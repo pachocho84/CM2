@@ -1,0 +1,4 @@
+cm_cmbundle:
+    resource: "@CMBundle/Resources/config/routing.yml"
+    prefix:   /
+

@@ -1,0 +1,27 @@
+{% extends 'BloggerTranslBundle::layout.html.twig' %}
+
+{% block body %}
+    <article class="blog">
+      <header>
+        <h2>{{ event.title }}</h2>
+        <h3>{{ event.subtitle }}</h3>
+      </header>
+      <div>
+      	<p>{{ event.extract }}</p>
+      	<p>{{ event.text }}</p>
+      </div>
+    {% for locale, translation in event.translations %}
+      <div>
+        <p>{{ translation.field }}</p>
+        <p>{{ translation.content }}</p>
+      </div>
+    {% endfor %}
+      <div>
+        <ul>
+            {% for date in event.eventDates %}
+                <li>{{ date.start | date }}</li>
+            {% endfor %}
+        </ul>
+     </div>
+    </article>
+{% endblock %}

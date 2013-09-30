@@ -1,0 +1,10 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+	<form action="{{ path('cm_event_create', { 'id' : event.id } ) }}" method="post" {{ form_enctype(form) }} class="blogger">
+	    {{ form_widget(form) }}
+	    <p>
+	        <input type="submit" value="Submit">
+	    </p>
+	</form>
+{% endblock %}

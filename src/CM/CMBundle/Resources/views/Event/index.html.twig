@@ -1,0 +1,20 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+  {% for event in events %}
+    <article class="blog">
+      <header>
+        <h2>{{ event.id }} {{ event.getTitle }}</h2>
+        <h3>{{ event.getSubtitle }}</h3>
+      </header>
+      <div>
+      	<p>{{ event.getExtract }}</p>
+      	<ul>
+      		{% for date in event.eventDates %}
+      			<li>{{ date.start | date }}</li>
+      		{% endfor %}
+      	</ul>
+      </div>
+    </article>
+  {% endfor %}
+{% endblock %}
