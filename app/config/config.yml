@@ -68,7 +68,6 @@ swiftmailer:
 
 # Translatable form
 a2lix_translation_form:
-    locales: [fr, es, de]
     default_required: true
     manager_registry: doctrine
     templating: "A2lixTranslationFormBundle::default.html.twig" 

@@ -1,27 +1,18 @@
-{% extends 'BloggerTranslBundle::layout.html.twig' %}
+{% extends 'CMBundle::layout.html.twig' %}
 
 {% block body %}
     <article class="blog">
       <header>
-        <h2>{{ event.title }}</h2>
-        <h3>{{ event.subtitle }}</h3>
+        <h2>{{ event.id }} {{ event.getTitle }}</h2>
+        <h3>{{ event.getSubtitle }}</h3>
       </header>
       <div>
-      	<p>{{ event.extract }}</p>
-      	<p>{{ event.text }}</p>
+      	<p>{{ event.getExtract }}</p>
+      	<ul>
+      		{% for date in event.eventDates %}
+      			<li>{{ date.start | date }}</li>
+      		{% endfor %}
+      	</ul>
       </div>
-    {% for locale, translation in event.translations %}
-      <div>
-        <p>{{ translation.field }}</p>
-        <p>{{ translation.content }}</p>
-      </div>
-    {% endfor %}
-      <div>
-        <ul>
-            {% for date in event.eventDates %}
-                <li>{{ date.start | date }}</li>
-            {% endfor %}
-        </ul>
-     </div>
     </article>
 {% endblock %}

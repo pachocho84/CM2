@@ -19,7 +19,8 @@ class EventRepository extends ORMEntityRepository
 		$query = $this->createQueryBuilder('e')->select('e, t, d')
 			->leftJoin('e.event_dates', 'd')
 			->leftJoin('e.translations', 't')
-			->where('t.locale = :locale')->setParameter('locale', $locale)
+			->where('d.start > :start')->setParameter('start', date('Y-m-d H:i:s', time())) // TODO: use Doctrine for time format!
+			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $locale)
 			->setMaxResults(10)
 			->getQuery();
 		
@@ -29,10 +30,10 @@ class EventRepository extends ORMEntityRepository
 	public function getEvent($id, $locale)
 	{
 		return $this->createQueryBuilder('e')->select('e, t, d')
-			->where('e.id = :id')->setParameter('id', $id)
 			->leftJoin('e.event_dates', 'd')
 			->leftJoin('e.translations', 't')
-			->where('t.locale = :locale')->setParameter('locale', $locale)
+			->where('e.id = :id')->setParameter('id', $id)
+			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $locale)
 			->getQuery()
 			->getSingleResult();
 	}

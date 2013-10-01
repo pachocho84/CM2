@@ -22,7 +22,7 @@ class EventFixtures extends AbstractFixture implements OrderedFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-       	for ($i = 1; $i < 101; $i++) {
+       	for ($i = 1; $i < 201; $i++) {
 	   		$event = new Event;
            	$event->setVisible(true);
            	$event->setTitle('Title (EN) '.$i)
@@ -70,7 +70,7 @@ class EventFixtures extends AbstractFixture implements OrderedFixtureInterface
            	$event->mergeNewTranslations();
            	
            	if ($i % 10 == 0) {
-           		echo '.';
+           		echo $i." - ";
            	    $manager->flush();
            	}
        	}

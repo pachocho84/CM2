@@ -4,7 +4,7 @@
   {% for event in events %}
     <article class="blog">
       <header>
-        <h2>{{ event.id }} {{ event.getTitle }}</h2>
+        <h2><a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}">{{ event.id }} {{ event.getTitle }}</a></h2>
         <h3>{{ event.getSubtitle }}</h3>
       </header>
       <div>

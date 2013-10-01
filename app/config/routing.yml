@@ -1,4 +1,5 @@
 cm_cmbundle:
-    resource: "@CMBundle/Resources/config/routing.yml"
+    resource: "@CMBundle/Controller"
+    type:     annotation
     prefix:   /
 

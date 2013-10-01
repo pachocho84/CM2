@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class EventType extends EntityType
+class EntityType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -14,13 +14,13 @@ class EventType extends EntityType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-    	parent::buildForm($builder, $options);
-    
-    	$builder->add('event_dates', 'collection', array(
-    			'type' => new EventDateType(),
-    			'allow_add' => true,
-    			'by_reference' => false
-    	));
+    	$builder->add('translations', 'a2lix_translations', array(
+    		'locales' => array('en', 'fr', 'it'),
+		    'required' => false,                    // [2]
+		    'fields' => array(                      // [3]
+		        'slug' => array('display' => false)
+		    )
+		))->add('visible');
     }
     
     /**
@@ -29,7 +29,7 @@ class EventType extends EntityType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'CM\CMBundle\Entity\Event'
+            'data_class' => 'CM\CMBundle\Entity\Entity'
         ));
     }
 
@@ -38,6 +38,6 @@ class EventType extends EntityType
      */
     public function getName()
     {
-        return 'cm_cmbundle_event';
+        return 'cm_cmbundle_entity';
     }
 }

@@ -3,7 +3,4 @@
 {% block stylesheets %}
     {{ parent () }}
 
-    {% stylesheets 'bundles/bloggerblog/css/*' filter='cssrewrite,?uglifycss' %}
-        <link href="{{ asset_url }}" rel="stylesheet" media="screen" />
-    {% endstylesheets %}
 {% endblock %}

@@ -15,8 +15,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  */
 class EntityTranslation
 {
-    use ORMBehaviors\Sluggable\Sluggable,
-    	ORMBehaviors\Translatable\Translation;
+    use ORMBehaviors\Sluggable\Sluggable;
+	use	ORMBehaviors\Translatable\Translation;
 
     /**
      * @var string

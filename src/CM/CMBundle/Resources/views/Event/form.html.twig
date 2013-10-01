@@ -1,9 +1,9 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
 {% block body %}
-	{{ form(form) }}
+	<form action="{{ path('event_create') }}" method="post" {{ form_enctype(form) }} class="blogger">
+		{{ form_widget(form) }}
 {#
-	<form action="{{ path('cm_event_create') }}" method="post" {{ form_enctype(form) }} class="blogger">
 	    {{ form_row(form.getTitle) }}
 	    {{ form_row(form.getSubtitle) }}
 	    {{ form_row(form.getExtract) }}
@@ -20,9 +20,14 @@
             	date: <li>{{ form_widget(date) }}</li>
 			{% endfor %}
 		</ul>
+#}
 		<p>
 	        <input type="submit" value="Submit">
 	    </p>
 	</form>
-#}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('bundles/cm/js/uploadCollection.js') }}"></script>
 {% endblock %}

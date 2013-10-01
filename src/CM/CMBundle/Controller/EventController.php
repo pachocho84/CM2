@@ -5,52 +5,63 @@ namespace CM\CMBundle\Controller;
 use \DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
 use CM\CMBundle\Entity\Event;
-use CM\CMBundle\Entity\EntityTranslation;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\EventDateType;
 
+/**
+ * @Route("/event")
+ */
 class EventController extends Controller
 {
-    public function indexAction()
+    /**
+     * @Route("/{_locale}", name = "event_index", defaults={"_locale" = "en"}, requirements={"_locale" = "en|fr|it"})
+     * @Template("CMBundle:Event:index.html.twig")
+     */
+    public function indexAction(Request $request, $_locale)
     {
         $em = $this->getDoctrine()->getManager();
-               
-        $events = $em->getRepository('CMBundle:Event')->getEvents($this->container->getParameter('locale'));//$this->get('session')->get('locale'));
+        $events = $em->getRepository('CMBundle:Event')->getEvents($_locale);
     
-        return $this->render('CMBundle:Event:index.html.twig', array(
-	       	'events' => $events
-        ));
+        return array('events' => $events);
     }
     
-    public function showAction($id)
+    /**
+     * @Route("/{_locale}/{id}/{slug}", defaults={"_locale" = "en"}, requirements={"id" = "\d+", "_locale" = "en|fr|it"}, name="event_show")
+     * @Template("CMBundle:Event:show.html.twig")
+     */
+    public function showAction($id, $slug, $_locale)
     {
-        $event = $this->getEvent($id, $this->container->getParameter('locale'));
+        $em = $this->getDoctrine()->getManager();
+        $event = $em->getRepository('CMBundle:Event')->getEvent($id, $_locale);
         
-        return $this->render('CMBundle:Event:show.html.twig', array(
-            'event' => $event
-        ));
+        return array('event' => $event);
     }
     
+    /**
+     * @Route("/new", name="event_new") 
+     * @Template("CMBundle:Event:form.html.twig")
+     */
     public function newAction()
     {
         $event = new Event;
-        $eventDate = new EventDate;
-        $eventDate->setLocation('casa mia');
-        $event->addEventDate($eventDate);
-        $eventDate1 = new EventDate;
-        $eventDate1->setLocation('casa mia');
-        $event->addEventDate($eventDate1);
+        $event->addEventDate(new EventDate);
         
         $form = $this->createForm(new EventType, $event);
 
-        return $this->render('CMBundle:Event:form.html.twig', array(
-            'form' => $form->createView()
-        ));
+        return array('form' => $form->createView());
     }
 
+    /**
+     * @Route("/create", name="event_create") 
+     * @Method("POST")
+     * @Template("CMBundle:Event:create.html.twig")
+     */
     public function createAction(Request $request)
     {
         $event = new Event;
@@ -63,12 +74,13 @@ class EventController extends Controller
             $em->persist($event);
             $em->flush();
 			
-            return $this->redirect($this->generateUrl('cm_event_show', array('id' => $event->getId())));
+            return $this->redirect($this->generateUrl('event_show', array('id' => $event->getId())));
         }
 
-        return $this->render('CMBundle:Event:create.html.twig', array(
-            'event' => $event,
-            'form' => $form->createView()
-        ));
+        return array('event' => $event, 'form' => $form->createView());
     }
+    
+    /**
+     * @Route("/locale", name="event_locale", 
+     */
 }

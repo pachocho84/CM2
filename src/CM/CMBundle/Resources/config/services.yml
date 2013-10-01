@@ -1,7 +1,6 @@
 parameters:
-#    cm.example.class: CM\CMBundle\Example
+    my_property_accessor.class: CM\CMBundle\PropertyAccess\CMPropertyAccessor
 
 services:
-#    cm.example:
-#        class: %cm.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    property_accessor:
+      class: %my_property_accessor.class%

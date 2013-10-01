@@ -14,10 +14,12 @@ class EntityTranslationType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+/*
         $builder->add('title')
 			->add('subtitle')
 			->add('extract')
 			->add('text');
+*/
     }
     
     /**
