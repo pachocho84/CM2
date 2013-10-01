@@ -3,6 +3,7 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * EventDate
@@ -33,6 +34,8 @@ class EventDate
      * @var \DateTime
      *
      * @ORM\Column(name="start", type="datetimetz")
+     * @Assert\NotBlank()
+     * @Assert\DateTime()
      */
     private $start;
 
@@ -40,6 +43,7 @@ class EventDate
      * @var \DateTime
      *
      * @ORM\Column(name="end", type="datetimetz", nullable=true)
+     * @Assert\DateTime()
      */
     private $end;
 

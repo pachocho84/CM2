@@ -17,7 +17,7 @@ use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\EventDateType;
 
 /**
- * @Route("/{_locale}/event", defaults={"_locale" = "en"}, requirements={"_locale" = "en|fr|it"})
+ * @Route("/{_locale}/event", defaults={"_locale" = "en"}, requirements={"_locale" = "^[a-z]{2}$"})
  */
 class EventController extends Controller
 {

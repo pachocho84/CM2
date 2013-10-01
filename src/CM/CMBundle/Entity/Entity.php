@@ -4,6 +4,7 @@ namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Entity
@@ -31,6 +32,7 @@ class Entity
      * @var boolean
      *
      * @ORM\Column(name="visible", type="boolean", nullable=true)
+	 * @Assert\Type(type="bool")
      */
     private $visible;
     
