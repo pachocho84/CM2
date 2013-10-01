@@ -26,7 +26,7 @@ class EventController extends Controller
     public function indexAction(Request $request, $_locale)
     {
         $em = $this->getDoctrine()->getManager();
-        $events = $em->getRepository('CMBundle:Event')->getEvents($_locale);
+        $events = $em->getRepository('CMBundle:Event')->getEvents(array('locale' => $_locale));
     
         return array('events' => $events);
     }

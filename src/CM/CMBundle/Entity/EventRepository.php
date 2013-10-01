@@ -14,17 +14,41 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class EventRepository extends ORMEntityRepository
 {
-	public function getEvents($locale)
+	
+	static protected function getOptions($options = array())
 	{
+		return array_merge(array(
+/* 			'entity_type'		=> sfContext::getInstance()->getRequest()->getParameter('module'), */
+			'user_id'           => null,
+/* 			'category'          => sfContext::getInstance()->getRequest()->getParameter('category', null), */
+			'paginate'			=> true,
+			'locale'			=> 'en',
+			'limit'             => 25,
+		), $options);
+	}
+	
+	public function getEvents($options = array())
+	{
+		$options 	= self::getOptions($options);
+		
 		$query = $this->createQueryBuilder('e')->select('e, t, d')
 			->leftJoin('e.event_dates', 'd')
-			->leftJoin('e.translations', 't')
-			->where('d.start > :start')->setParameter('start', date('Y-m-d H:i:s', time())) // TODO: use Doctrine for time format!
-			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $locale)
-			->setMaxResults(10)
+			->leftJoin('e.translations', 't');
+			
+		if (isset($options['archive'])) {
+			$query->where('d.start <= '.time());	
+		} 
+		else {
+			$query->where('d.start >= '.time());	
+		}			
+			
+		$query
+			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
+			->setMaxResults($options['limit'])
 			->getQuery();
 		
-		return new Paginator($query, $fetchJoinCollection = true);
+		
+		return $options['paginate'] ? new Paginator($query, $fetchJoinCollection = true) : $query->limit($options['limit'])->getResults();
 	}
 
 	public function getEvent($id, $locale)
