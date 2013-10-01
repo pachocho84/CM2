@@ -1,6 +1,6 @@
 parameters:
-    my_property_accessor.class: CM\CMBundle\PropertyAccess\CMPropertyAccessor
+    cm_property_accessor.class: CM\CMBundle\PropertyAccess\CMPropertyAccessor
 
 services:
     property_accessor:
-      class: %my_property_accessor.class%
+      class: %cm_property_accessor.class%

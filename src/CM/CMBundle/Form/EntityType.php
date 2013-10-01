@@ -8,6 +8,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class EntityType extends AbstractType
 {
+	protected $locales = array('en');
+
+	public function __construct(array $locales)
+	{
+		$this->locales = $locales;
+	}
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -15,9 +22,9 @@ class EntityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
     	$builder->add('translations', 'a2lix_translations', array(
-    		'locales' => array('en', 'fr', 'it'),
-		    'required' => false,                    // [2]
-		    'fields' => array(                      // [3]
+    		'locales' => $this->locales,
+		    'required' => false,
+		    'fields' => array(
 		        'slug' => array('display' => false)
 		    )
 		))->add('visible');

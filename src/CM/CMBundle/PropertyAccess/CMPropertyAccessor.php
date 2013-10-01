@@ -10,5 +10,4 @@ class CMPropertyAccessor extends PropertyAccessor
     {
         parent::__construct($magicCall);
     }
-
 }

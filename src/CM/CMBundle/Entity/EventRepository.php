@@ -15,26 +15,27 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class EventRepository extends ORMEntityRepository
 {
 	
-	static protected function getOptions($options = array())
+	static protected function getOptions(array $options = array())
 	{
 		return array_merge(array(
-/* 			'entity_type'		=> sfContext::getInstance()->getRequest()->getParameter('module'), */
-			'user_id'           => null,
-/* 			'category'          => sfContext::getInstance()->getRequest()->getParameter('category', null), */
-			'paginate'			=> true,
-			'locale'			=> 'en',
-			'limit'             => 25,
+ 			// 'entity_type' => sfContext::getInstance()->getRequest()->getParameter('module'), 
+			'user_id'     => null,
+ 			// 'category'    => sfContext::getInstance()->getRequest()->getParameter('category', null), 
+			'paginate'	  => true,
+			'locale'	  => 'en',
+			'limit'       => 25,
 		), $options);
 	}
 	
-	public function getEvents($options = array())
+	public function getEvents(array $options = array())
 	{
 		$options 	= self::getOptions($options);
 		
 		$query = $this->createQueryBuilder('e')->select('e, t, d')
 			->leftJoin('e.event_dates', 'd')
 			->leftJoin('e.translations', 't');
-			
+		
+		// $now = \DateTime('@time()');
 		if (isset($options['archive'])) {
 			$query->where('d.start <= '.time());	
 		} 

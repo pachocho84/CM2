@@ -7,35 +7,37 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
+use CM\CMBundle\Entity\Locale;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\EventDateType;
 
 /**
- * @Route("/event")
+ * @Route("/{_locale}/event", defaults={"_locale" = "en"}, requirements={"_locale" = "en|fr|it"})
  */
 class EventController extends Controller
 {
     /**
-     * @Route("/{_locale}", name = "event_index", defaults={"_locale" = "en"}, requirements={"_locale" = "en|fr|it"})
+     * @Route("/", name = "event_index")
      * @Template("CMBundle:Event:index.html.twig")
      */
     public function indexAction(Request $request, $_locale)
     {
         $em = $this->getDoctrine()->getManager();
         $events = $em->getRepository('CMBundle:Event')->getEvents(array('locale' => $_locale));
-    
-        return array('events' => $events);
+
+        return array('locale' => $_locale, 'events' => $events);
     }
     
     /**
-     * @Route("/{_locale}/{id}/{slug}", defaults={"_locale" = "en"}, requirements={"id" = "\d+", "_locale" = "en|fr|it"}, name="event_show")
+     * @Route("/{id}/{slug}", defaults={"_locale" = "en"}, requirements={"id" = "\d+", "_locale" = "en|fr|it"}, name="event_show")
      * @Template("CMBundle:Event:show.html.twig")
      */
-    public function showAction($id, $slug, $_locale)
+    public function showAction($_locale, $id, $slug)
     {
         $em = $this->getDoctrine()->getManager();
         $event = $em->getRepository('CMBundle:Event')->getEvent($id, $_locale);
@@ -52,7 +54,10 @@ class EventController extends Controller
         $event = new Event;
         $event->addEventDate(new EventDate);
         
-        $form = $this->createForm(new EventType, $event);
+        // TODO: retrieve locales from user
+        $locales = array('en', 'fr', 'it');
+
+        $form = $this->createForm(new EventType($locales), $event);
 
         return array('form' => $form->createView());
     }
