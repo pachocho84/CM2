@@ -60,16 +60,19 @@ class EventController extends Controller
     /**
      * @Route("/create", name="event_create") 
      * @Method("POST")
-     * @Template("CMBundle:Event:create.html.twig")
+     * @Template("CMBundle:Event:form.html.twig")
      */
     public function createAction(Request $request)
     {
         $event = new Event;
         
         $form = $this->createForm(new EventType(), $event);
-        $form->bind($request);
+/*         $form->bind($request); */
+		$form->handleRequest($request);
+        
 
         if ($form->isValid()) {
+        	echo 'valid'; die;
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($event);
             $em->flush();
