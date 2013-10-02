@@ -23,7 +23,18 @@ class EntityTranslation
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=150)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min = "2",
+     *      max = "150",
+     *      minMessage = "The title must be at least {{ limit }} characters length",
+     *      maxMessage = "The title cannot be longer than {{ limit }} characters length"
+     * )
+     * @Assert\Regex(
+     *     pattern="/\b[A-Z]{3}/",
+     *     match=false,
+     *     message="Please remove all UPPERCASE words"
+     * )
      */
     private $title;
 
@@ -31,6 +42,10 @@ class EntityTranslation
      * @var string
      *
      * @ORM\Column(name="subtitle", type="string", length=250, nullable=true)
+     * @Assert\Length(
+     *      max = "250",
+     *      maxMessage = "The subtitle cannot be longer than {{ limit }} characters length"
+     * )
      */
     private $subtitle;
 
@@ -38,6 +53,10 @@ class EntityTranslation
      * @var string
      *
      * @ORM\Column(name="extract", type="text", nullable=true)
+     * @Assert\Length(
+     *      max = "500",
+     *      maxMessage = "The extract cannot be longer than {{ limit }} characters length"
+     * )
      */
     private $extract;
 
@@ -45,6 +64,7 @@ class EntityTranslation
      * @var string
      *
      * @ORM\Column(name="text", type="text")
+     * @Assert\NotBlank
      */
     private $text;
 

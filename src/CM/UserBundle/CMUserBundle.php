@@ -1,9 +1,9 @@
 <?php
 
-namespace CM\CMBundle;
+namespace CM\UserBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class CMBundle extends Bundle
+class CMUserBundle extends Bundle
 {
 }

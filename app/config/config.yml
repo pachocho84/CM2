@@ -5,14 +5,14 @@ imports:
 
 framework:
     #esi:             ~
-    #translator:      { fallback: %locale% }
+    translator:      { fallback: %locale% }
     secret:          %secret%
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
     form:            ~
     csrf_protection: ~
-    validation:      { enable_annotations: true }
+    validation: { enable_annotations: true }
     templating:
         engines: ['twig']
         #assets_version: SomeVersionScheme
@@ -67,6 +67,6 @@ swiftmailer:
 
 # Translatable form
 a2lix_translation_form:
-    default_required: true
+    default_required: false
     manager_registry: doctrine
     templating: "A2lixTranslationFormBundle::default.html.twig" 

@@ -34,8 +34,7 @@ class EventDate
      * @var \DateTime
      *
      * @ORM\Column(name="start", type="datetimetz")
-     * @Assert\NotBlank()
-     * @Assert\DateTime()
+     * @Assert\DateTime
      */
     private $start;
 
@@ -43,7 +42,7 @@ class EventDate
      * @var \DateTime
      *
      * @ORM\Column(name="end", type="datetimetz", nullable=true)
-     * @Assert\DateTime()
+     * @Assert\DateTime
      */
     private $end;
 
@@ -51,6 +50,13 @@ class EventDate
      * @var string
      *
      * @ORM\Column(name="location", type="string", length=150)
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min = "2",
+     *      max = "150",
+     *      minMessage = "The location must be at least {{ limit }} characters length",
+     *      maxMessage = "The location cannot be longer than {{ limit }} characters length"
+     * )
      */
     private $location;
 
@@ -58,6 +64,13 @@ class EventDate
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=150)
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min = "2",
+     *      max = "150",
+     *      minMessage = "The location must be at least {{ limit }} characters length",
+     *      maxMessage = "The location cannot be longer than {{ limit }} characters length"
+     * )
      */
     private $address;
 

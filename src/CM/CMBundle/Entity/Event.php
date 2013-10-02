@@ -42,7 +42,7 @@ class Event extends Entity
      */
     public function __construct()
     {
-        $this->event_dates = new ArrayCollection();
+    	$this->event_dates = new ArrayCollection();
     }
     
     /**

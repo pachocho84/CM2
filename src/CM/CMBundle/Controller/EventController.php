@@ -23,19 +23,19 @@ class EventController extends Controller
 {
     /**
      * @Route("/", name = "event_index")
-     * @Template("CMBundle:Event:index.html.twig")
+     * @Template
      */
     public function indexAction(Request $request, $_locale)
     {
         $em = $this->getDoctrine()->getManager();
         $events = $em->getRepository('CMBundle:Event')->getEvents(array('locale' => $_locale));
 
-        return array('locale' => $_locale, 'events' => $events);
+        return array('locale' => $_locale, 'events' => $events, 'test' => 'test');
     }
     
     /**
-     * @Route("/{id}/{slug}", defaults={"_locale" = "en"}, requirements={"id" = "\d+", "_locale" = "en|fr|it"}, name="event_show")
-     * @Template("CMBundle:Event:show.html.twig")
+     * @Route("/{id}/{slug}", requirements={"id" = "\d+", "_locale" = "en|fr|it"}, name="event_show")
+     * @Template
      */
     public function showAction($_locale, $id, $slug)
     {
@@ -47,37 +47,37 @@ class EventController extends Controller
     
     /**
      * @Route("/new", name="event_new") 
-     * @Template("CMBundle:Event:form.html.twig")
+     * @Route("/{id}/{slug}/edit", requirements={"id" = "\d+", "_locale" = "en|fr|it"}, name="event_edit") 
+     * @Template
      */
-    public function newAction()
+    public function editAction(Request $request, $_locale, $id = null, $slug = null)
     {
-        $event = new Event;
-        $event->addEventDate(new EventDate);
+    	$event;
+    	if ($id == null || $slug == null) {
+        	$event = new Event;
+			$event->addEventDate(new EventDate);
+		}
+		else {
+			$em = $this->getDoctrine()->getManager();
+	        $event = $em->getRepository('CMBundle:Event')->getEvent($id, $_locale);
+		}
         
         // TODO: retrieve locales from user
-        $locales = array('en', 'fr', 'it');
 
-        $form = $this->createForm(new EventType($locales), $event);
-
-        return array('form' => $form->createView());
-    }
-
-    /**
-     * @Route("/create", name="event_create") 
-     * @Method("POST")
-     * @Template("CMBundle:Event:form.html.twig")
-     */
-    public function createAction(Request $request)
-    {
-        $event = new Event;
+        $form = $this->createForm(new EventType(), $event, array(
+        	'action' => $this->generateUrl('event_new'),
+        	'cascade_validation' => true,
+        	'locales' => array('en', 'fr', 'it'),
+        	'locale' => $_locale
+        ))->add('save', 'submit');
         
-        $form = $this->createForm(new EventType(), $event);
-/*         $form->bind($request); */
-		$form->handleRequest($request);
+        $form->handleRequest($request);
         
-
+        if (count($this->get('validator')->validate($event)) > 0) {
+        	return new Response(print_r($errors, true));
+		}
+        
         if ($form->isValid()) {
-        	echo 'valid'; die;
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($event);
             $em->flush();
@@ -85,10 +85,6 @@ class EventController extends Controller
             return $this->redirect($this->generateUrl('event_show', array('id' => $event->getId())));
         }
 
-        return array('event' => $event, 'form' => $form->createView());
+        return array('form' => $form->createView());
     }
-    
-    /**
-     * @Route("/locale", name="event_locale", 
-     */
 }

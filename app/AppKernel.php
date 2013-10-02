@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new A2lix\TranslationFormBundle\A2lixTranslationFormBundle(),
             new CM\CMBundle\CMBundle(),
+            new CM\UserBundle\CMUserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

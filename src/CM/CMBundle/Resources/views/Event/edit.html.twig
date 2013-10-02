@@ -1,0 +1,32 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+{# 	<form action="{{ path('event_create') }}" method="post" {{ form_enctype(form) }} class="blogger"> #}
+		{{ form(form) }}
+{#
+	    {{ form_row(form.translations) }}
+	    {{ form_row(form.visible) }}
+#}
+
+{#
+		<h3>Dates:</h3>
+    	<ul class="tags">
+    		{{ form_widget(form.event_dates) }}
+    		{{ form_row(form.event_dates) }}
+        	{% for date in form.event_dates %}
+            	date: <li>{{ form_widget(date) }}</li>
+			{% endfor %}
+		</ul>
+#}
+{#
+		<p>
+	        <input type="submit" value="Submit">
+	    </p>
+	</form>
+#}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+{# 	<script src="{{ asset('bundles/cm/js/uploadCollection.js') }}"></script> #}
+{% endblock %}

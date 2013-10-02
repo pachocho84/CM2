@@ -1,0 +1,2 @@
+cm:
+    notBlank: Questo campo non può essere vuoto # a default message for the "notBlank" constraint

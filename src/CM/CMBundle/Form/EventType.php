@@ -28,6 +28,8 @@ class EventType extends EntityType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+    	parent::setDefaultOptions($resolver);
+    	
         $resolver->setDefaults(array(
             'data_class' => 'CM\CMBundle\Entity\Event'
         ));

@@ -1,3 +1,8 @@
+cm_user:
+    resource: "@CMUserBundle/Controller"
+    type:     annotation
+    prefix:   /
+
 cm_cmbundle:
     resource: "@CMBundle/Controller"
     type:     annotation

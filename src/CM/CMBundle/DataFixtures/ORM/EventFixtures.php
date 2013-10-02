@@ -5,8 +5,6 @@ namespace CM\CMBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use CM\CMBundle\Entity\EntityTranslation;
-use CM\CMBundle\Entity\Entity;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\EventDate;
 
@@ -24,25 +22,26 @@ class EventFixtures extends AbstractFixture implements OrderedFixtureInterface
     {
        	for ($i = 1; $i < 201; $i++) {
 	   		$event = new Event;
-           	$event->setVisible(true);
+           	$event->setVisible(rand(0, 1));
            	$event->setTitle('Title (EN) '.$i)
            	    ->setSubtitle('Subtitle (EN) '.$i)
            	    ->setExtract('Extract (EN) '.$i)
            	    ->setText('Text (EN) '.$i);
-           	$event->setVisible(true);
-           	$event->translate('fr')->setTitle('Titre (FR) '.$i)
+           	$event->translate('fr')
+           		->setTitle('Titre (FR) '.$i)
            	    ->setSubtitle('Sous-titre (FR) '.$i)
            	    ->setExtract('Extrait (FR) '.$i)
            	    ->setText('Texte (FR) '.$i);
-/*
-		   	$event->translate('ru')->setTitle('Печатное (RU) '.$i)
-           	    ->setSubtitle('Субти́тр (RU) '.$i)
-           	    ->setExtract('Экстракта (RU) '.$i)
-           	    ->setText('Текст (RU) '.$i);
-*/
+
+//		   	$event->translate('ru')->setTitle('Печатное (RU) '.$i)
+//           	    ->setSubtitle('Субти́тр (RU) '.$i)
+//           	    ->setExtract('Экстракта (RU) '.$i)
+//           	    ->setText('Текст (RU) '.$i);
+
 
            	if ($i % 10 == rand(0, 9)) {
-           		$event->translate('it')->setTitle('Titolo (IT) '.$i)
+           		$event->translate('it')
+           			->setTitle('Titolo (IT) '.$i)
            	    	->setSubtitle('Sottotitolo (IT) '.$i)
 		   			->setExtract('Estratto (IT) '.$i)
 		   			->setText('Testo (IT) '.$i);
@@ -65,8 +64,10 @@ class EventFixtures extends AbstractFixture implements OrderedFixtureInterface
 	           	$event->addEventDate($eventDate);
            	}
            	
-           	$manager->persist($event);
+           	$category = $manager->merge($this->getReference('entity_category-'.rand(1, 3)));
+           	$category->addEntity($event);
            	
+           	$manager->persist($event);
            	$event->mergeNewTranslations();
            	
            	if ($i % 10 == 0) {
