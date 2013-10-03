@@ -13,8 +13,8 @@ use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
 use CM\CMBundle\Entity\Locale;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\EventDate;
+use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Form\EventType;
-use CM\CMBundle\Form\EventDateType;
 
 /**
  * @Route("/{_locale}/event", defaults={"_locale" = "en"}, requirements={"_locale" = "^[a-z]{2}$"})
@@ -56,10 +56,12 @@ class EventController extends Controller
     	if ($id == null || $slug == null) {
         	$event = new Event;
 			$event->addEventDate(new EventDate);
+			$event->addImage(new Image);
 		}
 		else {
 			$em = $this->getDoctrine()->getManager();
 	        $event = $em->getRepository('CMBundle:Event')->getEvent($id, $_locale);
+	        // TODO: retrieve images from event
 		}
         
         // TODO: retrieve locales from user
@@ -67,7 +69,7 @@ class EventController extends Controller
         $form = $this->createForm(new EventType(), $event, array(
         	'action' => $this->generateUrl('event_new'),
         	'cascade_validation' => true,
-        	'locales' => array('en', 'fr', 'it'),
+        	'locales' => array('en'/* , 'fr', 'it' */),
         	'locale' => $_locale
         ))->add('save', 'submit');
         
@@ -82,7 +84,10 @@ class EventController extends Controller
             $em->persist($event);
             $em->flush();
 			
-            return $this->redirect($this->generateUrl('event_show', array('id' => $event->getId())));
+            return $this->redirect($this->generateUrl('event_show', array(
+            	'id' => $event->getId(),
+            	'slug' => $event->getSlug()
+            )));
         }
 
         return array('form' => $form->createView());

@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use CM\CMBundle\Entity\EntityCategoryRepository;
+use CM\CMBundle\Entity\Image;
 
 class EntityType extends AbstractType
 {
@@ -47,7 +48,12 @@ class EntityType extends AbstractType
 			'query_builder' => function(EntityCategoryRepository $er) use ($options) {
 				return $er->filterEntityCategoriesByEntityType($options);
 			}
-		))->add('visible');
+		))->add('visible')
+			->add('images', 'collection', array(
+    			'type' => new ImageType(),
+    			'allow_add' => true,
+    			'by_reference' => false
+    	));
     }
     
     /**

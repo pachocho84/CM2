@@ -15,6 +15,11 @@
       		{% endfor %}
       	</ul>
       </div>
+      <div>
+      	{% if event.getImages | length > 0 %}
+	  		<img src='{{- uploaded_images_full_dir -}}/{{- event.getImages[0].img }}' width=200 />
+	  	{% endif %}
+      </div>
     </article>
   {% endfor %}
 {% endblock %}

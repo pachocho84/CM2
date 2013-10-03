@@ -21,11 +21,20 @@ framework:
     session:         ~
     fragments:       ~
     http_method_override: true
+    
+parameters:
+    upload.dir: /uploads
+    uploads.images_full: %upload.dir%/images/full
 
 # Twig Configuration
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
+    form:
+        resources:
+            - 'CMBundle:Form:bootstrap.html.twig'
+    globals:
+        uploaded_images_full_dir: %uploads.images_full%
 
 # Assetic Configuration
 assetic:
@@ -69,4 +78,6 @@ swiftmailer:
 a2lix_translation_form:
     default_required: false
     manager_registry: doctrine
-    templating: "A2lixTranslationFormBundle::default.html.twig" 
+    templating: "A2lixTranslationFormBundle::default.html.twig"
+    
+    

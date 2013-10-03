@@ -5,6 +5,7 @@ namespace CM\CMBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -33,12 +34,22 @@ class Entity
 	 * @Assert\Type(type="bool")
      */
     private $visible;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"})
+	 */
+	private $images;
 
     /**
      * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")
      * @ORM\JoinColumn(name="entity_category_id", referencedColumnName="id")
      */
-    private $entity_category;
+    private $entityCategory;
+    
+    public function __construct()
+    {
+    	$this->images = new ArrayCollection();
+    }
 
     public function __call($method, $arguments)
     {
@@ -79,25 +90,51 @@ class Entity
     }
     
     /**
-     * Set entity category
-     *
      * @param boolean $visible
      * @return Entity
      */
-    public function setEntityCategory($entity_category)
+    public function setEntityCategory($entityCategory)
     {
-        $this->entity_category = $entity_category;
+        $this->entityCategory = $entityCategory;
     
         return $this;
     }
 
     /**
-     * Get entity category
-     *
      * @return boolean 
      */
     public function getEntityCategory()
     {
-        return $this->entity_category;
+        return $this->entityCategory;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     * @return Entity
+     */
+    public function addImage(Image $image)
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setEntity($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     */
+    public function removeImage(Image $image)
+    {
+        $this->images->removeElement($image);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getImages()
+    {
+        return $this->images;
     }
 }

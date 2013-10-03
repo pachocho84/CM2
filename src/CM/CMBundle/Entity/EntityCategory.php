@@ -30,10 +30,10 @@ class EntityCategory
      *
      * @ORM\Column(name="entity_type", type="smallint")
      */
-    private $entity_type;
+    private $entityType;
      
     /**
-     * @ORM\OneToMany(targetEntity="Entity", mappedBy="entity_category")
+     * @ORM\OneToMany(targetEntity="Entity", mappedBy="entityCategory")
      */
     private $entities;
     
@@ -68,9 +68,9 @@ class EntityCategory
      * @param array $entityType
      * @return EntityCategory
      */
-    public function setEntityType($entity_type)
+    public function setEntityType($entityType)
     {
-        $this->entity_type = $entity_type;
+        $this->entityType = $entityType;
     
         return $this;
     }
@@ -82,7 +82,7 @@ class EntityCategory
      */
     public function getEntityType()
     {
-        return $this->entity_type;
+        return $this->entityType;
     }
 
     /**

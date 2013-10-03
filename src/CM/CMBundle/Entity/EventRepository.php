@@ -30,16 +30,17 @@ class EventRepository extends EntityRepository
 	{
 		$options = self::getOptions($options);
 		
-		$query = $this->createQueryBuilder('e')->select('e, t, d')
-			->leftJoin('e.event_dates', 'd')
-			->leftJoin('e.translations', 't');
+		$query = $this->createQueryBuilder('e')->select('e, t, d, i')
+			->leftJoin('e.eventDates', 'd')
+			->leftJoin('e.translations', 't')
+			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true);
 		
 		// $now = \DateTime('@time()');
 		if (isset($options['archive'])) {
-			$query->where('d.start <= '.time());	
+			$query->andWhere('d.start <= '.time());	
 		} 
 		else {
-			$query->where('d.start >= '.time());	
+			$query->andWhere('d.start >= '.time());	
 		}			
 			
 		$query
@@ -52,10 +53,11 @@ class EventRepository extends EntityRepository
 
 	public function getEvent($id, $locale)
 	{
-		return $this->createQueryBuilder('e')->select('e, t, d')
-			->leftJoin('e.event_dates', 'd')
+		return $this->createQueryBuilder('e')->select('e, t, d, i')
+			->leftJoin('e.eventDates', 'd')
 			->leftJoin('e.translations', 't')
-			->where('e.id = :id')->setParameter('id', $id)
+			->leftJoin('e.images', 'i')
+			->andWhere('e.id = :id')->setParameter('id', $id)
 			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $locale)
 			->getQuery()
 			->getSingleResult();

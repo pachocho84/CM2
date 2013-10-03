@@ -6,26 +6,18 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class EventDateType extends AbstractType
+class ImageType extends AbstractType
 {
-     /**
+        /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('start', 'datetime', array(
-				'date_widget'       => 'choice',
-				'date_format'       => \IntlDateFormatter::SHORT,
-				'time_widget'       => 'single_text',
-				'model_timezone'    => 'GMT',
-				'view_timezone'     => 'Europe/Rome',
-			))
-            ->add('end')
-            ->add('location')
-            ->add('address')
-            ->add('coordinates');
+            ->add('img')
+            ->add('main')
+            ->add('text');
     }
     
     /**
@@ -34,7 +26,7 @@ class EventDateType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'CM\CMBundle\Entity\EventDate'
+            'data_class' => 'CM\CMBundle\Entity\Image'
         ));
     }
 
@@ -43,6 +35,6 @@ class EventDateType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_eventdate';
+        return 'cm_cmbundle_image';
     }
 }

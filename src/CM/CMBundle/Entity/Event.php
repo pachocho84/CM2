@@ -18,13 +18,14 @@ class Event extends Entity
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
     
     /**
      * @ORM\OneToMany(targetEntity="EventDate", mappedBy="event", cascade={"persist", "remove"})
 	 */
-	private $event_dates;
+	private $eventDates;
 	
     /**
      * Get id
@@ -42,7 +43,9 @@ class Event extends Entity
      */
     public function __construct()
     {
-    	$this->event_dates = new ArrayCollection();
+    	parent::__construct();
+    	
+    	$this->eventDates = new ArrayCollection();
     }
     
     /**
@@ -61,14 +64,14 @@ class Event extends Entity
     /**
      * Add event_dates
      *
-     * @param \CM\CMBundle\Entity\EventDate $eventDates
+     * @param \CM\CMBundle\Entity\EventDate $eventDate
      * @return Event
      */
-    public function addEventDate(EventDate $eventDates)
+    public function addEventDate(EventDate $eventDate)
     {
-        if (!$this->event_dates->contains($eventDates)) {
-            $this->event_dates[] = $eventDates;
-            $eventDates->setEvent($this);
+        if (!$this->eventDates->contains($eventDate)) {
+            $this->eventDates[] = $eventDate;
+            $eventDate->setEvent($this);
         }
     
         return $this;
@@ -77,11 +80,11 @@ class Event extends Entity
     /**
      * Remove event_dates
      *
-     * @param \CM\CMBundle\Entity\EventDate $eventDates
+     * @param \CM\CMBundle\Entity\EventDate $eventDate
      */
-    public function removeEventDate(EventDate $eventDates)
+    public function removeEventDate(EventDate $eventDate)
     {
-        $this->event_dates->removeElement($eventDates);
+        $this->eventDates->removeElement($eventDate);
     }
 
     /**
@@ -91,6 +94,6 @@ class Event extends Entity
      */
     public function getEventDates()
     {
-        return $this->event_dates;
+        return $this->eventDates;
     }
 }
