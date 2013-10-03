@@ -27,10 +27,10 @@ function addEventDateForm(datesCollectionHolder, $newLinkLi) {
 
 /* image */
 // Get the ul that holds the collection of tags
-var imageCollectionHolder = $('#cm_cmbundle_event_image');
+var imageCollectionHolder = $('#cm_cmbundle_image_images');
 
 // setup an "add a tag" link
-var $addImageLink = $('<a href="#" class="add_date_link">Add a date</a>');
+var $addImageLink = $('<a href="#" class="add_date_link">Add an image</a>');
 var $newLinkForImage = $('<div></div>').append($addImageLink);
 
 function addImageForm(imageCollectionHolder, $newLinkForImage) {
@@ -49,7 +49,7 @@ function addImageForm(imageCollectionHolder, $newLinkForImage) {
 
     // Display the form in the page in an li, before the "Add a tag" link li
     var $newForm = $('<div></div>').append(newForm);
-    $newLink.before($newForm);
+    $newLinkForImage.before($newForm);
 }
 
 jQuery(document).ready(function() {

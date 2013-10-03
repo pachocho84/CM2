@@ -5,8 +5,9 @@ namespace CM\CMBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
-class ImageType extends AbstractType
+class MultipleImagesType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -15,9 +16,13 @@ class ImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('file')
-            ->add('main')
-            ->add('text');
+            ->add('images', 'collection', array(
+                'label' => 'Add images',
+                'required' => false,
+                'type' => new ImageType(),
+                'allow_add' => true,
+                'by_reference' => false
+        ));
     }
     
     /**
@@ -26,7 +31,7 @@ class ImageType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'CM\CMBundle\Entity\Image'
+            'data_class' => null
         ));
     }
 

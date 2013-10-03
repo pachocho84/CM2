@@ -16,6 +16,8 @@ use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Form\EventType;
+use CM\CMBundle\Form\MultipleImagesType;
+use CM\CMBundle\Utility\UploadHandler;
 
 /**
  * @Route("/{_locale}/event", defaults={"_locale" = "en"}, requirements={"_locale" = "^[a-z]{2}$"})
@@ -38,10 +40,36 @@ class EventController extends Controller
      * @Route("/{id}/{slug}", name="event_show", requirements={"id" = "\d+", "_locale" = "en|fr|it"})
      * @Template
      */
-    public function showAction($_locale, $id, $slug)
+    public function showAction(Request $request, $_locale, $id, $slug)
     {
         $em = $this->getDoctrine()->getManager();
         $event = $em->getRepository('CMBundle:Event')->getEvent($id, $_locale);
+
+        $images = new ArrayCollection();
+        $image = new Image;
+
+        $form = $this->createForm(new MultipleImagesType(), $images, array(
+        	'action' => $this->generateUrl('event_show', array(
+            	'id' => $event->getId(),
+            	'slug' => $event->getSlug()
+            )),
+        	'cascade_validation' => true
+        ))->add('save', 'submit');
+
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+        	$event->addImages($images);
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($event);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('event_show', array(
+            	'id' => $event->getId(),
+            	'slug' => $event->getSlug()
+            )));
+        }
         
         return array('event' => $event, 'form' => $form->createView());
     }
@@ -76,21 +104,8 @@ class EventController extends Controller
         
         $form->handleRequest($request);
         
-        if (count($this->get('validator')->validate($event)) > 0) {
-        	return new Response(print_r($errors, true));
-		}
-        
         if ($form->isValid()) {
-        	// sanitize uploaded file name and move it in the uploads dir
-        	$imageFile = $form['images'][0]['img']->getData();
-        	$fileDir = $this->container->getParameter('kernel.root_dir').'/../web'.$this->container->getParameter('uploads.images_full');
-        	$fileName = md5($imageFile->getClientOriginalName().time().uniqid()).'.'.$imageFile->guessExtension(); // FIXME: doesn't work with bmp files
-
-        	$imageFile->move($fileDir, $fileName);
-
-        	$event->getImages()[0]->setImg($fileName);
-
-            $em = $this->getDoctrine()->getEntityManager();
+        	$em = $this->getDoctrine()->getEntityManager();
             $em->persist($event);
             $em->flush();
 			

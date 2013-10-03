@@ -124,6 +124,19 @@ class Entity
 
     /**
      * @param \CM\CMBundle\Entity\Image $images
+     * @return Entity
+     */
+    public function addImages(ArrayCollection $images)
+    {
+    	foreach ($images->toArray()['images'] as $image) {
+    		$this->addImage($image);
+    	}
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
      */
     public function removeImage(Image $image)
     {

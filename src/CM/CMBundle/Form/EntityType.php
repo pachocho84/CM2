@@ -51,7 +51,6 @@ class EntityType extends AbstractType
 		))->add('visible')
 			->add('images', 'collection', array(
     			'type' => new ImageType(),
-    			'allow_add' => true,
     			'by_reference' => false
     	));
     }

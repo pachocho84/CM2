@@ -1,3 +1,4 @@
 parameters:
-    upload.dir: /uploads
-    uploads.images_full: %upload.dir%/images/full
+    bundle.dir: /bundles/cm
+    upload.dir: %bundle.dir%/uploads
+    uploads.images_full: %upload.dir%/images/full # if you change this, change it also in the Image.php file!

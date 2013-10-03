@@ -5,12 +5,14 @@ namespace CM\CMBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Image
  *
  * @ORM\Table(name="image")
  * @ORM\Entity(repositoryClass="CM\CMBundle\Entity\ImageRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Image
 {
@@ -37,7 +39,6 @@ class Image
      * @var string
      *
      * @ORM\Column(name="img", type="string", length=100)
-     * @Assert\Image(minWidth = 250, maxWidth = 750, minHeight = 250, maxHeight = 750, maxSize = "8M")
      */
     private $img;
 
@@ -68,6 +69,18 @@ class Image
      * @ORM\Column(name="text", type="text", nullable=true)
      */
     private $text;
+
+    /**
+     * @Assert\Image(
+     *     minWidth = 250,
+     *     maxWidth = 750,
+     *     minHeight = 250,
+     *     maxHeight = 750,
+     *     maxSize = "8M",
+     *     mimeTypes = {"image/png", "image/jpeg", }
+     * )
+     */
+    private $file;
 
 	public function __toString()
 	{
@@ -243,5 +256,85 @@ class Image
     public function getEntity()
     {
         return $this->entity;
+    }
+
+    /**
+     * Set file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setFile(UploadedFile $file = null)
+    {
+        $this->file = $file;
+    }
+
+    /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }    
+
+    public function getAbsolutePath()
+    {
+        return null === $this->img
+            ? null
+            : $this->getUploadRootDir().'/'.$this->img;
+    }
+
+    protected function getUploadRootDir()
+    {
+        // the absolute directory path where uploaded images should be saved
+        return __DIR__.'/../Resources/public/'.$this->getUploadDir();
+    }
+
+    protected function getUploadDir()
+    {
+   		// if you change this, change it also in the config.yml file!
+        return 'uploads/images/full';
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function sanitizeFileName()
+    {
+        if (null !== $this->getFile()) {
+        	$fileName = md5($this->getFile()->getClientOriginalName().time().uniqid());
+            $this->img = $fileName.'.'.$this->getFile()->guessExtension(); // FIXME: doesn't work with bmp files
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload()
+    {
+        if (null === $this->getFile()) {
+            return;
+        }
+
+        // if there is an error when moving the file, an exception will
+        // be automatically thrown by move(). This will properly prevent
+        // the entity from being persisted to the database on error
+        $this->getFile()->move($this->getUploadRootDir(), $this->img);
+
+   		// clean up the file property as you won't need it anymore
+        $this->file = null;
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        if ($file = $this->getAbsolutePath()) {
+            unlink($file);
+        }
     }
 }
