@@ -1,6 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
+    - { resource: ../../src/CM/CMBundle/Resources/config/config.yml }
     - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
 
 framework:
@@ -21,10 +22,6 @@ framework:
     session:         ~
     fragments:       ~
     http_method_override: true
-    
-parameters:
-    upload.dir: /uploads
-    uploads.images_full: %upload.dir%/images/full
 
 # Twig Configuration
 twig:

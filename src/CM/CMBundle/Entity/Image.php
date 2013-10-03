@@ -37,6 +37,7 @@ class Image
      * @var string
      *
      * @ORM\Column(name="img", type="string", length=100)
+     * @Assert\Image(minWidth = 250, maxWidth = 750, minHeight = 250, maxHeight = 750, maxSize = "8M")
      */
     private $img;
 

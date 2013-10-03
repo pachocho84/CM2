@@ -1,0 +1,3 @@
+parameters:
+    upload.dir: /uploads
+    uploads.images_full: %upload.dir%/images/full

@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
 use CM\CMBundle\Entity\Locale;
 use CM\CMBundle\Entity\Event;
@@ -34,7 +35,7 @@ class EventController extends Controller
     }
     
     /**
-     * @Route("/{id}/{slug}", requirements={"id" = "\d+", "_locale" = "en|fr|it"}, name="event_show")
+     * @Route("/{id}/{slug}", name="event_show", requirements={"id" = "\d+", "_locale" = "en|fr|it"})
      * @Template
      */
     public function showAction($_locale, $id, $slug)
@@ -42,12 +43,12 @@ class EventController extends Controller
         $em = $this->getDoctrine()->getManager();
         $event = $em->getRepository('CMBundle:Event')->getEvent($id, $_locale);
         
-        return array('event' => $event);
+        return array('event' => $event, 'form' => $form->createView());
     }
     
     /**
      * @Route("/new", name="event_new") 
-     * @Route("/{id}/{slug}/edit", requirements={"id" = "\d+", "_locale" = "en|fr|it"}, name="event_edit") 
+     * @Route("/{id}/{slug}/edit", name="event_edit", requirements={"id" = "\d+", "_locale" = "en|fr|it"}) 
      * @Template
      */
     public function editAction(Request $request, $_locale, $id = null, $slug = null)
@@ -80,6 +81,15 @@ class EventController extends Controller
 		}
         
         if ($form->isValid()) {
+        	// sanitize uploaded file name and move it in the uploads dir
+        	$imageFile = $form['images'][0]['img']->getData();
+        	$fileDir = $this->container->getParameter('kernel.root_dir').'/../web'.$this->container->getParameter('uploads.images_full');
+        	$fileName = md5($imageFile->getClientOriginalName().time().uniqid()).'.'.$imageFile->guessExtension(); // FIXME: doesn't work with bmp files
+
+        	$imageFile->move($fileDir, $fileName);
+
+        	$event->getImages()[0]->setImg($fileName);
+
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($event);
             $em->flush();
