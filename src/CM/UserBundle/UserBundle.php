@@ -4,6 +4,6 @@ namespace CM\UserBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class CMUserBundle extends Bundle
+class UserBundle extends Bundle
 {
 }

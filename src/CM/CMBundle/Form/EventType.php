@@ -3,8 +3,12 @@
 namespace CM\CMBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use CM\CMBundle\Entity\Event;
+use CM\CMBundle\Entity\EventDate;
+use CM\CMBundle\Entity\Image;
 
 class EventType extends EntityType
 {
@@ -30,8 +34,17 @@ class EventType extends EntityType
     {
     	parent::setDefaultOptions($resolver);
     	
+/*
+    	      	$event = new Event;
+			$event->addEventDate(new EventDate);
+			$image = new Image;
+			$image->setMain(true);
+			$event->addImage($image);
+*/
+    	
         $resolver->setDefaults(array(
-            'data_class' => 'CM\CMBundle\Entity\Event'
+            'data_class' => 'CM\CMBundle\Entity\Event',
+/*             'empty_data' => new Event(new EventDate) */
         ));
     }
 

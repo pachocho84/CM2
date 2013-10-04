@@ -1,7 +1,8 @@
 imports:
     - { resource: parameters.yml }
-    - { resource: security.yml }
-    - { resource: ../../src/CM/CMBundle/Resources/config/config.yml }
+#     - { resource: security.yml }
+    - { resource: @UserBundle/Resources/config/config.yml }
+    - { resource: @CMBundle/Resources/config/config.yml }
     - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
 
 framework:
@@ -71,10 +72,9 @@ swiftmailer:
     password:  %mailer_password%
     spool:     { type: memory }
 
-# Translatable form
-a2lix_translation_form:
-    default_required: false
-    manager_registry: doctrine
-    templating: "A2lixTranslationFormBundle::default.html.twig"
-    
-    
+services:
+    locale_listener:
+        class: CM\EventListener\LocaleListener
+        arguments: ["%kernel.default_locale%"]
+        tags:
+            - { name: kernel.event_subscriber }    

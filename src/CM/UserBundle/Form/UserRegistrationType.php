@@ -1,12 +1,12 @@
 <?php
 
-namespace CM\CMBundle\Form;
+namespace CM\UserBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
 
-class ImageType extends AbstractType
+class UserRegistrationType extends BaseType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -14,7 +14,9 @@ class ImageType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('file');
+        $builder
+        	->add('firstName')
+            ->add('lastName');
     }
     
     /**
@@ -23,7 +25,7 @@ class ImageType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'CM\CMBundle\Entity\Image'
+            'data_class' => 'CM\UserBundle\Entity\User'
         ));
     }
 
@@ -32,6 +34,6 @@ class ImageType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_image';
+        return 'cm_userbundle_user_registration';
     }
 }

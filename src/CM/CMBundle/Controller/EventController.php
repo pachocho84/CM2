@@ -5,6 +5,7 @@ namespace CM\CMBundle\Controller;
 use \DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -20,7 +21,7 @@ use CM\CMBundle\Form\MultipleImagesType;
 use CM\CMBundle\Utility\UploadHandler;
 
 /**
- * @Route("/{_locale}/event", defaults={"_locale" = "en"}, requirements={"_locale" = "^[a-z]{2}$"})
+ * @Route("/event")
  */
 class EventController extends Controller
 {
@@ -28,25 +29,24 @@ class EventController extends Controller
      * @Route("/", name = "event_index")
      * @Template
      */
-    public function indexAction(Request $request, $_locale)
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $events = $em->getRepository('CMBundle:Event')->getEvents(array('locale' => $_locale));
+        $events = $em->getRepository('CMBundle:Event')->getEvents(array('locale' => $request->getLocale()));
 
-        return array('locale' => $_locale, 'events' => $events, 'test' => 'test');
+        return array('locale' => $request->getLocale(), 'events' => $events, 'test' => 'test');
     }
     
     /**
      * @Route("/{id}/{slug}", name="event_show", requirements={"id" = "\d+", "_locale" = "en|fr|it"})
      * @Template
      */
-    public function showAction(Request $request, $_locale, $id, $slug)
+    public function showAction(Request $request, $id, $slug)
     {
         $em = $this->getDoctrine()->getManager();
-        $event = $em->getRepository('CMBundle:Event')->getEvent($id, $_locale);
+        $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale());
 
         $images = new ArrayCollection();
-        $image = new Image;
 
         $form = $this->createForm(new MultipleImagesType(), $images, array(
         	'action' => $this->generateUrl('event_show', array(
@@ -65,7 +65,7 @@ class EventController extends Controller
             $em->persist($event);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('event_show', array(
+            return new RedirectResponse($this->generateUrl('event_show', array(
             	'id' => $event->getId(),
             	'slug' => $event->getSlug()
             )));
@@ -79,17 +79,19 @@ class EventController extends Controller
      * @Route("/{id}/{slug}/edit", name="event_edit", requirements={"id" = "\d+", "_locale" = "en|fr|it"}) 
      * @Template
      */
-    public function editAction(Request $request, $_locale, $id = null, $slug = null)
+    public function editAction(Request $request, $id = null, $slug = null)
     {
     	$event;
     	if ($id == null || $slug == null) {
         	$event = new Event;
 			$event->addEventDate(new EventDate);
-			$event->addImage(new Image);
+			$image = new Image;
+			$image->setMain(true);
+			$event->addImage($image);
 		}
 		else {
 			$em = $this->getDoctrine()->getManager();
-	        $event = $em->getRepository('CMBundle:Event')->getEvent($id, $_locale);
+	        $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale());
 	        // TODO: retrieve images from event
 		}
         
@@ -99,7 +101,7 @@ class EventController extends Controller
         	'action' => $this->generateUrl('event_new'),
         	'cascade_validation' => true,
         	'locales' => array('en'/* , 'fr', 'it' */),
-        	'locale' => $_locale
+        	'locale' => $request->getLocale()
         ))->add('save', 'submit');
         
         $form->handleRequest($request);
@@ -109,7 +111,7 @@ class EventController extends Controller
             $em->persist($event);
             $em->flush();
 			
-            return $this->redirect($this->generateUrl('event_show', array(
+            return new RedirectResponse($this->generateUrl('event_show', array(
             	'id' => $event->getId(),
             	'slug' => $event->getSlug()
             )));

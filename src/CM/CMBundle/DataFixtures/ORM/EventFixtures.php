@@ -48,7 +48,7 @@ class EventFixtures extends AbstractFixture implements OrderedFixtureInterface
 //           	    ->setText('Текст (RU) '.$i);
 
 
-           	if ($i % 10 == rand(0, 9)) {
+           	if (0 == rand(0, 5)) {
            		$event->translate('it')
            			->setTitle('Titolo (IT) '.$i)
            	    	->setSubtitle('Sottotitolo (IT) '.$i)

@@ -4,3 +4,9 @@
     {{ parent () }}
 
 {% endblock %}
+
+{% block locales %}
+  <a href="{{ path('user_locale', {'_locale': "en" }) }}">En</a>
+  <a href="{{ path('user_locale', {'_locale': "fr" }) }}">Fr</a>
+  <a href="{{ path('user_locale', {'_locale': "it" }) }}">It</a>
+{% endblock %}
