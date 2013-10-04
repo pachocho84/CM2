@@ -34,7 +34,7 @@ class EventController extends Controller
         $em = $this->getDoctrine()->getManager();
         $events = $em->getRepository('CMBundle:Event')->getEvents(array('locale' => $request->getLocale()));
 
-        return array('locale' => $request->getLocale(), 'events' => $events, 'test' => 'test');
+        return array('locale' => $request->getLocale(), 'events' => $events->getIterator());
     }
     
     /**

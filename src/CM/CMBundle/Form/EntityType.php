@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use CM\CMBundle\Entity\EntityCategoryRepository;
 use CM\CMBundle\Entity\Image;
+use CM\CMBundle\Entity\EntityCategoryEnum;
 
 class EntityType extends AbstractType
 {
@@ -45,7 +46,7 @@ class EntityType extends AbstractType
 			->add('entity_category', 'entity', array(
 			'class' => 'CMBundle:EntityCategory',
 			'query_builder' => function(EntityCategoryRepository $er) use ($options) {
-				return $er->filterEntityCategoriesByEntityType($options);
+				return $er->filterEntityCategoriesByEntityType(EntityCategoryEnum::toNum(preg_replace('/^[\w\d_\\\]*\\\/', '', rtrim(get_class($this), 'Type'))), $options);
 			}
 		))
 			->add('visible')

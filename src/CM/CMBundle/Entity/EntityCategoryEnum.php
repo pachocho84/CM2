@@ -24,4 +24,18 @@ class EntityCategoryEnum {
 			case self::MULTIMEDIA: return 'Multimedia';
 		}
 	}
+	
+	static function toNum($string)
+	{
+		switch ($string) {
+			default:			  	 return -1;
+			case 'Entity':		 return self::ENTITY;
+			case 'Event':			 return self::EVENT;
+			case 'Disc':			 return self::DISC;
+			case 'Article': 	 return self::ARTICLE;
+			case 'Link':			 return self::LINK;
+			case 'Image':			 return self::IMAGE;
+			case 'Multimedia': return self::MULTIMEDIA;
+		}
+	}
 }

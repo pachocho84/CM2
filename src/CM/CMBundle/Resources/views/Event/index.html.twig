@@ -15,7 +15,17 @@
 	
 	<div class='box'>
 		<ul class="media-list objects">
-			{% for event in events %}
+			{% for key, event in events %}
+			
+				{% if key == 0 or event.eventDates[0].start | date('Y/m/d') != events[key-1].eventDates[0].start | date('Y/m/d') %}
+					</ul>
+					<div class="box-top">
+						<h2>{{ event.eventDates[0].start | date('Y/m/d') }}</h2>
+					</div>
+					<ul class="media-list objects">
+					
+				{% endif %}
+{# 				<?php if ($i == 0 || format_datetime($posts->getResults()->get($i)->getEventDates()->getFirst()->getStart(), 'D') != format_datetime($posts->getResults()->get($i-1)->getEventDates()->getFirst()->getStart(), 'D')): ?> #}
 				<li class="object">
 					<div class="media">
 						

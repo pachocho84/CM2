@@ -24,13 +24,14 @@ class EntityCategoryRepository extends EntityRepository
 		), $options);
 	}
 	
-	public function filterEntityCategoriesByEntityType(array $options = array())
+	public function filterEntityCategoriesByEntityType($entity_type, array $options = array())
 	{
 		$options = self::getOptions($options);
 		
 		return $this->createQueryBuilder('ec')
 			->select('ec, ect')
 			->leftJoin('ec.translations', 'ect')
+			->where('ec.entityType = :entity_type')->setParameter('entity_type', $entity_type)
 			->andWhere('ect.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
 			->orderBy('ect.name', 'ASC');
 	}

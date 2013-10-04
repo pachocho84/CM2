@@ -45,10 +45,11 @@ class EventRepository extends EntityRepository
 			
 		$query
 			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
-			->setMaxResults($options['limit']);
+			->setMaxResults($options['limit'])
+			->orderBy('d.start');
 		
 		
-		return $options['paginate'] ? new Paginator($query, $fetchJoinCollection = true) : $query->getQuery()->getResult();
+		return $options['paginate'] ? new Paginator($query, $fetchJoinCollection = false) : $query->getQuery()->getResult();
 	}
 
 	public function getEvent($id, $locale)
