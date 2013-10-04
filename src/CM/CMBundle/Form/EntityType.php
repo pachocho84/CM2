@@ -41,14 +41,14 @@ class EntityType extends AbstractType
 		    	'text' => array(),
 		        'slug' => array('display' => false)
 		    )
-		));
-		
-		$builder->add('entity_category', 'entity', array(
+		))
+			->add('entity_category', 'entity', array(
 			'class' => 'CMBundle:EntityCategory',
 			'query_builder' => function(EntityCategoryRepository $er) use ($options) {
 				return $er->filterEntityCategoriesByEntityType($options);
 			}
-		))->add('visible')
+		))
+			->add('visible')
 			->add('images', 'collection', array(
     			'type' => new ImageType(),
     			'by_reference' => false

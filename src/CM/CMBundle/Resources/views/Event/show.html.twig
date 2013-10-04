@@ -15,7 +15,6 @@
       	</ul>
       </div>
      <div>
-        {{ event.getImages | length }}
       	{% for image in event.getImages %}
 	  		<img src='{{- uploaded_images_full_dir -}}/{{- image.img }}' width=200 />
 	  	{% endfor %}

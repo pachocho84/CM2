@@ -4,7 +4,13 @@
 {% spaceless %}
     {% set type = type|default('text') %}
     {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
-    <div class="col-lg-9">
+    {% if type == 'date' %}
+    	<div class="col-lg-5">
+    {% elseif type == 'time' %}
+    	<div class="col-lg-4">
+    {% else %}
+    	<div class="col-lg-9">
+    {% endif %}
 	    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
 	</div>
 {% endspaceless %}

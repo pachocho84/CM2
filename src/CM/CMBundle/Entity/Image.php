@@ -299,7 +299,6 @@ class Image
 
     /**
      * @ORM\PrePersist()
-     * @ORM\PreUpdate()
      */
     public function sanitizeFileName()
     {
@@ -311,7 +310,6 @@ class Image
 
     /**
      * @ORM\PostPersist()
-     * @ORM\PostUpdate()
      */
     public function upload()
     {

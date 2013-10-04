@@ -8,6 +8,7 @@
 /bin/
 /build/
 /composer.phar
+/src/CM/CMBundle/Resources/public/uploads/
 /vendor/
 /web/bundles/
 *.DS_Store
