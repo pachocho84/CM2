@@ -63,7 +63,11 @@ class EntityType extends AbstractType
         $resolver->setDefaults(array(
         	'locale' => 'en',
         	'locales' => array('en'),
-            'data_class' => 'CM\CMBundle\Entity\Entity'
+            'data_class' => 'CM\CMBundle\Entity\Entity',
+            'empty_data' => function (FormInterface $form) {
+            	$entity = new Entity;
+            	return $entity;
+			},
         ));
     }
 

@@ -2,12 +2,10 @@
 /app/cache/
 /app/config/parameters.yml
 /app/config/parameters.yml.dist
-/app/DoctrineMigrations/
 /app/logs/
 /app/Resources/node_modules/
 /bin/
 /build/
-/composer.phar
 /src/CM/CMBundle/Resources/public/uploads/
 /vendor/
 /web/bundles/
