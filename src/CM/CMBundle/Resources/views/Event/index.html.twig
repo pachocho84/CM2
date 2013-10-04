@@ -1,25 +1,60 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
-{% block body %}  
-  {% for event in events %}
-    <article class="blog">
-      <header>
-        <h2><a href="{{ path('event_show', {'_locale': locale, 'id': event.id, 'slug': event.getSlug}) }}">{{ event.id }} {{ event.getTitle }}</a></h2>
-        <h3>{{ event.getSubtitle }}</h3>
-      </header>
-      <div>
-      	<p>{{ event.getExtract }}</p>
-      	<ul>
-      		{% for date in event.eventDates %}
-      			<li>{{ date.start | date }}</li>
-      		{% endfor %}
-      	</ul>
-      </div>
-      <div>
-      	{% if event.getImages | length > 0 %}
-	  		<img src='{{- uploaded_images_full_dir -}}/{{- event.getImages[0].img }}' width=200 />
-	  	{% endif %}
-      </div>
-    </article>
-  {% endfor %}
+{% block title %}{{ "Events"|trans }}{% endblock %}
+
+{% block body %}
+
+	<div class="row">
+		<div class="col-lg-5">
+			<h2>{{ block('title') }}</h2>
+		</div>
+{# 		<?php include_partial('menu', array('categories' => $categories)) ?> #}
+	</div>
+	
+	
+	
+	<div class='box'>
+		<ul class="media-list objects">
+			{% for event in events %}
+				<li class="object">
+					<div class="media">
+						
+						{% if event.getImages | length > 0 %}
+							<img src='{{- uploaded_images_full_dir -}}/{{- event.getImages[0].img }}' class="pull-left thumbnail" width=200 />
+						{% endif %}
+{# 						<?php show_img_box($post->getImages()->getFirst(), array('width' => 200, 'height' => 140, 'link' => $post->getRawValue()->getEntity()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left thumbnail'))) ?>	 #}
+					
+						<div class="media-body">
+							
+							<h4><a href="{{ path('event_show', {'_locale': locale, 'id': event.id, 'slug': event.getSlug}) }}">{{ event.id }} {{ event.getTitle }}</a></h4>
+{# 							<h4><?php echo link_to($post->getEntity(), $post->getRawValue()->getEntity()->getLinkShow()) ?></h4> #}
+							
+							
+				    	<ul>
+				    		{% for date in event.eventDates %}
+				    			<li>{{ date.start | date }}</li>
+				    		{% endfor %}
+				    	</ul>
+{#
+							<p class="text-muted">
+								ore <?php echo format_datetime($post->getEventDates()->getFirst()->getStart(), 'H:mm') ?> &middot; 
+								<?php echo $post->getEventDates()->getFirst()->getLocation() ?> <small>(<?php echo $post->getEventDates()->getFirst()->getAddress() ?>)</small><br/>
+							
+								<?php echo __('with') ?> <?php include_component('protagonist', 'protagonists', array('post' => $post)) ?>
+							</p>
+#}
+					
+							<p>{{ event.getExtract }}</p>
+{# 							<?php echo $post->getRawValue()->getEntity()->getShortText() ?> #}
+							
+							
+{# 							<?php include_partial('utility/bottom', array('post' => $post)) ?> #}
+					
+						</div><!-- END Media Body -->
+					
+					</div>
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
 {% endblock %}

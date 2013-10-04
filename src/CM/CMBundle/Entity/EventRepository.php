@@ -48,7 +48,7 @@ class EventRepository extends EntityRepository
 			->setMaxResults($options['limit']);
 		
 		
-		return $options['paginate'] ? new Paginator($query, $fetchJoinCollection = true) : $query->limit($options['limit'])->getQuery()->getResults();
+		return $options['paginate'] ? new Paginator($query, $fetchJoinCollection = true) : $query->getQuery()->getResult();
 	}
 
 	public function getEvent($id, $locale)
