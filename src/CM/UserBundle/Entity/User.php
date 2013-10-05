@@ -5,12 +5,15 @@ namespace CM\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use CM\CMBundle\Entity\Post;
 
 /**
  * User
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="CM\UserBundle\Entity\UserRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class User extends BaseUser
 {
@@ -63,21 +66,21 @@ class User extends BaseUser
     /**
      * @var integer
      *
-     * @ORM\Column(name="img_offset", type="smallint")
+     * @ORM\Column(name="img_offset", type="smallint", nullable=true)
      */
     private $imgOffset;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="cover_img", type="string", length=100)
+     * @ORM\Column(name="cover_img", type="string", length=100, nullable=true)
      */
     private $coverImg;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="cover_img_offset", type="smallint")
+     * @ORM\Column(name="cover_img_offset", type="smallint", nullable=true)
      */
     private $coverImgOffset;
 
@@ -85,13 +88,16 @@ class User extends BaseUser
      * @var boolean
      *
      * @ORM\Column(name="sex", type="boolean", nullable=false)
+     * @Assert\Choice(choices = {"M", "F"}, message = "Choose a valid gender.")
      */
-    private $sex;
+    private $sex = false;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="birth_date", type="datetime", nullable=false)
+     * @ORM\Column(name="birth_date", type="date", nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Date
      */
     private $birthDate;
 
@@ -99,6 +105,7 @@ class User extends BaseUser
      * @var boolean
      *
      * @ORM\Column(name="birth_date_visible", type="boolean")
+     * @Assert\Choice(choices = {true, false})
      */
     private $birthDateVisible;
 
@@ -106,6 +113,7 @@ class User extends BaseUser
      * @var string
      *
      * @ORM\Column(name="city_birth", type="string", length=50)
+     * @Assert\NotBlank
      */
     private $cityBirth;
 
@@ -113,6 +121,7 @@ class User extends BaseUser
      * @var string
      *
      * @ORM\Column(name="city_current", type="string", length=50)
+     * @Assert\NotBlank
      */
     private $cityCurrent;
 
@@ -120,43 +129,66 @@ class User extends BaseUser
      * @var boolean
      *
      * @ORM\Column(name="newsletter", type="boolean")
+     * @Assert\Choice(choices = {true, false})
      */
-    private $newsletter;
+    private $newsletter = true;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="vip", type="boolean")
+     * @Assert\Choice(choices = {true, false})
      */
-    private $vip;
+    private $vip = false;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="notify_email", type="boolean")
+     * @Assert\Choice(choices = {true, false})
      */
-    private $notifyEmail;
+    private $notifyEmail = true;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="request_email", type="boolean")
+     * @Assert\Choice(choices = {true, false})
      */
-    private $requestEmail;
+    private $requestEmail = true;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="message_email", type="boolean")
+     * @Assert\Choice(choices = {true, false})
      */
-    private $messageEmail;
+    private $messageEmail = true;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="notes", type="text")
+     * @ORM\Column(name="notes", type="text", nullable=true)
      */
     private $notes;
+        
+    /**
+     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Post", mappedBy="user", cascade={"persist", "remove"})
+	 */
+	private $posts;
+
+    /**
+     * @Assert\NotBlank
+     * @Assert\Image(
+     *     minWidth = 250,
+     *     maxWidth = 750,
+     *     minHeight = 250,
+     *     maxHeight = 750,
+     *     maxSize = "8M",
+     *     mimeTypes = {"image/png", "image/jpeg", }
+     * )
+     */
+    private $imgFile;
 
 	public function __construct()
 	{
@@ -322,7 +354,7 @@ class User extends BaseUser
     	if ($sex == 'M') {
 	    	$this->sex = true;
     	}
-        elseif ($sex == 'F') {
+        else {
 	        $this->sex = false;
         }
             
@@ -567,5 +599,126 @@ class User extends BaseUser
     public function getNotes()
     {
         return $this->notes;
+    }
+    
+    /**
+     * Set file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setImgFile(UploadedFile $file = null)
+    {
+        $this->imgFile = $file;
+    }
+
+    /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getImgFile()
+    {
+        return $this->imgFile;
+    }    
+
+    public function getImgAbsolutePath()
+    {
+        return null === $this->img
+            ? null
+            : $this->getUploadRootDir().'/'.$this->img;
+    }
+
+    protected function getUploadRootDir()
+    {
+        // the absolute directory path where uploaded images should be saved
+        return __DIR__.'/../Resources/public/'.$this->getUploadDir();
+    }
+
+    protected function getUploadDir()
+    {
+   		// if you change this, change it also in the config.yml file!
+        return 'uploads/images/full';
+    }
+
+    /**
+     * @ORM\PrePersist()
+     */
+    public function sanitizeImgFileName()
+    {
+        if (null !== $this->getImgFile()) {
+        	$fileName = md5($this->getImgFile()->getClientOriginalName().time().uniqid());
+            $this->img = $fileName.'.'.$this->getImgFile()->guessExtension(); // FIXME: doesn't work with bmp files
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     */
+    public function upload()
+    {
+        if (null === $this->getImgFile()) {
+            return;
+        }
+
+        // if there is an error when moving the file, an exception will
+        // be automatically thrown by move(). This will properly prevent
+        // the entity from being persisted to the database on error
+        $this->getImgFile()->move($this->getUploadRootDir(), $this->img);
+
+   		// clean up the file property as you won't need it anymore
+        $this->file = null;
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        if ($file = $this->getImgAbsolutePath()) {
+            unlink($file);
+        }
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     * @return Entity
+     */
+    public function addPost(Post $post)
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     * @return Entity
+     */
+    public function addPosts(ArrayCollection $posts)
+    {
+    	foreach ($images->toArray()['posts'] as $post) {
+    		$this->addPost($post);
+    	}
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     */
+    public function removePost(Post $post)
+    {
+        $this->posts->removeElement($post);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPosts()
+    {
+        return $this->posts;
     }
 }

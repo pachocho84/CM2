@@ -6,5 +6,5 @@ a2lix_translation_form:
     
 parameters:
     bundle.dir: /bundles/cm
-    upload.dir: %bundle.dir%/uploads
+    upload.dir: /uploads
     uploads.images_full: %upload.dir%/images/full # if you change this, change it also in the Image.php file!

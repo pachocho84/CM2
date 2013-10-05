@@ -34,6 +34,11 @@ class Entity
 	 * @Assert\Type(type="bool")
      */
     private $visible;
+        
+    /**
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="entity", cascade={"persist", "remove"})
+	 */
+	private $posts;
     
     /**
      * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"})
@@ -48,6 +53,8 @@ class Entity
     
     public function __construct()
     {
+    	$this->users = new ArrayCollection();
+    	$this->posts = new ArrayCollection();
     	$this->images = new ArrayCollection();
     }
 
@@ -106,6 +113,49 @@ class Entity
     public function getEntityCategory()
     {
         return $this->entityCategory;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     * @return Entity
+     */
+    public function addPost(Post $post)
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setEntity($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     * @return Entity
+     */
+    public function addPosts(ArrayCollection $posts)
+    {
+    	foreach ($images->toArray()['posts'] as $post) {
+    		$this->addPost($post);
+    	}
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     */
+    public function removePost(Post $post)
+    {
+        $this->posts->removeElement($post);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPosts()
+    {
+        return $this->posts;
     }
 
     /**

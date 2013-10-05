@@ -21,7 +21,7 @@ use CM\CMBundle\Form\MultipleImagesType;
 use CM\CMBundle\Utility\UploadHandler;
 
 /**
- * @Route("/event")
+ * @Route("/events")
  */
 class EventController extends Controller
 {

@@ -7,5 +7,10 @@ fos_user:
     firewall_name: main
     user_class: CM\UserBundle\Entity\User
     registration:
+        confirmation:
+            enabled: true
         form:
             type: cm_userbundle_user_registration
+    profile:
+        form:
+            type: cm_userbundle_user_profile

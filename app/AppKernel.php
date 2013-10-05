@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new A2lix\TranslationFormBundle\A2lixTranslationFormBundle(),
             new FOS\UserBundle\FOSUserBundle(),
+            new Sonata\IntlBundle\SonataIntlBundle(),
             new CM\CMBundle\CMBundle(),
             new CM\UserBundle\UserBundle(),
         );

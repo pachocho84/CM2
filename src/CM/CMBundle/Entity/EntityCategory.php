@@ -26,7 +26,7 @@ class EntityCategory
     private $id;
 
     /**
-     * @var array
+     * @var integer
      *
      * @ORM\Column(name="entity_type", type="smallint")
      */
