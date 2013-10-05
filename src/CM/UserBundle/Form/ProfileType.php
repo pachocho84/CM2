@@ -5,6 +5,7 @@ namespace CM\UserBundle\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
+use CM\UserBundle\Entity\User;
 
 class ProfileType extends BaseType
 {
@@ -20,7 +21,7 @@ class ProfileType extends BaseType
         	->add('firstName')
             ->add('lastName')
             ->add('sex', 'choice', array(
-				'choices' => array('M' => 'Male', 'F' => 'Female'),
+				'choices' => array(User::SEX_M => 'Male', User::SEX_F => 'Female'),
 				'expanded' => true
 			))
 			->add('cityBirth', 'text', array('label' => 'City of birth'))
