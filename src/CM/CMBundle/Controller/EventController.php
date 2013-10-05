@@ -33,8 +33,16 @@ class EventController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $events = $em->getRepository('CMBundle:Event')->getEvents(array('locale' => $request->getLocale()));
-
-        return array('locale' => $request->getLocale(), 'events' => $events->getIterator());
+        
+				$paginator  = $this->get('knp_paginator');
+				$pagination = $paginator->paginate($events, $this->get('request')->query->get('page', 1), 10);
+				
+				if($request->isXmlHttpRequest())
+				{
+					return $this->render('CMBundle:Event:objects.html.twig', array('events' => $pagination));
+				}
+				
+				return array('events' => $pagination);
     }
     
     /**

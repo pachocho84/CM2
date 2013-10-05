@@ -1,0 +1,29 @@
+<li class="object">
+	<div class="media">
+		
+		{% if event.getImages | length > 0 %}
+			<a href="{{ path('event_show', { 'id': event.id, 'slug': event.getSlug }) }}" class="pull-left thumbnail">
+				<img src='{{- uploaded_images_full_dir -}}/{{- event.getImages[0].img }}' width=200 />
+			</a>
+		{% endif %}
+{# 						<?php show_img_box($post->getImages()->getFirst(), array('width' => 200, 'height' => 140, 'link' => $post->getRawValue()->getEntity()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left thumbnail'))) ?>	 #}
+	
+		<div class="media-body">
+			
+			<h4><a href="{{ path('event_show', { 'id': event.id, 'slug': event.getSlug }) }}">{{ event.getTitle }}</a></h4>
+						
+			<p class="text-muted">
+				<i class="glyphicon glyphicon-time"></i> {{ event.eventDates[0].start | format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }} &middot; 
+				<i class="glyphicon glyphicon-map-marker"></i> {{ event.eventDates[0].location }} <small>({{ event.eventDates[0].address }})</small>
+			</p>
+	
+			<p>{{ event.getExtract }}</p>
+{# 							<?php echo $post->getRawValue()->getEntity()->getShortText() ?> #}
+			
+			
+{# 							<?php include_partial('utility/bottom', array('post' => $post)) ?> #}
+	
+		</div><!-- END Media Body -->
+	
+	</div>
+</li>

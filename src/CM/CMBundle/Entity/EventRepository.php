@@ -35,7 +35,6 @@ class EventRepository extends EntityRepository
 			->leftJoin('e.translations', 't')
 			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true);
 		
-		// $now = \DateTime('@time()');
 		if (isset($options['archive'])) {
 			$query->andWhere('d.start <= '.time());	
 		} 
@@ -45,11 +44,12 @@ class EventRepository extends EntityRepository
 			
 		$query
 			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
-			->setMaxResults($options['limit'])
+/* 			->setMaxResults($options['limit']) */
 			->orderBy('d.start');
+			
+		return $query;
 		
-		
-		return $options['paginate'] ? new Paginator($query, $fetchJoinCollection = false) : $query->getQuery()->getResult();
+		return $options['paginate'] ? new Paginator($query/* , $fetchJoinCollection = false */) : $query->getQuery()->getResult();
 	}
 
 	public function getEvent($id, $locale)

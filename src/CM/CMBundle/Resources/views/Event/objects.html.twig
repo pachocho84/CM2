@@ -1,0 +1,30 @@
+{% for key, event in events %}
+
+	{% if key == 0 or event.eventDates[0].start | date('Y/m/d') != events[key-1].eventDates[0].start | date('Y/m/d') %}
+{# 		<?php if ($posts->getPage().'_'.$i != '1_0'): ?> #}
+			</ul>
+{# 		<?php endif ?> #}
+		<div class="box-top">
+			<h2><i class="glyphicon glyphicon-calendar"></i> {{ event.eventDates[0].start | format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</h2>
+		</div>
+		<ul class="media-list objects">
+	{% endif %}
+	
+	{{ include('CMBundle:Event:object.html.twig', { 'event': event } ) }}
+	
+{% endfor %}
+		</ul>
+
+	
+
+<div id="load_more_posts" class="well well-small">
+	<a href="{{ path('event_index', { 'page': events.getCurrentPageNumber + 1 }) }}">{{ 'Load more' | trans }}</a>
+</div>
+	
+{#
+<?php if (get_class($posts->getRawValue()) == 'PropelModelPager' && $posts->getLastPage() != $posts->getPage()): ?>
+	<div id="load_more_posts" class="well well-small">
+		<?php echo link_to(__('Show more'), $url.$posts->getNextPage()) ?>
+	</div>
+<?php endif ?>
+#}
