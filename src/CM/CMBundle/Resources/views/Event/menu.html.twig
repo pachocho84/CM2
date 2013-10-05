@@ -1,18 +1,23 @@
 <div class="col-lg-7 text-right">
 	<div class="btn-group btn-group-sm">
-		<?php echo link_to('<i class="glyphicon glyphicon-list"></i> '.__('List'), '@event_index', array('class' => $sf_request->getParameter('action') == 'index' ? 'btn btn-default active' : 'btn btn-default')) ?>
-		<?php echo link_to('<i class="glyphicon glyphicon-calendar"></i> '.__('Calendar'), '@event_calendar', array('class' => $sf_request->getParameter('action') == 'calendar' ? 'btn btn-default active' : 'btn btn-default')) ?>
-		<?php echo link_to('<i class="glyphicon glyphicon-folder-close"></i> '.__('Archive'), '@event_archive', array('class' => $sf_request->getParameter('action') == 'archive' ? 'btn btn-default active' : 'btn btn-default')) ?>
+		<a href="{{ path('event_index') }}" class="{{ app.request.attributes.get('_route') == 'event_index' ? 'btn btn-default active' : 'btn btn-default'}}"><i class="glyphicon glyphicon-list"></i> {{ 'List' | trans }}</a>
+		<a href="{{ path('event_index') }}" class="{{ app.request.attributes.get('_route') == 'event_calendar' ? 'btn btn-default active' : 'btn btn-default'}}"><i class="glyphicon glyphicon-calendar"></i> {{ 'Calendar' | trans }}</a>
+		<a href="{{ path('event_index') }}" class="{{ app.request.attributes.get('_route') == 'event_archive' ? 'btn btn-default active' : 'btn btn-default'}}"><i class="glyphicon glyphicon-folder-close"></i> {{ 'Archive' | trans }}</a>
 		<div class="btn-group btn-group-sm">
-			<?php echo link_to('<i class="glyphicon glyphicon-tag"></i> '.__('Categories').' <b class="caret"></b>', '@event_archive', array('class' => 'btn btn-default dropdown-toggle', 'data-toggle' => 'dropdown')) ?>
+			<a href="{{ path('event_index') }}" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-tag"></i> {{ 'Categories' | trans }} <b class="caret"></b></a>
 			<ul class="dropdown-menu pull-right text-left" role="menu" aria-labelledby="dropdownMenu">
-				<li><?php echo link_to(__('Events'), '@event_list') ?></li>
+				<li><a href="{{ path('event_index') }}">{{ 'Events' | trans }}</a></li>
 				<li class="divider"></li>
+				{% for category in categories %}
+					<li><a href="{{ path('event_index') }}">{{ category.getPlural | capitalize }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+		<a href="{{ path('event_new') }}" class="{{ app.request.attributes.get('_route') == 'event_new' ? 'btn btn-default active' : 'btn btn-default'}}"><i class="glyphicon glyphicon-plus"></i> {{ 'Create' | trans }}</a>
+{#
 				<?php foreach ($categories as $category): ?>
 					<li><?php echo link_to($category, '@event_category?category='.$category->getSlug()) ?></li>
 				<?php endforeach ?>
-			</ul>
-		</div>
-		<?php echo link_to('<i class="glyphicon glyphicon-plus"></i> '.__('Create'), '@event_new', array('class' => $sf_request->getParameter('action') == 'new' ? 'btn btn-default active' : 'btn btn-default')) ?>
+#}
 	</div>
 </div>

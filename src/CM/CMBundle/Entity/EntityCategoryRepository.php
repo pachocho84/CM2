@@ -28,16 +28,15 @@ class EntityCategoryRepository extends EntityRepository
 	{
 		$options = self::getOptions($options);
 		
-		return $this->createQueryBuilder('ec')
-			->select('ec, ect')
+		return $this->createQueryBuilder('ec')->select('ec, ect')
 			->leftJoin('ec.translations', 'ect')
 			->where('ec.entityType = :entity_type')->setParameter('entity_type', $entity_type)
 			->andWhere('ect.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
 			->orderBy('ect.name', 'ASC');
 	}
 	
-	public function getEntityCategories(array $options = array())
+	public function getEntityCategories($entity_type, array $options = array())
 	{
-		return $this->filterEntityCategoriesByEntityType($options)->getQuery()->getResults();
+		return $this->filterEntityCategoriesByEntityType($entity_type, $options)->getQuery()->getResult();
 	}
 }
