@@ -17,6 +17,9 @@ use CM\CMBundle\Entity\Post;
  */
 class User extends BaseUser
 {
+	const SEX_M = true;
+	const SEX_F = false;
+
     /**
      * @var integer
      *
@@ -88,9 +91,9 @@ class User extends BaseUser
      * @var boolean
      *
      * @ORM\Column(name="sex", type="boolean", nullable=false)
-     * @Assert\Choice(choices = {"M", "F"}, message = "Choose a valid gender.")
+     * @Assert\Choice(choices = {User::SEX_M, User::SEX_F}, message = "Choose a valid gender.")
      */
-    private $sex = false;
+    private $sex;
 
     /**
      * @var \DateTime
@@ -351,12 +354,11 @@ class User extends BaseUser
      */
     public function setSex($sex)
     {
-    	if ($sex == 'M') {
-	    	$this->sex = true;
-    	}
-        else {
-	        $this->sex = false;
+        if (!in_array($status, array(self::SEX_M, self::SEX_F))) {
+            throw new \InvalidArgumentException("Invalid sex");
         }
+
+        $this->sex = $sex;
             
         return $this;
     }

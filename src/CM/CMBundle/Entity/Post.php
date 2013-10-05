@@ -3,16 +3,20 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use CM\UserBundle\Entity\User as User;
 
 /**
  * Post
  *
- * @ORM\Table()
+ * @ORM\Table(name="post")
  * @ORM\Entity(repositoryClass="CM\CMBundle\Entity\PostRepository")
  */
 class Post
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
     /**
      * @var integer
      *
@@ -206,5 +210,16 @@ class Post
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Get sluggable fields
+     * 
+     * @access public
+     * @return void
+     */
+    public function getSluggableFields()
+    {
+        return [];
     }
 }
