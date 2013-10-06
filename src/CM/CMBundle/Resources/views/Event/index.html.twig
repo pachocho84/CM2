@@ -7,6 +7,8 @@
 		{{ "Events"|trans }}
 	{% elseif app.request.get('_route') == 'event_archive' %}
 		{{ "Events Archive"|trans }}
+	{% elseif app.request.get('_route') == 'event_category' %}
+		{{ category.getPlural | capitalize }}
 	{% endif %}
 {% endblock %}
 
@@ -14,6 +16,10 @@
 
 {% block body %}
 {# 	<pre>{{ dump(app.request.query.get('page')) }}</pre> #}
+
+{# <pre>	{{ dump(app.request.attributes.get('_route_params')) }}</pre> #}
+
+{# <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({'page': app.request.query.get('page') ? app.request.query.get('page') + 1 : 2})) }}">{{ 'Load more' | trans }}</a> #}
 
 	<div class="row">
 		<div class="col-lg-5">
@@ -25,7 +31,7 @@
 	
 	
 	<div class='box'>
-		{{ include('CMBundle:Event:objects.html.twig', { 'events': events } ) }}
+		{{ include('CMBundle:Event:objects.html.twig', { 'events': events, 'category': category } ) }}
 	</div>
 	
 {% endblock %}

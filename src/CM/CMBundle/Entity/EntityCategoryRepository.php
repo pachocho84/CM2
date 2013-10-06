@@ -39,4 +39,22 @@ class EntityCategoryRepository extends EntityRepository
 	{
 		return $this->filterEntityCategoriesByEntityType($entity_type, $options)->getQuery()->getResult();
 	}
+	
+	public function getCategory($slug, $entity_type, array $options = array())
+	{
+		$options = self::getOptions($options);
+		
+		return $this->createQueryBuilder('ec')->select('ec, ect')
+			->leftJoin('ec.translations', 'ect')
+			->where('ec.entityType = :entity_type')
+			->andWhere('ect.slug = :slug')
+			->andWhere('ect.locale IN (:locale, \'en\')')
+			->setParameters(array(
+				':slug' => $slug,
+				'entity_type' => $entity_type,
+				'locale' => $options['locale']
+			))
+			->getQuery()
+			->getSingleResult();
+	}
 }

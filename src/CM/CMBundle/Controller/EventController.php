@@ -29,9 +29,10 @@ class EventController extends Controller
 	/**
 	 * @Route("/", name = "event_index")
    * @Route("/archive", name="event_archive") 
+   * @Route("/category/{slug}/{page}", name="event_category", requirements={"slug" = "\w+", "page" = "\d+"}) 
 	 * @Template
 	 */
-	public function indexAction(Request $request)
+	public function indexAction(Request $request, $page = 1, $slug = null)
 	{
 	  $em = $this->getDoctrine()->getManager();
 			
@@ -39,7 +40,17 @@ class EventController extends Controller
 		{
 			$categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategoryEnum::toNum('Event'), array('locale' => $request->getLocale())); // QUESTA SOLUZIONE DI ENTITY CATEGORY ENUM FA VERAMENTE CAGARE ED È DA CAMBIARE SUBITO!!!!!!!!!
 		}
-	  $events = $em->getRepository('CMBundle:Event')->getEvents(array('locale' => $request->getLocale(), 'archive' => $request->get('_route') == 'event_archive' ? true : null));
+		
+		if ($request->get('_route') == 'event_category')
+		{
+			$category = $em->getRepository('CMBundle:EntityCategory')->getCategory($slug, EntityCategoryEnum::toNum('Event'), array('locale' => $request->getLocale()));
+		}
+		
+	  $events = $em->getRepository('CMBundle:Event')->getEvents(array(
+	  	'locale' => $request->getLocale(), 
+	  	'archive' => $request->get('_route') == 'event_archive' ? true : null,
+	  	'category' => $request->get('_route') == 'event_category' ? $category->getId() : null
+	  ));
 	    
 		$paginator  = $this->get('knp_paginator');
 		$pagination = $paginator->paginate($events, $this->get('request')->query->get('page', 1), 10);
@@ -49,7 +60,7 @@ class EventController extends Controller
 			return $this->render('CMBundle:Event:objects.html.twig', array('events' => $pagination));
 		}
 			
-		return array('categories' => $categories, 'events' => $pagination);
+		return array('categories' => $categories, 'events' => $pagination, 'category' => $category);
 	}
     
   /**

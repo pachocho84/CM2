@@ -19,7 +19,8 @@ class EventRepository extends EntityRepository
 		return array_merge(array(
 /*  		'entity_type' => sfContext::getInstance()->getRequest()->getParameter('module'),  */
 			'user_id'     => null,
-/*  		'category'    => sfContext::getInstance()->getRequest()->getParameter('category', null),  */
+/* 			'category'    => sfContext::getInstance()->getRequest()->getParameter('category', null),  */
+			'category'    => null, 
 /* 			'paginate'	  => true, */
 			'locale'	  	=> 'en',
 /* 			'limit'       => 25, */
@@ -35,7 +36,12 @@ class EventRepository extends EntityRepository
 			->leftJoin('e.translations', 't')
 			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true);
 		
-		if (isset($options['archive']) && $options['archive'] == true) 
+		if (isset($options['category'])) 
+		{
+			$query->andWhere('e.entityCategory = :category')->setParameter('category', $options['category']);	
+		} 
+		
+		if (isset($options['archive'])) 
 		{
 			$query->andWhere('d.start <= :now')->orderBy('d.start', 'desc');	
 		} 
