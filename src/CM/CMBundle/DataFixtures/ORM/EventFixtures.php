@@ -127,19 +127,20 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 				$image = new Image;
 				$image
 					->setImg($this->events[$eventNum]['img'])
+					->setText('main image for event "'.$event->getTitle().'"')
 					->setMain(true);
 				$event->addImage($image);				
-/*
-				for ($j = rand(1, 5); $j > 0; $j--) {
+
+				for ($j = rand(1, 4); $j > 0; $j--) {
 					$image = new Image;
 					$image
-						->setImg($this->images[rand(0, 4)])
+						->setImg($this->events[$eventNum]['img'])
 						->setText('image number '.$j.' for event "'.$event->getTitle().'"')
-						->setMain($j == 1);
+						->setMain(false);
 					
 					$event->addImage($image);
 				}
-*/
+
 			}
 			
 			$category = $manager->merge($this->getReference('entity_category-'.rand(1, 3)));
