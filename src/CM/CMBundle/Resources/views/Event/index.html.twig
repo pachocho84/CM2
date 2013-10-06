@@ -2,11 +2,18 @@
 
 
 
-{% block title %}{{ "Events"|trans }}{% endblock %}
+{% block title %}
+	{% if app.request.get('_route') == 'event_index' %}
+		{{ "Events"|trans }}
+	{% elseif app.request.get('_route') == 'event_archive' %}
+		{{ "Events Archive"|trans }}
+	{% endif %}
+{% endblock %}
 
 
 
 {% block body %}
+{# 	<pre>{{ dump(app.request.query.get('page')) }}</pre> #}
 
 	<div class="row">
 		<div class="col-lg-5">
@@ -19,10 +26,6 @@
 	
 	<div class='box'>
 		{{ include('CMBundle:Event:objects.html.twig', { 'events': events } ) }}
-	</div>
-	
-	<div class="navigation">
-    {{ knp_pagination_render(events) }}
 	</div>
 	
 {% endblock %}

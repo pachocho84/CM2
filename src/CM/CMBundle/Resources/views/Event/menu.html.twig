@@ -2,7 +2,7 @@
 	<div class="btn-group btn-group-sm">
 		<a href="{{ path('event_index') }}" class="{{ app.request.attributes.get('_route') == 'event_index' ? 'btn btn-default active' : 'btn btn-default'}}"><i class="glyphicon glyphicon-list"></i> {{ 'List' | trans }}</a>
 		<a href="{{ path('event_index') }}" class="{{ app.request.attributes.get('_route') == 'event_calendar' ? 'btn btn-default active' : 'btn btn-default'}}"><i class="glyphicon glyphicon-calendar"></i> {{ 'Calendar' | trans }}</a>
-		<a href="{{ path('event_index') }}" class="{{ app.request.attributes.get('_route') == 'event_archive' ? 'btn btn-default active' : 'btn btn-default'}}"><i class="glyphicon glyphicon-folder-close"></i> {{ 'Archive' | trans }}</a>
+		<a href="{{ path('event_archive') }}" class="{{ app.request.attributes.get('_route') == 'event_archive' ? 'btn btn-default active' : 'btn btn-default'}}"><i class="glyphicon glyphicon-folder-close"></i> {{ 'Archive' | trans }}</a>
 		<div class="btn-group btn-group-sm">
 			<a href="{{ path('event_index') }}" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-tag"></i> {{ 'Categories' | trans }} <b class="caret"></b></a>
 			<ul class="dropdown-menu pull-right text-left" role="menu" aria-labelledby="dropdownMenu">
@@ -14,10 +14,5 @@
 			</ul>
 		</div>
 		<a href="{{ path('event_new') }}" class="{{ app.request.attributes.get('_route') == 'event_new' ? 'btn btn-default active' : 'btn btn-default'}}"><i class="glyphicon glyphicon-plus"></i> {{ 'Create' | trans }}</a>
-{#
-				<?php foreach ($categories as $category): ?>
-					<li><?php echo link_to($category, '@event_category?category='.$category->getSlug()) ?></li>
-				<?php endforeach ?>
-#}
 	</div>
 </div>

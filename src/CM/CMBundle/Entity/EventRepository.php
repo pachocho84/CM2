@@ -17,12 +17,12 @@ class EventRepository extends EntityRepository
 	static protected function getOptions(array $options = array())
 	{
 		return array_merge(array(
- 			// 'entity_type' => sfContext::getInstance()->getRequest()->getParameter('module'), 
+/*  		'entity_type' => sfContext::getInstance()->getRequest()->getParameter('module'),  */
 			'user_id'     => null,
- 			// 'category'    => sfContext::getInstance()->getRequest()->getParameter('category', null), 
-			'paginate'	  => true,
-			'locale'	  => 'en',
-			'limit'       => 25,
+/*  		'category'    => sfContext::getInstance()->getRequest()->getParameter('category', null),  */
+/* 			'paginate'	  => true, */
+			'locale'	  	=> 'en',
+/* 			'limit'       => 25, */
 		), $options);
 	}
 	
@@ -35,21 +35,23 @@ class EventRepository extends EntityRepository
 			->leftJoin('e.translations', 't')
 			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true);
 		
-		if (isset($options['archive'])) {
-			$query->andWhere('d.start <= '.time());	
+		if (isset($options['archive']) && $options['archive'] == true) 
+		{
+			$query->andWhere('d.start <= :now')->orderBy('d.start', 'desc');	
 		} 
-		else {
-			$query->andWhere('d.start >= '.time());	
+		else 
+		{
+			$query->andWhere('d.start >= :now')->orderBy('d.start');	
 		}			
 			
 		$query
+			->setParameter('now', new \DateTime('now'))
 			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
-/* 			->setMaxResults($options['limit']) */
-			->orderBy('d.start');
+/* 			->setMaxResults($options['limit']) */;
 			
 		return $query;
 		
-		return $options['paginate'] ? new Paginator($query/* , $fetchJoinCollection = false */) : $query->getQuery()->getResult();
+/* 		return $options['paginate'] ? new Paginator($query , $fetchJoinCollection = true) : $query->getQuery()->getResult(); */
 	}
 
 	public function getEvent($id, $locale)

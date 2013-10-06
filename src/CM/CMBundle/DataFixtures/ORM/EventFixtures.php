@@ -75,7 +75,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
   public function load(ObjectManager $manager)
   {
-    for ($i = 1; $i < 201; $i++) {
+    for ($i = 1; $i < 281; $i++) {
     	$eventNum = rand(0, 4);
  			$event = new Event;
      	$event->setVisible(rand(0, 1));
@@ -107,7 +107,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 			for ($j = rand(1, 3); $j > 0; $j--) {
 				$eventDate = new EventDate;
 				$dtz = new \DateTime;
-				$dtz->setTimestamp(rand(time(), time() + 31556926));
+				$dtz->setTimestamp(rand(time() - 3155692, time() + 31556926));
 				$dtz->setTimeZone(new \DateTimeZone('Europe/Berlin'));
 				$eventDate->setStart($dtz);
 			

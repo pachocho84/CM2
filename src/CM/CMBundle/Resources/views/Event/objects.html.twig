@@ -16,15 +16,8 @@
 		</ul>
 
 	
-
-<div id="load_more_posts" class="well well-small">
-	<a href="{{ path('event_index', { 'page': events.getCurrentPageNumber + 1 }) }}">{{ 'Load more' | trans }}</a>
-</div>
-	
-{#
-<?php if (get_class($posts->getRawValue()) == 'PropelModelPager' && $posts->getLastPage() != $posts->getPage()): ?>
+{% if events.paginationData.current < events.paginationData.last %}
 	<div id="load_more_posts" class="well well-small">
-		<?php echo link_to(__('Show more'), $url.$posts->getNextPage()) ?>
+		<a href="{{ path(app.request.attributes.get('_route'), app.request.query.all | merge({'page': app.request.query.get('page') ? app.request.query.get('page') + 1 : 2})) }}">{{ 'Load more' | trans }}</a>
 	</div>
-<?php endif ?>
-#}
+{% endif %}

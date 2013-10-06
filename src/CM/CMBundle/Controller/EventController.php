@@ -2,7 +2,6 @@
 
 namespace CM\CMBundle\Controller;
 
-use \DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -29,6 +28,7 @@ class EventController extends Controller
 {
 	/**
 	 * @Route("/", name = "event_index")
+   * @Route("/archive", name="event_archive") 
 	 * @Template
 	 */
 	public function indexAction(Request $request)
@@ -39,7 +39,7 @@ class EventController extends Controller
 		{
 			$categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategoryEnum::toNum('Event'), array('locale' => $request->getLocale())); // QUESTA SOLUZIONE DI ENTITY CATEGORY ENUM FA VERAMENTE CAGARE ED È DA CAMBIARE SUBITO!!!!!!!!!
 		}
-	  $events = $em->getRepository('CMBundle:Event')->getEvents(array('locale' => $request->getLocale()));
+	  $events = $em->getRepository('CMBundle:Event')->getEvents(array('locale' => $request->getLocale(), 'archive' => $request->get('_route') == 'event_archive' ? true : null));
 	    
 		$paginator  = $this->get('knp_paginator');
 		$pagination = $paginator->paginate($events, $this->get('request')->query->get('page', 1), 10);
@@ -65,9 +65,9 @@ class EventController extends Controller
 
     $form = $this->createForm(new MultipleImagesType(), $images, array(
     	'action' => $this->generateUrl('event_show', array(
-        	'id' => $event->getId(),
-        	'slug' => $event->getSlug()
-        )),
+       	'id' => $event->getId(),
+      	'slug' => $event->getSlug()
+      )),
     	'cascade_validation' => true
     ))->add('save', 'submit');
 
@@ -88,7 +88,7 @@ class EventController extends Controller
     
   /**
    * @Route("/new", name="event_new") 
-   * @Route("/{id}/{slug}/edit", name="event_edit", requirements={"id" = "\d+", "_locale" = "en|fr|it"}) 
+   * @Route("/{id}/{slug}/edit", name="event_edit", requirements={"id" = "\d+"}) 
    * @Template
    */
   public function editAction(Request $request, $id = null, $slug = null)
