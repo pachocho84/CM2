@@ -9,7 +9,7 @@ use CM\UserBundle\Entity\User;
 /**
  * Request
  *
- * @ORM\Table()
+ * @ORM\Table(name="request")
  * @ORM\Entity
  */
 class Request
