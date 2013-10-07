@@ -32,7 +32,10 @@ class EventRepository extends EntityRepository
 		
 		$postRepository = $this->getEntityManager()->getRepository('CMBundle:Post');
 		
-		$query = $this->createQueryBuilder('e')->select('e, d, t, i')
+		$query = $postRepository->createQueryBuilder('p')->select('et, e, d, t, i')
+			->leftJoin('p.entity', 'et')
+			->from('CM\CMBundle\Entity\Event', 'e')
+			->andWhere('et.id = e.id')
 			->leftJoin('e.eventDates', 'd')
 			->leftJoin('e.translations', 't')
 			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true);
@@ -45,8 +48,8 @@ class EventRepository extends EntityRepository
 		if (isset($options['archive'])) 
 		{
 			$query->andWhere('d.start <= :now')->orderBy('d.start', 'desc');	
-		} 
-		else 
+		}
+		else
 		{
 			$query->andWhere('d.start >= :now')->orderBy('d.start');	
 		}			
@@ -55,19 +58,17 @@ class EventRepository extends EntityRepository
 			->setParameter('now', new \DateTime('now'))
 			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale']);
 		
-/*
-		$query->setMaxResults(10);
-		$query = $query->getQuery();
-		echo 'sql:<br/><pre>'.$query->getSQL().'</pre>';
-		echo 'parameters:<br/><pre>'.var_dump($query->getParameters()).'</pre>';
-    echo '<br/><br/>';
-		$results = $query->getResult();
-		echo count($results).'<br/><br/>';
-		foreach ($results as $event) {
-			echo $event->getId().'<pre>'.var_dump(get_class_methods($event)).'</pre><br/>';
-		}
-		die;
-*/
+		// $query->setMaxResults(10);
+		// $query = $query->getQuery();
+		// echo 'sql:<br/><pre>'.$query->getSQL().'</pre>';
+		// echo 'parameters:<br/><pre>'.var_dump($query->getParameters()).'</pre>';
+		// echo '<br/><br/>';
+		// $results = $query->getResult();
+		// echo count($results).'<br/><br/>';
+		// foreach ($results as $event) {
+		// 	echo $event->getId().'<pre>'.var_dump(get_class_methods($event)).'</pre><br/>';
+		// }
+		// die;
 		
 		return $options['paginate'] ? $query : $query->setMaxResults($options['limit'])->getQuery()->getResult();
 	}

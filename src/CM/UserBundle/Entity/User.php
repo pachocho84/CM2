@@ -5,6 +5,7 @@ namespace CM\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use CM\CMBundle\Entity\Post;
 
@@ -91,7 +92,7 @@ class User extends BaseUser
      * @var boolean
      *
      * @ORM\Column(name="sex", type="boolean", nullable=false)
-     * @Assert\Choice(choices = {User::SEX_M, User::SEX_F}, message = "Choose a valid gender.")
+     * @Assert\Choice(choices = {CM\UserBundle\Entity\User::SEX_M, CM\UserBundle\Entity\User::SEX_F}, message = "Choose a valid gender.")
      */
     private $sex;
 
@@ -354,7 +355,7 @@ class User extends BaseUser
      */
     public function setSex($sex)
     {
-        if (!in_array($status, array(self::SEX_M, self::SEX_F))) {
+        if (!in_array($sex, array(self::SEX_M, self::SEX_F))) {
             throw new \InvalidArgumentException("Invalid sex");
         }
 

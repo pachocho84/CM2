@@ -5,10 +5,12 @@ namespace CM\CMBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\ReferenceRepository;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Post;
+use CM\UserBundle\Entity\User;
 
 class EventFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -74,100 +76,104 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 		array('Teatro degli Arcimboldi', 'Viale dell\'Innovazione, 20, 20125 Milano', '45.51170,9.21109'),
 	);
 
-  public function load(ObjectManager $manager)
-  {
-  	for ($i = 1; $i < 201; $i++) {
-    	$eventNum = rand(0, 4);
-    	$event = new Event;
-     	$event->setVisible(rand(0, 1));
-     	$event->setTitle($this->events[$eventNum]['title'].' (en)')
-     	    ->setExtract($this->events[$eventNum]['extract'])
-     	    ->setText($this->events[$eventNum]['text']);
+	private $images = array('bb01acb97854b24ed23598bd4f055eba.jpeg', 'ff9398d3d47436e2b4f72874a2c766fd.jpeg');
 
-			if (0 == rand(0, 2)) {
-				$event->translate('it')
-					->setTitle($this->events[$eventNum]['title'].' (it)')
-		     	    ->setExtract($this->events[$eventNum]['extract'])
-		     	    ->setText($this->events[$eventNum]['text']);
-			}
-
-			if (0 == rand(0, 4)) {
-				$event->translate('fr')
-					->setTitle($this->events[$eventNum]['title'].' (fr)')
-		     	    ->setExtract($this->events[$eventNum]['extract'])
-		     	    ->setText($this->events[$eventNum]['text']);
-			}
-
-/*
-			$event->translate('ru')->setTitle('Печатное (RU) '.$i)
-				->setSubtitle('Субти́тр (RU) '.$i)
-				->setExtract('Экстракта (RU) '.$i)
-				->setText('Текст (RU) '.$i);
-*/
-           	
-			for ($j = rand(1, 3); $j > 0; $j--) {
-				$eventDate = new EventDate;
-				$dtz = new \DateTime;
-				$dtz->setTimestamp(rand(time() - 3155692, time() + 31556926));
-				$dtz->setTimeZone(new \DateTimeZone('Europe/Berlin'));
-				$eventDate->setStart($dtz);
-			
-				if (rand(0, 1) == 0) {
-					$dtz->setTimestamp($eventDate->getStart()->getTimestamp() + 7200);
-					$eventDate->setEnd($dtz);
+	public function load(ObjectManager $manager)
+	{
+		for ($i = 1; $i < 201; $i++) {
+			$eventNum = rand(0, count($this->events) - 1);
+			$event = new Event;
+			$event->setVisible(rand(0, 1));
+			$event->setTitle($this->events[$eventNum]['title'].' (en)')
+				->setExtract($this->events[$eventNum]['extract'])
+				->setText($this->events[$eventNum]['text']);
+	
+				if (0 == rand(0, 2)) {
+					$event->translate('it')
+						->setTitle($this->events[$eventNum]['title'].' (it)')
+						->setExtract($this->events[$eventNum]['extract'])
+						->setText($this->events[$eventNum]['text']);
 				}
-			
-				$locNum = rand(0, 4);
-				$eventDate->setLocation($this->locations[$locNum][0]);
-				$eventDate->setAddress($this->locations[$locNum][1]);
-				$eventDate->setCoordinates($this->locations[$locNum][2]);
-				$event->addEventDate($eventDate);
-			}
-			
-			if (rand(0, 4) > 0) {
-				$image = new Image;
-				$image
-					->setImg($this->events[$eventNum]['img'])
-					->setText('main image for event "'.$event->getTitle().'"')
-					->setMain(true);
-				$event->addImage($image);				
-
-				for ($j = rand(1, 4); $j > 0; $j--) {
+	
+				if (0 == rand(0, 4)) {
+					$event->translate('fr')
+						->setTitle($this->events[$eventNum]['title'].' (fr)')
+						->setExtract($this->events[$eventNum]['extract'])
+						->setText($this->events[$eventNum]['text']);
+				}
+	
+	/*
+				$event->translate('ru')->setTitle('Печатное (RU) '.$i)
+					->setSubtitle('Субти́тр (RU) '.$i)
+					->setExtract('Экстракта (RU) '.$i)
+					->setText('Текст (RU) '.$i);
+	*/
+	           	
+				for ($j = rand(1, 3); $j > 0; $j--) {
+					$eventDate = new EventDate;
+					$dtz = new \DateTime;
+					$dtz->setTimestamp(rand(time() - 3155692, time() + 31556926));
+					$dtz->setTimeZone(new \DateTimeZone('Europe/Berlin'));
+					$eventDate->setStart($dtz);
+				
+					if (rand(0, 1) == 0) {
+						$dtz->setTimestamp($eventDate->getStart()->getTimestamp() + 7200);
+						$eventDate->setEnd($dtz);
+					}
+				
+					$locNum = rand(0, 4);
+					$eventDate->setLocation($this->locations[$locNum][0]);
+					$eventDate->setAddress($this->locations[$locNum][1]);
+					$eventDate->setCoordinates($this->locations[$locNum][2]);
+					$event->addEventDate($eventDate);
+				}
+				
+				if (rand(0, 4) > 0) {
 					$image = new Image;
 					$image
 						->setImg($this->events[$eventNum]['img'])
-						->setText('image number '.$j.' for event "'.$event->getTitle().'"')
-						->setMain(false);
-					
-					$event->addImage($image);
+						->setText('main image for event "'.$event->getTitle().'"')
+						->setMain(true);
+					$event->addImage($image);				
+	
+					for ($j = rand(1, 4); $j > 0; $j--) {
+						$image = new Image;
+						$image
+							->setImg($this->events[$eventNum]['img'])
+							->setText('image number '.$j.' for event "'.$event->getTitle().'"')
+							->setMain(false);
+						
+						$event->addImage($image);
+					}
+	
 				}
+				
+				$category = $manager->merge($this->getReference('entity_category-'.rand(1, 3)));
+				$category->addEntity($event);
 
+				$user = $manager->merge($this->getReference('user-'.rand(1, 10)));
+
+				$post = new Post;
+				$post
+					->setType(Post::TYPE_CREATION)
+					->setObject('event')
+					->setUser($user);
+				$event->addPost($post);
+				
+				$manager->persist($event);
+				$event->mergeNewTranslations();
+				
+				if ($i % 10 == 0) {
+					echo $i." - ";
+					$manager->flush();
+				}
 			}
-			
-			$category = $manager->merge($this->getReference('entity_category-'.rand(1, 3)));
-			$category->addEntity($event);
-			
-			$post = new Post;
-			$post->setType(Post::TYPE_CREATION);
-			$post->setUser();
-			$event->addPost();
-			
-			$manager->persist($event);
-			$event->mergeNewTranslations();
-			
-			if ($i % 10 == 0) {
-				echo $i." - ";
-			  $manager->flush();
-			}
-			
-			$this->addReference('entity_category-'.$i, $event);
-		}
-
-    $manager->flush();
-  }
-
-  public function getOrder()
-  {
-    return 2;
-  }
+	
+	    $manager->flush();
+	}
+	
+	public function getOrder()
+	{
+		return 3;
+	}
 }

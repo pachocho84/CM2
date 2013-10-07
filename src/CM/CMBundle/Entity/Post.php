@@ -107,6 +107,8 @@ class Post
     public function setEntity(Entity $entity = null)
     {
         $this->entity = $entity;
+        $this->object = get_class($entity);
+        $this->objectIds[] = $entity->getId();
     
         return $this;
     }
