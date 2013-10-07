@@ -34,8 +34,7 @@ class EventRepository extends EntityRepository
 		$query = $this->createQueryBuilder('e')->select('e, d, t, i')
 			->leftJoin('e.eventDates', 'd')
 			->leftJoin('e.translations', 't')
-			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
-			->distinct('');
+			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true);
 		
 		if (isset($options['category'])) 
 		{
