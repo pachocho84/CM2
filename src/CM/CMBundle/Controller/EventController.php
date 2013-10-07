@@ -62,7 +62,7 @@ class EventController extends Controller
 			return $this->render('CMBundle:Event:objects.html.twig', array('events' => $pagination, 'page' => $page));
 		}
 			
-		return array('categories' => $categories, 'events' => $pagination, 'category' => $category, 'page' => $page);
+		return array('categories' => $categories, 'posts' => $pagination, 'category' => $category, 'page' => $page);
 	}
 	
 	/**

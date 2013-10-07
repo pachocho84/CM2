@@ -28,7 +28,7 @@ class Event extends Entity
 	 	private $eventDates;
     
     /**
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="event", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="entity", cascade={"persist", "remove"})
 		 */
 	 	private $posts;
 	
@@ -121,6 +121,7 @@ class Event extends Entity
     public function addPost(\CM\CMBundle\Entity\Post $posts)
     {
         $this->posts[] = $posts;
+        $post->setEvent($this);
     
         return $this;
     }

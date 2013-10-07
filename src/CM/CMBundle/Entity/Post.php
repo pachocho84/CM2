@@ -230,17 +230,6 @@ class Post
     }
 
     /**
-     * Get sluggable fields
-     * 
-     * @access public
-     * @return void
-     */
-    public function getSluggableFields()
-    {
-        return [];
-    }
-
-    /**
      * Set event
      *
      * @param \CM\CMBundle\Entity\Event $event

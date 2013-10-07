@@ -1,10 +1,12 @@
-<pre>{% for key, param in events.getPaginationData %}
+<pre>{% for key, param in posts.getPaginationData %}
 	{{ key }}: {{ param }}<br/>
 {% endfor %}</pre>
 
-{% for key, event in events %}
+{% for key, post in posts %}
 
-	{% if key == 0 or event.eventDates[0].start | date('Y/m/d') != events[key-1].eventDates[0].start | date('Y/m/d') %}
+    {% set event = post.getEvent %}
+
+	{% if key == 0 or event.eventDates[0].start | date('Y/m/d') != posts[key-1].getEvent.eventDates[0].start | date('Y/m/d') %}
 {# 		<?php if ($posts->getPage().'_'.$i != '1_0'): ?> #}
 			</ul>
 {# 		<?php endif ?> #}
@@ -23,7 +25,7 @@
 
 
 
-{% if events.paginationData.current < events.paginationData.last %}
+{% if posts.paginationData.current < posts.paginationData.last %}
 	<div id="load_more_posts5" class="well well-small">
 		<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({'page': app.request.attributes.get('_route_params').page ? app.request.attributes.get('_route_params').page + 1 : 2})) }}">{{ 'Load more' | trans }}</a>
 	</div>

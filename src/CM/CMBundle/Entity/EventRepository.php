@@ -32,16 +32,16 @@ class EventRepository extends EntityRepository
 		
 		$postRepository = $this->getEntityManager()->getRepository('CMBundle:Post');
 		
-		$query = $postRepository->createQueryBuilder('p')->select('p, e, en, t, d, i')
+		$query = $postRepository->createQueryBuilder('p')->select('p, en, e, t, d, i')
 			->leftJoin('p.event', 'e')
 			->leftJoin('p.entity', 'en')
 			->leftJoin('e.eventDates', 'd')
-			->leftJoin('en.translations', 't')
-			->leftJoin('en.images', 'i', 'WITH', 'i.main = '.true);
+			->leftJoin('e.translations', 't')
+			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true);
 		
 		if (isset($options['category'])) 
 		{
-			$query->andWhere('en.entityCategory = :category')->setParameter('category', $options['category']);	
+			$query->andWhere('e.entityCategory = :category')->setParameter('category', $options['category']);	
 		} 
 		
 		if (isset($options['archive'])) 
