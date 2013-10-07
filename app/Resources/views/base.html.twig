@@ -8,8 +8,7 @@
 		<link href="{{ asset('/lib/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" />
 		<link href="{{ asset('/bundles/cm/css/common.css') }}" rel="stylesheet" />
 		<link href="{{ asset('/bundles/cm/css/main.css') }}" rel="stylesheet" />
-		{% block stylesheets %}
-		{% endblock %}
+		{% block stylesheets %}{% endblock %}
 		
 		<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 	</head>
@@ -26,7 +25,6 @@
 			</div>
 		</div>
 			
-		{% block locales %}{% endblock %}
 			
 		{# MENU #}
 		<div id="menu-container">
@@ -45,15 +43,21 @@
 					<div class="container">
 			
 						<ul class="nav navbar-nav pull-left">
-							<li class="dropdown<?php $module == 'wall' and print ' active' ?>">
+							<li class="dropdown">
 								<a href="{{ path('event_index') }}">Events</a>
 								<ul class="dropdown-menu">  
 									<li><a href="{{ path('event_index') }}">Events</a></li> 
 								</ul>
-							</li>         
+							</li> 
+							<li class="dropdown">
+								<a href="{{ path('event_index') }}">Locales</a>
+								<ul class="dropdown-menu">	
+									<li><a href="{{ path('user_locale', {'_locale': "en" }) }}">En</a></li>
+									<li><a href="{{ path('user_locale', {'_locale': "fr" }) }}">Fr</a></li>
+									<li><a href="{{ path('user_locale', {'_locale': "it" }) }}">It</a></li>
+								</ul>
+							</li>        
 						</ul>
-			
-			
 			
 						<ul class="nav navbar-nav pull-right">
 						</ul>
@@ -102,7 +106,8 @@
 			<script src="{{ asset('/js/jquery-2.0.3.min.js') }}"></script>
 			<script src="{{ asset('/lib/bootstrap/js/bootstrap.min.js') }}"></script>
 			<script src="{{ asset('/js/jquery.hcsticky-min.js') }}"></script>
-			<script src="{{ asset('/js/common.js') }}"></script>
+			<script src="{{ asset('/bundles/cm/js/common.js') }}"></script>
+			<script src="{{ asset('/bundles/cm/js/interface.js') }}"></script>
 		{% endblock %}
 		
 		

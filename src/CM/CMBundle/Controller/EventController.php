@@ -67,16 +67,13 @@ class EventController extends Controller
 	 * @Route("/calendar/{year}/{month}", name = "event_calendar", requirements={"month" = "\d+", "year" = "\d+"})
 	 * @Template
 	 */
-	public function calendarAction(Request $request)
+	public function calendarAction(Request $request, $year = null, $month = null)
 	{
 	  $em = $this->getDoctrine()->getManager();
 		$categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategoryEnum::toNum('Event'), array('locale' => $request->getLocale())); // QUESTA SOLUZIONE DI ENTITY CATEGORY ENUM FA VERAMENTE CAGARE ED È DA CAMBIARE SUBITO!!!!!!!!!
 		
-	  $events = $em->getRepository('CMBundle:Event')->getEvents(array(
-	  	'locale' => $request->getLocale(), 
-	  	'archive' => $request->get('_route') == 'event_archive' ? true : null,
-	  	'category' => $request->get('_route') == 'event_category' ? $category->getId() : null
-	  ));
+		
+/* 		$events = $em->createQuery("SELECT DISTINCT e,t,d, i FROM CMBundle:Event e INNER JOIN e.translations t LEFT JOIN e.eventDates d LEFT JOIN e.images i WHERE t.locale = 'en' AND SUBSTRING(d.start, 1, 4) = 2013 AND SUBSTRING(d.start, 6, 2) = 10 ORDER BY d.start")->getResult(); */
 			
 		return array('categories' => $categories);
 	}
@@ -84,18 +81,13 @@ class EventController extends Controller
 	/**
 	 * @Template
 	 */
-	public function calendarMonthAction(Request $request)
+	public function calendarMonthAction(Request $request, $year, $month)
 	{
 	  $em = $this->getDoctrine()->getManager();
-		$categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategoryEnum::toNum('Event'), array('locale' => $request->getLocale())); // QUESTA SOLUZIONE DI ENTITY CATEGORY ENUM FA VERAMENTE CAGARE ED È DA CAMBIARE SUBITO!!!!!!!!!
 		
-	  $events = $em->getRepository('CMBundle:Event')->getEvents(array(
-	  	'locale' => $request->getLocale(), 
-	  	'archive' => $request->get('_route') == 'event_archive' ? true : null,
-	  	'category' => $request->get('_route') == 'event_category' ? $category->getId() : null
-	  ));
-			
-		return array('categories' => $categories);
+	  $events = $em->getRepository('CMBundle:Event')->getEventsPerMonth($year, $month);
+
+		return array('events' => $events);
 	}
     
   /**
