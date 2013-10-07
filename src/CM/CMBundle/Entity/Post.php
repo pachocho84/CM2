@@ -44,6 +44,14 @@ class Post
     private $entity;
 
     /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="Event", inversedBy="posts")
+     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)	
+     */
+    private $event;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="object", type="string", length=50)
@@ -230,5 +238,28 @@ class Post
     public function getSluggableFields()
     {
         return [];
+    }
+
+    /**
+     * Set event
+     *
+     * @param \CM\CMBundle\Entity\Event $event
+     * @return Post
+     */
+    public function setEvent(\CM\CMBundle\Entity\Event $event = null)
+    {
+        $this->event = $event;
+    
+        return $this;
+    }
+
+    /**
+     * Get event
+     *
+     * @return \CM\CMBundle\Entity\Event 
+     */
+    public function getEvent()
+    {
+        return $this->event;
     }
 }

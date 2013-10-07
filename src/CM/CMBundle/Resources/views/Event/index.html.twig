@@ -26,8 +26,11 @@
 		{{ include('CMBundle:Event:menu.html.twig') }}
 	</div>
 
-    {% for post in events %}
-        {{ post }}
+  {% for post in events %}
+	  <pre>
+	  	{{ post.getId }}
+	  	{{ post.getEvent.getTitle }}
+	  </pre>
 	{% endfor %}
 	
 	

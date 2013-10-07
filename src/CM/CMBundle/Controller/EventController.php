@@ -55,6 +55,8 @@ class EventController extends Controller
 		$paginator  = $this->get('knp_paginator');
 		$pagination = $paginator->paginate($events, $page, 10);
 			
+/* 		return array('categories' => $categories, 'events' => $events, 'category' => $category, 'page' => $page); */
+			
 		if ($request->isXmlHttpRequest())
 		{
 			return $this->render('CMBundle:Event:objects.html.twig', array('events' => $pagination, 'page' => $page));

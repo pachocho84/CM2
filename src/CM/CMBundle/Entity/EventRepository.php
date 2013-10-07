@@ -32,45 +32,38 @@ class EventRepository extends EntityRepository
 		
 		$postRepository = $this->getEntityManager()->getRepository('CMBundle:Post');
 		
-		$query = $postRepository->createQueryBuilder('p')->select('p, et, e, t')
-			->leftJoin('p.entity', 'et')
-			->from('CM\CMBundle\Entity\Event', 'e')
-			// ->andWhere('et.id = e.id')
-			// ->leftJoin('e.eventDates', 'd')
-			->leftJoin('e.translations', 't');
-			// ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true);
+		$query = $postRepository->createQueryBuilder('p')->select('p, e, en, t, d, i')
+			->leftJoin('p.event', 'e')
+			->leftJoin('p.entity', 'en')
+			->leftJoin('e.eventDates', 'd')
+			->leftJoin('en.translations', 't')
+			->leftJoin('en.images', 'i', 'WITH', 'i.main = '.true);
 		
-		// if (isset($options['category'])) 
-		// {
-		// 	$query->andWhere('e.entityCategory = :category')->setParameter('category', $options['category']);	
-		// } 
+		if (isset($options['category'])) 
+		{
+			$query->andWhere('en.entityCategory = :category')->setParameter('category', $options['category']);	
+		} 
 		
-		// if (isset($options['archive'])) 
-		// {
-		// 	$query->andWhere('d.start <= :now')->orderBy('d.start', 'desc');	
-		// }
-		// else
-		// {
-		// 	$query->andWhere('d.start >= :now')->orderBy('d.start');	
-		// }			
+		if (isset($options['archive'])) 
+		{
+			$query->andWhere('d.start <= :now')->orderBy('d.start', 'desc');	
+		}
+		else
+		{
+			$query->andWhere('d.start >= :now')->orderBy('d.start');	
+		}			
 			
 		$query
-			// ->setParameter('now', new \DateTime('now'))
-			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale']);
+			->setParameter('now', new \DateTime('now'))
+			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
+			->setMaxResults(3)->getQuery();
+			
+			
+/*
+		return new Paginator($query, $fetchJoinCollection = true);
 
-		return $query->setMaxResults(2)->getQuery()->getResult();
-		
-		$query->setMaxResults(1);
-		$query = $query->getQuery();
-		echo 'sql:<br/><pre>'.$query->getSQL().'</pre>';
-		echo 'parameters:<br/><pre>'.var_dump($query->getParameters()).'</pre>';
-		echo '<br/><br/>';
-		$results = $query->getResult();
-		echo 'Number of results: '.count($results).'<br/><br/>';
-		foreach ($results as $post) {
-			echo $post->getId().'<pre>'.var_dump(get_class_methods($post)).'</pre><br/>';
-		}
-		die;
+		return $query->setMaxResults(3)->getQuery()->getResult();
+*/
 		
 		return $options['paginate'] ? $query : $query->setMaxResults($options['limit'])->getQuery()->getResult();
 	}
