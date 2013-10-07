@@ -1,0 +1,28 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+
+
+{% block title %}{{ "Calendar"|trans }}{% endblock %}
+
+
+
+{% block body %}
+
+	<div class="row">
+		<div class="col-lg-5">
+			<h2>{{ block('title') }}</h2>
+		</div>
+		{{ include('CMBundle:Event:menu.html.twig') }}
+	</div>
+	
+	
+	
+	<div class='box'>
+		{{ include('CMBundle:Event:calendarMonth.html.twig', { 'events': events } ) }}
+	</div>
+	
+{% endblock %} 
+
+
+
+{# <?php include_component('event', 'sponsored') ?> #}

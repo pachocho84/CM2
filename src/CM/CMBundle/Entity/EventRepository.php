@@ -59,6 +59,18 @@ class EventRepository extends EntityRepository
 		
 /* 		return $options['paginate'] ? new Paginator($query , $fetchJoinCollection = true) : $query->getQuery()->getResult(); */
 	}
+	
+	static public function getEventsPerMonth($year, $month, $options = array())
+	{
+		return $this->createQueryBuilder('e')->select('e, t, d')
+			->leftJoin('e.eventDates', 'd')
+			->leftJoin('e.translations', 't')
+			->where('YEAR(d.start) = '.$year)
+			->andWhere('MONTH(d.start) = '.$month)
+			->orderBy('d.start')
+			->getQuery()
+			->getResult();
+	}
 
 	public function getEvent($id, $locale)
 	{

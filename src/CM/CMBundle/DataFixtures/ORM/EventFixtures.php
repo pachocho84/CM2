@@ -75,7 +75,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
   public function load(ObjectManager $manager)
   {
-    for ($i = 1; $i < 281; $i++) {
+    for ($i = 1; $i < 201; $i++) {
     	$eventNum = rand(0, 4);
  			$event = new Event;
      	$event->setVisible(rand(0, 1));

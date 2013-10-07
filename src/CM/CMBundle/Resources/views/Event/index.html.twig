@@ -19,8 +19,6 @@
 
 {# <pre>	{{ dump(app.request.attributes.get('_route_params')) }}</pre> #}
 
-{# <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({'page': app.request.query.get('page') ? app.request.query.get('page') + 1 : 2})) }}">{{ 'Load more' | trans }}</a> #}
-
 	<div class="row">
 		<div class="col-lg-5">
 			<h2>{{ block('title') }}</h2>

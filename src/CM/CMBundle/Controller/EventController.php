@@ -27,9 +27,9 @@ use CM\CMBundle\Utility\UploadHandler;
 class EventController extends Controller
 {
 	/**
-	 * @Route("/", name = "event_index")
-   * @Route("/archive", name="event_archive") 
-   * @Route("/category/{slug}/{page}", name="event_category", requirements={"slug" = "\w+", "page" = "\d+"}) 
+	 * @Route("/{page}", name = "event_index", requirements={"page" = "\d+"})
+   * @Route("/archive/{page}", name="event_archive", requirements={"page" = "\d+"}) 
+   * @Route("/category/{slug}/{page}", name="event_category", requirements={"page" = "\d+"}) 
 	 * @Template
 	 */
 	public function indexAction(Request $request, $page = 1, $slug = null)
@@ -53,7 +53,7 @@ class EventController extends Controller
 	  ));
 	    
 		$paginator  = $this->get('knp_paginator');
-		$pagination = $paginator->paginate($events, $this->get('request')->query->get('page', 1), 10);
+		$pagination = $paginator->paginate($events, $page, 10);
 			
 		if ($request->isXmlHttpRequest())
 		{
@@ -61,6 +61,41 @@ class EventController extends Controller
 		}
 			
 		return array('categories' => $categories, 'events' => $pagination, 'category' => $category);
+	}
+	
+	/**
+	 * @Route("/calendar/{year}/{month}", name = "event_calendar", requirements={"month" = "\d+", "year" = "\d+"})
+	 * @Template
+	 */
+	public function calendarAction(Request $request)
+	{
+	  $em = $this->getDoctrine()->getManager();
+		$categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategoryEnum::toNum('Event'), array('locale' => $request->getLocale())); // QUESTA SOLUZIONE DI ENTITY CATEGORY ENUM FA VERAMENTE CAGARE ED È DA CAMBIARE SUBITO!!!!!!!!!
+		
+	  $events = $em->getRepository('CMBundle:Event')->getEvents(array(
+	  	'locale' => $request->getLocale(), 
+	  	'archive' => $request->get('_route') == 'event_archive' ? true : null,
+	  	'category' => $request->get('_route') == 'event_category' ? $category->getId() : null
+	  ));
+			
+		return array('categories' => $categories);
+	}
+	
+	/**
+	 * @Template
+	 */
+	public function calendarMonthAction(Request $request)
+	{
+	  $em = $this->getDoctrine()->getManager();
+		$categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategoryEnum::toNum('Event'), array('locale' => $request->getLocale())); // QUESTA SOLUZIONE DI ENTITY CATEGORY ENUM FA VERAMENTE CAGARE ED È DA CAMBIARE SUBITO!!!!!!!!!
+		
+	  $events = $em->getRepository('CMBundle:Event')->getEvents(array(
+	  	'locale' => $request->getLocale(), 
+	  	'archive' => $request->get('_route') == 'event_archive' ? true : null,
+	  	'category' => $request->get('_route') == 'event_category' ? $category->getId() : null
+	  ));
+			
+		return array('categories' => $categories);
 	}
     
   /**
