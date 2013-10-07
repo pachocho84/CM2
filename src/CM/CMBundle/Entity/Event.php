@@ -118,9 +118,10 @@ class Event extends Entity
      * @param \CM\CMBundle\Entity\Post $posts
      * @return Event
      */
-    public function addPost(\CM\CMBundle\Entity\Post $posts)
+    public function addPost(\CM\CMBundle\Entity\Post $post)
     {
-        $this->posts[] = $posts;
+        $this->posts[] = $post;
+        $post->setEvent($this);
     
         return $this;
     }

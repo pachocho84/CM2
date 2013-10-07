@@ -38,14 +38,6 @@ class Post
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="Entity", inversedBy="posts")
-     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)	
-     */
-    private $entity;
-
-    /**
-     * @var integer
-     *
      * @ORM\ManyToOne(targetEntity="Event", inversedBy="posts")
      * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)	
      */
@@ -109,32 +101,6 @@ class Post
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * Set entity
-     *
-     * @param Entity $entity
-     * @return Image
-     */
-    public function setEntity(Entity $entity = null)
-    {
-        $this->entity = $entity;
-        $this->object = get_class($entity);
-        $this->objectIds[] = $entity->getId();
-    
-        return $this;
-    }
-
-    /**
-     * Get entity
-     *
-     * @return Entity 
-     */
-    public function getEntity()
-    {
-    	echo get_class($this->entity);
-        return $this->entity;
     }
 
     /**
@@ -230,17 +196,6 @@ class Post
     }
 
     /**
-     * Get sluggable fields
-     * 
-     * @access public
-     * @return void
-     */
-    public function getSluggableFields()
-    {
-        return [];
-    }
-
-    /**
      * Set event
      *
      * @param \CM\CMBundle\Entity\Event $event
@@ -249,6 +204,8 @@ class Post
     public function setEvent(\CM\CMBundle\Entity\Event $event = null)
     {
         $this->event = $event;
+        $this->object = get_class($event);
+        $this->objectIds[] = $event->getId();
     
         return $this;
     }

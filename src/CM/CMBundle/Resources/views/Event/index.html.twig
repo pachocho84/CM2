@@ -26,16 +26,18 @@
 		{{ include('CMBundle:Event:menu.html.twig') }}
 	</div>
 
-  {% for post in events %}
+{#
+  {% for date in dates %}
 	  <pre>
-	  	{{ loop.index }} - {{ post.getId }}
-	  	{{ post.getEvent.getEventDates.getStart }} - {{ post.getEvent.getTitle }}
+	  	{{ loop.index }} - {{ date.getId }}
+	  	{{ date.start | date('Y/m/d') }} - {{ date.getEvent.getTitle }}
 	  </pre>
 	{% endfor %}
+#}
 	
 	
 	<div class='box'>
-		{# {{ include('CMBundle:Event:objects.html.twig', { 'events': events, 'category': category } ) }} #}
+		{{ include('CMBundle:Event:objects.html.twig' ) }}
 	</div>
 	
 {% endblock %}

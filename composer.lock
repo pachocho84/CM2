@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/a2lix/TranslationFormBundle.git",
-                "reference": "2e67a02330f27d9737200b486138c916f98d4c66"
+                "reference": "397506777b2ae35432f963da553a765bac5fe720"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/a2lix/TranslationFormBundle/zipball/2e67a02330f27d9737200b486138c916f98d4c66",
-                "reference": "2e67a02330f27d9737200b486138c916f98d4c66",
+                "url": "https://api.github.com/repos/a2lix/TranslationFormBundle/zipball/397506777b2ae35432f963da553a765bac5fe720",
+                "reference": "397506777b2ae35432f963da553a765bac5fe720",
                 "shasum": ""
             },
             "require": {
@@ -65,7 +65,7 @@
                 "translatable",
                 "translation"
             ],
-            "time": "2013-09-23 09:44:55"
+            "time": "2013-10-07 19:50:34"
         },
         {
             "name": "doctrine/annotations",
@@ -697,7 +697,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],

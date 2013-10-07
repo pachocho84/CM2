@@ -1,30 +1,33 @@
-<pre>{% for key, param in events.getPaginationData %}
+<pre>{% for key, param in dates.getPaginationData %}
 	{{ key }}: {{ param }}<br/>
 {% endfor %}</pre>
 
-{% for key, event in events %}
 
-	{% if key == 0 or event.eventDates[0].start | date('Y/m/d') != events[key-1].eventDates[0].start | date('Y/m/d') %}
-{# 		<?php if ($posts->getPage().'_'.$i != '1_0'): ?> #}
+
+{% for key, date in dates %}
+
+	{% if key == 0 or date.start | date('Y/m/d') != dates[key-1].start | date('Y/m/d') %}
+	
+		{% if "#{dates.getPaginationData.current}_#{key}" != '1_0' %}
 			</ul>
-{# 		<?php endif ?> #}
+		{% endif %}
+		
 		<div class="box-top">
-			<h2><i class="glyphicon glyphicon-calendar"></i> {{ event.eventDates[0].start | format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</h2>
+			<h2><i class="glyphicon glyphicon-calendar"></i> {{ date.start | format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</h2>
 		</div>
+		
 		<ul class="media-list objects">
 	{% endif %}
 	
-	{{ include('CMBundle:Event:object.html.twig', { 'event': event } ) }}
-
-	<p>Iteration {{ loop.index }} in {{ loop.length }}: date {{ event.eventDates[0].start | format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</p>
+	{{ include('CMBundle:Event:object.html.twig' ) }}
 	
 {% endfor %}
 		</ul>
 
 
 
-{% if events.paginationData.current < events.paginationData.last %}
-	<div id="load_more_posts5" class="well well-small">
+{% if dates.paginationData.current < dates.paginationData.last %}
+	<div id="load_more_posts" class="well well-small">
 		<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({'page': app.request.attributes.get('_route_params').page ? app.request.attributes.get('_route_params').page + 1 : 2})) }}">{{ 'Load more' | trans }}</a>
 	</div>
 {% endif %}

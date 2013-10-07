@@ -30,18 +30,17 @@ class EventRepository extends EntityRepository
 	{
 		$options = self::getOptions($options);
 		
-		$postRepository = $this->getEntityManager()->getRepository('CMBundle:Post');
+		$eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
 		
-		$query = $postRepository->createQueryBuilder('p')->select('p, e, en, t, d, i')
-			->leftJoin('p.event', 'e')
-			->leftJoin('p.entity', 'en')
-			->leftJoin('e.eventDates', 'd')
-			->leftJoin('en.translations', 't')
-			->leftJoin('en.images', 'i', 'WITH', 'i.main = '.true);
+		$query = $eventDateRepository->createQueryBuilder('d')->select('d, e, t, p, i')
+			->join('d.event', 'e')
+			->leftJoin('e.translations', 't')
+			->leftJoin('e.posts', 'p')
+			->leftJoin('e.images', 'i', 'WITH', 'i.main = 1');
 		
 		if (isset($options['category'])) 
 		{
-			$query->andWhere('en.entityCategory = :category')->setParameter('category', $options['category']);	
+			$query->andWhere('e.entityCategory = :category')->setParameter('category', $options['category']);	
 		} 
 		
 		if (isset($options['archive'])) 
@@ -54,16 +53,12 @@ class EventRepository extends EntityRepository
 		}			
 			
 		$query
-			->setParameter('now', new \DateTime('now'))
-			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
-			->setMaxResults(3)->getQuery();
+			->andWhere('t.locale in (:locale, \'en\')') // TODO: DA SISTEMARE CON UN MERGE
+			->setParameters(array(
+				'now' => '2013-10-07',
+				'locale' => $options['locale']
+			));
 			
-			
-/*
-		return new Paginator($query, $fetchJoinCollection = true);
-
-		return $query->setMaxResults(3)->getQuery()->getResult();
-*/
 		
 		return $options['paginate'] ? $query : $query->setMaxResults($options['limit'])->getQuery()->getResult();
 	}
