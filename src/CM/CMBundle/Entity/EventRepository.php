@@ -3,7 +3,6 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -31,11 +30,12 @@ class EventRepository extends EntityRepository
 	{
 		$options = self::getOptions($options);
 		
+		$postRepository = $this->getEntityManager()->getRepository('CMBundle:Post');
+		
 		$query = $this->createQueryBuilder('e')->select('e, d, t, i')
 			->leftJoin('e.eventDates', 'd')
 			->leftJoin('e.translations', 't')
-			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
-			->distinct('');
+			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true);
 		
 		if (isset($options['category'])) 
 		{

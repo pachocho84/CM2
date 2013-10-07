@@ -8,6 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
+use CM\CMBundle\Entity\Post;
 
 class EventFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -75,9 +76,9 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
   public function load(ObjectManager $manager)
   {
-    for ($i = 1; $i < 201; $i++) {
+  	for ($i = 1; $i < 201; $i++) {
     	$eventNum = rand(0, 4);
- 			$event = new Event;
+    	$event = new Event;
      	$event->setVisible(rand(0, 1));
      	$event->setTitle($this->events[$eventNum]['title'].' (en)')
      	    ->setExtract($this->events[$eventNum]['extract'])
@@ -86,15 +87,15 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 			if (0 == rand(0, 2)) {
 				$event->translate('it')
 					->setTitle($this->events[$eventNum]['title'].' (it)')
-     	    ->setExtract($this->events[$eventNum]['extract'])
-     	    ->setText($this->events[$eventNum]['text']);
+		     	    ->setExtract($this->events[$eventNum]['extract'])
+		     	    ->setText($this->events[$eventNum]['text']);
 			}
 
 			if (0 == rand(0, 4)) {
 				$event->translate('fr')
 					->setTitle($this->events[$eventNum]['title'].' (fr)')
-     	    ->setExtract($this->events[$eventNum]['extract'])
-     	    ->setText($this->events[$eventNum]['text']);
+		     	    ->setExtract($this->events[$eventNum]['extract'])
+		     	    ->setText($this->events[$eventNum]['text']);
 			}
 
 /*
@@ -146,6 +147,11 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 			$category = $manager->merge($this->getReference('entity_category-'.rand(1, 3)));
 			$category->addEntity($event);
 			
+			$post = new Post;
+			$post->setType(Post::TYPE_CREATION);
+			$post->setUser();
+			$event->addPost();
+			
 			$manager->persist($event);
 			$event->mergeNewTranslations();
 			
@@ -153,6 +159,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 				echo $i." - ";
 			  $manager->flush();
 			}
+			
+			$this->addReference('entity_category-'.$i, $event);
 		}
 
     $manager->flush();

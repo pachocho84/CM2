@@ -16,6 +16,8 @@ use CM\UserBundle\Entity\User as User;
 class Post
 {
     use ORMBehaviors\Timestampable\Timestampable;
+    
+    const TYPE_CREATION = 'CREATION';
 
     /**
      * @var integer
@@ -62,7 +64,6 @@ class Post
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)	
      */
     private $user;
-
 
     /**
      * Get id

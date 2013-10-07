@@ -31,19 +31,19 @@ class Entity
      * @var boolean
      *
      * @ORM\Column(name="visible", type="boolean", nullable=true)
-	 * @Assert\Type(type="bool")
+     * @Assert\Type(type="bool")
      */
     private $visible;
         
     /**
      * @ORM\OneToMany(targetEntity="Post", mappedBy="entity", cascade={"persist", "remove"})
-	 */
-	private $posts;
+     */
+     private $posts;
     
     /**
      * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"})
-	 */
-	private $images;
+     */
+     private $images;
 
     /**
      * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")
