@@ -21,7 +21,7 @@ class EventRepository extends EntityRepository
 			'user_id'     => null,
 /* 			'category'    => sfContext::getInstance()->getRequest()->getParameter('category', null),  */
 			'category'    => null, 
-/* 			'paginate'	  => true, */
+			'paginate'	  => true,
 			'locale'	  	=> 'en',
 /* 			'limit'       => 25, */
 		), $options);
@@ -31,10 +31,11 @@ class EventRepository extends EntityRepository
 	{
 		$options = self::getOptions($options);
 		
-		$query = $this->createQueryBuilder('e')->select('e, t, d, i')
+		$query = $this->createQueryBuilder('e')->select('e, d, t, i')
 			->leftJoin('e.eventDates', 'd')
 			->leftJoin('e.translations', 't')
-			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true);
+			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
+			->distinct('');
 		
 		if (isset($options['category'])) 
 		{
@@ -52,12 +53,23 @@ class EventRepository extends EntityRepository
 			
 		$query
 			->setParameter('now', new \DateTime('now'))
-			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
-/* 			->setMaxResults($options['limit']) */;
-			
-		return $query;
+			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale']);
 		
-/* 		return $options['paginate'] ? new Paginator($query , $fetchJoinCollection = true) : $query->getQuery()->getResult(); */
+/*
+		$query->setMaxResults(10);
+		$query = $query->getQuery();
+		echo 'sql:<br/><pre>'.$query->getSQL().'</pre>';
+		echo 'parameters:<br/><pre>'.var_dump($query->getParameters()).'</pre>';
+    echo '<br/><br/>';
+		$results = $query->getResult();
+		echo count($results).'<br/><br/>';
+		foreach ($results as $event) {
+			echo $event->getId().'<pre>'.var_dump(get_class_methods($event)).'</pre><br/>';
+		}
+		die;
+*/
+		
+		return $options['paginate'] ? $query : $query->setMaxResults($options['limit'])->getQuery()->getResult();
 	}
 	
 	static public function getEventsPerMonth($year, $month, $options = array())

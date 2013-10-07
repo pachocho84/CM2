@@ -1,3 +1,7 @@
+<pre>{% for key, param in events.getPaginationData %}
+	{{ key }}: {{ param }}<br/>
+{% endfor %}</pre>
+
 {% for key, event in events %}
 
 	{% if key == 0 or event.eventDates[0].start | date('Y/m/d') != events[key-1].eventDates[0].start | date('Y/m/d') %}
@@ -11,6 +15,8 @@
 	{% endif %}
 	
 	{{ include('CMBundle:Event:object.html.twig', { 'event': event } ) }}
+
+	<p>Iteration {{ loop.index }} in {{ loop.length }}: date {{ event.eventDates[0].start | format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</p>
 	
 {% endfor %}
 		</ul>
@@ -18,7 +24,7 @@
 
 
 {% if events.paginationData.current < events.paginationData.last %}
-	<div id="load_more_posts" class="well well-small">
+	<div id="load_more_posts5" class="well well-small">
 		<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({'page': app.request.attributes.get('_route_params').page ? app.request.attributes.get('_route_params').page + 1 : 2})) }}">{{ 'Load more' | trans }}</a>
 	</div>
 {% endif %}

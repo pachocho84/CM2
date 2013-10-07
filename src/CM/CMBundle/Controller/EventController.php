@@ -57,10 +57,10 @@ class EventController extends Controller
 			
 		if ($request->isXmlHttpRequest())
 		{
-			return $this->render('CMBundle:Event:objects.html.twig', array('events' => $pagination));
+			return $this->render('CMBundle:Event:objects.html.twig', array('events' => $pagination, 'page' => $page));
 		}
 			
-		return array('categories' => $categories, 'events' => $pagination, 'category' => $category);
+		return array('categories' => $categories, 'events' => $pagination, 'category' => $category, 'page' => $page);
 	}
 	
 	/**
