@@ -156,8 +156,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 				$post = new Post;
 				$post
 					->setType(Post::TYPE_CREATION)
-					->setObject('event')
 					->setUser($user);
+
 				$event->addPost($post);
 				
 				$manager->persist($event);

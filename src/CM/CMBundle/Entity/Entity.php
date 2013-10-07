@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({"entity"="Entity","event"="Event"})
  */
-class Entity
+abstract class Entity
 {
 	use ORMBehaviors\Translatable\Translatable;
 	

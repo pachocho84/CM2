@@ -44,11 +44,18 @@ class Event extends Entity
     public function __construct(EventDate $eventDate = null)
     {
     	parent::__construct();
+
+    	$this->posts = new ArrayCollection();
     	
     	$this->eventDates = new ArrayCollection();
     	if (! is_null($eventDate)) {
     		$this->addEventDate($eventDate);
     	}
+    }
+
+    public function __toString()
+    {
+    	return "Event";
     }
     
     /**

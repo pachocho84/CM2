@@ -65,6 +65,11 @@ class Post
      */
     private $user;
 
+    public function __toString()
+    {
+    	return "Post";
+    }
+
     /**
      * Get id
      *
@@ -120,6 +125,7 @@ class Post
      */
     public function getEntity()
     {
+    	echo get_class($this->entity);
         return $this->entity;
     }
 

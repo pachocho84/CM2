@@ -25,11 +25,14 @@
 		</div>
 		{{ include('CMBundle:Event:menu.html.twig') }}
 	</div>
-	
+
+    {% for post in events %}
+        {{ post }}
+	{% endfor %}
 	
 	
 	<div class='box'>
-		{{ include('CMBundle:Event:objects.html.twig', { 'events': events, 'category': category } ) }}
+		{# {{ include('CMBundle:Event:objects.html.twig', { 'events': events, 'category': category } ) }} #}
 	</div>
 	
 {% endblock %}
