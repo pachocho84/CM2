@@ -38,12 +38,12 @@ abstract class Entity
     /**
      * @ORM\OneToMany(targetEntity="Request", mappedBy="entity", cascade={"persist", "remove"})
      */
-     private $requests;
+    private $requests;
     
     /**
      * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"})
      */
-     private $images;
+    private $images;
 
     /**
      * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")

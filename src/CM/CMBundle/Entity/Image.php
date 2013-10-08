@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use CM\UserBundle\Entity\User;
 
 /**
  * Image
@@ -305,7 +306,7 @@ class Image
      * @param User $user
      * @return Image
      */
-    public function setUser(CM\UserBundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
     

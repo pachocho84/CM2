@@ -28,7 +28,7 @@ class Event extends Entity
 	private $eventDates;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="Post", mappedBy="post", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="Post", mappedBy="event", cascade={"persist", "remove"})
 	 */
 	private $posts;
 	
