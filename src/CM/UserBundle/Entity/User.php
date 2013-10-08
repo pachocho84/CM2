@@ -7,8 +7,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use CM\CMBundle\Entity\Page;
 use CM\CMBundle\Entity\Post;
-
+use CM\CMBundle\Entity\Group;
+use CM\CMBundle\Entity\Comment;
+use CM\CMBundle\Entity\Image;
+use CM\CMBundle\Entity\Like;
+use CM\CMBundle\Entity\Notification;
+use CM\CMBundle\Entity\Request;
 /**
  * User
  *
@@ -175,11 +181,57 @@ class User extends BaseUser
      * @ORM\Column(name="notes", type="text", nullable=true)
      */
     private $notes;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="CM\CMBundle\Entity\Group", inversedBy="users")
+     * @ORM\JoinTable(name="users_groups")
+     */
+	protected $groups;
+        
+    /**
+     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Page", mappedBy="user", cascade={"persist", "remove"})
+	 */
+	private $pages;
         
     /**
      * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Post", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	private $posts;
+        
+    /**
+     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Comment", mappedBy="user", cascade={"persist", "remove"})
+	 */
+	private $comments;
+        
+    /**
+     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Image", mappedBy="user", cascade={"persist", "remove"})
+	 */
+	private $images;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Like", mappedBy="user", cascade={"persist", "remove"})
+	 */
+	private $likes;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Notification", mappedBy="user", cascade={"persist", "remove"})
+	 */
+	private $notificationsIncoming;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Notification", mappedBy="userFrom", cascade={"persist", "remove"})
+	 */
+	private $notificationsOutcoming;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Request", mappedBy="user", cascade={"persist", "remove"})
+	 */
+	private $requestsIncoming;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Request", mappedBy="userFrom", cascade={"persist", "remove"})
+	 */
+	private $requestsOutcoming;
 
     /**
      * @Assert\NotBlank
@@ -197,6 +249,17 @@ class User extends BaseUser
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->groups = new ArrayCollection;
+		$this->pages = new ArrayCollection;
+		$this->posts = new ArrayCollection;
+		$this->comments = new ArrayCollection;
+		$this->images = new ArrayCollection;
+		$this->likes = new ArrayCollection;
+		$this->notificationsIncoming = new ArrayCollection;
+		$this->notificationsOutcoming = new ArrayCollection;
+		$this->requestsIncoming = new ArrayCollection;
+		$this->requestsOutcoming = new ArrayCollection;
 	}
 
     /**
@@ -683,6 +746,66 @@ class User extends BaseUser
     }
 
     /**
+     * @param \CM\CMBundle\Entity\Group $group
+     * @return Entity
+     */
+    public function addUserGroup(Group $group)
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups[] = $group;
+            $group->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     */
+    public function removeUserGroup(Group $group)
+    {
+        $this->groups->removeElement($group);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserGroups()
+    {
+        return $this->groups;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Page $page
+     * @return Entity
+     */
+    public function addPage(Page $page)
+    {
+        if (!$this->pages->contains($page)) {
+            $this->pages[] = $page;
+            $page->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     */
+    public function removePage(Page $page)
+    {
+        $this->pages->removeElement($page);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPages()
+    {
+        return $this->pages;
+    }
+
+    /**
      * @param \CM\CMBundle\Entity\Image $images
      * @return Entity
      */
@@ -692,19 +815,6 @@ class User extends BaseUser
             $this->posts[] = $post;
             $post->setUser($this);
         }
-    
-        return $this;
-    }
-
-    /**
-     * @param \CM\CMBundle\Entity\Image $images
-     * @return Entity
-     */
-    public function addPosts(ArrayCollection $posts)
-    {
-    	foreach ($images->toArray()['posts'] as $post) {
-    		$this->addPost($post);
-    	}
     
         return $this;
     }
@@ -724,4 +834,234 @@ class User extends BaseUser
     {
         return $this->posts;
     }
+
+    /**
+     * @param \CM\CMBundle\Entity\Comment $comment
+     * @return Entity
+     */
+    public function addComment(Comment $comment)
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Comment $images
+     */
+    public function removeComment(Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $comment
+     * @return Entity
+     */
+    public function addImage(Image $image)
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     */
+    public function removeImage(Image $image)
+    {
+        $this->images->removeElement($image);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+	/**
+	 * Add like
+	 *
+	 * @param Like $like
+	 * @return Post
+	 */
+	public function addLike(Like $like)
+	{
+	    $this->likes[] = $like;
+	    $like->setPost($this);
+	
+	    return $this;
+	}
+
+	/**
+	 * Remove likes
+	 *
+	 * @param Like $like
+	 */
+	public function removeLike(Like $like)
+	{
+	    $this->likes->removeElement($like);
+	}
+
+	/**
+	 * Get like
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getLikes()
+	{
+	    return $this->likes;
+	}
+
+	/**
+	 * Add notificationIncoming
+	 *
+	 * @param NotificationIncoming $notificationIncoming
+	 * @return Post
+	 */
+	public function addNotificationIncoming(Notification $notificationIncoming)
+	{
+	    $this->notificationsIncoming[] = $notificationIncoming;
+	    $notificationIncoming->setPost($this);
+	
+	    return $this;
+	}
+
+	/**
+	 * Remove notificationsIncoming
+	 *
+	 * @param NotificationIncoming $notificationIncoming
+	 */
+	public function removeNotificationIncoming(Notification $notificationIncoming)
+	{
+	    $this->notificationsIncoming->removeElement($notificationIncoming);
+	}
+
+	/**
+	 * Get notificationIncoming
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getNotificationsIncoming()
+	{
+	    return $this->notificationsIncoming;
+	}
+
+	/**
+	 * Add notificationOutcoming
+	 *
+	 * @param NotificationOutcoming $notificationOutcoming
+	 * @return Post
+	 */
+	public function addNotificationOutcoming(Notification $notificationOutcoming)
+	{
+	    $this->notificationsOutcoming[] = $notificationOutcoming;
+	    $notificationOutcoming->setPost($this);
+	
+	    return $this;
+	}
+
+	/**
+	 * Remove notificationsOutcoming
+	 *
+	 * @param NotificationOutcoming $notificationOutcoming
+	 */
+	public function removeNotificationOutcoming(Notification $notificationOutcoming)
+	{
+	    $this->notificationsOutcoming->removeElement($notificationOutcoming);
+	}
+
+	/**
+	 * Get notificationOutcoming
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getNotificationsOutcoming()
+	{
+	    return $this->notificationsOutcoming;
+	}
+
+	/**
+	 * Add requestIncoming
+	 *
+	 * @param RequestIncoming $requestIncoming
+	 * @return Post
+	 */
+	public function addRequestIncoming(Request $requestIncoming)
+	{
+	    $this->requestsIncoming[] = $requestIncoming;
+	    $requestIncoming->setPost($this);
+	
+	    return $this;
+	}
+
+	/**
+	 * Remove requestsIncoming
+	 *
+	 * @param RequestIncoming $requestIncoming
+	 */
+	public function removeRequestIncoming(Request $requestIncoming)
+	{
+	    $this->requestsIncoming->removeElement($requestIncoming);
+	}
+
+	/**
+	 * Get requestIncoming
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getRequestsIncoming()
+	{
+	    return $this->requestsIncoming;
+	}
+
+	/**
+	 * Add requestOutcoming
+	 *
+	 * @param RequestOutcoming $requestOutcoming
+	 * @return Post
+	 */
+	public function addRequestOutcoming(Request $requestOutcoming)
+	{
+	    $this->requestsOutcoming[] = $requestOutcoming;
+	    $requestOutcoming->setPost($this);
+	
+	    return $this;
+	}
+
+	/**
+	 * Remove requestsOutcoming
+	 *
+	 * @param RequestOutcoming $requestOutcoming
+	 */
+	public function removeRequestOutcoming(Request $requestOutcoming)
+	{
+	    $this->requestsOutcoming->removeElement($requestOutcoming);
+	}
+
+	/**
+	 * Get requestOutcoming
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getRequestsOutcoming()
+	{
+	    return $this->requestsOutcoming;
+	}
 }

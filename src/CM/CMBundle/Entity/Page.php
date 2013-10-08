@@ -4,6 +4,7 @@ namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use Doctrine\Common\Collections\ArrayCollection;
 use CM\UserBundle\Entity\User;
 
 /**
@@ -41,7 +42,7 @@ class Page
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="pages")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $user;
@@ -94,7 +95,16 @@ class Page
      * @ORM\Column(name="vip", type="boolean")
      */
     private $vip = false;
-
+        
+    /**
+     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Image", mappedBy="page", cascade={"persist", "remove"})
+	 */
+	private $images;
+    
+    public function __construct()
+    {
+    	$this->images = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -334,6 +344,36 @@ class Page
     public function getVip()
     {
         return $this->vip;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $comment
+     * @return Entity
+     */
+    public function addImage(Image $image)
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     */
+    public function removeImage(Image $image)
+    {
+        $this->images->removeElement($image);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getImages()
+    {
+        return $this->images;
     }
 
     /**

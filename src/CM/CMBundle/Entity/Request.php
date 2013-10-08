@@ -31,19 +31,19 @@ class Request
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="requestIncoming")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="requestOutcoming")
      * @ORM\JoinColumn(name="from_user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $fromUser;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Entity")
+     * @ORM\ManyToOne(targetEntity="Entity", inversedBy="request")
      * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE")
      **/
     private $entity;

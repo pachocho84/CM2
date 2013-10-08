@@ -33,19 +33,19 @@ class Comment
     private $comment;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Post")
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
      * @ORM\JoinColumn(name="post_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $post;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Image")
+     * @ORM\ManyToOne(targetEntity="Image", inversedBy="comments")
      * @ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $user;

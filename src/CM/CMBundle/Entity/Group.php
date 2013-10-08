@@ -4,6 +4,7 @@ namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use Doctrine\Common\Collections\ArrayCollection;
 use CM\UserBundle\Entity\User;
 
 /**
@@ -40,10 +41,9 @@ class Group
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     **/
-    private $user;
+     * @ORM\ManyToMany(targetEntity="CM\UserBundle\Entity\User", mappedBy="groups")
+     */
+    private $users;
 
     /**
      * @var string
@@ -86,6 +86,17 @@ class Group
      * @ORM\Column(name="vip", type="boolean")
      */
     private $vip = false;
+        
+    /**
+     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Image", mappedBy="group", cascade={"persist", "remove"})
+	 */
+	private $images;
+    
+    public function __construct()
+    {
+    	$this->users = new ArrayCollection();
+    	$this->images = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -312,6 +323,36 @@ class Group
      */
     public function getSluggableFields()
     {
-        return [];
+        return ['name'];
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $comment
+     * @return Entity
+     */
+    public function addImage(Image $image)
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     */
+    public function removeImage(Image $image)
+    {
+        $this->images->removeElement($image);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getImages()
+    {
+        return $this->images;
     }
 }

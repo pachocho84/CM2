@@ -36,6 +36,11 @@ abstract class Entity
     private $visible;
     
     /**
+     * @ORM\OneToMany(targetEntity="Request", mappedBy="entity", cascade={"persist", "remove"})
+     */
+     private $requests;
+    
+    /**
      * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"})
      */
      private $images;
@@ -49,7 +54,7 @@ abstract class Entity
     public function __construct()
     {
     	$this->users = new ArrayCollection();
-/*     	$this->posts = new ArrayCollection(); */
+    	$this->requests = new ArrayCollection();
     	$this->images = new ArrayCollection();
     }
 
@@ -111,6 +116,36 @@ abstract class Entity
     }
 
     /**
+     * @param \CM\CMBundle\Entity\Request $requests
+     * @return Entity
+     */
+    public function addRequest(Request $request)
+    {
+        if (!$this->requests->contains($request)) {
+            $this->requests[] = $request;
+            $request->setEntity($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Request $requests
+     */
+    public function removeRequest(Request $request)
+    {
+        $this->requests->removeElement($request);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRequests()
+    {
+        return $this->requests;
+    }
+
+    /**
      * @param \CM\CMBundle\Entity\Image $images
      * @return Entity
      */
@@ -122,19 +157,6 @@ abstract class Entity
         }
     
         return $this;
-    }
-
-    /**
-     * @param \CM\CMBundle\Entity\Image $images
-     * @return Entity
-     */
-    public function addImages(ArrayCollection $images)
-    {
-    	foreach ($images->toArray()['images'] as $image) {
-    		$this->addImage($image);
-    	}
-    
-      return $this;
     }
 
     /**

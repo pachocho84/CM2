@@ -26,19 +26,19 @@ class Like
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Post")
-     * @ORM\JoinColumn(name="post_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="likes")
+     * @ORM\JoinColumn(name="post_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $post;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Image")
-     * @ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Image", inversedBy="likes")
+     * @ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="likes")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $user;

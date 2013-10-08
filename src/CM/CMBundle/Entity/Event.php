@@ -13,32 +13,32 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Event extends Entity
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="EventDate", mappedBy="event", cascade={"persist", "remove"})
-		 */
-	 	private $eventDates;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="event", cascade={"persist", "remove"})
-		 */
-	 	private $posts;
+	/**
+	 * @var integer
+	 *
+	 * @ORM\Column(name="id", type="integer")
+	 * @ORM\Id
+	 * @ORM\GeneratedValue(strategy="AUTO")
+	 */
+	private $id;
 	
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
+	/**
+	 * @ORM\OneToMany(targetEntity="EventDate", mappedBy="event", cascade={"persist", "remove"})
+	 */
+	private $eventDates;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="Post", mappedBy="post", cascade={"persist", "remove"})
+	 */
+	private $posts;
+	
+	/**
+	 * Get id
+	 *
+	 * @return integer 
+	 */
+	public function getId()
+	{
 /*         return $this->id; */
 	    return parent::getId();
     }
@@ -115,10 +115,10 @@ class Event extends Entity
     /**
      * Add posts
      *
-     * @param \CM\CMBundle\Entity\Post $posts
+     * @param ìPost $posts
      * @return Event
      */
-    public function addPost(\CM\CMBundle\Entity\Post $post)
+    public function addPost(Post $post)
     {
         $this->posts[] = $post;
         $post->setEvent($this);
@@ -131,7 +131,7 @@ class Event extends Entity
      *
      * @param \CM\CMBundle\Entity\Post $posts
      */
-    public function removePost(\CM\CMBundle\Entity\Post $posts)
+    public function removePost(Post $posts)
     {
         $this->posts->removeElement($posts);
     }

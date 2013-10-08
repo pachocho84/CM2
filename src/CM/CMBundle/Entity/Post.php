@@ -4,6 +4,7 @@ namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use CM\UserBundle\Entity\User as User;
 
@@ -64,6 +65,31 @@ class Post
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)	
      */
     private $user;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"persist", "remove"})
+	 */
+	private $comments;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="Like", mappedBy="post", cascade={"persist", "remove"})
+	 */
+	private $likes;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="post", cascade={"persist", "remove"})
+	 */
+	private $notifications;
+        
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+    	$this->comments = new ArrayCollection;
+    	$this->likes = new ArrayCollection;
+    	$this->notifications = new ArrayCollection;
+    }
 
     public function __toString()
     {
@@ -219,4 +245,106 @@ class Post
     {
         return $this->event;
     }
+
+    /**
+     * Add comment
+     *
+     * @param Comment $comment
+     * @return Post
+     */
+    public function addComment(Comment $comment)
+    {
+        $this->comments[] = $comment;
+        $comment->setPost($this);
+    
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \CM\CMBundle\Entity\Post $posts
+     */
+    public function removeComment(Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+	/**
+	 * Add like
+	 *
+	 * @param Like $like
+	 * @return Post
+	 */
+	public function addLike(Like $like)
+	{
+	    $this->likes[] = $like;
+	    $like->setPost($this);
+	
+	    return $this;
+	}
+
+	/**
+	 * Remove likes
+	 *
+	 * @param Like $like
+	 */
+	public function removeLike(Like $like)
+	{
+	    $this->likes->removeElement($like);
+	}
+
+	/**
+	 * Get like
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getLikes()
+	{
+	    return $this->likes;
+	}
+
+	/**
+	 * Add notification
+	 *
+	 * @param Notification $notification
+	 * @return Post
+	 */
+	public function addNotification(Notification $notification)
+	{
+	    $this->notifications[] = $notification;
+	    $notification->setPost($this);
+	
+	    return $this;
+	}
+
+	/**
+	 * Remove notifications
+	 *
+	 * @param Notification $notification
+	 */
+	public function removeNotification(Notification $notification)
+	{
+	    $this->notifications->removeElement($notification);
+	}
+
+	/**
+	 * Get notification
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getNotifications()
+	{
+	    return $this->notifications;
+	}
 }
