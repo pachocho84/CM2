@@ -15,6 +15,14 @@ use CM\CMBundle\Entity\EntityCategoryEnum;
 class EntityCategory
 {
 	use ORMBehaviors\Translatable\Translatable;
+
+	const ENTITY	 = 0;
+	const EVENT		 = 1;
+	const DISC		 = 2;
+	const ARTICLE	 = 3;
+	const LINK		 = 4;
+	const IMAGE		 = 5;
+	const MULTIMEDIA = 6;
 	
     /**
      * @var integer

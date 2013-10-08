@@ -4,6 +4,7 @@ namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use CM\UserBundle\Entity\User;
 
@@ -12,10 +13,12 @@ use CM\UserBundle\Entity\User;
  *
  * @ORM\Entity
  * @ORM\Table(name="`group`")
+ * @ORM\HasLifecycleCallbacks
  */
 class Group
 {
-    use ORMBehaviors\Sluggable\Sluggable;
+    use ORMBehaviors\Sluggable\Sluggable,
+    	\CM\Model\ImageAndCoverTrait;
     
     /**
      * @var integer
@@ -53,34 +56,6 @@ class Group
     private $description;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="img", type="string", length=100)
-     */
-    private $img;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="img_offset", type="smallint")
-     */
-    private $imgOffset;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="cover_img", type="string", length=100)
-     */
-    private $coverImg;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="cover_img_offset", type="smallint")
-     */
-    private $coverImgOffset;
-
-    /**
      * @var boolean
      *
      * @ORM\Column(name="vip", type="boolean")
@@ -97,6 +72,11 @@ class Group
     	$this->users = new ArrayCollection();
     	$this->images = new ArrayCollection();
     }
+
+	protected function getRootDir()
+	{
+		return __DIR__.'/../Resources/public/';
+	}
 
     /**
      * Get id
@@ -178,98 +158,6 @@ class Group
     }
 
     /**
-     * Set img
-     *
-     * @param string $img
-     * @return Group
-     */
-    public function setImg($img)
-    {
-        $this->img = $img;
-    
-        return $this;
-    }
-
-    /**
-     * Get img
-     *
-     * @return string 
-     */
-    public function getImg()
-    {
-        return $this->img;
-    }
-
-    /**
-     * Set imgOffset
-     *
-     * @param integer $imgOffset
-     * @return Group
-     */
-    public function setImgOffset($imgOffset)
-    {
-        $this->imgOffset = $imgOffset;
-    
-        return $this;
-    }
-
-    /**
-     * Get imgOffset
-     *
-     * @return integer 
-     */
-    public function getImgOffset()
-    {
-        return $this->imgOffset;
-    }
-
-    /**
-     * Set coverImg
-     *
-     * @param string $coverImg
-     * @return Group
-     */
-    public function setCoverImg($coverImg)
-    {
-        $this->coverImg = $coverImg;
-    
-        return $this;
-    }
-
-    /**
-     * Get coverImg
-     *
-     * @return string 
-     */
-    public function getCoverImg()
-    {
-        return $this->coverImg;
-    }
-
-    /**
-     * Set coverImgOffset
-     *
-     * @param integer $coverImgOffset
-     * @return Group
-     */
-    public function setCoverImgOffset($coverImgOffset)
-    {
-        $this->coverImgOffset = $coverImgOffset;
-    
-        return $this;
-    }
-
-    /**
-     * Get coverImgOffset
-     *
-     * @return integer 
-     */
-    public function getCoverImgOffset()
-    {
-        return $this->coverImgOffset;
-    }
-
-    /**
      * Set vip
      *
      * @param boolean $vip
@@ -293,37 +181,32 @@ class Group
     }
 
     /**
-     * Set user
-     *
-     * @param User $user
-     * @return Group
+     * @param \CM\CMBundle\Entity\User $comment
+     * @return Entity
      */
-    public function setUser(User $user = null)
+    public function addUser(User $user)
     {
-        $this->user = $user;
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+        }
     
         return $this;
     }
 
     /**
-     * Get user
-     *
-     * @return User 
+     * @param \CM\CMBundle\Entity\User $users
      */
-    public function getUser()
+    public function removeUser(User $user)
     {
-        return $this->user;
+        $this->users->removeElement($user);
     }
 
     /**
-     * Get sluggable fields
-     * 
-     * @access public
-     * @return void
+     * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getSluggableFields()
+    public function getUsers()
     {
-        return ['name'];
+        return $this->users;
     }
 
     /**
@@ -354,5 +237,16 @@ class Group
     public function getImages()
     {
         return $this->images;
+    }
+
+    /**
+     * Get sluggable fields
+     * 
+     * @access public
+     * @return void
+     */
+    public function getSluggableFields()
+    {
+        return ['name'];
     }
 }

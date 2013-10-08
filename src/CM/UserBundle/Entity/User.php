@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use CM\CMBundle\Entity\Entity;
 use CM\CMBundle\Entity\Page;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Group;
@@ -24,6 +25,8 @@ use CM\CMBundle\Entity\Request;
  */
 class User extends BaseUser
 {
+	use \CM\Model\ImageAndCoverTrait;
+
 	const SEX_M = true;
 	const SEX_F = false;
 
@@ -65,34 +68,6 @@ class User extends BaseUser
      * )
      */
     private $lastName;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="img", type="string", length=100)
-     */
-    private $img;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="img_offset", type="smallint", nullable=true)
-     */
-    private $imgOffset;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="cover_img", type="string", length=100, nullable=true)
-     */
-    private $coverImg;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="cover_img_offset", type="smallint", nullable=true)
-     */
-    private $coverImgOffset;
 
     /**
      * @var boolean
@@ -187,6 +162,12 @@ class User extends BaseUser
      * @ORM\JoinTable(name="users_groups")
      */
 	protected $groups;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="CM\CMBundle\Entity\Entity", inversedBy="users")
+     * @ORM\JoinTable(name="users_entities")
+     */
+	protected $entities;
         
     /**
      * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Page", mappedBy="user", cascade={"persist", "remove"})
@@ -233,19 +214,6 @@ class User extends BaseUser
 	 */
 	private $requestsOutcoming;
 
-    /**
-     * @Assert\NotBlank
-     * @Assert\Image(
-     *     minWidth = 250,
-     *     maxWidth = 750,
-     *     minHeight = 250,
-     *     maxHeight = 750,
-     *     maxSize = "8M",
-     *     mimeTypes = {"image/png", "image/jpeg", }
-     * )
-     */
-    private $imgFile;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -260,6 +228,11 @@ class User extends BaseUser
 		$this->notificationsOutcoming = new ArrayCollection;
 		$this->requestsIncoming = new ArrayCollection;
 		$this->requestsOutcoming = new ArrayCollection;
+	}
+
+	protected function getRootDir()
+	{
+		return __DIR__.'/../Resources/public/';
 	}
 
     /**
@@ -316,98 +289,6 @@ class User extends BaseUser
     public function getLastName()
     {
         return $this->lastName;
-    }
-
-    /**
-     * Set img
-     *
-     * @param string $img
-     * @return User
-     */
-    public function setImg($img)
-    {
-        $this->img = $img;
-    
-        return $this;
-    }
-
-    /**
-     * Get img
-     *
-     * @return string 
-     */
-    public function getImg()
-    {
-        return $this->img;
-    }
-
-    /**
-     * Set imgOffset
-     *
-     * @param integer $imgOffset
-     * @return User
-     */
-    public function setImgOffset($imgOffset)
-    {
-        $this->imgOffset = $imgOffset;
-    
-        return $this;
-    }
-
-    /**
-     * Get imgOffset
-     *
-     * @return integer 
-     */
-    public function getImgOffset()
-    {
-        return $this->imgOffset;
-    }
-
-    /**
-     * Set coverImg
-     *
-     * @param string $coverImg
-     * @return User
-     */
-    public function setCoverImg($coverImg)
-    {
-        $this->coverImg = $coverImg;
-    
-        return $this;
-    }
-
-    /**
-     * Get coverImg
-     *
-     * @return string 
-     */
-    public function getCoverImg()
-    {
-        return $this->coverImg;
-    }
-
-    /**
-     * Set coverImgOffset
-     *
-     * @param integer $coverImgOffset
-     * @return User
-     */
-    public function setCoverImgOffset($coverImgOffset)
-    {
-        $this->coverImgOffset = $coverImgOffset;
-    
-        return $this;
-    }
-
-    /**
-     * Get coverImgOffset
-     *
-     * @return integer 
-     */
-    public function getCoverImgOffset()
-    {
-        return $this->coverImgOffset;
     }
 
     /**
@@ -666,84 +547,6 @@ class User extends BaseUser
     {
         return $this->notes;
     }
-    
-    /**
-     * Set file.
-     *
-     * @param UploadedFile $file
-     */
-    public function setImgFile(UploadedFile $file = null)
-    {
-        $this->imgFile = $file;
-    }
-
-    /**
-     * Get file.
-     *
-     * @return UploadedFile
-     */
-    public function getImgFile()
-    {
-        return $this->imgFile;
-    }    
-
-    public function getImgAbsolutePath()
-    {
-        return null === $this->img
-            ? null
-            : $this->getUploadRootDir().'/'.$this->img;
-    }
-
-    protected function getUploadRootDir()
-    {
-        // the absolute directory path where uploaded images should be saved
-        return __DIR__.'/../Resources/public/'.$this->getUploadDir();
-    }
-
-    protected function getUploadDir()
-    {
-   		// if you change this, change it also in the config.yml file!
-        return 'uploads/images/full';
-    }
-
-    /**
-     * @ORM\PrePersist()
-     */
-    public function sanitizeImgFileName()
-    {
-        if (null !== $this->getImgFile()) {
-        	$fileName = md5($this->getImgFile()->getClientOriginalName().time().uniqid());
-            $this->img = $fileName.'.'.$this->getImgFile()->guessExtension(); // FIXME: doesn't work with bmp files
-        }
-    }
-
-    /**
-     * @ORM\PostPersist()
-     */
-    public function upload()
-    {
-        if (null === $this->getImgFile()) {
-            return;
-        }
-
-        // if there is an error when moving the file, an exception will
-        // be automatically thrown by move(). This will properly prevent
-        // the entity from being persisted to the database on error
-        $this->getImgFile()->move($this->getUploadRootDir(), $this->img);
-
-   		// clean up the file property as you won't need it anymore
-        $this->file = null;
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeUpload()
-    {
-        if ($file = $this->getImgAbsolutePath()) {
-            unlink($file);
-        }
-    }
 
     /**
      * @param \CM\CMBundle\Entity\Group $group
@@ -773,6 +576,36 @@ class User extends BaseUser
     public function getUserGroups()
     {
         return $this->groups;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Entity $entity
+     * @return Entity
+     */
+    public function addEntity(Entity $entity)
+    {
+        if (!$this->entities->contains($entity)) {
+            $this->entities[] = $entity;
+            $entity->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Entity $images
+     */
+    public function removeEntity(Entity $entity)
+    {
+        $this->entities->removeElement($entity);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Entity 
+     */
+    public function getEntities()
+    {
+        return $this->entities;
     }
 
     /**

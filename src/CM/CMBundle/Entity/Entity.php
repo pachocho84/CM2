@@ -25,7 +25,7 @@ abstract class Entity
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
     
     /**
      * @var boolean
@@ -34,6 +34,11 @@ abstract class Entity
      * @Assert\Type(type="bool")
      */
     private $visible;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="CM\UserBundle\Entity\User", mappedBy="entities")
+     */
+    private $users;
     
     /**
      * @ORM\OneToMany(targetEntity="Request", mappedBy="entity", cascade={"persist", "remove"})
@@ -113,6 +118,35 @@ abstract class Entity
     public function getEntityCategory()
     {
         return $this->entityCategory;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\User $comment
+     * @return Entity
+     */
+    public function addUser(User $user)
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\User $users
+     */
+    public function removeUser(User $user)
+    {
+        $this->users->removeElement($user);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 
     /**

@@ -18,7 +18,7 @@ class Post
 {
     use ORMBehaviors\Timestampable\Timestampable;
     
-    const TYPE_CREATION = 'CREATION';
+    const TYPE_CREATION = 0;
 
     /**
      * @var integer
@@ -32,7 +32,7 @@ class Post
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="string", length=50)
+     * @ORM\Column(name="type", type="smallint")
      */
     private $type;
 

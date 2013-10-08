@@ -29,6 +29,11 @@ class EventRepository extends EntityRepository
 	public function getEvents(array $options = array())
 	{
 		$options = self::getOptions($options);
+
+		$parameters = array(
+			'now' => '2013-10-07',
+			'locale' => $options['locale']
+		);
 		
 		$eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
 		
@@ -36,28 +41,23 @@ class EventRepository extends EntityRepository
 			->join('d.event', 'e')
 			->leftJoin('e.translations', 't')
 			->leftJoin('e.posts', 'p')
-			->leftJoin('e.images', 'i', 'WITH', 'i.main = 1');
+			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true);
 		
-		if (isset($options['category'])) 
-		{
-			$query->andWhere('e.entityCategory = :category')->setParameter('category', $options['category']);	
-		} 
+		if (isset($options['category'])) {
+			$query->andWhere('e.entityCategory = :category');
+			$parameters['category'] = $options['category'];
+		}
 		
-		if (isset($options['archive'])) 
-		{
+		if (isset($options['archive'])) {
 			$query->andWhere('d.start <= :now')->orderBy('d.start', 'desc');	
 		}
-		else
-		{
+		else {
 			$query->andWhere('d.start >= :now')->orderBy('d.start');	
-		}			
+		}
 			
 		$query
 			->andWhere('t.locale in (:locale, \'en\')') // TODO: DA SISTEMARE CON UN MERGE
-			->setParameters(array(
-				'now' => '2013-10-07',
-				'locale' => $options['locale']
-			));
+			->setParameters($parameters);
 			
 		
 		return $options['paginate'] ? $query : $query->setMaxResults($options['limit'])->getQuery()->getResult();

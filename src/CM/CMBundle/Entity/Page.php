@@ -4,6 +4,7 @@ namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use CM\UserBundle\Entity\User;
 
@@ -12,11 +13,13 @@ use CM\UserBundle\Entity\User;
  *
  * @ORM\Table(name="page")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class Page
 {
     use ORMBehaviors\Sluggable\Sluggable,
-    	ORMBehaviors\Timestampable\Timestampable;
+    	ORMBehaviors\Timestampable\Timestampable,
+    	\CM\Model\ImageAndCoverTrait;
 
     /**
      * @var integer
@@ -57,34 +60,6 @@ class Page
     /**
      * @var string
      *
-     * @ORM\Column(name="img", type="string", length=100, nullable=true)
-     */
-    private $img;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="img_offset", type="smallint", nullable=true)
-     */
-    private $imgOffset;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="cover_img", type="string", length=100, nullable=true)
-     */
-    private $coverImg;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="cover_img_offset", type="smallint", nullable=true)
-     */
-    private $coverImgOffset;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="website", type="string", length=150, nullable=false)
      */
     private $website;
@@ -105,6 +80,11 @@ class Page
     {
     	$this->images = new ArrayCollection();
     }
+
+	protected function getRootDir()
+	{
+		return __DIR__.'/../Resources/public/';
+	}
 
     /**
      * Get id
@@ -206,98 +186,6 @@ class Page
     public function getDescription()
     {
         return $this->description;
-    }
-
-    /**
-     * Set img
-     *
-     * @param string $img
-     * @return Page
-     */
-    public function setImg($img)
-    {
-        $this->img = $img;
-    
-        return $this;
-    }
-
-    /**
-     * Get img
-     *
-     * @return string 
-     */
-    public function getImg()
-    {
-        return $this->img;
-    }
-
-    /**
-     * Set imgOffset
-     *
-     * @param integer $imgOffset
-     * @return Page
-     */
-    public function setImgOffset($imgOffset)
-    {
-        $this->imgOffset = $imgOffset;
-    
-        return $this;
-    }
-
-    /**
-     * Get imgOffset
-     *
-     * @return integer 
-     */
-    public function getImgOffset()
-    {
-        return $this->imgOffset;
-    }
-
-    /**
-     * Set coverImg
-     *
-     * @param string $coverImg
-     * @return Page
-     */
-    public function setCoverImg($coverImg)
-    {
-        $this->coverImg = $coverImg;
-    
-        return $this;
-    }
-
-    /**
-     * Get coverImg
-     *
-     * @return string 
-     */
-    public function getCoverImg()
-    {
-        return $this->coverImg;
-    }
-
-    /**
-     * Set coverImgOffset
-     *
-     * @param integer $coverImgOffset
-     * @return Page
-     */
-    public function setCoverImgOffset($coverImgOffset)
-    {
-        $this->coverImgOffset = $coverImgOffset;
-    
-        return $this;
-    }
-
-    /**
-     * Get coverImgOffset
-     *
-     * @return integer 
-     */
-    public function getCoverImgOffset()
-    {
-        return $this->coverImgOffset;
     }
 
     /**

@@ -6,6 +6,7 @@
 /app/Resources/node_modules/
 /bin/
 /build/
+/src/CM/CMBundle/Resources/public/uploads/
 /vendor/
 /web/bundles/
 *.DS_Store
