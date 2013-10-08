@@ -11,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
-use CM\CMBundle\Entity\Locale;
+use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\EntityCategoryEnum;
 use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Event;
@@ -135,14 +135,25 @@ class EventController extends Controller
   	if ($id == null || $slug == null) {
       	$event = new Event;
 		$event->addEventDate(new EventDate);
+
 		$image = new Image;
 		$image->setMain(true);
 		$event->addImage($image);
+
+		$post = new Post;
+		$post->setType(Post::TYPE_CREATION);
+
+		$user = $this->getUser();
+		$user
+			->addImage($image)
+			->addPost($post);
+
+		$event->addPost($post);
 		}
 		else {
 			$em = $this->getDoctrine()->getManager();
-	    $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale());
-	    // TODO: retrieve images from event
+	    	$event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale());
+	    	// TODO: retrieve images from event
 		}
 	      
 	  // TODO: retrieve locales from user

@@ -19,4 +19,4 @@ knp_paginator:
 parameters:
     bundle.dir: /bundles/cm
     upload.dir: /uploads
-    uploads.images_full: %upload.dir%/images/full # if you change this, change it also in the Image.php file!
+    uploads.images_full: %bundle.dir%/%upload.dir%/images/full # if you change this, change it also in the Image.php file!

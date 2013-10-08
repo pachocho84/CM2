@@ -521,7 +521,7 @@ class Image
     public function sanitizeFileName()
     {
         if (null !== $this->getFile()) {
-        	$fileName = md5($this->getFile()->getClientOriginalName().time().uniqid());
+        	$fileName = uniqid($this->getFile()->getClientOriginalName().time(), true);
             $this->img = $fileName.'.'.$this->getFile()->guessExtension(); // FIXME: doesn't work with bmp files
         }
     }

@@ -28,6 +28,25 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 	{
 		$userManager = $this->container->get('fos_user.user_manager');
 
+		$user = $userManager->createUser();
+		$date = new \DateTime;
+		$user
+			->setEmail('ernesto@circuitomusica.it')
+			->setUsername('pachocho')
+			->setPlainPassword('pacho')
+			->setEnabled(true)
+			->setFirstName('Ernesto')
+			->setLastName('Casareto')
+			->setSex(User::SEX_M)
+			->setCityBirth('Padua')
+			->setCityCurrent('Milan')
+			->setBirthDate($date->setDate(1984, 5, 17))
+			->setBirthDateVisible(false)
+			->setImg($this->images[1]);
+
+		$manager->persist($user);
+		$manager->flush();
+
 		$userCount = 10;
 		// $this->addReference('user-count', $userCount);
 
@@ -54,7 +73,6 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 				->setImg($this->images[$userNum]);
 
 			$manager->persist($user);
-
 			$manager->flush();
 
 			$this->addReference('user-'.$i, $user);
