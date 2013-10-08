@@ -102,6 +102,11 @@ class Image
 	private $likes;
 	
 	/**
+	 * @ORM\OneToMany(targetEntity="Comment", mappedBy="image", cascade={"persist", "remove"})
+	 */
+	private $comments;
+	
+	/**
 	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="image", cascade={"persist", "remove"})
 	 */
 	private $notifications;
@@ -401,6 +406,40 @@ class Image
 	public function getLikes()
 	{
 	    return $this->likes;
+	}
+
+	/**
+	 * Add comment
+	 *
+	 * @param Comment $comment
+	 * @return Post
+	 */
+	public function addComment(Comment $comment)
+	{
+	    $this->comments[] = $comment;
+	    $comment->setPost($this);
+	
+	    return $this;
+	}
+
+	/**
+	 * Remove comments
+	 *
+	 * @param Comment $comment
+	 */
+	public function removeComment(Comment $comment)
+	{
+	    $this->comments->removeElement($comment);
+	}
+
+	/**
+	 * Get comment
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getComments()
+	{
+	    return $this->comments;
 	}
 
 	/**

@@ -219,7 +219,7 @@ class User extends BaseUser
 	private $notificationsIncoming;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Notification", mappedBy="userFrom", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Notification", mappedBy="fromUser", cascade={"persist", "remove"})
 	 */
 	private $notificationsOutcoming;
 	
@@ -229,7 +229,7 @@ class User extends BaseUser
 	private $requestsIncoming;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Request", mappedBy="userFrom", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Request", mappedBy="fromUser", cascade={"persist", "remove"})
 	 */
 	private $requestsOutcoming;
 
