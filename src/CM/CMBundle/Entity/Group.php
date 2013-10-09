@@ -188,6 +188,7 @@ class Group
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
+            $user->addUserGroup($this);
         }
     
         return $this;

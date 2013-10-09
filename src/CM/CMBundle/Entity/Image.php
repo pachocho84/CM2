@@ -82,20 +82,20 @@ class Image
      */
     private $text;
 	
-	/**
-	 * @ORM\OneToMany(targetEntity="Like", mappedBy="image", cascade={"persist", "remove"})
-	 */
-	private $likes;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="Comment", mappedBy="image", cascade={"persist", "remove"})
-	 */
-	private $comments;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="image", cascade={"persist", "remove"})
-	 */
-	private $notifications;
+    /**
+     * @ORM\OneToMany(targetEntity="Like", mappedBy="image", cascade={"persist", "remove"})
+     */
+    private $likes;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="image", cascade={"persist", "remove"})
+     */
+    private $comments;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Notification", mappedBy="image", cascade={"persist", "remove"})
+     */
+    private $notifications;
     
     public function __construct()
     {
@@ -103,16 +103,16 @@ class Image
     	$this->notifications = new ArrayCollection();
     }
 
-	public function __toString()
-	{
-		return $this->img;
-	}
-
-	protected function getRootDir()
-	{
-		return __DIR__.'/../Resources/public/';
-	}
-
+    public function __toString()
+    {
+      return $this->img;
+    }
+    
+    protected function getRootDir()
+    {
+      return __DIR__.'/../Resources/public/';
+    }
+    
     /**
      * Get id
      *

@@ -37,10 +37,11 @@ class EventRepository extends EntityRepository
 		
 		$eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
 		
-		$query = $eventDateRepository->createQueryBuilder('d')->select('d, e, t, p, i')
+		$query = $eventDateRepository->createQueryBuilder('d')->select('d, e, t, p, l, i')
 			->join('d.event', 'e')
 			->leftJoin('e.translations', 't')
-			->leftJoin('e.posts', 'p')
+			->leftJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
+			->leftJoin('p.likes', 'l')
 			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true);
 		
 		if (isset($options['category'])) {

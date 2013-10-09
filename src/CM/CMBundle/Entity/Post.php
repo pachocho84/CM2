@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
-use CM\UserBundle\Entity\User as User;
+use CM\UserBundle\Entity\User;
 
 /**
  * Post
@@ -313,6 +313,51 @@ class Post
 	{
 	    return $this->likes;
 	}
+	
+	public function getLikesWithoutUser($user)
+    {
+	    if (is_null($user)) {
+    	    return $this->getLikes();
+	    }
+	
+	    $likes = $this->getLikes();
+		foreach ($this->getLikes() as $like) {
+            if ($like->getUser() == $user) {
+                $likes->removeElement($like);
+            }
+        }
+		return $likes;
+	}
+	
+	public function getUserLikeIt($user)
+	{
+	    if (is_null($user)) {
+    	    return false;
+	    }
+	    
+		foreach ($this->getLikes() as $like) {
+            if ($like->getUser() == $user) {
+                return true;
+            }
+        }
+        
+        return false;
+	}
+  
+	public function getWhoLikesIt($user, $authenticated)
+	{
+		if (!is_null($user) && $authenticated) {
+    		$count = 0;
+    		foreach ($this->getLikes() as $like) {
+        		if ($like->getUser() != $user) {
+            		$count++;
+        		}
+    		};
+			return $count;
+        }
+        
+        return $this->getLikes()->count();
+    }
 
 	/**
 	 * Add notification

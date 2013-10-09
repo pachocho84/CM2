@@ -4,6 +4,7 @@ services:
         arguments: [%fos_user.model.user.class%]
         tags:
             - { name: form.type, alias: cm_userbundle_user_registration }
+            
     cm_user.profile.type:
         class: CM\UserBundle\Form\ProfileType
         arguments: [%fos_user.model.user.class%]

@@ -4,7 +4,3 @@ parameters:
 services:
     property_accessor:
         class: %cm_property_accessor.class%
-    locale_converter:
-        class: CM\CMBundle\Request\ParamConverter\LocaleParamConverter
-        tags:
-            - { name: request.param_converter, priority: 10, converter: locale_converter }

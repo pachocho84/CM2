@@ -1,0 +1,57 @@
+{% if post.likes.count > 0 %}
+
+	<li class="bottom-likes">
+		
+		<i class="glyphicon glyphicon-thumbs-up"></i>
+		
+		{% set userLikesIt = post.userLikeIt(app.user) %}
+		{% set whoLikesIt = post.whoLikesIt(app.user, is_granted('IS_AUTHENTICATED_REMEMBERED')) %}
+		{% set likesWithoutUser = post.likesWithoutUser(app.user) %}
+		
+        {% if userLikesIt %}
+            {% if whoLikesIt == 0 %}
+                {{ 'You like this.' | trans }}
+            {% elseif whoLikesIt == 1 %}
+                {{ 'You and %name% like this.' | trans({'%name%': '<a href="'~path('user_show', {'name': likesWithoutUser[0].user.usernameCanonical})~'">'~likesWithoutUser[0].user~'</a>'}) | raw }}
+            {% elseif whoLikesIt == 2 %}
+                2
+{#                 {{ '%name1% and %name2% likes this.'|trans({'%name1%': '<a href="'path('user_show', {'name': user.name})'">'user.name'</li>a>', }) }} #}
+            {% else %}
+                more
+            {% endif %}
+        {% else %}
+            {% if whoLikesIt == 1 %}
+                {{ '%name% likes this.' | trans({'%name%': '<a href="test"></li>a>'}) | raw }}
+            {% elseif whoLikesIt == 2 %}
+                {{ '%name1% and %name2% like this.' | trans({'%name1%': '<a href="'~path('user_show', {'name': post.likes[0].user.usernameCanonical})~'">'~post.likes[0].user~'</a>', '%name2%': '<a href="'~path('user_show', {'name': post.likes[1].user.usernameCanonical})~'">'~post.likes[1].user~'</a>'}) | raw }}
+            {% else %}
+                more
+            {% endif %}
+        {% endif %}
+		
+{#
+		<?php if ($post->getILikeIt() == false && $post->getWhoLikesIt() == 1): ?>
+			<?php echo __('%user% likes this.', array('%user%' => link_to($post->getLikes()->get(0)->getUser(), $post->getLikes()->get(0)->getUser()->getLinkShow()))) ?>	
+		<?php elseif ($post->getILikeIt() == false && $post->getWhoLikesIt() == 2): ?>
+			<?php echo __('%user1% and %user2% like this.', array('%user1%' => link_to($post->getLikes()->get(0)->getUser(), $post->getLikes()->get(0)->getUser()->getLinkShow()), '%user2%' => link_to($post->getLikes()->get(1)->getUser(), $post->getLikes()->get(1)->getUser()->getLinkShow()))) ?>
+		<?php elseif ($post->getILikeIt() == false && $post->getWhoLikesIt() > 2): ?>
+			<?php echo __('%user% and %link%%count% others%end_link% like this.', array('%user%' => link_to($post->getLikes()->get(0)->getUser(), $post->getLikes()->get(0)->getUser()->getLinkShow()), '%count%' => $post->getWhoLikesIt() - 1, '%link%' => '<a href="'.url_for('@whoLikesIt?type='.strtolower(get_class($post)).'&id='.$post->getId()).'" class="modal-trigger">', '%end_link%' => '</a>')) ?>
+		
+		<?php elseif ($post->getILikeIt() == true && $post->getWhoLikesIt() == 0): ?>
+			<?php echo __('You like this.') ?>
+		<?php elseif ($post->getILikeIt() == true && $post->getWhoLikesIt() == 1): ?>
+			<?php echo __('You and %user1% like this.', array('%user1%' => link_to($post->getLikesWithoutMe()->getFirst()->getUser(), $post->getLikesWithoutMe()->getFirst()->getUser()->getLinkShow()))) ?>
+		<?php elseif ($post->getILikeIt() == true && $post->getWhoLikesIt() == 2): ?>
+			<?php echo __('You, %user1% and %user2% like this.', array('%user1%' => link_to($post->getLikesWithoutMe()->getFirst()->getUser(), $post->getLikesWithoutMe()->getFirst()->getUser()->getLinkShow()), '%user2%' => link_to($post->getLikesWithoutMe()->getNext()->getUser(), $post->getLikesWithoutMe()->getNext()->getUser()->getLinkShow()))) ?>
+		<?php elseif ($post->getILikeIt() == true && $post->getWhoLikesIt() > 2): ?>
+			<?php echo __('You, %user1% and %link%%count% others%end_link% like this.', array('%user1%' => link_to($post->getLikesWithoutMe()->getFirst()->getUser(), $post->getLikesWithoutMe()->getFirst()->getUser()->getLinkShow()), '%count%' => $post->getWhoLikesIt() - 1, '%link%' => '<a href="'.url_for('@whoLikesIt?type='.strtolower(get_class($post)).'&id='.$post->getId()).'" class="modal-trigger">', '%end_link%' => '</a>')) ?>
+		<?php endif ?>
+#}
+		
+	</li>
+
+{% else %}
+	
+	<div class="bottom-likes"></div>
+			
+{% endif %}

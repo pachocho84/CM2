@@ -36,9 +36,9 @@ abstract class Entity
     private $visible;
 
     /**
-     * @ORM\ManyToMany(targetEntity="CM\UserBundle\Entity\User", mappedBy="entities")
+     * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity")
      */
-    private $users;
+    private $entitiesUsers;
     
     /**
      * @ORM\OneToMany(targetEntity="Request", mappedBy="entity", cascade={"persist", "remove"})
@@ -58,7 +58,7 @@ abstract class Entity
     
     public function __construct()
     {
-    	$this->users = new ArrayCollection();
+    	$this->entitiesUsers = new ArrayCollection();
     	$this->requests = new ArrayCollection();
     	$this->images = new ArrayCollection();
     }
@@ -121,32 +121,33 @@ abstract class Entity
     }
 
     /**
-     * @param \CM\CMBundle\Entity\User $comment
+     * @param \CM\CMBundle\Entity\EntityUser $comment
      * @return Entity
      */
-    public function addUser(User $user)
+    public function addEntitiesUsers(EntityUser $entityUser)
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
+        if (!$this->entitiesUsers->contains($entityUser)) {
+            $this->entitiesUsers[] = $entityUser;
+            $entityUser->setEntity($this);
         }
     
         return $this;
     }
 
     /**
-     * @param \CM\CMBundle\Entity\User $users
+     * @param \CM\CMBundle\Entity\EntityUser $users
      */
-    public function removeUser(User $user)
+    public function removeEntitiesUsers(EntityUser $entityUser)
     {
-        $this->users->removeElement($user);
+        $this->entitiesUsers->removeElement($entityUser);
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getUsers()
+    public function getEntitiesUsers()
     {
-        return $this->users;
+        return $this->entitiesUsers;
     }
 
     /**
