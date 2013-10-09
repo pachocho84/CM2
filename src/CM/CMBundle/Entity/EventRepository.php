@@ -55,7 +55,7 @@ class EventRepository extends EntityRepository
 		$query
 			->andWhere('t.locale in (:locale, \'en\')') // TODO: DA SISTEMARE CON UN MERGE
 			->setParameters(array(
-				'now' => '2013-10-07',
+				'now' => new \DateTime,
 				'locale' => $options['locale']
 			));
 			

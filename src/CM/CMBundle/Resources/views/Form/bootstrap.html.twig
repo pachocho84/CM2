@@ -25,6 +25,31 @@
 {% endspaceless %}
 {% endblock textarea_widget %}
 
+{% block form_widget_compound %}
+{% spaceless %}
+	<div class="panel panel-default"><div class="panel-heading">Head</div><div class="panel-body">
+    <div {{ block('widget_container_attributes') }}>
+        {% if form.parent is empty %}
+            {{ form_errors(form) }}
+        {% endif %}
+        {{ block('form_rows') }}
+        {{ form_rest(form) }}
+    </div>
+  </div></div>
+{% endspaceless %}
+{% endblock form_widget_compound %}
+
+{% block collection_widget %}
+<div class="well clearfix" style="clear: both;">
+{% spaceless %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    {{ block('form_widget') }}
+{% endspaceless %}
+</div>
+{% endblock collection_widget %}
+
 {#
 {% block choice_widget_collapsed %}
 {% spaceless %}
