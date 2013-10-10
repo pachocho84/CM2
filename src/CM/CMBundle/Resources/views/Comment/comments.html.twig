@@ -1,0 +1,14 @@
+{% if comments | length > 0 %}
+    {% if comments | length > 3 %}
+        <li><a href="{# {{ path('post_show', {'post_id': postId}) }} #}" class="comments-show_all">{{ 'View all %comments% comments' | trans({'%comments%': comments | length }) }}</a></li>
+    {% endif %}
+
+    {% for num, comment in comments %}
+        {% set hide = (num < comments | length - 3) ? true : false %}
+        {% include('CMBundle:Comment:comment.html.twig') %}
+    {% endfor %}
+{% endif %}
+
+{% if is_granted('ROLE_USER') %}
+    {# {% include('@CMBundle:Comment:new.html.twig') %} #}
+{% endif %}

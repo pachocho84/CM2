@@ -6,5 +6,6 @@ services:
         class: %cm_property_accessor.class%
     cm.twig.cm_extension:
         class: CM\General\Twig\CMExtension
+        arguments: [@translator]
         tags:
             - { name: twig.extension }

@@ -1,3 +1,4 @@
 <ul>{% include('CMBundle:Like:like.html.twig') %}</ul>
 <ul>{% include('CMBundle:Like:likeActions.html.twig') %}</ul>
 <ul>{% include('CMBundle:Like:likeCount.html.twig') %}</ul>
+<ul>{{ render(controller('CMBundle:Comment:comments', {'post_id': post.id})) }}</ul>

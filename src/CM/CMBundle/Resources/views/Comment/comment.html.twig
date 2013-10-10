@@ -1,0 +1,20 @@
+<li class="media comment{{ (hide is defined and hide) ? ' hide' : '' }}">
+
+{% if false %}#{ user->canManage($comment) #}
+    {{ delete_link(path('comment_delete', {'id': comment.id}), 'comment', {'data-placement': 'left', 'class': 'close', 'text': '&times;', 'icon': false}) }}
+{% endif %}
+
+{# <li class="media comment<?php isset($hide) && $hide and print ' hide' ?>">
+                    
+    <?php if ($sf_user->canManage($comment)): ?>
+        <?php echo delete_link('@comment_delete?comment_id='.$comment->getId(), 'comment', array('data-placement' => 'left', 'class' => 'close', 'text' => '&times;', 'icon' => false)) ?>
+    <?php endif ?>
+    
+    <?php show_img_box($comment->getUser()->getImg(), array('width' => 32, 'height' => 32, 'offset' => $comment->getUser()->getImgOffset(), 'default' => 'user', 'box_attributes' => array('class' => 'pull-left'))) ?>
+    
+    <div class="media-body">
+        <?php echo simple_format_text(link_to($comment->getUser(), $comment->getUser()->getRawValue()->getLinkShow(), array('target' => '_blank')).' '.$comment->getComment()) ?>
+        <div class="text-muted"><?php echo __('%date% at %time%', array('%date%' => ucwords(format_datetime($comment->getCreatedAt(), 'd MMMM yyyy')), '%time%' => format_datetime($comment->getCreatedAt(), 'HH:mm'))) ?></div>
+    </div> #}
+    
+</li>

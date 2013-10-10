@@ -9,6 +9,7 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Like;
+use CM\CMBundle\Entity\Comment;
 use CM\UserBundle\Entity\User;
 
 class LikeCommentFixtures extends AbstractFixture implements OrderedFixtureInterface
@@ -25,6 +26,17 @@ class LikeCommentFixtures extends AbstractFixture implements OrderedFixtureInter
                 $like->setPost($post);
 
                 $manager->persist($like);
+            }
+
+            for ($j = 1; $j < 11; $j++) {
+                $comment = new Comment;
+                $comment->setComment("Comment");
+                $user = $manager->merge($this->getReference('user-'.rand(1, 10)));
+                $comment->setUser($user);
+                $post = $manager->merge($this->getReference('event-'.$i))->getPosts()[0];
+                $comment->setPost($post);
+
+                $manager->persist($comment);
             }
                 
             if ($i % 10 == 0) {

@@ -9,7 +9,7 @@ use CM\UserBundle\Entity\User;
 /**
  * Comment
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CM\CMBundle\Entity\CommentRepository")
  * @ORM\Table(name="comment")
  */
 class Comment
