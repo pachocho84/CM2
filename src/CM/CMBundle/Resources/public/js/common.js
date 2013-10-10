@@ -124,7 +124,7 @@ $(function() {
     // Show all comments
     $('.object').on('click', '.comments-show_all', function(event) {
         event.preventDefault();
-        $(this).closest('.bottom').find('li').fadeIn();
+        $(this).closest('.bottom').find('li').removeClass('hide'); // TODO: .fadeIn() not working anymore
         $(this).parent('li').remove();
     });
     
