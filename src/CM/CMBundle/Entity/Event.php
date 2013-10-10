@@ -57,11 +57,6 @@ class Event extends Entity
             $this->addEventDate($eventDate);
         }
     }
-
-    public function __toString()
-    {
-        return "Event";
-    }
     
     /**
      * Set id

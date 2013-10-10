@@ -63,6 +63,17 @@ abstract class Entity
         $this->images = new ArrayCollection();
     }
 
+    /**
+     * __toString function.
+     * 
+     * @access public
+     * @return void
+     */
+    public function __toString()
+    {
+        return $this->getTitle();
+    }
+
     public function __call($method, $arguments)
     {
         return $this->proxyCurrentLocaleTranslation($method, $arguments);

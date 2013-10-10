@@ -25,7 +25,31 @@
 {% endspaceless %}
 {% endblock textarea_widget %}
 
-{#
+{% block form_widget_compound %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+        {% if form.parent is empty %}
+            {{ form_errors(form) }}
+        {% endif %}
+	<div style="clear: both;">
+        {{ block('form_rows') }}
+  </div>
+        {{ form_rest(form) }}
+    </div>
+{% endspaceless %}
+{% endblock form_widget_compound %}
+
+{% block collection_widget %}
+<div class="well" style="clear: both;">
+{% spaceless %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    {{ block('form_widget') }}
+{% endspaceless %}
+</div>
+{% endblock collection_widget %}
+
 {% block choice_widget_collapsed %}
 {% spaceless %}
     {% if required and empty_value is none and not empty_value_in_choices %}
@@ -50,7 +74,6 @@
     </div>
 {% endspaceless %}
 {% endblock choice_widget_collapsed %}
-#}
 
 {# Labels #}
 

@@ -13,25 +13,24 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class EventRepository extends EntityRepository
 {
-    static protected function getOptions(array $options = array())
-    {
-        return array_merge(array(
-/*          'entity_type' => sfContext::getInstance()->getRequest()->getParameter('module'),  */
-            'user_id'     => null,
-/*             'category'    => sfContext::getInstance()->getRequest()->getParameter('category', null),  */
-            'category'    => null, 
-            'paginate'      => true,
-            'locale'          => 'en',
-/*             'limit'       => 25, */
-        ), $options);
-    }
+    
+	static protected function getOptions(array $options = array())
+	{
+		return array_merge(array(
+			'user_id'     => null,
+			'category'    => null, 
+			'paginate'	  => true,
+			'locale'	  => 'en',
+			'limit'       => 25,
+		), $options);
+	}
     
     public function getEvents(array $options = array())
     {
         $options = self::getOptions($options);
 
         $parameters = array(
-            'now' => '2013-10-07',
+			'now' => new \DateTime,
             'locale' => $options['locale']
         );
         
@@ -63,20 +62,24 @@ class EventRepository extends EntityRepository
         
         return $options['paginate'] ? $query : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
-    
-    public function getEventsPerMonth($year, $month, $options = array())
-    {
-        return $this->createQueryBuilder('e')->select('e, t, d, i')
-            ->leftJoin('e.eventDates', 'd')
-            ->leftJoin('e.translations', 't')
-            ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
-            ->where('SUBSTRING(d.start, 1, 4) = '.$year)
-            ->andWhere('SUBSTRING(d.start, 6, 2) = '.$month)
-            ->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
-            ->orderBy('d.start')
-            ->getQuery()
-            ->getResult();
-    }
+	
+	public function getEventsPerMonth($year, $month, $options = array())
+	{
+		$options = self::getOptions($options);
+		
+		$eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
+		
+		return $eventDateRepository->createQueryBuilder('d')->select('d, e, t, i')
+			->join('d.event', 'e')
+			->leftJoin('e.translations', 't')
+			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
+			->where('SUBSTRING(d.start, 1, 4) = '.$year)
+			->andWhere('SUBSTRING(d.start, 6, 2) = '.$month)
+			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
+			->orderBy('d.start')
+			->getQuery()
+			->getResult();
+	}
 
     public function getEvent($id, $locale)
     {
