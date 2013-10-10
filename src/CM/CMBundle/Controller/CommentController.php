@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Process\Exception\RuntimeException;
+use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Comment;
 
 /**
@@ -22,10 +23,10 @@ class CommentController extends Controller
      * @Route("/{post_id}", name="comment_index")
      * @Template
      */
-    public function commentsAction($post_id)
+    public function commentsAction(Post $post)
     {
         $em = $this->getDoctrine()->getManager();
-        $comments = $em->getRepository('CMBundle:Comment')->getCommentsFor('post', $post_id);
+        // $comments = $em->getRepository('CMBundle:Comment')->getCommentsFor('post', $post->getId());
 
         // echo '<pre>'.var_dump($comments); die;
 
@@ -41,8 +42,8 @@ class CommentController extends Controller
         }
 
         return array(
-            'postId' => $post_id,
-            'comments' => $comments,
+            'postId' => $post->getId(),
+            'comments' => $post->getComments(),
             'form' => $form
         );
         // $this->comments = $this->post->getComments();

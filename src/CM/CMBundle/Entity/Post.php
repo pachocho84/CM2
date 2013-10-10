@@ -329,10 +329,10 @@ class Post
         return $likes;
     }
     
-    public function getUserLikesIt($user)
+    public function getUserLikesIt($user, $authenticated)
     {
-        if (is_null($user)) {
-            return 42;
+        if (is_null($user) || !$authenticated) {
+            return false;
         }
         
         foreach ($this->getLikes() as $like) {

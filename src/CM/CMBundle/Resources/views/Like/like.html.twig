@@ -4,8 +4,8 @@
         
         <i class="glyphicon glyphicon-thumbs-up"></i>
         
-        {% set userLikesIt = post.userLikesIt(app.user) %}
-        {% set whoLikesIt = post.whoLikesIt(app.user, is_granted('IS_AUTHENTICATED_REMEMBERED')) %}
+        {% set userLikesIt = post.userLikesIt(app.user, is_granted('ROLE_USER')) %}
+        {% set whoLikesIt = post.whoLikesIt(app.user, is_granted('ROLE_USER')) %}
         
         {% if userLikesIt %}
             {% set likesWithoutUser = post.likesWithoutUser(app.user) %}

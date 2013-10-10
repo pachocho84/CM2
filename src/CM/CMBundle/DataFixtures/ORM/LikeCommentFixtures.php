@@ -28,7 +28,7 @@ class LikeCommentFixtures extends AbstractFixture implements OrderedFixtureInter
                 $manager->persist($like);
             }
 
-            for ($j = 1; $j < 11; $j++) {
+            for ($j = 1; $j < rand(1, 11); $j++) {
                 $comment = new Comment;
                 $comment->setComment("Comment");
                 $user = $manager->merge($this->getReference('user-'.rand(1, 10)));

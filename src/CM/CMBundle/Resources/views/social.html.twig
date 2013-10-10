@@ -1,4 +1,48 @@
-<ul>{% include('CMBundle:Like:like.html.twig') %}</ul>
-<ul>{% include('CMBundle:Like:likeActions.html.twig') %}</ul>
-<ul>{% include('CMBundle:Like:likeCount.html.twig') %}</ul>
-<ul>{{ render(controller('CMBundle:Comment:comments', {'post_id': post.id})) }}</ul>
+<div class="media-list bottom#{<?php $sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == false and print ' well well-small' ?>#}">
+
+    <ul>{% include('CMBundle:Like:like.html.twig') %}</ul>
+    <ul>{% include('CMBundle:Like:likeActions.html.twig') %}</ul>
+    <ul>{% include('CMBundle:Like:likeCount.html.twig') %}</ul>
+    <ul>{{ render(controller('CMBundle:Comment:comments', {'post': post})) }}</ul>
+</div>
+{# 
+<?php $sito = $sf_context->getSito() ?>
+
+<?php if (($sito->getCommentsEnabled() && $sito->getCommentsDisplay()) || ($sito->getLikesEnabled() && $sito->getLikesDisplay())): ?>
+    
+    <div class="media-list bottom<?php $sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == false and print ' well well-small' ?>">
+    
+        
+        
+        <?php include_partial('utility/bottomActions', array('post' => $post)) ?>
+            
+
+
+        <?php if ($sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == false): ?>
+            <div class="pull-right">                    
+                <?php if ($sito->getLikesEnabled() && $sito->getLikesDisplay()): ?>
+                    <?php include_partial('like/likeCount', array('post' => $post)) ?>
+                <?php endif ?>          
+                <?php if ($sito->getCommentsEnabled() && $sito->getCommentsDisplay()): ?>
+                    <?php include_partial('comment/commentCount', array('post' => $post)) ?>
+                <?php endif ?>
+            </div>
+        <?php endif ?>
+    
+    
+    
+        <ul class="media-list<?php $sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == false and print ' hide' ?><?php $sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == true && ($post->getComments()->count() > 0 || $post->getWhoLikesIt() + $post->getILikeIt() > 0) and print ' triangle' ?>">
+
+            <?php if ($sito->getLikesEnabled() && $sito->getLikesDisplay() && ($sito->getLikesCommentsExpanded() == true || $sf_request->getParameter('action') == 'show')): ?>
+                <?php include_partial('like/like', array('post' => $post)) ?>
+            <?php endif ?>
+
+            <?php if ($sito->getCommentsEnabled() && $sito->getCommentsDisplay()): ?>
+                <?php include_component('comment', 'comments', array('post' => $post)) ?>
+            <?php endif ?>
+
+        </ul>
+    
+    </div>
+
+<?php endif ?> #}
