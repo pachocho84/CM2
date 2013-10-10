@@ -16,9 +16,9 @@ class EntityTranslationType extends AbstractType
     {
 /*
         $builder->add('title')
-			->add('subtitle')
-			->add('extract')
-			->add('text');
+            ->add('subtitle')
+            ->add('extract')
+            ->add('text');
 */
     }
     

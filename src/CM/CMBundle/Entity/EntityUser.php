@@ -13,13 +13,13 @@ use CM\UserBundle\Entity\User;
  */
 class EntityUser
 {
-		const STATUS_PENDING = 0;
-		const STATUS_ACTIVE = 1;
-		const STATUS_REQUESTED = 2;
-		const STATUS_REFUSED_ADMIN = 3;
-		const STATUS_REFUSED_ENTITY_USER = 4;
-		const STATUS_FOLLOWING = 5;
-				
+    const STATUS_PENDING = 0;
+    const STATUS_ACTIVE = 1;
+    const STATUS_REQUESTED = 2;
+    const STATUS_REFUSED_ADMIN = 3;
+    const STATUS_REFUSED_ENTITY_USER = 4;
+    const STATUS_FOLLOWING = 5;
+                
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Entity", inversedBy="entitiesUsers")

@@ -16,10 +16,10 @@ class Request
 {
     use ORMBehaviors\Timestampable\Timestampable;
     
-	const STATUS_NEW = 0;
-	const STATUS_PENDING = 1;
-	const STATUS_ACCEPTED = 2;
-	const STATUS_REFUSED = 3;
+    const STATUS_NEW = 0;
+    const STATUS_PENDING = 1;
+    const STATUS_ACCEPTED = 2;
+    const STATUS_REFUSED = 3;
 
     /**
      * @var integer
@@ -133,8 +133,8 @@ class Request
      */
     public function setStatus($status)
     {
-    	if (!in_array($status, array(self::STATUS_NEW, self::STATUS_PENDING, 
-    			self::STATUS_ACCEPTED, self::STATUS_REFUSED))) {
+        if (!in_array($status, array(self::STATUS_NEW, self::STATUS_PENDING, 
+                self::STATUS_ACCEPTED, self::STATUS_REFUSED))) {
             throw new \InvalidArgumentException("Invalid status");
         }
 

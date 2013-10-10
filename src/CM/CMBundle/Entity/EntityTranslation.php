@@ -16,8 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class EntityTranslation
 {
-    use ORMBehaviors\Sluggable\Sluggable,
-    	ORMBehaviors\Translatable\Translation;
+    use ORMBehaviors\Sluggable\Sluggable;
+    use ORMBehaviors\Translatable\Translation;
 
     /**
      * @var string

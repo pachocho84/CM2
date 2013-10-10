@@ -16,8 +16,8 @@ class Notification
 {
     use ORMBehaviors\Timestampable\Timestampable;
     
-	const STATUS_NEW = 'new';
-	const STATUS_NOTIFIED = 'notified';
+    const STATUS_NEW = 'new';
+    const STATUS_NOTIFIED = 'notified';
 
     /**
      * @var integer
@@ -107,11 +107,11 @@ class Notification
      */
     public function setStatus($status)
     {
-    	if ($sex == self::STATUS_NEW) {
-	    	$this->status = true;
-    	}
+        if ($sex == self::STATUS_NEW) {
+            $this->status = true;
+        }
         elseif ($sex == self::STATUS_NOTIFIED) {
-	        $this->status = false;
+            $this->status = false;
         }
         else {
             throw new \InvalidArgumentException("Invalid status");

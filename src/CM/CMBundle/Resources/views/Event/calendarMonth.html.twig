@@ -1,7 +1,7 @@
 {{ events | length }}
 {% for key, event in events %}
-	
-{# 	<h2>{{ event.eventDates[0].start | date('Y/m/d') }}</h2> #}
-	{{ include('CMBundle:Event:object.html.twig', { 'event': event } ) }}
-	
+    
+{#     <h2>{{ event.eventDates[0].start | date('Y/m/d') }}</h2> #}
+    {{ include('CMBundle:Event:object.html.twig', { 'event': event } ) }}
+    
 {% endfor %}

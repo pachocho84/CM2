@@ -1,0 +1,15 @@
+{% if not post.userLikeIt(app.user) %}
+    <a href="{{ path('like', {'type': post | get_class_name | lower, 'id': post.id}) }}" class="iLikeIt">{{ "Like" | trans }}</a>
+{% else %}
+    <a href="{{ path('unlike', {'type': post | get_class_name | lower, 'id': post.id}) }}" class="iLikeIt">{{ "Unike" | trans }}</a>
+{% endif %}
+
+
+
+
+{# 
+<?php if ($post->getILikeIt() == false): ?>
+    <?php echo link_to(__('Like'), '@like?type='.strtolower(get_class($post->getRawValue())).'&id='.$post->getId(), array('class' => 'iLikeIt')) ?>
+<?php else: ?>
+    <?php echo link_to(__('Unlike'), '@unlike?type='.strtolower(get_class($post->getRawValue())).'&id='.$post->getId(), array('class' => 'iLikeIt')) ?>
+<?php endif ?> #}

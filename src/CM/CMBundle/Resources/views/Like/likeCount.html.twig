@@ -1,0 +1,5 @@
+<?php if ($post->getWhoLikesIt() + $post->getILikeIt() > 0): ?>
+    <?php echo link_to('<i class="glyphicon glyphicon-thumbs-up"></i> '.($post->getWhoLikesIt() + $post->getILikeIt()), '@whoLikesIt?type='.strtolower(get_class($post->getRawValue())).'&id='.$post->getId(), array('class' => 'modal-trigger bottom-like-count')) ?>
+<?php else: ?>
+    <span class="bottom-like-count"></span>
+<?php endif ?>

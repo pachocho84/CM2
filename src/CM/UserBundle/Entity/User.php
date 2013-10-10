@@ -26,7 +26,7 @@ use CM\CMBundle\Entity\Request;
  */
 class User extends BaseUser
 {
-	use \CM\Model\ImageAndCoverTrait;
+	use \CM\General\Model\ImageAndCoverTrait;
 
 	const SEX_M = true;
 	const SEX_F = false;

@@ -16,8 +16,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 abstract class Entity
 {
-	use ORMBehaviors\Translatable\Translatable;
-	
+    use ORMBehaviors\Translatable\Translatable;
+    
     /**
      * @var integer
      *
@@ -58,9 +58,9 @@ abstract class Entity
     
     public function __construct()
     {
-    	$this->entitiesUsers = new ArrayCollection();
-    	$this->requests = new ArrayCollection();
-    	$this->images = new ArrayCollection();
+        $this->entitiesUsers = new ArrayCollection();
+        $this->requests = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function __call($method, $arguments)

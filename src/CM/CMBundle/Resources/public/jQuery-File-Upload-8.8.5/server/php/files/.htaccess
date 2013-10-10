@@ -4,8 +4,8 @@
 ForceType application/octet-stream
 Header set Content-Disposition attachment
 <FilesMatch "(?i)\.(gif|jpe?g|png)$">
-	ForceType none
-	Header unset Content-Disposition
+    ForceType none
+    Header unset Content-Disposition
 </FilesMatch>
 
 # The following directive prevents browsers from MIME-sniffing the content-type.

@@ -4,3 +4,7 @@ parameters:
 services:
     property_accessor:
         class: %cm_property_accessor.class%
+    cm.twig.cm_extension:
+        class: CM\General\Twig\CMExtension
+        tags:
+            - { name: twig.extension }

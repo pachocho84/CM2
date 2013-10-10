@@ -17,8 +17,8 @@ use CM\UserBundle\Entity\User;
  */
 class Group
 {
-    use ORMBehaviors\Sluggable\Sluggable,
-    	\CM\Model\ImageAndCoverTrait;
+    use ORMBehaviors\Sluggable\Sluggable;
+    use \CM\General\Model\ImageAndCoverTrait;
     
     /**
      * @var integer
@@ -64,19 +64,19 @@ class Group
         
     /**
      * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Image", mappedBy="group", cascade={"persist", "remove"})
-	 */
-	private $images;
+     */
+    private $images;
     
     public function __construct()
     {
-    	$this->users = new ArrayCollection();
-    	$this->images = new ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
-	protected function getRootDir()
-	{
-		return __DIR__.'/../Resources/public/';
-	}
+    protected function getRootDir()
+    {
+        return __DIR__.'/../Resources/public/';
+    }
 
     /**
      * Get id

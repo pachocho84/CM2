@@ -16,20 +16,20 @@ class EventDateType extends AbstractType
     {
         $builder
             ->add('start', 'datetime', array(
-				'date_widget'       => 'single_text',
-/* 				'date_format'       => \IntlDateFormatter::SHORT, */
-				'time_widget'       => 'single_text',
-				'model_timezone'    => 'GMT',
-				'view_timezone'     => 'Europe/Rome',
-			))
+                'date_widget'       => 'single_text',
+/*                 'date_format'       => \IntlDateFormatter::SHORT, */
+                'time_widget'       => 'single_text',
+                'model_timezone'    => 'GMT',
+                'view_timezone'     => 'Europe/Rome',
+            ))
             ->add('end', 'datetime', array(
-            	'required'			=> false,
-				'date_widget'       => 'single_text',
-/* 				'date_format'       => \IntlDateFormatter::SHORT, */
-				'time_widget'       => 'single_text',
-				'model_timezone'    => 'GMT',
-				'view_timezone'     => 'Europe/Rome',
-			))
+                'required'            => false,
+                'date_widget'       => 'single_text',
+/*                 'date_format'       => \IntlDateFormatter::SHORT, */
+                'time_widget'       => 'single_text',
+                'model_timezone'    => 'GMT',
+                'view_timezone'     => 'Europe/Rome',
+            ))
             ->add('location')
             ->add('address')
             ->add('coordinates');

@@ -13,13 +13,23 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class LikeRepository extends EntityRepository
 {
-	public function checkIfILikeIt($type, $id)
-	{
-		return $this->createQueryBuilder('l')
-			->select('COUNT(l)')
-			->where('l.'.$type.' = :id')->setParameter('id', $id)
-			->getQuery()
-			->getSingleScalarResult();
-	}
+    public function checkIfUserLikesIt($user, $type, $id)
+    {
+        return $this->createQueryBuilder('l')
+            ->select('COUNT(l)')
+            ->where('l.'.$type.' = :id')->setParameter('id', $id)
+            ->andWhere('l.user = :user')->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function whoLikesIt($type, $id)
+    {
+        return $this->createQueryBuilder('l')
+            ->select('l')
+            ->where('l.'.$type.' = :id')->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
 }
-	
+    
