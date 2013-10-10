@@ -22,7 +22,7 @@ class LikeController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
   
-        if ($em->getRepository('CMBundle:Like')->checkIfUserLikesIt($this->getUser(), $type, $id) == false) {        
+        if (!$em->getRepository('CMBundle:Like')->checkIfUserLikesIt($this->getUser(), $type, $id)) {        
             $like = new Like();
             $like->setUser($this->getUser());
             if ($type == 'post') {
@@ -40,9 +40,9 @@ class LikeController extends Controller
         
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse(array(
-                'likes' => $this->render('CMBundle:Event:Like:like.html.twig', array('post' => $post)), 
-                'likeActions' => $this->render('CMBundle:Event:Like:likeActions.html.twig', array('post' => $post)),
-                'likeCount' => $this->render('CMBundle:Event:Like:likeCount.html.twig', array('post' => $post))
+                'likes' => $this->render('CMBundle:Like:like.html.twig', array('post' => $post)), 
+                'likeActions' => $this->render('CMBundle:Like:likeActions.html.twig', array('post' => $post)),
+                'likeCount' => $this->render('CMBundle:Like:likeCount.html.twig', array('post' => $post))
             ));
         }
         
@@ -53,28 +53,36 @@ class LikeController extends Controller
     /**
      * @Route("/unlike/{type}/{id}", name="unlike", requirements={"type" = "post|image"})
      */
-    public function unlikeAction(Request $request)
-    {        
-        $like = LikeQuery::create()->filterByArray(array(ucfirst($request->getParameter('type')).'Id' => $request->getParameter('id'), 'UserId' => $this->getUser()->getId()))->findOne();
-        $like->delete();
-        
-        if ($request->isXmlHttpRequest()) {                    
-            if ($request->getParameter('type') == 'post') {
-                $post = PostQuery::create()->findOneById($request->getParameter('id'));
-            } elseif ($request->getParameter('type') == 'image') {
-                $post = ImageQuery::create()->findOneById($request->getParameter('id'));
-            }
-        $this->forward404Unless($post, $this->getContext()->getI18N()->__('Bad request.'));
+    public function unlikeAction(Request $request, $type, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $like = $em->getRepository('CMBundle:Like')->findOneBy(array(
+            $type => $id,
+            'user' => $this->getUser()
+        ));
+        $em->remove($like);
+        $em->flush();
 
-            return $this->renderText(json_encode(array(
-                'likes'             => $this->getPartial('like', array('post' => $post)), 
-                'likeActions' => $this->getPartial('likeActions', array('post' => $post)),
-                'likeCount'     => $this->getPartial('likeCount', array('post' => $post)),
-            )));
+        if ($request->isXmlHttpRequest()) { 
+            if ($type == 'post') {
+                $post = $em->getRepository('CMBundle:Post')->find($id);
+            } elseif ($type == 'image') {
+                $post = $em->getRepository('CMBundle:Image')->find($id);
+            }
+            
+            if (is_null($post)) {
+                throw $this->createNotFoundException('Bad request.');
+            }
+
+            return new JsonResponse(array(
+                'likes' => $this->render('CMBundle:Like:like.html.twig', array('post' => $post)), 
+                'likeActions' => $this->render('CMBundle:Like:like.html.twig', array('post' => $post)),
+                'likeCount' => $this->render('CMBundle:Like:like.html.twig', array('post' => $post)),
+            ));
         }
-    
-        $this->getUser()->setFlash('conferma', $this->getContext()->getI18N()->__('You don\'t like this anymore.'));
-        return new RedirectResponse($request->headers->get('referer'));
+
+        $this->get('session')->getFlashBag('confirm', 'You don\'t like this anymore.');
+        return new RedirectResponse($request->get('referer'));
     }
 
     /**
