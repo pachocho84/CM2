@@ -205,10 +205,10 @@ class EventController extends Controller
             
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
-          $em->persist($event);
-          $em->flush();
-                
-          return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(),    'slug' => $event->getSlug())));
+            $em->persist($event);
+            $em->flush();
+                  
+            return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(),    'slug' => $event->getSlug())));
         }
         
         return array('form' => $form->createView());

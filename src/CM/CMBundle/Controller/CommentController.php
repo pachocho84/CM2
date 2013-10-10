@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -13,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Process\Exception\RuntimeException;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Comment;
+use CM\CMBundle\Form\CommentType;
 
 /**
  * @Route("/comments")
@@ -20,7 +22,7 @@ use CM\CMBundle\Entity\Comment;
 class CommentController extends Controller
 {
     /**
-     * @Route("/{post_id}", name="comment_index")
+     * @Route("/{post_id}", name="comment_index", requirements={"post_id" = "\d+"})
      * @Template
      */
     public function commentsAction(Post $post)
@@ -31,20 +33,21 @@ class CommentController extends Controller
         // echo '<pre>'.var_dump($comments); die;
 
         $form = null;
-        if ($this->get('security.context')->isGranted('IS_ACCESS_REMEMBERED')) {
-            $form = $this->createForm(new CommentType(), array(
+        if ($this->get('security.context')->isGranted('ROLE_USER')) {
+            $comment = new Comment;
+
+            $form = $this->createForm(new CommentType(), $comment, array(
                 'action' => $this->generateUrl('comment_new', array(
-                    'id' => $event->getId(),
-                    'slug' => $event->getSlug()
+                    'post_id' => $post->getId()
                 )),
                 'cascade_validation' => true
             ))->add('save', 'submit');
         }
 
         return array(
-            'postId' => $post->getId(),
+            'post' => $post,
             'comments' => $post->getComments(),
-            'form' => $form
+            'form' => $form->createView()
         );
         // $this->comments = $this->post->getComments();
         
@@ -59,36 +62,43 @@ class CommentController extends Controller
     }
     
     /**
-     * @Route("/new", name="comment_new") 
-     * @Route("/{id}/{slug}/edit", name="event_edit", requirements={"id" = "\d+"}) 
+     * @Route("/new/{post_id}", name="comment_new", requirements={"post_id" = "\d+"}) 
      * @Template
      */
-      public function newAction(Request $request)
-    {     
-        $this->form = new CommentForm();
-        
-        if ($this->form->bindAndSave($request->getParameter('comment'))) {
-        
-            if ($request->isXmlHttpRequest()) {         
-                if ($this->form->getObject()->getPostId()) {
-                    $commentCount = $this->getPartial('commentCount', array('post' => PostQuery::create()->findOneById($this->form->getObject()->getPostId())));
-                } elseif ($this->form->getObject()->getImageId()) {
-                    $commentCount = $this->getPartial('commentCount', array('post' => $this->form->getObject()->getImage()));
+      public function newAction(Request $request, $post_id)
+    {
+        $comment = new Comment;
+        $form = $this->createForm(new CommentType(), $comment)->add('save', 'submit');
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $comment
+                ->setUser($this->getUser())
+                ->setPost($em->getRepository('CMBundle:Post')->findOneById($post_id));
+            $em->persist($comment);
+            $em->flush();
+
+            if ($request->isXmlHttpRequest()) {
+                if ($comment->getPost()->getId()) {
+                    $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getPost()));
+                } elseif ($comment->getImage()->getId()) {
+                    $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getImage()));
                 }
-                $this->getResponse()->setContentType('application/json');   
-                return $this->renderText(json_encode(array(
-                    'comment' => $this->getPartial('comment/comment', array('comment' => $this->form->getObject())),
+
+                return new JsonResponse(array(
+                    'comment' => $this->renderView('CMBundle:Comment:comment.html.twig', array('comment' => $comment)),
                     'commentCount' => $commentCount
-                )));
+                ));
             }
-            
-            $this->getUser()->setFlash('conferma', $this->getContext()->getI18N()->__('Comment successfully added.'));
+
+            $this->get('session')->getFlashBag('confirm', 'Comment successfully added.');
         } else {
-            echo $this->form;
-            $this->getUser()->setFlash('errore', $this->getContext()->getI18N()->__('Please fill in all the required fields.'));
+            $this->get('session')->getFlashBag('error', 'Please fill in all the required fields.');
         }
-        
-        $this->redirect($request->getReferer());
+
+        return new RedirectResponse($request->get('referer'));
     }
 
     /**
@@ -96,22 +106,22 @@ class CommentController extends Controller
      */ 
     public function executeDelete(sfWebRequest $request)
     {
-        $comment = CommentQuery::create()->findOneById($request->getParameter('comment_id'));
+        // $comment = CommentQuery::create()->findOneById($request->getParameter('comment_id'));
 
-        $this->forward404Unless($this->getUser()->canManage($comment) && $comment, $this->getContext()->getI18N()->__('Bad request.'));
+        // $this->forward404Unless($this->getUser()->canManage($comment) && $comment, $this->getContext()->getI18N()->__('Bad request.'));
             
-            $comment->delete();
+        //     $comment->delete();
             
-            if ($request->isXmlHttpRequest()) {         
-                if ($comment->getPostId()) {
-                    $post = $comment->getPost();
-                } elseif ($comment->getImageId()) {
-                    $post = $comment->getImage();
-                }
-                return $this->renderPartial('commentCount', array('post' => $post));
-            }
+        //     if ($request->isXmlHttpRequest()) {         
+        //         if ($comment->getPostId()) {
+        //             $post = $comment->getPost();
+        //         } elseif ($comment->getImageId()) {
+        //             $post = $comment->getImage();
+        //         }
+        //         return $this->renderPartial('commentCount', array('post' => $post));
+        //     }
             
-            $this->getUser()->setFlash('conferma', $this->getContext()->getI18N()->__('Comment successfully deleted.'));
-            $this->redirect($request->getReferer());
+        //     $this->getUser()->setFlash('conferma', $this->getContext()->getI18N()->__('Comment successfully deleted.'));
+        //     $this->redirect($request->getReferer());
     }
 }
