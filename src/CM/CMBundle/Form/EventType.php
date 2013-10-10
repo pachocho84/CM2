@@ -18,17 +18,17 @@ class EventType extends EntityType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-    	parent::buildForm($builder, $options);
+        parent::buildForm($builder, $options);
     
-    	$builder->add('event_dates', 'collection', array(
-    			'type' => new EventDateType(),
-    			'allow_add' => true,
-    			'by_reference' => false
-    	))
-    		->add('posts', 'collection', array(
-    			'type' => new PostType(),
-    			'by_reference' => false
-    	));
+        $builder->add('event_dates', 'collection', array(
+                'type' => new EventDateType(),
+                'allow_add' => true,
+                'by_reference' => false
+        ))
+            ->add('posts', 'collection', array(
+                'type' => new PostType(),
+                'by_reference' => false
+        ));
     }
     
     /**
@@ -36,16 +36,16 @@ class EventType extends EntityType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-    	parent::setDefaultOptions($resolver);
-    	
+        parent::setDefaultOptions($resolver);
+        
 /*
-    	      	$event = new Event;
-			$event->addEventDate(new EventDate);
-			$image = new Image;
-			$image->setMain(true);
-			$event->addImage($image);
+                  $event = new Event;
+            $event->addEventDate(new EventDate);
+            $image = new Image;
+            $image->setMain(true);
+            $event->addImage($image);
 */
-    	
+        
         $resolver->setDefaults(array(
             'data_class' => 'CM\CMBundle\Entity\Event',
 /*             'empty_data' => new Event(new EventDate) */

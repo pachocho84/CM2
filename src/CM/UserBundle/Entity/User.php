@@ -8,6 +8,7 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use CM\CMBundle\Entity\Entity;
+use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\Page;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Group;
@@ -25,7 +26,7 @@ use CM\CMBundle\Entity\Request;
  */
 class User extends BaseUser
 {
-	use \CM\Model\ImageAndCoverTrait;
+	use \CM\General\Model\ImageAndCoverTrait;
 
 	const SEX_M = true;
 	const SEX_F = false;
@@ -38,6 +39,8 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+    
+    
 
     /**
      * @var string
@@ -164,10 +167,9 @@ class User extends BaseUser
 	protected $groups;
 
     /**
-     * @ORM\ManyToMany(targetEntity="CM\CMBundle\Entity\Entity", inversedBy="users")
-     * @ORM\JoinTable(name="users_entities")
+     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\EntityUser", mappedBy="user")
      */
-	protected $entities;
+	protected $entitiesUsers;
         
     /**
      * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Page", mappedBy="user", cascade={"persist", "remove"})
@@ -217,7 +219,8 @@ class User extends BaseUser
 	public function __construct()
 	{
 		parent::__construct();
-
+		
+		$this->entitiesUsers = new ArrayCollection;
 		$this->groups = new ArrayCollection;
 		$this->pages = new ArrayCollection;
 		$this->posts = new ArrayCollection;
@@ -228,6 +231,11 @@ class User extends BaseUser
 		$this->notificationsOutcoming = new ArrayCollection;
 		$this->requestsIncoming = new ArrayCollection;
 		$this->requestsOutcoming = new ArrayCollection;
+	}
+	
+	public function __toString()
+	{
+    	return $this->getFirstName()." ".$this->getLastName();
 	}
 
 	protected function getRootDir()
@@ -549,6 +557,36 @@ class User extends BaseUser
     }
 
     /**
+     * @param \CM\CMBundle\Entity\EntityUser $comment
+     * @return Entity
+     */
+    public function addEntitiesUsers(EntityUser $entityUser)
+    {
+        if (!$this->entitiesUsers->contains($entityUser)) {
+            $this->entitiesUsers[] = $entityUser;
+            $entityUser->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityUser $users
+     */
+    public function removeEntitiesUsers(EntityUser $entityUser)
+    {
+        $this->entitiesUsers->removeElement($entityUser);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEntitiesUsers()
+    {
+        return $this->entitiesUsers;
+    }
+
+    /**
      * @param \CM\CMBundle\Entity\Group $group
      * @return Entity
      */
@@ -556,7 +594,7 @@ class User extends BaseUser
     {
         if (!$this->groups->contains($group)) {
             $this->groups[] = $group;
-            $group->setUser($this);
+            $group->addUser($this);
         }
     
         return $this;
@@ -576,36 +614,6 @@ class User extends BaseUser
     public function getUserGroups()
     {
         return $this->groups;
-    }
-
-    /**
-     * @param \CM\CMBundle\Entity\Entity $entity
-     * @return Entity
-     */
-    public function addEntity(Entity $entity)
-    {
-        if (!$this->entities->contains($entity)) {
-            $this->entities[] = $entity;
-            $entity->setUser($this);
-        }
-    
-        return $this;
-    }
-
-    /**
-     * @param \CM\CMBundle\Entity\Entity $images
-     */
-    public function removeEntity(Entity $entity)
-    {
-        $this->entities->removeElement($entity);
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\Entity 
-     */
-    public function getEntities()
-    {
-        return $this->entities;
     }
 
     /**

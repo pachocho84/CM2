@@ -4,8 +4,8 @@ parameters:
 services:
     property_accessor:
         class: %cm_property_accessor.class%
-    locale_converter:
-        class: CM\CMBundle\Request\ParamConverter\LocaleParamConverter
+    cm.twig.cm_extension:
+        class: CM\General\Twig\CMExtension
         tags:
             - { name: request.param_converter, priority: 10, converter: locale_converter }
     cm.twig.acme_extension:

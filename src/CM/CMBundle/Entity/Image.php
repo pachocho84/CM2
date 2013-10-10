@@ -17,8 +17,8 @@ use CM\UserBundle\Entity\User;
  */
 class Image
 {
-    use ORMBehaviors\Timestampable\Timestampable,
-    	\CM\Model\ImageTrait;
+    use ORMBehaviors\Timestampable\Timestampable;
+    use \CM\General\Model\ImageTrait;
         
     /**
      * @var integer
@@ -33,7 +33,7 @@ class Image
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Entity", inversedBy="images")
-     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)	
+     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
      */
     private $entity;
 
@@ -41,7 +41,7 @@ class Image
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="images")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)	
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)    
      */
     private $user;
 
@@ -49,7 +49,7 @@ class Image
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Group", inversedBy="images")
-     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)	
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
      */
     private $group;
 
@@ -57,7 +57,7 @@ class Image
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Page", inversedBy="images")
-     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)	
+     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
      */
     private $page;
 
@@ -81,38 +81,38 @@ class Image
      * @ORM\Column(name="text", type="text", nullable=true)
      */
     private $text;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="Like", mappedBy="image", cascade={"persist", "remove"})
-	 */
-	private $likes;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="Comment", mappedBy="image", cascade={"persist", "remove"})
-	 */
-	private $comments;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="image", cascade={"persist", "remove"})
-	 */
-	private $notifications;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Like", mappedBy="image", cascade={"persist", "remove"})
+     */
+    private $likes;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="image", cascade={"persist", "remove"})
+     */
+    private $comments;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Notification", mappedBy="image", cascade={"persist", "remove"})
+     */
+    private $notifications;
     
     public function __construct()
     {
-    	$this->likes = new ArrayCollection();
-    	$this->notifications = new ArrayCollection();
+        $this->likes = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
-	public function __toString()
-	{
-		return $this->img;
-	}
-
-	protected function getRootDir()
-	{
-		return __DIR__.'/../Resources/public/';
-	}
-
+    public function __toString()
+    {
+      return $this->img;
+    }
+    
+    protected function getRootDir()
+    {
+      return __DIR__.'/../Resources/public/';
+    }
+    
     /**
      * Get id
      *
@@ -307,105 +307,105 @@ class Image
         return $this->page;
     }
 
-	/**
-	 * Add like
-	 *
-	 * @param Like $like
-	 * @return Post
-	 */
-	public function addLike(Like $like)
-	{
-	    $this->likes[] = $like;
-	    $like->setPost($this);
-	
-	    return $this;
-	}
+    /**
+     * Add like
+     *
+     * @param Like $like
+     * @return Post
+     */
+    public function addLike(Like $like)
+    {
+        $this->likes[] = $like;
+        $like->setPost($this);
+    
+        return $this;
+    }
 
-	/**
-	 * Remove likes
-	 *
-	 * @param Like $like
-	 */
-	public function removeLike(Like $like)
-	{
-	    $this->likes->removeElement($like);
-	}
+    /**
+     * Remove likes
+     *
+     * @param Like $like
+     */
+    public function removeLike(Like $like)
+    {
+        $this->likes->removeElement($like);
+    }
 
-	/**
-	 * Get like
-	 *
-	 * @return \Doctrine\Common\Collections\Collection 
-	 */
-	public function getLikes()
-	{
-	    return $this->likes;
-	}
+    /**
+     * Get like
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLikes()
+    {
+        return $this->likes;
+    }
 
-	/**
-	 * Add comment
-	 *
-	 * @param Comment $comment
-	 * @return Post
-	 */
-	public function addComment(Comment $comment)
-	{
-	    $this->comments[] = $comment;
-	    $comment->setPost($this);
-	
-	    return $this;
-	}
+    /**
+     * Add comment
+     *
+     * @param Comment $comment
+     * @return Post
+     */
+    public function addComment(Comment $comment)
+    {
+        $this->comments[] = $comment;
+        $comment->setPost($this);
+    
+        return $this;
+    }
 
-	/**
-	 * Remove comments
-	 *
-	 * @param Comment $comment
-	 */
-	public function removeComment(Comment $comment)
-	{
-	    $this->comments->removeElement($comment);
-	}
+    /**
+     * Remove comments
+     *
+     * @param Comment $comment
+     */
+    public function removeComment(Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
 
-	/**
-	 * Get comment
-	 *
-	 * @return \Doctrine\Common\Collections\Collection 
-	 */
-	public function getComments()
-	{
-	    return $this->comments;
-	}
+    /**
+     * Get comment
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
 
-	/**
-	 * Add notification
-	 *
-	 * @param Notification $notification
-	 * @return Post
-	 */
-	public function addNotification(Notification $notification)
-	{
-	    $this->notifications[] = $notification;
-	    $notification->setPost($this);
-	
-	    return $this;
-	}
+    /**
+     * Add notification
+     *
+     * @param Notification $notification
+     * @return Post
+     */
+    public function addNotification(Notification $notification)
+    {
+        $this->notifications[] = $notification;
+        $notification->setPost($this);
+    
+        return $this;
+    }
 
-	/**
-	 * Remove notifications
-	 *
-	 * @param Notification $notification
-	 */
-	public function removeNotification(Notification $notification)
-	{
-	    $this->notifications->removeElement($notification);
-	}
+    /**
+     * Remove notifications
+     *
+     * @param Notification $notification
+     */
+    public function removeNotification(Notification $notification)
+    {
+        $this->notifications->removeElement($notification);
+    }
 
-	/**
-	 * Get notification
-	 *
-	 * @return \Doctrine\Common\Collections\Collection 
-	 */
-	public function getNotifications()
-	{
-	    return $this->notifications;
-	}
+    /**
+     * Get notification
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getNotifications()
+    {
+        return $this->notifications;
+    }
 }

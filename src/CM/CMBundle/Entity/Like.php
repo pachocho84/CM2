@@ -9,7 +9,7 @@ use CM\UserBundle\Entity\User;
 /**
  * Like
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CM\CMBundle\Entity\LikeRepository")
  * @ORM\Table(name="`like`")
  */
 class Like

@@ -13,34 +13,34 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Event extends Entity
 {
-	/**
-	 * @var integer
-	 *
-	 * @ORM\Column(name="id", type="integer")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
-	protected $id;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="EventDate", mappedBy="event", cascade={"persist", "remove"})
-	 */
-	private $eventDates;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="Post", mappedBy="event", cascade={"persist", "remove"})
-	 */
-	private $posts;
-	
-	/**
-	 * Get id
-	 *
-	 * @return integer 
-	 */
-	public function getId()
-	{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="EventDate", mappedBy="event", cascade={"persist", "remove"})
+     */
+    private $eventDates;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="event", cascade={"persist", "remove"})
+     */
+    private $posts;
+    
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
 /*         return $this->id; */
-	    return parent::getId();
+        return parent::getId();
     }
         
     /**
@@ -48,14 +48,14 @@ class Event extends Entity
      */
     public function __construct(EventDate $eventDate = null)
     {
-    	parent::__construct();
+        parent::__construct();
 
-    	$this->posts = new ArrayCollection();
-    	
-    	$this->eventDates = new ArrayCollection();
-    	if (! is_null($eventDate)) {
-    		$this->addEventDate($eventDate);
-    	}
+        $this->posts = new ArrayCollection();
+        
+        $this->eventDates = new ArrayCollection();
+        if (! is_null($eventDate)) {
+            $this->addEventDate($eventDate);
+        }
     }
     
     /**

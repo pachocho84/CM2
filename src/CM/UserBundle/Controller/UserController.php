@@ -15,12 +15,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class UserController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/{name}", name="user_show")
      * @Template
      */
-    public function indexAction()
+    public function showAction($name)
     {
-        return array();
+        return array('name' => $name);
     }
     
     /**

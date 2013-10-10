@@ -51,7 +51,7 @@ class EventController extends Controller
 		));
 	    
 		$paginator  = $this->get('knp_paginator');
-		$pagination = $paginator->paginate($events, $page, 10);
+		$pagination = $paginator->paginate($events, $page, 25);
 			
 		if ($request->isXmlHttpRequest()) {
 			return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'page' => $page));
@@ -126,91 +126,91 @@ class EventController extends Controller
 		return array('dates' => $dates, 'month' => $cMonth);
 	}
     
-	/**
-	 * @Route("/{id}/{slug}", name="event_show", requirements={"id" = "\d+", "_locale" = "en|fr|it"})
-	 * @Template
-	 */
-	public function showAction(Request $request, $id, $slug)
-	{
-		$em = $this->getDoctrine()->getManager();
-		$event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale());
+    /**
+     * @Route("/{id}/{slug}", name="event_show", requirements={"id" = "\d+", "_locale" = "en|fr|it"})
+     * @Template
+     */
+    public function showAction(Request $request, $id, $slug)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale());
 
-		$images = new ArrayCollection();
+        $images = new ArrayCollection();
 
-		$form = $this->createForm(new MultipleImagesType(), $images, array(
-			'action' => $this->generateUrl('event_show', array(
-		   	'id' => $event->getId(),
-		  	'slug' => $event->getSlug()
-		  )),
-			'cascade_validation' => true
-		))->add('save', 'submit');
+        $form = $this->createForm(new MultipleImagesType(), $images, array(
+            'action' => $this->generateUrl('event_show', array(
+               'id' => $event->getId(),
+              'slug' => $event->getSlug()
+          )),
+            'cascade_validation' => true
+        ))->add('save', 'submit');
 
-		$form->handleRequest($request);
-		
-		if ($form->isValid()) {
-			$event->addImages($images);
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+            $event->addImages($images);
 
-		  $em = $this->getDoctrine()->getEntityManager();
-		  $em->persist($event);
-		  $em->flush();
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($event);
+            $em->flush();
 
-		  return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
-		}
-		
-		return array('event' => $event, 'form' => $form->createView());
-	}
+            return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
+        }
+        
+        return array('event' => $event, 'form' => $form->createView());
+    }
     
-	/**
-	 * @Route("/new", name="event_new") 
-	 * @Route("/{id}/{slug}/edit", name="event_edit", requirements={"id" = "\d+"}) 
-	 * @Template
-	 */
-	public function editAction(Request $request, $id = null, $slug = null)
-	{
-		$event;
-		if ($id == null || $slug == null) {
-	    	$event = new Event;
-		$event->addEventDate(new EventDate);
+    /**
+     * @Route("/new", name="event_new") 
+     * @Route("/{id}/{slug}/edit", name="event_edit", requirements={"id" = "\d+"}) 
+     * @Template
+     */
+    public function editAction(Request $request, $id = null, $slug = null)
+    {
+        $event;
+        if ($id == null || $slug == null) {
+            $event = new Event;
+        $event->addEventDate(new EventDate);
 
-		$image = new Image;
-		$image->setMain(true);
-		$event->addImage($image);
+        $image = new Image;
+        $image->setMain(true);
+        $event->addImage($image);
 
-		$post = new Post;
-		$post->setType(Post::TYPE_CREATION);
+        $post = new Post;
+        $post->setType(Post::TYPE_CREATION);
 
-		$user = $this->getUser();
-		$user
-			->addImage($image)
-			->addPost($post);
+        $user = $this->getUser();
+        $user
+            ->addImage($image)
+            ->addPost($post);
 
-		$event->addPost($post);
-		}
-		else {
-			$em = $this->getDoctrine()->getManager();
-	    	$event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale());
-	    	// TODO: retrieve images from event
-		}
-	      
-		// TODO: retrieve locales from user
-		
-		$form = $this->createForm(new EventType(), $event, array(
-			'action' => $this->generateUrl('event_new'),
-		  'cascade_validation' => true,
-		  'locales' => array('en'/* , 'fr', 'it' */),
-		  'locale' => $request->getLocale()
-		))->add('save', 'submit');
-		    
-		$form->handleRequest($request);
-		    
-		if ($form->isValid()) {
-			$em = $this->getDoctrine()->getEntityManager();
-		  $em->persist($event);
-		  $em->flush();
-				
-		  return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(),	'slug' => $event->getSlug())));
-		}
-		
-		return array('form' => $form->createView());
-	}
+        $event->addPost($post);
+        }
+        else {
+            $em = $this->getDoctrine()->getManager();
+            $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale());
+            // TODO: retrieve images from event
+        }
+          
+        // TODO: retrieve locales from user
+        
+        $form = $this->createForm(new EventType(), $event, array(
+            'action' => $this->generateUrl('event_new'),
+          'cascade_validation' => true,
+          'locales' => array('en'/* , 'fr', 'it' */),
+          'locale' => $request->getLocale()
+        ))->add('save', 'submit');
+            
+        $form->handleRequest($request);
+            
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+          $em->persist($event);
+          $em->flush();
+                
+          return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(),    'slug' => $event->getSlug())));
+        }
+        
+        return array('form' => $form->createView());
+    }
 }

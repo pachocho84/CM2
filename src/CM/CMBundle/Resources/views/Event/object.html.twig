@@ -1,29 +1,28 @@
 <li class="object">
-	<div class="media">
-		
-		{% if date.getEvent.getImages | length > 0 %}
-			<a href="{{ path('event_index', { 'id': date.getEvent.id, 'slug': date.getEvent.getSlug }) }}" class="pull-left thumbnail">
-				<img src='{{- uploaded_images_full_dir -}}/{{- date.getEvent.getImages[0].img }}' width=200 />
-			</a>
-		{% endif %}
-{# 						<?php show_img_box($post->getImages()->getFirst(), array('width' => 200, 'height' => 140, 'link' => $post->getRawValue()->getEntity()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left thumbnail'))) ?>	 #}
-	
-		<div class="media-body">
-			
-			<h4><a href="{{ path('event_show', { 'id': date.getEvent.id, 'slug': date.getEvent.getSlug }) }}">{{ date.getEvent.getTitle }}</a> [{{ date.getEvent.getEntityCategory }}]</h4>
-						
-			<p class="text-muted">
-				<i class="glyphicon glyphicon-time"></i> {{ date.start | format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
-				<i class="glyphicon glyphicon-map-marker"></i> {{ date.location }} <small>({{ date.address }})</small>
-			</p>
-	
-			<p>{{ date.getEvent.getExtract }}</p>
-{# 							<?php echo $post->getRawValue()->getEntity()->getShortText() ?> #}
-			
-			
-{# 							<?php include_partial('utility/bottom', array('post' => $post)) ?> #}
-	
-		</div><!-- END Media Body -->
-	
-	</div>
+    <div class="media">
+        
+        {% if date.getEvent.getImages | length > 0 %}
+            <a href="{{ path('event_show', { 'id': date.getEvent.id, 'slug': date.getEvent.getSlug }) }}" class="pull-left thumbnail">
+                <img src='{{- uploaded_images_full_dir -}}/{{- date.getEvent.getImages[0].img }}' width=200 />
+            </a>
+        {% endif %}
+{#                         <?php show_img_box($post->getImages()->getFirst(), array('width' => 200, 'height' => 140, 'link' => $post->getRawValue()->getEntity()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left thumbnail'))) ?>     #}
+    
+        <div class="media-body">
+            
+            <h4><a href="{{ path('event_show', { 'id': date.getEvent.id, 'slug': date.getEvent.getSlug }) }}">{{ date.getEvent.getTitle }}</a> [{{ date.getEvent.getEntityCategory }}]</h4>
+                        
+            <p class="text-muted">
+                <i class="glyphicon glyphicon-time"></i> {{ date.start | format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
+                <i class="glyphicon glyphicon-map-marker"></i> {{ date.location }} <small>({{ date.address }})</small>
+            </p>
+    
+            <p>{{ date.getEvent.getExtract }}</p>
+{#                             <?php echo $post->getRawValue()->getEntity()->getShortText() ?> #}
+
+            {{ include('CMBundle::social.html.twig', {'post': date.event.posts[0]}) }}
+    
+        </div><!-- END Media Body -->
+    
+    </div>
 </li>

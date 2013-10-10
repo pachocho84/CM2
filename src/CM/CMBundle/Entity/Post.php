@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
-use CM\UserBundle\Entity\User as User;
+use CM\UserBundle\Entity\User;
 
 /**
  * Post
@@ -40,7 +40,7 @@ class Post
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Event", inversedBy="posts")
-     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)	
+     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
      */
     private $event;
 
@@ -62,38 +62,38 @@ class Post
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="posts")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)	
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)    
      */
     private $user;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"persist", "remove"})
-	 */
-	private $comments;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="Like", mappedBy="post", cascade={"persist", "remove"})
-	 */
-	private $likes;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="post", cascade={"persist", "remove"})
-	 */
-	private $notifications;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"persist", "remove"})
+     */
+    private $comments;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Like", mappedBy="post", cascade={"persist", "remove"})
+     */
+    private $likes;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Notification", mappedBy="post", cascade={"persist", "remove"})
+     */
+    private $notifications;
         
     /**
      * Constructor
      */
     public function __construct()
     {
-    	$this->comments = new ArrayCollection;
-    	$this->likes = new ArrayCollection;
-    	$this->notifications = new ArrayCollection;
+        $this->comments = new ArrayCollection;
+        $this->likes = new ArrayCollection;
+        $this->notifications = new ArrayCollection;
     }
 
     public function __toString()
     {
-    	return "Post";
+        return "Post";
     }
 
     /**
@@ -280,71 +280,116 @@ class Post
         return $this->comments;
     }
 
-	/**
-	 * Add like
-	 *
-	 * @param Like $like
-	 * @return Post
-	 */
-	public function addLike(Like $like)
-	{
-	    $this->likes[] = $like;
-	    $like->setPost($this);
-	
-	    return $this;
-	}
+    /**
+     * Add like
+     *
+     * @param Like $like
+     * @return Post
+     */
+    public function addLike(Like $like)
+    {
+        $this->likes[] = $like;
+        $like->setPost($this);
+    
+        return $this;
+    }
 
-	/**
-	 * Remove likes
-	 *
-	 * @param Like $like
-	 */
-	public function removeLike(Like $like)
-	{
-	    $this->likes->removeElement($like);
-	}
+    /**
+     * Remove likes
+     *
+     * @param Like $like
+     */
+    public function removeLike(Like $like)
+    {
+        $this->likes->removeElement($like);
+    }
 
-	/**
-	 * Get like
-	 *
-	 * @return \Doctrine\Common\Collections\Collection 
-	 */
-	public function getLikes()
-	{
-	    return $this->likes;
-	}
+    /**
+     * Get like
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLikes()
+    {
+        return $this->likes;
+    }
+    
+    public function getLikesWithoutUser($user)
+    {
+        if (is_null($user)) {
+            return $this->getLikes();
+        }
+    
+        $likes = new ArrayCollection;
+        foreach ($this->getLikes() as $like) {
+            if ($like->getUser() != $user) {
+                $likes[] = $like;
+            }
+        }
+        return $likes;
+    }
+    
+    public function getUserLikesIt($user)
+    {
+        if (is_null($user)) {
+            return 42;
+        }
+        
+        foreach ($this->getLikes() as $like) {
+            if ($like->getUser() == $user) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+  
+    public function getWhoLikesIt($user, $authenticated)
+    {
+        if (!is_null($user) && $authenticated) {
+            $count = 0;
+            foreach ($this->getLikes() as $like) {
+                if ($like->getUser() != $user) {
+                    $count++;
+                }
+            };
+            return $count;
+        }
+        
+        return $this->getLikes()->count();
+    }
 
-	/**
-	 * Add notification
-	 *
-	 * @param Notification $notification
-	 * @return Post
-	 */
-	public function addNotification(Notification $notification)
-	{
-	    $this->notifications[] = $notification;
-	    $notification->setPost($this);
-	
-	    return $this;
-	}
+    /**
+     * Add notification
+     *
+     * @param Notification $notification
+     * @return Post
+     */
+    public function addNotification(Notification $notification)
+    {
+        $this->notifications[] = $notification;
+        $notification->setPost($this);
+    
+        return $this;
+    }
 
-	/**
-	 * Remove notifications
-	 *
-	 * @param Notification $notification
-	 */
-	public function removeNotification(Notification $notification)
-	{
-	    $this->notifications->removeElement($notification);
-	}
+    /**
+     * Remove notifications
+     *
+     * @param Notification $notification
+     */
+    public function removeNotification(Notification $notification)
+    {
+        $this->notifications->removeElement($notification);
+    }
 
-	/**
-	 * Get notification
-	 *
-	 * @return \Doctrine\Common\Collections\Collection 
-	 */
-	public function getNotifications()
-	{
-	    return $this->notifications;
-	}
+    /**
+     * Get notification
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getNotifications()
+    {
+        return $this->notifications;
+    }
 }

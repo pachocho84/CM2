@@ -26,7 +26,7 @@ class EventDate
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Event", inversedBy="eventDates")
-     * @ORM\JoinColumn(name="event_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)	
+     * @ORM\JoinColumn(name="event_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)    
      */
     private $event;
 

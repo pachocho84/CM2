@@ -47,10 +47,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 		$manager->persist($user);
 		$manager->flush();
 
-		$userCount = 10;
-		// $this->addReference('user-count', $userCount);
-
-		for ($i = 1; $i < $userCount + 1; $i++) {
+		for ($i = 1; $i < 11; $i++) {
 			$userNum = rand(0, count($this->images) - 1);
 
 			$user = $userManager->createUser();

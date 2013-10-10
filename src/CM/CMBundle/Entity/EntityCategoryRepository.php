@@ -12,49 +12,49 @@ use Doctrine\ORM\EntityRepository;
  */
 class EntityCategoryRepository extends EntityRepository
 {
-	static protected function getOptions(array $options = array())
-	{
-		return array_merge(array(
- 			// 'entity_type' => sfContext::getInstance()->getRequest()->getParameter('module'), 
-			'user_id'     => null,
- 			// 'category'    => sfContext::getInstance()->getRequest()->getParameter('category', null), 
-			'paginate'	  => true,
-			'locale'	  => 'en',
-			'limit'       => 25,
-		), $options);
-	}
-	
-	public function filterEntityCategoriesByEntityType($entity_type, array $options = array())
-	{
-		$options = self::getOptions($options);
-		
-		return $this->createQueryBuilder('ec')->select('ec, ect')
-			->leftJoin('ec.translations', 'ect')
-			->where('ec.entityType = :entity_type')->setParameter('entity_type', $entity_type)
-			->andWhere('ect.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
-			->orderBy('ect.name', 'ASC');
-	}
-	
-	public function getEntityCategories($entity_type, array $options = array())
-	{
-		return $this->filterEntityCategoriesByEntityType($entity_type, $options)->getQuery()->getResult();
-	}
-	
-	public function getCategory($slug, $entity_type, array $options = array())
-	{
-		$options = self::getOptions($options);
-		
-		return $this->createQueryBuilder('ec')->select('ec, ect')
-			->leftJoin('ec.translations', 'ect')
-			->where('ec.entityType = :entity_type')
-			->andWhere('ect.slug = :slug')
-			->andWhere('ect.locale IN (:locale, \'en\')')
-			->setParameters(array(
-				':slug' => $slug,
-				'entity_type' => $entity_type,
-				'locale' => $options['locale']
-			))
-			->getQuery()
-			->getSingleResult();
-	}
+    static protected function getOptions(array $options = array())
+    {
+        return array_merge(array(
+             // 'entity_type' => sfContext::getInstance()->getRequest()->getParameter('module'), 
+            'user_id'     => null,
+             // 'category'    => sfContext::getInstance()->getRequest()->getParameter('category', null), 
+            'paginate'      => true,
+            'locale'      => 'en',
+            'limit'       => 25,
+        ), $options);
+    }
+    
+    public function filterEntityCategoriesByEntityType($entity_type, array $options = array())
+    {
+        $options = self::getOptions($options);
+        
+        return $this->createQueryBuilder('ec')->select('ec, ect')
+            ->leftJoin('ec.translations', 'ect')
+            ->where('ec.entityType = :entity_type')->setParameter('entity_type', $entity_type)
+            ->andWhere('ect.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
+            ->orderBy('ect.name', 'ASC');
+    }
+    
+    public function getEntityCategories($entity_type, array $options = array())
+    {
+        return $this->filterEntityCategoriesByEntityType($entity_type, $options)->getQuery()->getResult();
+    }
+    
+    public function getCategory($slug, $entity_type, array $options = array())
+    {
+        $options = self::getOptions($options);
+        
+        return $this->createQueryBuilder('ec')->select('ec, ect')
+            ->leftJoin('ec.translations', 'ect')
+            ->where('ec.entityType = :entity_type')
+            ->andWhere('ect.slug = :slug')
+            ->andWhere('ect.locale IN (:locale, \'en\')')
+            ->setParameters(array(
+                ':slug' => $slug,
+                'entity_type' => $entity_type,
+                'locale' => $options['locale']
+            ))
+            ->getQuery()
+            ->getSingleResult();
+    }
 }

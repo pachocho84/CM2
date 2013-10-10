@@ -72,9 +72,4 @@ swiftmailer:
     password:  %mailer_password%
     spool:     { type: memory }
 
-services:
-    locale_listener:
-        class: CM\EventListener\LocaleListener
-        arguments: ["%kernel.default_locale%"]
-        tags:
-            - { name: kernel.event_subscriber }    
+services:  

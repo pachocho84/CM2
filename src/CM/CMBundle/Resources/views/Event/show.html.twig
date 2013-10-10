@@ -7,17 +7,17 @@
         <h3>{{ event.getSubtitle }}</h3>
       </header>
       <div>
-      	<p>{{ event.getExtract }}</p>
-      	<ul>
-      		{% for date in event.eventDates %}
-      			<li>{{ date.start | date }}</li>
-      		{% endfor %}
-      	</ul>
+          <p>{{ event.getExtract }}</p>
+          <ul>
+              {% for date in event.eventDates %}
+                  <li>{{ date.start | date }}</li>
+              {% endfor %}
+          </ul>
       </div>
      <div>
-      	{% for image in event.getImages %}
-	  		<img src='{{- uploaded_images_full_dir -}}/{{- image.img }}' width=200 />
-	  	{% endfor %}
+          {% for image in event.getImages %}
+              <img src='{{- uploaded_images_full_dir -}}/{{- image.img }}' width=200 />
+          {% endfor %}
       </div>
     </article>
     <div>

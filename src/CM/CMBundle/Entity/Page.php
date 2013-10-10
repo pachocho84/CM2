@@ -17,9 +17,9 @@ use CM\UserBundle\Entity\User;
  */
 class Page
 {
-    use ORMBehaviors\Sluggable\Sluggable,
-    	ORMBehaviors\Timestampable\Timestampable,
-    	\CM\Model\ImageAndCoverTrait;
+    use ORMBehaviors\Sluggable\Sluggable;
+    use ORMBehaviors\Timestampable\Timestampable;
+    use \CM\General\Model\ImageAndCoverTrait;
 
     /**
      * @var integer
@@ -73,18 +73,18 @@ class Page
         
     /**
      * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Image", mappedBy="page", cascade={"persist", "remove"})
-	 */
-	private $images;
+     */
+    private $images;
     
     public function __construct()
     {
-    	$this->images = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
-	protected function getRootDir()
-	{
-		return __DIR__.'/../Resources/public/';
-	}
+    protected function getRootDir()
+    {
+        return __DIR__.'/../Resources/public/';
+    }
 
     /**
      * Get id
