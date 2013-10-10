@@ -8,8 +8,4 @@ services:
         class: CM\General\Twig\CMExtension
         arguments: [@translator]
         tags:
-            - { name: request.param_converter, priority: 10, converter: locale_converter }
-    cm.twig.acme_extension:
-        class: CM\CMBundle\Twig\CMExtension
-        tags:
             - { name: twig.extension }

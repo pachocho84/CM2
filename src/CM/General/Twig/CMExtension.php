@@ -16,7 +16,8 @@ class CMExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter('get_class_name', array($this, 'getClassName')),
+            'ceil' => new \Twig_Filter_Method($this, 'ceil'),
+            'get_class_name' => new \Twig_Filter_Method($this, 'getClassName'),
         );
     }
 
@@ -25,6 +26,11 @@ class CMExtension extends \Twig_Extension
         return array(
             'delete_link' => new \Twig_Function_Method($this, 'getDeleteLink'),
         );
+    }
+
+    public function ceil($number)
+    {
+        return ceil($number);
     }
 
     public function getClassName($object)
