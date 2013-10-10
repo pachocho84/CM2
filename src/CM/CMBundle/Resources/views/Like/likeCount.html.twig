@@ -1,4 +1,4 @@
-{% set userLikesIt = post.userLikeIt(app.user) %}
+{% set userLikesIt = post.userLikesIt(app.user) %}
 {% set whoLikesIt = post.whoLikesIt(app.user, is_granted('IS_AUTHENTICATED_REMEMBERED')) %}
 
 {% if userLikesIt + whoLikesIt > 0 %}

@@ -89,10 +89,8 @@ $(function() {
     
     /* LIKE */
     $('body').on('click', '.iLikeIt', function(event) {
-        console.log("OK");
         event.preventDefault();
         $.getJSON(event.currentTarget.href, function(data) {
-            console.log(data);
             $(event.target).closest('.object').find('.bottom-like-count').replaceWith(data.likeCount);
             $(event.target).closest('.object').find('.bottom-likes').replaceWith(data.likes);
             fix_triangle($(event.target));

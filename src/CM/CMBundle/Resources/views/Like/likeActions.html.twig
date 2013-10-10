@@ -1,7 +1,7 @@
-{% if not post.userLikeIt(app.user) %}
+{% if not post.userLikesIt(app.user) %}
     <a href="{{ path('like', {'type': post | get_class_name | lower, 'id': post.id}) }}" class="iLikeIt">{{ "Like" | trans }}</a>
 {% else %}
-    <a href="{{ path('unlike', {'type': post | get_class_name | lower, 'id': post.id}) }}" class="iLikeIt">{{ "Unike" | trans }}</a>
+    <a href="{{ path('unlike', {'type': post | get_class_name | lower, 'id': post.id}) }}" class="iLikeIt">{{ "Unlike" | trans }}</a>
 {% endif %}
 
 

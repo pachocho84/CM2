@@ -4,6 +4,7 @@ namespace CM\CMBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -16,7 +17,7 @@ use CM\CMBundle\Entity\Like;
 class LikeController extends Controller
 {
     /**
-     * @Route("/like/{type}/{id}", name="like", requirements={"type" = "post|image"})
+     * @Route("/like/{type}/{id}.{_format}", name="like", defaults={"_format"="json"}, requirements={"type" = "post|image"})
      */
     public function likeAction(Request $request, $type, $id)
     {
@@ -40,9 +41,9 @@ class LikeController extends Controller
         
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse(array(
-                'likes' => $this->render('CMBundle:Like:like.html.twig', array('post' => $post)), 
-                'likeActions' => $this->render('CMBundle:Like:likeActions.html.twig', array('post' => $post)),
-                'likeCount' => $this->render('CMBundle:Like:likeCount.html.twig', array('post' => $post))
+                'likes' => $this->renderView('CMBundle:Like:like.html.twig', array('post' => $post)), 
+                'likeActions' => $this->renderView('CMBundle:Like:likeActions.html.twig', array('post' => $post)),
+                'likeCount' => $this->renderView('CMBundle:Like:likeCount.html.twig', array('post' => $post))
             ));
         }
         
@@ -51,7 +52,7 @@ class LikeController extends Controller
     }
     
     /**
-     * @Route("/unlike/{type}/{id}", name="unlike", requirements={"type" = "post|image"})
+     * @Route("/unlike/{type}/{id}.{_format}", name="unlike", defaults={"_format"="json"}, requirements={"type" = "post|image"})
      */
     public function unlikeAction(Request $request, $type, $id)
     {
@@ -75,9 +76,9 @@ class LikeController extends Controller
             }
 
             return new JsonResponse(array(
-                'likes' => $this->render('CMBundle:Like:like.html.twig', array('post' => $post)), 
-                'likeActions' => $this->render('CMBundle:Like:like.html.twig', array('post' => $post)),
-                'likeCount' => $this->render('CMBundle:Like:like.html.twig', array('post' => $post)),
+                'likes' => $this->renderView('CMBundle:Like:like.html.twig', array('post' => $post)), 
+                'likeActions' => $this->renderView('CMBundle:Like:likeActions.html.twig', array('post' => $post)),
+                'likeCount' => $this->renderView('CMBundle:Like:likeCount.html.twig', array('post' => $post)),
             ));
         }
 
@@ -86,21 +87,19 @@ class LikeController extends Controller
     }
 
     /**
-     * @Route("/who_likes/{type}/{id}", name="who_likes_it")
+     * @Route("/who_likes/{type}/{id}.{_format}", name="who_likes_it", defaults={"_format"="json"}, requirements={"_format"="json"})
      */
     public function whoLikesItAction(Request $request, $type, $id)
-    {   
-        if (!$request->isXmlHttpRequest()) {
-            throw $this->createNotFoundException('This page can only be requested by AJAX.');
-        }
+    {
+        return new Response('OK');
 
-        $em = $this->getDoctrine()->getManager();
-        $whoLikesIt = $em->getRepository('CMBundle:Like')->whoLikesIt($type, $id);
+        // $em = $this->getDoctrine()->getManager();
+        // $whoLikesIt = $em->getRepository('CMBundle:Like')->whoLikesIt($type, $id);
         
-        return $this->render('utenti/dialog', array(
-            'title'             => 'Who likes it',
-            'users'             => $whoLikesIt, 
-            'whoImFanOf'    => false // $this->getUser()->isAuthenticated() ? FansQuery::whoImFanOf() : false
-        ));
+        // return $this->render('utenti/dialog', array(
+        //     'title'             => 'Who likes it',
+        //     'users'             => $whoLikesIt, 
+        //     'whoImFanOf'    => false // $this->getUser()->isAuthenticated() ? FansQuery::whoImFanOf() : false
+        // ));
     }
 }

@@ -320,19 +320,19 @@ class Post
             return $this->getLikes();
         }
     
-        $likes = $this->getLikes();
+        $likes = new ArrayCollection;
         foreach ($this->getLikes() as $like) {
-            if ($like->getUser() == $user) {
-                $likes->removeElement($like);
+            if ($like->getUser() != $user) {
+                $likes[] = $like;
             }
         }
         return $likes;
     }
     
-    public function getUserLikeIt($user)
+    public function getUserLikesIt($user)
     {
         if (is_null($user)) {
-            return false;
+            return 42;
         }
         
         foreach ($this->getLikes() as $like) {
