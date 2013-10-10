@@ -32,7 +32,7 @@ class RegistrationType extends BaseType
 				'choices' => array(true => 'Visible', false => 'Not visible'),
 				'expanded' => true
 			))
-			->add('imgFile');
+			->add('file');
     }
     
     /**

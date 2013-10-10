@@ -17,10 +17,8 @@
 	
 	
 	
-	<div class='box'>
-		{{ render(controller('CMBundle:Event:calendarMonth', { 'year': "now"|date("Y"), 'month': "now"|date("m") } )) }}
-{# 		{{ include('CMBundle:Event:calendarMonth.html.twig', { 'events': events }) }} #}
-	</div>
+	{{ render(controller('CMBundle:Event:calendarMonth', { 'year': year, 'month': month } )) }}
+
 	
 {% endblock %} 
 

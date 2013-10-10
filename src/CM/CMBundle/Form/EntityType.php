@@ -46,7 +46,10 @@ class EntityType extends AbstractType
 			->add('entity_category', 'entity', array(
 			'class' => 'CMBundle:EntityCategory',
 			'query_builder' => function(EntityCategoryRepository $er) use ($options) {
-				return $er->filterEntityCategoriesByEntityType(EntityCategoryEnum::toNum(preg_replace('/^[\w\d_\\\]*\\\/', '', rtrim(get_class($this), 'Type'))), $options);
+    			// get Entity child class name, to retrieve the EntityCategoty type associated
+    			$entityChild = strtoupper(preg_replace('/^[\w\d_\\\]*\\\/', '', rtrim(get_class($this), 'Type')));
+    			$entityCategory = constant('CM\CMBundle\Entity\EntityCategory::'.$entityChild);
+				return $er->filterEntityCategoriesByEntityType($entityCategory, $options);
 			}
 		))
 			->add('visible')

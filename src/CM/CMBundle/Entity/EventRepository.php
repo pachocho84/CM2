@@ -16,19 +16,22 @@ class EventRepository extends EntityRepository
 	static protected function getOptions(array $options = array())
 	{
 		return array_merge(array(
-/*  		'entity_type' => sfContext::getInstance()->getRequest()->getParameter('module'),  */
 			'user_id'     => null,
-/* 			'category'    => sfContext::getInstance()->getRequest()->getParameter('category', null),  */
 			'category'    => null, 
 			'paginate'	  => true,
 			'locale'	  	=> 'en',
-/* 			'limit'       => 25, */
+			'limit'       => 25,
 		), $options);
 	}
 	
 	public function getEvents(array $options = array())
 	{
 		$options = self::getOptions($options);
+
+		$parameters = array(
+			'now' => new \DateTime,
+			'locale' => $options['locale']
+		);
 		
 		$eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
 		
@@ -36,28 +39,22 @@ class EventRepository extends EntityRepository
 			->join('d.event', 'e')
 			->leftJoin('e.translations', 't')
 			->leftJoin('e.posts', 'p')
-			->leftJoin('e.images', 'i', 'WITH', 'i.main = 1');
+			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true);
 		
-		if (isset($options['category'])) 
-		{
-			$query->andWhere('e.entityCategory = :category')->setParameter('category', $options['category']);	
-		} 
-		
-		if (isset($options['archive'])) 
-		{
-			$query->andWhere('d.start <= :now')->orderBy('d.start', 'desc');	
+		if (isset($options['category'])) {
+			$query->andWhere('e.entityCategory = :category');
+			$parameters['category'] = $options['category'];
 		}
-		else
-		{
+		
+		if (isset($options['archive'])) {
+			$query->andWhere('d.start <= :now')->orderBy('d.start', 'desc');	
+		} else {
 			$query->andWhere('d.start >= :now')->orderBy('d.start');	
-		}			
+		}
 			
 		$query
-			->andWhere('t.locale in (:locale, \'en\')') // TODO: DA SISTEMARE CON UN MERGE
-			->setParameters(array(
-				'now' => new \DateTime,
-				'locale' => $options['locale']
-			));
+			->andWhere('t.locale IN (:locale, \'en\')') // TODO: DA SISTEMARE CON UN MERGE
+			->setParameters($parameters);
 			
 		
 		return $options['paginate'] ? $query : $query->setMaxResults($options['limit'])->getQuery()->getResult();
@@ -65,8 +62,12 @@ class EventRepository extends EntityRepository
 	
 	public function getEventsPerMonth($year, $month, $options = array())
 	{
-		return $this->createQueryBuilder('e')->select('e, t, d, i')
-			->leftJoin('e.eventDates', 'd')
+		$options = self::getOptions($options);
+		
+		$eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
+		
+		return $eventDateRepository->createQueryBuilder('d')->select('d, e, t, i')
+			->join('d.event', 'e')
 			->leftJoin('e.translations', 't')
 			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
 			->where('SUBSTRING(d.start, 1, 4) = '.$year)

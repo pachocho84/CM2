@@ -13,7 +13,7 @@ class LocaleParamConverter implements ParamConverterInterface
 {
     public function apply(Request $request, ConfigurationInterface $configuration)
     {
-        $_locale = $request->attributes->get('_locale');
+        $_locale = $request->get('_locale');
 
         $locale = new Locale($_locale);
 
@@ -22,7 +22,8 @@ class LocaleParamConverter implements ParamConverterInterface
         }
 
         $param = $configuration->getName();
-        $request->attributes->set($param, $locale);
+        $request->set($param, $locale);
+        $request->setLocale($locale);
 
         return true;
     }

@@ -20,7 +20,7 @@ class Event extends Entity
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
-	private $id;
+	protected $id;
 	
 	/**
 	 * @ORM\OneToMany(targetEntity="EventDate", mappedBy="event", cascade={"persist", "remove"})
@@ -56,11 +56,6 @@ class Event extends Entity
     	if (! is_null($eventDate)) {
     		$this->addEventDate($eventDate);
     	}
-    }
-
-    public function __toString()
-    {
-    	return "Event";
     }
     
     /**

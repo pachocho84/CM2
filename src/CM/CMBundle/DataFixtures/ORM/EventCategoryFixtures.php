@@ -14,7 +14,7 @@ class EventCategoryFixtures extends AbstractFixture implements OrderedFixtureInt
     {
     	$category1 = new EntityCategory;
     	$category1
-    		->setEntityType(EntityCategoryEnum::EVENT)
+    		->setEntityType(EntityCategory::EVENT)
     		->setName('concert')
     		->setPlural('concerts');
     	$category1->translate('fr')
@@ -29,7 +29,7 @@ class EventCategoryFixtures extends AbstractFixture implements OrderedFixtureInt
     	
     	$category2 = new EntityCategory;
     	$category2
-    		->setEntityType(EntityCategoryEnum::EVENT)
+    		->setEntityType(EntityCategory::EVENT)
     		->setName('opera')
     		->setPlural('operas');
     	$category2->translate('fr')
@@ -44,7 +44,7 @@ class EventCategoryFixtures extends AbstractFixture implements OrderedFixtureInt
     	
     	$category3 = new EntityCategory;
     	$category3
-    		->setEntityType(EntityCategoryEnum::EVENT)
+    		->setEntityType(EntityCategory::EVENT)
     		->setName('masterclass')
     		->setPlural('masterclasses');
     	$category3->translate('fr')

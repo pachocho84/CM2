@@ -1,3 +1,4 @@
+# GENERAL
 Title: Titolo
 Subtitle: Sottotitolo
 Extract: Estratto
@@ -10,6 +11,15 @@ End: Fine
 Location: Luogo
 Address: Indirizzo
 Save: Salva
+
+# DATES
+sunday: domenica
+monday: lunedì
+tuesday: martedì
+wednesday: mercoledì
+thursday: giovedì
+friday: venerdì
+saturday: sabato
 
 # EVENTS
 Events: Eventi
