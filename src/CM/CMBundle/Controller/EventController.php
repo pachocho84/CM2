@@ -70,10 +70,9 @@ class EventController extends Controller
 		if ($request->isXmlHttpRequest()) {
 			return $this->forward('CMBundle:Event:calendarMonth', array('request' => $request, 'month' => $month, 'year' => $year));
 		}
-/*
-	    $cal1 = \IntlCalendar::createInstance();
-        echo $cal1->getFirstDayOfWeek(); // Monday
-*/
+		
+        $month = !is_null($month) ? $month : date('n');
+        $year = !is_null($year) ? $year : date('Y');
         
 		$em = $this->getDoctrine()->getManager();
 		$categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::EVENT, array('locale' => $request->getLocale()));
@@ -114,6 +113,10 @@ class EventController extends Controller
     	$cMonth['maxday'] = date('t', strtotime($year.'-'.$month.'-01'));
     	$cMonth['thismonth'] = getdate($cMonth['timestamp']);
     	$cMonth['startday'] = $cMonth['thismonth']['wday'];
+/*
+	    $cal1 = \IntlCalendar::createInstance();
+        echo $cal1->getFirstDayOfWeek(); // Monday
+*/
 /*     	$cMonth['calendar'] = \IntlCalendar::createInstance(); */
 			
 		if ($request->isXmlHttpRequest()) {

@@ -66,8 +66,7 @@
 
 
 
-{# <?php if (mktime(0, 0, 0, $cMonth, 1, $cYear) >= mktime(0, 0, 0, date('n'), 1, date('Y'))): ?> #}
-{% if dates[0].start | date('U') >= 'now' | date ('U') %}
+{% if dates[dates | length - 1].start | date('U') >= 'now' | date ('U') %}
 	<div id="load_more_posts" class="well well-small">
 	    <a href=" {{ path('event_calendar', { 'year': month.next_year, 'month': month.next_month }) }}"><i class="glyphicon glyphicon-calendar"></i> {{ dates[0].start | date_modify('+1 month') | format_date('MMMM Y') | capitalize }}</a>
 	</div>
