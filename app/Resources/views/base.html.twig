@@ -103,6 +103,11 @@
 		
 		
 		{% block javascripts %}
+
+            <script>
+                var script 	= "{{ app.request.scriptname }}";
+                var culture = "{{ app.request.locale }}";
+            </script>
 			<script src="{{ asset('/js/jquery-2.0.3.min.js') }}"></script>
 			<script src="{{ asset('/lib/bootstrap/js/bootstrap.min.js') }}"></script>
 			<script src="{{ asset('/js/jquery.hcsticky-min.js') }}"></script>
