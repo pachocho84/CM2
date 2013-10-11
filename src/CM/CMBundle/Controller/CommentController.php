@@ -41,13 +41,13 @@ class CommentController extends Controller
                     'post_id' => $post->getId()
                 )),
                 'cascade_validation' => true
-            ))->add('save', 'submit');
+            ))->add('save', 'submit')->createView();
         }
 
         return array(
             'post' => $post,
             'comments' => $post->getComments(),
-            'form' => $form->createView()
+            'form' => $form
         );
         // $this->comments = $this->post->getComments();
         

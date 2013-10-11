@@ -1,9 +1,7 @@
-{% if is_granted('ROLE_USER') %}
-    {% if not post.userLikesIt(app.user, is_granted('ROLE_USER')) %}
-        <a href="{{ path('like', {'type': post | get_class_name | lower, 'id': post.id}) }}" class="iLikeIt">{{ "Like" | trans }}</a>
-    {% else %}
-       <a href="{{ path('unlike', {'type': post | get_class_name | lower, 'id': post.id}) }}" class="iLikeIt">{{ "Unlike" | trans }}</a>
-    {% endif %}
+{% if not post.userLikesIt(app.user, is_granted('ROLE_USER')) %}
+    <a href="{{ path('like', {'type': post | get_class_name | lower, 'id': post.id}) }}" class="iLikeIt {{ is_granted('ROLE_USER') ? '' : 'unlogged' }}">{{ "Like" | trans }}</a>
+{% else %}
+   <a href="{{ path('unlike', {'type': post | get_class_name | lower, 'id': post.id}) }}" class="iLikeIt {{ is_granted('ROLE_USER') ? '' : 'unlogged' }}">{{ "Unlike" | trans }}</a>
 {% endif %}
 
 
