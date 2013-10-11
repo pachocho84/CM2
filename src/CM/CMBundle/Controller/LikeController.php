@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -21,6 +22,10 @@ class LikeController extends Controller
      */
     public function likeAction(Request $request, $type, $id)
     {
+        if (!$this->get('security.context')->isGranted('ROLE_USER')) {
+	          throw new HttpException('Unauthorized access.', 401); 
+        }
+    
         $em = $this->getDoctrine()->getManager();
   
         if (!$em->getRepository('CMBundle:Like')->checkIfUserLikesIt($this->getUser(), $type, $id)) {        
@@ -56,6 +61,10 @@ class LikeController extends Controller
      */
     public function unlikeAction(Request $request, $type, $id)
     {
+        if (!$this->get('security.context')->isGranted('ROLE_USER')) {
+	          throw new HttpException('Unauthorized access.', 401); 
+        }
+        
         $em = $this->getDoctrine()->getManager();
         $like = $em->getRepository('CMBundle:Like')->findOneBy(array(
             $type => $id,
