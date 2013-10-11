@@ -10,7 +10,7 @@
 		<h2 class="text-center">{{ dates[0].start | format_date('MMMM Y') | capitalize }}</h2>
 	</div>
 	
-	<table class="table table-bordered events" style="table-layout: fixed;">
+	<table class="table table-bordered events events_calendar" style="table-layout: fixed;">
 	
 		<thead>
 			<tr>
@@ -40,7 +40,7 @@
 								{% for date in dates %}
 									{% if date.start | date('d') == i - month.startday + 1 %}
 										<li class="object">
-										    <a href="{{ path('event_show', { 'id': date.getEvent.id, 'slug': date.getEvent.getSlug }) }}">
+										    <a href="{{ path('event_show', { 'id': date.getEvent.id, 'slug': date.getEvent.getSlug }) }}" data-target="{{ path('event_show', { 'id': date.id, 'slug': date.getEvent.getSlug }) }}">
 												{{ date.event | slice(0, 340) }}
 											</a>
 										</li>

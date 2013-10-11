@@ -879,6 +879,10 @@ table.events .object:first-child {
     margin-top: 0;
     padding-top: 0;
 }
+table.events .popover {
+    width: 500px;
+    max-width: 550px;
+}
 .events-sponsored .media {
     margin-top: 0px;
 }

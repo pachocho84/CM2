@@ -184,5 +184,32 @@ $(function() {
             element.closest('.object').find('ul').removeClass('triangle');
         }
     }
+    
+    
+    
+    /* EVENT CALENDAR */
+    $('.events_calendar').on('mouseover', '.object a', function(event) {
+/*         $('.popover').each(function() { $(this).remove()}); */
+        event.preventDefault();
+        if (!$(event.target).attr('data-toggle')) {
+            $.get($(event.target).attr('data-target'), function(data) {
+                $(event.target)
+                    .attr('data-toggle', 'popover')
+                    .attr('data-content', data)
+                    .popover({
+                        'html': true,
+                        'placement': 'top',
+                    })
+                    .popover('show');
+            });
+        } else {
+            $(event.target).popover('show');
+        }
+    });
+    $('.events_calendar').on('mouseout', '.object a', function(event) {
+        $('.popover').each(function() { $(this).remove()});
+        $(event.target).popover('hide');
+    });
+    
                             
 });

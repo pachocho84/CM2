@@ -94,5 +94,18 @@ class EventRepository extends EntityRepository
             ->getQuery()
             ->getSingleResult();
     }
+
+    public function getDate($id, $locale)
+	{	
+        $eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
+		
+		return $eventDateRepository->createQueryBuilder('d')->select('d, e, t, i')
+			->join('d.event', 'e')
+            ->leftJoin('e.translations', 't')
+            ->leftJoin('e.images', 'i')
+            ->andWhere('d.id = :id')->setParameter('id', $id)
+            ->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $locale)
+            ->getQuery()
+            ->getSingleResult();
+    }
 }
-    

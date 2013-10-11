@@ -133,6 +133,12 @@ class EventController extends Controller
     public function showAction(Request $request, $id, $slug)
     {
         $em = $this->getDoctrine()->getManager();
+        	
+		if ($request->isXmlHttpRequest()) {
+            $date = $em->getRepository('CMBundle:Event')->getDate($id, $request->getLocale());
+			return $this->render('CMBundle:Event:object.html.twig', array('date' => $date));
+		}
+		
         $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale());
 
         $images = new ArrayCollection();
@@ -212,5 +218,23 @@ class EventController extends Controller
         }
         
         return array('form' => $form->createView());
+    }
+    
+    
+    /**
+     * @Template
+     */
+    public function sponsoredAction(Request $request)
+    {
+	    $request->setLocale($request->get('_locale')); // TODO: workaround for locale in subsession
+	    
+		$em = $this->getDoctrine()->getManager();
+		
+		$events = $em->getRepository('CMBundle:Event')->getSponsored(array('locale' => $request->getLocale(), 'paginate' => false, 'limit' => 3));
+    	
+    	foreach ($events as $event) {
+    		SponsoredQuery::create()->filterByEntityId($post->getEntityId())->limit(1)->update(array('Views' => $post->getViews() + 1));
+    		$post->save();
+    	}
     }
 }
