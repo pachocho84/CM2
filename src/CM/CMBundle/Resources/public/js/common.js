@@ -67,7 +67,7 @@ $(function() {
         }
     });
     // Unlogged
-    $('.object').on('click', '.unlogged', function(event) {
+    $('body').on('click', '.unlogged', function(event) {
         $.get(script + '/login');
     });    
     

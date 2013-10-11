@@ -21,6 +21,7 @@ class EventRepository extends EntityRepository
 			'category'    => null, 
 			'paginate'	  => true,
 			'locale'	  => 'en',
+			'locales'     => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
 			'limit'       => 25,
 		), $options);
 	}
@@ -31,7 +32,7 @@ class EventRepository extends EntityRepository
 
         $parameters = array(
 			'now' => new \DateTime,
-            'locale' => $options['locale']
+            'locales' => $options['locales']
         );
         
         $eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
@@ -58,45 +59,48 @@ class EventRepository extends EntityRepository
         }
             
         $query
-            ->andWhere('t.locale in (:locale, \'en\')') // TODO: DA SISTEMARE CON UN MERGE
+            ->andWhere('t.locale in (:locales)')
             ->setParameters($parameters);
             
         
         return $options['paginate'] ? $query : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 	
-	public function getEventsPerMonth($year, $month, $options = array())
+	public function getEventsPerMonth($year, $month, array $options = array())
 	{
 		$options = self::getOptions($options);
 		
 		$eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
 		
-		return $eventDateRepository->createQueryBuilder('d')->select('d, e, t, i')
+		return $eventDateRepository->createQueryBuilder('d')->select('d, e, t')
 			->join('d.event', 'e')
 			->leftJoin('e.translations', 't')
-			->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
 			->where('SUBSTRING(d.start, 1, 4) = '.$year)
 			->andWhere('SUBSTRING(d.start, 6, 2) = '.$month)
-			->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
+			->andWhere('t.locale IN (:locales)')->setParameter('locales', $options['locales'])
 			->orderBy('d.start')
 			->getQuery()
 			->getResult();
 	}
 
-    public function getEvent($id, $locale)
+    public function getEvent($id, array $options = array())
     {
+		$options = self::getOptions($options);
+		
         return $this->createQueryBuilder('e')->select('e, t, d, i')
             ->leftJoin('e.eventDates', 'd')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.images', 'i')
             ->andWhere('e.id = :id')->setParameter('id', $id)
-            ->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $locale)
+            ->andWhere('t.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->getQuery()
             ->getSingleResult();
     }
 
-    public function getDate($id, $locale)
+    public function getDate($id, array $options = array())
 	{	
+		$options = self::getOptions($options);
+		
         $eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
 		
 		return $eventDateRepository->createQueryBuilder('d')->select('d, e, t, i')
@@ -104,8 +108,32 @@ class EventRepository extends EntityRepository
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.images', 'i')
             ->andWhere('d.id = :id')->setParameter('id', $id)
-            ->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $locale)
+            ->andWhere('t.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->getQuery()
             ->getSingleResult();
+    }
+
+    public function getSponsored(array $options = array())
+	{	
+		$options = self::getOptions($options);
+		
+        $sponsoredRepository = $this->getEntityManager()->getRepository('CMBundle:Sponsored');
+		
+		return $sponsoredRepository->createQueryBuilder('s')->select('s, e, d, t, i')
+			->join('s.event', 'e')
+			->leftJoin('e.eventDates', 'd')
+            ->leftJoin('e.translations', 't')
+            ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
+            ->andWhere('s.start <= :now')
+            ->andWhere('s.end >= :now')
+            ->andWhere('t.locale IN (:locales)')
+            ->setParameters(array(
+                ':now' => new \DateTime,
+                ':locales' => $options['locales']
+            ))
+            ->setMaxResults($options['limit'])
+            ->orderBy('s.views')
+            ->getQuery()
+            ->getResult();
     }
 }

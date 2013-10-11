@@ -17,6 +17,7 @@ use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
+use CM\CMBundle\Entity\Sponsored;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\MultipleImagesType;
 use CM\CMBundle\Utility\UploadHandler;
@@ -135,11 +136,11 @@ class EventController extends Controller
         $em = $this->getDoctrine()->getManager();
         	
 		if ($request->isXmlHttpRequest()) {
-            $date = $em->getRepository('CMBundle:Event')->getDate($id, $request->getLocale());
+            $date = $em->getRepository('CMBundle:Event')->getDate($id, array('locale' => $request->getLocale()));
 			return $this->render('CMBundle:Event:object.html.twig', array('date' => $date));
 		}
 		
-        $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale());
+        $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale()));
 
         $images = new ArrayCollection();
 
@@ -202,9 +203,9 @@ class EventController extends Controller
         
         $form = $this->createForm(new EventType(), $event, array(
             'action' => $this->generateUrl('event_new'),
-          'cascade_validation' => true,
-          'locales' => array('en'/* , 'fr', 'it' */),
-          'locale' => $request->getLocale()
+            'cascade_validation' => true,
+            'locales' => array('en'/* , 'fr', 'it' */),
+            'locale' => $request->getLocale()
         ))->add('save', 'submit');
             
         $form->handleRequest($request);
@@ -214,7 +215,7 @@ class EventController extends Controller
             $em->persist($event);
             $em->flush();
                   
-            return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(),    'slug' => $event->getSlug())));
+            return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
         }
         
         return array('form' => $form->createView());
@@ -224,17 +225,16 @@ class EventController extends Controller
     /**
      * @Template
      */
-    public function sponsoredAction(Request $request)
+    public function sponsoredAction(Request $request, $limit = 2)
     {
 	    $request->setLocale($request->get('_locale')); // TODO: workaround for locale in subsession
 	    
 		$em = $this->getDoctrine()->getManager();
 		
-		$events = $em->getRepository('CMBundle:Event')->getSponsored(array('locale' => $request->getLocale(), 'paginate' => false, 'limit' => 3));
-    	
-    	foreach ($events as $event) {
-    		SponsoredQuery::create()->filterByEntityId($post->getEntityId())->limit(1)->update(array('Views' => $post->getViews() + 1));
-    		$post->save();
-    	}
+		$sponsored = $em->getRepository('CMBundle:Event')->getSponsored(array('limit' => $limit, 'paginate' => false, 'locale' => $request->getLocale()));
+		
+		$em->createQuery("UPDATE CMBundle:Sponsored s SET s.views = s.views + 1 WHERE s.id IN (2, 20)")->getResult();
+        
+        return array('sponsored_events' => $sponsored);
     }
 }

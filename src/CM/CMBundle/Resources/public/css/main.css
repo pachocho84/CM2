@@ -852,7 +852,6 @@ form.form-horizontal ul li.image textarea {
 /* Events */
 table.events {
     border: none;
-    border-bottom: 1px solid #dddddd;
     margin-bottom: 0;
 }
 table.events th,

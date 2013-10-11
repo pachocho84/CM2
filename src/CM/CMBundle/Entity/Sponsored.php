@@ -46,16 +46,16 @@ class Sponsored
     /**
      * @var \Date
      *
-     * @ORM\Column(name="date_from", type="date")
+     * @ORM\Column(name="start", type="date")
      */
-    private $dateFrom;
+    private $start;
 
     /**
      * @var \Date
      *
-     * @ORM\Column(name="date_to", type="date")
+     * @ORM\Column(name="end", type="date")
      */
-    private $dateTo;
+    private $end;
 
     /**
      * @var integer
@@ -76,49 +76,49 @@ class Sponsored
     }
 
     /**
-     * Set dateFrom
+     * Set start
      *
-     * @param \Date $dateFrom
+     * @param \Date $start
      * @return Sponsored
      */
-    public function setDateFrom($dateFrom)
+    public function setStart($start)
     {
-        $this->dateFrom = $dateFrom;
+        $this->start = $start;
     
         return $this;
     }
 
     /**
-     * Get dateFrom
+     * Get start
      *
      * @return \Date 
      */
-    public function getDateFrom()
+    public function getStart()
     {
-        return $this->dateFrom;
+        return $this->start;
     }
 
     /**
-     * Set dateTo
+     * Set end
      *
-     * @param \Date $dateTo
+     * @param \Date $end
      * @return Sponsored
      */
-    public function setDateTo($dateTo)
+    public function setEnd($end)
     {
-        $this->dateTo = $dateTo;
+        $this->end = $end;
     
         return $this;
     }
 
     /**
-     * Get dateTo
+     * Get end
      *
      * @return \Date 
      */
-    public function getDateTo()
+    public function getEnd()
     {
-        return $this->dateTo;
+        return $this->end;
     }
 
     /**
