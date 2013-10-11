@@ -16,10 +16,13 @@
       </div>
      <div>
           {% for image in event.getImages %}
-              <img src='{{- uploaded_images_full_dir -}}/{{- image.img }}' width=200 />
+              <img src='{{ uploaded_images_full_dir -}}/{{- image.img }}' width=200 />
           {% endfor %}
       </div>
     </article>
+
+    {{ include('CMBundle::social.html.twig', {'post': event.posts[0]}) }}
+
     <div>
         {{ form(form) }}
     </div>

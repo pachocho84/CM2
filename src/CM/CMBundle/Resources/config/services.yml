@@ -1,11 +1,13 @@
 parameters:
-    cm_property_accessor.class: CM\CMBundle\PropertyAccess\CMPropertyAccessor
 
 services:
-    property_accessor:
-        class: %cm_property_accessor.class%
     cm.twig.cm_extension:
         class: CM\General\Twig\CMExtension
         arguments: [@translator]
         tags:
             - { name: twig.extension }
+    cm.locale_listener:
+        class: CM\General\EventListener\LocaleListener
+        arguments: ["%kernel.default_locale%"]
+        tags:
+            - { name: kernel.event_subscriber }

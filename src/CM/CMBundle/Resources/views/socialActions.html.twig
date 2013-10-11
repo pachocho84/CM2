@@ -1,0 +1,11 @@
+{# <?php if ($sf_context->getSito()->getLikesEnabled() && $sf_context->getSito()->getLikesDisplay()): ?> #}
+    {% include('CMBundle:Like:likeActions.html.twig') %}
+{# <?php endif ?> #}
+
+{# <?php if ($sf_context->getSito()->getLikesEnabled() && $sf_context->getSito()->getLikesDisplay() && $sf_context->getSito()->getCommentsEnabled() && $sf_context->getSito()->getCommentsDisplay()): ?> #}
+    &middot;
+{# <?php endif ?> #}
+
+{# <?php if ($sf_context->getSito()->getCommentsEnabled() && $sf_context->getSito()->getCommentsDisplay()): ?> #}
+    <a href="{# {{ path('post_show', {'post_id': postId}) }} #}" class="{{ is_granted('ROLE_USER') ? 'comment_new-show' : 'comment_new-show unlogged' }}">{{ 'Comment' | trans }}</a>
+{# <?php endif ?> #}
