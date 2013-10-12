@@ -9,7 +9,6 @@
 /src/CM/CMBundle/DataFixtures/MongoDB/
 /src/CM/CMBundle/Document/
 /src/CM/CMBundle/Resources/public/uploads/
-/vendor/
 /web/bundles/
 *.DS_Store
 UPGRADE*
