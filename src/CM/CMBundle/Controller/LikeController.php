@@ -23,7 +23,7 @@ class LikeController extends Controller
     public function likeAction(Request $request, $type, $id)
     {
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
-	          throw new HttpException('Unauthorized access.', 401); 
+	          throw new HttpException(401, 'Unauthorized access.'); 
         }
     
         $em = $this->getDoctrine()->getManager();
@@ -62,7 +62,7 @@ class LikeController extends Controller
     public function unlikeAction(Request $request, $type, $id)
     {
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
-	          throw new HttpException('Unauthorized access.', 401); 
+	          throw new HttpException(401, 'Unauthorized access.'); 
         }
         
         $em = $this->getDoctrine()->getManager();

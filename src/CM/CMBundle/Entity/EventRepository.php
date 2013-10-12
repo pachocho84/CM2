@@ -37,14 +37,16 @@ class EventRepository extends EntityRepository
         
         $eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
         
-        $query = $eventDateRepository->createQueryBuilder('d')->select('d, e, t, i, p, l, c, u')
+        $query = $eventDateRepository->createQueryBuilder('d')->select('d, e, t, i, p, l, c, u, lu, cu')
             ->join('d.event', 'e')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
             ->leftJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
             ->leftJoin('p.likes', 'l')
             ->leftJoin('p.comments', 'c')
-            ->leftJoin('l.user', 'u');
+            ->leftJoin('p.user', 'u')
+            ->leftJoin('l.user', 'lu')
+            ->leftJoin('c.user', 'cu');
         
         if (isset($options['category'])) {
             $query->andWhere('e.entityCategory = :category');
@@ -62,8 +64,12 @@ class EventRepository extends EntityRepository
             ->andWhere('t.locale in (:locales)')
             ->setParameters($parameters);
             
+        $count = $this->getEntityManager()
+            ->createQuery('SELECT COUNT(d) FROM CMBundle:EventDate d')
+            ->getSingleScalarResult();
+            
         
-        return $options['paginate'] ? $query : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 	
 	public function getEventsPerMonth($year, $month, array $options = array())

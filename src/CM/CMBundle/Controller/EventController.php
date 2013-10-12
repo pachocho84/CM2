@@ -48,11 +48,11 @@ class EventController extends Controller
 		$events = $em->getRepository('CMBundle:Event')->getEvents(array(
 			'locale' => $request->getLocale(), 
 			'archive' => $request->get('_route') == 'event_archive' ? true : null,
-			'category' => $request->get('_route') == 'event_category' ? $category->getId() : null
-		));
-	    
+			'category' => $request->get('_route') == 'event_category' ? $category->getId() : null		
+        ));
+        
 		$paginator  = $this->get('knp_paginator');
-		$pagination = $paginator->paginate($events, $page, 25);
+		$pagination = $paginator->paginate($events, $page, 10, array('distinct' => true));
 			
 		if ($request->isXmlHttpRequest()) {
 			return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'page' => $page));
@@ -232,6 +232,8 @@ class EventController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		
 		$sponsored = $em->getRepository('CMBundle:Event')->getSponsored(array('limit' => $limit, 'paginate' => false, 'locale' => $request->getLocale()));
+		
+		echo get_class($sponsored);
 		
 		$em->createQuery("UPDATE CMBundle:Sponsored s SET s.views = s.views + 1 WHERE s.id IN (2, 20)")->getResult();
         
