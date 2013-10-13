@@ -16,6 +16,21 @@ knp_paginator:
         pagination: KnpPaginatorBundle:Pagination:sliding.html.twig     # sliding pagination controls template
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
 
+liip_imagine:
+    filter_sets:
+        entity:
+            quality: 100
+            filters:
+                thumbnail: { size: [120, 90], mode: outbound }
+        page:
+            quality: 100
+            filters:
+                thumbnail: { size: [120, 90], mode: outbound }
+        group:
+            quality: 100
+            filters:
+                thumbnail: { size: [120, 90], mode: outbound }
+
 parameters:
     bundle.dir: /bundles/cm
     upload.dir: /uploads

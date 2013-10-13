@@ -7,6 +7,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait ImageTrait
 {
+    public static $thumbnails = array(
+        array('dir' => '70', 'width' => 70, 'height' => 175),
+        array('dir' => '170', 'width' => 170, 'height' => 425),
+        array('dir' => '370', 'width' => 370, 'height' => 925),
+        array('dir' => '770', 'width' => 770, 'height' => 1925),
+        array('dir' => 'full', 'width' => null, 'height' => 5000)
+    );
+
     /**
      * @var string
      *
@@ -103,21 +111,26 @@ trait ImageTrait
     {
         return null === $this->img
             ? null
-            : $this->getUploadRootDir().'/'.$this->img;
+            : $this->getUploadRootDir().$this->img;
     }
 
     protected abstract function getRootDir(); // return __DIR__ or similar
 
-    protected static function getUploadDir()
+    protected static function getImageDir()
     {
    		// if you change this, change it also in the config.yml file!
-        return 'uploads/images/full';
+        return $this->getUploadDir().'full/';
+    }
+    protected static function getUploadDir()
+    {
+        // if you change this, change it also in the config.yml file!
+        return 'uploads/images/';
     }
 
     protected function getUploadRootDir()
     {
         // the absolute directory path where uploaded images should be saved
-        return $this->getRootDir().$this->getUploadDir();
+        return $this->getRootDir().$this->getImageDir();
     }
 
     /**

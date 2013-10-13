@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Sonata\IntlBundle\SonataIntlBundle(),
+            new Liip\ImagineBundle\LiipImagineBundle(),
             new CM\CMBundle\CMBundle(),
             new CM\UserBundle\UserBundle(),
         );
