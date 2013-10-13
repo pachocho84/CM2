@@ -3,7 +3,7 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * EventRepository
@@ -13,11 +13,13 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class EventRepository extends EntityRepository
 {
-    
 	static protected function getOptions(array $options = array())
 	{
 		return array_merge(array(
 			'user_id'     => null,
+			'group_id'    => null,
+			'page_id'     => null,
+			'archive'     => null, 
 			'category'    => null, 
 			'paginate'	  => true,
 			'locale'	  => 'en',
@@ -35,9 +37,14 @@ class EventRepository extends EntityRepository
             'locales' => $options['locales']
         );
         
-        $eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
+        $count = $this->getEntityManager()->createQueryBuilder()
+            ->select('count(d.id)')
+            ->from('CMBundle:EventDate','d')
+            ->setParameter(':now', new \DateTime);
         
-        $query = $eventDateRepository->createQueryBuilder('d')->select('d, e, t, i, p, l, c, u, lu, cu')
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('d, e, t, i, p, l, c, u, lu, cu')
+            ->from('CMBundle:EventDate','d')
             ->join('d.event', 'e')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
@@ -46,39 +53,39 @@ class EventRepository extends EntityRepository
             ->leftJoin('p.comments', 'c')
             ->leftJoin('p.user', 'u')
             ->leftJoin('l.user', 'lu')
-            ->leftJoin('c.user', 'cu');
+            ->leftJoin('c.user', 'cu')
+            ->where('t.locale in (:locales)');
         
         if (isset($options['category'])) {
+            $count->join('d.event', 'e')
+                ->andWhere('e.entityCategory = :category')
+                ->setParameter(':category', $options['category']);
             $query->andWhere('e.entityCategory = :category');
             $parameters['category'] = $options['category'];
         }
         
         if (isset($options['archive'])) {
-            $query->andWhere('d.start <= :now')->orderBy('d.start', 'desc');    
+            $count->andWhere('d.start <= :now');
+            $query->andWhere('d.start <= :now')
+                ->orderBy('d.start', 'desc');    
+        } else {
+            $count->andWhere('d.start >= :now');
+            $query->andWhere('d.start >= :now')
+                ->orderBy('d.start');    
         }
-        else {
-            $query->andWhere('d.start >= :now')->orderBy('d.start');    
-        }
-            
-        $query
-            ->andWhere('t.locale in (:locales)')
-            ->setParameters($parameters);
-            
-        $count = $this->getEntityManager()
-            ->createQuery('SELECT COUNT(d) FROM CMBundle:EventDate d')
-            ->getSingleScalarResult();
-            
         
-        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+        $query->setParameters($parameters);
+        
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 	
 	public function getEventsPerMonth($year, $month, array $options = array())
 	{
 		$options = self::getOptions($options);
 		
-		$eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
-		
-		return $eventDateRepository->createQueryBuilder('d')->select('d, e, t')
+		return $this->getEntityManager()->createQueryBuilder()
+            ->select('d, e, t')
+            ->from('CMBundle:EventDate','d')
 			->join('d.event', 'e')
 			->leftJoin('e.translations', 't')
 			->where('SUBSTRING(d.start, 1, 4) = '.$year)
@@ -107,9 +114,9 @@ class EventRepository extends EntityRepository
 	{	
 		$options = self::getOptions($options);
 		
-        $eventDateRepository = $this->getEntityManager()->getRepository('CMBundle:EventDate');
-		
-		return $eventDateRepository->createQueryBuilder('d')->select('d, e, t, i')
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('d, e, t, i')
+            ->from('CMBundle:EventDate','d')
 			->join('d.event', 'e')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.images', 'i')
@@ -122,24 +129,35 @@ class EventRepository extends EntityRepository
     public function getSponsored(array $options = array())
 	{	
 		$options = self::getOptions($options);
+        
+        $count = $this->getEntityManager()->createQueryBuilder()
+            ->select('count(s.id)')
+            ->from('CMBundle:Sponsored','s')
+			->join('s.event', 'e')
+			->leftJoin('e.eventDates', 'd')
+            ->andWhere('s.start <= :now')
+            ->andWhere('s.end >= :now')
+            ->andWhere('d.start >= :now')
+            ->setParameter(':now', new \DateTime);
 		
-        $sponsoredRepository = $this->getEntityManager()->getRepository('CMBundle:Sponsored');
-		
-		return $sponsoredRepository->createQueryBuilder('s')->select('s, e, d, t, i')
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('s, e, d, t, i')
+            ->from('CMBundle:Sponsored','s')
 			->join('s.event', 'e')
 			->leftJoin('e.eventDates', 'd')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
             ->andWhere('s.start <= :now')
             ->andWhere('s.end >= :now')
+            ->andWhere('d.start >= :now')
             ->andWhere('t.locale IN (:locales)')
             ->setParameters(array(
                 ':now' => new \DateTime,
                 ':locales' => $options['locales']
             ))
             ->setMaxResults($options['limit'])
-            ->orderBy('s.views')
-            ->getQuery()
-            ->getResult();
+            ->orderBy('s.views');
+            
+            return $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult());
     }
 }
