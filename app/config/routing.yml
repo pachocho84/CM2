@@ -1,8 +1,3 @@
-cm_user:
-    resource: "@UserBundle/Controller"
-    type:     annotation
-    prefix:   /
-
 cm_cmbundle:
     resource: "@CMBundle/Controller"
     type:     annotation
@@ -29,4 +24,4 @@ fos_user_change_password:
 
 _imagine:
     resource: .
-    type:     imagine
+    type: imagine

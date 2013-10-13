@@ -13,7 +13,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class EventRepository extends EntityRepository
 {
-    
 	static protected function getOptions(array $options = array())
 	{
 		return array_merge(array(

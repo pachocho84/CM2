@@ -1,3 +1,25 @@
+imports:
+    - { resource: security.yml }
+
+parameters:
+    bundle.dir: /bundles/cm
+    upload.dir: %bundle.dir%/uploads
+    images.dir: %upload.dir%/images
+    images_full.dir: %images.dir%/full # if you change this, change it also in the Entity/Image.php file!
+
+fos_user:
+    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: CM\CMBundle\Entity\User
+    registration:
+        confirmation:
+            enabled: true
+        form:
+            type: cm_cmbundle_user_registration
+    profile:
+        form:
+            type: cm_cmbundle_user_profile
+
 # Translatable form
 a2lix_translation_form:
     default_required: false
@@ -17,21 +39,42 @@ knp_paginator:
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
 
 liip_imagine:
+    cache_mkdir_mode: 0755
+    web_root: %kernel.root_dir%/../web
+    data_root: %kernel.root_dir%/../web%images_full.dir%
+    cache_prefix: %images.dir%
+    cache_clearer: false
     filter_sets:
-        entity:
+        350:
             quality: 100
             filters:
-                thumbnail: { size: [120, 90], mode: outbound }
-        page:
+                thumbnail: { size: [350, 350], mode: inset }
+        750:
             quality: 100
             filters:
-                thumbnail: { size: [120, 90], mode: outbound }
-        group:
-            quality: 100
-            filters:
-                thumbnail: { size: [120, 90], mode: outbound }
+                thumbnail: { size: [750, 750], mode: inset }
 
-parameters:
-    bundle.dir: /bundles/cm
-    upload.dir: /uploads
-    uploads.images_full: %bundle.dir%/%upload.dir%/images/full # if you change this, change it also in the Image.php file!
+services:
+    cm.twig.cm_extension:
+        class: CM\CMBundle\Twig\CMExtension
+        arguments: [@translator, { images_dir: %kernel.root_dir%/../web%images_full.dir%, sizes: %liip_imagine.filter_sets% }]
+        tags:
+            - { name: twig.extension }
+            
+    cm.locale_listener:
+        class: CM\CMBundle\EventListener\LocaleListener
+        arguments: ["%kernel.default_locale%"]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    cm_user.registration.type:
+        class: CM\CMBundle\Form\RegistrationType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: cm_userbundle_user_registration }
+            
+    cm_user.profile.type:
+        class: CM\CMBundle\Form\ProfileType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: cm_userbundle_user_profile }

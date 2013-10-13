@@ -3,7 +3,7 @@
         
         {% if date.getEvent.getImages | length > 0 %}
             <a href="{{ path('event_show', { 'id': date.getEvent.id, 'slug': date.getEvent.getSlug }) }}" class="pull-left thumbnail">
-                <img src='{{- uploaded_images_full_dir -}}/{{- date.getEvent.getImages[0].img }}' width=200 />
+                <img src='{{ uploaded_images_full_dir -}}/{{- date.getEvent.getImages[0].img }}' width=200 />
             </a>
         {% endif %}
 {#                         <?php show_img_box($post->getImages()->getFirst(), array('width' => 200, 'height' => 140, 'link' => $post->getRawValue()->getEntity()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left thumbnail'))) ?>     #}

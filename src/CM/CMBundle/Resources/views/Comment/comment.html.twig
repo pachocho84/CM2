@@ -4,8 +4,7 @@
        {# {{ delete_link(path('comment_delete', {'id': comment.id}), 'comment', {'data-placement': 'left', 'class': 'close', 'text': '&times;', 'icon': false}) }} #}
     {% endif %}
 
-    {{ show_img_box(comment.user.img, {'width': 32, 'height': 32, 'offset': comment.user.offset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) | raw }}
-{# <?php show_img_box($comment->getUser()->getImg(), array('width' => 32, 'height' => 32, 'offset' => $comment->getUser()->getImgOffset(), 'default' => 'user', 'box_attributes' => array('class' => 'pull-left'))) ?> #}
+    {{ show_img_box(comment.user.img | imagine_filter('350'), {'width': 32, 'height': 32, 'offset': comment.user.offset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) | raw }}
 
     <div class="media-body">
         <a href="{{ path('user_show', {'username': comment.user.usernameCanonical}) }}" target="_blank">{{ comment.user }}</a> {{ comment.comment }}

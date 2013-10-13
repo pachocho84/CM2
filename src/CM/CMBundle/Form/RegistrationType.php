@@ -1,6 +1,6 @@
 <?php
 
-namespace CM\UserBundle\Form;
+namespace CM\CMBundle\Form;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -50,6 +50,6 @@ class RegistrationType extends BaseType
      */
     public function getName()
     {
-        return 'cm_userbundle_user_registration';
+        return 'cm_cmbundle_user_registration';
     }
 }

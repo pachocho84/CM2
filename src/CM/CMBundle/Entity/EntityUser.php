@@ -3,7 +3,6 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use CM\UserBundle\Entity\User;
 
 /**
  * EntityUser
@@ -29,7 +28,7 @@ class EntityUser
     
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="entitiesUsers")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="entitiesUsers")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;

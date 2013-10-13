@@ -1,6 +1,6 @@
 <?php
 
-namespace CM\General\EventListener;
+namespace CM\CMBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;

@@ -1,6 +1,6 @@
 <?php
 
-namespace CM\UserBundle\Controller;
+namespace CM\CMBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

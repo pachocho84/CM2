@@ -1,6 +1,6 @@
 <?php
 
-namespace CM\General\Model;
+namespace CM\CMBundle\Model;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -31,10 +31,10 @@ trait ImageTrait
 
     /**
      * @Assert\Image(
-     *     minWidth = 250,
-     *     maxWidth = 750,
-     *     minHeight = 250,
-     *     maxHeight = 750,
+     *     minWidth = 150,
+     *     maxWidth = 5000,
+     *     minHeight = 150,
+     *     maxHeight = 5000,
      *     maxSize = "8M",
      *     mimeTypes = {"image/png", "image/jpeg", }
      * )
@@ -105,32 +105,33 @@ trait ImageTrait
     public function getFile()
     {
         return $this->file;
-    }    
-
-    public function getAbsolutePath()
-    {
-        return null === $this->img
-            ? null
-            : $this->getUploadRootDir().$this->img;
     }
 
     protected abstract function getRootDir(); // return __DIR__ or similar
 
-    protected static function getImageDir()
-    {
-   		// if you change this, change it also in the config.yml file!
-        return $this->getUploadDir().'full/';
-    }
     protected static function getUploadDir()
     {
         // if you change this, change it also in the config.yml file!
         return 'uploads/images/';
     }
 
+    protected static function getImageDir()
+    {
+   		// if you change this, change it also in the config.yml file!
+        return self::getUploadDir().'full/';
+    }
+
     protected function getUploadRootDir()
     {
         // the absolute directory path where uploaded images should be saved
         return $this->getRootDir().$this->getImageDir();
+    }
+
+    public function getAbsolutePath()
+    {
+        return null === $this->img
+            ? null
+            : $this->getUploadRootDir().$this->img;
     }
 
     /**
