@@ -155,7 +155,7 @@ class Request
     /**
      * Set user
      *
-     * @param \CM\UserBundle\Entity\User $user
+     * @param User $user
      * @return Request
      */
     public function setUser(User $user = null)
@@ -168,7 +168,7 @@ class Request
     /**
      * Get user
      *
-     * @return \CM\UserBundle\Entity\User 
+     * @return User 
      */
     public function getUser()
     {
@@ -178,10 +178,10 @@ class Request
     /**
      * Set fromUser
      *
-     * @param \CM\UserBundle\Entity\User $fromUser
+     * @param User $fromUser
      * @return Request
      */
-    public function setFromUser(\CM\UserBundle\Entity\User $fromUser = null)
+    public function setFromUser(User $fromUser = null)
     {
         $this->fromUser = $fromUser;
     
@@ -201,10 +201,10 @@ class Request
     /**
      * Set entity
      *
-     * @param \CM\CMBundle\Entity\Entity $entity
+     * @param Entity $entity
      * @return Request
      */
-    public function setEntity(\CM\CMBundle\Entity\Entity $entity = null)
+    public function setEntity(Entity $entity = null)
     {
         $this->entity = $entity;
     
@@ -214,7 +214,7 @@ class Request
     /**
      * Get entity
      *
-     * @return \CM\CMBundle\Entity\Entity 
+     * @return Entity 
      */
     public function getEntity()
     {

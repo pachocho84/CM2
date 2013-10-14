@@ -71,10 +71,10 @@ services:
         class: CM\CMBundle\Form\RegistrationType
         arguments: [%fos_user.model.user.class%]
         tags:
-            - { name: form.type, alias: cm_userbundle_user_registration }
+            - { name: form.type, alias: cm_cmbundle_user_registration }
             
     cm_user.profile.type:
         class: CM\CMBundle\Form\ProfileType
         arguments: [%fos_user.model.user.class%]
         tags:
-            - { name: form.type, alias: cm_userbundle_user_profile }
+            - { name: form.type, alias: cm_cmbundle_user_profile }

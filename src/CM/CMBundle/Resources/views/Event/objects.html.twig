@@ -26,10 +26,8 @@
 {% endfor %}
         </ul>
 
-
-
 {% if dates.paginationData.current < dates.paginationData.last %}
     <div id="load_more_posts" class="well well-small">
-        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': dates.getPaginationData.next })) }}">{{ 'Load more' | trans }}</a>
+        <a href="{{ path(request.attributes.get('_route'), request.attributes.get('_route_params') | merge({ 'page': dates.getPaginationData.next })) }}">{{ 'Load more' | trans }}</a>
     </div>
 {% endif %}

@@ -33,7 +33,7 @@ class Post
      *
      * @ORM\Column(name="type", type="smallint")
      */
-    private $type;
+    private $type = self::TYPE_CREATION;
 
     /**
      * @var integer
@@ -226,7 +226,7 @@ class Post
      * @param \CM\CMBundle\Entity\Event $event
      * @return Post
      */
-    public function setEvent(\CM\CMBundle\Entity\Event $event = null)
+    public function setEvent(Event $event = null)
     {
         $this->event = $event;
         $this->object = get_class($event);

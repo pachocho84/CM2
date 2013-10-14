@@ -31,13 +31,63 @@ class User extends BaseUser
     protected $id;
     
     /**
+     * @Assert\Regex(
+     *     pattern="/^[a-zA-Z]/",
+     *     message="Your username must begin with a letter.",
+     *     groups={"Registration", "Profile"}
+     * )
+     * @Assert\Regex(
+     *     pattern="/^[^\w\d\_\-]+$/",
+     *     match=false,
+     *     message="Your username must contain only letters, numbers, '_' or '-' characters.",
+     *     groups={"Registration", "Profile"}
+     * )
+     * @Assert\Regex(
+     *     pattern="/^home|homepage|index|articles|links|contacts|groups|pages$/i",
+     *     match=false,
+     *     message="Your username contains a reserved word.",
+     *     groups={"Registration", "Profile"}
+     * )
+     * @Assert\Regex(
+     *     pattern="/user|utent|event|disc|ufficio|office|press|stampa|concert|master|corso|course|accadem|scuol|school|accademi|academy|conservator|societ|associa|social/i",
+     *     match=false,
+     *     message="Your username contains a reserved word.",
+     *     groups={"Registration", "Profile"}
+     * )
+     * @Assert\Length(
+     *     min=5,
+     *     max=20,
+     *     minMessage="The username is too short.",
+     *     maxMessage="The username is too long.",
+     *     groups={"Registration", "Profile"}
+     * )
+     */
+    protected $username;
+    
+    /**
+     * @Assert\Length(
+     *     min=10,
+     *     max=50,
+     *     minMessage="The username is too short.",
+     *     maxMessage="The username is too long.",
+     *     groups={"Registration", "Profile"}
+     * )
+     * @Assert\Email(
+     *     message="The email '{{ value }}' is not a valid email.",
+     *     checkHost=true,
+     *     groups={"Registration", "Profile"}
+     * )
+     */
+    protected $email;
+    
+    /**
      * @var string
      *
      * @ORM\Column(name="first_name", type="string", length=50, nullable=false)
      * @Assert\NotBlank(message="Please enter your name.", groups={"Registration", "Profile"})
      * @Assert\Length(
      *     min=2,
-     *     max="50",
+     *     max=50,
      *     minMessage="The name is too short.",
      *     maxMessage="The name is too long.",
      *     groups={"Registration", "Profile"}
@@ -52,7 +102,7 @@ class User extends BaseUser
      * @Assert\NotBlank(message="Please enter your last name.", groups={"Registration", "Profile"})
      * @Assert\Length(
      *     min=2,
-     *     max="50",
+     *     max=50,
      *     minMessage="The last name is too short.",
      *     maxMessage="The last name is too long.",
      *     groups={"Registration", "Profile"}
@@ -149,58 +199,57 @@ class User extends BaseUser
     private $notes;
 
     /**
-     * @ORM\ManyToMany(targetEntity="CM\CMBundle\Entity\Group", inversedBy="users")
-     * @ORM\JoinTable(name="users_groups")
-     */
-	protected $groups;
-
-    /**
-     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\EntityUser", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="user")
      */
 	protected $entitiesUsers;
+
+    /**
+     * @ORM\OneToMany(targetEntity="GroupUser", mappedBy="user")
+     */
+	protected $groupsUsers;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PageUser", mappedBy="user")
+     */
+	protected $pagesUsers;
         
     /**
-     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Page", mappedBy="user", cascade={"persist", "remove"})
-	 */
-	private $pages;
-        
-    /**
-     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Post", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	private $posts;
         
     /**
-     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Comment", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	private $comments;
         
     /**
-     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Image", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Image", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	private $images;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Like", mappedBy="user", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="Like", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	private $likes;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Notification", mappedBy="user", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	private $notificationsIncoming;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Notification", mappedBy="fromUser", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="fromUser", cascade={"persist", "remove"})
 	 */
 	private $notificationsOutcoming;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Request", mappedBy="user", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="Request", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	private $requestsIncoming;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Request", mappedBy="fromUser", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="Request", mappedBy="fromUser", cascade={"persist", "remove"})
 	 */
 	private $requestsOutcoming;
 
@@ -548,7 +597,7 @@ class User extends BaseUser
      * @param \CM\CMBundle\Entity\EntityUser $comment
      * @return Entity
      */
-    public function addEntitiesUsers(EntityUser $entityUser)
+    public function addEntityUser(EntityUser $entityUser)
     {
         if (!$this->entitiesUsers->contains($entityUser)) {
             $this->entitiesUsers[] = $entityUser;
@@ -561,7 +610,7 @@ class User extends BaseUser
     /**
      * @param \CM\CMBundle\Entity\EntityUser $users
      */
-    public function removeEntitiesUsers(EntityUser $entityUser)
+    public function removeEntityUser(EntityUser $entityUser)
     {
         $this->entitiesUsers->removeElement($entityUser);
     }
@@ -575,63 +624,63 @@ class User extends BaseUser
     }
 
     /**
-     * @param \CM\CMBundle\Entity\Group $group
-     * @return Entity
+     * @param \CM\CMBundle\Entity\GroupUser $comment
+     * @return User
      */
-    public function addUserGroup(Group $group)
+    public function addGroupUser(GroupUser $groupUser)
     {
-        if (!$this->groups->contains($group)) {
-            $this->groups[] = $group;
-            $group->addUser($this);
+        if (!$this->groupsUsers->contains($groupUser)) {
+            $this->groupsUsers[] = $groupUser;
+            $groupUser->setUser($this);
         }
     
         return $this;
     }
 
     /**
-     * @param \CM\CMBundle\Entity\Image $images
+     * @param \CM\CMBundle\Entity\GroupUser $users
      */
-    public function removeUserGroup(Group $group)
+    public function removeGroupUser(GroupUser $groupUser)
     {
-        $this->groups->removeElement($group);
+        $this->groupsUsers->removeElement($groupUser);
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getUserGroups()
+    public function getGroupsUsers()
     {
-        return $this->groups;
+        return $this->groupsUsers;
     }
 
     /**
-     * @param \CM\CMBundle\Entity\Page $page
+     * @param \CM\CMBundle\Entity\PageUser $comment
      * @return Entity
      */
-    public function addPage(Page $page)
+    public function addPageUser(PageUser $pageUser)
     {
-        if (!$this->pages->contains($page)) {
-            $this->pages[] = $page;
-            $page->setUser($this);
+        if (!$this->pagesUsers->contains($pageUser)) {
+            $this->pagesUsers[] = $pageUser;
+            $pageUser->setUser($this);
         }
     
         return $this;
     }
 
     /**
-     * @param \CM\CMBundle\Entity\Image $images
+     * @param \CM\CMBundle\Entity\EntityUser $users
      */
-    public function removePage(Page $page)
+    public function removePageUser(PageUser $pageUser)
     {
-        $this->pages->removeElement($page);
+        $this->pagesUsers->removeElement($pageUser);
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getPages()
+    public function getPagesUsers()
     {
-        return $this->pages;
+        return $this->pagesUsers;
     }
 
     /**

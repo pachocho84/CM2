@@ -55,6 +55,17 @@
     margin-right: 10px;
 }
 
+.image_box .image_box-inner {
+    display: inline-block;
+    position: relative;
+    right: -50%;
+}
+
+.image_box .image_box-inner img {
+    position: relative;
+    left: -50%;
+}
+
 
 
 /* OBJECT */

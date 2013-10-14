@@ -41,7 +41,7 @@ class RegistrationType extends BaseType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'CM\UserBundle\Entity\User'
+            'data_class' => 'CM\CMBundle\Entity\User'
         ));
     }
 

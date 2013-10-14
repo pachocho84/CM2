@@ -1,0 +1,11 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block title %}
+    {{ user }}
+{% endblock %}
+
+{% block body %}
+    <div class='box'>
+        {{ render(controller('CMBundle:Event:objects', {'request': request, 'page': page, 'category_slug': null, 'user_id': user.id})) }}
+    </div>
+{% endblock %}
