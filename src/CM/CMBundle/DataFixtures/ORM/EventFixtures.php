@@ -82,9 +82,11 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
     public function load(ObjectManager $manager)
     {
         for ($i = 1; $i < 201; $i++) {
+            $user = $manager->merge($this->getReference('user-'.rand(1, 5)));
             $eventNum = rand(0, count($this->events) - 1);
             $event = new Event;
-            $event->setVisible(rand(0, 1));
+            $event->setVisible(rand(0, 1))
+                ->setCreator($user);
             $event->setTitle($this->events[$eventNum]['title'].' (en)')
                 ->setExtract($this->events[$eventNum]['extract'])
                 ->setText($this->events[$eventNum]['text']);
@@ -168,13 +170,20 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             
             $manager->persist($event);
             $event->mergeNewTranslations();
+            $manager->flush();
+
+            for ($j = $userNum + 1; $j < 6; $j++) {
+                $otherUser = $manager->merge($this->getReference('user-'.$j));
+
+                $event->addEntityUser(
+                    $otherUser,
+                    !rand(0, 3), // admin
+                    rand(0, 5), // status
+                    rand(0, 1) // notification
+                );
+            }
 
             $this->addReference('event-'.$i, $event);
-            
-            if ($i % 10 == 0) {
-                echo $i." - ";
-                $manager->flush();
-            }
         }
     
         $manager->flush();

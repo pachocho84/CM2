@@ -25,7 +25,8 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 	public function load(ObjectManager $manager)
 	{
         for ($i = 1; $i < 21; $i++) {
-            $user = $manager->merge($this->getReference('user-'.rand(1, 5)));
+            $userNum = rand(1, 5);
+            $user = $manager->merge($this->getReference('user-'.$userNum));
             $page = new Page;
             $page->setType(Page::TYPE_ASSOCIATION)
                 ->setName('Page '.$i)
@@ -37,9 +38,24 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             
             $manager->persist($page);
             $manager->flush();
+
+            for ($j = $userNum + 1; $j < 6; $j++) {
+                $otherUser = $manager->merge($this->getReference('user-'.$j));
+
+                $page->addPageUser(
+                    $otherUser,
+                    !rand(0, 3), // admin
+                    rand(0, 2), // join event
+                    rand(0, 2), // join disc
+                    rand(0, 2), // join article
+                    rand(0, 1) // notification
+                );
+            }
             
 			$this->addReference('page-'.$i, $page);
         }
+
+        $manager->flush();
 	}
 
 	public function getOrder()

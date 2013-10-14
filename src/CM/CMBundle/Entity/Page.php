@@ -52,7 +52,7 @@ class Page
     private $creator;
 
     /**
-     * @ORM\OneToMany(targetEntity="PageUser", mappedBy="page")
+     * @ORM\OneToMany(targetEntity="PageUser", mappedBy="page", cascade={"persist", "remove"})
      */
     private $pagesUsers;
         
@@ -90,6 +90,7 @@ class Page
     public function __construct()
     {
         $this->images = new ArrayCollection();
+        $this->pagesUsers = new ArrayCollection();
     }
 	
 	public function __toString()
@@ -185,12 +186,24 @@ class Page
      * @param \CM\CMBundle\Entity\EntityUser $comment
      * @return Entity
      */
-    public function addPagesUsers(PageUser $pageUser)
+    public function addPageUser(
+        User $user,
+        $admin = false,
+        $joinEvent = PageUser::JOIN_REQUEST,
+        $joinDisc = PageUser::JOIN_REQUEST,
+        $joinArticle = PageUser::JOIN_REQUEST,
+        $notification = true
+    )
     {
-        if (!$this->pagesUsers->contains($pageUser)) {
-            $this->pagesUsers[] = $pageUser;
-            $pageUser->setPage($this);
-        }
+        $pageUser = new PageUser;
+        $pageUser->setPage($this)
+            ->setUser($user)
+            ->setAdmin($admin)
+            ->setJoinEvent($joinEvent)
+            ->setJoinDisc($joinDisc)
+            ->setJoinArticle($joinArticle)
+            ->setNotification($notification);
+        $this->pagesUsers[] = $pageUser;
     
         return $this;
     }
@@ -198,7 +211,7 @@ class Page
     /**
      * @param \CM\CMBundle\Entity\EntityUser $users
      */
-    public function removePagesUsers(PageUser $pageUser)
+    public function removePageUser(PageUser $pageUser)
     {
         $this->pagesUsers->removeElement($pageUser);
     }
