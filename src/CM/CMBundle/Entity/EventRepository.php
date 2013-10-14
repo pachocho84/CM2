@@ -58,7 +58,7 @@ class EventRepository extends EntityRepository
         
         if (isset($options['user_id'])) {
             $count->join('d.event', 'e')
-                ->join('e.post', 'p')
+                ->join('e.posts', 'p')
                 ->andWhere('p.user = :user_id')
                 ->setParameter(':user_id', $options['user_id']);
             $query->andWhere('p.user = :user_id');
