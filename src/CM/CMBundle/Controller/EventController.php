@@ -30,10 +30,10 @@ class EventController extends Controller
 	/**
 	 * @Route("/{page}", name = "event_index", requirements={"page" = "\d+"})
 	 * @Route("/archive/{page}", name="event_archive", requirements={"page" = "\d+"}) 
-	 * @Route("/category/{slug}/{page}", name="event_category", requirements={"page" = "\d+"}) 
+	 * @Route("/category/{category_slug}/{page}", name="event_category", requirements={"page" = "\d+"}) 
 	 * @Template
 	 */
-	public function indexAction(Request $request, $page = 1, $slug = null)
+	public function indexAction(Request $request, $page = 1, $category_slug = null, $user_id = null)
 	{
 		$em = $this->getDoctrine()->getManager();
 			
@@ -41,14 +41,15 @@ class EventController extends Controller
 			$categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::EVENT, array('locale' => $request->getLocale()));
 		}
 		
-		if ($request->get('_route') == 'event_category') {
-			$category = $em->getRepository('CMBundle:EntityCategory')->getCategory($slug, EntityCategory::EVENT, array('locale' => $request->getLocale()));
+		if ($category_slug) {
+			$category = $em->getRepository('CMBundle:EntityCategory')->getCategory($category_slug, EntityCategory::EVENT, array('locale' => $request->getLocale()));
 		}
 			
 		$events = $em->getRepository('CMBundle:Event')->getEvents(array(
-			'locale' => $request->getLocale(), 
-			'archive' => $request->get('_route') == 'event_archive' ? true : null,
-			'category' => $request->get('_route') == 'event_category' ? $category->getId() : null		
+			'locale'        => $request->getLocale(), 
+			'archive'       => $request->get('_route') == 'event_archive' ? true : null,
+			'category_id'   => $category_slug ? $category->getId() : null,
+			'user_id'       => $user_id		
         ));
         
 		$pagination  = $this->get('knp_paginator')->paginate($events, $page, 10);
