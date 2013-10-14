@@ -16,15 +16,15 @@ class EventRepository extends EntityRepository
 	static protected function getOptions(array $options = array())
 	{
 		return array_merge(array(
-			'user_id'     => null,
-			'group_id'    => null,
-			'page_id'     => null,
-			'archive'     => null, 
-			'category'    => null, 
-			'paginate'	  => true,
-			'locale'	  => 'en',
-			'locales'     => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
-			'limit'       => 25,
+			'user_id'       => null,
+			'group_id'      => null,
+			'page_id'       => null,
+			'archive'       => null, 
+			'category_id'   => null, 
+			'paginate'	    => true,
+			'locale'	    => 'en',
+			'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
+			'limit'         => 25,
 		), $options);
 	}
     
@@ -56,12 +56,21 @@ class EventRepository extends EntityRepository
             ->leftJoin('c.user', 'cu')
             ->where('t.locale in (:locales)');
         
-        if (isset($options['category'])) {
+        if (isset($options['user_id'])) {
             $count->join('d.event', 'e')
-                ->andWhere('e.entityCategory = :category')
-                ->setParameter(':category', $options['category']);
-            $query->andWhere('e.entityCategory = :category');
-            $parameters['category'] = $options['category'];
+                ->join('e.post', 'p')
+                ->andWhere('p.user = :user_id')
+                ->setParameter(':user_id', $options['user_id']);
+            $query->andWhere('p.user = :user_id');
+            $parameters['user_id'] = $options['user_id'];
+        }
+        
+        if (isset($options['category_id'])) {
+            $count->join('d.event', 'e')
+                ->andWhere('e.entityCategory = :category_id')
+                ->setParameter(':category_id', $options['category_id']);
+            $query->andWhere('e.entityCategory = :category_id');
+            $parameters['category_id'] = $options['category_id'];
         }
         
         if (isset($options['archive'])) {
