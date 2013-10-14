@@ -178,7 +178,7 @@ class CMExtension extends \Twig_Extension
         if ($img_ratio > 1 && isset($options['offset'])) {
             $img_style[] = 'left: -'.$options['offset'].'%'; 
         } elseif ($img_ratio > 1) {
-            $img_style[] = 'left: -'.abs($width - $img_r_w / 2).'px';
+            $img_style[] = 'left: -'.(abs($width - $img_r_w) / 2).'px';
         } elseif ($img_ratio < 1 && isset($options['offset'])) {
             $img_style[] = 'top: -'.$options['offset'].'%'; 
         } elseif ($img_ratio < 1) {                 

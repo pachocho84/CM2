@@ -10,7 +10,7 @@ use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Like;
 use CM\CMBundle\Entity\Comment;
-use CM\UserBundle\Entity\User;
+use CM\CMBundle\Entity\User;
 
 class LikeCommentFixtures extends AbstractFixture implements OrderedFixtureInterface
 {

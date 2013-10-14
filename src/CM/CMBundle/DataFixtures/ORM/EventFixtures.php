@@ -11,7 +11,7 @@ use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Like;
-use CM\UserBundle\Entity\User;
+use CM\CMBundle\Entity\User;
 
 class EventFixtures extends AbstractFixture implements OrderedFixtureInterface
 {

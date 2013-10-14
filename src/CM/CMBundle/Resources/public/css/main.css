@@ -25,7 +25,17 @@
     font-size: 12px;
 }
 
+/* test */
+div.inner {
+    display: inline-block;
+    position: relative;
+    right: -50%;
+}
 
+img.center {
+    position: relative;
+    left: -50%;
+}
 
 /* Bootstrap Fixes */
 a {

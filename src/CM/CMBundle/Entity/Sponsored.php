@@ -10,8 +10,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * Sponsored
  *
- * @ORM\Table()
  * @ORM\Entity
+ * @ORM\Table(name="sponsored")
  */
 class Sponsored
 {
@@ -149,7 +149,7 @@ class Sponsored
      * @param \CM\CMBundle\Entity\Event $event
      * @return Sponsored
      */
-    public function setEvent(\CM\CMBundle\Entity\Event $event = null)
+    public function setEvent(Event $event = null)
     {
         $this->event = $event;
     
@@ -172,7 +172,7 @@ class Sponsored
      * @param \CM\UserBundle\Entity\User $user
      * @return Sponsored
      */
-    public function setUser(\CM\UserBundle\Entity\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     
