@@ -10,31 +10,31 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
- * @Route("/user")
+ * @Route("/{username}", defaults={"username": null})
  */
 class UserController extends Controller
 {
     /**
-     * @Route("/{username}", name="user_show")
+     * @Route("/", name="user_show")
      * @Template
      */
     public function showAction($username)
     {
-        return array('name' => $name);
+        return array('username' => $username);
     }
     
     /**
-     * @Route("/locale/{_locale}", name="user_locale")
+     * @Route("/events", name="user_events")
+     * @Template
      */
-    public function localeAction(Request $request, $_locale)
+    public function eventsAction($username)
     {
-	    $request->getSession()->set('_locale', $_locale);
-	    
-	    if (!is_null($request->headers->get('referer'))) {
-	    	return new RedirectResponse($request->headers->get('referer'));
-	    }
-	    else {
-		    return new RedirectResponse($this->generateUrl('event_index'));
-	    }
+		$em = $this->getDoctrine()->getManager();
+		
+		$user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $username));
+    
+        return array(
+            'user' => $user
+        );
     }
 }

@@ -19,6 +19,8 @@ class Group
     use ORMBehaviors\Sluggable\Sluggable;
     use \CM\CMBundle\Model\ImageAndCoverTrait;
     
+    const TYPE_DUO = 0;
+    
     /**
      * @var integer
      *
@@ -31,9 +33,9 @@ class Group
     /**
      * @var integer
      *
-     * @ORM\Column(name="type_id", type="smallint", nullable=false)
+     * @ORM\Column(name="type", type="smallint", nullable=false)
      */
-    private $typeId;
+    private $type;
 
     /**
      * @var string
@@ -42,6 +44,12 @@ class Group
      */
     private $name;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="pages")
+     * @ORM\JoinColumn(name="creator_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     **/
+    private $creator;
+    
     /**
      * @ORM\ManyToMany(targetEntity="User", mappedBy="groups")
      */
@@ -93,9 +101,9 @@ class Group
      * @param integer $typeId
      * @return Group
      */
-    public function setTypeId($typeId)
+    public function setType($type)
     {
-        $this->typeId = $typeId;
+        $this->type = $type;
     
         return $this;
     }
@@ -105,9 +113,9 @@ class Group
      *
      * @return integer 
      */
-    public function getTypeId()
+    public function getType()
     {
-        return $this->typeId;
+        return $this->type;
     }
 
     /**
@@ -131,6 +139,29 @@ class Group
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set user
+     *
+     * @param User $user
+     * @return Like
+     */
+    public function setCreator(User $creator = null)
+    {
+        $this->creator = $creator;
+    
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return User 
+     */
+    public function getCreator()
+    {
+        return $this->creator;
     }
 
     /**

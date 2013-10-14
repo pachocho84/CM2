@@ -7,7 +7,7 @@
     {{ show_img_box(comment.user.img | imagine_filter('350'), {'width': 32, 'height': 32, 'offset': comment.user.offset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) | raw }}
 
     <div class="media-body">
-        <a href="{{ path('user_show', {'username': comment.user.usernameCanonical}) }}" target="_blank">{{ comment.user }}</a> {{ comment.comment }}
+        <a href="{{ path('user_show', {'username': comment.user.usernameCanonical}) }}" >{{ comment.user }}</a> {{ comment.comment }}
         <div class="text-muted">
             {{ '%date% at %time%' | trans({'%date%': comment.createdAt | format_date('d MMMM Y'), '%time%': comment.createdAt | format_date('HH:mm')}) }}
         </div>

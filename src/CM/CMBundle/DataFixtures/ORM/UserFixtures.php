@@ -14,7 +14,58 @@ use CM\CMBundle\Entity\EntityCategoryEnum;
 
 class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
-	private $images = array('ff9398d3d47436e2b4f72874a2c766fd.jpeg', '00b7b971d96ce05797e6757e5a0a4232.jpeg');
+    private $people = array(
+        array('firstname' => 'Ernesto',
+            'lastname' => 'Casareto',
+            'username' => 'pachocho',
+            'email' => 'ernesto@circuitomusica.it',
+            'sex' => User::SEX_M,
+            'city_birth' => 'Padua',
+            'city_current' => 'Milan',
+            'birth_date' => array(1984, 6, 17),
+            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg'
+        ),
+        array('firstname' => 'Fabrizio', 
+            'lastname' => 'Castellarin',
+            'username' => 'EnoahNetzach',
+            'email' => 'f.castellarin@gmail.it',
+            'sex' => User::SEX_M,
+            'city_birth' => 'Milan',
+            'city_current' => 'Milan',
+            'birth_date' => array(1990, 4, 19),
+            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg'
+        ),
+        array('firstname' => 'Federica',
+            'lastname' => 'Fontana',
+            'username' => 'fede_pucci_pucci',
+            'email' => 'f.fontana@gmail.it',
+            'sex' => User::SEX_F,
+            'city_birth' => 'Taranto',
+            'city_current' => 'Milan',
+            'birth_date' => array(1900, 4, 15),
+            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg'
+        ),
+        array('firstname' => 'Luca',
+            'lastname' => 'Casareto',
+            'username' => 'ghey',
+            'email' => 'lucasareto@gmail.it',
+            'sex' => User::SEX_M,
+            'city_birth' => 'Padua',
+            'city_current' => 'Milan',
+            'birth_date' => array(190, 5, 15),
+            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg'
+        ),
+        array('firstname' => 'Virginia Alexandra',
+            'lastname' => 'Nolte',
+            'username' => 'cinnamoon',
+            'email' => 'vir@circuitomusica.it',
+            'sex' => User::SEX_F,
+            'city_birth' => 'Milan',
+            'city_current' => 'Milan',
+            'birth_date' => array(1994, 3, 29),
+            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg'
+        ),
+    );
 	
 	/**
 	 * {@inheritDoc}
@@ -28,46 +79,22 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 	{
 		$userManager = $this->container->get('fos_user.user_manager');
 
-		$user = $userManager->createUser();
-		$date = new \DateTime;
-		$user
-			->setEmail('ernesto@circuitomusica.it')
-			->setUsername('pachocho')
-			->setPlainPassword('pacho')
-			->setEnabled(true)
-			->setFirstName('Ernesto')
-			->setLastName('Casareto')
-			->setSex(User::SEX_M)
-			->setCityBirth('Padua')
-			->setCityCurrent('Milan')
-			->setBirthDate($date->setDate(1984, 5, 17))
-			->setBirthDateVisible(false)
-			->setImg($this->images[1]);
-
-		$manager->persist($user);
-		$manager->flush();
-
-		for ($i = 1; $i < 11; $i++) {
-			$userNum = rand(0, count($this->images) - 1);
-
+		for ($i = 1; $i < count($this->people) + 1; $i++) {
 			$user = $userManager->createUser();
-
+			$person = $this->people[$i - 1];
 			$date = new \DateTime;
-			$date->setTimestamp(rand(time() - 600000000, time() + 1000000000));
-
-			$user
-				->setEmail('test'.$i.'@gmail.com')
-				->setUsername('user '.$i)
-				->setPlainPassword('test')
-				->setEnabled(true)
-				->setFirstName('Name '.$i)
-				->setLastName('Lastame '.$i)
-				->setSex(rand(0, 1) ? User::SEX_M : User::SEX_F)
-				->setCityBirth('Milan')
-				->setCityCurrent('Milan')
-				->setBirthDate($date)
-				->setBirthDateVisible(rand(0, 1) ? true : false)
-				->setImg($this->images[$userNum]);
+			$user->setEmail($person['email'])
+		  	   ->setUsername($person['username'])
+		  	   ->setPlainPassword('pacho')
+		  	   ->setEnabled(true)
+		  	   ->setFirstName($person['firstname'])
+		  	   ->setLastName($person['lastname'])
+		  	   ->setSex($person['sex'])
+		  	   ->setCityBirth($person['city_birth'])
+		  	   ->setCityCurrent($person['city_current'])
+		  	   ->setBirthDate($date->setDate($person['birth_date'][0], $person['birth_date'][1], $person['birth_date'][2]))
+		  	   ->setBirthDateVisible(false)
+		  	   ->setImg($person['image']);
 
 			$manager->persist($user);
 			$manager->flush();

@@ -31,13 +31,63 @@ class User extends BaseUser
     protected $id;
     
     /**
+     * @Assert\Regex(
+     *     pattern="/^[a-zA-Z]/",
+     *     message="Your username must begin with a letter.",
+     *     groups={"Registration", "Profile"}
+     * )
+     * @Assert\Regex(
+     *     pattern="/^[^\w\d\_\-]+$/",
+     *     match=false,
+     *     message="Your username must contain only letters, numbers, '_' or '-' characters.",
+     *     groups={"Registration", "Profile"}
+     * )
+     * @Assert\Regex(
+     *     pattern="/^home|homepage|index|articles|links|contacts|groups|pages$/i",
+     *     match=false,
+     *     message="Your username contains a reserved word.",
+     *     groups={"Registration", "Profile"}
+     * )
+     * @Assert\Regex(
+     *     pattern="/user|utent|event|disc|ufficio|office|press|stampa|concert|master|corso|course|accadem|scuol|school|accademi|academy|conservator|societ|associa|social/i",
+     *     match=false,
+     *     message="Your username contains a reserved word.",
+     *     groups={"Registration", "Profile"}
+     * )
+     * @Assert\Length(
+     *     min=5,
+     *     max=20,
+     *     minMessage="The username is too short.",
+     *     maxMessage="The username is too long.",
+     *     groups={"Registration", "Profile"}
+     * )
+     */
+    protected $username;
+    
+    /**
+     * @Assert\Length(
+     *     min=10,
+     *     max=50,
+     *     minMessage="The username is too short.",
+     *     maxMessage="The username is too long.",
+     *     groups={"Registration", "Profile"}
+     * )
+     * @Assert\Email(
+     *     message="The email '{{ value }}' is not a valid email.",
+     *     checkHost=true,
+     *     groups={"Registration", "Profile"}
+     * )
+     */
+    protected $email;
+    
+    /**
      * @var string
      *
      * @ORM\Column(name="first_name", type="string", length=50, nullable=false)
      * @Assert\NotBlank(message="Please enter your name.", groups={"Registration", "Profile"})
      * @Assert\Length(
      *     min=2,
-     *     max="50",
+     *     max=50,
      *     minMessage="The name is too short.",
      *     maxMessage="The name is too long.",
      *     groups={"Registration", "Profile"}
@@ -52,7 +102,7 @@ class User extends BaseUser
      * @Assert\NotBlank(message="Please enter your last name.", groups={"Registration", "Profile"})
      * @Assert\Length(
      *     min=2,
-     *     max="50",
+     *     max=50,
      *     minMessage="The last name is too short.",
      *     maxMessage="The last name is too long.",
      *     groups={"Registration", "Profile"}

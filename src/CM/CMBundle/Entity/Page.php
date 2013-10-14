@@ -20,6 +20,8 @@ class Page
     use ORMBehaviors\Timestampable\Timestampable;
     use \CM\CMBundle\Model\ImageAndCoverTrait;
 
+    const TYPE_ASSOCIATION = 0;
+
     /**
      * @var integer
      *
@@ -32,9 +34,9 @@ class Page
     /**
      * @var integer
      *
-     * @ORM\Column(name="type_id", type="integer", nullable=false)
+     * @ORM\Column(name="type", type="smallint")
      */
-    private $typeId;
+    private $type;
 
     /**
      * @var string
@@ -45,9 +47,9 @@ class Page
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="pages")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="creator_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
-    private $user;
+    private $creator;
 
     /**
      * @var string
@@ -96,26 +98,26 @@ class Page
     }
 
     /**
-     * Set typeId
+     * Set type
      *
-     * @param integer $typeId
+     * @param integer $type
      * @return Page
      */
-    public function setTypeId($typeId)
+    public function setType($type)
     {
-        $this->typeId = $typeId;
+        $this->type = $type;
     
         return $this;
     }
 
     /**
-     * Get typeId
+     * Get type
      *
      * @return integer 
      */
-    public function getTypeId()
+    public function getType()
     {
-        return $this->typeId;
+        return $this->type;
     }
 
     /**
@@ -147,9 +149,9 @@ class Page
      * @param User $user
      * @return Like
      */
-    public function setUser(User $user = null)
+    public function setCreator(User $creator = null)
     {
-        $this->user = $user;
+        $this->creator = $creator;
     
         return $this;
     }
@@ -159,9 +161,9 @@ class Page
      *
      * @return User 
      */
-    public function getUser()
+    public function getCreator()
     {
-        return $this->user;
+        return $this->creator;
     }
 
     /**

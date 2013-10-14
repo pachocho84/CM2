@@ -33,7 +33,7 @@ class Post
      *
      * @ORM\Column(name="type", type="smallint")
      */
-    private $type;
+    private $type = self::TYPE_CREATION;
 
     /**
      * @var integer

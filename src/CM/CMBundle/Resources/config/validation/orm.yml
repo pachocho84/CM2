@@ -1,7 +1,0 @@
-FOS\UserBundle\Model\User:
-    properties:
-        usernameCanonical:
-            - Regex:
-                pattern: "/\d/"
-                match:   false
-                message: Your name cannot contain a number
