@@ -224,7 +224,7 @@ class EventController extends Controller
     /**
      * @Template
      */
-    public function sponsoredAction(Request $request, $limit = 2)
+    public function sponsoredAction(Request $request, $limit = 3)
     {
 	    $request->setLocale($request->get('_locale')); // TODO: workaround for locale in subsession
 		
