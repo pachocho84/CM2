@@ -28,7 +28,9 @@
         "a2lix/translation-form-bundle": "1.*@dev",
         "friendsofsymfony/user-bundle": "~2.0@dev",
         "sonata-project/intl-bundle": ">=2.1",
-        "knplabs/knp-paginator-bundle": "dev-master"
+        "knplabs/knp-paginator-bundle": "dev-master",
+        "imagine/imagine": "0.5.*",
+        "liip/imagine-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
@@ -53,6 +55,7 @@
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
+        "symfony-assets-install": "symlink",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         },

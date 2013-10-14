@@ -22,8 +22,9 @@ class AppKernel extends Kernel
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Sonata\IntlBundle\SonataIntlBundle(),
+            new Liip\ImagineBundle\LiipImagineBundle(),
             new CM\CMBundle\CMBundle(),
-            new CM\UserBundle\UserBundle(),
+            // new CM\UserBundle\UserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

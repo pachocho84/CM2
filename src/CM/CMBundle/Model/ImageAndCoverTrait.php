@@ -1,6 +1,6 @@
 <?php
 
-namespace CM\General\Model;
+namespace CM\CMBundle\Model;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;

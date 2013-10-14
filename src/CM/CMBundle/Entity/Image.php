@@ -6,19 +6,18 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
-use CM\UserBundle\Entity\User;
 
 /**
  * Image
  *
  * @ORM\Table(name="image")
- * @ORM\Entity(repositoryClass="CM\CMBundle\Entity\ImageRepository")
+ * @ORM\Entity(repositoryClass="ImageRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class Image
 {
     use ORMBehaviors\Timestampable\Timestampable;
-    use \CM\General\Model\ImageTrait;
+    use \CM\CMBundle\Model\ImageTrait;
         
     /**
      * @var integer
@@ -40,7 +39,7 @@ class Image
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="images")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="images")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)    
      */
     private $user;

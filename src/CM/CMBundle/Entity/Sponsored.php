@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
-use CM\UserBundle\Entity\User;
 
 /**
  * Sponsored
@@ -38,7 +37,7 @@ class Sponsored
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)    
      */
     private $user;

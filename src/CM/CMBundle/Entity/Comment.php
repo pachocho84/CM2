@@ -4,12 +4,11 @@ namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
-use CM\UserBundle\Entity\User;
 
 /**
  * Comment
  *
- * @ORM\Entity(repositoryClass="CM\CMBundle\Entity\CommentRepository")
+ * @ORM\Entity(repositoryClass="CommentRepository")
  * @ORM\Table(name="comment")
  */
 class Comment
@@ -45,7 +44,7 @@ class Comment
     private $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="comments")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $user;

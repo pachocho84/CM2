@@ -1,11 +1,11 @@
 <?php
 
-namespace CM\UserBundle\Form;
+namespace CM\CMBundle\Form;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
-use CM\UserBundle\Entity\User;
+use CM\CMBundle\Entity\User;
 
 class ProfileType extends BaseType
 {
@@ -51,6 +51,6 @@ class ProfileType extends BaseType
      */
     public function getName()
     {
-        return 'cm_userbundle_user_profile';
+        return 'cm_cmbundle_user_profile';
     }
 }

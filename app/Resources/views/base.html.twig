@@ -101,18 +101,19 @@
 		</div>
 		
 		
-		
-		{% block javascripts %}
 
-            <script>
-                var script 	= "{{ app.request.scriptname }}";
-                var culture = "{{ app.request.locale }}";
-            </script>
-			<script src="{{ asset('/js/jquery-2.0.3.min.js') }}"></script>
-			<script src="{{ asset('/lib/bootstrap/js/bootstrap.min.js') }}"></script>
-			<script src="{{ asset('/js/jquery.hcsticky-min.js') }}"></script>
-			<script src="{{ asset('/bundles/cm/js/common.js') }}"></script>
-			<script src="{{ asset('/bundles/cm/js/interface.js') }}"></script>
+        <script>
+            var script 	= "{{ app.request.scriptname }}";
+            var culture = "{{ app.request.locale }}";
+        </script>
+		<script src="{{ asset('/js/jquery-2.0.3.min.js') }}"></script>
+		<script src="{{ asset('/lib/bootstrap/js/bootstrap.min.js') }}"></script>
+		<script src="{{ asset('/js/jquery.hcsticky-min.js') }}"></script>
+		<script src="{{ asset('/js/jquery.cycle2.min.js') }}"></script>
+		<script src="{{ asset('/js/jquery.cycle2.scrollVert.min.js') }}"></script>
+		<script src="{{ asset('/bundles/cm/js/common.js') }}"></script>
+		<script src="{{ asset('/bundles/cm/js/interface.js') }}"></script>			
+		{% block javascripts %}
 		{% endblock %}
 		
 		

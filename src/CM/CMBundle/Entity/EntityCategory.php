@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use CM\CMBundle\Entity\EntityCategoryEnum;
 
 /**
- * @ORM\Entity(repositoryClass="CM\CMBundle\Entity\EntityCategoryRepository")
+ * @ORM\Entity(repositoryClass="EntityCategoryRepository")
  * @ORM\Table(name="entity_category")
  */
 class EntityCategory

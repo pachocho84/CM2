@@ -188,8 +188,8 @@ $(function() {
     
     
     /* EVENT CALENDAR */
+/*
     $('.events_calendar').on('mouseover', '.object a', function(event) {
-/*         $('.popover').each(function() { $(this).remove()}); */
         event.preventDefault();
         if (!$(event.target).attr('data-toggle')) {
             $.get($(event.target).attr('data-target'), function(data) {
@@ -210,6 +210,7 @@ $(function() {
         $('.popover').each(function() { $(this).remove()});
         $(event.target).popover('hide');
     });
+*/
     
                             
 });

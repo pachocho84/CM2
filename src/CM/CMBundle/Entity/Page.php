@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
-use CM\UserBundle\Entity\User;
 
 /**
  * Page
@@ -19,7 +18,7 @@ class Page
 {
     use ORMBehaviors\Sluggable\Sluggable;
     use ORMBehaviors\Timestampable\Timestampable;
-    use \CM\General\Model\ImageAndCoverTrait;
+    use \CM\CMBundle\Model\ImageAndCoverTrait;
 
     /**
      * @var integer
@@ -45,7 +44,7 @@ class Page
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="pages")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="pages")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $user;

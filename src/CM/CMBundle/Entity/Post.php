@@ -6,13 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
-use CM\UserBundle\Entity\User;
 
 /**
  * Post
  *
  * @ORM\Table(name="post")
- * @ORM\Entity(repositoryClass="CM\CMBundle\Entity\PostRepository")
+ * @ORM\Entity(repositoryClass="PostRepository")
  */
 class Post
 {
@@ -61,7 +60,7 @@ class Post
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="posts")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)    
      */
     private $user;

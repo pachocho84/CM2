@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
-use CM\UserBundle\Entity\User;
 
 /**
  * Group
@@ -18,7 +17,7 @@ use CM\UserBundle\Entity\User;
 class Group
 {
     use ORMBehaviors\Sluggable\Sluggable;
-    use \CM\General\Model\ImageAndCoverTrait;
+    use \CM\CMBundle\Model\ImageAndCoverTrait;
     
     /**
      * @var integer
@@ -44,7 +43,7 @@ class Group
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="CM\UserBundle\Entity\User", mappedBy="groups")
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="groups")
      */
     private $users;
 
@@ -63,7 +62,7 @@ class Group
     private $vip = false;
         
     /**
-     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Image", mappedBy="group", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Image", mappedBy="group", cascade={"persist", "remove"})
      */
     private $images;
     
@@ -181,7 +180,7 @@ class Group
     }
 
     /**
-     * @param \CM\CMBundle\Entity\User $comment
+     * @param User $comment
      * @return Entity
      */
     public function addUser(User $user)
@@ -195,7 +194,7 @@ class Group
     }
 
     /**
-     * @param \CM\CMBundle\Entity\User $users
+     * @param User $users
      */
     public function removeUser(User $user)
     {
@@ -225,7 +224,7 @@ class Group
     }
 
     /**
-     * @param \CM\CMBundle\Entity\Image $images
+     * @param Image $images
      */
     public function removeImage(Image $image)
     {

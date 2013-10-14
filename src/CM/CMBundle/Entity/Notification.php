@@ -4,7 +4,6 @@ namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
-use CM\UserBundle\Entity\User;
 
 /**
  * Notification
@@ -55,13 +54,13 @@ class Notification
     private $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="notificationsIncoming")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="notificationsIncoming")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="notificationsOutcoming")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="notificationsOutcoming")
      * @ORM\JoinColumn(name="from_user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $fromUser;

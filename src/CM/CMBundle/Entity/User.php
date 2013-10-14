@@ -1,32 +1,22 @@
 <?php
 
-namespace CM\UserBundle\Entity;
+namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use CM\CMBundle\Entity\Entity;
-use CM\CMBundle\Entity\EntityUser;
-use CM\CMBundle\Entity\Page;
-use CM\CMBundle\Entity\Post;
-use CM\CMBundle\Entity\Group;
-use CM\CMBundle\Entity\Comment;
-use CM\CMBundle\Entity\Image;
-use CM\CMBundle\Entity\Like;
-use CM\CMBundle\Entity\Notification;
-use CM\CMBundle\Entity\Request;
 /**
  * User
  *
  * @ORM\Table(name="user")
- * @ORM\Entity(repositoryClass="CM\UserBundle\Entity\UserRepository")
+ * @ORM\Entity(repositoryClass="UserRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class User extends BaseUser
 {
-	use \CM\General\Model\ImageAndCoverTrait;
+	use \CM\CMBundle\Model\ImageAndCoverTrait;
 
 	const SEX_M = true;
 	const SEX_F = false;
@@ -40,8 +30,6 @@ class User extends BaseUser
      */
     protected $id;
     
-    
-
     /**
      * @var string
      *
@@ -76,7 +64,7 @@ class User extends BaseUser
      * @var boolean
      *
      * @ORM\Column(name="sex", type="boolean", nullable=false)
-     * @Assert\Choice(choices = {CM\UserBundle\Entity\User::SEX_M, CM\UserBundle\Entity\User::SEX_F}, message = "Choose a valid gender.")
+     * @Assert\Choice(choices = {CM\CMBundle\Entity\User::SEX_M, CM\CMBundle\Entity\User::SEX_F}, message = "Choose a valid gender.")
      */
     private $sex;
 

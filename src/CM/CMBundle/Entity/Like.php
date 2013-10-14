@@ -4,12 +4,11 @@ namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
-use CM\UserBundle\Entity\User;
 
 /**
  * Like
  *
- * @ORM\Entity(repositoryClass="CM\CMBundle\Entity\LikeRepository")
+ * @ORM\Entity(repositoryClass="LikeRepository")
  * @ORM\Table(name="`like`")
  */
 class Like
@@ -38,7 +37,7 @@ class Like
     private $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User", inversedBy="likes")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="likes")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $user;

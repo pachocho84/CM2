@@ -48,11 +48,10 @@ class EventController extends Controller
 		$events = $em->getRepository('CMBundle:Event')->getEvents(array(
 			'locale' => $request->getLocale(), 
 			'archive' => $request->get('_route') == 'event_archive' ? true : null,
-			'category' => $request->get('_route') == 'event_category' ? $category->getId() : null
-		));
-	    
-		$paginator  = $this->get('knp_paginator');
-		$pagination = $paginator->paginate($events, $page, 25);
+			'category' => $request->get('_route') == 'event_category' ? $category->getId() : null		
+        ));
+        
+		$pagination  = $this->get('knp_paginator')->paginate($events, $page, 10);
 			
 		if ($request->isXmlHttpRequest()) {
 			return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'page' => $page));
@@ -101,11 +100,11 @@ class EventController extends Controller
     	$cMonth['prev_month'] = $cMonth['cMonth'] - 1;
     	$cMonth['next_month'] = $cMonth['cMonth'] + 1;
     	 
-    	if ($cMonth['prev_month'] == 0 ) {
+    	if ($cMonth['prev_month'] == 0) {
             $cMonth['prev_month'] = 12;
             $cMonth['prev_year'] = $cMonth['cYear'] - 1;
     	}
-    	if ($cMonth['next_month'] == 13 ) {
+    	if ($cMonth['next_month'] == 13) {
     	    $cMonth['next_month'] = 1;
             $cMonth['next_year'] = $cMonth['cYear'] + 1;
     	}
@@ -228,13 +227,13 @@ class EventController extends Controller
     public function sponsoredAction(Request $request, $limit = 2)
     {
 	    $request->setLocale($request->get('_locale')); // TODO: workaround for locale in subsession
-	    
-		$em = $this->getDoctrine()->getManager();
 		
-		$sponsored = $em->getRepository('CMBundle:Event')->getSponsored(array('limit' => $limit, 'paginate' => false, 'locale' => $request->getLocale()));
-		
-		$em->createQuery("UPDATE CMBundle:Sponsored s SET s.views = s.views + 1 WHERE s.id IN (2, 20)")->getResult();
+		$sponsored = $this->getDoctrine()->getManager()->getRepository('CMBundle:Event')->getSponsored(array('limit' => $limit, 'locale' => $request->getLocale()));
         
-        return array('sponsored_events' => $sponsored);
+		$pagination  = $this->get('knp_paginator')->paginate($sponsored, 1, $limit);
+		
+		$this->getDoctrine()->getManager()->createQuery("UPDATE CMBundle:Sponsored s SET s.views = s.views + 1 WHERE s.id IN (2, 20)")->getResult();
+        
+        return array('sponsored_events' => $pagination);
     }
 }

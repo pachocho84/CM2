@@ -8,13 +8,13 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use CM\UserBundle\Entity\User;
+use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\EntityCategoryEnum;
 
 class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
-	private $images = array('bb01acb97854b24ed23598bd4f055eba.jpeg', 'ff9398d3d47436e2b4f72874a2c766fd.jpeg');
+	private $images = array('ff9398d3d47436e2b4f72874a2c766fd.jpeg', '00b7b971d96ce05797e6757e5a0a4232.jpeg');
 	
 	/**
 	 * {@inheritDoc}
