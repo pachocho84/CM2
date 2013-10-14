@@ -33,13 +33,20 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
                 ->setVip(rand(0, 1));
             
             $manager->persist($group);
+
+            $post = new Post;
+            $post->setType(Post::TYPE_CREATION);
+
+            $group->addPost($post);
+            
+            $manager->flush();
+            
+			$this->addReference('group-'.$i, $group);
         }
-    
-        $manager->flush();
 	}
 
 	public function getOrder()
 	{
-        return 6;
+        return 2;
     }
 }

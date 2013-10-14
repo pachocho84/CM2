@@ -65,6 +65,6 @@ class EventCategoryFixtures extends AbstractFixture implements OrderedFixtureInt
 
     public function getOrder()
     {
-        return 1;
+        return 4;
     }
 }

@@ -135,7 +135,7 @@ abstract class Entity
      * @param \CM\CMBundle\Entity\EntityUser $comment
      * @return Entity
      */
-    public function addEntitiesUsers(EntityUser $entityUser)
+    public function addEntityUser(EntityUser $entityUser)
     {
         if (!$this->entitiesUsers->contains($entityUser)) {
             $this->entitiesUsers[] = $entityUser;
@@ -148,7 +148,7 @@ abstract class Entity
     /**
      * @param \CM\CMBundle\Entity\EntityUser $users
      */
-    public function removeEntitiesUsers(EntityUser $entityUser)
+    public function removeEntityUser(EntityUser $entityUser)
     {
         $this->entitiesUsers->removeElement($entityUser);
     }

@@ -13,7 +13,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
 use CM\CMBundle\Entity\Post;
-use CM\CMBundle\Entity\EntityCategoryEnum;
 use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\EventDate;
@@ -34,30 +33,15 @@ class EventController extends Controller
 	 * @Route("/category/{category_slug}/{page}", name="event_category", requirements={"page" = "\d+"})
 	 * @Template
 	 */
-	public function indexAction(Request $request, $page = 1, $category_slug = null)
+	public function indexAction(Request $request, $page = 1, $category_slug = null, $user_id = null)
 	{
+	    $em = $this->getDoctrine()->getManager();
+		    
 		if (!$request->isXmlHttpRequest()) {
-		    $em = $this->getDoctrine()->getManager();
 			$categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::EVENT, array('locale' => $request->getLocale()));
-		} else {
-    		return $this->forward('CMBundle:Event:objects', array(
-    		    'request' => $request,
-    		    'page' => $page,
-    		    'category_slug' => $category_slug
-    		));
 		}
-
-		return array('request' => $request, 'categories' => $categories, 'page' => $page, 'category_slug' => $category_slug);
-	}
-	
-	/**
-	 * @Template
-	 */
-	public function objectsAction(Request $request, $page = 1, $category_slug = null, $user_id = null)
-	{
-    	$em = $this->getDoctrine()->getManager();
-    		
-		if ($category_slug != '') {
+		
+		if ($category_slug) {
 			$category = $em->getRepository('CMBundle:EntityCategory')->getCategory($category_slug, EntityCategory::EVENT, array('locale' => $request->getLocale()));
 		}
 			
@@ -70,7 +54,11 @@ class EventController extends Controller
         
 		$pagination = $this->get('knp_paginator')->paginate($events, $page, 10);
 		
-		return array('request' => $request, 'dates' => $pagination, 'category' => $category, 'page' => $page);
+		if ($request->isXmlHttpRequest()) {
+    		return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'page' => $page));
+		}
+		
+		return array('categories' => $categories, 'dates' => $pagination, 'category' => $category, 'page' => $page);
 	}
 	
 	/**
