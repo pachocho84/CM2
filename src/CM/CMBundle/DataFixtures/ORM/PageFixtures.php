@@ -36,13 +36,14 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                 ->setVip(rand(0, 1));
             
             $manager->persist($page);
+            $manager->flush();
+            
+			$this->addReference('page-'.$i, $page);
         }
-    
-        $manager->flush();
 	}
 
 	public function getOrder()
 	{
-        return 7;
+        return 3;
     }
 }

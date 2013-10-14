@@ -55,6 +55,11 @@ class Page
      * @ORM\OneToMany(targetEntity="PageUser", mappedBy="page")
      */
     private $pagesUsers;
+        
+    /**
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="page", cascade={"persist", "remove"})
+	 */
+	private $posts;
 
     /**
      * @var string
@@ -86,6 +91,11 @@ class Page
     {
         $this->images = new ArrayCollection();
     }
+	
+	public function __toString()
+	{
+    	return $this->getName();
+	}
 
     protected function getRootDir()
     {
@@ -169,6 +179,66 @@ class Page
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityUser $comment
+     * @return Entity
+     */
+    public function addPagesUsers(PageUser $pageUser)
+    {
+        if (!$this->pagesUsers->contains($pageUser)) {
+            $this->pagesUsers[] = $pageUser;
+            $pageUser->setPage($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityUser $users
+     */
+    public function removePagesUsers(PageUser $pageUser)
+    {
+        $this->pagesUsers->removeElement($pageUser);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPagesUsers()
+    {
+        return $this->pagesUsers;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     * @return Entity
+     */
+    public function addPost(Post $post)
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setPage($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     */
+    public function removePost(Post $post)
+    {
+        $this->posts->removeElement($post);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPosts()
+    {
+        return $this->posts;
     }
 
     /**

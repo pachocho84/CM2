@@ -54,6 +54,11 @@ class Group
      * @ORM\OneToMany(targetEntity="GroupUser", mappedBy="group")
      */
     private $groupsUsers;
+        
+    /**
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="group", cascade={"persist", "remove"})
+	 */
+	private $posts;
 
     /**
      * @var string
@@ -79,6 +84,11 @@ class Group
         $this->users = new ArrayCollection();
         $this->images = new ArrayCollection();
     }
+	
+	public function __toString()
+	{
+    	return $this->getName();
+	}
 
     protected function getRootDir()
     {
@@ -162,6 +172,66 @@ class Group
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityUser $comment
+     * @return Entity
+     */
+    public function addGroupUser(GroupUser $groupUser)
+    {
+        if (!$this->groupsUsers->contains($groupUser)) {
+            $this->groupsUsers[] = $groupUser;
+            $groupUser->setGroup($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityUser $users
+     */
+    public function removeGroupUser(GroupUser $groupUser)
+    {
+        $this->groupsUsers->removeElement($groupUser);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getGroupsUsers()
+    {
+        return $this->groupsUsers;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     * @return Entity
+     */
+    public function addPost(Post $post)
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setGroup($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Image $images
+     */
+    public function removePost(Post $post)
+    {
+        $this->posts->removeElement($post);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPosts()
+    {
+        return $this->posts;
     }
 
     /**

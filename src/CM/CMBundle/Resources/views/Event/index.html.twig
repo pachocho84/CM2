@@ -21,6 +21,6 @@
     </div>
     
     <div class='box'>
-        {{ render(controller('CMBundle:Event:objects', {'request': request, 'page': page, 'category_slug': category_slug})) }}
+        {{ include('CMBundle:Event:objects.html.twig') }}
     </div>
 {% endblock %}

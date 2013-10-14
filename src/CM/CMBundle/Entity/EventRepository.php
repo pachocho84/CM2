@@ -43,7 +43,7 @@ class EventRepository extends EntityRepository
             ->setParameter(':now', new \DateTime);
         
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('d, e, t, i, p, l, c, u, lu, cu')
+            ->select('d, e, t, i, p, l, c, u, lu, cu, pg, gr')
             ->from('CMBundle:EventDate','d')
             ->join('d.event', 'e')
             ->leftJoin('e.translations', 't')
@@ -54,6 +54,8 @@ class EventRepository extends EntityRepository
             ->leftJoin('p.user', 'u')
             ->leftJoin('l.user', 'lu')
             ->leftJoin('c.user', 'cu')
+            ->leftJoin('p.page', 'pg')
+            ->leftJoin('p.group', 'gr')
             ->where('t.locale in (:locales)');
         
         if ($options['user_id']) {
@@ -63,6 +65,24 @@ class EventRepository extends EntityRepository
                 ->setParameter(':user_id', $options['user_id']);
             $query->andWhere('p.user = :user_id');
             $parameters['user_id'] = $options['user_id'];
+        }
+        
+        if ($options['page_id']) {
+            $count->join('d.event', 'e')
+                ->join('e.posts', 'p')
+                ->andWhere('p.page = :page_id')
+                ->setParameter(':page_id', $options['page_id']);
+            $query->andWhere('p.page = :page_id');
+            $parameters['page_id'] = $options['page_id'];
+        }
+        
+        if ($options['group_id']) {
+            $count->join('d.event', 'e')
+                ->join('e.posts', 'p')
+                ->andWhere('p.group = :group_id')
+                ->setParameter(':group_id', $options['group_id']);
+            $query->andWhere('p.group = :group_id');
+            $parameters['group_id'] = $options['group_id'];
         }
         
         if ($options['category_id']) {

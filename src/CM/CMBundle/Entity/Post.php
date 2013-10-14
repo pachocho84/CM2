@@ -64,6 +64,22 @@ class Post
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)    
      */
     private $user;
+
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="posts")
+     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
+     */
+    private $page;
+
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="Group", inversedBy="posts")
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
+     */
+    private $group;
     
     /**
      * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"persist", "remove"})
@@ -218,6 +234,52 @@ class Post
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set entity
+     *
+     * @param Entity $entity
+     * @return Image
+     */
+    public function setPage(Page $page = null)
+    {
+        $this->page = $page;
+    
+        return $this;
+    }
+
+    /**
+     * Get entity
+     *
+     * @return Entity 
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    /**
+     * Set entity
+     *
+     * @param Entity $entity
+     * @return Image
+     */
+    public function setGroup(Group $group = null)
+    {
+        $this->group = $group;
+    
+        return $this;
+    }
+
+    /**
+     * Get entity
+     *
+     * @return Entity 
+     */
+    public function getGroup()
+    {
+        return $this->group;
     }
 
     /**
