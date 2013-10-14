@@ -56,16 +56,16 @@ class EventRepository extends EntityRepository
             ->leftJoin('c.user', 'cu')
             ->where('t.locale in (:locales)');
         
-        if (isset($options['user_id'])) {
+        if ($options['user_id']) {
             $count->join('d.event', 'e')
-                ->join('e.post', 'p')
+                ->join('e.posts', 'p')
                 ->andWhere('p.user = :user_id')
                 ->setParameter(':user_id', $options['user_id']);
             $query->andWhere('p.user = :user_id');
             $parameters['user_id'] = $options['user_id'];
         }
         
-        if (isset($options['category_id'])) {
+        if ($options['category_id']) {
             $count->join('d.event', 'e')
                 ->andWhere('e.entityCategory = :category_id')
                 ->setParameter(':category_id', $options['category_id']);
@@ -73,7 +73,7 @@ class EventRepository extends EntityRepository
             $parameters['category_id'] = $options['category_id'];
         }
         
-        if (isset($options['archive'])) {
+        if ($options['archive']) {
             $count->andWhere('d.start <= :now');
             $query->andWhere('d.start <= :now')
                 ->orderBy('d.start', 'desc');    

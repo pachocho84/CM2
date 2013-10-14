@@ -27,13 +27,16 @@ class UserController extends Controller
      * @Route("/events", name="user_events")
      * @Template
      */
-    public function eventsAction($username)
+    public function eventsAction(Request $request, $username)
     {
 		$em = $this->getDoctrine()->getManager();
 		
 		$user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $username));
     
         return array(
+            'request' => $request,
+            'page' => 1,
+            'category_slug' => null,
             'user' => $user
         );
     }

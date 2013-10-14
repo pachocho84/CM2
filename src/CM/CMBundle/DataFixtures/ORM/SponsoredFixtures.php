@@ -6,11 +6,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
-use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\Sponsored;
-use CM\CMBundle\Entity\Like;
-use CM\CMBundle\Entity\Comment;
-use CM\CMBundle\Entity\User;
 
 class SponsoredFixtures extends AbstractFixture implements OrderedFixtureInterface
 {

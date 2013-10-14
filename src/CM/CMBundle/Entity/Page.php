@@ -46,10 +46,15 @@ class Page
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="pages")
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="creator_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $creator;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PageUser", mappedBy="page")
+     */
+    private $pagesUsers;
 
     /**
      * @var string

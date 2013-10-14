@@ -4,6 +4,7 @@ namespace CM\CMBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -30,18 +31,33 @@ class EventController extends Controller
 	/**
 	 * @Route("/{page}", name = "event_index", requirements={"page" = "\d+"})
 	 * @Route("/archive/{page}", name="event_archive", requirements={"page" = "\d+"}) 
-	 * @Route("/category/{category_slug}/{page}", name="event_category", requirements={"page" = "\d+"}) 
+	 * @Route("/category/{category_slug}/{page}", name="event_category", requirements={"page" = "\d+"})
 	 * @Template
 	 */
-	public function indexAction(Request $request, $page = 1, $category_slug = null, $user_id = null)
+	public function indexAction(Request $request, $page = 1, $category_slug = null)
 	{
-		$em = $this->getDoctrine()->getManager();
-			
 		if (!$request->isXmlHttpRequest()) {
+		    $em = $this->getDoctrine()->getManager();
 			$categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::EVENT, array('locale' => $request->getLocale()));
+		} else {
+    		return $this->forward('CMBundle:Event:objects', array(
+    		    'request' => $request,
+    		    'page' => $page,
+    		    'category_slug' => $category_slug
+    		));
 		}
-		
-		if ($category_slug) {
+
+		return array('request' => $request, 'categories' => $categories, 'page' => $page, 'category_slug' => $category_slug);
+	}
+	
+	/**
+	 * @Template
+	 */
+	public function objectsAction(Request $request, $page = 1, $category_slug = null, $user_id = null)
+	{
+    	$em = $this->getDoctrine()->getManager();
+    		
+		if ($category_slug != '') {
 			$category = $em->getRepository('CMBundle:EntityCategory')->getCategory($category_slug, EntityCategory::EVENT, array('locale' => $request->getLocale()));
 		}
 			
@@ -52,13 +68,9 @@ class EventController extends Controller
 			'user_id'       => $user_id		
         ));
         
-		$pagination  = $this->get('knp_paginator')->paginate($events, $page, 10);
-			
-		if ($request->isXmlHttpRequest()) {
-			return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'page' => $page));
-		}
-			
-		return array('categories' => $categories, 'dates' => $pagination, 'category' => $category, 'page' => $page);
+		$pagination = $this->get('knp_paginator')->paginate($events, $page, 10);
+		
+		return array('request' => $request, 'dates' => $pagination, 'category' => $category, 'page' => $page);
 	}
 	
 	/**
@@ -220,7 +232,6 @@ class EventController extends Controller
         
         return array('form' => $form->createView());
     }
-    
     
     /**
      * @Template

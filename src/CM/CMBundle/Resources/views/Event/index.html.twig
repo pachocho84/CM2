@@ -1,43 +1,26 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
-
-
 {% block title %}
     {% if app.request.get('_route') == 'event_index' %}
         {{ "Events"|trans }}
     {% elseif app.request.get('_route') == 'event_archive' %}
         {{ "Events Archive"|trans }}
     {% elseif app.request.get('_route') == 'event_category' %}
-        {{ category.getPlural | capitalize }}
+{#         {{ category.getPlural | capitalize }} #}
     {% endif %}
 {% endblock %}
 
 
 
 {% block body %}
-{#     <pre>{{ dump(app.request.query.get('page')) }}</pre> #}
-
-{# <pre>    {{ dump(app.request.attributes.get('_route_params')) }}</pre> #}
-
     <div class="row">
         <div class="col-lg-5">
             <h2>{{ block('title') }}</h2>
         </div>
         {{ include('CMBundle:Event:menu.html.twig') }}
     </div>
-
-{#
-  {% for date in dates %}
-      <pre>
-          {{ loop.index }} - {{ date.getId }}
-          {{ date.start | date('Y/m/d') }} - {{ date.getEvent.getTitle }}
-      </pre>
-    {% endfor %}
-#}
-    
     
     <div class='box'>
-        {{ include('CMBundle:Event:objects.html.twig' ) }}
+        {{ render(controller('CMBundle:Event:objects', {'request': request, 'page': page, 'category_slug': category_slug})) }}
     </div>
-    
 {% endblock %}
