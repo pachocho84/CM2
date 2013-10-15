@@ -33,7 +33,7 @@ class EventController extends Controller
 	 * @Route("/category/{category_slug}/{page}", name="event_category", requirements={"page" = "\d+"})
 	 * @Template
 	 */
-	public function indexAction(Request $request, $page = 1, $category_slug = null, $user_id = null)
+	public function indexAction(Request $request, $page = 1, $category_slug = null)
 	{
 	    $em = $this->getDoctrine()->getManager();
 		    
@@ -48,8 +48,7 @@ class EventController extends Controller
 		$events = $em->getRepository('CMBundle:Event')->getEvents(array(
 			'locale'        => $request->getLocale(), 
 			'archive'       => $request->get('_route') == 'event_archive' ? true : null,
-			'category_id'   => $category_slug ? $category->getId() : null,
-			'user_id'       => $user_id		
+			'category_id'   => $category_slug ? $category->getId() : null
         ));
         
 		$pagination = $this->get('knp_paginator')->paginate($events, $page, 10);

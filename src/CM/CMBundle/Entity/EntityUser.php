@@ -46,6 +46,13 @@ class EntityUser
      * @ORM\Column(name="status", type="smallint", nullable=false)
      */
     private $status = self::STATUS_PENDING;
+    
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="user_tags", type="simple_array", nullable=true)
+     */
+    private $userTags = array();
 
     /**
      * @var boolean
@@ -144,6 +151,59 @@ class EntityUser
     public function getStatus()
     {
         return $this->status;
+    }
+    
+    /**
+     * Add userTag
+     *
+     * @param UserTag $userTag
+     * @return EntityUser
+     */
+    public function addUserTag($userTag)
+    {
+        if (!in_array($userTag, $this->getUserTags())) {
+            $this->userTags[] = $userTag;
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Add userTag
+     *
+     * @param UserTag $userTag
+     * @return EntityUser
+     */
+    public function addUserTags(array $userTags)
+    {
+        foreach ($userTags as $userTag) {
+            $this->addUserTag($userTag);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Remove userTag
+     *
+     * @param UserTag $userTag
+     * return EntityUser
+     */
+    public function removeUserTag($userTag)
+    {
+        if(($key = array_search($userTag, $this->getUserTags())) !== false) {
+            unset($this->userTags[$key]);
+        }
+    }
+    
+    /**
+     * Get userTags
+     *
+     * @return array
+     */
+    public function getUserTags()
+    {
+        return $this->userTags;
     }
 
     /**

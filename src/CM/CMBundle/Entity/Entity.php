@@ -36,12 +36,6 @@ abstract class Entity
     private $visible;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="creator_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     **/
-    private $creator;
-
-    /**
      * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity", cascade={"persist", "remove"})
      */
     private $entitiesUsers;
@@ -138,29 +132,6 @@ abstract class Entity
     }
 
     /**
-     * Set user
-     *
-     * @param User $user
-     * @return Like
-     */
-    public function setCreator(User $creator = null)
-    {
-        $this->creator = $creator;
-    
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return User 
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    /**
      * @param \CM\CMBundle\Entity\EntityUser $comment
      * @return Entity
      */
@@ -168,7 +139,8 @@ abstract class Entity
         User $user,
         $admin = false,
         $status = EntityUser::STATUS_PENDING,
-        $notification = true
+        $notification = true,
+        $userTags = array()
     )
     {
         $entityUser = new EntityUser;
@@ -176,6 +148,7 @@ abstract class Entity
             ->setUser($user)
             ->setAdmin($admin)
             ->setStatus($status)
+            ->addUserTags($userTags)
             ->setNotification($notification);
         $this->entitiesUsers[] = $entityUser;
     

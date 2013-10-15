@@ -13,19 +13,19 @@
             {% if whoLikesIt == 0 %}
                 {{ 'You like this.' | trans }}
             {% elseif whoLikesIt == 1 %}
-                {{ 'You and %name% like this.' | trans({'%name%': '<a href="'~path('user_show', {'username': likesWithoutUser[0].user.usernameCanonical})~'">'~likesWithoutUser[0].user~'</a>'}) | raw }}
+                {{ 'You and %name% like this.' | trans({'%name%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>'}) | raw }}
             {% elseif whoLikesIt == 2 %}
-                {{ 'You, %name1% and %name2% like this.' | trans({'%name1%': '<a href="'~path('user_show', {'username': likesWithoutUser[0].user.usernameCanonical})~'">'~likesWithoutUser[0].user~'</a>', '%name2%': '<a href="'~path('user_show', {'username': likesWithoutUser[1].user.usernameCanonical})~'">'~likesWithoutUser[1].user~'</a>'}) | raw }}
+                {{ 'You, %name1% and %name2% like this.' | trans({'%name1%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>', '%name2%': '<a href="'~path('user_show', {'slug': likesWithoutUser[1].user.slug})~'">'~likesWithoutUser[1].user~'</a>'}) | raw }}
             {% else %}
-                {{ 'You, %name% and %link%%count% others %endlink% like this.' | trans({'%name%': '<a href="'~path('user_show', {'username': likesWithoutUser[0].user.usernameCanonical})~'">'~likesWithoutUser[0].user~'</a>', '%count%': whoLikesIt - 2, '%link%': '<a href="'~path('who_likes_it', {'type': post | get_class_name | lower, 'id': post.id})~'" class="modal-trigger">', '%endlink%': '</a>'}) | raw }}
+                {{ 'You, %name% and %link%%count% others %endlink% like this.' | trans({'%name%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>', '%count%': whoLikesIt - 2, '%link%': '<a href="'~path('who_likes_it', {'type': post | get_class_name | lower, 'id': post.id})~'" class="modal-trigger">', '%endlink%': '</a>'}) | raw }}
             {% endif %}
         {% else %}
             {% if whoLikesIt == 1 %}
-                {{ '%name% likes this.' | trans({'%name%': '<a href="'~path('user_show', {'username': post.likes[0].user.usernameCanonical})~'">'~post.likes[0].user~'</a>'}) | raw }}
+                {{ '%name% likes this.' | trans({'%name%': '<a href="'~path('user_show', {'slug': post.likes[0].user.slug})~'">'~post.likes[0].user~'</a>'}) | raw }}
             {% elseif whoLikesIt == 2 %}
-                {{ '%name1% and %name2% like this.' | trans({'%name1%': '<a href="'~path('user_show', {'username': post.likes[0].user.usernameCanonical})~'">'~post.likes[0].user~'</a>', '%name2%': '<a href="'~path('user_show', {'username': post.likes[1].user.usernameCanonical})~'">'~post.likes[1].user~'</a>'}) | raw }}
+                {{ '%name1% and %name2% like this.' | trans({'%name1%': '<a href="'~path('user_show', {'slug': post.likes[0].user.slug})~'">'~post.likes[0].user~'</a>', '%name2%': '<a href="'~path('user_show', {'slug': post.likes[1].user.slug})~'">'~post.likes[1].user~'</a>'}) | raw }}
             {% else %}
-                {{ '%name% and %link%%count% others %endlink% like this.' | trans({'%name%': '<a href="'~path('user_show', {'username': post.likes[0].user.usernameCanonical})~'">'~post.likes[0].user~'</a>', '%count%': whoLikesIt - 1, '%link%': '<a href="'~path('who_likes_it', {'type': post | get_class_name | lower, 'id': post.id})~'" class="modal-trigger">', '%endlink%': '</a>'}) | raw }}
+                {{ '%name% and %link%%count% others %endlink% like this.' | trans({'%name%': '<a href="'~path('user_show', {'slug': post.likes[0].user.slug})~'">'~post.likes[0].user~'</a>', '%count%': whoLikesIt - 1, '%link%': '<a href="'~path('who_likes_it', {'type': post | get_class_name | lower, 'id': post.id})~'" class="modal-trigger">', '%endlink%': '</a>'}) | raw }}
             {% endif %}
         {% endif %}
         

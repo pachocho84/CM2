@@ -38,9 +38,29 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             
             $manager->persist($page);
             $manager->flush();
+                        
+            $userTags = array();
+            for ($j = 1; $j < rand(1, 3); $j++) {
+                $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
+            }
+                            
+            $page->addPageUser(
+                $user,
+                true, // admin
+                rand(0, 2), // join event
+                rand(0, 2), // join disc
+                rand(0, 2), // join article
+                rand(0, 1), // notification
+                $userTags
+            );
 
             for ($j = $userNum + 1; $j < 6; $j++) {
                 $otherUser = $manager->merge($this->getReference('user-'.$j));
+                
+                $userTags = array();
+                for ($k = 1; $k < rand(1, 3); $k++) {
+                    $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
+                }
 
                 $page->addPageUser(
                     $otherUser,
@@ -48,7 +68,8 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                     rand(0, 2), // join event
                     rand(0, 2), // join disc
                     rand(0, 2), // join article
-                    rand(0, 1) // notification
+                    rand(0, 1), // notification
+                    $userTags
                 );
             }
             
@@ -60,6 +81,6 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 
 	public function getOrder()
 	{
-        return 3;
+        return 4;
     }
 }

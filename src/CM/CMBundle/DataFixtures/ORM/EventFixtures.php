@@ -82,11 +82,9 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
     public function load(ObjectManager $manager)
     {
         for ($i = 1; $i < 201; $i++) {
-            $user = $manager->merge($this->getReference('user-'.rand(1, 5)));
             $eventNum = rand(0, count($this->events) - 1);
             $event = new Event;
-            $event->setVisible(rand(0, 1))
-                ->setCreator($user);
+            $event->setVisible(rand(0, 1));
             $event->setTitle($this->events[$eventNum]['title'].' (en)')
                 ->setExtract($this->events[$eventNum]['extract'])
                 ->setText($this->events[$eventNum]['text']);
@@ -156,14 +154,15 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
     
             }
             
-            $user = $manager->merge($this->getReference('user-'.rand(1, 5)));
+            $userNum = rand(1, 5);
+            $user = $manager->merge($this->getReference('user-'.$userNum));
             
             $category = $manager->merge($this->getReference('entity_category-'.rand(1, 3)));
             $category->addEntity($event);
 
             $post = new Post;
-            $post
-                ->setType(Post::TYPE_CREATION)
+            $post->setType(Post::TYPE_CREATION)
+                ->setCreator($user)
                 ->setUser($user);
 
             $event->addPost($post);
@@ -171,15 +170,34 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             $manager->persist($event);
             $event->mergeNewTranslations();
             $manager->flush();
+            
+            $userTags = array();
+            for ($j = 1; $j < rand(1, 3); $j++) {
+                $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
+            }
+            
+            $event->addEntityUser(
+                $user,
+                true, // admin
+                rand(0, 5), // status
+                true, // notification
+                $userTags
+            );
 
             for ($j = $userNum + 1; $j < 6; $j++) {
                 $otherUser = $manager->merge($this->getReference('user-'.$j));
+                
+                $userTags = array();
+                for ($k = 1; $k < rand(1, 3); $k++) {
+                    $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
+                }
 
                 $event->addEntityUser(
                     $otherUser,
                     !rand(0, 3), // admin
                     rand(0, 5), // status
-                    rand(0, 1) // notification
+                    true, // notification
+                    $userTags
                 );
             }
 
@@ -191,6 +209,6 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
     
     public function getOrder()
     {
-        return 5;
+        return 6;
     }
 }

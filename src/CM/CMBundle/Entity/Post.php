@@ -36,6 +36,12 @@ class Post
     private $type = self::TYPE_CREATION;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="creator_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     **/
+    private $creator;
+
+    /**
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Event", inversedBy="posts")
@@ -120,6 +126,40 @@ class Post
     {
         return $this->id;
     }
+    
+    public function getPublisher()
+    {
+		if ($this->getPage()) {
+			return $this->getPage();
+		} elseif ($this->getGroup()) {
+			return $this->getGroup();
+		} else {
+			return $this->getUser();
+		}
+    }
+    
+    public function getPublisherRoute()
+    {
+		if ($this->getPage()) {
+			return 'page_show';
+		} elseif ($this->getGroup()) {
+			return 'group_show';
+		} else {
+			return 'user_show';
+		}
+    }
+
+	public function getPublisherSex($type = 'he')
+    {
+		if ($this->getPageId() || $this->getGroupId()) {
+			$sex = array('he' => 'it', 'his' => 'its', 'M' => '');
+		} elseif (!$this->getUser()->getSex() || $this->getUser()->getSex() == 'M') {
+			$sex = array('he' => 'he', 'his' => 'his', 'M' => 'M');
+		} else {
+			$sex = array('he' => 'she', 'his' => 'her', 'M' => 'F');
+		}
+		return $sex[$type];
+    }
 
     /**
      * Set type
@@ -142,6 +182,54 @@ class Post
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set user
+     *
+     * @param User $user
+     * @return Like
+     */
+    public function setCreator(User $creator = null)
+    {
+        $this->creator = $creator;
+    
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return User 
+     */
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+
+    /**
+     * Set event
+     *
+     * @param \CM\CMBundle\Entity\Event $event
+     * @return Post
+     */
+    public function setEvent(Event $event = null)
+    {
+        $this->event = $event;
+        $this->object = get_class($event);
+        $this->objectIds[] = $event->getId();
+    
+        return $this;
+    }
+
+    /**
+     * Get event
+     *
+     * @return \CM\CMBundle\Entity\Event 
+     */
+    public function getEvent()
+    {
+        return $this->event;
     }
 
     /**
@@ -280,31 +368,6 @@ class Post
     public function getGroup()
     {
         return $this->group;
-    }
-
-    /**
-     * Set event
-     *
-     * @param \CM\CMBundle\Entity\Event $event
-     * @return Post
-     */
-    public function setEvent(Event $event = null)
-    {
-        $this->event = $event;
-        $this->object = get_class($event);
-        $this->objectIds[] = $event->getId();
-    
-        return $this;
-    }
-
-    /**
-     * Get event
-     *
-     * @return \CM\CMBundle\Entity\Event 
-     */
-    public function getEvent()
-    {
-        return $this->event;
     }
 
     /**

@@ -184,7 +184,8 @@ class Group
         $joinEvent = GroupUser::JOIN_REQUEST,
         $joinDisc = GroupUser::JOIN_REQUEST,
         $joinArticle = GroupUser::JOIN_REQUEST,
-        $notification = true
+        $notification = true,
+        $userTags = array()
     )
     {
         $groupUser = new GroupUser;
@@ -194,6 +195,7 @@ class Group
             ->setJoinEvent($joinEvent)
             ->setJoinDisc($joinDisc)
             ->setJoinArticle($joinArticle)
+            ->addUserTags($userTags)
             ->setNotification($notification);
         $this->groupsUsers[] = $groupUser;
     

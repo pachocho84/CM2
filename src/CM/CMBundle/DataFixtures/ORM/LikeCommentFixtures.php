@@ -49,6 +49,6 @@ class LikeCommentFixtures extends AbstractFixture implements OrderedFixtureInter
     
     public function getOrder()
     {
-        return 6;
+        return 7;
     }
 }
