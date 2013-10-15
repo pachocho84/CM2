@@ -8,7 +8,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * UserTag
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UserTagRepository")
  * @ORM\Table(name="user_tag")
  */
 class UserTag
@@ -59,6 +59,16 @@ class UserTag
      */
     private $isProtagonist;
 
+    public function __call($method, $arguments)
+    {
+        return $this->proxyCurrentLocaleTranslation($method, $arguments);
+    }
+    
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
     /**
      * Get id
      *
@@ -67,11 +77,6 @@ class UserTag
     public function getId()
     {
         return $this->id;
-    }
-
-    public function __call($method, $arguments)
-    {
-        return $this->proxyCurrentLocaleTranslation($method, $arguments);
     }
 
     /**
