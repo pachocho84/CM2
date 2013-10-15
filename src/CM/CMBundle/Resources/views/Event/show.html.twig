@@ -9,6 +9,18 @@
       <div>
           <p>{{ event.getExtract }}</p>
           <ul>
+              {% for protagonist in event.entitiesUsers %}
+                  <li>
+                      {{ protagonist.user }}
+                      {% for t in protagonist.userTags %}
+                          <ul>
+                              <li>{{ tags[t] }}</li>
+                          </ul>
+                      {% endfor %}
+                  </li>
+              {% endfor %}
+          </ul>
+          <ul>
               {% for date in event.eventDates %}
                   <li>{{ date.start | date }}</li>
               {% endfor %}

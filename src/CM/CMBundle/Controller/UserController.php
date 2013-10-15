@@ -4,6 +4,7 @@ namespace CM\CMBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -11,17 +12,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use CM\CMBundle\Entity\EntityCategory;
 
 /**
- * @Route("/{username}", defaults={"username": null})
+ * @Route("/{slug}", defaults={"slug": null})
  */
 class UserController extends Controller
 {
     /**
-     * @Route("/", name="user_show")
+     * @Route(name="user_show")
      * @Template
      */
-    public function showAction($username)
+    public function showAction($slug)
     {
-        return array('username' => $username);
+        return array('username' => $slug);
     }
     
     /**
@@ -30,9 +31,15 @@ class UserController extends Controller
 	 * @Route("/events/category/{category_slug}/{page}", name="user_events_category", requirements={"page" = "\d+"})
      * @Template
      */
-	public function eventsAction(Request $request, $username, $page = 1, $category_slug = null, $user_id = null)
+	public function eventsAction(Request $request, $slug, $page = 1, $category_slug = null)
 	{
 	    $em = $this->getDoctrine()->getManager();
+		
+		$user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+		
+		if (!$user) {
+    		throw new NotFoundHttpException('User not found.');
+		}
 		    
 		if (!$request->isXmlHttpRequest()) {
 			$categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::EVENT, array('locale' => $request->getLocale()));
@@ -46,7 +53,7 @@ class UserController extends Controller
 			'locale'        => $request->getLocale(), 
 			'archive'       => $request->get('_route') == 'event_archive' ? true : null,
 			'category_id'   => $category_slug ? $category->getId() : null,
-			'user_id'       => $user_id		
+			'user_id'       => $user->getId()		
         ));
         
 		$pagination = $this->get('knp_paginator')->paginate($events, $page, 10);
@@ -54,8 +61,6 @@ class UserController extends Controller
 		if ($request->isXmlHttpRequest()) {
     		return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'page' => $page));
 		}
-		
-		$user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $username));
 		
 		return array('categories' => $categories, 'user' => $user, 'dates' => $pagination, 'category' => $category, 'page' => $page);
 	}

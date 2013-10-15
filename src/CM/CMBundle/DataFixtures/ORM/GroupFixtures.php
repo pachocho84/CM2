@@ -23,7 +23,8 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
 	public function load(ObjectManager $manager)
 	{
         for ($i = 1; $i < 21; $i++) {
-            $user = $manager->merge($this->getReference('user-'.rand(1, 5)));
+            $userNum = rand(1, 5);
+            $user = $manager->merge($this->getReference('user-'.$userNum));
             $group = new Group;
             $group->setType(Group::TYPE_DUO)
                 ->setName('Group '.$i)
@@ -34,9 +35,29 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
             
             $manager->persist($group);
             $manager->flush();
+                        
+            $userTags = array();
+            for ($j = 1; $j < rand(1, 3); $j++) {
+                $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
+            }
+            
+            $group->addGroupUser(
+                $user,
+                true, // admin
+                rand(0, 2), // join event
+                rand(0, 2), // join disc
+                rand(0, 2), // join article
+                rand(0, 1), // notification
+                $userTags
+            );
 
             for ($j = $userNum + 1; $j < 6; $j++) {
                 $otherUser = $manager->merge($this->getReference('user-'.$j));
+                
+                $userTags = array();
+                for ($k = 1; $k < rand(1, 3); $k++) {
+                    $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
+                }
 
                 $group->addGroupUser(
                     $otherUser,
@@ -44,7 +65,8 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
                     rand(0, 2), // join event
                     rand(0, 2), // join disc
                     rand(0, 2), // join article
-                    rand(0, 1) // notification
+                    rand(0, 1), // notification
+                    $userTags
                 );
             }
             
@@ -56,6 +78,6 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
 
 	public function getOrder()
 	{
-        return 2;
+        return 3;
     }
 }

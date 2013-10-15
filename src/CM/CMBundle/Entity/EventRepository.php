@@ -24,6 +24,7 @@ class EventRepository extends EntityRepository
 			'paginate'	    => true,
 			'locale'	    => 'en',
 			'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
+			'protagonists'  => false,
 			'limit'         => 25,
 		), $options);
 	}
@@ -41,9 +42,9 @@ class EventRepository extends EntityRepository
             ->select('count(d.id)')
             ->from('CMBundle:EventDate','d')
             ->setParameter(':now', new \DateTime);
-        
+                    
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('d, e, t, i, p, l, c, u, lu, cu, pg, gr')
+            ->select('d, e, t, i, p, l, c, u, lu, cu, pg, gr'.($options['protagonists'] ? ', eu, us' : ''))
             ->from('CMBundle:EventDate','d')
             ->join('d.event', 'e')
             ->leftJoin('e.translations', 't')
@@ -57,6 +58,11 @@ class EventRepository extends EntityRepository
             ->leftJoin('p.page', 'pg')
             ->leftJoin('p.group', 'gr')
             ->where('t.locale in (:locales)');
+            
+        if ($options['protagonists']) {
+            $query->leftJoin('e.entitiesUsers', 'eu')
+                ->leftJoin('eu.user', 'us');
+        }
         
         if ($options['user_id']) {
             $count->join('d.event', 'e')
@@ -129,10 +135,20 @@ class EventRepository extends EntityRepository
     {
 		$options = self::getOptions($options);
 		
-        return $this->createQueryBuilder('e')->select('e, t, d, i')
+        return $this->createQueryBuilder('e')->select('e, t, d, i, p, l, c, u, lu, cu, pg, gr, eu, us')
             ->leftJoin('e.eventDates', 'd')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.images', 'i')
+            ->leftJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
+            ->leftJoin('p.likes', 'l')
+            ->leftJoin('p.comments', 'c')
+            ->leftJoin('p.user', 'u')
+            ->leftJoin('l.user', 'lu')
+            ->leftJoin('c.user', 'cu')
+            ->leftJoin('p.page', 'pg')
+            ->leftJoin('p.group', 'gr')
+            ->leftJoin('e.entitiesUsers', 'eu')
+            ->leftJoin('eu.user', 'us')
             ->andWhere('e.id = :id')->setParameter('id', $id)
             ->andWhere('t.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->getQuery()

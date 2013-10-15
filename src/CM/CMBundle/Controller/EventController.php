@@ -33,7 +33,7 @@ class EventController extends Controller
 	 * @Route("/category/{category_slug}/{page}", name="event_category", requirements={"page" = "\d+"})
 	 * @Template
 	 */
-	public function indexAction(Request $request, $page = 1, $category_slug = null, $user_id = null)
+	public function indexAction(Request $request, $page = 1, $category_slug = null)
 	{
 	    $em = $this->getDoctrine()->getManager();
 		    
@@ -48,8 +48,7 @@ class EventController extends Controller
 		$events = $em->getRepository('CMBundle:Event')->getEvents(array(
 			'locale'        => $request->getLocale(), 
 			'archive'       => $request->get('_route') == 'event_archive' ? true : null,
-			'category_id'   => $category_slug ? $category->getId() : null,
-			'user_id'       => $user_id		
+			'category_id'   => $category_slug ? $category->getId() : null
         ));
         
 		$pagination = $this->get('knp_paginator')->paginate($events, $page, 10);
@@ -140,15 +139,16 @@ class EventController extends Controller
 			return $this->render('CMBundle:Event:object.html.twig', array('date' => $date));
 		}
 		
-        $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale()));
+        $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale(), 'protagonists' => true));
+        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
 
         $images = new ArrayCollection();
 
         $form = $this->createForm(new MultipleImagesType(), $images, array(
-            'action' => $this->generateUrl('event_show', array(
-               'id' => $event->getId(),
-              'slug' => $event->getSlug()
-          )),
+                'action' => $this->generateUrl('event_show', array(
+                'id' => $event->getId(),
+                'slug' => $event->getSlug()
+            )),
             'cascade_validation' => true
         ))->add('save', 'submit');
 
@@ -164,7 +164,7 @@ class EventController extends Controller
             return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
         }
         
-        return array('event' => $event, 'form' => $form->createView());
+        return array('event' => $event, 'tags' => $tags, 'form' => $form->createView());
     }
     
     /**
