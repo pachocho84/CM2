@@ -33,17 +33,26 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
                 ->setVip(rand(0, 1));
             
             $manager->persist($group);
-
-            $post = new Post;
-            $post->setType(Post::TYPE_CREATION);
-
-            $group->addPost($post);
-            
             $manager->flush();
+
+            for ($j = $userNum + 1; $j < 6; $j++) {
+                $otherUser = $manager->merge($this->getReference('user-'.$j));
+
+                $group->addGroupUser(
+                    $otherUser,
+                    !rand(0, 3), // admin
+                    rand(0, 2), // join event
+                    rand(0, 2), // join disc
+                    rand(0, 2), // join article
+                    rand(0, 1) // notification
+                );
+            }
             
-			$this->addReference('group-'.$i, $group);
+            $this->addReference('group-'.$i, $group);
         }
-	}
+
+        $manager->flush();
+    }
 
 	public function getOrder()
 	{

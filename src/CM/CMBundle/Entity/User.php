@@ -199,17 +199,17 @@ class User extends BaseUser
     private $notes;
 
     /**
-     * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="user", cascade={"persist", "remove"})
      */
 	protected $entitiesUsers;
 
     /**
-     * @ORM\OneToMany(targetEntity="GroupUser", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="GroupUser", mappedBy="user", cascade={"persist", "remove"})
      */
 	protected $groupsUsers;
 
     /**
-     * @ORM\OneToMany(targetEntity="PageUser", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="PageUser", mappedBy="user", cascade={"persist", "remove"})
      */
 	protected $pagesUsers;
         
@@ -624,20 +624,6 @@ class User extends BaseUser
     }
 
     /**
-     * @param \CM\CMBundle\Entity\GroupUser $comment
-     * @return User
-     */
-    public function addGroupUser(GroupUser $groupUser)
-    {
-        if (!$this->groupsUsers->contains($groupUser)) {
-            $this->groupsUsers[] = $groupUser;
-            $groupUser->setUser($this);
-        }
-    
-        return $this;
-    }
-
-    /**
      * @param \CM\CMBundle\Entity\GroupUser $users
      */
     public function removeGroupUser(GroupUser $groupUser)
@@ -651,20 +637,6 @@ class User extends BaseUser
     public function getGroupsUsers()
     {
         return $this->groupsUsers;
-    }
-
-    /**
-     * @param \CM\CMBundle\Entity\PageUser $comment
-     * @return Entity
-     */
-    public function addPageUser(PageUser $pageUser)
-    {
-        if (!$this->pagesUsers->contains($pageUser)) {
-            $this->pagesUsers[] = $pageUser;
-            $pageUser->setUser($this);
-        }
-    
-        return $this;
     }
 
     /**

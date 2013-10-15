@@ -40,7 +40,6 @@ class LikeCommentFixtures extends AbstractFixture implements OrderedFixtureInter
             }
                 
             if ($i % 10 == 0) {
-                echo $i." - ";
                 $manager->flush();
             }
         }

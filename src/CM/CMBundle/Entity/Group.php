@@ -51,7 +51,7 @@ class Group
     private $creator;
 
     /**
-     * @ORM\OneToMany(targetEntity="GroupUser", mappedBy="group")
+     * @ORM\OneToMany(targetEntity="GroupUser", mappedBy="group", cascade={"persist", "remove"})
      */
     private $groupsUsers;
         
@@ -178,12 +178,24 @@ class Group
      * @param \CM\CMBundle\Entity\EntityUser $comment
      * @return Entity
      */
-    public function addGroupUser(GroupUser $groupUser)
+    public function addGroupUser(
+        User $user,
+        $admin = false,
+        $joinEvent = GroupUser::JOIN_REQUEST,
+        $joinDisc = GroupUser::JOIN_REQUEST,
+        $joinArticle = GroupUser::JOIN_REQUEST,
+        $notification = true
+    )
     {
-        if (!$this->groupsUsers->contains($groupUser)) {
-            $this->groupsUsers[] = $groupUser;
-            $groupUser->setGroup($this);
-        }
+        $groupUser = new GroupUser;
+        $groupUser->setGroup($this)
+            ->setUser($user)
+            ->setAdmin($admin)
+            ->setJoinEvent($joinEvent)
+            ->setJoinDisc($joinDisc)
+            ->setJoinArticle($joinArticle)
+            ->setNotification($notification);
+        $this->groupsUsers[] = $groupUser;
     
         return $this;
     }
