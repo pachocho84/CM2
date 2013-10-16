@@ -64,4 +64,24 @@ class UserController extends Controller
 		
 		return array('categories' => $categories, 'user' => $user, 'dates' => $pagination, 'category' => $category, 'page' => $page);
 	}
+
+    public function executeAutocompleteUsers(sfWebRequest $request)
+    {           
+        $exclusion = explode(',', $request->getParameter('exclusion'));
+        $exclusion[] = $this->getUser()->getId();
+        $users = UserQuery::getFromAutocomplete($request->getParameter('query'), $exclusion);
+
+        foreach($users as $user)
+        {
+            if ($user['Img'] == '' || $user['Img'] == null) {
+              $user['Img'] = '/uploads/utenti/avatar/50/default.jpg';
+            } else {
+              $user['Img'] = '/uploads/utenti/avatar/50/' . $user['Img'];
+            }
+            $resp[$user['FirstName'].' '.$user['LastName']] = $user;
+        }   
+
+        $this->getResponse()->setContentType('application/json');
+        return $this->renderText(json_encode($resp));
+    }
 }

@@ -25,11 +25,11 @@ class UserTagRepository extends EntityRepository
     {
         $options = self::getOptions($options);
         
-        return $this->getEntityManager()->createQueryBuilder()->select('tg, t')
+        $query = $this->getEntityManager()->createQueryBuilder()->select('tg, t')
             ->from('CM\CMBundle\Entity\UserTag', 'tg', 'tg.id')
             ->leftJoin('tg.translations', 't')
-            ->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])
-            ->getQuery()
-            ->getResult();
+            ->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale']);
+        
+        return $query->getQuery()->getResult();
     }
 }

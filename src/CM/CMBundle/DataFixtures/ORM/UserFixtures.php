@@ -51,7 +51,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'sex' => User::SEX_M,
             'city_birth' => 'Padua',
             'city_current' => 'Milan',
-            'birth_date' => array(190, 5, 15),
+            'birth_date' => array(1990, 5, 15),
             'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg'
         ),
         array('firstname' => 'Virginia Alexandra',
@@ -98,8 +98,18 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 			$manager->persist($user);
 			$manager->flush();
 
+            $numbers =range(1, 10);
+            shuffle($numbers);
+            for ($j = 1; $j < rand(2, 5); $j++) {
+                $userTag = $manager->merge($this->getReference('user_tag-'.$numbers[$j]));
+                
+                $user->addUserUserTag($userTag);
+            }
+
 			$this->addReference('user-'.$i, $user);
 		}
+        
+        $manager->flush();
 	}
 
 	public function getOrder()

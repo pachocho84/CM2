@@ -140,9 +140,12 @@ abstract class Entity
         $admin = false,
         $status = EntityUser::STATUS_PENDING,
         $notification = true,
-        $userTags = array()
+        $userTags = null
     )
     {
+        if ($userTags === null) {
+            $userTags = $user->getUserTags();
+        }
         $entityUser = new EntityUser;
         $entityUser->setEntity($this)
             ->setUser($user)

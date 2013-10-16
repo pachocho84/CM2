@@ -199,6 +199,11 @@ class User extends BaseUser
     private $notes;
 
     /**
+     * @ORM\OneToMany(targetEntity="UserUserTag", mappedBy="user", cascade={"persist", "remove"})
+     */
+    protected $usersUserTags;
+
+    /**
      * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="user", cascade={"persist", "remove"})
      */
 	protected $entitiesUsers;
@@ -257,7 +262,8 @@ class User extends BaseUser
 	{
 		parent::__construct();
 		
-		$this->entitiesUsers = new ArrayCollection;
+        $this->usersUserTags = new ArrayCollection;
+        $this->entitiesUsers = new ArrayCollection;
 		$this->groups = new ArrayCollection;
 		$this->pages = new ArrayCollection;
 		$this->posts = new ArrayCollection;
@@ -596,6 +602,52 @@ class User extends BaseUser
     public function getNotes()
     {
         return $this->notes;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityUser $comment
+     * @return Entity
+     */
+    public function addUserUserTag(
+        UserTag $userTag,
+        $order = null
+    )
+    {
+        $userUserTag = new UserUserTag;
+        $userUserTag->setUser($this)
+            ->setUserTag($userTag)
+            ->setOrder($order);
+        $this->usersUserTags[] = $userUserTag;
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityUser $users
+     */
+    public function removeUserUserTag(UserUserTag $userUserTag)
+    {
+        $this->usersUserTags->removeElement($userUserTag);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsersUserTags()
+    {
+        return $this->usersUserTags;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserTags()
+    {
+        $userTags = array();
+        foreach ($this->usersUserTags as $tag) {
+            $userTags[] = $tag->getUserTag();
+        }
+        return $userTags;
     }
 
     /**

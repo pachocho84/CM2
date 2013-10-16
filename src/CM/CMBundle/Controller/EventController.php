@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -15,6 +16,7 @@ use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Event;
+use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Sponsored;
@@ -174,24 +176,36 @@ class EventController extends Controller
      */
     public function editAction(Request $request, $id = null, $slug = null)
     {
-        $event;
+        if (!$this->get('security.context')->isGranted('ROLE_USER')) {
+              throw new HttpException(401, 'Unauthorized access.'); 
+        }
+
         if ($id == null || $slug == null) {
             $event = new Event;
-        $event->addEventDate(new EventDate);
 
-        $image = new Image;
-        $image->setMain(true);
-        $event->addImage($image);
+            $user = $this->getUser();
 
-        $post = new Post;
-        $post->setType(Post::TYPE_CREATION);
+            $event->addEntityUser(
+                $user,
+                true, // admin
+                EntityUser::STATUS_ACTIVE,
+                true // notifications
+            );
 
-        $user = $this->getUser();
-        $user
-            ->addImage($image)
-            ->addPost($post);
+            $image = new Image;
+            $image->setMain(true);
+            $event->addImage($image);
 
-        $event->addPost($post);
+            $event->addEventDate(new EventDate);
+
+            $post = new Post;
+            $post->setType(Post::TYPE_CREATION);
+
+            $user
+                ->addImage($image)
+                ->addPost($post);
+
+            $event->addPost($post);
         }
         else {
             $em = $this->getDoctrine()->getManager();
@@ -200,10 +214,11 @@ class EventController extends Controller
         }
           
         // TODO: retrieve locales from user
-        
-        $form = $this->createForm(new EventType(), $event, array(
+
+        $form = $this->createForm(new EventType, $event, array(
             'action' => $this->generateUrl('event_new'),
             'cascade_validation' => true,
+            'em' => $this->getDoctrine()->getManager(),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ))->add('save', 'submit');
