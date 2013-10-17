@@ -142,15 +142,19 @@ abstract class Entity
         $userTags = null
     )
     {
-        if ($userTags === null) {
+        if (is_null($userTags)) {
             $userTags = $user->getUserTags();
+        }
+        $userTagsIds = array();
+        foreach ($userTags as $userTag) {
+            $userTagsIds[] = $userTag->getId();
         }
         $entityUser = new EntityUser;
         $entityUser->setEntity($this)
             ->setUser($user)
             ->setAdmin($admin)
             ->setStatus($status)
-            ->addUserTags($userTags)
+            ->addUserTags($userTagsIds)
             ->setNotification($notification);
         $this->entityUsers[] = $entityUser;
     

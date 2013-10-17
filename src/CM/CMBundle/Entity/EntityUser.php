@@ -76,7 +76,6 @@ class EntityUser
 
     public function __construct()
     {
-        $this->userTags = new ArrayCollection;
     }
 
     /**
@@ -204,7 +203,7 @@ class EntityUser
      */
     public function addUserTag($userTag)
     {
-        if (!in_array($userTag, $this->getUserTags())) {
+        if (!in_array($userTag, $this->userTags)) {
             $this->userTags[] = $userTag;
         }
         
