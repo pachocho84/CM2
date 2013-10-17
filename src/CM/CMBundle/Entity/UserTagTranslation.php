@@ -10,9 +10,9 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  *
  * @ORM\Entity
  * @ORM\Table(name="user_tag_translation",
- *   uniqueConstraints={@ORM\UniqueConstraint(name="lookup_unique_idx", columns={
- *     "locale", "object_id", "field"
- *   })}
+ *     uniqueConstraints={@ORM\UniqueConstraint(columns={
+ *         "translatable_id", "locale"
+ *     })}
  * )
  */
 class UserTagTranslation

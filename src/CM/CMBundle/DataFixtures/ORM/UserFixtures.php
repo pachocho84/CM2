@@ -96,7 +96,6 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 		  	   ->setImg($person['image']);
 
 			$manager->persist($user);
-			$manager->flush();
 
             $numbers =range(1, 10);
             shuffle($numbers);

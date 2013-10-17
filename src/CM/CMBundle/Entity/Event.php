@@ -8,8 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Event
  *
- * @ORM\Table(name="event")
  * @ORM\Entity(repositoryClass="EventRepository")
+ * @ORM\Table(name="event")
  */
 class Event extends Entity
 {

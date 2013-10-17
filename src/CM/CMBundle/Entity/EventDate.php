@@ -8,8 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * EventDate
  *
- * @ORM\Table(name="event_date")
  * @ORM\Entity
+ * @ORM\Table(name="event_date")
  */
 class EventDate
 {

@@ -41,11 +41,6 @@ abstract class Entity
     private $entityUsers;
     
     /**
-     * @ORM\OneToMany(targetEntity="Request", mappedBy="entity", cascade={"persist", "remove"})
-     */
-    private $requests;
-    
-    /**
      * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"})
      */
     private $images;
@@ -59,7 +54,6 @@ abstract class Entity
     public function __construct()
     {
         $this->entityUsers = new ArrayCollection();
-        $this->requests = new ArrayCollection();
         $this->images = new ArrayCollection();
     }
 
@@ -161,7 +155,7 @@ abstract class Entity
     /**
      * @param \CM\CMBundle\Entity\EntityUser $users
      */
-    public function setEntityUser(ArrayCollection $entityUser)
+    public function setEntityUsers(ArrayCollection $entityUser)
     {
         $this->entityUsers = $entityUsers;
     }
@@ -180,36 +174,6 @@ abstract class Entity
     public function getEntityUsers()
     {
         return $this->entityUsers;
-    }
-
-    /**
-     * @param \CM\CMBundle\Entity\Request $requests
-     * @return Entity
-     */
-    public function addRequest(Request $request)
-    {
-        if (!$this->requests->contains($request)) {
-            $this->requests[] = $request;
-            $request->setEntity($this);
-        }
-    
-        return $this;
-    }
-
-    /**
-     * @param \CM\CMBundle\Entity\Request $requests
-     */
-    public function removeRequest(Request $request)
-    {
-        $this->requests->removeElement($request);
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getRequests()
-    {
-        return $this->requests;
     }
 
     /**

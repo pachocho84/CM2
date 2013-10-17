@@ -8,8 +8,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * Request
  *
- * @ORM\Table(name="request")
  * @ORM\Entity
+ * @ORM\Table(name="request")
  */
 class Request
 {
@@ -42,7 +42,7 @@ class Request
     private $fromUser;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Entity", inversedBy="requests")
+     * @ORM\ManyToOne(targetEntity="Entity")
      * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE")
      **/
     private $entity;

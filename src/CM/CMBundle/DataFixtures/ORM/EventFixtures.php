@@ -88,6 +88,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             $event->setTitle($this->events[$eventNum]['title'].' (en)')
                 ->setExtract($this->events[$eventNum]['extract'])
                 ->setText($this->events[$eventNum]['text']);
+
+            $manager->persist($event);
     
             if (0 == rand(0, 2)) {
                 $event->translate('it')
@@ -109,6 +111,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                 ->setExtract('Экстракта (RU) '.$i)
                 ->setText('Текст (RU) '.$i);
     */
+
+            $event->mergeNewTranslations();
                
             for ($j = rand(1, 3); $j > 0; $j--) {
                 $eventDate = new EventDate;
@@ -169,7 +173,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             
             $userTags = array();
             for ($j = 1; $j < rand(1, 3); $j++) {
-                $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
+                $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)));
             }
             
             $event->addEntityUser(
@@ -179,16 +183,13 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                 true, // notification
                 $userTags
             );
-            
-            $manager->persist($event);
-            $event->mergeNewTranslations();
 
             for ($j = $userNum + 1; $j < 6; $j++) {
                 $otherUser = $manager->merge($this->getReference('user-'.$j));
                 
                 $userTags = array();
                 for ($k = 1; $k < rand(1, 3); $k++) {
-                    $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
+                    $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)));
                 }
 
                 $event->addEntityUser(

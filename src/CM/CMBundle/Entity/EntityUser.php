@@ -9,7 +9,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  * EntityUser
  *
  * @ORM\Entity
- * @ORM\Table(name="entity_user")
+ * @ORM\Table(name="entity_user",
+ *     uniqueConstraints={@ORM\UniqueConstraint(columns={
+ *         "entity_id", "user_id"
+ *     })}
+ * )
  * @ORM\HasLifecycleCallbacks  
  */
 class EntityUser
@@ -24,21 +28,21 @@ class EntityUser
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
         
     /**
-     * @ORM\ManyToOne(targetEntity="Entity", inversedBy="entitiesUsers")
-     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Entity", inversedBy="entityUsers")
+     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $entity;
     
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="entitiesUsers")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="userEntities")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $user;
 
@@ -75,6 +79,16 @@ class EntityUser
     public function __construct()
     {
         $this->userTags = new ArrayCollection;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -175,10 +189,11 @@ class EntityUser
      * @param UserTag $userTag
      * @return EntityUser
      */
-    public function addUserTag($userTag)
+    public function addUserTag(UserTag $userTag)
     {
-        if (!$this->userTags->contains($userTag)) {
-            $this->userTags[] = $userTag;
+        $id = $userTag->getId();
+        if (!$this->userTags->contains($id)) {
+            $this->userTags[] = $id;
         }
         
         return $this;
@@ -190,7 +205,7 @@ class EntityUser
      * @param UserTag $userTag
      * @return EntityUser
      */
-    public function addUserTags(array $userTags)
+    public function addUserTags($userTags)
     {
         foreach ($userTags as $userTag) {
             $this->addUserTag($userTag);
@@ -207,7 +222,8 @@ class EntityUser
      */
     public function removeUserTag($userTag)
     {
-        $this->userTags->removeElement($userTag);
+        $id = $userTag->getId();
+        $this->userTags->removeElement($id);
     }
     
     /**
@@ -217,7 +233,7 @@ class EntityUser
      */
     public function getUserTags()
     {
-        $this->userTags = new ArrayCollection($this-userTagsArray);
+        $this->userTags = new ArrayCollection($this->userTagsArray);
         return $this->userTags;
     }
     

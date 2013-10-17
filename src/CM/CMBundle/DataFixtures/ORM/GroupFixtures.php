@@ -34,7 +34,6 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
                 ->setVip(rand(0, 1));
             
             $manager->persist($group);
-            $manager->flush();
                         
             $userTags = array();
             for ($j = 1; $j < rand(1, 3); $j++) {

@@ -37,7 +37,6 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                 ->setVip(rand(0, 1));
             
             $manager->persist($page);
-            $manager->flush();
                         
             $userTags = array();
             for ($j = 1; $j < rand(1, 3); $j++) {

@@ -218,6 +218,7 @@ class EventController extends Controller
         $form = $this->createForm(new EventType, $event, array(
             'action' => $this->generateUrl('event_new'),
             'cascade_validation' => true,
+            'em' => $this->getDoctrine()->getManager(),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ))->add('save', 'submit');
