@@ -110,7 +110,7 @@ class Event extends Entity
     /**
      * Add posts
      *
-     * @param ìPost $posts
+     * @param Post $posts
      * @return Event
      */
     public function addPost(Post $post)
