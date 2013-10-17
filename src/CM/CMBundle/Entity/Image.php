@@ -32,7 +32,7 @@ class Image
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Entity", inversedBy="images")
-     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
+     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     private $entity;
 

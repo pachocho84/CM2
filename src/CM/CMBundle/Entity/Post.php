@@ -44,10 +44,10 @@ class Post
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="Event", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Entity", inversedBy="posts")
      * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
      */
-    private $event;
+    private $entity;
 
     /**
      * @var string
@@ -208,28 +208,28 @@ class Post
     }
 
     /**
-     * Set event
+     * Set entity
      *
-     * @param \CM\CMBundle\Entity\Event $event
+     * @param \CM\CMBundle\Entity\Event $entity
      * @return Post
      */
-    public function setEvent(Event $event = null)
+    public function setEntity(Entity $entity = null)
     {
-        $this->event = $event;
-        $this->object = get_class($event);
-        $this->objectIds[] = $event->getId();
+        $this->entity = $entity;
+        $this->object = get_class($entity);
+        $this->objectIds[] = $entity->getId();
     
         return $this;
     }
 
     /**
-     * Get event
+     * Get entity
      *
      * @return \CM\CMBundle\Entity\Event 
      */
-    public function getEvent()
+    public function getEntity()
     {
-        return $this->event;
+        return $this->entity;
     }
 
     /**

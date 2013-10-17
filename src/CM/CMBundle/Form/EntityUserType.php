@@ -58,7 +58,6 @@ class EntityUserType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'em' => null,
             'locale' => 'en',
             'locales' => array('en'),
             'data_class' => 'CM\CMBundle\Entity\EntityUser'
