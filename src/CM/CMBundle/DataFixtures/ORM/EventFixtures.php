@@ -173,7 +173,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             
             $userTags = array();
             for ($j = 1; $j < rand(1, 3); $j++) {
-                $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)));
+                $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
             }
             
             $event->addEntityUser(
@@ -189,7 +189,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                 
                 $userTags = array();
                 for ($k = 1; $k < rand(1, 3); $k++) {
-                    $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)));
+                    $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
                 }
 
                 $event->addEntityUser(

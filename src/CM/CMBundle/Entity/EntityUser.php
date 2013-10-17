@@ -65,9 +65,7 @@ class EntityUser
      *
      * @ORM\Column(name="user_tags", type="simple_array", nullable=true)
      */
-    private $userTagsArray = array();
-    
-    private $userTags;
+    private $userTags = array();
 
     /**
      * @var boolean
@@ -189,23 +187,7 @@ class EntityUser
      * @param UserTag $userTag
      * @return EntityUser
      */
-    public function addUserTag(UserTag $userTag)
-    {
-        $id = $userTag->getId();
-        if (!$this->userTags->contains($id)) {
-            $this->userTags[] = $id;
-        }
-        
-        return $this;
-    }
-    
-    /**
-     * Add userTag
-     *
-     * @param UserTag $userTag
-     * @return EntityUser
-     */
-    public function addUserTags($userTags)
+    public function addUserTags(array $userTags)
     {
         foreach ($userTags as $userTag) {
             $this->addUserTag($userTag);
@@ -215,35 +197,12 @@ class EntityUser
     }
     
     /**
-     * Remove userTag
-     *
-     * @param UserTag $userTag
-     * return EntityUser
-     */
-    public function removeUserTag($userTag)
-    {
-        $id = $userTag->getId();
-        $this->userTags->removeElement($id);
-    }
-    
-    /**
-     * Get userTags
-     *
-     * @return array
-     */
-    public function getUserTags()
-    {
-        $this->userTags = new ArrayCollection($this->userTagsArray);
-        return $this->userTags;
-    }
-    
-    /**
      * Add userTag
      *
      * @param UserTag $userTag
      * @return EntityUser
      */
-    public function addUserTagsArray($userTag)
+    public function addUserTag($userTag)
     {
         if (!in_array($userTag, $this->getUserTags())) {
             $this->userTags[] = $userTag;
@@ -258,7 +217,7 @@ class EntityUser
      * @param UserTag $userTag
      * return EntityUser
      */
-    public function removeUserTagsArray($userTag)
+    public function removeUserTag($userTag)
     {
         if(($key = array_search($userTag, $this->getUserTags())) !== false) {
             unset($this->userTags[$key]);
@@ -270,9 +229,9 @@ class EntityUser
      *
      * @return array
      */
-    public function getUserTagsArray()
+    public function getUserTags()
     {
-        return $this->userTagsArray;
+        return $this->userTags;
     }
 
     /**
@@ -296,13 +255,5 @@ class EntityUser
     public function getNotification()
     {
         return $this->notification;
-    }
-    
-    /**
-     * @ORM\PrePersist
-     */
-    public function convertArrayCollectionToArray()
-    {
-        $this->userTagsArray = $this->userTags->toArray();
     }
 }
