@@ -9,12 +9,12 @@
       <div>
           <p>{{ event.getExtract }}</p>
           <ul>
-              {% for protagonist in event.entitiesUsers %}
+              {% for protagonist in event.entityUsers %}
                   <li>
                       {{ protagonist.user }}
-                      {% for t in protagonist.userTags %}
+                      {% for userTag in protagonist.userTags %}
                           <ul>
-                              <li>{{ tags[t] }}</li>
+                              <li>{{ tags[userTag] }}</li>
                           </ul>
                       {% endfor %}
                   </li>

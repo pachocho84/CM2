@@ -38,7 +38,7 @@ abstract class Entity
     /**
      * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity", cascade={"persist", "remove"})
      */
-    private $entitiesUsers;
+    private $entityUsers;
     
     /**
      * @ORM\OneToMany(targetEntity="Request", mappedBy="entity", cascade={"persist", "remove"})
@@ -58,7 +58,7 @@ abstract class Entity
     
     public function __construct()
     {
-        $this->entitiesUsers = new ArrayCollection();
+        $this->entityUsers = new ArrayCollection();
         $this->requests = new ArrayCollection();
         $this->images = new ArrayCollection();
     }
@@ -140,9 +140,12 @@ abstract class Entity
         $admin = false,
         $status = EntityUser::STATUS_PENDING,
         $notification = true,
-        $userTags = array()
+        $userTags = null
     )
     {
+        if ($userTags === null) {
+            $userTags = $user->getUserTags();
+        }
         $entityUser = new EntityUser;
         $entityUser->setEntity($this)
             ->setUser($user)
@@ -150,7 +153,7 @@ abstract class Entity
             ->setStatus($status)
             ->addUserTags($userTags)
             ->setNotification($notification);
-        $this->entitiesUsers[] = $entityUser;
+        $this->entityUsers[] = $entityUser;
     
         return $this;
     }
@@ -158,17 +161,25 @@ abstract class Entity
     /**
      * @param \CM\CMBundle\Entity\EntityUser $users
      */
+    public function setEntityUser(ArrayCollection $entityUser)
+    {
+        $this->entityUsers = $entityUsers;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityUser $users
+     */
     public function removeEntityUser(EntityUser $entityUser)
     {
-        $this->entitiesUsers->removeElement($entityUser);
+        $this->entityUsers->removeElement($entityUser);
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getEntitiesUsers()
+    public function getEntityUsers()
     {
-        return $this->entitiesUsers;
+        return $this->entityUsers;
     }
 
     /**

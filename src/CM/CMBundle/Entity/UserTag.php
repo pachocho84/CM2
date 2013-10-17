@@ -4,6 +4,7 @@ namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * UserTag
@@ -32,6 +33,11 @@ class UserTag
     private $visible;
 
     /**
+     * @ORM\OneToMany(targetEntity="UserUserTag", mappedBy="userTag", cascade={"persist", "remove"})
+     */
+    protected $userTagUsers;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="is_user", type="boolean")
@@ -58,6 +64,11 @@ class UserTag
      * @ORM\Column(name="is_protagonist", type="boolean")
      */
     private $isProtagonist;
+
+    public function __construct()
+    {
+        $this->usersUserTags = new ArrayCollection;
+    }
 
     public function __call($method, $arguments)
     {
@@ -100,6 +111,36 @@ class UserTag
     public function getVisible()
     {
         return $this->visible;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityUser $comment
+     * @return Entity
+     */
+    public function addUserTagUser(UserUserTag $userUserTag)
+    {
+        if (!$this->userTagUsers->contains($userUserTag)) {
+            $this->userTagUsers[] = $userUserTag;
+            $userUserTag->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityUser $users
+     */
+    public function removeUserTagUser(UserUserTag $userUserTag)
+    {
+        $this->userTagUsers->removeElement($userUserTag);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserTagUsers()
+    {
+        return $this->userTagUsers;
     }
 
     /**

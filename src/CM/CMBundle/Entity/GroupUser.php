@@ -4,6 +4,7 @@ namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * EntityUser
@@ -21,14 +22,14 @@ class GroupUser
                 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Group", inversedBy="groupsUsers")
+     * @ORM\ManyToOne(targetEntity="Group", inversedBy="groupUsers")
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id", nullable=false)
      */
     private $group;
     
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="groupsUsers")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="userGroups")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
@@ -64,9 +65,9 @@ class GroupUser
     /**
      * @var array
      *
-     * @ORM\Column(name="user_tags", type="simple_array", nullable=true)
+     * @ORM\Column(name="user_tags", type="array", nullable=true)
      */
-    private $userTags = array();
+    private $userTags;
 
     /**
      * @var boolean
@@ -74,6 +75,11 @@ class GroupUser
      * @ORM\Column(name="notification", type="boolean")
      */
     private $notification = true;
+    
+    public function __construct()
+    {
+        $this->userTags = new ArrayCollection;
+    }
 
     /**
      * Set entity
@@ -219,10 +225,10 @@ class GroupUser
      * @param UserTag $userTag
      * @return EntityUser
      */
-    public function addUserTag($userTag)
+    public function addUserTags($userTags)
     {
-        if (!in_array($userTag, $this->getUserTags())) {
-            $this->userTags[] = $userTag;
+        foreach ($userTags as $userTag) {
+            $this->addUserTag($userTags);
         }
         
         return $this;
@@ -234,10 +240,10 @@ class GroupUser
      * @param UserTag $userTag
      * @return EntityUser
      */
-    public function addUserTags(array $userTags)
+    public function addUserTag($userTag)
     {
-        foreach ($userTags as $userTag) {
-            $this->addUserTag($userTag);
+        if (!$this->userTags->contains($userTag)) {
+            $this->userTags[] = $userTag;
         }
         
         return $this;
@@ -251,9 +257,7 @@ class GroupUser
      */
     public function removeUserTag($userTag)
     {
-        if(($key = array_search($userTag, $this->getUserTags())) !== false) {
-            unset($this->userTags[$key]);
-        }
+        $this->userTags->removeElement($userTag);
     }
     
     /**

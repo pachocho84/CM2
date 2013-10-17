@@ -8,7 +8,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use CM\CMBundle\Entity\EntityCategoryRepository;
 use CM\CMBundle\Entity\Image;
-use CM\CMBundle\Entity\EntityCategoryEnum;
 
 class EntityType extends AbstractType
 {
@@ -18,8 +17,6 @@ class EntityType extends AbstractType
     {
         $resolver = new OptionsResolver();
         $this->setDefaultOptions($resolver);
-
-        $this->options = $resolver->resolve($options);
     }
 
     /**
@@ -29,34 +26,39 @@ class EntityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('translations', 'a2lix_translations', array(
-            'locales' => $options['locales'],
-            'required' => true,    
-            'fields' => array(
-                'title' => array(),
-                'subtitle' => array(
-                    'required' => false
-                ),
-                'extract' => array(
-                    'required' => false
-                ),
-                'text' => array(),
-                'slug' => array('display' => false)
-            )
-        ))
+                'locales' => $options['locales'],
+                'required' => true,    
+                'fields' => array(
+                    'title' => array(),
+                    'subtitle' => array(
+                        'required' => false
+                    ),
+                    'extract' => array(
+                        'required' => false
+                    ),
+                    'text' => array(),
+                    'slug' => array('display' => false)
+                )
+            ))
             ->add('entity_category', 'entity', array(
-            'class' => 'CMBundle:EntityCategory',
-            'query_builder' => function(EntityCategoryRepository $er) use ($options) {
-                // get Entity child class name, to retrieve the EntityCategoty type associated
-                $entityChild = strtoupper(preg_replace('/^[\w\d_\\\]*\\\/', '', rtrim(get_class($this), 'Type')));
-                $entityCategory = constant('CM\CMBundle\Entity\EntityCategory::'.$entityChild);
-                return $er->filterEntityCategoriesByEntityType($entityCategory, $options);
-            }
-        ))
+                'class' => 'CMBundle:EntityCategory',
+                'query_builder' => function(EntityCategoryRepository $er) use ($options) {
+                    // get Entity child class name, to retrieve the EntityCategoty type associated
+                    $entityChild = strtoupper(preg_replace('/^[\w\d_\\\]*\\\/', '', rtrim(get_class($this), 'Type')));
+                    $entityCategory = constant('CM\CMBundle\Entity\EntityCategory::'.$entityChild);
+                    return $er->filterEntityCategoriesByEntityType($entityCategory, $options);
+                }
+            ))
+            ->add('entityUsers', 'collection', array(
+                'type' => new EntityUserType,
+                'by_reference' => false,
+                'options' => array('locale' => $options['locale'], 'locales' => $options['locales'])
+            ))
             ->add('visible')
             ->add('images', 'collection', array(
-                'type' => new ImageType(),
+                'type' => new ImageType,
                 'by_reference' => false
-        ));
+            ));
     }
     
     /**

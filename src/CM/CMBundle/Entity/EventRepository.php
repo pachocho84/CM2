@@ -60,7 +60,7 @@ class EventRepository extends EntityRepository
             ->where('t.locale in (:locales)');
             
         if ($options['protagonists']) {
-            $query->leftJoin('e.entitiesUsers', 'eu')
+            $query->leftJoin('e.entityUsers', 'eu')
                 ->leftJoin('eu.user', 'us');
         }
         
@@ -147,7 +147,7 @@ class EventRepository extends EntityRepository
             ->leftJoin('c.user', 'cu')
             ->leftJoin('p.page', 'pg')
             ->leftJoin('p.group', 'gr')
-            ->leftJoin('e.entitiesUsers', 'eu')
+            ->leftJoin('e.entityUsers', 'eu')
             ->leftJoin('eu.user', 'us')
             ->andWhere('e.id = :id')->setParameter('id', $id)
             ->andWhere('t.locale IN (:locales)')->setParameter('locales', $options['locales'])

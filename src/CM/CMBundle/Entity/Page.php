@@ -54,7 +54,7 @@ class Page
     /**
      * @ORM\OneToMany(targetEntity="PageUser", mappedBy="page", cascade={"persist", "remove"})
      */
-    private $pagesUsers;
+    private $pageUsers;
         
     /**
      * @ORM\OneToMany(targetEntity="Post", mappedBy="page", cascade={"persist", "remove"})
@@ -205,7 +205,7 @@ class Page
             ->setJoinArticle($joinArticle)
             ->addUserTags($userTags)
             ->setNotification($notification);
-        $this->pagesUsers[] = $pageUser;
+        $this->pageUsers[] = $pageUser;
     
         return $this;
     }
@@ -215,15 +215,15 @@ class Page
      */
     public function removePageUser(PageUser $pageUser)
     {
-        $this->pagesUsers->removeElement($pageUser);
+        $this->pageUsers->removeElement($pageUser);
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getPagesUsers()
+    public function getPageUsers()
     {
-        return $this->pagesUsers;
+        return $this->pageUsers;
     }
 
     /**
