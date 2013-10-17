@@ -209,6 +209,7 @@ class EventController extends Controller
         }
         else {
             $em = $this->getDoctrine()->getManager();
+            $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale(), 'protagonists' => true));
 /*             $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale()); */
             // TODO: retrieve images from event
         }
@@ -218,7 +219,6 @@ class EventController extends Controller
         $form = $this->createForm(new EventType, $event, array(
             'action' => $this->generateUrl('event_new'),
             'cascade_validation' => true,
-            'em' => $this->getDoctrine()->getManager(),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ))->add('save', 'submit');

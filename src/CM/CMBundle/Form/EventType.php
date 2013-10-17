@@ -39,7 +39,7 @@ class EventType extends EntityType
         parent::setDefaultOptions($resolver);
         
 /*
-                  $event = new Event;
+            $event = new Event;
             $event->addEventDate(new EventDate);
             $image = new Image;
             $image->setMain(true);

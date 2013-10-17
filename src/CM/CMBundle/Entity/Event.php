@@ -28,11 +28,6 @@ class Event extends Entity
     private $eventDates;
     
     /**
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="event", cascade={"persist", "remove"})
-     */
-    private $posts;
-    
-    /**
      * Get id
      *
      * @return integer 
@@ -105,39 +100,5 @@ class Event extends Entity
     public function getEventDates()
     {
         return $this->eventDates;
-    }
-
-    /**
-     * Add posts
-     *
-     * @param Post $posts
-     * @return Event
-     */
-    public function addPost(Post $post)
-    {
-        $this->posts[] = $post;
-        $post->setEvent($this);
-    
-        return $this;
-    }
-
-    /**
-     * Remove posts
-     *
-     * @param \CM\CMBundle\Entity\Post $posts
-     */
-    public function removePost(Post $posts)
-    {
-        $this->posts->removeElement($posts);
-    }
-
-    /**
-     * Get posts
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getPosts()
-    {
-        return $this->posts;
     }
 }

@@ -36,6 +36,12 @@ abstract class Entity
     private $visible;
 
     /**
+     * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")
+     * @ORM\JoinColumn(name="entity_category_id", referencedColumnName="id")
+     */
+    private $entityCategory;
+
+    /**
      * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity", cascade={"persist", "remove"})
      */
     private $entityUsers;
@@ -44,12 +50,11 @@ abstract class Entity
      * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"})
      */
     private $images;
-
+    
     /**
-     * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")
-     * @ORM\JoinColumn(name="entity_category_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="entity", cascade={"persist", "remove"})
      */
-    private $entityCategory;
+    private $posts;
     
     public function __construct()
     {
@@ -204,5 +209,39 @@ abstract class Entity
     public function getImages()
     {
         return $this->images;
+    }
+
+    /**
+     * Add posts
+     *
+     * @param ìPost $posts
+     * @return Event
+     */
+    public function addPost(Post $post)
+    {
+        $this->posts[] = $post;
+        $post->setEntity($this);
+    
+        return $this;
+    }
+
+    /**
+     * Remove posts
+     *
+     * @param \CM\CMBundle\Entity\Post $posts
+     */
+    public function removePost(Post $posts)
+    {
+        $this->posts->removeElement($posts);
+    }
+
+    /**
+     * Get posts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPosts()
+    {
+        return $this->posts;
     }
 }
