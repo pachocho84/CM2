@@ -14,14 +14,14 @@ class UserUserTag
 {
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="usersUserTags")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="userUserTags")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
     
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="UserTag", inversedBy="usersUserTags")
+     * @ORM\ManyToOne(targetEntity="UserTag", inversedBy="userTagUsers")
      * @ORM\JoinColumn(name="user_tag_id", referencedColumnName="id", nullable=false)
      */
     private $userTag;

@@ -16,6 +16,7 @@ class PostType extends AbstractType
     {
         $builder
             ->add('type')
+            ->add('creator')
             ->add('user');
     }
     

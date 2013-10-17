@@ -35,7 +35,7 @@ class UserTag
     /**
      * @ORM\OneToMany(targetEntity="UserUserTag", mappedBy="userTag", cascade={"persist", "remove"})
      */
-    protected $usersUserTags;
+    protected $userTagUsers;
 
     /**
      * @var boolean
@@ -117,10 +117,10 @@ class UserTag
      * @param \CM\CMBundle\Entity\EntityUser $comment
      * @return Entity
      */
-    public function addUserUserTag(UserUserTag $userUserTag)
+    public function addUserTagUser(UserUserTag $userUserTag)
     {
-        if (!$this->usersUserTags->contains($userUserTag)) {
-            $this->usersUserTags[] = $userUserTag;
+        if (!$this->userTagUsers->contains($userUserTag)) {
+            $this->userTagUsers[] = $userUserTag;
             $userUserTag->setUser($this);
         }
     
@@ -130,17 +130,17 @@ class UserTag
     /**
      * @param \CM\CMBundle\Entity\EntityUser $users
      */
-    public function removeUserUserTag(UserUserTag $userUserTag)
+    public function removeUserTagUser(UserUserTag $userUserTag)
     {
-        $this->usersUserTags->removeElement($userUserTag);
+        $this->userTagUsers->removeElement($userUserTag);
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getUsersUserTags()
+    public function getUserTagUsers()
     {
-        return $this->usersUserTags;
+        return $this->userTagUsers;
     }
 
     /**

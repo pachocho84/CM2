@@ -53,7 +53,7 @@ class Group
     /**
      * @ORM\OneToMany(targetEntity="GroupUser", mappedBy="group", cascade={"persist", "remove"})
      */
-    private $groupsUsers;
+    private $groupUsers;
         
     /**
      * @ORM\OneToMany(targetEntity="Post", mappedBy="group", cascade={"persist", "remove"})
@@ -197,7 +197,7 @@ class Group
             ->setJoinArticle($joinArticle)
             ->addUserTags($userTags)
             ->setNotification($notification);
-        $this->groupsUsers[] = $groupUser;
+        $this->groupUsers[] = $groupUser;
     
         return $this;
     }
@@ -207,15 +207,15 @@ class Group
      */
     public function removeGroupUser(GroupUser $groupUser)
     {
-        $this->groupsUsers->removeElement($groupUser);
+        $this->groupUsers->removeElement($groupUser);
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getGroupsUsers()
+    public function getGroupUsers()
     {
-        return $this->groupsUsers;
+        return $this->groupUsers;
     }
 
     /**

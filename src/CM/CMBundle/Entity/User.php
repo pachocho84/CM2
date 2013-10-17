@@ -201,22 +201,22 @@ class User extends BaseUser
     /**
      * @ORM\OneToMany(targetEntity="UserUserTag", mappedBy="user", cascade={"persist", "remove"})
      */
-    protected $usersUserTags;
+    protected $userUserTags;
 
     /**
      * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="user", cascade={"persist", "remove"})
      */
-	protected $entitiesUsers;
+	protected $userEntities;
 
     /**
      * @ORM\OneToMany(targetEntity="GroupUser", mappedBy="user", cascade={"persist", "remove"})
      */
-	protected $groupsUsers;
+	protected $userGroups;
 
     /**
      * @ORM\OneToMany(targetEntity="PageUser", mappedBy="user", cascade={"persist", "remove"})
      */
-	protected $pagesUsers;
+	protected $userPages;
         
     /**
      * @ORM\OneToMany(targetEntity="Post", mappedBy="user", cascade={"persist", "remove"})
@@ -262,10 +262,10 @@ class User extends BaseUser
 	{
 		parent::__construct();
 		
-        $this->usersUserTags = new ArrayCollection;
-        $this->entitiesUsers = new ArrayCollection;
-		$this->groups = new ArrayCollection;
-		$this->pages = new ArrayCollection;
+        $this->userUserTags = new ArrayCollection;
+        $this->userEntities = new ArrayCollection;
+		$this->userGroups = new ArrayCollection;
+		$this->userPages = new ArrayCollection;
 		$this->posts = new ArrayCollection;
 		$this->comments = new ArrayCollection;
 		$this->images = new ArrayCollection;
@@ -617,7 +617,7 @@ class User extends BaseUser
         $userUserTag->setUser($this)
             ->setUserTag($userTag)
             ->setOrder($order);
-        $this->usersUserTags[] = $userUserTag;
+        $this->userUserTags[] = $userUserTag;
     
         return $this;
     }
@@ -627,15 +627,15 @@ class User extends BaseUser
      */
     public function removeUserUserTag(UserUserTag $userUserTag)
     {
-        $this->usersUserTags->removeElement($userUserTag);
+        $this->userUserTags->removeElement($userUserTag);
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getUsersUserTags()
+    public function getUserUserTags()
     {
-        return $this->usersUserTags;
+        return $this->userUserTags;
     }
 
     /**
@@ -644,7 +644,7 @@ class User extends BaseUser
     public function getUserTags()
     {
         $userTags = array();
-        foreach ($this->usersUserTags as $tag) {
+        foreach ($this->userUserTags as $tag) {
             $userTags[] = $tag->getUserTag();
         }
         return $userTags;
@@ -654,10 +654,10 @@ class User extends BaseUser
      * @param \CM\CMBundle\Entity\EntityUser $comment
      * @return Entity
      */
-    public function addEntityUser(EntityUser $entityUser)
+    public function addUserEntity(EntityUser $entityUser)
     {
-        if (!$this->entitiesUsers->contains($entityUser)) {
-            $this->entitiesUsers[] = $entityUser;
+        if (!$this->userEntities->contains($entityUser)) {
+            $this->userEntities[] = $entityUser;
             $entityUser->setUser($this);
         }
     
@@ -667,33 +667,61 @@ class User extends BaseUser
     /**
      * @param \CM\CMBundle\Entity\EntityUser $users
      */
-    public function removeEntityUser(EntityUser $entityUser)
+    public function removeUserEntity(EntityUser $entityUser)
     {
-        $this->entitiesUsers->removeElement($entityUser);
+        $this->userEntities->removeElement($entityUser);
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getEntitiesUsers()
+    public function getUserEntities()
     {
-        return $this->entitiesUsers;
+        return $this->userEntities;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityUser $comment
+     * @return Entity
+     */
+    public function addUserGroup(GroupUser $groupUser)
+    {
+        if (!$this->userGroups->contains($groupUser)) {
+            $this->userGroups[] = $groupUser;
+            $groupUser->setUser($this);
+        }
+    
+        return $this;
     }
 
     /**
      * @param \CM\CMBundle\Entity\GroupUser $users
      */
-    public function removeGroupUser(GroupUser $groupUser)
+    public function removeUserGroup(GroupUser $groupUser)
     {
-        $this->groupsUsers->removeElement($groupUser);
+        $this->userGroups->removeElement($groupUser);
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getGroupsUsers()
+    public function getUserGroups()
     {
-        return $this->groupsUsers;
+        return $this->userGroups;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityUser $comment
+     * @return Entity
+     */
+    public function addUserPage(PageUser $pageUser)
+    {
+        if (!$this->userPages->contains($pageUser)) {
+            $this->userPages[] = $pageUser;
+            $pageUser->setUser($this);
+        }
+    
+        return $this;
     }
 
     /**
@@ -701,7 +729,7 @@ class User extends BaseUser
      */
     public function removePageUser(PageUser $pageUser)
     {
-        $this->pagesUsers->removeElement($pageUser);
+        $this->userPages->removeElement($pageUser);
     }
 
     /**
@@ -709,7 +737,7 @@ class User extends BaseUser
      */
     public function getPagesUsers()
     {
-        return $this->pagesUsers;
+        return $this->userPages;
     }
 
     /**

@@ -180,9 +180,8 @@ class EventController extends Controller
               throw new HttpException(401, 'Unauthorized access.'); 
         }
 
+        $event = new Event;
         if ($id == null || $slug == null) {
-            $event = new Event;
-
             $user = $this->getUser();
 
             $event->addEntityUser(
@@ -199,7 +198,8 @@ class EventController extends Controller
             $event->addEventDate(new EventDate);
 
             $post = new Post;
-            $post->setType(Post::TYPE_CREATION);
+            $post->setType(Post::TYPE_CREATION)
+                ->setCreator($user);
 
             $user
                 ->addImage($image)
@@ -209,7 +209,7 @@ class EventController extends Controller
         }
         else {
             $em = $this->getDoctrine()->getManager();
-            $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale());
+/*             $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale()); */
             // TODO: retrieve images from event
         }
           
@@ -218,7 +218,6 @@ class EventController extends Controller
         $form = $this->createForm(new EventType, $event, array(
             'action' => $this->generateUrl('event_new'),
             'cascade_validation' => true,
-            'em' => $this->getDoctrine()->getManager(),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ))->add('save', 'submit');
@@ -227,6 +226,7 @@ class EventController extends Controller
             
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
+            
             $em->persist($event);
             $em->flush();
                   

@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use CM\CMBundle\Entity\EntityUser;
+use CM\CMBundle\Entity\UserTagRepository;
 use CM\CMBundle\Form\DataTransformer\UserTagsToChoiceTransformer;
 
 class EntityUserType extends AbstractType
@@ -40,15 +41,31 @@ class EntityUserType extends AbstractType
                     EntityUser::STATUS_FOLLOWING => 'Following'
                 )
             ))
-            ->add('notification')
+            ->add('userTags', 'entity', array(
+                'class' => 'CMBundle:UserTag',
+                'property' => 'id',
+                'query_builder' => function(UserTagRepository $em) use ($options) {
+                    return $em->filterUserTags($options);
+                },
+                'multiple' => true,
+                'by_reference' => false
+            ))
+            ->add('notification');
+/*
             ->addModelTransformer(new UserTagsToChoiceTransformer($options['em']));
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
                 $userTags = $event->getData()->getUserTags();
+                $tags = array();
+                foreach ($userTagw)
                 $form = $event->getForm();
                 if ($userTags !== null) {
-                    $form->add('userTags', 'choice', array('by_reference' => false));
+                    $form->add('userTags', 'choice', array(
+                        'choices' => $userTags,
+                        'by_reference' => false
+                    ));
                 }
             });
+*/
     }
     
     /**
@@ -57,15 +74,9 @@ class EntityUserType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'locale' => 'en',
+            'locales' => array('en'),
             'data_class' => 'CM\CMBundle\Entity\EntityUser'
-        ));
-
-        $resolver->setRequired(array(
-            'em',
-        ));
-
-        $resolver->setAllowedTypes(array(
-            'em' => 'Doctrine\Common\Persistence\ObjectManager',
         ));
     }
 

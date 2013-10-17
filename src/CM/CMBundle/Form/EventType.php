@@ -24,11 +24,11 @@ class EventType extends EntityType
                 'type' => new EventDateType(),
                 'allow_add' => true,
                 'by_reference' => false
-        ))
+            ))
             ->add('posts', 'collection', array(
                 'type' => new PostType(),
                 'by_reference' => false
-        ));
+            ));
     }
     
     /**

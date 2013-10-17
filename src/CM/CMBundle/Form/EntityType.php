@@ -49,10 +49,10 @@ class EntityType extends AbstractType
                     return $er->filterEntityCategoriesByEntityType($entityCategory, $options);
                 }
             ))
-            ->add('entitiesUsers', 'collection', array(
+            ->add('entityUsers', 'collection', array(
                 'type' => new EntityUserType,
-                'options' => array('em' => $options['em']),
-                'by_reference' => false
+                'by_reference' => false,
+                'options' => array('locale' => $options['locale'], 'locales' => $options['locales'])
             ))
             ->add('visible')
             ->add('images', 'collection', array(
@@ -70,14 +70,6 @@ class EntityType extends AbstractType
             'locale' => 'en',
             'locales' => array('en'),
             'data_class' => 'CM\CMBundle\Entity\Entity'
-        ));
-
-        $resolver->setRequired(array(
-            'em',
-        ));
-
-        $resolver->setAllowedTypes(array(
-            'em' => 'Doctrine\Common\Persistence\ObjectManager',
         ));
     }
 

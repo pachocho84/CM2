@@ -3,12 +3,14 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * EntityUser
  *
  * @ORM\Entity
  * @ORM\Table(name="entity_user")
+ * @ORM\HasLifecycleCallbacks  
  */
 class EntityUser
 {
@@ -18,16 +20,23 @@ class EntityUser
     const STATUS_REFUSED_ADMIN = 3;
     const STATUS_REFUSED_ENTITY_USER = 4;
     const STATUS_FOLLOWING = 5;
-                
+            
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+        
+    /**
      * @ORM\ManyToOne(targetEntity="Entity", inversedBy="entitiesUsers")
      * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", nullable=false)
      */
     private $entity;
     
     /**
-     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="User", inversedBy="entitiesUsers")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
@@ -52,7 +61,9 @@ class EntityUser
      *
      * @ORM\Column(name="user_tags", type="simple_array", nullable=true)
      */
-    private $userTags = array();
+    private $userTagsArray = array();
+    
+    private $userTags;
 
     /**
      * @var boolean
@@ -60,6 +71,11 @@ class EntityUser
      * @ORM\Column(name="notification", type="boolean")
      */
     private $notification = true;
+
+    public function __construct()
+    {
+        $this->userTags = new ArrayCollection;
+    }
 
     /**
      * Set entity
@@ -161,7 +177,7 @@ class EntityUser
      */
     public function addUserTag($userTag)
     {
-        if (!in_array($userTag, $this->getUserTags())) {
+        if (!$this->userTags->contains($userTag)) {
             $this->userTags[] = $userTag;
         }
         
@@ -191,6 +207,43 @@ class EntityUser
      */
     public function removeUserTag($userTag)
     {
+        $this->userTags->removeElement($userTag);
+    }
+    
+    /**
+     * Get userTags
+     *
+     * @return array
+     */
+    public function getUserTags()
+    {
+        $this->userTags = new ArrayCollection($this-userTagsArray);
+        return $this->userTags;
+    }
+    
+    /**
+     * Add userTag
+     *
+     * @param UserTag $userTag
+     * @return EntityUser
+     */
+    public function addUserTagsArray($userTag)
+    {
+        if (!in_array($userTag, $this->getUserTags())) {
+            $this->userTags[] = $userTag;
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Remove userTag
+     *
+     * @param UserTag $userTag
+     * return EntityUser
+     */
+    public function removeUserTagsArray($userTag)
+    {
         if(($key = array_search($userTag, $this->getUserTags())) !== false) {
             unset($this->userTags[$key]);
         }
@@ -201,9 +254,9 @@ class EntityUser
      *
      * @return array
      */
-    public function getUserTags()
+    public function getUserTagsArray()
     {
-        return $this->userTags;
+        return $this->userTagsArray;
     }
 
     /**
@@ -227,5 +280,13 @@ class EntityUser
     public function getNotification()
     {
         return $this->notification;
+    }
+    
+    /**
+     * @ORM\PrePersist
+     */
+    public function convertArrayCollectionToArray()
+    {
+        $this->userTagsArray = $this->userTags->toArray();
     }
 }
