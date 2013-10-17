@@ -30,7 +30,7 @@ class EntityUserType extends AbstractType
     {
         $builder
             ->add('user')
-            ->add('admin')
+            ->add('admin', 'checkbox', array('required' => false))
             ->add('status', 'choice', array(
                 'choices' => array(
                     EntityUser::STATUS_PENDING => 'Pending',
@@ -41,11 +41,8 @@ class EntityUserType extends AbstractType
                     EntityUser::STATUS_FOLLOWING => 'Following'
                 )
             ))
-            ->add('userTags', 'entity', array(
-                'class' => 'CMBundle:UserTag',
-                'query_builder' => function(UserTagRepository $em) use ($options) {
-                    return $em->filterUserTags($options);
-                },
+            ->add('userTags', 'choice', array(
+                'choices' => $options['tags'],
                 'multiple' => true,
                 'by_reference' => false
             ))
@@ -58,6 +55,7 @@ class EntityUserType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),
             'data_class' => 'CM\CMBundle\Entity\EntityUser'

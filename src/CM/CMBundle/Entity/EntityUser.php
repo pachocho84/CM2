@@ -65,9 +65,7 @@ class EntityUser
      *
      * @ORM\Column(name="user_tags", type="simple_array", nullable=true)
      */
-    private $userTagsArray = array();
-    
-    private $userTags;
+    private $userTags = array();
 
     /**
      * @var boolean
@@ -78,7 +76,6 @@ class EntityUser
 
     public function __construct()
     {
-        $this->userTags = new ArrayCollection;
     }
 
     /**
@@ -189,11 +186,10 @@ class EntityUser
      * @param UserTag $userTag
      * @return EntityUser
      */
-    public function addUserTag(UserTag $userTag)
+    public function addUserTags(array $userTags)
     {
-        $id = $userTag->getId();
-        if (!$this->userTags->contains($id)) {
-            $this->userTags[] = $id;
+        foreach ($userTags as $userTag) {
+            $this->addUserTag($userTag);
         }
         
         return $this;
@@ -205,10 +201,10 @@ class EntityUser
      * @param UserTag $userTag
      * @return EntityUser
      */
-    public function addUserTags($userTags)
+    public function addUserTag($userTag)
     {
-        foreach ($userTags as $userTag) {
-            $this->addUserTag($userTag);
+        if (!in_array($userTag, $this->userTags)) {
+            $this->userTags[] = $userTag;
         }
         
         return $this;
@@ -222,44 +218,6 @@ class EntityUser
      */
     public function removeUserTag($userTag)
     {
-        $id = $userTag->getId();
-        $this->userTags->removeElement($id);
-    }
-    
-    /**
-     * Get userTags
-     *
-     * @return array
-     */
-    public function getUserTags()
-    {
-        $this->userTags = new ArrayCollection($this->userTagsArray);
-        return $this->userTags;
-    }
-    
-    /**
-     * Add userTag
-     *
-     * @param UserTag $userTag
-     * @return EntityUser
-     */
-    public function addUserTagsArray($userTag)
-    {
-        if (!in_array($userTag, $this->getUserTags())) {
-            $this->userTags[] = $userTag;
-        }
-        
-        return $this;
-    }
-    
-    /**
-     * Remove userTag
-     *
-     * @param UserTag $userTag
-     * return EntityUser
-     */
-    public function removeUserTagsArray($userTag)
-    {
         if(($key = array_search($userTag, $this->getUserTags())) !== false) {
             unset($this->userTags[$key]);
         }
@@ -270,9 +228,9 @@ class EntityUser
      *
      * @return array
      */
-    public function getUserTagsArray()
+    public function getUserTags()
     {
-        return $this->userTagsArray;
+        return $this->userTags;
     }
 
     /**
@@ -296,13 +254,5 @@ class EntityUser
     public function getNotification()
     {
         return $this->notification;
-    }
-    
-    /**
-     * @ORM\PrePersist
-     */
-    public function convertArrayCollectionToArray()
-    {
-        $this->userTagsArray = $this->userTags->toArray();
     }
 }

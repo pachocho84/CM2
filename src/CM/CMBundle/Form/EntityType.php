@@ -52,7 +52,8 @@ class EntityType extends AbstractType
             ->add('entityUsers', 'collection', array(
                 'type' => new EntityUserType,
                 'by_reference' => false,
-                'options' => array('locale' => $options['locale'], 'locales' => $options['locales'])
+                'allow_add' => true,
+                'options' => array('tags' => $options['user_tags'], 'locale' => $options['locale'], 'locales' => $options['locales'])
             ))
             ->add('visible')
             ->add('images', 'collection', array(
@@ -67,6 +68,7 @@ class EntityType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'user_tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),
             'data_class' => 'CM\CMBundle\Entity\Entity'

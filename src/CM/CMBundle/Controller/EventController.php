@@ -180,6 +180,8 @@ class EventController extends Controller
               throw new HttpException(401, 'Unauthorized access.'); 
         }
 
+        $em = $this->getDoctrine()->getManager();
+
         $event = new Event;
         if ($id == null || $slug == null) {
             $user = $this->getUser();
@@ -206,9 +208,7 @@ class EventController extends Controller
                 ->addPost($post);
 
             $event->addPost($post);
-        }
-        else {
-            $em = $this->getDoctrine()->getManager();
+        } else {
             $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale(), 'protagonists' => true));
 /*             $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale()); */
             // TODO: retrieve images from event
@@ -216,9 +216,18 @@ class EventController extends Controller
           
         // TODO: retrieve locales from user
 
+        if ($request->get('_route') == 'event_edit') {
+            $formRoute = 'event_edit';
+            $formRouteArgs = array('id' => $event->getId(), 'slug' => $event->getSlug());
+        } else {
+            $formRoute = 'event_new';
+            $formRouteArgs = array();
+        }
+
         $form = $this->createForm(new EventType, $event, array(
-            'action' => $this->generateUrl('event_new'),
+            'action' => $this->generateUrl($formRoute, $formRouteArgs),
             'cascade_validation' => true,
+            'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ))->add('save', 'submit');
