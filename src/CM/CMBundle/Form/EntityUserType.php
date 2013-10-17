@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\UserTagRepository;
-use CM\CMBundle\Form\DataTransformer\UserTagsToChoiceTransformer;
+use CM\CMBundle\Form\DataTransformer\UserTagNameToIdTransformer;
 
 class EntityUserType extends AbstractType
 {
@@ -43,7 +43,6 @@ class EntityUserType extends AbstractType
             ))
             ->add('userTags', 'entity', array(
                 'class' => 'CMBundle:UserTag',
-                'property' => 'id',
                 'query_builder' => function(UserTagRepository $em) use ($options) {
                     return $em->filterUserTags($options);
                 },
@@ -51,21 +50,6 @@ class EntityUserType extends AbstractType
                 'by_reference' => false
             ))
             ->add('notification');
-/*
-            ->addModelTransformer(new UserTagsToChoiceTransformer($options['em']));
-            $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
-                $userTags = $event->getData()->getUserTags();
-                $tags = array();
-                foreach ($userTagw)
-                $form = $event->getForm();
-                if ($userTags !== null) {
-                    $form->add('userTags', 'choice', array(
-                        'choices' => $userTags,
-                        'by_reference' => false
-                    ));
-                }
-            });
-*/
     }
     
     /**
@@ -74,6 +58,7 @@ class EntityUserType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'em' => null,
             'locale' => 'en',
             'locales' => array('en'),
             'data_class' => 'CM\CMBundle\Entity\EntityUser'

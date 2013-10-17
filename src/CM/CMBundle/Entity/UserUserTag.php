@@ -8,21 +8,32 @@ use Doctrine\ORM\Mapping as ORM;
  * UserUserTag
  *
  * @ORM\Entity
- * @ORM\Table(name="user_user_tag")
+ * @ORM\Table(name="user_user_tag",
+ *     uniqueConstraints={@ORM\UniqueConstraint(columns={
+ *         "user_id", "user_tag_id"
+ *     })}
+ * )
  */
 class UserUserTag
-{
+{     
     /**
+     * @var integer
+     *
      * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="userUserTags")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $user;
     
     /**
-     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="UserTag", inversedBy="userTagUsers")
-     * @ORM\JoinColumn(name="user_tag_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="user_tag_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $userTag;
 
@@ -32,6 +43,16 @@ class UserUserTag
      * @ORM\Column(name="`order`", type="smallint", nullable=true)
      */
     private $order;
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set entity

@@ -10,8 +10,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * Post
  *
- * @ORM\Table(name="post")
  * @ORM\Entity(repositoryClass="PostRepository")
+ * @ORM\Table(name="post")
  */
 class Post
 {

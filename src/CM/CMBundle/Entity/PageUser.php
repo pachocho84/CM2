@@ -9,8 +9,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * EntityUser
  *
- * @ORM\Table(name="page_user")
  * @ORM\Entity
+ * @ORM\Table(name="page_user",
+ *     uniqueConstraints={@ORM\UniqueConstraint(columns={
+ *         "page_id", "user_id"
+ *     })}
+ * )
  */
 class PageUser
 {
@@ -19,18 +23,25 @@ class PageUser
     const JOIN_NO = 0;
     const JOIN_YES = 1;
     const JOIN_REQUEST = 2;
+            
+    /**
+     * @var integer
+     *
+     * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
                 
     /**
-     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Page", inversedBy="pageUsers")
-     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $page;
     
     /**
-     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="User", inversedBy="userPages")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $user;
 
@@ -79,6 +90,16 @@ class PageUser
     public function __construct()
     {
         $this->userTags = new ArrayCollection;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

@@ -10,8 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Page
  *
- * @ORM\Table(name="page")
  * @ORM\Entity
+ * @ORM\Table(name="page")
  * @ORM\HasLifecycleCallbacks
  */
 class Page
