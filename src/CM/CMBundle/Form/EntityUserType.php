@@ -42,9 +42,10 @@ class EntityUserType extends AbstractType
                 )
             ))
             ->add('userTags', 'choice', array(
+                'attr' => array('class' => 'typeahead'),
                 'choices' => $options['tags'],
                 'multiple' => true,
-                'by_reference' => false
+                'by_reference' => false,
             ))
             ->add('notification');
     }
@@ -55,6 +56,7 @@ class EntityUserType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'attr' => array('class' => 'protagonists_user'),
             'tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),

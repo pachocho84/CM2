@@ -3,17 +3,21 @@
 namespace CM\CMBundle\Twig;
 
 use Symfony\Component\Translation\Translator;
+use CM\CMBundle\Service\UserAuthentication;
 use CM\CMBundle\Entity\Image;
 
 class CMExtension extends \Twig_Extension
 {
     private $translator;
 
+    private $userAuthentication;
+
     private $options;
 
-    public function __construct(Translator $translator, $options = array())
+    public function __construct(Translator $translator, UserAuthentication $userAuthentication, $options = array())
     {
         $this->translator = $translator;
+        $this->userAuthentication = $userAuthentication;
         $this->options = array_merge(array(
             'images_abs_dir' => '/',
             'sizes' => array()
@@ -31,6 +35,7 @@ class CMExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
+            'can_manage' => new \Twig_Function_Method($this, 'getCanManage'),
             'delete_link' => new \Twig_Function_Method($this, 'getDeleteLink'),
             'show_img_box' => new \Twig_Function_Method($this, 'getShowImgBox'),
         );
@@ -44,6 +49,11 @@ class CMExtension extends \Twig_Extension
     public function getClassName($object)
     {
         return preg_replace('/^[\w\d_\\\]*\\\/', '', get_class($object));
+    }
+
+    public function getCanManage($object)
+    {
+        return $this->userAuthentication->canManage($object);
     }
 
     public function getDeleteLink($link, $object = 'element', $options = array())

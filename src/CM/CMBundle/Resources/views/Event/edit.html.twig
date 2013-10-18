@@ -1,7 +1,17 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+{% form_theme form 'MopaBootstrapBundle:Form:fields.html.twig' %}
+
+{% block stylesheets %}
+    {% stylesheets
+        '@MopaBootstrapBundle/Resources/public/less/collections.less'
+        '@CMBundle/Resources/public/css/typeahead.js-bootstrap.css'
+    %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+{% endblock %}
+
 {% block body %}
-{#     <form action="{{ path('event_create') }}" method="post" {{ form_enctype(form) }} class="blogger"> #}
         {{ form(form) }}
 {#
         {{ form_row(form.translations) }}
@@ -28,5 +38,14 @@
 
 {% block javascripts %}
     {{ parent() }}
-{#     <script src="{{ asset('bundles/cm/js/uploadCollection.js') }}"></script> #}
+        <script type="text/javascript">
+            var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
+        </script>
+        {% javascripts
+            '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
+            '@CMBundle/Resources/public/js/typeahead.min.js'
+            '@CMBundle/Resources/public/js/form.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
 {% endblock %}

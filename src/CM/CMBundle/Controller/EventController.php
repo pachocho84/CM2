@@ -176,8 +176,8 @@ class EventController extends Controller
      */
     public function editAction(Request $request, $id = null, $slug = null)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_USER')) {
-              throw new HttpException(401, 'Unauthorized access.'); 
+        if (!$this->get('cm_user.authentication')->isAuthenticated()) {
+            return new RedirectResponse($this->generateUrl('fos_user_security_login'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -186,7 +186,7 @@ class EventController extends Controller
         if ($id == null || $slug == null) {
             $user = $this->getUser();
 
-            $event->addEntityUser(
+            $event->addUser(
                 $user,
                 true, // admin
                 EntityUser::STATUS_ACTIVE,
@@ -194,7 +194,8 @@ class EventController extends Controller
             );
 
             $image = new Image;
-            $image->setMain(true);
+            $image->setMain(true)
+                ->setUser($user);
             $event->addImage($image);
 
             $event->addEventDate(new EventDate);
@@ -202,10 +203,6 @@ class EventController extends Controller
             $post = new Post;
             $post->setType(Post::TYPE_CREATION)
                 ->setCreator($user);
-
-            $user
-                ->addImage($image)
-                ->addPost($post);
 
             $event->addPost($post);
         } else {
@@ -226,17 +223,19 @@ class EventController extends Controller
 
         $form = $this->createForm(new EventType, $event, array(
             'action' => $this->generateUrl($formRoute, $formRouteArgs),
+            'attr' => array('class' => 'form-horizontal'),
             'cascade_validation' => true,
             'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ))->add('save', 'submit');
-            
+        
         $form->handleRequest($request);
-            
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
-            
+
+        if (!$this->get('cm_user.authentication')->canManage($event)) {
+              throw new HttpException(401, 'Unauthorized access.'); // TODO: redirect to login page
+        } elseif ($form->isValid()) {
+
             $em->persist($event);
             $em->flush();
                   

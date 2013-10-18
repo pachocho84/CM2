@@ -27,19 +27,21 @@ framework:
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
-    form:
-        resources:
-            - 'CMBundle:Form:bootstrap.html.twig'
+
     globals:
         uploaded_images_full_dir: %images_full.dir%
 
 # Assetic Configuration
-# assetic:
-#     debug:          %kernel.debug%
+assetic:
+    debug:          %kernel.debug%
+    bundles:        [ CMBundle, MopaBootstrapBundle ]
 #     use_controller: false
-#     bundles:        [ CMBundle ]
 #     #java: /usr/bin/java
-#     filters:
+    filters:
+        less:
+            node: %kernel.root_dir%/Resources/less
+            node_paths: [%kernel.root_dir%/Resources/node_modules]
+            apply_to: "\.less$"
 #         cssrewrite: ~
 #         #closure:
 #         #    jar: %kernel.root_dir%/Resources/java/compiler.jar

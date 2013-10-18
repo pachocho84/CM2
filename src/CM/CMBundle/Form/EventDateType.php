@@ -41,6 +41,8 @@ class EventDateType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'widget_control_group' => false,
+            'widget_controls' => false,
             'data_class' => 'CM\CMBundle\Entity\EventDate'
         ));
     }

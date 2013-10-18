@@ -12,4 +12,21 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserRepository extends EntityRepository
 {
+    public function getCreatedGroupsIds($user_id)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('g.id')->from('CMBundle:Group', 'g')
+            ->leftJoin('g.creator', 'c')
+            ->where('c.id = :user_id')->setParameter('user_id', $user_id)
+            ->getQuery()->getResult();
+    }
+
+    public function getCreatedPagesIds($user_id)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('p.id')->from('CMBundle:Page', 'p')
+            ->leftJoin('p.creator', 'c')
+            ->where('c.id = :user_id')->setParameter('user_id', $user_id)
+            ->getQuery()->getResult();
+    }
 }

@@ -6,14 +6,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use CM\CMBundle\Entity\EntityCategory;
 
-/**
- * @Route("/{slug}", defaults={"slug": null})
- */
 class UserController extends Controller
 {
     /**
@@ -26,9 +24,9 @@ class UserController extends Controller
     }
     
     /**
-	 * @Route("/events/{page}", name = "user_events", requirements={"page" = "\d+"})
-	 * @Route("/events/archive/{page}", name="user_events_archive", requirements={"page" = "\d+"}) 
-	 * @Route("/events/category/{category_slug}/{page}", name="user_events_category", requirements={"page" = "\d+"})
+	 * @Route("/{slug}/events/{page}", name="user_events", requirements={"page" = "\d+"})
+	 * @Route("/{slug}/events/archive/{page}", name="user_events_archive", requirements={"page" = "\d+"}) 
+	 * @Route("/{slug}/events/category/{category_slug}/{page}", name="user_events_category", requirements={"page" = "\d+"})
      * @Template
      */
 	public function eventsAction(Request $request, $slug, $page = 1, $category_slug = null)
@@ -65,8 +63,13 @@ class UserController extends Controller
 		return array('categories' => $categories, 'user' => $user, 'dates' => $pagination, 'category' => $category, 'page' => $page);
 	}
 
-    public function executeAutocompleteUsers(sfWebRequest $request)
-    {           
+    /**
+     * @Route("/typeaheadHint", name="user_typeahead_hint")
+     */
+    public function typeaheadHintAction(Request $request)
+    {
+        return new JsonResponse(array('test', 'prova'));
+
         $exclusion = explode(',', $request->getParameter('exclusion'));
         $exclusion[] = $this->getUser()->getId();
         $users = UserQuery::getFromAutocomplete($request->getParameter('query'), $exclusion);

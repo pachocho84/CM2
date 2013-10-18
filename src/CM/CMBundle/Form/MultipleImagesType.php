@@ -21,7 +21,16 @@ class MultipleImagesType extends AbstractType
                 'required' => false,
                 'type' => new ImageType(),
                 'allow_add' => true,
-                'by_reference' => false
+                'allow_delete' => true,
+                'by_reference' => false,
+                'widget_add_btn' => array(
+                    'label' => 'add an image'
+                ),
+                'options' => array(
+                    'horizontal' => true,
+                    'label_render' => false,
+                    'horizontal_input_wrapper_class' => "col-lg-8",
+                )
         ));
     }
     

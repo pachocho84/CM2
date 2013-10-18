@@ -55,6 +55,8 @@ abstract class Entity
      * @ORM\OneToMany(targetEntity="Post", mappedBy="entity", cascade={"persist", "remove"})
      */
     private $posts;
+
+    private $post;
     
     public function __construct()
     {
@@ -134,7 +136,7 @@ abstract class Entity
      * @param \CM\CMBundle\Entity\EntityUser $comment
      * @return Entity
      */
-    public function addEntityUser(
+    public function addUser(
         User $user,
         $admin = false,
         $status = EntityUser::STATUS_PENDING,
@@ -158,6 +160,16 @@ abstract class Entity
             ->setNotification($notification);
         $this->entityUsers[] = $entityUser;
     
+        return $this;
+    }
+
+    public function addEntityUser(EntityUser $entityUser)
+    {
+        if (!$this->entityUsers->contains($entityUser)) {
+            $this->entityUsers[] = $entityUser;
+            $entityUser->setEntity($this);
+        }
+
         return $this;
     }
 
@@ -215,10 +227,24 @@ abstract class Entity
         return $this->images;
     }
 
+    public function getPost($type = Post::TYPE_CREATION)
+    {
+        if (!$this->post) {
+            foreach($this->posts as $post) {
+                if ($post->getType() == $type) {
+                    $this->post = $post;
+                    break;
+                }
+            }
+        }
+
+        return $this->post;
+    }
+
     /**
      * Add posts
      *
-     * @param ìPost $posts
+     * @param Post $posts
      * @return Event
      */
     public function addPost(Post $post)

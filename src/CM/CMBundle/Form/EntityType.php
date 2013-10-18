@@ -51,9 +51,22 @@ class EntityType extends AbstractType
             ))
             ->add('entityUsers', 'collection', array(
                 'type' => new EntityUserType,
+                'attr' => array('class' => 'protagonist_typeahead'),
                 'by_reference' => false,
                 'allow_add' => true,
-                'options' => array('tags' => $options['user_tags'], 'locale' => $options['locale'], 'locales' => $options['locales'])
+                'allow_delete' => true,
+                'prototype' => true,
+                'widget_add_btn' => array(
+                    'label' => 'add protagonist'
+                ),
+                'options' => array(
+                    'tags' => $options['user_tags'],
+                    'locale' => $options['locale'],
+                    'locales' => $options['locales'],
+                    'horizontal' => true,
+                    'label_render' => false,
+                    'horizontal_input_wrapper_class' => "col-lg-8",
+                )
             ))
             ->add('visible')
             ->add('images', 'collection', array(
@@ -68,6 +81,7 @@ class EntityType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'attr' => array('class' => 'form-horizontal'),
             'user_tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),
