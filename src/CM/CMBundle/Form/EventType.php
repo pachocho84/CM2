@@ -26,22 +26,15 @@ class EventType extends EntityType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
-                'widget_add_btn' => array(
-                    'label' => 'add a date'
-                ),
                 'options' => array(
-                    'horizontal' => true,
                     'label_render' => false,
-                    'horizontal_input_wrapper_class' => "col-lg-8",
                 )
             ))
             ->add('posts', 'collection', array(
                 'type' => new PostType(),
                 'by_reference' => false,
                 'options' => array(
-                    'horizontal' => true,
                     'label_render' => false,
-                    'horizontal_input_wrapper_class' => "col-lg-8",
                 )
             ));
     }

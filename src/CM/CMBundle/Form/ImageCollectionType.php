@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class MultipleImagesType extends AbstractType
+class ImageCollectionType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -49,6 +49,6 @@ class MultipleImagesType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_image';
+        return 'cm_cmbundle_image_collection';
     }
 }

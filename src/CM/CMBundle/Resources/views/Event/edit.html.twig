@@ -4,7 +4,6 @@
 
 {% block stylesheets %}
     {% stylesheets
-        '@MopaBootstrapBundle/Resources/public/less/collections.less'
         '@CMBundle/Resources/public/css/typeahead.js-bootstrap.css'
     %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
@@ -12,7 +11,33 @@
 {% endblock %}
 
 {% block body %}
-        {{ form(form) }}
+        {# {{ form(form) }} #}
+
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        
+        {{ form_row(form.translations) }}
+        {{ form_row(form.entityCategory) }}
+
+        <div class="form-group cm_cmbundle_event_entityUsers_control_group protagonist_typeahead" >
+            <label class=" control-label col-lg-3 control-label required">{{ "Protagonists" | trans }}</label>
+            <div class="collection-items col-lg-9" >
+                {{ include('CMBundle:User:addProtagonist.html.twig', {'entityUsers': form.entityUsers}) }}
+            </div>
+        </div>
+        
+{#         <div class="form-group cm_cmbundle_event_images_control_group " >
+            <label class=" control-label col-lg-3 control-label required">{{ "Protagonists" | trans }}</label>
+            <div class=" control-label col-lg-9 control-label required" >
+                {% for field in form.entityUsers %}
+                    {{ form_row(field) }}
+                {% endfor %}
+            </div>
+        </div> #}
+        {{ form_row(form.visible) }}
+        {{ form_row(form.images) }}
+
+    {{ form_end(form) }}
 {#
         {{ form_row(form.translations) }}
         {{ form_row(form.visible) }}
@@ -42,7 +67,7 @@
             var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
         </script>
         {% javascripts
-            '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
+            '@CMBundle/Resources/public/js/hogan-2.0.0.min.js'
             '@CMBundle/Resources/public/js/typeahead.min.js'
             '@CMBundle/Resources/public/js/form.js'
         %}

@@ -21,7 +21,7 @@ use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Sponsored;
 use CM\CMBundle\Form\EventType;
-use CM\CMBundle\Form\MultipleImagesType;
+use CM\CMBundle\Form\ImageCollectionType;
 use CM\CMBundle\Utility\UploadHandler;
 
 /**
@@ -146,7 +146,7 @@ class EventController extends Controller
 
         $images = new ArrayCollection();
 
-        $form = $this->createForm(new MultipleImagesType(), $images, array(
+        $form = $this->createForm(new ImageCollectionType(), $images, array(
                 'action' => $this->generateUrl('event_show', array(
                 'id' => $event->getId(),
                 'slug' => $event->getSlug()
@@ -223,7 +223,6 @@ class EventController extends Controller
 
         $form = $this->createForm(new EventType, $event, array(
             'action' => $this->generateUrl($formRoute, $formRouteArgs),
-            'attr' => array('class' => 'form-horizontal'),
             'cascade_validation' => true,
             'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),

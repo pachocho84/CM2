@@ -1,76 +1,66 @@
 $(function() {
     /* PROTAGONIST */
-
-    // var form = $('form');
-    // var element = $('select.typeahead');
-    // var select = $('<div />').append(element.clone()).html();
-    // var hashOptions = new Array;
-    // var options = new Array;
-    // $($(select).html()).each(function () {
-    //     hashOptions[$(this).val()] = $(this).html();
-    //     options.push($(this).html());
-    // });
-    // // substitute multiselect with text field
-    // $('select.typeahead').replaceWith('<input type="text" class="typeahead-select_sub ' + $(select).attr('class') + '"" ></input>');
-
-    // $('input.typeahead-select_sub').typeahead({
-    //     name: 'tags',
-    //     local: options,
-    //     updater: function(item) {
-    //         console.log('ok');
-    //         return '';
-    //     }
-    // });
-    // form.submit(function () {
-
-    // });
-
-    var collection = $('.protagonist_typeahead .collection-items');
-    collection.on('typeahead:autocompleted typeahead:selected', function (event) {
-        console.log('ok');
-        console.log(event.data);
+    var protagonist_new_id;
+    var collection = $('.protagonist_typeahead').children('.collection-items');
+    collection.on('typeahead:autocompleted typeahead:selected', function (event, datum) {
+        // console.log(datum);
+        protagonist_new_id = parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1;
+        $.get(script + '/protagonist/add', { user_id: datum.id, protagonist_new_id: protagonist_new_id, entity_type: $('#protagonists').attr('object') }, function(data) {
+            $('.protagonists_user:last').after(data);
+        });
     });
-    collection.append('<div class="form-group"><label class="control-label">Add new protagonists</label><input type="text" id="protagonists_finder" class="form-control" /></div>');
+    collection.append('<div class="form-group"><div class="form-group"><label class="control-label col-lg-3">Add new protagonist</label><input type="text" id="protagonists_finder" class="form-control col-lg-6" /></div></div>');
     $('#protagonists_finder').typeahead({
         name: 'protagonists',
-        remote: typeaheadHintRoute+'?query=%QUERY',
-        filter: function (response) {
-            console.log(response);
-            return response;
+        valueKey: 'fullname',
+        template: '<img src="{{ img }}" class="pull-left" /> <div class="media">{{ fullname }}</div>',
+        engine: Hogan,
+        remote:  {
+            url: typeaheadHintRoute + '?query=%QUERY',
+            replace: function (url, uriEncodedQuery) {
+
+                return url.replace('%QUERY', uriEncodedQuery) + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',');
+            }
+        },
+    });
+    $(document).on('click', '.protagonists_remove', function (event) {
+        var removeId = $(event.target).attr('id');
+        if (parseInt(removeId.substring(removeId.lastIndexOf('_') + 1)) != 0) {
+            $(this).closest('.protagonists_user').remove();
         }
     });
 
 // 	$('.protagonists_user:last').attr('protagonist_new_id') != undefined ? protagonist_new_id = $('.protagonists_user:last').attr('protagonist_new_id') : protagonist_new_id = 1;
-	
-// 	// Add
-// 	$('#protagonists_finder').typeahead({
-// 		minLength: 		2,
-//    	source: 			function (query, process) {
-//       return $.get(script + '/utenti/autocomplete_users', { query: query, exclusion: $('.protagonists_user, .protagonists_group_user').map(function() { return $(this).attr('user_id'); }).get().join(',') }, function (data) {
-// 				users = data;
-//         return process(
-// 					$.map(data, function(user) {
-// 						item = new String(user.FirstName + ' ' + user.LastName);
-// 						item.data = user;
-// 						return item;
-// 					})
-// 				);
-//       });
-//    	},
-// 		highlighter: function(item) {
-//       return '<img src="' + item.data.Img + '" class="pull-left" /> ' + item;
-//    	},
-// 		item: 				'<li class="media"><a href="' + script + '"></a></li>',
-// 		items: 				8,
-// 		updater: 			function(item) {
-// 			$.get(script + '/protagonist/add', { user_id: users[item].Id, protagonist_new_id: parseInt(protagonist_new_id) + 1, entity_type: $('#protagonists').attr('object') }, function(data) {
-// 				$('#protagonists_users').append(data);
-// 				protagonist_new_id ++;
-// 			});
-// 			return '';
-// 		}
-// 	});
-	
+
+    // // Add
+    // $('#protagonists_finder').typeahead({
+    //     minLength: 2,
+    //     source: function (query, process) {
+    //         return $.get(script + '/utenti/autocomplete_users', { query: query, exclusion: $('.protagonists_user, .protagonists_group_user').map(function() { return $(this).attr('user_id'); }).get().join(',') }, function (data) {
+    //             users = data;
+    //             return process(
+    //                 $.map(data, function(user) {
+    //                     item = new String(user.FirstName + ' ' + user.LastName);
+    //                     item.data = user;
+    //                     return item;
+    //                 })
+    //             );
+    //         });
+    //     },
+    //     highlighter: function(item) {
+    //         return '<img src="' + item.data.Img + '" class="pull-left" /> ' + item;
+    //     },
+    //     item: '<li class="media"><a href="' + script + '"></a></li>',
+    //     items: 8,
+    //     updater: function(item) {
+    //         $.get(script + '/protagonist/add', { user_id: users[item].Id, protagonist_new_id: parseInt(protagonist_new_id) + 1, entity_type: $('#protagonists').attr('object') }, function(data) {
+    //             $('#protagonists_users').append(data);
+    //             protagonist_new_id ++;
+    //         });
+    //         return '';
+    //     }
+    // });
+
 // 	// Group
 // 	$('body').on('change', 'select[name*="group_id"]', function(event) {
 // 		// Mark all protagonists from previous selected group for delete

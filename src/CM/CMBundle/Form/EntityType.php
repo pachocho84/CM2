@@ -40,7 +40,7 @@ class EntityType extends AbstractType
                     'slug' => array('display' => false)
                 )
             ))
-            ->add('entity_category', 'entity', array(
+            ->add('entityCategory', 'entity', array(
                 'class' => 'CMBundle:EntityCategory',
                 'query_builder' => function(EntityCategoryRepository $er) use ($options) {
                     // get Entity child class name, to retrieve the EntityCategoty type associated
@@ -51,27 +51,23 @@ class EntityType extends AbstractType
             ))
             ->add('entityUsers', 'collection', array(
                 'type' => new EntityUserType,
-                'attr' => array('class' => 'protagonist_typeahead'),
                 'by_reference' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'prototype' => true,
-                'widget_add_btn' => array(
-                    'label' => 'add protagonist'
-                ),
                 'options' => array(
                     'tags' => $options['user_tags'],
                     'locale' => $options['locale'],
                     'locales' => $options['locales'],
-                    'horizontal' => true,
                     'label_render' => false,
-                    'horizontal_input_wrapper_class' => "col-lg-8",
                 )
             ))
             ->add('visible')
             ->add('images', 'collection', array(
                 'type' => new ImageType,
-                'by_reference' => false
+                'by_reference' => false,
+                'options' => array(
+                    'label_render' => false,
+                )
             ));
     }
     
