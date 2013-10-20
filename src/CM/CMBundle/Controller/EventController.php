@@ -210,6 +210,11 @@ class EventController extends Controller
 /*             $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale()); */
             // TODO: retrieve images from event
         }
+
+        $oldEntityUsers = array();
+        foreach ($event->getEntityUsers() as $oldEntityUser) {
+            $oldEntityUsers[] = $oldEntityUser;
+        }
           
         // TODO: retrieve locales from user
 
@@ -234,6 +239,13 @@ class EventController extends Controller
         if (!$this->get('cm_user.authentication')->canManage($event)) {
               throw new HttpException(401, 'Unauthorized access.'); // TODO: redirect to login page
         } elseif ($form->isValid()) {
+
+            // ensure removed entityUsers deletion from database
+            foreach ($oldEntityUsers as $oldEntityUser) {
+                if (!$event->getEntityUsers()->contains($oldEntityUser)) {
+                    $em->remove($oldEntityUser);
+                }
+            }
 
             $em->persist($event);
             $em->flush();

@@ -24,6 +24,7 @@ $(function() {
         },
     });
     $(document).on('click', '.protagonists_remove', function (event) {
+        event.preventDefault();
         var removeId = $(event.target).attr('id');
         if (parseInt(removeId.substring(removeId.lastIndexOf('_') + 1)) != 0) {
             $(this).closest('.protagonists_user').remove();
