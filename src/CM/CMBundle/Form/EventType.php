@@ -23,11 +23,19 @@ class EventType extends EntityType
         $builder->add('event_dates', 'collection', array(
                 'type' => new EventDateType(),
                 'allow_add' => true,
-                'by_reference' => false
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'options' => array(
+                    'label_render' => false,
+                )
             ))
             ->add('posts', 'collection', array(
                 'type' => new PostType(),
-                'by_reference' => false
+                'by_reference' => false,
+                'options' => array(
+                    'label_render' => false,
+                )
             ));
     }
     

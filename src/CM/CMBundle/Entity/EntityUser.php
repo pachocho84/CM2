@@ -152,7 +152,7 @@ class EntityUser
      *
      * @return boolean 
      */
-    public function getAdmin()
+    public function isAdmin()
     {
         return $this->admin;
     }

@@ -40,7 +40,7 @@ class EntityType extends AbstractType
                     'slug' => array('display' => false)
                 )
             ))
-            ->add('entity_category', 'entity', array(
+            ->add('entityCategory', 'entity', array(
                 'class' => 'CMBundle:EntityCategory',
                 'query_builder' => function(EntityCategoryRepository $er) use ($options) {
                     // get Entity child class name, to retrieve the EntityCategoty type associated
@@ -53,12 +53,21 @@ class EntityType extends AbstractType
                 'type' => new EntityUserType,
                 'by_reference' => false,
                 'allow_add' => true,
-                'options' => array('tags' => $options['user_tags'], 'locale' => $options['locale'], 'locales' => $options['locales'])
+                'allow_delete' => true,
+                'options' => array(
+                    'tags' => $options['user_tags'],
+                    'locale' => $options['locale'],
+                    'locales' => $options['locales'],
+                    'label_render' => false,
+                )
             ))
             ->add('visible')
             ->add('images', 'collection', array(
                 'type' => new ImageType,
-                'by_reference' => false
+                'by_reference' => false,
+                'options' => array(
+                    'label_render' => false,
+                )
             ));
     }
     
@@ -68,6 +77,7 @@ class EntityType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'attr' => array('class' => 'form-horizontal'),
             'user_tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),

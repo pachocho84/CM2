@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class MultipleImagesType extends AbstractType
+class ImageCollectionType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -21,7 +21,16 @@ class MultipleImagesType extends AbstractType
                 'required' => false,
                 'type' => new ImageType(),
                 'allow_add' => true,
-                'by_reference' => false
+                'allow_delete' => true,
+                'by_reference' => false,
+                'widget_add_btn' => array(
+                    'label' => 'add an image'
+                ),
+                'options' => array(
+                    'horizontal' => true,
+                    'label_render' => false,
+                    'horizontal_input_wrapper_class' => "col-lg-8",
+                )
         ));
     }
     
@@ -40,6 +49,6 @@ class MultipleImagesType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_image';
+        return 'cm_cmbundle_image_collection';
     }
 }

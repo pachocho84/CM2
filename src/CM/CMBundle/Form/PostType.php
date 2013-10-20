@@ -5,6 +5,7 @@ namespace CM\CMBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use CM\CMBundle\Entity\Post;
 
 class PostType extends AbstractType
 {
@@ -15,7 +16,11 @@ class PostType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('type')
+            ->add('type', 'choice', array(
+                'choices' => array(
+                    Post::TYPE_CREATION => 'Created'
+                )
+            ))
             ->add('creator')
             ->add('user');
     }

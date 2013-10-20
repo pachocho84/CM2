@@ -3,6 +3,7 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 /**
  * UserRepository
@@ -12,4 +13,36 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserRepository extends EntityRepository
 {
+    public function getCreatedGroupsIds($user_id)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('g.id')->from('CMBundle:Group', 'g')
+            ->leftJoin('g.creator', 'c')
+            ->where('c.id = :user_id')->setParameter('user_id', $user_id)
+            ->getQuery()->getResult();
+    }
+
+    public function getCreatedPagesIds($user_id)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('p.id')->from('CMBundle:Page', 'p')
+            ->leftJoin('p.creator', 'c')
+            ->where('c.id = :user_id')->setParameter('user_id', $user_id)
+            ->getQuery()->getResult();
+    }
+
+    public function getFromAutocomplete($fullname, $exclude = array())
+    {
+        $qb = $this->createQueryBuilder('u');
+        return $qb->select('partial u.{id, username, firstName, lastName, img, offset}')
+            ->andWhere('u.id NOT IN (:exclude)')->setParameter('exclude', $exclude)
+            // ->where('u.IsActive = ?', true)
+            ->andWhere('u.enabled = '.true)
+            ->andWhere(
+                $qb->expr()->orX('CONCAT(u.firstName, CONCAT(\' \', u.lastName)) LIKE :fullname', 'CONCAT(u.lastName, CONCAT(\' \', u.firstName)) LIKE :fullname')
+            )->setParameter('fullname', $fullname.'%')
+            ->setMaxResults(8)
+            ->orderBy('u.vip', 'DESC')
+            ->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
 }

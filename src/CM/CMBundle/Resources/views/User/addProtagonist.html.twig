@@ -1,0 +1,15 @@
+{% if protagonist_new_id is not defined %}
+    {% set protagonist_new_id = 0 %}
+{% endif %}
+{% for field in entityUsers %}
+    {% if skip is not defined or loop.index0 == protagonist_new_id %}
+        <div protagonist_new_id="{{ protagonist_new_id }}" class="collection-item protagonists_user" {% if user_id is defined %}user_id="{{ user_id }}"{% endif %}>
+            <div class="form-group"><a class="pull-right btn btn-default protagonists_remove" id="protagonists_remove_{{ protagonist_new_id }}">{{ "Remove" | trans }}</a></div>
+            {{ form_errors(field) }}
+            {{ form_widget(field) }}
+        </div>
+        {% set protagonist_new_id = protagonist_new_id + 1 %}
+    {% endif %}
+{% else %}
+    DOH
+{% endfor %}

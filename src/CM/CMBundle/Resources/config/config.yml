@@ -6,6 +6,7 @@ parameters:
     upload.dir: %bundle.dir%/uploads
     images.dir: %upload.dir%/images
     images_full.dir: %images.dir%/full # if you change this, change it also in the Entity/Image.php file!
+    session.attribute_bag.class: Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag
 
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
@@ -38,6 +39,10 @@ knp_paginator:
         pagination: KnpPaginatorBundle:Pagination:sliding.html.twig     # sliding pagination controls template
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
 
+mopa_bootstrap:
+    form:
+        show_legend: false
+
 liip_imagine:
     cache_mkdir_mode: 0755
     web_root: %kernel.root_dir%/../web
@@ -57,7 +62,12 @@ liip_imagine:
 services:
     cm.twig.cm_extension:
         class: CM\CMBundle\Twig\CMExtension
-        arguments: [@translator, { images_dir: %kernel.root_dir%/../web%images_full.dir%, sizes: %liip_imagine.filter_sets% }]
+        arguments: 
+            translator: @translator
+            userAuthentication: @cm_user.authentication
+            options: 
+                images_dir: %kernel.root_dir%/../web%images_full.dir%
+                sizes: %liip_imagine.filter_sets% 
         tags:
             - { name: twig.extension }
             
@@ -66,6 +76,13 @@ services:
         arguments: ["%kernel.default_locale%"]
         tags:
             - { name: kernel.event_subscriber }
+
+    cm_user.authentication:
+        class: CM\CMBundle\Service\UserAuthentication
+        arguments:
+            securityContext: @security.context
+            session: @session
+            entityManager: @doctrine.orm.entity_manager
 
     cm_user.registration.type:
         class: CM\CMBundle\Form\RegistrationType

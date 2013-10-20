@@ -1,10 +1,6 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
-
-
 {% block title %}{{ "Calendar"|trans }}{% endblock %}
-
-
 
 {% block body %}
 
@@ -15,14 +11,8 @@
 		{{ include('CMBundle:Event:menu.html.twig') }}
 	</div>
 
-
-
     {{ render(controller('CMBundle:Event:sponsored')) }}
 	
-	
-	
 	{{ render(controller('CMBundle:Event:calendarMonth', { 'year': year, 'month': month } )) }}
-	
-	
 	
 {% endblock %} 
