@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({"entity"="Entity","event"="Event"})
+ * @ORM\HasLifecycleCallbacks
  */
 abstract class Entity
 {
@@ -273,5 +274,18 @@ abstract class Entity
     public function getPosts()
     {
         return $this->posts;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PostLoad
+     */
+    private function orderEntityUsers()
+    {
+        $iterator = $this->getEntityUsers()->getIterator();
+        $iterator->uasort(function ($a, $b) {
+            return ($a->getUser()->getId() < $b->getUser()->getId()) ? -1 : 1;
+        });
+        $this->entityUsers = new ArrayCollection(iterator_to_array($iterator));
     }
 }

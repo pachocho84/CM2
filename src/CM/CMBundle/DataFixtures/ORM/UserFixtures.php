@@ -22,7 +22,8 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'city_birth' => 'Padua',
             'city_current' => 'Milan',
             'birth_date' => array(1984, 6, 17),
-            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg'
+            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg',
+            'user_tags' => array(1, 5)
         ),
         array('firstname' => 'Fabrizio', 
             'lastname' => 'Castellarin',
@@ -32,7 +33,8 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'city_birth' => 'Milan',
             'city_current' => 'Milan',
             'birth_date' => array(1990, 4, 19),
-            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg'
+            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg',
+            'user_tags' => array(4)
         ),
         array('firstname' => 'Federica',
             'lastname' => 'Fontana',
@@ -42,7 +44,8 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'city_birth' => 'Taranto',
             'city_current' => 'Milan',
             'birth_date' => array(1900, 4, 15),
-            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg'
+            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg',
+            'user_tags' => array(1)
         ),
         array('firstname' => 'Luca',
             'lastname' => 'Casareto',
@@ -52,7 +55,8 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'city_birth' => 'Padua',
             'city_current' => 'Milan',
             'birth_date' => array(1990, 5, 15),
-            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg'
+            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg',
+            'user_tags' => array()
         ),
         array('firstname' => 'Virginia Alexandra',
             'lastname' => 'Nolte',
@@ -62,7 +66,8 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'city_birth' => 'Milan',
             'city_current' => 'Milan',
             'birth_date' => array(1994, 3, 29),
-            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg'
+            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg',
+            'user_tags' => array()
         ),
     );
 	
