@@ -50,8 +50,11 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
                 $userTags
             );
 
-            for ($j = $userNum + 1; $j < 6; $j++) {
-                $otherUser = $manager->merge($this->getReference('user-'.$j));
+            $numbers = range(1, 5);
+            unset($numbers[$userNum - 1]);
+            shuffle($numbers);
+            for ($j = 0; $j < 4; $j++) {
+                $otherUser = $manager->merge($this->getReference('user-'.$numbers[$j]));
                 
                 $userTags = array();
                 for ($k = 1; $k < rand(1, 3); $k++) {

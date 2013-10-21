@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Group
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="GroupRepository")
  * @ORM\Table(name="`group`")
  * @ORM\HasLifecycleCallbacks
  */

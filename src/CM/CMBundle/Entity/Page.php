@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Page
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PageRepository")
  * @ORM\Table(name="page")
  * @ORM\HasLifecycleCallbacks
  */

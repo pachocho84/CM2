@@ -10,8 +10,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * User
  *
- * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="UserRepository")
+ * @ORM\Table(name="user")
  * @ORM\HasLifecycleCallbacks
  */
 class User extends BaseUser
@@ -729,7 +729,7 @@ class User extends BaseUser
     /**
      * @param \CM\CMBundle\Entity\EntityUser $users
      */
-    public function removePageUser(PageUser $pageUser)
+    public function removeUserPage(PageUser $pageUser)
     {
         $this->userPages->removeElement($pageUser);
     }
@@ -737,7 +737,7 @@ class User extends BaseUser
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getPagesUsers()
+    public function getUserPages()
     {
         return $this->userPages;
     }

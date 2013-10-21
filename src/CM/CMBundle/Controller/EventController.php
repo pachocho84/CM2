@@ -5,6 +5,7 @@ namespace CM\CMBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -183,8 +184,8 @@ class EventController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $event = new Event;
+        $user = $this->getUser();
         if ($id == null || $slug == null) {
-            $user = $this->getUser();
 
             $event->addUser(
                 $user,
@@ -202,7 +203,8 @@ class EventController extends Controller
 
             $post = new Post;
             $post->setType(Post::TYPE_CREATION)
-                ->setCreator($user);
+                ->setCreator($user)
+                ->setUser($user);
 
             $event->addPost($post);
         } else {
@@ -237,23 +239,129 @@ class EventController extends Controller
         $form->handleRequest($request);
 
         if (!$this->get('cm_user.authentication')->canManage($event)) {
-              throw new HttpException(401, 'Unauthorized access.'); // TODO: redirect to login page
+              throw new HttpException(401, 'Unauthorized access.');
         } elseif ($form->isValid()) {
-
             // ensure removed entityUsers deletion from database
-            foreach ($oldEntityUsers as $oldEntityUser) {
-                if (!$event->getEntityUsers()->contains($oldEntityUser)) {
-                    $em->remove($oldEntityUser);
+            foreach ($event->getEntityUsers() as $entityUser) {
+                foreach ($oldEntityUsers as $key => $oldEntityUser) {
+                    if ($oldEntityUser->getId() == $entityUser->getId()) {
+                        unset($oldEntityUsers[$key]);
+                        break;
+                    }
                 }
             }
+            foreach ($oldEntityUsers as $oldEntityUser) {
+                $event->removeEntityUser($oldEntityUser);
+                $em->remove($oldEntityUser);
+            }
+            $em->flush();
 
             $em->persist($event);
             $em->flush();
                   
             return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
         }
+
+        $user_ids = array();
+        foreach ($event->getEntityUsers() as $entityUser) {
+            $user_ids[] = $entityUser->getUser()->getId();
+        }
         
-        return array('form' => $form->createView());
+        return array(
+            'form' => $form->createView(),
+            'user_ids' => $user_ids
+        );
+    }
+
+    /**
+     * @Route("/protagonist/add", name="user_add_protagonist")
+     * @Route("/protagonist/addGroup", name="user_add_group_protagonists")
+     * @Route("/protagonist/addPage", name="user_add_page_protagonists")
+     * @Template
+     */
+    public function addProtagonistAction(Request $request)
+    {
+        if (!$request->isXmlHttpRequest() || !$this->get('cm_user.authentication')->isAuthenticated()) {
+            throw new HttpException(401, 'Unauthorized access.');
+        }
+        $em = $this->getDoctrine()->getManager();
+
+        $target = array();
+        if (!is_null($request->query->get('user_id'))) {
+            $user_ids = explode(',', $request->query->get('user_id'));
+        } elseif (!is_null($request->query->get('group_id'))) {
+            $group_id = $request->query->get('group_id');
+
+            $excludes = explode(',', $request->query->get('exclude'));
+            $user_ids = $em->getRepository('CMBundle:Group')->getUserIdsFor($group_id, $excludes);
+
+            $target = array('group_id', $group_id);
+        } elseif (!is_null($request->query->get('page_id'))) {
+            $page_id = $request->query->get('page_id');
+
+            $excludes = explode(',', $request->query->get('exclude'));
+            $user_ids = $em->getRepository('CMBundle:Page')->getUserIdsFor($page_id, $excludes);
+
+            $target = array('page_id', $page_id);
+        } else {
+            // throw exception
+        }
+
+        $event = new Event;
+            
+        $protagonist_new_id = $request->query->get('protagonist_new_id');
+
+        // add dummies
+        foreach (range(0, $protagonist_new_id - 1) as $i) {
+            $event->addUser($this->getUser());
+        }
+
+        for ($i = 0; $i < count($user_ids); $i++) {
+            $user = $em->getRepository('CMBundle:User')->findOneById($user_ids[$i]);
+    
+            $event->addUser(
+                $user,
+                false, // admin
+                EntityUser::STATUS_ACTIVE,
+                true // notifications
+            );
+        }
+
+        $form = $this->createForm(new EventType, $event, array(
+            'cascade_validation' => true,
+            'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
+            'locales' => array('en'/* , 'fr', 'it' */),
+            'locale' => $request->getLocale()
+        ));
+        
+        return array(
+            'skip' => true,
+            'user_ids' => $user_ids,
+            'entityUsers' => $form->createView()['entityUsers'],
+            'target' => $target,
+            'protagonist_new_id' => $protagonist_new_id
+        );
+    }
+
+    /**
+     * @Route("/group/protagonists/remove", name="user_remove_group_protagonists")
+     * @Route("/page/protagonists/remove", name="user_remove_page_protagonists")
+     */
+    public function removeProtagonistAction(Request $request)
+    {
+
+        if (!is_null($request->query->get('group_id'))) {
+            $group_ids = explode(',', $request->query->get('group_id'));
+            $user_ids = $em->getRepository('CMBundle:Group')->getUserIdsFor($group_ids);
+        var_dump($user_ids); die;
+        } elseif (!is_null($request->query->get('page_id'))) {
+            $page_ids = explode(',', $request->query->get('page_id'));
+            $user_ids = $em->getRepository('CMBundle:Page')->getUserIdsFor($page_ids);
+        } else {
+            // throw exception
+        }
+
+        return new JsonResponse($user_ids);
     }
     
     /**

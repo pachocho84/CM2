@@ -68,62 +68,6 @@ class UserController extends Controller
 	}
 
     /**
-     * @Route("/protagonist/add", name="user_add_protagonist")
-     * @Template
-     */
-    public function addProtagonistAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $user_id = $request->query->get('user_id');
-        $user = $em->getRepository('CMBundle:User')->findOneById($user_id);
-
-        $protagonist_new_id = $request->query->get('protagonist_new_id');
-
-        $event = new Event;
-
-        foreach (range(0, $protagonist_new_id - 1) as $i) {
-            $event->addUser($user);
-        }
-
-        $event->addUser(
-            $user,
-            true, // admin
-            EntityUser::STATUS_ACTIVE,
-            true // notifications
-        );
-
-        // $entityUsers = new ArrayCollection;
-        // $entityUser = new EntityUser;
-
-        // $userTags = $user->getUserTags();
-        // $userTagsIds = array();
-        // foreach ($userTags as $userTag) {
-        //     $userTagsIds[] = $userTag->getId();
-        // }
-        // $entityUser->setUser($user)
-        //     ->setStatus(EntityUser::STATUS_PENDING)
-        //     ->addUserTags($userTagsIds);
-        // $entityUsers[] = $entityUser;
-
-        $form = $this->createForm(new EventType, $event, array(
-            'omit_collection_item' => range(0, $protagonist_new_id - 1),
-            'cascade_validation' => true,
-            'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
-            'locales' => array('en'/* , 'fr', 'it' */),
-            'locale' => $request->getLocale()
-        ));
-        
-        return array(
-            'skip' => true,
-            'user_id' => $user->getId(),
-            'entityUsers' => $form->createView()['entityUsers'],
-            'user_id' => $user_id,
-            'protagonist_new_id' => $protagonist_new_id
-        );
-    }
-
-    /**
      * @Route("/typeaheadHint", name="user_typeahead_hint")
      */
     public function typeaheadHintAction(Request $request)

@@ -19,10 +19,10 @@
         {{ form_row(form.translations) }}
         {{ form_row(form.entityCategory) }}
 
-        <div class="form-group cm_cmbundle_event_entityUsers_control_group protagonist_typeahead" >
+        <div class="form-group cm_cmbundle_event_entityUsers_control_group protagonist_typeahead">
             <label class=" control-label col-lg-3 control-label required">{{ "Protagonists" | trans }}</label>
             <div class="collection-items col-lg-9" >
-                {{ include('CMBundle:User:addProtagonist.html.twig', {'entityUsers': form.entityUsers}) }}
+                {{ include('CMBundle:Event:addProtagonist.html.twig', {'entityUsers': form.entityUsers}) }}
             </div>
         </div>
         

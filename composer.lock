@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "47a78f0745c024b176e0d463c90423dc",
+    "hash": "de0f3d741a236b05817d9185281c89a0",
     "packages": [
         {
             "name": "a2lix/translation-form-bundle",
@@ -894,12 +894,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSUserBundle.git",
-                "reference": "f9ea1de0698e3055c9916e88c19f42e28844ef61"
+                "reference": "4025c4113bc000cef331ea833a52123080d2faa4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/f9ea1de0698e3055c9916e88c19f42e28844ef61",
-                "reference": "f9ea1de0698e3055c9916e88c19f42e28844ef61",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/4025c4113bc000cef331ea833a52123080d2faa4",
+                "reference": "4025c4113bc000cef331ea833a52123080d2faa4",
                 "shasum": ""
             },
             "require": {
@@ -954,7 +954,7 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2013-10-09 22:58:46"
+            "time": "2013-10-21 09:54:07"
         },
         {
             "name": "imagine/imagine",
@@ -1107,6 +1107,50 @@
                 "sql"
             ],
             "time": "2013-04-26 18:42:52"
+        },
+        {
+            "name": "jms/debugging-bundle",
+            "version": "dev-master",
+            "target-dir": "JMS/DebuggingBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/schmittjoh/JMSDebuggingBundle.git",
+                "reference": "5566021922720429ab0daf9f2bbc32c0aa778af0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/schmittjoh/JMSDebuggingBundle/zipball/5566021922720429ab0daf9f2bbc32c0aa778af0",
+                "reference": "5566021922720429ab0daf9f2bbc32c0aa778af0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "~2.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "JMS\\DebuggingBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache2"
+            ],
+            "authors": [
+                {
+                    "name": "Johannes M. Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "http://jmsyst.com",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "This bundle provides advanced debugging tools (for your Symfony2 project).",
+            "homepage": "http://jmsyst.com/bundles/JMSDebuggingBundle",
+            "keywords": [
+                "debugging"
+            ],
+            "time": "2013-08-04 10:47:51"
         },
         {
             "name": "knplabs/doctrine-behaviors",
@@ -1479,12 +1523,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phiamo/MopaBootstrapBundle.git",
-                "reference": "2a45b6dc8b85f4b6186829d37eedd702822efcb9"
+                "reference": "99cee0ed0368b18ea45ff4f44ba9ef9ee6b51b3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/2a45b6dc8b85f4b6186829d37eedd702822efcb9",
-                "reference": "2a45b6dc8b85f4b6186829d37eedd702822efcb9",
+                "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/99cee0ed0368b18ea45ff4f44ba9ef9ee6b51b3d",
+                "reference": "99cee0ed0368b18ea45ff4f44ba9ef9ee6b51b3d",
                 "shasum": ""
             },
             "require": {
@@ -1533,7 +1577,7 @@
                 "form",
                 "template"
             ],
-            "time": "2013-10-16 21:33:19"
+            "time": "2013-10-20 21:18:23"
         },
         {
             "name": "mopa/composer-bridge",
@@ -2212,12 +2256,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "4c043b7d5f3f9d1f7c4ebe1e82c77b29d282fc39"
+                "reference": "eed53d781188914c8328fb0ab77b700c3462fdbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/4c043b7d5f3f9d1f7c4ebe1e82c77b29d282fc39",
-                "reference": "4c043b7d5f3f9d1f7c4ebe1e82c77b29d282fc39",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/eed53d781188914c8328fb0ab77b700c3462fdbf",
+                "reference": "eed53d781188914c8328fb0ab77b700c3462fdbf",
                 "shasum": ""
             },
             "type": "library",
@@ -2241,7 +2285,7 @@
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-10-17 21:53:50"
+            "time": "2013-10-21 08:53:41"
         },
         {
             "name": "twig/extensions",
@@ -2358,7 +2402,8 @@
         "a2lix/translation-form-bundle": 20,
         "friendsofsymfony/user-bundle": 20,
         "knplabs/knp-paginator-bundle": 20,
-        "liip/imagine-bundle": 20
+        "liip/imagine-bundle": 20,
+        "jms/debugging-bundle": 20
     },
     "platform": {
         "php": ">=5.3.3"
