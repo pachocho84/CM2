@@ -39,21 +39,26 @@ abstract class Entity
     /**
      * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")
      * @ORM\JoinColumn(name="entity_category_id", referencedColumnName="id")
+     * @Assert\Valid
+     * @Assert\NotNull
      */
     private $entityCategory;
 
     /**
      * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity", cascade={"persist", "remove"})
+     * @Assert\Valid
      */
     private $entityUsers;
     
     /**
      * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"})
+     * @Assert\Valid
      */
     private $images;
     
     /**
      * @ORM\OneToMany(targetEntity="Post", mappedBy="entity", cascade={"persist", "remove"})
+     * @Assert\Valid
      */
     private $posts;
 

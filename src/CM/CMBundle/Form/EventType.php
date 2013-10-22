@@ -21,22 +21,30 @@ class EventType extends EntityType
         parent::buildForm($builder, $options);
     
         $builder->add('event_dates', 'collection', array(
+                'cascade_validation' => true,
                 'type' => new EventDateType(),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
+/*                 'show_legend' => false, */
+                'options' => array(
+
+/*                     'label_render' => false, */
+                )
+            ))/*
+
+            ->add('posts', 'collection', array(
+                'type' => new PostType(),
+                'by_reference' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
                 'options' => array(
                     'label_render' => false,
                 )
             ))
-            ->add('posts', 'collection', array(
-                'type' => new PostType(),
-                'by_reference' => false,
-                'options' => array(
-                    'label_render' => false,
-                )
-            ));
+*/;
     }
     
     /**
@@ -45,7 +53,6 @@ class EventType extends EntityType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         parent::setDefaultOptions($resolver);
-        
 /*
             $event = new Event;
             $event->addEventDate(new EventDate);

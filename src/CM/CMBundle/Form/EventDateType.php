@@ -16,15 +16,19 @@ class EventDateType extends AbstractType
     {
         $builder
             ->add('start', 'datetime', array(
+                'attr' => array('class' => 'col-lg-4'),
                 'date_widget'       => 'single_text',
+/*                 'horizontal_input_wrapper_class' => 'col-lg-4', */
 /*                 'date_format'       => \IntlDateFormatter::SHORT, */
                 'time_widget'       => 'single_text',
                 'model_timezone'    => 'GMT',
-                'view_timezone'     => 'Europe/Rome',
+                'view_timezone'     => 'Europe/Rome'
             ))
             ->add('end', 'datetime', array(
+                'attr' => array('class' => 'col-lg-4'),
                 'required'            => false,
                 'date_widget'       => 'single_text',
+/*                 'horizontal_input_wrapper_class' => 'col-lg-4', */
 /*                 'date_format'       => \IntlDateFormatter::SHORT, */
                 'time_widget'       => 'single_text',
                 'model_timezone'    => 'GMT',
@@ -41,8 +45,7 @@ class EventDateType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'widget_control_group' => false,
-            'widget_controls' => false,
+            'cascade_validation' => true,
             'data_class' => 'CM\CMBundle\Entity\EventDate'
         ));
     }
