@@ -1,6 +1,9 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+{#
+{% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
 {% form_theme form 'MopaBootstrapBundle:Form:fields.html.twig' %}
+#}
 
 {% block stylesheets %}
     {% stylesheets
@@ -11,8 +14,9 @@
 {% endblock %}
 
 {% block body %}
-        {# {{ form(form) }} #}
+        {{ form(form) }}
 
+{#
     {{ form_start(form) }}
         {{ form_errors(form) }}
         
@@ -26,38 +30,10 @@
             </div>
         </div>
         
-{#         <div class="form-group cm_cmbundle_event_images_control_group " >
-            <label class=" control-label col-lg-3 control-label required">{{ "Protagonists" | trans }}</label>
-            <div class=" control-label col-lg-9 control-label required" >
-                {% for field in form.entityUsers %}
-                    {{ form_row(field) }}
-                {% endfor %}
-            </div>
-        </div> #}
         {{ form_row(form.visible) }}
         {{ form_row(form.images) }}
 
     {{ form_end(form) }}
-{#
-        {{ form_row(form.translations) }}
-        {{ form_row(form.visible) }}
-#}
-
-{#
-        <h3>Dates:</h3>
-        <ul class="tags">
-            {{ form_widget(form.event_dates) }}
-            {{ form_row(form.event_dates) }}
-            {% for date in form.event_dates %}
-                date: <li>{{ form_widget(date) }}</li>
-            {% endfor %}
-        </ul>
-#}
-{#
-        <p>
-            <input type="submit" value="Submit">
-        </p>
-    </form>
 #}
 {% endblock %}
 
@@ -69,6 +45,7 @@
         {% javascripts
             '@CMBundle/Resources/public/js/hogan-2.0.0.min.js'
             '@CMBundle/Resources/public/js/typeahead.min.js'
+            '@CMBundle/Resources/public/js/uploadCollection.js'
             '@CMBundle/Resources/public/js/form.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>

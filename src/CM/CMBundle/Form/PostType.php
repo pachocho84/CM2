@@ -34,24 +34,26 @@ class PostType extends AbstractType
                 $form = $event->getForm();
                 $data = $event->getData();
 
-                $form->add('group', 'entity', array(
-                        'class' => 'CMBundle:Group',
-                        'query_builder' => function (GroupRepository $er) use ($data) {
-                            return $er->filterGroupsForUser($data->getUser());
-                        },
-                        'empty_value' => 'No group selected',
-                        'attr' => array('class' => 'protagonists_group'),
-                        'required' => false
-                    ))
-                    ->add('page', 'entity', array(
-                        'class' => 'CMBundle:Page',
-                        'query_builder' => function (PageRepository $er) use ($data) {
-                            return $er->filterPagesForUser($data->getUser());
-                        },
-                        'empty_value' => 'No page selected',
-                        'attr' => array('class' => 'protagonists_page'),
-                        'required' => false
-                    ));
+                if (method_exists($data, 'getUser')) {
+                    $form->add('group', 'entity', array(
+                            'class' => 'CMBundle:Group',
+                            'query_builder' => function (GroupRepository $er) use ($data) {
+                                return $er->filterGroupsForUser($data->getUser());
+                            },
+                            'empty_value' => 'No group selected',
+                            'attr' => array('class' => 'protagonists_group'),
+                            'required' => false
+                        ))
+                        ->add('page', 'entity', array(
+                            'class' => 'CMBundle:Page',
+                            'query_builder' => function (PageRepository $er) use ($data) {
+                                return $er->filterPagesForUser($data->getUser());
+                            },
+                            'empty_value' => 'No page selected',
+                            'attr' => array('class' => 'protagonists_page'),
+                            'required' => false
+                        ));
+                }
             });
     }
     

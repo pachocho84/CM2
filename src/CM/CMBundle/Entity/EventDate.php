@@ -34,6 +34,7 @@ class EventDate
      * @var \DateTime
      *
      * @ORM\Column(name="start", type="datetimetz")
+     * @Assert\DateTime
      */
     private $start;
 
@@ -41,6 +42,7 @@ class EventDate
      * @var \DateTime
      *
      * @ORM\Column(name="end", type="datetimetz", nullable=true)
+     * @Assert\DateTime
      */
     private $end;
 

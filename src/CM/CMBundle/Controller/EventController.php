@@ -183,10 +183,73 @@ class EventController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $event = new Event;
         $user = $this->getUser();
+        
         if ($id == null || $slug == null) {
+            
+            $event = new Event;
 
+            $event->addEventDate(new EventDate);
+        } else {
+            $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale(), 'protagonists' => true));
+/*             $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale()); */
+            // TODO: retrieve images from event
+        }
+        
+        if ($request->get('_route') == 'event_edit') {
+            $formRoute = 'event_edit';
+            $formRouteArgs = array('id' => $event->getId(), 'slug' => $event->getSlug());
+        } else {
+            $formRoute = 'event_new';
+            $formRouteArgs = array();
+        }
+        
+        $form = $this->createForm(new EventType, $event, array(
+            'action' => $this->generateUrl($formRoute, $formRouteArgs),
+/*             'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())), */
+            'locales' => array('en'/* , 'fr', 'it' */),
+            'locale' => $request->getLocale()
+        ))->add('save', 'submit');
+        
+        
+        $form->handleRequest($request);
+/* var_dump($form->isValid()); die; */
+        /*
+if (!$this->get('cm_user.authentication')->canManage($event)) {
+              throw new HttpException(401, 'Unauthorized access.');
+        } else
+*/if ($form->isValid()) {
+
+            $em->persist($event);
+            $em->flush();
+                  
+            return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
+        }
+        
+        return array(
+            'form' => $form->createView(),
+            'user_ids' => array()
+        );
+    }
+    
+    /*
+     * @Route("/new", name="event_new") 
+     * @Route("/{id}/{slug}/edit", name="event_edit", requirements={"id" = "\d+"}) 
+     * @Template
+     */
+    public function editwAction(Request $request, $id = null, $slug = null)
+    {
+        if (!$this->get('cm_user.authentication')->isAuthenticated()) {
+            return new RedirectResponse($this->generateUrl('fos_user_security_login'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+        
+        if ($id == null || $slug == null) {
+            
+            $event = new Event;
             $event->addUser(
                 $user,
                 true, // admin
@@ -217,7 +280,7 @@ class EventController extends Controller
         foreach ($event->getEntityUsers() as $oldEntityUser) {
             $oldEntityUsers[] = $oldEntityUser;
         }
-          
+        
         // TODO: retrieve locales from user
 
         if ($request->get('_route') == 'event_edit') {
