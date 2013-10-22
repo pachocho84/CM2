@@ -229,7 +229,7 @@ class EventController extends Controller
         }
 
         $form = $this->createForm(new EventType, $event, array(
-            'action' => $this->generateUrl($formRoute, $formRouteArgs),
+/*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
             'cascade_validation' => true,
             'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
