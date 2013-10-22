@@ -19,7 +19,7 @@ use CM\CMBundle\Form\EventType;
 class UserController extends Controller
 {
     /**
-     * @Route(name="user_show")
+     * @Route("/{slug}", name="user_show")
      * @Template
      */
     public function showAction($slug)
