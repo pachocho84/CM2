@@ -5,7 +5,7 @@ $(function() {
     collection.on('typeahead:autocompleted typeahead:selected', function (event, datum) {
         // console.log(datum);
         protagonist_new_id = parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1;
-        $.get(script + '/protagonist/add?user_id=' + datum.id + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1) + '&entity_type=' + $('#protagonists').attr('object'), function (data) {
+        $.get(script + '/events/protagonist/add?user_id=' + datum.id + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1) + '&entity_type=' + $('#protagonists').attr('object'), function (data) {
             $('.protagonists_user:last').after(data);
         });
     });

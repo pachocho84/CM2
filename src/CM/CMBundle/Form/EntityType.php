@@ -48,7 +48,7 @@ class EntityType extends AbstractType
                     $entityCategory = constant('CM\CMBundle\Entity\EntityCategory::'.$entityChild);
                     return $er->filterEntityCategoriesByEntityType($entityCategory, $options);
                 }
-            ))
+            ))/*
             ->add('entityUsers', 'collection', array(
                 'type' => new EntityUserType,
                 'by_reference' => false,
@@ -60,15 +60,17 @@ class EntityType extends AbstractType
                     'locales' => $options['locales'],
                     'label_render' => false,
                 )
-            ))
+            ))*/
             ->add('visible')
+/*
             ->add('images', 'collection', array(
                 'type' => new ImageType,
                 'by_reference' => false,
                 'options' => array(
                     'label_render' => false,
                 )
-            ));
+            ))
+*/;
     }
     
     /**

@@ -46,6 +46,11 @@ class EntityTranslation
      *      max = "250",
      *      maxMessage = "The subtitle cannot be longer than {{ limit }} characters length"
      * )
+     * @Assert\Regex(
+     *     pattern="/\b[A-Z]{3}/",
+     *     match=false,
+     *     message="Please remove all UPPERCASE words"
+     * )
      */
     private $subtitle;
 
@@ -57,6 +62,11 @@ class EntityTranslation
      *      max = "500",
      *      maxMessage = "The extract cannot be longer than {{ limit }} characters length"
      * )
+     * @Assert\Regex(
+     *     pattern="/\b[A-Z]{3}/",
+     *     match=false,
+     *     message="Please remove all UPPERCASE words"
+     * )
      */
     private $extract;
 
@@ -65,6 +75,15 @@ class EntityTranslation
      *
      * @ORM\Column(name="text", type="text")
      * @Assert\NotBlank
+     * @Assert\Length(
+     *      min = "12",
+     *      minMessage = "The title must be at least {{ limit }} characters length"
+     * )
+     * @Assert\Regex(
+     *     pattern="/\b[A-Z]{3}/",
+     *     match=false,
+     *     message="Please remove all UPPERCASE words"
+     * )
      */
     private $text;
 

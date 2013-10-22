@@ -18,13 +18,18 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
-            new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
+/*             new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(), */
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new A2lix\TranslationFormBundle\A2lixTranslationFormBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Sonata\IntlBundle\SonataIntlBundle(),
             new Liip\ImagineBundle\LiipImagineBundle(),
+            new Sonata\BlockBundle\SonataBlockBundle(),
+            new Sonata\jQueryBundle\SonatajQueryBundle(),
+            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+            new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
+            new Sonata\AdminBundle\SonataAdminBundle(),
             new CM\CMBundle\CMBundle(),
         );
 
