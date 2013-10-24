@@ -8,6 +8,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use CM\CMBundle\Entity\EntityCategoryRepository;
 use CM\CMBundle\Entity\Image;
+use CM\CMBundle\Form\EntityTranslationType;
+use CM\CMBundle\Form\DataTransformer\ArrayCollectionToEntityTransformer;
 
 class EntityType extends AbstractType
 {
@@ -25,22 +27,28 @@ class EntityType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add($builder->create('translations', new EntityTranslationType)->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 0, function ($entity) { $entity->setLocale('en'); })));
+/*
         $builder->add('translations', 'a2lix_translations', array(
                 'locales' => $options['locales'],
                 'required' => true,
                 'fields' => array(
                     'title' => array(),
                     'subtitle' => array(
-                        'required' => false
+                        'display' => in_array('ROLE_CLIENT', $options['roles']),
+                        'required' => false,
                     ),
                     'extract' => array(
+                        'display' => in_array('ROLE_CLIENT', $options['roles']),
                         'required' => false
                     ),
                     'text' => array(),
                     'slug' => array('display' => false)
                 )
-            ))
-            ->add('entityCategory', 'entity', array(
+            ));
+*/
+        $builder->add('entityCategory', 'entity', array(
+                'label' => 'Category',
                 'class' => 'CMBundle:EntityCategory',
                 'query_builder' => function(EntityCategoryRepository $er) use ($options) {
                     // get Entity child class name, to retrieve the EntityCategoty type associated
@@ -55,13 +63,17 @@ class EntityType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'options' => array(
+                    'em' => $options['em'],
+                    'roles' => $options['roles'],
                     'tags' => $options['user_tags'],
                     'locale' => $options['locale'],
                     'locales' => $options['locales'],
                 )
-            ))
-            ->add('visible')
-            ->add('images', 'collection', array(
+            ));
+        if (in_array('ROLE_CLIENT', $options['roles'])) {
+            $builder->add('visible');
+        }
+        $builder->add('images', 'collection', array(
                 'type' => new ImageType,
                 'by_reference' => false,
                 'options' => array(
@@ -76,11 +88,21 @@ class EntityType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'roles' => array(),
             'attr' => array('class' => 'form-horizontal'),
             'user_tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),
             'data_class' => 'CM\CMBundle\Entity\Entity'
+        ));
+
+        $resolver->setRequired(array(
+            'em',
+            'roles'
+        ));
+
+        $resolver->setAllowedTypes(array(
+            'em' => 'Doctrine\Common\Persistence\ObjectManager',
         ));
     }
 

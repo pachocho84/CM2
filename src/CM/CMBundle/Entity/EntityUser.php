@@ -7,15 +7,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 //UNIQ_C55F6F6281257D5DA76ED395
 
+// TODO: reinsert unique constraint:
+/*
+ *     uniqueConstraints={@ORM\UniqueConstraint(columns={
+ *         "entity_id", "user_id"
+ *     })}
+ */
+
 /**
  * EntityUser
  *
  * @ORM\Entity 
- * @ORM\Table(name="entity_user",
- *     uniqueConstraints={@ORM\UniqueConstraint(columns={
- *         "entity_id", "user_id"
- *     })}
- * ) 
+ * @ORM\Table(name="entity_user") 
  */
 class EntityUser
 {

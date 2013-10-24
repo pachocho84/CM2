@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\UserTagRepository;
-use CM\CMBundle\Form\DataTransformer\UserTagNameToIdTransformer;
+use CM\CMBundle\Form\DataTransformer\UserToIntTransformer;
 
 class EntityUserType extends AbstractType
 {
@@ -28,26 +28,29 @@ class EntityUserType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('user')
-            ->add('admin', 'checkbox', array('required' => false))
-            ->add('status', 'choice', array(
-                'choices' => array(
-                    EntityUser::STATUS_PENDING => 'Pending',
-                    EntityUser::STATUS_ACTIVE => 'Active',
-                    EntityUser::STATUS_REQUESTED => 'Requested',
-                    EntityUser::STATUS_REFUSED_ADMIN => 'Refused by an admin',
-                    EntityUser::STATUS_REFUSED_ENTITY_USER => 'Refused by an entity user',
-                    EntityUser::STATUS_FOLLOWING => 'Following'
-                )
-            ))
-            ->add('userTags', 'choice', array(
+        $builder->add($builder->create('user', 'hidden')->addModelTransformer(new UserToIntTransformer($options['em'])))
+            ->add('admin', 'checkbox', array('required' => false));
+        if (in_array('ROLE_ADMIN', $options['roles'])) {
+            $builder->add('status', 'choice', array(
+                    'choices' => array(
+                        EntityUser::STATUS_PENDING => 'Pending',
+                        EntityUser::STATUS_ACTIVE => 'Active',
+                        EntityUser::STATUS_REQUESTED => 'Requested',
+                        EntityUser::STATUS_REFUSED_ADMIN => 'Refused by an admin',
+                        EntityUser::STATUS_REFUSED_ENTITY_USER => 'Refused by an entity user',
+                        EntityUser::STATUS_FOLLOWING => 'Following'
+                    )
+                ));
+        }
+        $builder->add('userTags', 'choice', array(
                 'attr' => array('class' => 'typeahead'),
                 'choices' => $options['tags'],
                 'multiple' => true,
                 'by_reference' => false,
-            ))
-            ->add('notification');
+            ));
+        if ($options['is_admin']) {
+            $builder->add('notification');
+        }
     }
     
     /**
@@ -56,10 +59,20 @@ class EntityUserType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'roles' => array(),
             'tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),
             'data_class' => 'CM\CMBundle\Entity\EntityUser'
+        ));
+
+        $resolver->setRequired(array(
+            'em',
+            'roles'
+        ));
+
+        $resolver->setAllowedTypes(array(
+            'em' => 'Doctrine\Common\Persistence\ObjectManager',
         ));
     }
 

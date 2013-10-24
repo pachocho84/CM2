@@ -20,11 +20,13 @@
         {{ form_row(form.translations) }}
         {{ form_row(form.entityCategory) }}
 
-        <div class="form-group cm_cmbundle_event_entityUsers_control_group protagonist_typeahead">
+        <div class="form-group protagonist_typeahead">
             <label class=" control-label col-lg-3 control-label required">{{ "Protagonists" | trans }}</label>
-            <div class="collection-items col-lg-9" >
-                {{ include('CMBundle:EntityUser:addEntityUsers.html.twig', {'entityUsers': form.entityUsers}) }}
-                <div class="form-group" id="protagonists_finder_container" hidden><div class="form-group"><label class="control-label col-lg-3">Add new protagonist</label><input type="text" id="protagonists_finder" class="form-control col-lg-6" /></div></div>
+            <div class="collection-items well" >
+                <div class="cm_cmbundle_event_entityUsers_control_group">
+                    <div class="form-group" id="protagonists_finder_container" hidden><div class="form-group"><label class="control-label col-lg-3">Add new protagonist</label><input type="text" id="protagonists_finder" class="form-control col-lg-6" /></div></div>
+                    {{ include('CMBundle:EntityUser:addEntityUsers.html.twig', {'entityUsers': form.entityUsers}) }}
+                </div>
             </div>
         </div>
 

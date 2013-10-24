@@ -1,56 +1,5 @@
 {% form_theme entityUsers 'CMBundle:Form:bootstrap.html.twig' %}
 
-{#<?php
-    // if ($entityIsNew && !isset($group) && $form['Protagonist'][$key]['user_id']->getValue() == $sf_user->getId()) {
-    //     // Object is new and user is the creator
-    //     $requestText    = __('This element will appear on your profile.', array('%user%' => $user));
-    //     $alertClass     = ' alert-success';
-    // } elseif (($entityIsNew || !is_numeric($key)) && !isset($group)) {
-    //     // Object is new and user is not the creator
-    //     $requestText    = __('%user% will recive a request to add this element to his profile.', array('%user%' => $user));
-    //     $alertClass     = '';
-    // } elseif ($entityIsNew && isset($group) && $user->getSfGuardUser()->getGroupUsers()->getFirst()->$getJoinEntityType() == 'request') {
-    //     // Object is new, user is member of the selected group and wants a request
-    //     $requestText    = __('%user% will recive a request to add this element to his profile due to his group settings.', array('%user%' => $user));
-    //     $alertClass     = '';
-    // } elseif ($entityIsNew && isset($group) && $user->getSfGuardUser()->getGroupUsers()->getFirst()->$getJoinEntityType() == 'yes') {
-    //     // Object is new, user is member of the selected group and wants to be added automatically
-    //     $requestText    = __('This element will be automatically added to %user%\'s profile due to his group settings.', array('%user%' => $user));
-    //     $alertClass     = ' alert-success';
-    // } elseif ($entityIsNew && isset($group) && $user->getSfGuardUser()->getGroupUsers()->getFirst()->$getJoinEntityType() == 'no') {
-    //     // Object is new, user is member of the selected group and does not want to be added
-    //     $requestText    = __('%user% will not recive a request and this element will not be visible to his profile due to his group settings.', array('%user%' => $user));
-    //     $alertClass     = ' alert-error';
-    // } elseif (!$entityIsNew && is_numeric($key) && $entity->getProtagonists()->get($i-1)->getStatus() == 'pending') {
-    //     // Object is not new, the protagonist is not new, the status is pending and user is not the current admin of the object
-    //     $requestText    = __('%user% has not accepted the request yet.', array('%user%' => $user));
-    //     $alertClass     = '';
-    // } elseif (!$entityIsNew && is_numeric($key) && $entity->getProtagonists()->get($i-1)->getStatus() == 'active' && $form['Protagonist'][$key]['user_id']->getValue() == $sf_user->getId()) {
-    //     // Object is not new, the protagonist is not new, the status is active and user is the current admin of the object
-    //     $requestText    = __('This element appears on your profile.', array('%user%' => $user));
-    //     $alertClass     = ' alert-success';
-    // } elseif (!$entityIsNew && is_numeric($key) && $entity->getProtagonists()->get($i-1)->getStatus() == 'active') {
-    //     // Object is not new, the protagonist is not new, the status is active and user is not the current admin of the object
-    //     $requestText    = __('This element appears on %user%\'s profile.', array('%user%' => $user));
-    //     $alertClass     = ' alert-success';
-    } elseif (!$entityIsNew && is_numeric($key) && $entity->getProtagonists()->get($i-1)->getStatus() == 'refused_protagonist') {
-        // Object is not new, the protagonist is not new, the status is rejected
-        $requestText    = __('%user% has denied the request and this element does not appear on his profile.', array('%user%' => $user));
-        $alertClass     = ' alert-error';
-    } elseif (!$entityIsNew && is_numeric($key) && $entity->getProtagonists()->get($i-1)->getStatus() == 'refused_admin') {
-        // Object is not new, the protagonist is not new, the status is rejected
-        $requestText    = __('%user%\' request has been denied and this element does not appear on his profile.', array('%user%' => $user));
-        $alertClass     = ' alert-error';
-    } elseif (!$entityIsNew && is_numeric($key) && $entity->getProtagonists()->get($i-1)->getStatus() == 'requested') {
-        // Object is not new, the protagonist is not new, the status is requested
-        $requestText    = __('%user% has sent a request to be added to the protagonists.', array('%user%' => $user)).' '.
-            link_to(__('Accept'), 'request/update?choice=accept&object='.$form->getOption('entity_type').'&object_id='.$entity->getId().'&user_id='.$user->getId().'&protagonist_key='.$key.'&callback=object_edit_protagonist', array('class' => 'btn btn-default btn-sm ajax-link request-accept')).' '.
-            link_to(__('Refuse'), 'request/update?choice=refuse&object='.$form->getOption('entity_type').'&object_id='.$entity->getId().'&user_id='.$user->getId().'&protagonist_key='.$key.'&callback=object_edit_protagonist', array('class' => 'btn btn-default btn-sm ajax-link request-refuse'));
-        $alertClass     = ' alert-info';
-    }
-?>#}
-
-
 {% if protagonist_new_id is not defined %}
     {% set protagonist_new_id = 0 %}
 {% endif %}
@@ -60,15 +9,7 @@
         {% set user = entityUser.user %}
 
         {% if newEntry %}
-            {% if target is not defined or target.type != 'group' %}
-                {% if user.id == app.security.token.user.id %}
-                    {% set requestText = ('This element will appear on your profile.' | trans) %}
-                    {% set alertClass = 'alert-success' %}
-                {% else %}
-                    {% set requestText = ('%user% will recive a request to add this element to his profile.' | trans({'%user%': user})) %}
-                    {% set alertClass = 'alert-warning' %}
-                {% endif %}
-            {% else %}
+            {% if target is defined and target | length == 2 and target.type == 'group' %}
                 {% if attribute(target.obj.groupUsers[loop.index0 - protagonist_new_id], joinEntityType) == 0 %} {# no #}
                     {% set requestText = ('%user% will not recive a request and this element will not be visible to his profile due to his group settings.' | trans({'%user%': user})) %}
                     {% set alertClass = 'alert-danger' %}
@@ -76,6 +17,14 @@
                     {% set requestText = ('This element will be automatically added to %user%\'s profile due to his group settings.' | trans({'%user%': user})) %}
                     {% set alertClass = 'alert-success' %}
                 {% elseif attribute(target.obj.groupUsers[loop.index0 - protagonist_new_id], joinEntityType) == 2 %} {# request #}
+                    {% set requestText = ('%user% will recive a request to add this element to his profile.' | trans({'%user%': user})) %}
+                    {% set alertClass = 'alert-warning' %}
+                {% endif %}
+            {% else %}
+                {% if user.id == app.security.token.user.id %}
+                    {% set requestText = ('This element will appear on your profile.' | trans) %}
+                    {% set alertClass = 'alert-success' %}
+                {% else %}
                     {% set requestText = ('%user% will recive a request to add this element to his profile.' | trans({'%user%': user})) %}
                     {% set alertClass = 'alert-warning' %}
                 {% endif %}
@@ -105,11 +54,15 @@
             {% set alertClass = '' %}
         {% endif %}
 
-        <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user alert {{ alertClass }}" user_id="{{ user.id }}" {% if target is defined and target | length == 2 %}{{ target.type }}_id="{{ target.obj.id }}"{% endif %}>
+        <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user media alert {{ alertClass }}" user_id="{{ user.id }}" {% if target is defined and target | length == 2 %}{{ target.type }}_id="{{ target.obj.id }}"{% endif %}>
             {{ form_errors(field) }}
-            {{ form_widget(field) }}
-            <p>{{ requestText }}</p>
-            {% if user.id != app.security.token.user.id %}<a class="btn btn-danger protagonists_remove" id="protagonists_remove_{{ loop.index0 }}><span class="glyphicon glyphicon-trash""></span>{{ "Remove this protagonist" | trans }}</a>{% endif %}
+            {% if user.id != app.security.token.user.id %}<a class="protagonists_remove close" aria-hidden="true" id="protagonists_remove_{{ loop.index0 }}">&times;</a>{% endif %}
+            {{ show_img_box(user.img | imagine_filter('350'), {'width': 75, 'height': 75, 'offset': user.offset, 'default': 'user', 'box_attributes': {'class': 'thumbnail pull-left'}}) | raw }}
+            <div class="media-body">
+                <h4 class="media-heading">{{ user }}</h4>
+                <p>{{ requestText }}</p>
+                {{ form_widget(field) }}
+            </div>
         </div>
     {% endif %}
 {% endfor %}

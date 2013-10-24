@@ -6,15 +6,18 @@ use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Doctrine\Common\Collections\ArrayCollection;
 
+// TODO: reinsert unique constraint:
+/*
+ *     uniqueConstraints={@ORM\UniqueConstraint(columns={
+ *         "page_id", "user_id"
+ *     })}
+ */
+
 /**
  * EntityUser
  *
  * @ORM\Entity
- * @ORM\Table(name="page_user",
- *     uniqueConstraints={@ORM\UniqueConstraint(columns={
- *         "page_id", "user_id"
- *     })}
- * )
+ * @ORM\Table(name="page_user")
  */
 class PageUser
 {

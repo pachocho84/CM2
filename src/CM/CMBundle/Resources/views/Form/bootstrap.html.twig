@@ -5,16 +5,25 @@
     {% set type = type|default('text') %}
     {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
     {% if type == 'date' %}
-        <div class="col-lg-5">
+        <div class="form-group col-lg-5">
     {% elseif type == 'time' %}
-        <div class="col-lg-4">
+        <div class="form-group col-lg-4">
+    {% elseif type == 'hidden' %}
+        <div>
     {% else %}
-        <div class="col-lg-9">
+        <div class="form-group col-lg-9">
     {% endif %}
         <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     </div>
 {% endspaceless %}
 {% endblock form_widget_simple %}
+
+{% block hidden_widget %}
+{% spaceless %}
+    {% set type = type|default('hidden') %}
+    {{ block('form_widget_simple') }}
+{% endspaceless %}
+{% endblock hidden_widget %}
 
 {% block textarea_widget %}
 {% spaceless %}

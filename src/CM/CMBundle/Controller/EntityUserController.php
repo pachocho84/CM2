@@ -43,9 +43,9 @@ class EntityUserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if (!is_null($request->query->get('user_id'))) {
-            $user_id = $request->query->get('user_id');
+            $user_id = intval($request->query->get('user_id'));
 
-            $users = array($em->getRepository('CMBundle:Group')->findOneBy($user_id));
+            $users = array($em->getRepository('CMBundle:User')->findOneById($user_id));
         } elseif (!is_null($request->query->get('group_id'))) {
             $group_id = $request->query->get('group_id');
 
@@ -89,6 +89,9 @@ class EntityUserController extends Controller
 
         $form = $this->createForm(new EventType, $event, array(
             'cascade_validation' => true,
+            'error_bubbling' => false,
+            'em' => $em,
+            'is_admin' => $this->get('security.context')->isGranted('ROLE_ADMIN'),
             'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()

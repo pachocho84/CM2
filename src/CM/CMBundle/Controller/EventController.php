@@ -279,12 +279,9 @@ if (!$this->get('cm_user.authentication')->canManage($event)) {
             // TODO: retrieve images from event
         }
 
-        $oldEntityUsersIds = array();
-
         $oldEntityUsers = array();
         foreach ($event->getEntityUsers() as $oldEntityUser) {
             $oldEntityUsers[] = $oldEntityUser;
-            $oldEntityUsersIds[] = $oldEntityUser->getId();
         }
 
         $oldEventDates = array();
@@ -301,11 +298,13 @@ if (!$this->get('cm_user.authentication')->canManage($event)) {
             $formRoute = 'event_new';
             $formRouteArgs = array();
         }
-
+ 
         $form = $this->createForm(new EventType, $event, array(
 /*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
             'cascade_validation' => true,
             'error_bubbling' => false,
+            'em' => $em,
+            'roles' => $user->getRoles(),
             'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
@@ -316,12 +315,6 @@ if (!$this->get('cm_user.authentication')->canManage($event)) {
         if (!$this->get('cm_user.authentication')->canManage($event)) {
               throw new HttpException(401, 'Unauthorized access.');
         } elseif ($form->isValid()) {
-
-            $newEntityUsersIds = array();
-
-            foreach ($event->getEntityUsers() as $entityUser) {
-                $newEntityUsersIds[] = $entityUser->getId();
-            }
 
             foreach ($event->getEventDates() as $eventDate) {
                 foreach ($oldEventDates as $key => $toDel) {
@@ -343,57 +336,27 @@ if (!$this->get('cm_user.authentication')->canManage($event)) {
                 $em->remove($eventDate);
             }
 
-            $saveEntityUsersIds = array();
-
             foreach ($event->getEntityUsers() as $entityUser) {
                 foreach ($oldEntityUsers as $key => $toDel) {
                     if ($toDel->getId() === $entityUser->getId()) {
                         unset($oldEntityUsers[$key]);
-                        $saveEntityUsersIds[] = $entityUser->getId();
                     }
                 }
             }
 
-            $removeEntityUsersIds = array();
-
-            foreach ($oldEntityUsers as $entityUser) {
-                $removeEntityUsersIds[] = $entityUser->getId();
-            }
-
-            echo '<html><body>OLD:</br><pre>';print_r($oldEntityUsersIds);echo'</pre></br>SAV:</br><pre>';print_r($saveEntityUsersIds);echo'</pre></br>REM:</br><pre>';print_r($removeEntityUsersIds);echo'</pre></br>NEW:</br><pre>';print_r($newEntityUsersIds);echo'</pre>';
-
-            $after = array();
             // remove the relationship between the tag and the Task
             foreach ($oldEntityUsers as $entityUser) {
-
-                echo $entityUser->getId().'</br>';
-
                 // remove the Task from the Tag
                 $event->removeEntityUser($entityUser);
-
-
-
-                $after[] = $entityUser->getId();
 
                 $entityUser->setEntity(null);
                 $entityUser->setUser(null);
     
-                $em->persist($entityUser);
                 $em->remove($entityUser);
             }
 
-            $afterEntityUsersIds = array();
-
-            foreach ($event->getEntityUsers() as $entityUser) {
-                $afterEntityUsersIds[] = $entityUser->getId();
-            }
-
-            echo 'AFT:</br><pre>';print_r($after);echo'</pre></br>EVN:</br><pre>';print_r($afterEntityUsersIds);echo'</pre></body></html>';
-
             $em->persist($event);
             $em->flush();
-
-            // die;
                   
             return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
         }

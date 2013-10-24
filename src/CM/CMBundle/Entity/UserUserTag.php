@@ -4,15 +4,18 @@ namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+// TODO: reinsert unique constraint:
+/*
+ *     uniqueConstraints={@ORM\UniqueConstraint(columns={
+ *         "user_id", "user_tag_id"
+ *     })}
+ */
+ 
 /**
  * UserUserTag
  *
  * @ORM\Entity
- * @ORM\Table(name="user_user_tag",
- *     uniqueConstraints={@ORM\UniqueConstraint(columns={
- *         "user_id", "user_tag_id"
- *     })}
- * )
+ * @ORM\Table(name="user_user_tag")
  */
 class UserUserTag
 {     
