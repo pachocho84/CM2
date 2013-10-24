@@ -1,9 +1,6 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
-{#
-{% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
-{% form_theme form 'MopaBootstrapBundle:Form:fields.html.twig' %}
-#}
+{% form_theme form 'CMBundle:Form:bootstrap.html.twig' %}
 
 {% block stylesheets %}
     {% stylesheets
@@ -14,9 +11,9 @@
 {% endblock %}
 
 {% block body %}
-        {{ form(form) }}
+        {# {{ form(form) }} #}
 
-{#
+
     {{ form_start(form) }}
         {{ form_errors(form) }}
         
@@ -26,15 +23,13 @@
         <div class="form-group cm_cmbundle_event_entityUsers_control_group protagonist_typeahead">
             <label class=" control-label col-lg-3 control-label required">{{ "Protagonists" | trans }}</label>
             <div class="collection-items col-lg-9" >
-                {{ include('CMBundle:Event:addProtagonist.html.twig', {'entityUsers': form.entityUsers}) }}
+                {{ include('CMBundle:EntityUser:addEntityUsers.html.twig', {'entityUsers': form.entityUsers}) }}
+                <div class="form-group" id="protagonists_finder_container" hidden><div class="form-group"><label class="control-label col-lg-3">Add new protagonist</label><input type="text" id="protagonists_finder" class="form-control col-lg-6" /></div></div>
             </div>
         </div>
-        
-        {{ form_row(form.visible) }}
-        {{ form_row(form.images) }}
 
     {{ form_end(form) }}
-#}
+
 {% endblock %}
 
 {% block javascripts %}

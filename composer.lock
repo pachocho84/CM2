@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "55e6b1ff68c111c95daa82d7c30734ae",
+    "hash": "553cee4e0b922bddccfddb6d3914ad07",
     "packages": [
         {
             "name": "a2lix/translation-form-bundle",
@@ -697,7 +697,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1630,120 +1630,6 @@
             "time": "2013-07-28 22:38:30"
         },
         {
-            "name": "mopa/bootstrap-bundle",
-            "version": "dev-master",
-            "target-dir": "Mopa/Bundle/BootstrapBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phiamo/MopaBootstrapBundle.git",
-                "reference": "7db0ffb50b3b045460baed244401aaf1a7f4c612"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/7db0ffb50b3b045460baed244401aaf1a7f4c612",
-                "reference": "7db0ffb50b3b045460baed244401aaf1a7f4c612",
-                "shasum": ""
-            },
-            "require": {
-                "mopa/composer-bridge": "1.3.*",
-                "symfony/symfony": "~2.3-dev"
-            },
-            "suggest": {
-                "craue/formflow-bundle": "dev-master",
-                "jlong/sass-twitter-bootstrap": "dev-master",
-                "knplabs/knp-menu-bundle": "2.0.*",
-                "knplabs/knp-paginator-bundle": "dev-master",
-                "mopa/bootstrap-sandbox-bundle": "~2.3",
-                "twbs/bootstrap": "2.*"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Mopa\\Bundle\\BootstrapBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Philipp A. Mohrenweiser",
-                    "email": "phiamo@googlemail.com",
-                    "homepage": "http://bootstrap.mohrenweiserpartner.de"
-                },
-                {
-                    "name": "Community contributions",
-                    "homepage": "https://github.com/phiamo/MopaBootstrapBundle/contributors"
-                }
-            ],
-            "description": "Easy integration of twitters bootstrap into symfony2",
-            "keywords": [
-                "bootstrap",
-                "bootstrap form",
-                "extra form",
-                "form",
-                "template"
-            ],
-            "time": "2013-10-21 22:08:47"
-        },
-        {
-            "name": "mopa/composer-bridge",
-            "version": "v1.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phiamo/MopaComposerBridge.git",
-                "reference": "4ce791bfeabc5261da11cf4a949745d60dae711f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phiamo/MopaComposerBridge/zipball/4ce791bfeabc5261da11cf4a949745d60dae711f",
-                "reference": "4ce791bfeabc5261da11cf4a949745d60dae711f",
-                "shasum": ""
-            },
-            "require": {
-                "symfony/console": "2.*"
-            },
-            "type": "symfony-bridge",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Mopa\\Bridge\\Composer": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Philipp A. Mohrenweiser",
-                    "email": "phiamo@googlemail.com",
-                    "homepage": "http://bootstrap.mohrenweiserpartner.de"
-                },
-                {
-                    "name": "Community contributions",
-                    "homepage": "https://github.com/phiamo/MopaComposerBridge/contributors"
-                }
-            ],
-            "description": "Symfony2 Composer Bridge",
-            "homepage": "http://bootstrap.mohrenweiserpartner.de",
-            "keywords": [
-                "Symfony2",
-                "composer"
-            ],
-            "time": "2013-09-10 10:06:34"
-        },
-        {
             "name": "psr/log",
             "version": "1.0.0",
             "source": {
@@ -1929,12 +1815,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataAdminBundle.git",
-                "reference": "d3861f5f6a5f0e63d105ed9f5874ef04e951d9c4"
+                "reference": "e8f6032b48d4e75bbd11cd75c755cc679c3ae8a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataAdminBundle/zipball/d3861f5f6a5f0e63d105ed9f5874ef04e951d9c4",
-                "reference": "d3861f5f6a5f0e63d105ed9f5874ef04e951d9c4",
+                "url": "https://api.github.com/repos/sonata-project/SonataAdminBundle/zipball/e8f6032b48d4e75bbd11cd75c755cc679c3ae8a6",
+                "reference": "e8f6032b48d4e75bbd11cd75c755cc679c3ae8a6",
                 "shasum": ""
             },
             "require": {
@@ -1999,7 +1885,7 @@
                 "bootstrap",
                 "sonata"
             ],
-            "time": "2013-10-21 08:35:15"
+            "time": "2013-10-23 08:21:46"
         },
         {
             "name": "sonata-project/block-bundle",
@@ -2122,28 +2008,30 @@
         },
         {
             "name": "sonata-project/exporter",
-            "version": "1.3.1",
+            "version": "1.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/exporter.git",
-                "reference": "0b70df4ef28eafd48efc21b5257a78060c69e9ab"
+                "reference": "32be2960ad553b27cc9a828f91d7d501e16ba8ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/exporter/zipball/0b70df4ef28eafd48efc21b5257a78060c69e9ab",
-                "reference": "0b70df4ef28eafd48efc21b5257a78060c69e9ab",
+                "url": "https://api.github.com/repos/sonata-project/exporter/zipball/32be2960ad553b27cc9a828f91d7d501e16ba8ae",
+                "reference": "32be2960ad553b27cc9a828f91d7d501e16ba8ae",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
             "require-dev": {
-                "php": ">=5.3.0",
-                "symfony/property-access": ">=2.2, <3.0.0-dev",
+                "propel/propel1": "~1.6",
+                "symfony/property-access": "~2.2",
                 "symfony/routing": "*"
             },
             "suggest": {
                 "ext-curl": "*",
+                "propel/propel1": "~1.6",
+                "symfony/property-access": "~2.2",
                 "symfony/routing": "*"
             },
             "type": "library",
@@ -2172,7 +2060,7 @@
                 "export",
                 "xls"
             ],
-            "time": "2013-08-05 08:50:12"
+            "time": "2013-10-11 10:14:05"
         },
         {
             "name": "sonata-project/intl-bundle",
@@ -2669,12 +2557,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "9673c25e2cf8701e4fe0d255d38f1a9f6b193e9f"
+                "reference": "eb77241ae2d4b90fccea1707e12caca355a1afce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/9673c25e2cf8701e4fe0d255d38f1a9f6b193e9f",
-                "reference": "9673c25e2cf8701e4fe0d255d38f1a9f6b193e9f",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/eb77241ae2d4b90fccea1707e12caca355a1afce",
+                "reference": "eb77241ae2d4b90fccea1707e12caca355a1afce",
                 "shasum": ""
             },
             "type": "library",
@@ -2698,7 +2586,7 @@
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-10-21 15:58:38"
+            "time": "2013-10-22 20:45:41"
         },
         {
             "name": "twig/extensions",
@@ -2809,7 +2697,6 @@
         "doctrine/data-fixtures": 20,
         "doctrine/doctrine-migrations-bundle": 20,
         "doctrine/migrations": 20,
-        "mopa/bootstrap-bundle": 20,
         "twbs/bootstrap": 20,
         "knplabs/doctrine-behaviors": 20,
         "a2lix/translation-form-bundle": 20,

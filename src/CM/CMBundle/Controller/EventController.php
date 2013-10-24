@@ -170,12 +170,12 @@ class EventController extends Controller
         return array('event' => $event, 'tags' => $tags, 'form' => $form->createView());
     }
     
-    /**
+    /*
      * @Route("/new", name="event_new") 
      * @Route("/{id}/{slug}/edit", name="event_edit", requirements={"id" = "\d+"}) 
      * @Template
      */
-    public function editAction(Request $request, $id = null, $slug = null)
+    public function QeditAction(Request $request, $id = null, $slug = null)
     {
         if (!$this->get('cm_user.authentication')->isAuthenticated()) {
             return new RedirectResponse($this->generateUrl('fos_user_security_login'));
@@ -208,12 +208,16 @@ class EventController extends Controller
             'action' => $this->generateUrl($formRoute, $formRouteArgs),
 /*             'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())), */
             'locales' => array('en'/* , 'fr', 'it' */),
-            'locale' => $request->getLocale()
+            'locale' => $request->getLocale(),
+            'cascade_validation' => true,
+            'error_bubbling' => false
         ))->add('save', 'submit');
         
         
         $form->handleRequest($request);
-/* var_dump($form->isValid()); die; */
+
+        echo'<pre>';print_r($form->getErrors());echo'</pre>';
+
         /*
 if (!$this->get('cm_user.authentication')->canManage($event)) {
               throw new HttpException(401, 'Unauthorized access.');
@@ -232,12 +236,12 @@ if (!$this->get('cm_user.authentication')->canManage($event)) {
         );
     }
     
-    /*
+    /**
      * @Route("/new", name="event_new") 
      * @Route("/{id}/{slug}/edit", name="event_edit", requirements={"id" = "\d+"}) 
      * @Template
      */
-    public function editwAction(Request $request, $id = null, $slug = null)
+    public function editAction(Request $request, $id = null, $slug = null)
     {
         if (!$this->get('cm_user.authentication')->isAuthenticated()) {
             return new RedirectResponse($this->generateUrl('fos_user_security_login'));
@@ -272,13 +276,20 @@ if (!$this->get('cm_user.authentication')->canManage($event)) {
             $event->addPost($post);
         } else {
             $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale(), 'protagonists' => true));
-/*             $event = $em->getRepository('CMBundle:Event')->getEvent($id, $request->getLocale()); */
             // TODO: retrieve images from event
         }
+
+        $oldEntityUsersIds = array();
 
         $oldEntityUsers = array();
         foreach ($event->getEntityUsers() as $oldEntityUser) {
             $oldEntityUsers[] = $oldEntityUser;
+            $oldEntityUsersIds[] = $oldEntityUser->getId();
+        }
+
+        $oldEventDates = array();
+        foreach ($event->getEventDates() as $oldEventDate) {
+            $oldEventDates[] = $oldEventDate;
         }
         
         // TODO: retrieve locales from user
@@ -294,6 +305,7 @@ if (!$this->get('cm_user.authentication')->canManage($event)) {
         $form = $this->createForm(new EventType, $event, array(
 /*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
             'cascade_validation' => true,
+            'error_bubbling' => false,
             'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
@@ -304,127 +316,99 @@ if (!$this->get('cm_user.authentication')->canManage($event)) {
         if (!$this->get('cm_user.authentication')->canManage($event)) {
               throw new HttpException(401, 'Unauthorized access.');
         } elseif ($form->isValid()) {
-            // ensure removed entityUsers deletion from database
+
+            $newEntityUsersIds = array();
+
             foreach ($event->getEntityUsers() as $entityUser) {
-                foreach ($oldEntityUsers as $key => $oldEntityUser) {
-                    if ($oldEntityUser->getId() == $entityUser->getId()) {
-                        unset($oldEntityUsers[$key]);
-                        break;
+                $newEntityUsersIds[] = $entityUser->getId();
+            }
+
+            foreach ($event->getEventDates() as $eventDate) {
+                foreach ($oldEventDates as $key => $toDel) {
+                    if ($toDel->getId() === $eventDate->getId()) {
+                        unset($oldEventDates[$key]);
                     }
                 }
             }
-            foreach ($oldEntityUsers as $oldEntityUser) {
-                $event->removeEntityUser($oldEntityUser);
-                $em->remove($oldEntityUser);
+    
+            // remove the relationship between the tag and the Task
+            foreach ($oldEventDates as $eventDate) {
+                // remove the Task from the Tag
+                $event->removeEventDate($eventDate);
+    
+                // if it were a ManyToOne relationship, remove the relationship like this
+                // $tag->setTask(null);
+    
+                // if you wanted to delete the Tag entirely, you can also do that
+                $em->remove($eventDate);
             }
-            $em->flush();
+
+            $saveEntityUsersIds = array();
+
+            foreach ($event->getEntityUsers() as $entityUser) {
+                foreach ($oldEntityUsers as $key => $toDel) {
+                    if ($toDel->getId() === $entityUser->getId()) {
+                        unset($oldEntityUsers[$key]);
+                        $saveEntityUsersIds[] = $entityUser->getId();
+                    }
+                }
+            }
+
+            $removeEntityUsersIds = array();
+
+            foreach ($oldEntityUsers as $entityUser) {
+                $removeEntityUsersIds[] = $entityUser->getId();
+            }
+
+            echo '<html><body>OLD:</br><pre>';print_r($oldEntityUsersIds);echo'</pre></br>SAV:</br><pre>';print_r($saveEntityUsersIds);echo'</pre></br>REM:</br><pre>';print_r($removeEntityUsersIds);echo'</pre></br>NEW:</br><pre>';print_r($newEntityUsersIds);echo'</pre>';
+
+            $after = array();
+            // remove the relationship between the tag and the Task
+            foreach ($oldEntityUsers as $entityUser) {
+
+                echo $entityUser->getId().'</br>';
+
+                // remove the Task from the Tag
+                $event->removeEntityUser($entityUser);
+
+
+
+                $after[] = $entityUser->getId();
+
+                $entityUser->setEntity(null);
+                $entityUser->setUser(null);
+    
+                $em->persist($entityUser);
+                $em->remove($entityUser);
+            }
+
+            $afterEntityUsersIds = array();
+
+            foreach ($event->getEntityUsers() as $entityUser) {
+                $afterEntityUsersIds[] = $entityUser->getId();
+            }
+
+            echo 'AFT:</br><pre>';print_r($after);echo'</pre></br>EVN:</br><pre>';print_r($afterEntityUsersIds);echo'</pre></body></html>';
 
             $em->persist($event);
             $em->flush();
+
+            // die;
                   
             return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
         }
 
-        $user_ids = array();
+        $users = array();
         foreach ($event->getEntityUsers() as $entityUser) {
-            $user_ids[] = $entityUser->getUser()->getId();
+            $users[] = $entityUser->getUser();
         }
         
         return array(
             'form' => $form->createView(),
-            'user_ids' => $user_ids
+            'entity' => $event,
+            'newEntry' => ($formRoute == 'event_new'),
+            'joinEntityType' => 'joinEvent'
         );
-    }
-
-    /**
-     * @Route("/protagonist/add", name="user_add_protagonist")
-     * @Route("/protagonist/addGroup", name="user_add_group_protagonists")
-     * @Route("/protagonist/addPage", name="user_add_page_protagonists")
-     * @Template
-     */
-    public function addProtagonistAction(Request $request)
-    {
-        if (!$request->isXmlHttpRequest() || !$this->get('cm_user.authentication')->isAuthenticated()) {
-            throw new HttpException(401, 'Unauthorized access.');
-        }
-        $em = $this->getDoctrine()->getManager();
-
-        $target = array();
-        if (!is_null($request->query->get('user_id'))) {
-            $user_ids = explode(',', $request->query->get('user_id'));
-        } elseif (!is_null($request->query->get('group_id'))) {
-            $group_id = $request->query->get('group_id');
-
-            $excludes = explode(',', $request->query->get('exclude'));
-            $user_ids = $em->getRepository('CMBundle:Group')->getUserIdsFor($group_id, $excludes);
-
-            $target = array('group_id', $group_id);
-        } elseif (!is_null($request->query->get('page_id'))) {
-            $page_id = $request->query->get('page_id');
-
-            $excludes = explode(',', $request->query->get('exclude'));
-            $user_ids = $em->getRepository('CMBundle:Page')->getUserIdsFor($page_id, $excludes);
-
-            $target = array('page_id', $page_id);
-        } else {
-            // throw exception
-        }
-
-        $event = new Event;
-            
-        $protagonist_new_id = $request->query->get('protagonist_new_id');
-
-        // add dummies
-        foreach (range(0, $protagonist_new_id - 1) as $i) {
-            $event->addUser($this->getUser());
-        }
-
-        for ($i = 0; $i < count($user_ids); $i++) {
-            $user = $em->getRepository('CMBundle:User')->findOneById($user_ids[$i]);
-    
-            $event->addUser(
-                $user,
-                false, // admin
-                EntityUser::STATUS_ACTIVE,
-                true // notifications
-            );
-        }
-
-        $form = $this->createForm(new EventType, $event, array(
-            'cascade_validation' => true,
-            'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
-            'locales' => array('en'/* , 'fr', 'it' */),
-            'locale' => $request->getLocale()
-        ));
-        
-        return array(
-            'skip' => true,
-            'user_ids' => $user_ids,
-            'entityUsers' => $form->createView()['entityUsers'],
-            'target' => $target,
-            'protagonist_new_id' => $protagonist_new_id
-        );
-    }
-
-    /**
-     * @Route("/group/protagonists/remove", name="user_remove_group_protagonists")
-     * @Route("/page/protagonists/remove", name="user_remove_page_protagonists")
-     */
-    public function removeProtagonistAction(Request $request)
-    {
-
-        if (!is_null($request->query->get('group_id'))) {
-            $group_ids = explode(',', $request->query->get('group_id'));
-            $user_ids = $em->getRepository('CMBundle:Group')->getUserIdsFor($group_ids);
-        var_dump($user_ids); die;
-        } elseif (!is_null($request->query->get('page_id'))) {
-            $page_ids = explode(',', $request->query->get('page_id'));
-            $user_ids = $em->getRepository('CMBundle:Page')->getUserIdsFor($page_ids);
-        } else {
-            // throw exception
-        }
-
-        return new JsonResponse($user_ids);
     }
     
     /**

@@ -9,14 +9,6 @@
 		<link href="{{ asset('/bundles/cm/css/common.css') }}" rel="stylesheet" />
 		<link href="{{ asset('/bundles/cm/css/main.css') }}" rel="stylesheet" />
 
-{#
-        {% stylesheets
-            '@MopaBootstrapBundle/Resources/public/less/mopabootstrapbundle.less'
-            '@MopaBootstrapBundle/Resources/public/less/eyecon-datepicker.less'
-        %}
-            <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
-        {% endstylesheets %}
-#}
 		{% block stylesheets %}{% endblock %}
 		
 		<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
@@ -119,32 +111,6 @@
         <script src="{{ asset('/js/jquery.hcsticky-min.js') }}"></script>
         <script src="{{ asset('/js/jquery.cycle2.min.js') }}"></script>
         <script src="{{ asset('/js/jquery.cycle2.scrollVert.min.js') }}"></script>
-
-{#
-        {% javascripts
-            '@MopaBootstrapBundle/Resources/public/bootstrap/js/tooltip.js'
-            '@MopaBootstrapBundle/Resources/public/bootstrap/js/affix.js'
-            '@MopaBootstrapBundle/Resources/public/bootstrap/js/alert.js'
-            '@MopaBootstrapBundle/Resources/public/bootstrap/js/button.js'
-            '@MopaBootstrapBundle/Resources/public/bootstrap/js/carousel.js'
-            '@MopaBootstrapBundle/Resources/public/bootstrap/js/collapse.js'
-            '@MopaBootstrapBundle/Resources/public/bootstrap/js/dropdown.js'
-            '@MopaBootstrapBundle/Resources/public/bootstrap/js/modal.js'
-            '@MopaBootstrapBundle/Resources/public/bootstrap/js/popover.js'
-            '@MopaBootstrapBundle/Resources/public/bootstrap/js/scrollspy.js'
-            '@MopaBootstrapBundle/Resources/public/bootstrap/js/tab.js'
-            '@MopaBootstrapBundle/Resources/public/bootstrap/js/transition.js'
-            '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
-        %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('[data-toggle="tooltip"]').tooltip();
-                $('[data-toggle="popover"]').popover();
-            });
-        </script>
-#}
 
         <script src="{{ asset('/bundles/cm/js/common.js') }}"></script>
         <script src="{{ asset('/bundles/cm/js/interface.js') }}"></script>

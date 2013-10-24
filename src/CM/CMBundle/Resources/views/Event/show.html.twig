@@ -12,7 +12,7 @@
           <ul>
               {% for protagonist in event.entityUsers %}
                   <li>
-                      {{ protagonist.user }}
+                      {{ protagonist.id }} : {{ protagonist.user }}
                       {% for userTag in protagonist.userTags %}
                           <ul>
                               <li>{{ tags[userTag] }}</li>
@@ -23,7 +23,7 @@
           </ul>
           <ul>
               {% for date in event.eventDates %}
-                  <li>{{ date.start | date }}</li>
+                  <li>{{date.id}} : {{ date.start | date }}</li>
               {% endfor %}
           </ul>
       </div>

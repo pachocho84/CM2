@@ -16,5 +16,10 @@
 
   * Run the fixtures `php app/console doctrine:fixtures:load -n`
 
+2) Working with assetic
+-----------------------
+
+While working on javascripts or css files, run `php app/console assetic:dump --watch` in a separate terminal.
+
 [1]:  http://lesscss.org/
 [2]:  http://nodejs.org/

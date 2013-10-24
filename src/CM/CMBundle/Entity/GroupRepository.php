@@ -19,6 +19,17 @@ class GroupRepository extends EntityRepository
         ), $options);
     }
 
+    public function getGroupExcludeUsers($group_id, $excludes)
+    {
+        return $this->createQueryBuilder('g')
+            ->select('g, gu, u')
+            ->leftJoin('g.groupUsers', 'gu')
+            ->leftJoin('gu.user', 'u')
+            ->where('g.id = :group_id')->setParameter('group_id', $group_id)
+            ->andWhere('u.id NOT IN (:excludes)')->setParameter('excludes', $excludes)
+            ->getQuery()->getSingleResult();
+    }
+
     public function filterGroupsForUser($user_id)
     {
         return $this->createQueryBuilder('g')

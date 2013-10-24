@@ -1,15 +1,16 @@
 $(function() {
     /* PROTAGONIST */
-    var protagonist_new_id;
+    var protagonist_new_id = parseInt(1 + $('.protagonists_user:last').attr('protagonist_new_id')) + 5;
     var collection = $('.protagonist_typeahead').children('.collection-items');
     collection.on('typeahead:autocompleted typeahead:selected', function (event, datum) {
         // console.log(datum);
-        protagonist_new_id = parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1;
-        $.get(script + '/protagonist/add?user_id=' + datum.id + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1) + '&entity_type=' + $('#protagonists').attr('object'), function (data) {
+        protagonist_new_id += 1;
+        $.get(script + '/protagonist/add?user_id=' + datum.id + '&protagonist_new_id=' + protagonist_new_id + '&entity_type=' + $('#protagonists').attr('object'), function (data) {
             $('.protagonists_user:last').after(data);
+            $('#protagonists_finder').val('');
         });
     });
-    collection.append('<div class="form-group"><div class="form-group"><label class="control-label col-lg-3">Add new protagonist</label><input type="text" id="protagonists_finder" class="form-control col-lg-6" /></div></div>');
+    $('#protagonists_finder_container').removeAttr('hidden');
     $('#protagonists_finder').typeahead({
         name: 'protagonists',
         valueKey: 'fullname',
@@ -38,7 +39,7 @@ $(function() {
             $(this).remove();
         });
         if (group != '') {
-            $.get(script + '/events/protagonist/addGroup?group_id=' + group + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',') + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1), function (data) {
+            $.get(script + '/protagonist/addGroup?group_id=' + group + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',') + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1), function (data) {
                 $('.protagonists_user:last').after(data);
             });
         }
@@ -51,7 +52,7 @@ $(function() {
             $(this).remove();
         });
         if (group != '') {
-            $.get(script + '/events/protagonist/addPage?page_id=' + group + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',') + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1), function (data) {
+            $.get(script + '/protagonist/addPage?page_id=' + group + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',') + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1), function (data) {
                 $('.protagonists_user:last').after(data);
             });
         }

@@ -28,6 +28,11 @@ cm_cmbundle_group:
     type:     annotation
     prefix:   /
 
+cm_cmbundle_entityuser:
+    resource: "CM\\CMBundle\\Controller\\EntityUserController"
+    type:     annotation
+    prefix:   /
+
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 

@@ -61,7 +61,7 @@ abstract class Entity
      * @Assert\Valid
      */
     private $posts;
-
+    
     private $post;
     
     public function __construct()

@@ -27,7 +27,7 @@ class EntityType extends AbstractType
     {
         $builder->add('translations', 'a2lix_translations', array(
                 'locales' => $options['locales'],
-                'required' => true,    
+                'required' => true,
                 'fields' => array(
                     'title' => array(),
                     'subtitle' => array(
@@ -48,29 +48,26 @@ class EntityType extends AbstractType
                     $entityCategory = constant('CM\CMBundle\Entity\EntityCategory::'.$entityChild);
                     return $er->filterEntityCategoriesByEntityType($entityCategory, $options);
                 }
-            ))/*
+            ))
             ->add('entityUsers', 'collection', array(
                 'type' => new EntityUserType,
-                'by_reference' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
+                'by_reference' => false,
                 'options' => array(
                     'tags' => $options['user_tags'],
                     'locale' => $options['locale'],
                     'locales' => $options['locales'],
-                    'label_render' => false,
                 )
-            ))*/
+            ))
             ->add('visible')
-/*
             ->add('images', 'collection', array(
                 'type' => new ImageType,
                 'by_reference' => false,
                 'options' => array(
-                    'label_render' => false,
+                    'error_bubbling' => false,
                 )
-            ))
-*/;
+            ));
     }
     
     /**

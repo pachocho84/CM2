@@ -23,6 +23,7 @@ class ImageType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'error_bubbling' => false,
             'data_class' => 'CM\CMBundle\Entity\Image'
         ));
     }

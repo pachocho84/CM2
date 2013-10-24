@@ -15,6 +15,7 @@
   /*.dow {
 		border-top: 1px solid #ddd !important;
 	}*/
+
 }
 .datepicker:before {
   content: '';

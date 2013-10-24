@@ -35,6 +35,7 @@ class EventDate
      *
      * @ORM\Column(name="start", type="datetimetz")
      * @Assert\DateTime
+     * @Assert\NotNull
      */
     private $start;
 

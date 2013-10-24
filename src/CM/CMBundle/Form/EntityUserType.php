@@ -56,7 +56,6 @@ class EntityUserType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'attr' => array('class' => 'protagonists_user'),
             'tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),

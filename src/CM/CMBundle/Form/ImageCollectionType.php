@@ -15,23 +15,16 @@ class ImageCollectionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('images', 'collection', array(
+        $builder->add('images', 'collection', array(
                 'label' => 'Add images',
                 'required' => false,
                 'type' => new ImageType(),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-                'widget_add_btn' => array(
-                    'label' => 'add an image'
-                ),
                 'options' => array(
-                    'horizontal' => true,
-                    'label_render' => false,
-                    'horizontal_input_wrapper_class' => "col-lg-8",
                 )
-        ));
+            ));
     }
     
     /**

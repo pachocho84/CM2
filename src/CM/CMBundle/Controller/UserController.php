@@ -19,6 +19,32 @@ use CM\CMBundle\Form\EventType;
 class UserController extends Controller
 {
     /**
+     * @Route("/typeaheadHint", name="user_typeahead_hint")
+     */
+    public function typeaheadHintAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $exclude = $request->query->get('exclude') ? explode(',', $request->query->get('exclude')) : array();
+        $exclude[] = $this->getUser()->getId();
+        $users = $em->getRepository('CMBundle:User')->getFromAutocomplete($request->query->get('query'), $exclude);
+
+        $results = array();
+        foreach($users as $user)
+        {
+            if ($user['img'] == '' || $user['img'] == null) {
+                $user['img'] = '/uploads/utenti/avatar/50/default.jpg';
+            } else {
+                $user['img'] = '/uploads/utenti/avatar/50/'.$user['img'];
+            }
+            $user['fullname'] = $user['firstName'].' '.$user['lastName'];
+            $results[] = $user;
+        }
+
+        return new JsonResponse($results);
+    }
+
+    /**
      * @Route("/{slug}", name="user_show")
      * @Template
      */
@@ -66,30 +92,4 @@ class UserController extends Controller
 		
 		return array('categories' => $categories, 'user' => $user, 'dates' => $pagination, 'category' => $category, 'page' => $page);
 	}
-
-    /**
-     * @Route("/typeaheadHint", name="user_typeahead_hint")
-     */
-    public function typeaheadHintAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $exclude = $request->query->get('exclude') ? explode(',', $request->query->get('exclude')) : array();
-        $exclude[] = $this->getUser()->getId();
-        $users = $em->getRepository('CMBundle:User')->getFromAutocomplete($request->query->get('query'), $exclude);
-
-        $results = array();
-        foreach($users as $user)
-        {
-            if ($user['img'] == '' || $user['img'] == null) {
-                $user['img'] = '/uploads/utenti/avatar/50/default.jpg';
-            } else {
-                $user['img'] = '/uploads/utenti/avatar/50/'.$user['img'];
-            }
-            $user['fullname'] = $user['firstName'].' '.$user['lastName'];
-            $results[] = $user;
-        }
-
-        return new JsonResponse($results);
-    }
 }
