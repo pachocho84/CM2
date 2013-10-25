@@ -2,6 +2,7 @@ imports:
     - { resource: security.yml }
 
 parameters:
+    cm_property_accessor.class: CM\CMBundle\PropertyAccess\CMPropertyAccessor
     bundle.dir: /bundles/cm
     upload.dir: %bundle.dir%/uploads
     images.dir: %upload.dir%/images
@@ -63,6 +64,9 @@ sonata_block:
             contexts:   [admin]
 
 services:
+    property_accessor:
+        class: %cm_property_accessor.class%
+
     cm.twig.cm_extension:
         class: CM\CMBundle\Twig\CMExtension
         arguments: 

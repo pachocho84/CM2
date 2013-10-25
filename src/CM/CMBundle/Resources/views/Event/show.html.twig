@@ -8,7 +8,7 @@
         {% if can_manage(event) %}<a href="{{ path('event_edit', {'id': event.id, 'slug': event.getSlug}) }}">{{ "Edit" | trans }}</a>{% endif %}
       </header>
       <div>
-          <p>{{ event.getExtract }}</p>
+          <p>{{ event.getText }}</p>
           <ul>
               {% for protagonist in event.entityUsers %}
                   <li>

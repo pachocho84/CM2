@@ -66,6 +66,8 @@ abstract class Entity
     
     public function __construct()
     {
+        $this->translate('en');
+        $this->mergeNewTranslations();
         $this->entityUsers = new ArrayCollection();
         $this->images = new ArrayCollection();
     }

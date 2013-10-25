@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use CM\CMBundle\Entity\EntityCategoryRepository;
+use CM\CMBundle\Entity\EntityTranslation;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Form\EntityTranslationType;
 use CM\CMBundle\Form\DataTransformer\ArrayCollectionToEntityTransformer;
@@ -27,26 +28,31 @@ class EntityType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add($builder->create('translations', new EntityTranslationType)->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 0, function ($entity) { $entity->setLocale('en'); })));
-/*
-        $builder->add('translations', 'a2lix_translations', array(
-                'locales' => $options['locales'],
-                'required' => true,
-                'fields' => array(
-                    'title' => array(),
-                    'subtitle' => array(
-                        'display' => in_array('ROLE_CLIENT', $options['roles']),
-                        'required' => false,
-                    ),
-                    'extract' => array(
-                        'display' => in_array('ROLE_CLIENT', $options['roles']),
-                        'required' => false
-                    ),
-                    'text' => array(),
-                    'slug' => array('display' => false)
-                )
-            ));
-*/
+        if (in_array('ROLE_CLIENT', $options['roles'])) {
+            $builder->add('translations', 'a2lix_translations', array(
+                    'locales' => $options['locales'],
+                    'required' => true,
+                    'fields' => array(
+                        'title' => array(),
+                        'subtitle' => array(
+                            'display' => in_array('ROLE_CLIENT', $options['roles']),
+                            'required' => false,
+                        ),
+                        'extract' => array(
+                            'display' => in_array('ROLE_CLIENT', $options['roles']),
+                            'required' => false
+                        ),
+                        'text' => array(),
+                        'slug' => array('display' => false)
+                    )
+                ));
+        } else {
+            $builder->add($builder->create('translations', new EntityTranslationType, array('label' => 'Body'))->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 'en')));
+
+            // $builder->add('translations', 'collection', array(
+            //         'type' => new EntityTranslationType
+            //     ));
+        }
         $builder->add('entityCategory', 'entity', array(
                 'label' => 'Category',
                 'class' => 'CMBundle:EntityCategory',

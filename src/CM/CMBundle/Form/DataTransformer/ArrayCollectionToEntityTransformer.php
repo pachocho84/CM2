@@ -15,52 +15,39 @@ class ArrayCollectionToEntityTransformer implements DataTransformerInterface
     private $om;
     
     private $index;
-    
-    private $callback;
 
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om, $index = 0, $callback = null)
+    public function __construct(ObjectManager $om, $index = 0)
     {
         $this->om = $om;
         $this->index = $index;
-        $this->callback = $callback;
     }
 
     /**
-     * Transforms an object (issue) to a string (number).
-     *
-     * @param  Issue|null $issue
-     * @return string
+     * Transforms an array collection to an entity.
      */
     public function transform($arrayCollection)
     {
         if (is_null($arrayCollection)) {
-            return -1;
+            return null;
         }
     
-        return $arrayCollection[$index];
+        return $arrayCollection[$this->index];
     }
 
     /**
-     * Transforms a string (number) to an object (issue).
-     *
-     * @param  string $number
-     *
-     * @return Issue|null
-     *
-     * @throws TransformationFailedException if object (issue) is not found.
+     * Transforms an entity to an array collection.
      */
     public function reverseTransform($entity)
     {
         if (is_null($entity)) {
-            return -1;
+            return null;
         }
-x
         
         $arrayCollection = new ArrayCollection;
-        $arrayCollection[] = $entity;
+        $arrayCollection[$this->index] = $entity;
     
         return $arrayCollection;
     }

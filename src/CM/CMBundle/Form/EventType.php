@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
+use CM\CMBundle\Form\DataTransformer\ArrayCollectionToEntityTransformer;
 
 class EventType extends EntityType
 {
@@ -28,14 +29,15 @@ class EventType extends EntityType
                 'options' => array(
                 )
             ))
-            ->add('posts', 'collection', array(
-                'type' => new PostType(),
-                'by_reference' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'options' => array(
-                )
-            ));
+            ->add($builder->create('posts', new PostType, array('label' => 'Post'))->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'])));
+            // ->add('posts', 'collection', array(
+            //     'type' => new PostType(),
+            //     'by_reference' => false,
+            //     'allow_add' => true,
+            //     'allow_delete' => true,
+            //     'options' => array(
+            //     )
+            // ));
     }
     
     /**

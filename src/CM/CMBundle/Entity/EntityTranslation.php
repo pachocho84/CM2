@@ -87,6 +87,11 @@ class EntityTranslation
      */
     private $text;
 
+    public function __construct()
+    {
+        $this->locale = 'en';
+    }
+
     /**
      * Set title
      *
