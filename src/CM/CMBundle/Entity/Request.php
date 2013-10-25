@@ -36,10 +36,22 @@ class Request
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="requestsOutcoming")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="requestsOutgoing")
      * @ORM\JoinColumn(name="from_user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $fromUser;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Group", inversedBy="requestsOutgoing")
+     * @ORM\JoinColumn(name="from_group_id", referencedColumnName="id", onDelete="CASCADE")
+     **/
+    private $fromGroup;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="requestsOutgoing")
+     * @ORM\JoinColumn(name="from_page_id", referencedColumnName="id", onDelete="CASCADE")
+     **/
+    private $fromPage;
 
     /**
      * @ORM\ManyToOne(targetEntity="Entity")
@@ -158,9 +170,11 @@ class Request
      * @param User $user
      * @return Request
      */
-    public function setUser(User $user = null)
+    public function setUser(User $user)
     {
-        $this->user = $user;
+        if ($user->addRequestIncoming($this)) {
+            $this->user = $user;
+        }
     
         return $this;
     }
@@ -181,9 +195,11 @@ class Request
      * @param User $fromUser
      * @return Request
      */
-    public function setFromUser(User $fromUser = null)
+    public function setFromUser(User $fromUser)
     {
-        $this->fromUser = $fromUser;
+        if ($user->addRequestOutgoing($this)) {
+            $this->fromUser = $fromUser;
+        }
     
         return $this;
     }
@@ -204,7 +220,7 @@ class Request
      * @param Entity $entity
      * @return Request
      */
-    public function setEntity(Entity $entity = null)
+    public function setEntity(Entity $entity)
     {
         $this->entity = $entity;
     

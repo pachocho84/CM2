@@ -48,7 +48,8 @@ class CMExtension extends \Twig_Extension
 
     public function getClassName($object)
     {
-        return preg_replace('/^[\w\d_\\\]*\\\/', '', get_class($object));
+        $name = new \ReflectionClass(get_class($object));
+        return $name->getShortName();
     }
 
     public function getCanManage($object)

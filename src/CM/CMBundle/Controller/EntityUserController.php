@@ -91,7 +91,7 @@ class EntityUserController extends Controller
             'cascade_validation' => true,
             'error_bubbling' => false,
             'em' => $em,
-            'is_admin' => $this->get('security.context')->isGranted('ROLE_ADMIN'),
+            'roles' => $user->getRoles(),
             'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()

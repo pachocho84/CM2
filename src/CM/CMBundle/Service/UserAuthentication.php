@@ -123,7 +123,11 @@ class UserAuthentication
             {
                 $creator_id = $object->getUser()->getId();
             } elseif (method_exists($object, 'getPost')) {
-                $creator_id = $object->getPost()->getCreator()->getId();
+                if (!is_null($object->getPost())) {
+                    $creator_id = $object->getPost()->getCreator()->getId();
+                } else {
+                    return true; // is a newly created entity!
+                }
             } else {
                 throw new \BadMethodCallException('Neither \'getCreator\' nor \'getUser\' methods exsist in class '.get_class($object));
             }

@@ -70,6 +70,8 @@ abstract class Entity
         $this->mergeNewTranslations();
         $this->entityUsers = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->posts = new ArrayCollection();
+        $this->requests = new ArrayCollection();
     }
 
     /**
@@ -235,17 +237,8 @@ abstract class Entity
         return $this->images;
     }
 
-    public function getPost($type = Post::TYPE_CREATION)
+    public function getPost()
     {
-        if (!$this->post) {
-            foreach($this->posts as $post) {
-                if ($post->getType() == $type) {
-                    $this->post = $post;
-                    break;
-                }
-            }
-        }
-
         return $this->post;
     }
 
@@ -257,8 +250,14 @@ abstract class Entity
      */
     public function addPost(Post $post)
     {
-        $this->posts[] = $post;
-        $post->setEntity($this);
+        if ($this->getPosts()->contains($post)) {
+            $this->posts[] = $post;
+            $post->setEntity($this);
+            
+            if ($post->getType == Post::TYPE_CREATION) {
+                $this->post = $post;
+            }
+        }
     
         return $this;
     }
@@ -281,18 +280,5 @@ abstract class Entity
     public function getPosts()
     {
         return $this->posts;
-    }
-
-    /**
-     * @ORM\PrePersist
-     * @ORM\PostLoad
-     */
-    private function orderEntityUsers()
-    {
-        $iterator = $this->getEntityUsers()->getIterator();
-        $iterator->uasort(function ($a, $b) {
-            return ($a->getUser()->getId() < $b->getUser()->getId()) ? -1 : 1;
-        });
-        $this->entityUsers = new ArrayCollection(iterator_to_array($iterator));
     }
 }

@@ -21,5 +21,10 @@
 
 While working on javascripts or css files, run `php app/console assetic:dump --watch` in a separate terminal.
 
+3) Debugging
+------------
+
+Do you want to avoid the painful experience of 500-status blank pages? Run `tail -f app/logs/<env>.log` in a separate terminal.  
+
 [1]:  http://lesscss.org/
 [2]:  http://nodejs.org/

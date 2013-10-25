@@ -18,7 +18,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * EntityUser
  *
  * @ORM\Entity 
- * @ORM\Table(name="entity_user") 
+ * @ORM\Table(name="entity_user")
+ * @ORM\HasLifecycleCallbacks
  */
 class EntityUser
 {
@@ -77,6 +78,8 @@ class EntityUser
      * @ORM\Column(name="notification", type="boolean")
      */
     private $notification = true;
+    
+    private $isNew = true;
 
     public function __construct()
     {
@@ -258,5 +261,13 @@ class EntityUser
     public function getNotification()
     {
         return $this->notification;
+    }
+    
+    /**
+     * @ORM\preUpdate
+     */
+    protected function checkIsNew()
+    {
+        $this->isNew = false;
     }
 }

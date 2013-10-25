@@ -86,11 +86,25 @@ class Page
      * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Image", mappedBy="page", cascade={"persist", "remove"})
      */
     private $images;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="fromPage", cascade={"persist", "remove"})
+	 */
+	private $notificationsOutgoing;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="Request", mappedBy="fromPage", cascade={"persist", "remove"})
+	 */
+	private $requestsOutgoing;
     
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->pagesUsers = new ArrayCollection();
+		$this->notificationsIncoming = new ArrayCollection;
+		$this->notificationsOutgoing = new ArrayCollection;
+		$this->requestsIncoming = new ArrayCollection;
+		$this->requestsOutgoing = new ArrayCollection;
     }
 	
 	public function __toString()
@@ -354,6 +368,150 @@ class Page
     {
         return $this->images;
     }
+
+	/**
+	 * Add notificationIncoming
+	 *
+	 * @param NotificationIncoming $notificationIncoming
+	 * @return Post
+	 */
+	public function addNotificationIncoming(Notification $notificationIncoming)
+	{
+        if ($this->notificationsIncoming->contains($notificationIncoming)) {
+	        $this->notificationsIncoming[] = $notificationIncoming;
+	        return true;
+	    }
+	
+	    return false;
+	}
+
+	/**
+	 * Remove notificationsIncoming
+	 *
+	 * @param NotificationIncoming $notificationIncoming
+	 */
+	public function removeNotificationIncoming(Notification $notificationIncoming)
+	{
+	    $this->notificationsIncoming->removeElement($notificationIncoming);
+	}
+
+	/**
+	 * Get notificationIncoming
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getNotificationsIncoming()
+	{
+	    return $this->notificationsIncoming;
+	}
+
+	/**
+	 * Add notificationOutcoming
+	 *
+	 * @param NotificationOutcoming $notificationOutcoming
+	 * @return Post
+	 */
+	public function addNotificationOutgoing(Notification $notificationOutgoing)
+	{
+        if ($this->notificationOutgoing->contains($notificationOutgoing)) {
+	        $this->notificationOutgoing[] = $notificationOutgoing;
+	        return true;
+	    }
+	
+	    return false;
+	}
+
+	/**
+	 * Remove notificationsOutcoming
+	 *
+	 * @param NotificationOutcoming $notificationOutcoming
+	 */
+	public function removeNotificationOutgoing(Notification $notificationOutcoming)
+	{
+	    $this->notificationOutcoming->removeElement($notificationOutcoming);
+	}
+
+	/**
+	 * Get notificationOutcoming
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getNotificationsOutgoing()
+	{
+	    return $this->notificationOutcoming;
+	}
+
+	/**
+	 * Add requestIncoming
+	 *
+	 * @param RequestIncoming $requestIncoming
+	 * @return Post
+	 */
+	public function addRequestIncoming(Request $requestIncoming)
+	{
+        if ($this->requestsIncoming->contains($requestIncoming)) {
+	        $this->requestsIncoming[] = $requestIncoming;
+	        return true;
+	    }
+	
+	    return false;
+	}
+
+	/**
+	 * Remove requestsIncoming
+	 *
+	 * @param RequestIncoming $requestIncoming
+	 */
+	public function removeRequestIncoming(Request $requestIncoming)
+	{
+	    $this->requestsIncoming->removeElement($requestIncoming);
+	}
+
+	/**
+	 * Get requestIncoming
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getRequestsIncoming()
+	{
+	    return $this->requestsIncoming;
+	}
+
+	/**
+	 * Add requestOutcoming
+	 *
+	 * @param RequestOutcoming $requestOutcoming
+	 * @return Post
+	 */
+	public function addRequestOutgoing(Request $requestOutgoing)
+	{
+        if ($this->requestsOutgoing->contains($requestOutgoing)) {
+	        $this->requestsOutgoing[] = $requestOutgoing;
+	        return true;
+	    }
+	
+	    return false;
+	}
+
+	/**
+	 * Remove requestsOutcoming
+	 *
+	 * @param RequestOutcoming $requestOutcoming
+	 */
+	public function removeRequestOutgoing(Request $requestOutgoing)
+	{
+	    $this->requestsOutcoming->removeElement($requestOutgoing);
+	}
+
+	/**
+	 * Get requestOutcoming
+	 *
+	 * @return \Doctrine\Common\Collections\Collection 
+	 */
+	public function getRequestsOutgoing()
+	{
+	    return $this->$requestOutgoing;
+	}
 
     /**
      * Get sluggable fields

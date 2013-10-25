@@ -246,7 +246,7 @@ class User extends BaseUser
 	/**
 	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="fromUser", cascade={"persist", "remove"})
 	 */
-	private $notificationsOutcoming;
+	private $notificationsOutgoing;
 	
 	/**
 	 * @ORM\OneToMany(targetEntity="Request", mappedBy="user", cascade={"persist", "remove"})
@@ -256,7 +256,7 @@ class User extends BaseUser
 	/**
 	 * @ORM\OneToMany(targetEntity="Request", mappedBy="fromUser", cascade={"persist", "remove"})
 	 */
-	private $requestsOutcoming;
+	private $requestsOutgoing;
 
 	public function __construct()
 	{
@@ -273,9 +273,9 @@ class User extends BaseUser
 		$this->images = new ArrayCollection;
 		$this->likes = new ArrayCollection;
 		$this->notificationsIncoming = new ArrayCollection;
-		$this->notificationsOutcoming = new ArrayCollection;
+		$this->notificationsOutgoing = new ArrayCollection;
 		$this->requestsIncoming = new ArrayCollection;
-		$this->requestsOutcoming = new ArrayCollection;
+		$this->requestsOutgoing = new ArrayCollection;
 	}
 	
 	public function __toString()
@@ -874,10 +874,12 @@ class User extends BaseUser
 	 */
 	public function addNotificationIncoming(Notification $notificationIncoming)
 	{
-	    $this->notificationsIncoming[] = $notificationIncoming;
-	    $notificationIncoming->setPost($this);
+        if ($this->notificationsIncoming->contains($notificationIncoming)) {
+	        $this->notificationsIncoming[] = $notificationIncoming;
+	        return true;
+	    }
 	
-	    return $this;
+	    return false;
 	}
 
 	/**
@@ -906,12 +908,14 @@ class User extends BaseUser
 	 * @param NotificationOutcoming $notificationOutcoming
 	 * @return Post
 	 */
-	public function addNotificationOutcoming(Notification $notificationOutcoming)
+	public function addNotificationOutgoing(Notification $notificationOutgoing)
 	{
-	    $this->notificationsOutcoming[] = $notificationOutcoming;
-	    $notificationOutcoming->setPost($this);
+        if ($this->notificationOutgoing->contains($notificationOutgoing)) {
+	        $this->notificationOutgoing[] = $notificationOutgoing;
+	        return true;
+	    }
 	
-	    return $this;
+	    return false;
 	}
 
 	/**
@@ -919,9 +923,9 @@ class User extends BaseUser
 	 *
 	 * @param NotificationOutcoming $notificationOutcoming
 	 */
-	public function removeNotificationOutcoming(Notification $notificationOutcoming)
+	public function removeNotificationOutgoing(Notification $notificationOutcoming)
 	{
-	    $this->notificationsOutcoming->removeElement($notificationOutcoming);
+	    $this->notificationOutcoming->removeElement($notificationOutcoming);
 	}
 
 	/**
@@ -929,9 +933,9 @@ class User extends BaseUser
 	 *
 	 * @return \Doctrine\Common\Collections\Collection 
 	 */
-	public function getNotificationsOutcoming()
+	public function getNotificationsOutgoing()
 	{
-	    return $this->notificationsOutcoming;
+	    return $this->notificationOutcoming;
 	}
 
 	/**
@@ -942,10 +946,12 @@ class User extends BaseUser
 	 */
 	public function addRequestIncoming(Request $requestIncoming)
 	{
-	    $this->requestsIncoming[] = $requestIncoming;
-	    $requestIncoming->setPost($this);
+        if ($this->requestsIncoming->contains($requestIncoming)) {
+	        $this->requestsIncoming[] = $requestIncoming;
+	        return true;
+	    }
 	
-	    return $this;
+	    return false;
 	}
 
 	/**
@@ -974,12 +980,14 @@ class User extends BaseUser
 	 * @param RequestOutcoming $requestOutcoming
 	 * @return Post
 	 */
-	public function addRequestOutcoming(Request $requestOutcoming)
+	public function addRequestOutgoing(Request $requestOutgoing)
 	{
-	    $this->requestsOutcoming[] = $requestOutcoming;
-	    $requestOutcoming->setPost($this);
+        if ($this->requestsOutgoing->contains($requestOutgoing)) {
+	        $this->requestsOutgoing[] = $requestOutgoing;
+	        return true;
+	    }
 	
-	    return $this;
+	    return false;
 	}
 
 	/**
@@ -987,9 +995,9 @@ class User extends BaseUser
 	 *
 	 * @param RequestOutcoming $requestOutcoming
 	 */
-	public function removeRequestOutcoming(Request $requestOutcoming)
+	public function removeRequestOutgoing(Request $requestOutgoing)
 	{
-	    $this->requestsOutcoming->removeElement($requestOutcoming);
+	    $this->requestsOutcoming->removeElement($requestOutgoing);
 	}
 
 	/**
@@ -997,8 +1005,8 @@ class User extends BaseUser
 	 *
 	 * @return \Doctrine\Common\Collections\Collection 
 	 */
-	public function getRequestsOutcoming()
+	public function getRequestsOutgoing()
 	{
-	    return $this->requestsOutcoming;
+	    return $this->$requestOutgoing;
 	}
 }

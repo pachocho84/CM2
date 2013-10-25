@@ -60,10 +60,22 @@ class Notification
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="notificationsOutcoming")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="notificationsOutgoing")
      * @ORM\JoinColumn(name="from_user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $fromUser;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Group", inversedBy="notificationsOutgoing")
+     * @ORM\JoinColumn(name="from_group_id", referencedColumnName="id", onDelete="CASCADE")
+     **/
+    private $fromGroup;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="notificationsOutgoing")
+     * @ORM\JoinColumn(name="from_page_id", referencedColumnName="id", onDelete="CASCADE")
+     **/
+    private $fromPage;
 
     /**
      * Get id

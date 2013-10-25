@@ -77,6 +77,11 @@ services:
                 sizes: %liip_imagine.filter_sets% 
         tags:
             - { name: twig.extension }
+    
+    cm.doctrine_listener:
+        class: CM\CMBundle\EventListener\DoctrineEventsListener
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }
             
     cm.locale_listener:
         class: CM\CMBundle\EventListener\LocaleListener
