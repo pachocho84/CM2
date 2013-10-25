@@ -47,7 +47,8 @@ class EntityType extends AbstractType
                     )
                 ));
         } else {
-            $builder->add($builder->create('translations', new EntityTranslationType, array('label' => 'Body'))->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 'en')));
+            $builder->add($builder->create('translations', new EntityTranslationType, array('label' => 'Body',
+                    'error_bubbling' => false,))->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 'en')));
 
             // $builder->add('translations', 'collection', array(
             //         'type' => new EntityTranslationType

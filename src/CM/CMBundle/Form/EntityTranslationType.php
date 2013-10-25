@@ -14,8 +14,10 @@ class EntityTranslationType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title')
-            ->add('text');
+        $builder->add('title', 'text', array(
+                    'error_bubbling' => false))
+            ->add('text', 'text', array(
+                    'error_bubbling' => false));
     }
     
     /**
@@ -24,6 +26,7 @@ class EntityTranslationType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'error_bubbling' => false,
             'data_class' => 'CM\CMBundle\Entity\EntityTranslation'
         ));
     }

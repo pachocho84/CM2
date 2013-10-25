@@ -89,7 +89,7 @@ abstract class EntityAdmin extends Admin;
 
     protected function configureListFields(ListMapper $listMapper)
     {
-        $listMapper->add('translations', 'a2lix_translations', array(
+        $listMapper->addIdentifier('translations', 'a2lix_translations', array(
                 'locales' => $options['locales'],
                 'required' => true,    
                 'fields' => array(

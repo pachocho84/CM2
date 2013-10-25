@@ -308,6 +308,24 @@ class EventController extends Controller
             'joinEntityType' => 'joinEvent'
         );
     }
+
+    /**
+     * @Route("/eventDelete/{id}", name="event_delete", requirements={"id" = "\d+"})
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $event = $em->getRepository('CMBundle:Event')->findOneById($id);
+
+        if (!$this->get('cm_user.authentication')->canManage($event)) {
+              throw new HttpException(401, 'Unauthorized access.');
+        }
+
+        $em->remove($event);
+        $em->flush();
+
+        return new JsonResponse(array('title' => $event->getTitle()));
+    }
     
     /**
      * @Template
