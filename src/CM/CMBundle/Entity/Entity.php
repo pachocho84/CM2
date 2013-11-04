@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="EntityRepository")
  * @ORM\Table(name="entity")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
@@ -61,8 +61,6 @@ abstract class Entity
      * @Assert\Valid
      */
     private $posts;
-    
-    private $post;
     
     public function __construct()
     {
@@ -143,7 +141,7 @@ abstract class Entity
     }
 
     /**
-     * @param \CM\CMBundle\Entity\EntityUser $comment
+     * @param EntityUser $comment
      * @return Entity
      */
     public function addUser(
@@ -184,7 +182,7 @@ abstract class Entity
     }
 
     /**
-     * @param \CM\CMBundle\Entity\EntityUser $users
+     * @param EntityUser $users
      */
     public function setEntityUsers(ArrayCollection $entityUser)
     {
@@ -192,7 +190,7 @@ abstract class Entity
     }
 
     /**
-     * @param \CM\CMBundle\Entity\EntityUser $users
+     * @param EntityUser $users
      */
     public function removeEntityUser(EntityUser $entityUser)
     {
@@ -200,7 +198,7 @@ abstract class Entity
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return ArrayCollection 
      */
     public function getEntityUsers()
     {
@@ -208,7 +206,7 @@ abstract class Entity
     }
 
     /**
-     * @param \CM\CMBundle\Entity\Image $images
+     * @param Image $images
      * @return Entity
      */
     public function addImage(Image $image)
@@ -222,7 +220,7 @@ abstract class Entity
     }
 
     /**
-     * @param \CM\CMBundle\Entity\Image $images
+     * @param Image $images
      */
     public function removeImage(Image $image)
     {
@@ -230,7 +228,7 @@ abstract class Entity
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return ArrayCollection 
      */
     public function getImages()
     {
@@ -239,7 +237,11 @@ abstract class Entity
 
     public function getPost()
     {
-        return $this->post;
+        foreach ($this->posts as $post) {
+            if ($post->getType() == Post::TYPE_CREATION) {
+                return $post;
+            }
+        }
     }
 
     /**
@@ -250,13 +252,9 @@ abstract class Entity
      */
     public function addPost(Post $post)
     {
-        if ($this->getPosts()->contains($post)) {
+        if (!$this->getPosts()->contains($post)) {
             $this->posts[] = $post;
             $post->setEntity($this);
-            
-            if ($post->getType == Post::TYPE_CREATION) {
-                $this->post = $post;
-            }
         }
     
         return $this;
@@ -265,7 +263,7 @@ abstract class Entity
     /**
      * Remove posts
      *
-     * @param \CM\CMBundle\Entity\Post $posts
+     * @param Post $posts
      */
     public function removePost(Post $posts)
     {
@@ -275,7 +273,7 @@ abstract class Entity
     /**
      * Get posts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return ArrayCollection
      */
     public function getPosts()
     {

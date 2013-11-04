@@ -874,7 +874,7 @@ class User extends BaseUser
 	 */
 	public function addNotificationIncoming(Notification $notificationIncoming)
 	{
-        if ($this->notificationsIncoming->contains($notificationIncoming)) {
+        if (!$this->notificationsIncoming->contains($notificationIncoming)) {
 	        $this->notificationsIncoming[] = $notificationIncoming;
 	        return true;
 	    }
@@ -910,7 +910,7 @@ class User extends BaseUser
 	 */
 	public function addNotificationOutgoing(Notification $notificationOutgoing)
 	{
-        if ($this->notificationOutgoing->contains($notificationOutgoing)) {
+        if (!$this->notificationOutgoing->contains($notificationOutgoing)) {
 	        $this->notificationOutgoing[] = $notificationOutgoing;
 	        return true;
 	    }
@@ -946,7 +946,7 @@ class User extends BaseUser
 	 */
 	public function addRequestIncoming(Request $requestIncoming)
 	{
-        if ($this->requestsIncoming->contains($requestIncoming)) {
+        if (!$this->requestsIncoming->contains($requestIncoming)) {
 	        $this->requestsIncoming[] = $requestIncoming;
 	        return true;
 	    }
@@ -982,7 +982,7 @@ class User extends BaseUser
 	 */
 	public function addRequestOutgoing(Request $requestOutgoing)
 	{
-        if ($this->requestsOutgoing->contains($requestOutgoing)) {
+        if (!$this->requestsOutgoing->contains($requestOutgoing)) {
 	        $this->requestsOutgoing[] = $requestOutgoing;
 	        return true;
 	    }
@@ -997,7 +997,7 @@ class User extends BaseUser
 	 */
 	public function removeRequestOutgoing(Request $requestOutgoing)
 	{
-	    $this->requestsOutcoming->removeElement($requestOutgoing);
+	    $this->requestsOutgoing->removeElement($requestOutgoing);
 	}
 
 	/**
@@ -1007,6 +1007,6 @@ class User extends BaseUser
 	 */
 	public function getRequestsOutgoing()
 	{
-	    return $this->$requestOutgoing;
+	    return $this->$requestsOutgoing;
 	}
 }

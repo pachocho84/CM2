@@ -197,7 +197,7 @@ class Request
      */
     public function setFromUser(User $fromUser)
     {
-        if ($user->addRequestOutgoing($this)) {
+        if ($fromUser->addRequestOutgoing($this)) {
             $this->fromUser = $fromUser;
         }
     

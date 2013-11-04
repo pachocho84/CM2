@@ -200,6 +200,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                     $userTags
                 );
             }
+
+            $manager->persist($event);
             
             if ($i % 10 == 9) {
                 $manager->flush();

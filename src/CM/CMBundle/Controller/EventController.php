@@ -250,7 +250,6 @@ class EventController extends Controller
         if (!$this->get('cm_user.authentication')->canManage($event)) {
               throw new HttpException(401, 'Unauthorized access.');
         } elseif ($form->isValid()) {
-
             foreach ($event->getEventDates() as $eventDate) {
                 foreach ($oldEventDates as $key => $toDel) {
                     if ($toDel->getId() === $eventDate->getId()) {
@@ -291,7 +290,13 @@ class EventController extends Controller
             }
 
             $em->persist($event);
+
             $em->flush();
+
+            // foreach ($event->getEntityUsers() as $entityUser) {
+            //     echo $entityUser->getUser().' -> i: '.count($entityUser->getUser()->getRequestsIncoming()).', o: '.'<br/>';
+            // }
+            // die;
                   
             return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
         }

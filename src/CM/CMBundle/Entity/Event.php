@@ -71,7 +71,7 @@ class Event extends Entity
     /**
      * Add event_dates
      *
-     * @param \CM\CMBundle\Entity\EventDate $eventDate
+     * @param EventDate $eventDate
      * @return Event
      */
     public function addEventDate(EventDate $eventDate)
@@ -87,7 +87,7 @@ class Event extends Entity
     /**
      * Remove event_dates
      *
-     * @param \CM\CMBundle\Entity\EventDate $eventDate
+     * @param EventDate $eventDate
      */
     public function removeEventDate(EventDate $eventDate)
     {
@@ -97,7 +97,7 @@ class Event extends Entity
     /**
      * Get event_dates
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Collection 
      */
     public function getEventDates()
     {

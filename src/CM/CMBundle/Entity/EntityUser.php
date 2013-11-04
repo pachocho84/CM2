@@ -3,6 +3,7 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\Common\Collections\ArrayCollection;
 
 //UNIQ_C55F6F6281257D5DA76ED395
@@ -17,7 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * EntityUser
  *
- * @ORM\Entity 
+ * @ORM\Entity
  * @ORM\Table(name="entity_user")
  * @ORM\HasLifecycleCallbacks
  */
@@ -38,12 +39,22 @@ class EntityUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @ORM\Column(name="entity_id", type="integer")
+     */
+    private $entityId;
         
     /**
      * @ORM\ManyToOne(targetEntity="Entity", inversedBy="entityUsers")
      * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $entity;
+
+    /**
+     * @ORM\Column(name="user_id", type="integer")
+     */
+    private $userId;
     
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="userEntities")
@@ -96,6 +107,16 @@ class EntityUser
     }
 
     /**
+     * Get entity
+     *
+     * @return Entity 
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    /**
      * Set entity
      *
      * @param Entity $entity
@@ -116,6 +137,16 @@ class EntityUser
     public function getEntity()
     {
         return $this->entity;
+    }
+
+    /**
+     * Get entity
+     *
+     * @return User 
+     */
+    public function getUserId()
+    {
+        return $this->userId;
     }
 
     /**
@@ -262,9 +293,14 @@ class EntityUser
     {
         return $this->notification;
     }
+
+    public function isNew()
+    {
+        return $this->isNew;
+    }
     
     /**
-     * @ORM\preUpdate
+     * @ORM\PreUpdate
      */
     protected function checkIsNew()
     {

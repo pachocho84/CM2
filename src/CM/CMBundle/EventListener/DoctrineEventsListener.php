@@ -2,22 +2,27 @@
 
 namespace CM\CMBundle\EventListener;
 
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PostFlushEventArgs;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\Request;
 
+// TODO: hopefully they will add entityListeners as a doctrine annotation in symfony
 class DoctrineEventsListener
 {
-    public function onPostPersist(LifecycleEventArgs $args)
+    private $flushNeeded = false;
+
+    public function postPersist(LifecycleEventArgs $args)
     {
-        $object = $args->getObject();
-        $em = $args->getObjectManager();
-               
-        if ($entityUser = $object instanceof EntityUser && $entityUser->isNew()) {
+        $object = $args->getEntity();
+        $em = $args->getEntityManager();
+
+        if ($object instanceof EntityUser && $object->isNew()) {
+            $entityUser = $object;
             $post = $entityUser->getEntity()->getPost();
             $user = $post->getUser();
             $group = $post->getGroup();
-            $page = $post->getPost();
+            $page = $post->getPage();
             $entity = $entityUser->getEntity();
             $entityClassName = new \ReflectionClass(get_class($entity));
             
@@ -35,6 +40,7 @@ class DoctrineEventsListener
                         $request->setGroup($group);
                     }
                     $em->persist($request);
+                    $this->flushNeeded = true;
                     break;
                 case EntityUser::STATUS_ACTIVE:
                     // TODO: notificate
@@ -42,14 +48,24 @@ class DoctrineEventsListener
                 case EntityUser::STATUS_REQUESTED:
                     foreach ($em->getRepository('CMBundle:Entity')->getAdmins($entity->getId()) as $admin) {
                         $request = new Request;
-                        $request->setUser($admin)
+                        $request->setUser($admin->getUser())
                             ->setFromUser($entityUser->getUser())
                             ->setEntity($entity)
                             ->setObject($entityClassName->getShortName())
                             ->setObjectId($entity->getId());
                     }
+                    $em->persist($request);
+                    $this->flushNeeded = true;
                     break;
             }
+        }
+    }
+
+    public function postFlush(PostFlushEventArgs $args)
+    {
+        if ($this->flushNeeded) {
+            $this->flushNeeded = false;
+            $args->getEntityManager()->flush();
         }
     }
 }
