@@ -71,7 +71,7 @@ class Notification
     private $fromPage;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Post", inversedBy="notifications")
+     * @ORM\ManyToOne(targetEntity="Post")
      * @ORM\JoinColumn(name="post_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $post;
