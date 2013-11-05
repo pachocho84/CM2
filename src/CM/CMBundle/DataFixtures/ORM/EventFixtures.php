@@ -170,6 +170,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                 ->setUser($user);
 
             $event->addPost($post);
+
+            // var_dump($post);die;
             
             $userTags = array();
             for ($j = 1; $j < rand(1, 3); $j++) {

@@ -91,15 +91,9 @@ class Image
      */
     private $comments;
     
-    /**
-     * @ORM\OneToMany(targetEntity="Notification", mappedBy="image", cascade={"persist", "remove"})
-     */
-    private $notifications;
-    
     public function __construct()
     {
         $this->likes = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
     }
 
     public function __toString()
@@ -372,39 +366,5 @@ class Image
     public function getComments()
     {
         return $this->comments;
-    }
-
-    /**
-     * Add notification
-     *
-     * @param Notification $notification
-     * @return Post
-     */
-    public function addNotification(Notification $notification)
-    {
-        $this->notifications[] = $notification;
-        $notification->setPost($this);
-    
-        return $this;
-    }
-
-    /**
-     * Remove notifications
-     *
-     * @param Notification $notification
-     */
-    public function removeNotification(Notification $notification)
-    {
-        $this->notifications->removeElement($notification);
-    }
-
-    /**
-     * Get notification
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getNotifications()
-    {
-        return $this->notifications;
     }
 }

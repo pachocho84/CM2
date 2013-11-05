@@ -43,18 +43,6 @@ abstract class Entity
      * @Assert\NotNull
      */
     private $entityCategory;
-
-    /**
-     * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity", cascade={"persist", "remove"})
-     * @Assert\Valid
-     */
-    private $entityUsers;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"})
-     * @Assert\Valid
-     */
-    private $images;
     
     /**
      * @ORM\OneToMany(targetEntity="Post", mappedBy="entity", cascade={"persist", "remove"})
@@ -62,13 +50,25 @@ abstract class Entity
      */
     private $posts;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"})
+     * @Assert\Valid
+     */
+    private $images;
+
+    /**
+     * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity", cascade={"persist", "remove"})
+     * @Assert\Valid
+     */
+    private $entityUsers;
+    
     public function __construct()
     {
         $this->translate('en');
         $this->mergeNewTranslations();
-        $this->entityUsers = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->entityUsers = new ArrayCollection();
         $this->requests = new ArrayCollection();
     }
 
@@ -138,71 +138,6 @@ abstract class Entity
     public function getEntityCategory()
     {
         return $this->entityCategory;
-    }
-
-    /**
-     * @param EntityUser $comment
-     * @return Entity
-     */
-    public function addUser(
-        User $user,
-        $admin = false,
-        $status = EntityUser::STATUS_PENDING,
-        $notification = true,
-        $userTags = null
-    )
-    {
-        if (is_null($userTags)) {
-            $userTags = $user->getUserTags();
-        }
-        $userTagsIds = array();
-        foreach ($userTags as $userTag) {
-            $userTagsIds[] = $userTag->getId();
-        }
-        $entityUser = new EntityUser;
-        $entityUser->setEntity($this)
-            ->setUser($user)
-            ->setAdmin($admin)
-            ->setStatus($status)
-            ->addUserTags($userTagsIds)
-            ->setNotification($notification);
-        $this->entityUsers[] = $entityUser;
-    
-        return $this;
-    }
-
-    public function addEntityUser(EntityUser $entityUser)
-    {
-        if (!$this->entityUsers->contains($entityUser)) {
-            $this->entityUsers[] = $entityUser;
-            $entityUser->setEntity($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param EntityUser $users
-     */
-    public function setEntityUsers(ArrayCollection $entityUser)
-    {
-        $this->entityUsers = $entityUsers;
-    }
-
-    /**
-     * @param EntityUser $users
-     */
-    public function removeEntityUser(EntityUser $entityUser)
-    {
-        $this->entityUsers->removeElement($entityUser);
-    }
-
-    /**
-     * @return ArrayCollection 
-     */
-    public function getEntityUsers()
-    {
-        return $this->entityUsers;
     }
 
     /**
@@ -278,5 +213,70 @@ abstract class Entity
     public function getPosts()
     {
         return $this->posts;
+    }
+
+    /**
+     * @param EntityUser $comment
+     * @return Entity
+     */
+    public function addUser(
+        User $user,
+        $admin = false,
+        $status = EntityUser::STATUS_PENDING,
+        $notification = true,
+        $userTags = null
+    )
+    {
+        if (is_null($userTags)) {
+            $userTags = $user->getUserTags();
+        }
+        $userTagsIds = array();
+        foreach ($userTags as $userTag) {
+            $userTagsIds[] = $userTag->getId();
+        }
+        $entityUser = new EntityUser;
+        $entityUser->setEntity($this)
+            ->setUser($user)
+            ->setAdmin($admin)
+            ->setStatus($status)
+            ->addUserTags($userTagsIds)
+            ->setNotification($notification);
+        $this->entityUsers[] = $entityUser;
+    
+        return $this;
+    }
+
+    public function addEntityUser(EntityUser $entityUser)
+    {
+        if (!$this->entityUsers->contains($entityUser)) {
+            $this->entityUsers[] = $entityUser;
+            $entityUser->setEntity($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param EntityUser $users
+     */
+    public function setEntityUsers(ArrayCollection $entityUser)
+    {
+        $this->entityUsers = $entityUsers;
+    }
+
+    /**
+     * @param EntityUser $users
+     */
+    public function removeEntityUser(EntityUser $entityUser)
+    {
+        $this->entityUsers->removeElement($entityUser);
+    }
+
+    /**
+     * @return ArrayCollection 
+     */
+    public function getEntityUsers()
+    {
+        return $this->entityUsers;
     }
 }

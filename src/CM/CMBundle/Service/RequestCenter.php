@@ -17,12 +17,14 @@ class RequestCenter
         $this->em = $em;
     }
 
-    public function flush()
+    public function flushNeeded()
     {
         if ($this->flushNeeded) {
             $this->flushNeeded = false;
-            $this->em->flush();
+            return true;
         }
+
+        return false;
     }
 
     public function newRequest(
@@ -40,16 +42,17 @@ class RequestCenter
         }
         $request = new Request;
         $request->setUser($toUser)
-            ->setFromUser($fromUser)
-            ->setObject($object)
-            ->setObjectId($objectId);
+            ->setFromUser($fromUser);
         if (!is_null($entity)) {
             $request->setEntity($entity);
+        } else {
+            $request->setObject($object)
+                ->setObjectId($objectId);
         }
         if (!is_null($page)) {
-            $request->setPage($page);
+            $request->setFromPage($page);
         } elseif (!is_null($group)) {
-            $request->setGroup($group);
+            $request->setFromGroup($group);
         }
         $this->em->persist($request);
         $this->flushNeeded = true;

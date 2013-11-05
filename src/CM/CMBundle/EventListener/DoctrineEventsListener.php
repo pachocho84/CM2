@@ -5,15 +5,14 @@ namespace CM\CMBundle\EventListener;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
+use Doctrine\ORM\EntityManager;
 use CM\CMBundle\Entity\Entity;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\Request;
+use CM\CMBundle\Entity\Notification;
 
-// TODO: hopefully they will add entityListeners as a doctrine annotation in symfony
 class DoctrineEventsListener
 {
-    private $flushNeeded = false;
-
     private $serviceContainer;
 
     public function __construct(ContainerInterface $serviceContainer)
@@ -27,18 +26,62 @@ class DoctrineEventsListener
         $em = $args->getEntityManager();
 
         if ($object instanceof EntityUser) {
-            $entityUser = $object;
-            $entity = $entityUser->getEntity();
-            $post = $entity->getPost();
-            $user = $post->getUser();
-            $group = $post->getGroup();
-            $page = $post->getPage();
-            $entityClassName = new \ReflectionClass(get_class($entity));
-            $entityClassName = $entityClassName->getShortName();
-            
+            $this->entityUserRoutine($object, $em);
+        }
+    }
+
+    public function postUpdate(LifecycleEventArgs $args)
+    {
+        $object = $args->getEntity();
+        $em = $args->getEntityManager();
+
+        if ($object instanceof EntityUser) {
+            if (array_key_exists('status', $em->getUnitOfWork()->getEntityChangeSet($object)))
+            {
+                $this->entityUserRoutine($object, $em, true);
+            }
+        }
+    }
+
+    public function postRemove(LifecycleEventArgs $args)
+    {
+        $object = $args->getEntity();
+
+        if ($object instanceof EntityUser) {
+            $this->entityUserRoutine($object, $em, true, false);
+        }
+    }
+
+    public function postFlush(PostFlushEventArgs $args)
+    {
+        if ($this->serviceContainer->get('cm.request_center')->flushNeeded() || $this->serviceContainer->get('cm.notification_center')->flushNeeded()) {
+            $args->getEntityManager()->flush();
+        }
+    }
+
+    private function entityUserRoutine(EntityUser $entityUser, EntityManager $em, $remove = false, $create = true)
+    {
+        $entity = $entityUser->getEntity();
+        $post = $entity->getPost();
+        $user = $post->getUser();
+        $group = $post->getGroup();
+        $page = $post->getPage();
+        $entityClassName = new \ReflectionClass(get_class($entity));
+        $entityClassName = $entityClassName->getShortName();
+        $postClassName = new \ReflectionClass(get_class($post));
+        $postClassName = $postClassName->getShortName();
+
+        $requestCenter = $this->serviceContainer->get('cm.request_center');
+        $notificationCenter = $this->serviceContainer->get('cm.notification_center');
+        
+        if ($remove) {
+            $requestCenter->removeRequests($user, $entityClassName, $entity->getId());
+        }
+
+        if ($create) {
             switch ($entityUser->getStatus()) {
                 case EntityUser::STATUS_PENDING:
-                    $this->serviceContainer->get('cm.request_center')->newRequest(
+                    $requestCenter->newRequest(
                         $entityUser->getUser(),
                         $user,
                         $entityClassName,
@@ -49,11 +92,12 @@ class DoctrineEventsListener
                     );
                     break;
                 case EntityUser::STATUS_ACTIVE:
-                    // TODO: notificate
-                    $this->serviceContainer->get('cm.notification_center')->newNotification(
-                        'test',
+                    $notificationCenter->newNotification(
+                        Notification::TYPE_REQUEST_ACCEPTED,
                         $entityUser->getUser(),
                         $user,
+                        $postClassName,
+                        $post->getId(),
                         $post,
                         $page,
                         $group
@@ -61,7 +105,7 @@ class DoctrineEventsListener
                     break;
                 case EntityUser::STATUS_REQUESTED:
                     foreach ($em->getRepository('CMBundle:Entity')->getAdmins($entity->getId()) as $admin) {
-                        $this->serviceContainer->get('cm.request_center')->newRequest(
+                        $requestCenter->newRequest(
                             $admin->getUser(),
                             $entityUser->getUser(),
                             $entityClassName,
@@ -72,59 +116,5 @@ class DoctrineEventsListener
                     break;
             }
         }
-    }
-
-    public function postUpdate(LifecycleEventArgs $args)
-    {
-        $object = $args->getEntity();
-        $em = $args->getEntityManager();
-
-        if ($object instanceof EntityUser) {
-
-            $entityUser = $object;
-            $entity = $entityUser->getEntity();
-            $post = $entity->getPost();
-            $user = $post->getUser();
-            $group = $post->getGroup();
-            $page = $post->getPage();
-            $entityClassName = new \ReflectionClass(get_class($entity));
-            $entityClassName = $entityClassName->getShortName();
-
-            if (array_key_exists('status', $em->getUnitOfWork()->getEntityChangeSet($object)))
-            {
-                $this->serviceContainer->get('cm.request_center')->removeRequests($user, $entityClassName, $entity->getId());
-                $this->serviceContainer->get('cm.request_center')->newRequest(
-                    $entityUser->getUser(),
-                    $user,
-                    $entityClassName,
-                    $entity->getId(),
-                    $entity,
-                    $page,
-                    $group
-                );
-            }
-        }
-    }
-
-    public function postRemove(LifecycleEventArgs $args)
-    {
-        $object = $args->getEntity();
-
-        if ($object instanceof EntityUser) {
-
-            $entityUser = $object;
-            $post = $entityUser->getEntity()->getPost();
-            $user = $post->getUser();
-            $entity = $entityUser->getEntity();
-            $entityClassName = new \ReflectionClass(get_class($entity));
-            $entityClassName = $entityClassName->getShortName();
-
-            $this->serviceContainer->get('cm.request_center')->removeRequests($user, $entityClassName, $entity->getId());
-        }
-    }
-
-    public function postFlush(PostFlushEventArgs $args)
-    {
-        $this->serviceContainer->get('cm.request_center')->flush();
     }
 }

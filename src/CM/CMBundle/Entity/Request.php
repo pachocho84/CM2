@@ -30,6 +30,13 @@ class Request
     private $id;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="status", type="smallint", nullable=false)
+     */
+    private $status = self::STATUS_NEW;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="requestsIncoming")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
@@ -74,13 +81,6 @@ class Request
     private $objectId;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="status", type="smallint", nullable=false)
-     */
-    private $status = self::STATUS_NEW;
-
-    /**
      * Get id
      *
      * @return integer 
@@ -88,52 +88,6 @@ class Request
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set object
-     *
-     * @param string $object
-     * @return Request
-     */
-    public function setObject($object)
-    {
-        $this->object = $object;
-    
-        return $this;
-    }
-
-    /**
-     * Get object
-     *
-     * @return string 
-     */
-    public function getObject()
-    {
-        return $this->object;
-    }
-
-    /**
-     * Set objectId
-     *
-     * @param integer $objectId
-     * @return Request
-     */
-    public function setObjectId($objectId)
-    {
-        $this->objectId = $objectId;
-    
-        return $this;
-    }
-
-    /**
-     * Get objectId
-     *
-     * @return integer 
-     */
-    public function getObjectId()
-    {
-        return $this->objectId;
     }
 
     /**
@@ -215,6 +169,56 @@ class Request
     }
 
     /**
+     * Set fromUser
+     *
+     * @param User $fromUser
+     * @return Notification
+     */
+    public function setFromGroup(User $fromGroup = null)
+    {
+        if ($fromGroup->addNotificationOutgoing($this)) {
+            $this->fromGroup = $fromGroup;
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Get fromUser
+     *
+     * @return User 
+     */
+    public function getFromGroup()
+    {
+        return $this->fromGroup;
+    }
+
+    /**
+     * Set fromUser
+     *
+     * @param User $fromUser
+     * @return Notification
+     */
+    public function setFromPage(User $fromPage = null)
+    {
+        if ($fromPage->addNotificationOutgoing($this)) {
+            $this->fromPage = $fromPage;
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Get fromUser
+     *
+     * @return User 
+     */
+    public function getFromPage()
+    {
+        return $this->fromPage;
+    }
+
+    /**
      * Set entity
      *
      * @param Entity $entity
@@ -223,6 +227,10 @@ class Request
     public function setEntity(Entity $entity)
     {
         $this->entity = $entity;
+        $entityClassName = new \ReflectionClass(get_class($entity));
+        $entityClassName = $entityClassName->getShortName();
+        $this->object = $entityClassName;
+        $this->objectId = $entity->getId();
     
         return $this;
     }
@@ -235,5 +243,51 @@ class Request
     public function getEntity()
     {
         return $this->entity;
+    }
+
+    /**
+     * Set object
+     *
+     * @param string $object
+     * @return Request
+     */
+    public function setObject($object)
+    {
+        $this->object = $object;
+    
+        return $this;
+    }
+
+    /**
+     * Get object
+     *
+     * @return string 
+     */
+    public function getObject()
+    {
+        return $this->object;
+    }
+
+    /**
+     * Set objectId
+     *
+     * @param integer $objectId
+     * @return Request
+     */
+    public function setObjectId($objectId)
+    {
+        $this->objectId = $objectId;
+    
+        return $this;
+    }
+
+    /**
+     * Get objectId
+     *
+     * @return integer 
+     */
+    public function getObjectId()
+    {
+        return $this->objectId;
     }
 }

@@ -77,6 +77,9 @@
                         <ul class="nav navbar-nav pull-right">
                             {% if is_granted('ROLE_USER') %}
                                 <li>
+                                    <a href="{{ path('user_show', {"slug": app.getUser.slug}) }}">{{ app.getUser }}</a>
+                                </li>
+                                <li>
                                     <a href="{{ path('fos_user_security_logout') }}">Logout</a>
                                 </li>
                             {% else %}

@@ -17,20 +17,23 @@ class NotificationCenter
         $this->em = $em;
     }
 
-    public function flush()
+    public function flushNeeded()
     {
         if ($this->flushNeeded) {
             $this->flushNeeded = false;
-            $this->em->flush();
+            return true;
         }
+
+        return false;
     }
 
     public function newNotification(
         $type,
         $toUser,
         $fromUser,
+        $object,
+        $objectId,
         $post = null,
-        $image = null,
         $page = null,
         $group = null
     )
@@ -38,15 +41,18 @@ class NotificationCenter
         if ($toUser->getId() == $fromUser->getId()) {
             return;
         }
+        // var_dump(array_keys(func_get_args()));
+        // throw new \Exception("Error Processing Request", 1);
+
         $notification = new Notification;
         $notification->setType($type)
             ->setUser($toUser)
             ->setFromUser($fromUser);
         if (!is_null($post)) {
             $notification->setPost($post);
-        }
-        if (!is_null($image)) {
-            $notification->setImage($image);
+        } else {
+            $notification->setObject($object)
+                ->setObjectId($objectId);
         }
         if (!is_null($page)) {
             $notification->setFromPage($page);

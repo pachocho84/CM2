@@ -96,11 +96,6 @@ class Post
      * @ORM\OneToMany(targetEntity="Like", mappedBy="post", cascade={"persist", "remove"})
      */
     private $likes;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="Notification", mappedBy="post", cascade={"persist", "remove"})
-     */
-    private $notifications;
         
     /**
      * Constructor
@@ -109,7 +104,6 @@ class Post
     {
         $this->comments = new ArrayCollection;
         $this->likes = new ArrayCollection;
-        $this->notifications = new ArrayCollection;
     }
 
     public function __toString()
@@ -481,39 +475,5 @@ class Post
         }
         
         return $this->getLikes()->count();
-    }
-
-    /**
-     * Add notification
-     *
-     * @param Notification $notification
-     * @return Post
-     */
-    public function addNotification(Notification $notification)
-    {
-        $this->notifications[] = $notification;
-        $notification->setPost($this);
-    
-        return $this;
-    }
-
-    /**
-     * Remove notifications
-     *
-     * @param Notification $notification
-     */
-    public function removeNotification(Notification $notification)
-    {
-        $this->notifications->removeElement($notification);
-    }
-
-    /**
-     * Get notification
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getNotifications()
-    {
-        return $this->notifications;
     }
 }

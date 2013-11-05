@@ -903,15 +903,15 @@ class User extends BaseUser
 	}
 
 	/**
-	 * Add notificationOutcoming
+	 * Add notificationOutgoing
 	 *
-	 * @param NotificationOutcoming $notificationOutcoming
+	 * @param NotificationOutcoming $notificationOutgoing
 	 * @return Post
 	 */
 	public function addNotificationOutgoing(Notification $notificationOutgoing)
 	{
-        if (!$this->notificationOutgoing->contains($notificationOutgoing)) {
-	        $this->notificationOutgoing[] = $notificationOutgoing;
+        if (!$this->notificationsOutgoing->contains($notificationOutgoing)) {
+	        $this->notificationsOutgoing[] = $notificationOutgoing;
 	        return true;
 	    }
 	
@@ -919,23 +919,23 @@ class User extends BaseUser
 	}
 
 	/**
-	 * Remove notificationsOutcoming
+	 * Remove notificationOutgoing
 	 *
-	 * @param NotificationOutcoming $notificationOutcoming
+	 * @param NotificationOutcoming $notificationOutgoing
 	 */
-	public function removeNotificationOutgoing(Notification $notificationOutcoming)
+	public function removeNotificationOutgoing(Notification $notificationOutgoing)
 	{
-	    $this->notificationOutcoming->removeElement($notificationOutcoming);
+	    $this->notificationsOutgoing->removeElement($notificationOutgoing);
 	}
 
 	/**
-	 * Get notificationOutcoming
+	 * Get notificationOutgoing
 	 *
 	 * @return \Doctrine\Common\Collections\Collection 
 	 */
 	public function getNotificationsOutgoing()
 	{
-	    return $this->notificationOutcoming;
+	    return $this->notificationsOutgoing;
 	}
 
 	/**

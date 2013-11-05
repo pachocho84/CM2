@@ -15,6 +15,11 @@ class Notification
 {
     use ORMBehaviors\Timestampable\Timestampable;
     
+    const TYPE_LIKE = 0;
+    const TYPE_COMMENT = 1;
+    const TYPE_FAN = 2;
+    const TYPE_REQUEST_ACCEPTED = 3;
+
     const STATUS_NEW = 0;
     const STATUS_NOTIFIED = 1;
 
@@ -30,7 +35,7 @@ class Notification
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="string", length=50)
+     * @ORM\Column(name="type", type="smallint", nullable=false)
      */
     private $type;
 
@@ -40,18 +45,6 @@ class Notification
      * @ORM\Column(name="status", type="smallint", nullable=false)
      */
     private $status = self::STATUS_NEW;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Post", inversedBy="notifications")
-     * @ORM\JoinColumn(name="post_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     **/
-    private $post;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Image", inversedBy="notifications")
-     * @ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     **/
-    private $image;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="notificationsIncoming")
@@ -76,6 +69,26 @@ class Notification
      * @ORM\JoinColumn(name="from_page_id", referencedColumnName="id", onDelete="CASCADE")
      **/
     private $fromPage;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="notifications")
+     * @ORM\JoinColumn(name="post_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     **/
+    private $post;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="object", type="string", length=50)
+     */
+    private $object;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="object_id", type="smallint")
+     */
+    private $objectId;
 
     /**
      * Get id
@@ -138,52 +151,6 @@ class Notification
     }
 
     /**
-     * Set post
-     *
-     * @param Post $post
-     * @return Notification
-     */
-    public function setPost(Post $post = null)
-    {
-        $this->post = $post;
-    
-        return $this;
-    }
-
-    /**
-     * Get post
-     *
-     * @return Post 
-     */
-    public function getPost()
-    {
-        return $this->post;
-    }
-
-    /**
-     * Set image
-     *
-     * @param Image $image
-     * @return Notification
-     */
-    public function setImage(Image $image = null)
-    {
-        $this->image = $image;
-    
-        return $this;
-    }
-
-    /**
-     * Get image
-     *
-     * @return Image 
-     */
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    /**
      * Set user
      *
      * @param User $user
@@ -191,7 +158,9 @@ class Notification
      */
     public function setUser(User $user = null)
     {
-        $this->user = $user;
+        if ($user->addNotificationIncoming($this)) {
+            $this->user = $user;
+        }
     
         return $this;
     }
@@ -214,7 +183,9 @@ class Notification
      */
     public function setFromUser(User $fromUser = null)
     {
-        $this->fromUser = $fromUser;
+        if ($fromUser->addNotificationOutgoing($this)) {
+            $this->fromUser = $fromUser;
+        }
     
         return $this;
     }
@@ -227,5 +198,128 @@ class Notification
     public function getFromUser()
     {
         return $this->fromUser;
+    }
+
+    /**
+     * Set fromUser
+     *
+     * @param User $fromUser
+     * @return Notification
+     */
+    public function setFromGroup(User $fromGroup = null)
+    {
+        if ($fromGroup->addNotificationOutgoing($this)) {
+            $this->fromGroup = $fromGroup;
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Get fromUser
+     *
+     * @return User 
+     */
+    public function getFromGroup()
+    {
+        return $this->fromGroup;
+    }
+
+    /**
+     * Set fromUser
+     *
+     * @param User $fromUser
+     * @return Notification
+     */
+    public function setFromPage(User $fromPage = null)
+    {
+        if ($fromPage->addNotificationOutgoing($this)) {
+            $this->fromPage = $fromPage;
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Get fromUser
+     *
+     * @return User 
+     */
+    public function getFromPage()
+    {
+        return $this->fromPage;
+    }
+
+    /**
+     * Set post
+     *
+     * @param Post $post
+     * @return Notification
+     */
+    public function setPost(Post $post = null)
+    {
+        $this->post = $post;
+        $postClassName = new \ReflectionClass(get_class($post));
+        $postClassName = $postClassName->getShortName();
+        $this->object = $postClassName;
+        $this->objectId = $post->getId();
+    
+        return $this;
+    }
+
+    /**
+     * Get post
+     *
+     * @return Posst 
+     */
+    public function getPost()
+    {
+        return $this->post;
+    }
+
+    /**
+     * Set object
+     *
+     * @param string $object
+     * @return Request
+     */
+    public function setObject($object)
+    {
+        $this->object = $object;
+    
+        return $this;
+    }
+
+    /**
+     * Get object
+     *
+     * @return string 
+     */
+    public function getObject()
+    {
+        return $this->object;
+    }
+
+    /**
+     * Set objectId
+     *
+     * @param integer $objectId
+     * @return Request
+     */
+    public function setObjectId($objectId)
+    {
+        $this->objectId = $objectId;
+    
+        return $this;
+    }
+
+    /**
+     * Get objectId
+     *
+     * @return integer 
+     */
+    public function getObjectId()
+    {
+        return $this->objectId;
     }
 }
