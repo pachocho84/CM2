@@ -17,11 +17,7 @@
     {{ form_start(form) }}
         {{ form_errors(form) }}
         
-        {% if app.security.isGranted('ROLE_CLIENT') %}
-            {{ form_row(form.translations) }}
-        {% else %}
-            {{ form_row(form.translations) }}
-        {% endif %}
+        {{ form_row(form.translations) }}
         {{ form_row(form.entityCategory) }}
 
         <div class="form-group protagonist_typeahead">

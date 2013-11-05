@@ -45,6 +45,36 @@ class UserController extends Controller
     }
 
     /**
+     * @Route("/requests/{page}", name="user_requests", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function requestListAction($page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $requests = $em->getRepository('CMBundle:User')->getRequests($this->getUser()->getId());
+
+        $pagination = $this->get('knp_paginator')->paginate($requests, $page, 10);
+
+        return array('requests' => $pagination);
+    }
+
+    /**
+     * @Route("/notifications/{page}", name="user_notifications", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function notificationListAction($page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $notifications = $em->getRepository('CMBundle:User')->getNotifications($this->getUser()->getId());
+
+        $pagination = $this->get('knp_paginator')->paginate($notifications, $page, 10);
+
+        return array('notifications' => $pagination);
+    }
+
+    /**
      * @Route("/{slug}", name="user_show")
      * @Template
      */

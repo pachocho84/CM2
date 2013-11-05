@@ -8,7 +8,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * Request
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="RequestRepository")
  * @ORM\Table(name="request")
  */
 class Request

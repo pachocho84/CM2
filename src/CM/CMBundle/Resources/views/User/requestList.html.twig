@@ -1,0 +1,5 @@
+{% for request in requests %}
+    <li><a>{{ request.id }} : {{ request.fromUser }} - {{ request.object }} #{{ request.objectId }}</a></li>
+{% else %}
+    <li>{{ "There are no requests." | trans }}</li>
+{% endfor %}

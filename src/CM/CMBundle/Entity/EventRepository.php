@@ -13,28 +13,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 class EventRepository extends BaseRepository
 {
-	static protected function getOptions(array $options = array())
-	{
-		return array_merge(array(
-			'user_id'       => null,
-			'group_id'      => null,
-			'page_id'       => null,
-			'archive'       => null, 
-			'category_id'   => null, 
-			'paginate'	    => true,
-			'locale'	    => 'en',
-			'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
-			'protagonists'  => false,
-			'limit'         => 25,
-		), $options);
-	}
+    static protected function getOptions(array $options = array())
+    {
+        return array_merge(array(
+            'user_id'       => null,
+            'group_id'      => null,
+            'page_id'       => null,
+            'archive'       => null, 
+            'category_id'   => null, 
+            'paginate'      => true,
+            'locale'        => 'en',
+            'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
+            'protagonists'  => false,
+            'limit'         => 25,
+        ), $options);
+    }
     
     public function getEvents(array $options = array())
     {
         $options = self::getOptions($options);
 
         $parameters = array(
-			'now' => new \DateTime,
+            'now' => new \DateTime,
             'locales' => $options['locales']
         );
         
@@ -113,28 +113,28 @@ class EventRepository extends BaseRepository
         
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
-	
-	public function getEventsPerMonth($year, $month, array $options = array())
-	{
-		$options = self::getOptions($options);
-		
-		return $this->getEntityManager()->createQueryBuilder()
+    
+    public function getEventsPerMonth($year, $month, array $options = array())
+    {
+        $options = self::getOptions($options);
+        
+        return $this->getEntityManager()->createQueryBuilder()
             ->select('d, e, t')
             ->from('CMBundle:EventDate','d')
-			->join('d.event', 'e')
-			->leftJoin('e.translations', 't')
-			->where('SUBSTRING(d.start, 1, 4) = '.$year)
-			->andWhere('SUBSTRING(d.start, 6, 2) = '.$month)
-			->andWhere('t.locale IN (:locales)')->setParameter('locales', $options['locales'])
-			->orderBy('d.start')
-			->getQuery()
-			->getResult();
-	}
+            ->join('d.event', 'e')
+            ->leftJoin('e.translations', 't')
+            ->where('SUBSTRING(d.start, 1, 4) = '.$year)
+            ->andWhere('SUBSTRING(d.start, 6, 2) = '.$month)
+            ->andWhere('t.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->orderBy('d.start')
+            ->getQuery()
+            ->getResult();
+    }
 
     public function getEvent($id, array $options = array())
     {
-		$options = self::getOptions($options);
-		
+        $options = self::getOptions($options);
+        
         return $this->createQueryBuilder('e')->select('e, t, d, i, p, l, c, u, lu, cu, pg, gr, eu, us')
             ->leftJoin('e.eventDates', 'd')
             ->leftJoin('e.translations', 't')
@@ -156,13 +156,13 @@ class EventRepository extends BaseRepository
     }
 
     public function getDate($id, array $options = array())
-	{	
-		$options = self::getOptions($options);
-		
+    {   
+        $options = self::getOptions($options);
+        
         return $this->getEntityManager()->createQueryBuilder()
             ->select('d, e, t, i')
             ->from('CMBundle:EventDate','d')
-			->join('d.event', 'e')
+            ->join('d.event', 'e')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.images', 'i')
             ->andWhere('d.id = :id')->setParameter('id', $id)
@@ -172,24 +172,24 @@ class EventRepository extends BaseRepository
     }
 
     public function getSponsored(array $options = array())
-	{	
-		$options = self::getOptions($options);
+    {   
+        $options = self::getOptions($options);
         
         $count = $this->getEntityManager()->createQueryBuilder()
             ->select('count(s.id)')
             ->from('CMBundle:Sponsored','s')
-			->join('s.event', 'e')
-			->leftJoin('e.eventDates', 'd')
+            ->join('s.event', 'e')
+            ->leftJoin('e.eventDates', 'd')
             ->andWhere('s.start <= :now')
             ->andWhere('s.end >= :now')
             ->andWhere('d.start >= :now')
             ->setParameter(':now', new \DateTime);
-		
+        
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('s, e, d, t, i')
             ->from('CMBundle:Sponsored','s')
-			->join('s.event', 'e')
-			->leftJoin('e.eventDates', 'd')
+            ->join('s.event', 'e')
+            ->leftJoin('e.eventDates', 'd')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
             ->andWhere('s.start <= :now')

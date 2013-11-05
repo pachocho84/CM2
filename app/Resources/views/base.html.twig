@@ -1,109 +1,132 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8" />            
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
-		<title>{% block title %}Welcome!{% endblock %}</title>
-	
-		<link href="{{ asset('/lib/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" />
-		<link href="{{ asset('/bundles/cm/css/common.css') }}" rel="stylesheet" />
-		<link href="{{ asset('/bundles/cm/css/main.css') }}" rel="stylesheet" />
+    <head>
+        <meta charset="UTF-8" />            
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+        <title>{% block title %}Welcome!{% endblock %}</title>
+    
+        <link href="{{ asset('/lib/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" />
+        <link href="{{ asset('/bundles/cm/css/common.css') }}" rel="stylesheet" />
+        <link href="{{ asset('/bundles/cm/css/main.css') }}" rel="stylesheet" />
 
-		{% block stylesheets %}{% endblock %}
-		
-		<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-	</head>
-	
-	
-	
-	<body data-spy="scroll">
-	
-	
-	
-		<div id="header">
-			<div class="container">
-				<a href="<?php echo url_for('@homepage') ?>" id="logo"><h1>Circuito Musica</h1></a>
-			</div>
-		</div>
-			
-			
-		{# MENU #}
-		<div id="menu-container">
-			<nav id="menu" class="navbar navbar-default snavbar-fixed-top" role="navigation" data-spy="saffix" sdata-offset-top="66">
-			
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="glyphicon glyphicon-bar"></span>
-						<span class="glyphicon glyphicon-bar"></span>
-						<span class="glyphicon glyphicon-bar"></span>
-					</button>
-				</div>
-			
-				<div class="collapse navbar-collapse navbar-ex1-collapse">
-					<div class="container">
-			
-						<ul class="nav navbar-nav pull-left">
-							<li class="dropdown">
-								<a href="{{ path('event_index') }}">Events</a>
-								<ul class="dropdown-menu">  
-									<li><a href="{{ path('event_index') }}">Events</a></li> 
-								</ul>
-							</li> 
-							<li class="dropdown">
-								<a href="{{ path('event_index') }}">Locales</a>
-								<ul class="dropdown-menu">	
-									<li><a href="{{ path('user_locale', {'_locale': "en" }) }}">En</a></li>
-									<li><a href="{{ path('user_locale', {'_locale': "fr" }) }}">Fr</a></li>
-									<li><a href="{{ path('user_locale', {'_locale': "it" }) }}">It</a></li>
-								</ul>
-							</li>        
-						</ul>
-			
-						<ul class="nav navbar-nav pull-right">
-						</ul>
-			
-					</div>
-				</div>
-			</nav>
-		</div>
-			
-			
-			
-		{# CONTENT #}		
-		<div class="container">
-			
-			<div class="row">
-			
-				<div class="col-md-8">
-					{# FLASH #}
-					{% block body %}{% endblock %}
-				</div>
-			
-			
-				{# RIGHT COLUMN #}
-				<div class="sidebar col-md-4">
-					<img src="{{ asset('/bundles/cm/images/layout/banner.jpg') }}" alt="Symfony!" />
-				</div>
-			
-			</div> <!-- END ROW --> 
-		
-		</div> <!-- END CONTAINER -->
-		
-		
-		
-		<div class="container">	
-			<div id="footer">
-				Circuito Musica &copy; 2006-<?php echo date('Y', time()) ?>
-				<div class="pull-right">
-					Contatti
-				</div>
-			</div>
-		</div>
-		
+        {% block stylesheets %}{% endblock %}
+        
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    
+    
+    
+    <body data-spy="scroll">
+    
+    
+    
+        <div id="header">
+            <div class="container">
+                <a href="<?php echo url_for('@homepage') ?>" id="logo"><h1>Circuito Musica</h1></a>
+            </div>
+        </div>
+            
+            
+        {# MENU #}
+        <div id="menu-container">
+            <nav id="menu" class="navbar navbar-default snavbar-fixed-top" role="navigation" data-spy="saffix" sdata-offset-top="66">
+            
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="glyphicon glyphicon-bar"></span>
+                        <span class="glyphicon glyphicon-bar"></span>
+                        <span class="glyphicon glyphicon-bar"></span>
+                    </button>
+                </div>
+            
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <div class="container">
+            
+                        <ul class="nav navbar-nav pull-left">
+                            <li class="dropdown">
+                                <a href="{{ path('event_index') }}">Events</a>
+                                <ul class="dropdown-menu">  
+                                    <li><a href="{{ path('event_index') }}">Events</a></li> 
+                                </ul>
+                            </li> 
+                            <li class="dropdown">
+                                <a href="{{ path('user_locale') }}">Locales</a>
+                                <ul class="dropdown-menu">  
+                                    <li><a href="{{ path('user_locale', {'_locale': "en" }) }}">En</a></li>
+                                    <li><a href="{{ path('user_locale', {'_locale': "fr" }) }}">Fr</a></li>
+                                    <li><a href="{{ path('user_locale', {'_locale': "it" }) }}">It</a></li>
+                                </ul>
+                            </li>
+                            {% if is_granted('ROLE_USER') %}
+                                <li class="dropdown">
+                                    <a href="#{#{{ path('notification_bar') }}#}">Requests</a>
+                                    <ul class="dropdown-menu">
+                                        {{ render(controller('CMBundle:User:requestList')) }} 
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#{#{{ path('notification_bar') }}#}">Notifications</a>
+                                    <ul class="dropdown-menu">
+                                        {{ render(controller('CMBundle:User:notificationList')) }} 
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        </ul>
+
+                        <ul class="nav navbar-nav pull-right">
+                            {% if is_granted('ROLE_USER') %}
+                                <li>
+                                    <a href="{{ path('fos_user_security_logout') }}">Logout</a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="{{ path('fos_user_security_login') }}">Login</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+            
+                    </div>
+                </div>
+            </nav>
+        </div>
+            
+            
+            
+        {# CONTENT #}       
+        <div class="container">
+            
+            <div class="row">
+            
+                <div class="col-md-8">
+                    {# FLASH #}
+                    {% block body %}{% endblock %}
+                </div>
+            
+            
+                {# RIGHT COLUMN #}
+                <div class="sidebar col-md-4">
+                    <img src="{{ asset('/bundles/cm/images/layout/banner.jpg') }}" alt="Symfony!" />
+                </div>
+            
+            </div> <!-- END ROW --> 
+        
+        </div> <!-- END CONTAINER -->
+        
+        
+        
+        <div class="container"> 
+            <div id="footer">
+                Circuito Musica &copy; 2006-<?php echo date('Y', time()) ?>
+                <div class="pull-right">
+                    Contatti
+                </div>
+            </div>
+        </div>
+        
         
         <script>
-            var script 	= "{{ app.request.scriptname }}";
+            var script  = "{{ app.request.scriptname }}";
             var culture = "{{ app.request.locale }}";
         </script>
          <script src="{{ asset('/js/jquery-2.0.3.min.js') }}"></script>
@@ -114,25 +137,25 @@
 
         <script src="{{ asset('/bundles/cm/js/common.js') }}"></script>
         <script src="{{ asset('/bundles/cm/js/interface.js') }}"></script>
-		{% block javascripts %}{% endblock %}
-		
-		
-		
-		
-		{# PIWIK #}
-		<!-- <script type="text/javascript">
-		var pkBaseURL = (("https:" == document.location.protocol) ? "https://www.circuitomusica.it/stats/" : "http://www.circuitomusica.it/stats/");
-		document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-		</script><script type="text/javascript">
-		try {
-		var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 1);
-		piwikTracker.trackPageView();
-		piwikTracker.enableLinkTracking();
-		} catch( err ) {}
-		</script><noscript><p><img src="http://www.circuitomusica.it/stats/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript> -->
-		<!-- End Piwik Tracking Code    -->
-		
-	
-	
-	</body>
+        {% block javascripts %}{% endblock %}
+        
+        
+        
+        
+        {# PIWIK #}
+        <!-- <script type="text/javascript">
+        var pkBaseURL = (("https:" == document.location.protocol) ? "https://www.circuitomusica.it/stats/" : "http://www.circuitomusica.it/stats/");
+        document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+        </script><script type="text/javascript">
+        try {
+        var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 1);
+        piwikTracker.trackPageView();
+        piwikTracker.enableLinkTracking();
+        } catch( err ) {}
+        </script><noscript><p><img src="http://www.circuitomusica.it/stats/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript> -->
+        <!-- End Piwik Tracking Code    -->
+        
+    
+    
+    </body>
 </html>

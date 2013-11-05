@@ -1,0 +1,5 @@
+{% for notification in notifications %}
+    <li><a>{{ notification.id }} : {{ notification.fromUser }} - {{ notification.object }} #{{ notification.objectId }}</a></li>
+{% else %}
+    <li><a>{{ "There are no notifications." | trans }}</a></li>
+{% endfor %}

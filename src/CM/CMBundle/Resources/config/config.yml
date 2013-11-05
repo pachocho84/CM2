@@ -78,10 +78,24 @@ services:
         tags:
             - { name: twig.extension }
 
+    cm.notification_center:
+        class: CM\CMBundle\Service\NotificationCenter
+        arguments:
+            em: @doctrine.orm.entity_manager
+
+    cm.request_center:
+        class: CM\CMBundle\Service\RequestCenter
+        arguments:
+            em: @doctrine.orm.entity_manager
+
     cm.doctrine_listener:
         class: CM\CMBundle\EventListener\DoctrineEventsListener
+        arguments:
+            container: @service_container
         tags:
             - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: postUpdate }
+            - { name: doctrine.event_listener, event: postRemove }
             - { name: doctrine.event_listener, event: postFlush }
             
     cm.locale_listener:

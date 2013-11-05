@@ -13,6 +13,17 @@ use Doctrine\ORM\Query;
  */
 class UserRepository extends BaseRepository
 {
+    static protected function getOptions(array $options = array())
+    {
+        return array_merge(array(
+            'group_id'      => null,
+            'page_id'       => null,
+            'archive'       => null, 
+            'paginate'      => true,
+            'limit'         => 25,
+        ), $options);
+    }
+
     public function getCreatedGroupsIds($user_id)
     {
         return $this->getEntityManager()->createQueryBuilder()
@@ -44,5 +55,33 @@ class UserRepository extends BaseRepository
             ->setMaxResults(8)
             ->orderBy('u.vip', 'DESC')
             ->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
+
+    public function getRequests($userId, array $options = array())
+    {
+        $options = self::getOptions($options);
+        
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('r')
+            ->from('CMBundle:Request', 'r')
+            ->leftJoin('r.user', 'u')
+            ->where('u.id = :id')->setParameter('id', $userId)
+            ->orderBy('r.createdAt', 'desc');
+
+        return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+
+    public function getNotifications($userId, array $options = array())
+    {
+        $options = self::getOptions($options);
+        
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('n')
+            ->from('CMBundle:Notification', 'n')
+            ->leftJoin('n.user', 'u')
+            ->where('u.id = :id')->setParameter('id', $userId)
+            ->orderBy('n.createdAt', 'desc');
+
+        return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 }

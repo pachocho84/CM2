@@ -14,7 +14,7 @@
                     {% set requestText = ('%user% will not recive a request and this element will not be visible to his profile due to his group settings.' | trans({'%user%': user})) %}
                     {% set alertClass = 'alert-danger' %}
                 {% elseif attribute(target.obj.groupUsers[loop.index0 - protagonist_new_id], joinEntityType) == 1 %} {# yes #}
-                    {% set requestText = ('This element will be automatically added to %user%\'s profile due to his group settings.' | trans({'%user%': user})) %}
+                    {% set requestText = ('This element will be automatically added to %user%&#39;s profile due to his group settings.' | trans({'%user%': user})) %}
                     {% set alertClass = 'alert-success' %}
                 {% elseif attribute(target.obj.groupUsers[loop.index0 - protagonist_new_id], joinEntityType) == 2 %} {# request #}
                     {% set requestText = ('%user% will recive a request to add this element to his profile.' | trans({'%user%': user})) %}
@@ -37,13 +37,13 @@
                 {% set requestText = ('This element appears on your profile.' | trans) %}
                 {% set alertClass = 'alert-success' %}
             {% elseif entityUser.status == 1 %} {# active #}
-                {% set requestText = ('This element appears on %user%\'s profile.' | trans({'%user%': user})) %}
+                {% set requestText = ('This element appears on %user%&#39;s profile.' | trans({'%user%': user})) %}
                 {% set alertClass = 'alert-success' %}
             {% elseif entityUser.status == 2 %} {# requested #}
                 {% set requestText = ('%user% has sent a request to be added to the protagonists.' | trans({'%user%': user})) %}
                 {% set alertClass = 'alert-info' %}
             {% elseif entityUser.status == 3 %} {# refused admin #}
-                {% set requestText = ('%user%\'s request has been denied and this element does not appear on his profile.' | trans({'%user%': user})) %}
+                {% set requestText = ('%user%&#39;s request has been denied and this element does not appear on his profile.' | trans({'%user%': user})) %}
                 {% set alertClass = 'alert-danger' %}
             {% elseif entityUser.status == 4 %} {# refused entity user #}
                 {% set requestText = ('%user% has denied the request and this element does not appear on his profile.' | trans({'%user%': user})) %}

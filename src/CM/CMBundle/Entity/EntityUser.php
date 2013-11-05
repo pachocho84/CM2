@@ -90,7 +90,8 @@ class EntityUser
      */
     private $notification = true;
     
-    private $isNew = true;
+    private $isNew = false;
+    private $isUpdated = false;
 
     public function __construct()
     {
@@ -298,12 +299,25 @@ class EntityUser
     {
         return $this->isNew;
     }
+
+    public function isUpdated()
+    {
+        return $this->isUpdated;
+    }
+    
+    /**
+     * @ORM\PrePersist
+     */
+    protected function checkINew()
+    {
+        $this->isNew = true;
+    }
     
     /**
      * @ORM\PreUpdate
      */
-    protected function checkIsNew()
+    protected function checkIsUpdated()
     {
-        $this->isNew = false;
+        $this->isUpdated = true;
     }
 }

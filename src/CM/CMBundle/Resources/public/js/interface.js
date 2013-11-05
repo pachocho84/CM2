@@ -33,7 +33,7 @@ $(function() {
         });
     });
     $('#menu ul.nav.pull-right').on('click', '.dropdown-menu', function(event) { 
-    event.stopPropagation();
+        event.stopPropagation();
     });
     $('#menu').hcSticky({
     noContainer: true

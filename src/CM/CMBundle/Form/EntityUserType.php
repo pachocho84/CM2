@@ -30,7 +30,7 @@ class EntityUserType extends AbstractType
     {
         $builder->add($builder->create('user', 'hidden')->addModelTransformer(new UserToIntTransformer($options['em'])))
             ->add('admin', 'checkbox', array('required' => false));
-        if (in_array('ROLE_ADMIN', $options['roles'])) {
+        if (true || in_array('ROLE_ADMIN', $options['roles'])) {
             $builder->add('status', 'choice', array(
                     'choices' => array(
                         EntityUser::STATUS_PENDING => 'Pending',

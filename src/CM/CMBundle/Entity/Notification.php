@@ -15,8 +15,8 @@ class Notification
 {
     use ORMBehaviors\Timestampable\Timestampable;
     
-    const STATUS_NEW = 'new';
-    const STATUS_NOTIFIED = 'notified';
+    const STATUS_NEW = 0;
+    const STATUS_NOTIFIED = 1;
 
     /**
      * @var integer
@@ -37,7 +37,7 @@ class Notification
     /**
      * @var boolean
      *
-     * @ORM\Column(name="status", type="boolean", nullable=false)
+     * @ORM\Column(name="status", type="smallint", nullable=false)
      */
     private $status = self::STATUS_NEW;
 
@@ -118,15 +118,11 @@ class Notification
      */
     public function setStatus($status)
     {
-        if ($sex == self::STATUS_NEW) {
-            $this->status = true;
-        }
-        elseif ($sex == self::STATUS_NOTIFIED) {
-            $this->status = false;
-        }
-        else {
+        if (!in_array($status, array(self::STATUS_NEW, self::STATUS_NOTIFIED))) {
             throw new \InvalidArgumentException("Invalid status");
         }
+
+        $this->status = $status;
     
         return $this;
     }

@@ -23,6 +23,7 @@
                               <li>{{ tags[userTag] }}</li>
                           </ul>
                       {% endfor %}
+                      <span>Notifications: {{ protagonist.user.requestsIncoming | length }}</span>
                   </li>
               {% endfor %}
           </ul>
