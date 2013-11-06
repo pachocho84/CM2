@@ -20,7 +20,7 @@ class UserRepository extends BaseRepository
             'page_id'       => null,
             'archive'       => null, 
             'paginate'      => true,
-            'limit'         => 25,
+            'limit'         => 25
         ), $options);
     }
 
@@ -71,6 +71,31 @@ class UserRepository extends BaseRepository
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
+    public function getNumberNewRequests($userId)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('count(r.id)')
+            ->from('CMBundle:Request', 'r')
+            ->leftJoin('r.user', 'u')
+            ->where('u.id = :id')->setParameter('id', $userId)
+            ->andWhere('r.status = :new')->setParameter('new', Request::STATUS_NEW)
+            ->getQuery()->getSingleScalarResult();
+    }
+
+    public function updateRequestsStatus($userId, $ids, $oldStatus = null, $newStatus = Request::STATUS_PENDING)
+    {
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->update('CMBundle:Request', 'r')
+            ->where('r.user = :id')->setParameter('id', $userId)
+            ->andWhere('r.id IN (:ids)')->setParameter('ids', $ids);
+        if (!is_null($oldStatus)) {
+            $query->andWhere('r.status = '.$oldStatus);
+        }
+        $query->set('r.status', $newStatus);
+        return $query->getQuery()
+            ->execute();
+    }
+
     public function getNotifications($userId, array $options = array())
     {
         $options = self::getOptions($options);
@@ -83,5 +108,30 @@ class UserRepository extends BaseRepository
             ->orderBy('n.createdAt', 'desc');
 
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+
+    public function getNumberNewNotifications($userId)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('count(n.id)')
+            ->from('CMBundle:Notification', 'n')
+            ->leftJoin('n.user', 'u')
+            ->where('u.id = :id')->setParameter('id', $userId)
+            ->andWhere('n.status = :new')->setParameter('new', Notification::STATUS_NEW)
+            ->getQuery()->getSingleScalarResult();
+    }
+
+    public function updateNotificationsStatus($userId, $ids, $oldStatus = null, $newStatus = Notification::STATUS_NOTIFIED)
+    {
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->update('CMBundle:Notification', 'n')
+            ->where('n.user = :id')->setParameter('id', $userId)
+            ->andWhere('n.id IN (:ids)')->setParameter('ids', $ids);
+        if (!is_null($oldStatus)) {
+            $query->andWhere('n.status = '.$oldStatus);
+        }
+        $query->set('n.status', $newStatus);
+        return $query->getQuery()
+            ->execute();
     }
 }

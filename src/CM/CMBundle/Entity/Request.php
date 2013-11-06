@@ -118,6 +118,25 @@ class Request
         return $this->status;
     }
 
+    public function getStatusName()
+    {
+        switch ($this->status) {
+            case self::STATUS_NEW:
+                return 'new';
+            case self::STATUS_PENDING:
+                return 'pending';
+            case self::STATUS_ACCEPTED:
+                return 'accepted';
+            case self::STATUS_REFUSED:
+                return 'refused';
+        }
+    }
+
+    public function isNewOrPending()
+    {
+        return in_array($this->status, array(self::STATUS_NEW, self::STATUS_PENDING));
+    }
+
     /**
      * Set user
      *

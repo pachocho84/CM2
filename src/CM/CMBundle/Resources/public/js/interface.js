@@ -1,11 +1,14 @@
 $(function() {
-
-
-    
-    /* AJAX LINK */    
-    $('body').on('click', '.ajax-link', function(event) {
-        $(this).closest('*[rel="tooltip"]').tooltip('destroy');
+    /* AJAX LINK */
+    $('body').on('click', function(event) {
         event.preventDefault();
+        console.log($(event.target));
+    });
+
+    $(document).on('click', '.ajax-link', function(event) {
+        event.preventDefault();
+        console.log(42);
+        $(this).closest('*[rel="tooltip"]').tooltip('destroy');
         if ($(this).attr('data-loading-text')) {
             $(this).closest('.btn').html('<img src="/images/loader.gif" /> ' + $(this).attr('data-loading-text'));
         }
@@ -23,29 +26,36 @@ $(function() {
         });
     });
     
-    
-    
     /* MENU */
-    $('#menu ul.pull-right li.menu-tab a').one('click', function(event) {
+    $('#menu ul.pull-right li.menu-tab a').on('click', function(event) {
+        if ($(this).parent('li.dropdown.menu-tab').hasClass('open')) return;
+
+        ids = '';
         $.get(event.currentTarget.href, function(data) {
-            $(event.target).closest('li.menu-tab').find('.countNew').empty();
             $(event.target).closest('li.menu-tab').find('.dropdown-menu-body').html(data);
+            $(data).children('li').each(function() {
+                ids += $(this).attr('object-id') + ',';
+            });
+        }).done(function() {
+            $.get($(event.currentTarget).attr('seen-url') + '?ids=' + ids, function(data) {
+                $(event.target).closest('li.menu-tab').find('.countNew').html(data['new']);
+            });
         });
     });
     $('#menu ul.nav.pull-right').on('click', '.dropdown-menu', function(event) { 
         event.stopPropagation();
     });
     $('#menu').hcSticky({
-    noContainer: true
-  });
+        noContainer: true
+    });
   
   
   
-  /* SIDEBAR */
-  $('.sidebar').hcSticky({
-      top: 50,
-      bottom: 15
-  });
+    /* SIDEBAR */
+    $('.sidebar').hcSticky({
+        top: 50,
+        bottom: 15
+    });
     
     
     

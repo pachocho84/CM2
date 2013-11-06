@@ -46,7 +46,7 @@
                         <ul class="nav navbar-nav pull-left">
                             <li class="dropdown">
                                 <a href="{{ path('event_index') }}">Events</a>
-                                <ul class="dropdown-menu">  
+                                <ul class="dropdown-menu">
                                     <li><a href="{{ path('event_index') }}">Events</a></li> 
                                 </ul>
                             </li> 
@@ -62,18 +62,7 @@
 
                         <ul class="nav navbar-nav pull-right">
                             {% if is_granted('ROLE_USER') %}
-                                <li class="dropdown">
-                                    <a href="#{#{{ path('notification_bar') }}#}">Requests</a>
-                                    <ul class="dropdown-menu">
-                                        {{ render(controller('CMBundle:User:requestList')) }} 
-                                    </ul>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#{#{{ path('notification_bar') }}#}">Notifications</a>
-                                    <ul class="dropdown-menu">
-                                        {{ render(controller('CMBundle:User:notificationList')) }} 
-                                    </ul>
-                                </li>
+                                {{ render(controller('CMBundle:User:menu', {'path': app.request.pathInfo} )) }}
                                 <li>
                                     <a href="{{ path('user_show', {"slug": app.getUser.slug}) }}">{{ app.getUser }}</a>
                                 </li>
@@ -91,8 +80,6 @@
                 </div>
             </nav>
         </div>
-            
-            
             
         {# CONTENT #}       
         <div class="container">

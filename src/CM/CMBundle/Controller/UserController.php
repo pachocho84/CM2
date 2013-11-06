@@ -3,8 +3,9 @@
 namespace CM\CMBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Request as sfRequest;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -14,6 +15,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
+use CM\CMBundle\Entity\Request;
+use CM\CMBundle\Entity\Notification;
 use CM\CMBundle\Form\EventType;
 
 class UserController extends Controller
@@ -21,7 +24,7 @@ class UserController extends Controller
     /**
      * @Route("/typeaheadHint", name="user_typeahead_hint")
      */
-    public function typeaheadHintAction(Request $request)
+    public function typeaheadHintAction(sfRequest $request)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -45,33 +48,109 @@ class UserController extends Controller
     }
 
     /**
+     * @Route("/menu", name="user_menu")
+     * @Template
+     */
+    public function menuAction(sfRequest $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $newRequests = $em->getRepository('CMBundle:User')->getNumberNewRequests($this->getUser()->getId());
+        $newNotifications = $em->getRepository('CMBundle:User')->getNumberNewNotifications($this->getUser()->getId());
+
+        $inRequest = substr($request->get('realRoute'), 1, 7) == 'request';
+        $inNotification = substr($request->get('realRoute'), 1, 12) == 'notification';
+
+        return array(
+            'newRequests' => $newRequests,
+            'newNotifications' => $newNotifications,
+            'inRequestPage' => $inRequest,
+            'inNotificationPage' => $inNotification
+        );
+    }
+
+    /**
      * @Route("/requests/{page}", name="user_requests", requirements={"page" = "\d+"})
      * @Template
      */
-    public function requestListAction($page = 1)
+    public function requestListAction(sfRequest $request, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
 
         $requests = $em->getRepository('CMBundle:User')->getRequests($this->getUser()->getId());
-
         $pagination = $this->get('knp_paginator')->paginate($requests, $page, 10);
 
+        if ($request->isXmlHttpRequest()) {
+            return array('requests' => $pagination);
+        }
+
         return array('requests' => $pagination);
+    }
+
+    /**
+     * @Route("/requestsSeen", name="user_requests_seen")
+     */
+    public function requestsSeen(sfRequest $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $requestIds = explode(',', $request->get('ids'));
+
+        $em->getRepository('CMBundle:User')->updateRequestsStatus($this->getUser()->getId(), $requestIds, Request::STATUS_NEW);
+
+        $newRequests = $em->getRepository('CMBundle:User')->getNumberNewRequests($this->getUser()->getId());
+
+        return new JsonResponse(array('new' => $newRequests));
+    }
+
+    /**
+     * @Route("/requestUpdate/{id}/{choice}", name="user_request_update", requirements={"id"="\d+", "choice"="accept|refuse"})
+     */
+    public function requestUpdateAction($id, $choice)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $newStatus = $choice == 'accept' ? Request::STATUS_ACCEPTED : Request::STATUS_REFUSED;
+
+        // echo $choice.' '.$newStatus;die;
+
+        $em->getRepository('CMBundle:User')->updateRequestsStatus($this->getUser()->getId(), $id, null, $newStatus);
+
+        return new Response;
     }
 
     /**
      * @Route("/notifications/{page}", name="user_notifications", requirements={"page" = "\d+"})
      * @Template
      */
-    public function notificationListAction($page = 1)
+    public function notificationListAction(sfRequest $request, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
 
         $notifications = $em->getRepository('CMBundle:User')->getNotifications($this->getUser()->getId());
-
         $pagination = $this->get('knp_paginator')->paginate($notifications, $page, 10);
 
+        if ($request->isXmlHttpRequest()) {
+            return array('notifications' => $pagination);
+        }
+
         return array('notifications' => $pagination);
+    }
+
+    /**
+     * @Route("/notificationsSeen", name="user_notifications_seen")
+     */
+    public function notificationsSeen(sfRequest $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $notificationIds = explode(',', $request->get('ids'));
+
+        $em->getRepository('CMBundle:User')->updateNotificationsStatus($this->getUser()->getId(), $notificationIds, Notification::STATUS_NEW);
+
+        $newNotifications = $em->getRepository('CMBundle:User')->getNumberNewNotifications($this->getUser()->getId());
+
+        return new JsonResponse(array('new' => $newNotifications));
     }
 
     /**
@@ -89,7 +168,7 @@ class UserController extends Controller
 	 * @Route("/{slug}/events/category/{category_slug}/{page}", name="user_events_category", requirements={"page" = "\d+"})
      * @Template
      */
-	public function eventsAction(Request $request, $slug, $page = 1, $category_slug = null)
+	public function eventsAction(sfRequest $request, $slug, $page = 1, $category_slug = null)
 	{
 	    $em = $this->getDoctrine()->getManager();
 		

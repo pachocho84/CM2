@@ -90,6 +90,8 @@ class Notification
      */
     private $objectId;
 
+    private $relatedObject;
+
     /**
      * Get id
      *
@@ -321,5 +323,18 @@ class Notification
     public function getObjectId()
     {
         return $this->objectId;
+    }
+
+    /**
+     * Get relatedObject
+     *
+     * @return Request
+     */
+    public function getRelatedObject()
+    {
+        if (!$this->relatedObject) {
+            // $this->relatedObject = get_object($this->getPost()->getObject(), $this->getPost()->getObjectIds());
+        }
+        return $this->relatedObject;
     }
 }
