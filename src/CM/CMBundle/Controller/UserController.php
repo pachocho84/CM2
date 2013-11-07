@@ -80,6 +80,8 @@ class UserController extends Controller
         $requests = $em->getRepository('CMBundle:User')->getRequests($this->getUser()->getId());
         $pagination = $this->get('knp_paginator')->paginate($requests, $page, $perPage);
 
+        $this->get('cm.request_center')->seeRequests($this->getUser()->getId());
+
         if ($request->isXmlHttpRequest() && !$request->get('outgoing')) {
             return $this->render('CMBundle:User:requestList.html.twig', array('requests' => $pagination));
         }
@@ -91,20 +93,6 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/requestsSeen", name="user_requests_seen")
-     */
-    public function requestsSeen(sfRequest $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $requestIds = explode(',', $request->get('ids'));
-
-        $newRequests = $this->get('cm.request_center')->seeRequests($this->getUser()->getId(), $requestIds);
-
-        return new JsonResponse(array('new' => $newRequests));
-    }
-
-    /**
      * @Route("/requestUpdate/{id}/{choice}", name="user_request_update", requirements={"id"="\d+", "choice"="accept|refuse"})
      */
     public function requestUpdateAction($id, $choice)
@@ -112,14 +100,10 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if ($choice == 'accept') {
-            $this->get('cm.request_center')->acceptRequest($userId, $id);
+            $this->get('cm.request_center')->acceptRequest($this->getUser()->getId(), $id);
         } elseif ($choice == 'refuse') {
-            $this->get('cm.request_center')->refuseRequest($userId, $id);
+            $this->get('cm.request_center')->refuseRequest($this->getUser()->getId(), $id);
         }
-
-        // echo $choice.' '.$newStatus;die;
-
-        $em->getRepository('CMBundle:User')->updateRequestsStatus($this->getUser()->getId(), $id, null, $newStatus);
 
         return new Response;
     }

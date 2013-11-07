@@ -1,37 +1,50 @@
 $(function() {
-
-    if ($('#load_more_posts').length > 0) {
-        $('#load_more_posts a').html('<img src="/bundles/cm/images/layout/loader.gif" />');
-        $.get($('#load_more_posts a').attr('href'), function(data) {
-            $('#load_more_posts').replaceWith(data);
-        })
+    // if ($('.load_more').length > 0) {
+    //     $('.load_more a').html('<img src="/bundles/cm/images/layout/loader.gif" />');
+    //     $('.load_more').each(function() {
+    //         target = this;
+    //         $.get($(this).children('a').attr('href'), function(data) {
+    //             $(target).replaceWith(data);
+    //         });
+    //     });
+    //     $.get($('.load_more a').attr('href'), function(data) {
+    //         $('.load_more').replaceWith(data);
+    //     })
     
-        $('body').on('click', '#load_more_posts a', function(event) {
-            event.preventDefault(); 
-            loadMorePosts(); 
-        });    
-    }
+    //     $('body').on('click', '.load_more a', function(event) {
+    //         event.preventDefault(); 
+    //         loadMorePosts(event.target); 
+    //     });    
+    // }
     
-    function loadMorePosts() {
-        $('#load_more_posts a').html('<img src="/bundles/cm/images/layout/loader.gif" />');
-        $.get($('#load_more_posts a').attr('href'), function(data) {
-            $('#load_more_posts').replaceWith(data);
-            loadOnScroll(); 
-            $('#menu').hcSticky('reinit');
-            $('.sidebar').hcSticky('reinit');
-        });
-    }
+    // function loadMorePosts(target) {
+    //     $(target).children('a').html('<img src="/bundles/cm/images/layout/loader.gif" />');
+    //     $.get($(target).children('a').attr('href'), function(data) {
+    //         $(target).replaceWith(data);
+    //         loadOnScroll(); 
+    //         $('#menu').hcSticky('reinit');
+    //         $('.sidebar').hcSticky('reinit');
+    //     });
+    // }
     
-    function loadOnScroll() {
-        $(window).scroll(function() {
-            if ($('#load_more_posts').length > 0 && $(window).height() + $(window).scrollTop() > ($('#load_more_posts').offset().top - $(window).height())) {
-                loadMorePosts();
-                $(window).unbind('scroll');
-            }
-        });
-    }
-    loadOnScroll();
-    
+    // function loadOnScroll() {
+    //     $(window).on('scroll', '.load_more', function(event) {
+    //         console.log(42);
+    //         if ($(event.target).length > 0 && $(event.target).closest('.load_more_container').height() + $(event.target).closest('.load_more_container').scrollTop() > ($(event.target).offset().top - $(event.target).closest('.load_more_container').height())) {
+    //             loadMorePosts(event.target);
+    //             $(window).unbind('scroll');
+    //         }
+    //     });
+    // }
+    // loadOnScroll();
+    $('.infinite-scroll').infinitescroll({
+        nextSelector: '.infinite-scroll a.infinite-scroll-link',
+        navSelector: '.infinite-scroll a.infinite-scroll-link',
+        itemSelecor: '.asd',
+        loadingImg: '/bundles/cm/images/layout/loader.gif',
+        localMode: true,
+        debug: true
+    });
     
     
     /* DELETE CONFIRMATION */

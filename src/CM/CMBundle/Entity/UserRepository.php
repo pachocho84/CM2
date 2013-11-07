@@ -62,8 +62,9 @@ class UserRepository extends BaseRepository
         $options = self::getOptions($options);
         
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('r')
-            ->from('CMBundle:Request', 'r');
+            ->select('r, u, e')
+            ->from('CMBundle:Request', 'r')
+            ->leftJoin('r.entity', 'e');
         if ($direction == 'incoming') {
             $query->leftJoin('r.user', 'u');
         } elseif ($direction == 'outgoing') {
@@ -87,12 +88,14 @@ class UserRepository extends BaseRepository
             ->getQuery()->getSingleScalarResult();
     }
 
-    public function updateRequestsStatus($userId, $ids, $oldStatus = null, $newStatus = Request::STATUS_PENDING)
+    public function updateRequestsStatus($userId, $ids = null, $oldStatus = null, $newStatus = Request::STATUS_PENDING)
     {
         $query = $this->getEntityManager()->createQueryBuilder()
             ->update('CMBundle:Request', 'r')
-            ->where('r.user = :id')->setParameter('id', $userId)
-            ->andWhere('r.id IN (:ids)')->setParameter('ids', $ids);
+            ->where('r.user = :id')->setParameter('id', $userId);
+        if (!is_null($ids)) {
+            $query->andWhere('r.id IN (:ids)')->setParameter('ids', $ids);
+        }
         if (!is_null($oldStatus)) {
             $query->andWhere('r.status = '.$oldStatus);
         }

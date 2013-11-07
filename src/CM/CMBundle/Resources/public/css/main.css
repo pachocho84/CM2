@@ -350,6 +350,9 @@ img {
 {
     padding: 10px 8px;
     font-size: 12px;
+    max-height: 350px;
+    overflow-y: scroll;
+
 }
 .dropdown-menu-loader
 {

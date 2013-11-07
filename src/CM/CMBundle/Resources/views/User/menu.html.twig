@@ -1,8 +1,8 @@
 <li class="dropdown menu-tab{% if inRequestPage %}active{% endif %}">
     
-    <a href="{{ path('user_requests') }}" id="menu-requests" class="dropdown-toggle" data-toggle="dropdown" seen-url={{ path('user_requests_seen') }}>
+    <a href="{{ path('user_requests') }}" id="menu-requests" class="dropdown-toggle" data-toggle="dropdown">
         <img src="/images/glyphicons/bell.png" />
-        <span class="countNew" id="requestsCounter">{{ newRequests }}</span>
+        <span class="countNew" id="requestsCounter">{% if newRequests > 0 %}{{ newRequests }}{% endif %}</span>
     </a>
     
     <div class="dropdown-menu pull-right">
@@ -24,9 +24,9 @@
 
 <li class="dropdown menu-tab{% if inNotificationPage %}active{% endif %}">
 	
-	<a href="{{ path('user_notifications') }}" id="menu-notifications" class="dropdown-toggle" data-toggle="dropdown" seen-url={{ path('user_notifications_seen') }}>
+	<a href="{{ path('user_notifications') }}" id="menu-notifications" class="dropdown-toggle" data-toggle="dropdown">
 		<img src="/images/glyphicons/globe.png" />
-		<span class="countNew" id="notificationsCounter">{{ newNotifications }}</span>
+		<span class="countNew" id="notificationsCounter">{% if newNotifications > 0 %}{{ newNotifications }}{% endif %}</span>
 	</a>
 	
 	<div class="dropdown-menu pull-right">
