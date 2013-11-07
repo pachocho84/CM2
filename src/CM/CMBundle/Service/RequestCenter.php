@@ -58,6 +58,29 @@ class RequestCenter
         $this->flushNeeded = true;
     }
 
+    public function getNewRequestsNumber($userId)
+    {
+        return $em->getRepository('CMBundle:User')->getNumberNewRequests($this->getUser()->getId());
+    }
+
+    public function seeRequests($userId, $ids)
+    {
+        $this->em->getRepository('CMBundle:User')->updateRequestsStatus($userId, $ids, Request::STATUS_NEW);
+
+        return $this->getNewRequestsNumber();
+    }
+
+    public function acceptRequest($userId, $id, $accept = true)
+    {
+        $newStatus = $accept ? Request::STATUS_ACCEPT : Request::STATUS_REFUSE;
+        $em->getRepository('CMBundle:User')->updateRequestsStatus($userId, $id, null, $newStatus);
+    }
+
+    public function refuseRequest($userId, $id)
+    {
+        $this->acceptRequest($userId, $id, false);
+    }
+
     public function removeRequests($toUser, $object, $objectId)
     {
         $requests = $this->em->getRepository('CMBundle:Request')->getFor($toUser, $object, $objectId);

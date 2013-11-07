@@ -1,0 +1,58 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+    <h2>
+        {#<?php echo image_tag('/images/glyphicons/globe') ?>
+        <?php echo $sf_response->getTitle() ?>#}
+    </h2>                                                                    
+    
+    
+     
+    <ul class="breadcrumb">
+      {#<li><?php echo link_to('Home', '@homepage') ?></li>
+      <li class="active"><?php echo __($sf_response->getTitle()) ?></li>#}
+    </ul>
+
+    <div class="objects-container">
+        
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#incomingRequests" data-toggle="tab"><i class="glyphicon glyphicon-bell"></i> {{ 'Incoming requests' | trans }}</a></li>
+          <li><a href="#outgoingRequests" data-toggle="tab"><i class="glyphicon glyphicon-share-alt"></i> {{ 'Outgoing requests' | trans }}</a></li>
+        </ul>
+
+        <div class="tab-content objects">
+
+            <div class="tab-pane active" id="incomingRequests">
+                <div class="objects">
+                    <ul class="media-list">
+                        {{ include('CMBundle:User:requestList.html.twig') }}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="outgoingRequests">
+                {% if requestsOutgoing | length > 0 %}
+                    {% for request in requestsOutgoing %}
+                        <div class="media object object-request">
+                            {{ show_img_box(request.user.img | imagine_filter('350'), {'width': 50, 'height': 50, 'offset': request.fromUser.offset,  'link': path('user_show', {'slug': request.fromUser.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) | raw }} 
+                            <div class="media-body ajax-link-target">
+                                <p>{#<?php echo $request->getRawValue()->getText() ?>#}{{ request.id }}</p>
+                                <a href="{{ path('user_request_delete', {'id' : request.id}) }}" class="btn btn-default btn-sm ajax-link" data-loading-text="{{ 'Loading' | trans }}"><i class="glyphicon glyphicon-remove"></i> {{ 'Cancel' | trans }}</a>
+                            </div> 
+                        </div>
+                    {% endfor %}
+
+                    {#{% if requestsOutgoing.paginationData.current < requestsOutgoing.paginationData.last %}
+                        <div id="load_more_posts" class="well well-small">
+                            <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': requestsOutgoing.getPaginationData.next, 'outgoing': true })) }}">{{ 'Load more' | trans }}</a>
+                        </div>
+                    {% endif %}#}
+                {% else %}
+                    {{ "There are no requests." | trans }}
+                {% endif %}
+            </div>
+
+        </div>
+        
+    </div>
+{% endblock %}

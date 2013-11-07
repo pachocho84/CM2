@@ -1,0 +1,25 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+    <h2>
+        {#<?php echo image_tag('/images/glyphicons/globe') ?>
+        <?php echo $sf_response->getTitle() ?>#}
+    </h2>                                                                    
+    
+    
+     
+    <ul class="breadcrumb">
+      {#<li><?php echo link_to('Home', '@homepage') ?></li>
+      <li class="active"><?php echo __($sf_response->getTitle()) ?></li>#}
+    </ul>
+    
+    
+    
+    <div class="objects-container">
+        <div class="objects">
+            <ul class="media-list">
+                {{ include('CMBundle:User:notificationList.html.twig') }}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

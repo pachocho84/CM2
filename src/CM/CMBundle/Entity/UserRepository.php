@@ -57,15 +57,20 @@ class UserRepository extends BaseRepository
             ->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
-    public function getRequests($userId, array $options = array())
+    public function getRequests($userId, $direction = 'incoming', array $options = array())
     {
         $options = self::getOptions($options);
         
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('r')
-            ->from('CMBundle:Request', 'r')
-            ->leftJoin('r.user', 'u')
-            ->where('u.id = :id')->setParameter('id', $userId)
+            ->from('CMBundle:Request', 'r');
+        if ($direction == 'incoming') {
+            $query->leftJoin('r.user', 'u');
+        } elseif ($direction == 'outgoing') {
+            $query->leftJoin('r.fromUser', 'u');
+        }
+        $query->where('u.id = :id')->setParameter('id', $userId)
+            ->andWhere('r.status NOT IN ('.Request::STATUS_ACCEPTED.','.Request::STATUS_REFUSED.')')
             ->orderBy('r.createdAt', 'desc');
 
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
@@ -93,6 +98,16 @@ class UserRepository extends BaseRepository
         }
         $query->set('r.status', $newStatus);
         return $query->getQuery()
+            ->execute();
+    }
+
+    public function deleteRequest($userId, $id)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->delete('CMBundle:Request', 'r')
+            ->where('r.fromUser = :user_id')->setParameter('user_id', $userId)
+            ->andWhere('r.id = :id')->setParameter('id', $id)
+            ->getQuery()
             ->execute();
     }
 

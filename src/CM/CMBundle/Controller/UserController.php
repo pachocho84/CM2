@@ -70,21 +70,24 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/requests/{page}", name="user_requests", requirements={"page" = "\d+"})
+     * @Route("/requests/{page}/{perPage}", name="user_requests", requirements={"page" = "\d+"})
      * @Template
      */
-    public function requestListAction(sfRequest $request, $page = 1)
+    public function requestsAction(sfRequest $request, $page = 1, $perPage = 6)
     {
         $em = $this->getDoctrine()->getManager();
 
         $requests = $em->getRepository('CMBundle:User')->getRequests($this->getUser()->getId());
-        $pagination = $this->get('knp_paginator')->paginate($requests, $page, 10);
+        $pagination = $this->get('knp_paginator')->paginate($requests, $page, $perPage);
 
-        if ($request->isXmlHttpRequest()) {
-            return array('requests' => $pagination);
+        if ($request->isXmlHttpRequest() && !$request->get('outgoing')) {
+            return $this->render('CMBundle:User:requestList.html.twig', array('requests' => $pagination));
         }
 
-        return array('requests' => $pagination);
+        $requestsOutgoing = $em->getRepository('CMBundle:User')->getRequests($this->getUser()->getId(), 'outgoing');
+        $paginationOutgoing = $this->get('knp_paginator')->paginate($requestsOutgoing, $page, $perPage);
+
+        return array('requests' => $pagination, 'requestsOutgoing' => $paginationOutgoing);
     }
 
     /**
@@ -96,9 +99,7 @@ class UserController extends Controller
 
         $requestIds = explode(',', $request->get('ids'));
 
-        $em->getRepository('CMBundle:User')->updateRequestsStatus($this->getUser()->getId(), $requestIds, Request::STATUS_NEW);
-
-        $newRequests = $em->getRepository('CMBundle:User')->getNumberNewRequests($this->getUser()->getId());
+        $newRequests = $this->get('cm.request_center')->seeRequests($this->getUser()->getId(), $requestIds);
 
         return new JsonResponse(array('new' => $newRequests));
     }
@@ -110,7 +111,11 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $newStatus = $choice == 'accept' ? Request::STATUS_ACCEPTED : Request::STATUS_REFUSED;
+        if ($choice == 'accept') {
+            $this->get('cm.request_center')->acceptRequest($userId, $id);
+        } elseif ($choice == 'refuse') {
+            $this->get('cm.request_center')->refuseRequest($userId, $id);
+        }
 
         // echo $choice.' '.$newStatus;die;
 
@@ -118,20 +123,32 @@ class UserController extends Controller
 
         return new Response;
     }
+    
+    /**
+     * @Route("/requestDelete/{id}", name="user_request_delete", requirements={"id"="\d+"})
+     */
+    public function requestDeleteAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $em->getRepository('CMBundle:User')->deleteRequest($this->getUser()->getId(), $id);
+
+        return new Response;
+    }
 
     /**
-     * @Route("/notifications/{page}", name="user_notifications", requirements={"page" = "\d+"})
+     * @Route("/notifications/{page}/{perPage}", name="user_notifications", requirements={"page" = "\d+"})
      * @Template
      */
-    public function notificationListAction(sfRequest $request, $page = 1)
+    public function notificationsAction(sfRequest $request, $page = 1, $perPage = 6)
     {
         $em = $this->getDoctrine()->getManager();
 
         $notifications = $em->getRepository('CMBundle:User')->getNotifications($this->getUser()->getId());
-        $pagination = $this->get('knp_paginator')->paginate($notifications, $page, 10);
+        $pagination = $this->get('knp_paginator')->paginate($notifications, $page, $perPage);
 
         if ($request->isXmlHttpRequest()) {
-            return array('notifications' => $pagination);
+            return $this->render('CMBundle:User:notificationList.html.twig', array('notifications' => $pagination));
         }
 
         return array('notifications' => $pagination);
