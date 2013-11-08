@@ -124,10 +124,17 @@ class RequestRepository extends BaseRepository
     public function delete($userId, $object, $objectId)
     {
         $this->createQueryBuilder('r')
-            ->delete('r')
+            ->delete('CMBundle:Request', 'r')
             ->where('r.user = :user_id')->setParameter('user_id', $userId)
             ->andWhere('r.object = :object')->setParameter('object', $object)
             ->andWhere('r.objectId = :object_id')->setParameter('object_id', $objectId)
+            ->getQuery()
+            ->execute();
+
+        $this->getEntityManager()->createQueryBuilder()
+            ->delete('CMBundle:EntityUser', 'eu')
+            ->where('eu.user = :user_id')->setParameter('user_id', $userId)
+            ->andWhere('eu.entity = :entity_id')->setParameter('entity_id', $objectId)
             ->getQuery()
             ->execute();
     }

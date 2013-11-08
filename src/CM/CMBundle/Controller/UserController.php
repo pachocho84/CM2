@@ -107,8 +107,11 @@ class UserController extends Controller
                     EntityUser::STATUS_REQUESTED,
                     true // notifications
                 );
+                $em->persist($event);
                 break;
         }
+
+        $em->flush();
 
         return new Response;
     }
