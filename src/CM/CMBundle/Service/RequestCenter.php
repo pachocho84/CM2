@@ -65,7 +65,7 @@ class RequestCenter
 
     public function seeRequests($userId)
     {
-        $this->em->getRepository('CMBundle:Request')->updateStatus($userId, Request::STATUS_PENDING, Request::STATUS_NEW);
+        $this->em->getRepository('CMBundle:Request')->updateStatus($userId, null, null, Request::STATUS_NEW, Request::STATUS_PENDING);
 
         return $this->getNewRequestsNumber($userId);
     }
