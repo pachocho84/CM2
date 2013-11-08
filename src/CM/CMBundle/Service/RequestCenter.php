@@ -60,25 +60,25 @@ class RequestCenter
 
     public function getNewRequestsNumber($userId)
     {
-        return $this->em->getRepository('CMBundle:User')->getNumberNewRequests($userId);
+        return $this->em->getRepository('CMBundle:Request')->getNumberNew($userId);
     }
 
     public function seeRequests($userId)
     {
-        $this->em->getRepository('CMBundle:User')->updateRequestsStatus($userId, null, Request::STATUS_NEW);
+        $this->em->getRepository('CMBundle:Request')->updateStatus($userId, Request::STATUS_PENDING, Request::STATUS_NEW);
 
         return $this->getNewRequestsNumber($userId);
     }
 
-    public function acceptRequest($userId, $id, $accept = true)
+    public function acceptRequest($userId, $object, $objectId, $accept = true)
     {
         $newStatus = $accept ? Request::STATUS_ACCEPTED : Request::STATUS_REFUSED;
-        $this->em->getRepository('CMBundle:User')->updateRequestsStatus($userId, $id, null, $newStatus);
+        $this->em->getRepository('CMBundle:Request')->updateStatus($userId, $object, $objectId, null, $newStatus);
     }
 
-    public function refuseRequest($userId, $id)
+    public function refuseRequest($userId, $object, $objectId)
     {
-        $this->acceptRequest($userId, $id, false);
+        $this->acceptRequest($userId, $object, $objectId, false);
     }
 
     public function removeRequests($toUser, $object, $objectId)

@@ -37,15 +37,13 @@ $(function() {
     //     });
     // }
     // loadOnScroll();
-    $('.infinite-scroll').infinitescroll({
-        nextSelector: '.infinite-scroll a.infinite-scroll-link',
-        navSelector: '.infinite-scroll a.infinite-scroll-link',
-        itemSelecor: '.asd',
-        loadingImg: '/bundles/cm/images/layout/loader.gif',
-        localMode: true,
-        debug: true
+    $(document).on('scroll', function(event) {
+        $('.load_more').each(function(i) {
+            $container = $(this).closest('.load_more_container').length > 0 ? $(this).closest('.load_more_container') : $(window);
+            console.log(i, $container, [$container.height(), $container.scrollTop(), $(this).offset().top]);
+        });
+        // console.log([$(event.target).offset(), $(event.target).children('.load_more').offset()]);
     });
-    
     
     /* DELETE CONFIRMATION */
     $('body').popover({

@@ -3,7 +3,7 @@
 namespace CM\CMBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request as sfRequest;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,7 +15,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
-use CM\CMBundle\Entity\Request;
 use CM\CMBundle\Entity\Notification;
 use CM\CMBundle\Form\EventType;
 
@@ -24,7 +23,7 @@ class UserController extends Controller
     /**
      * @Route("/typeaheadHint", name="user_typeahead_hint")
      */
-    public function typeaheadHintAction(sfRequest $request)
+    public function typeaheadHintAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -51,11 +50,11 @@ class UserController extends Controller
      * @Route("/menu", name="user_menu")
      * @Template
      */
-    public function menuAction(sfRequest $request)
+    public function menuAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $newRequests = $em->getRepository('CMBundle:User')->getNumberNewRequests($this->getUser()->getId());
+        $newRequests = $em->getRepository('CMBundle:Request')->getNumberNew($this->getUser()->getId());
         $newNotifications = $em->getRepository('CMBundle:User')->getNumberNewNotifications($this->getUser()->getId());
 
         $inRequest = substr($request->get('realRoute'), 1, 7) == 'request';
@@ -73,11 +72,11 @@ class UserController extends Controller
      * @Route("/requests/{page}/{perPage}", name="user_requests", requirements={"page" = "\d+"})
      * @Template
      */
-    public function requestsAction(sfRequest $request, $page = 1, $perPage = 6)
+    public function requestsAction(Request $request, $page = 1, $perPage = 6)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $requests = $em->getRepository('CMBundle:User')->getRequests($this->getUser()->getId());
+        $requests = $em->getRepository('CMBundle:Request')->getRequests($this->getUser()->getId());
         $pagination = $this->get('knp_paginator')->paginate($requests, $page, $perPage);
 
         $this->get('cm.request_center')->seeRequests($this->getUser()->getId());
@@ -86,36 +85,56 @@ class UserController extends Controller
             return $this->render('CMBundle:User:requestList.html.twig', array('requests' => $pagination));
         }
 
-        $requestsOutgoing = $em->getRepository('CMBundle:User')->getRequests($this->getUser()->getId(), 'outgoing');
+        $requestsOutgoing = $em->getRepository('CMBundle:Request')->getRequests($this->getUser()->getId(), 'outgoing');
         $paginationOutgoing = $this->get('knp_paginator')->paginate($requestsOutgoing, $page, $perPage);
 
         return array('requests' => $pagination, 'requestsOutgoing' => $paginationOutgoing);
     }
 
     /**
-     * @Route("/requestUpdate/{id}/{choice}", name="user_request_update", requirements={"id"="\d+", "choice"="accept|refuse"})
+     * @Route("/requestAdd/{object}/{objectId}", name="user_request_add", requirements={"objectId"="\d+"})
      */
-    public function requestUpdateAction($id, $choice)
+    public function requestAddAction($object, $objectId)
     {
         $em = $this->getDoctrine()->getManager();
 
+        switch ($object) {
+            case 'Event':
+                $event = $em->getRepository('CMBundle:Event')->findOneById($objectId);
+                $event->addUser(
+                    $this->getUser(),
+                    false, // admin
+                    EntityUser::STATUS_REQUESTED,
+                    true // notifications
+                );
+                break;
+        }
+
+        return new Response;
+    }
+
+    /**
+     * @Route("/requestUpdate/{object}/{objectId}/{choice}", name="user_request_update", requirements={"objectId"="\d+", "choice"="accept|refuse"})
+     */
+    public function requestUpdateAction($object, $objectId, $choice)
+    {
         if ($choice == 'accept') {
-            $this->get('cm.request_center')->acceptRequest($this->getUser()->getId(), $id);
+            $this->get('cm.request_center')->acceptRequest($this->getUser()->getId(), $object, $objectId);
         } elseif ($choice == 'refuse') {
-            $this->get('cm.request_center')->refuseRequest($this->getUser()->getId(), $id);
+            $this->get('cm.request_center')->refuseRequest($this->getUser()->getId(), $object, $objectId);
         }
 
         return new Response;
     }
     
     /**
-     * @Route("/requestDelete/{id}", name="user_request_delete", requirements={"id"="\d+"})
+     * @Route("/requestDelete/{object}/{objectId}", name="user_request_delete", requirements={"objectId"="\d+"})
      */
-    public function requestDeleteAction($id)
+    public function requestDeleteAction($object, $objectId)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $em->getRepository('CMBundle:User')->deleteRequest($this->getUser()->getId(), $id);
+        $em->getRepository('CMBundle:Request')->delete($this->getUser()->getId(), $object, $objectId);
 
         return new Response;
     }
@@ -124,7 +143,7 @@ class UserController extends Controller
      * @Route("/notifications/{page}/{perPage}", name="user_notifications", requirements={"page" = "\d+"})
      * @Template
      */
-    public function notificationsAction(sfRequest $request, $page = 1, $perPage = 6)
+    public function notificationsAction(Request $request, $page = 1, $perPage = 6)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -141,7 +160,7 @@ class UserController extends Controller
     /**
      * @Route("/notificationsSeen", name="user_notifications_seen")
      */
-    public function notificationsSeen(sfRequest $request)
+    public function notificationsSeen(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -169,7 +188,7 @@ class UserController extends Controller
 	 * @Route("/{slug}/events/category/{category_slug}/{page}", name="user_events_category", requirements={"page" = "\d+"})
      * @Template
      */
-	public function eventsAction(sfRequest $request, $slug, $page = 1, $category_slug = null)
+	public function eventsAction(Request $request, $slug, $page = 1, $category_slug = null)
 	{
 	    $em = $this->getDoctrine()->getManager();
 		

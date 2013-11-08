@@ -207,7 +207,7 @@ class Post
      * @param \CM\CMBundle\Entity\Event $entity
      * @return Post
      */
-    public function setEntity(Entity $entity = null)
+    public function setEntity(Entity $entity)
     {
         $this->entity = $entity;
         $this->object = get_class($entity);

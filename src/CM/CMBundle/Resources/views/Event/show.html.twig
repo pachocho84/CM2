@@ -2,47 +2,46 @@
 
 {% block body %}
     <article class="blog">
-      <header>
-        <h2>{{ event.id }} {{ event.getTitle }}</h2>
-        <h3>{{ event.getSubtitle }}</h3>
-        {% if can_manage(event) %}
-            <div class="media">
-                <div class="btn pull-left alert-info"><a href="{{ path('event_edit', {'id': event.id, 'slug': event.getSlug}) }}">{{ "Edit" | trans }}</a></div>
-                <div class="btn pull-right alert-danger"><a href="{{ path('event_delete', {'id': event.id}) }}">{{ "Delete" | trans }}</a></div>
-            </div>
-        {% endif %}
-      </header>
-      <div>
-          <p>{{ event.getText }}</p>
-          <ul>
-              {% for protagonist in event.entityUsers %}
-                  <li>
-                      {{ protagonist.id }} : {{ protagonist.user }}
-                      {% for userTag in protagonist.userTags %}
-                          <ul>
-                              <li>{{ tags[userTag] }}</li>
-                          </ul>
-                      {% endfor %}
-                      <span>Notifications: {{ protagonist.user.requestsIncoming | length }}</span>
-                  </li>
-              {% endfor %}
-          </ul>
-          <ul>
-              {% for date in event.eventDates %}
-                  <li>{{date.id}} : {{ date.start | date }}</li>
-              {% endfor %}
-          </ul>
-      </div>
-          {% for image in event.getImages %}
-              <img src="{{ asset(uploaded_images_full_dir~'/'~image.img) }}" width=200 />
-          {% endfor %}
-        
-        {{ include('CMBundle::social.html.twig', {'post': event.posts[0]}) }}
-
+        <header>
+            <h2>{{ event.id }} {{ event.getTitle }}</h2>
+            <h3>{{ event.getSubtitle }}</h3>
+            {% if can_manage(event) %}
+                <div class="media">
+                    <div class="btn pull-left alert-info"><a href="{{ path('event_edit', {'id': event.id, 'slug': event.getSlug}) }}">{{ "Edit" | trans }}</a></div>
+                    <div class="btn pull-right alert-danger"><a href="{{ path('event_delete', {'id': event.id}) }}">{{ "Delete" | trans }}</a></div>
+                </div>
+            {% endif %}
+        </header>
         <div>
-            {{ form(form) }}
+            <p>{{ event.getText }}</p>
+            {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'object': event.post}) }}
+            <ul>
+                {% for protagonist in event.entityUsers if protagonist.status == 1 %} {# active #}
+                    <li>
+                        {{ protagonist.id }} : {{ protagonist.user }}
+                        {% for userTag in protagonist.userTags %}
+                            <ul>
+                                <li>{{ tags[userTag] }}</li>
+                            </ul>
+                        {% endfor %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <ul>
+                {% for date in event.eventDates %}
+                    <li>{{ date.start | format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</li>
+                {% endfor %}
+            </ul>
         </div>
-      </div>
+            {% for image in event.getImages %}
+                <img src="{{ asset(uploaded_images_full_dir~'/'~image.img) }}" width=200 />
+            {% endfor %}
+          
+            {{ include('CMBundle::social.html.twig', {'post': event.posts[0]}) }} 
+            <div>
+                {{ form(form) }}
+            </div>
+        </div>
     </article>      
 {% endblock %}
 

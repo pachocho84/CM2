@@ -37,6 +37,11 @@ class Request
     private $status = self::STATUS_NEW;
 
     /**
+     * @ORM\Column(name="user_id")
+     **/
+    private $userId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="requestsIncoming")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/

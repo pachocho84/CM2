@@ -3,6 +3,7 @@
 namespace CM\CMBundle\Twig;
 
 use Symfony\Component\Translation\Translator;
+use CM\CMBundle\Service\Helper;
 use CM\CMBundle\Service\UserAuthentication;
 use CM\CMBundle\Entity\Image;
 
@@ -10,11 +11,13 @@ class CMExtension extends \Twig_Extension
 {
     private $translator;
 
+    private $helper;
+
     private $userAuthentication;
 
     private $options;
 
-    public function __construct(Translator $translator, UserAuthentication $userAuthentication, $options = array())
+    public function __construct(Translator $translator, Helper $helper, UserAuthentication $userAuthentication, $options = array())
     {
         $this->translator = $translator;
         $this->userAuthentication = $userAuthentication;
@@ -36,6 +39,7 @@ class CMExtension extends \Twig_Extension
     {
         return array(
             'can_manage' => new \Twig_Function_Method($this, 'getCanManage'),
+            'related_object' => new \Twig_Function_Method($this, 'getRelatedObject'),
             'delete_link' => new \Twig_Function_Method($this, 'getDeleteLink'),
             'show_img_box' => new \Twig_Function_Method($this, 'getShowImgBox'),
         );
@@ -48,13 +52,18 @@ class CMExtension extends \Twig_Extension
 
     public function getClassName($object)
     {
-        $name = new \ReflectionClass(get_class($object));
+        $name = new \ReflectionClass($object);
         return $name->getShortName();
     }
 
     public function getCanManage($object)
     {
         return $this->userAuthentication->canManage($object);
+    }
+
+    public function getRelatedObject($entity)
+    {
+        return $this->helper->getObject($entity);
     }
 
     public function getDeleteLink($link, $object = 'element', $options = array())

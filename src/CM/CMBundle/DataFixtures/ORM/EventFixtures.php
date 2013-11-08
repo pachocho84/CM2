@@ -12,6 +12,7 @@ use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Like;
 use CM\CMBundle\Entity\User;
+use CM\CMBundle\Entity\EntityUser;
 
 class EventFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -181,7 +182,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             $event->addUser(
                 $user,
                 true, // admin
-                rand(0, 5), // status
+                EntityUser::STATUS_ACTIVE,
                 true, // notification
                 $userTags
             );
@@ -197,7 +198,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                 $event->addUser(
                     $otherUser,
                     !rand(0, 3), // admin
-                    rand(0, 5), // status
+                    EntityUser::STATUS_PENDING,
                     true, // notification
                     $userTags
                 );

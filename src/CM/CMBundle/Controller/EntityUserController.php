@@ -114,7 +114,6 @@ class EntityUserController extends Controller
      */
     public function removeProtagonistAction(Request $request)
     {
-
         if (!is_null($request->query->get('group_id'))) {
             $group_ids = explode(',', $request->query->get('group_id'));
             $user_ids = $em->getRepository('CMBundle:Group')->getUserIdsFor($group_ids);
@@ -127,5 +126,21 @@ class EntityUserController extends Controller
         }
 
         return new JsonResponse($user_ids);
+    }
+
+    /**
+     * @Route("/requestAdd/{entityId}", name="entityuser_request_add", requirements={"entityId": "\d+"})
+     */
+    public function requestAddAction($entityId)
+    {
+
+    }
+
+    /**
+     * @Route("/delete/{entityId}", name="entityuser_delete", requirements={"entityId": "\d+"})
+     */
+    public function requestDeleteAction($entityId)
+    {
+
     }
 }

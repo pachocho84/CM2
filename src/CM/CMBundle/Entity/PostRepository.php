@@ -12,4 +12,12 @@ use Doctrine\ORM\EntityRepository as BaseRepository;
  */
 class PostRepository extends BaseRepository
 {
+    public function getEntity($entityId)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p, e')
+            ->leftJoin('p.entity', 'e')
+            ->where('e.id = :id')->setParameter('id', $entityId)
+            ->getQuery()->getSingleResult();
+    }
 }

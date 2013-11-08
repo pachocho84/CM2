@@ -67,10 +67,16 @@ services:
     property_accessor:
         class: %cm_property_accessor.class%
 
+    cm.helper:
+        class: CM\CMBundle\Service\Helper
+        arguments:
+            em: @doctrine.orm.entity_manager
+
     cm.twig.cm_extension:
         class: CM\CMBundle\Twig\CMExtension
         arguments: 
             translator: @translator
+            helper: @cm.helper
             userAuthentication: @cm_user.authentication
             options: 
                 images_dir: %kernel.root_dir%/../web%images_full.dir%
