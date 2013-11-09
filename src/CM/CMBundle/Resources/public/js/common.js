@@ -20,19 +20,28 @@ $(function() {
 
     $('.load_more_container').on('scroll', function(event) {
         event.stopPropagation();
-        if ($(this).find('.load_more').first().position().top < $(this).height()) {
-            infiniteScroll($(this).find('.load_more').first());
+        $loadMore = $(this).find('.load_more');
+        if ($loadMore.length > 0 && $loadMore.is(':visible') && $loadMore.first().position().top < $(this).height()) {
+            infiniteScroll($loadMore.first());
         }
     });
     $(document).on('scroll', function(event) {
         $('.load_more').each(function() {
             $container = $(this).closest('.load_more_container').length > 0 ? $(this).closest('.load_more_container') : $(window);
-            if ($(this).offset().top - $container.height() < $container.scrollTop()) {
+            if ($(this).is(':visible') && $(this).offset().top - $container.height() < $container.scrollTop()) {
                 infiniteScroll($(this));
             }
         });
     });
+
+    i = 0;
     
+    $(document).on('activate.bs.scrollspy', function(event) {
+        event.preventDefault();
+        // console.log(i, $(event.target));
+        i++;
+    });
+
     /* DELETE CONFIRMATION */
     $('body').popover({
         html:             true,
@@ -49,8 +58,6 @@ $(function() {
         event.preventDefault();
         $(this).closest('.popover').prev('a[data-toggle="popover"]').popover('hide');
     });
-    
-    
     
     /* AJAX ERROR */
     $(document).ajaxError(function(event, jqxhr, settings, exception) {

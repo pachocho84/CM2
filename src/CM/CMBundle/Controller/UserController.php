@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\Common\Collections\ArrayCollection;
+use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
@@ -72,7 +73,7 @@ class UserController extends Controller
      * @Route("/requests/{page}/{perPage}", name="user_requests", requirements={"page" = "\d+"})
      * @Template
      */
-    public function requestsAction(Request $request, $page = 1, $perPage = 6)
+    public function requestsAction(Request $request, $page = 1, $perPage = 26)
     {
         $em = $this->getDoctrine()->getManager();
 

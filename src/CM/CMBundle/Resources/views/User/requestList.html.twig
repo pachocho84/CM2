@@ -23,5 +23,7 @@
         <div class="well well-small load_more">
             <a href="{{ path('user_requests', { 'page': requests.getPaginationData.next }) }}">{{ 'Load more' | trans }}</a>
         </div>
+    {% else %}
+        <div class="well well-small"><span>{{ 'There are no more requests.' | trans }}</span></div>
     {% endif %}
 {% endif %}

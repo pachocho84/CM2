@@ -35,8 +35,13 @@ class RequestRepository extends BaseRepository
         $options = self::getOptions($options);
         
         $query = $this->createQueryBuilder('r')
-            ->select('r, u, e')
-            ->leftJoin('r.entity', 'e');
+            ->select('r, u, e, t, p, pu, pp, pg')
+            ->leftJoin('r.entity', 'e')
+            ->leftJoin('e.translations', 't')
+            ->leftJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
+            ->leftJoin('p.user', 'pu')
+            ->leftJoin('p.page', 'pp')
+            ->leftJoin('p.group', 'pg');
         if ($direction == 'incoming') {
             $query->leftJoin('r.user', 'u');
         } elseif ($direction == 'outgoing') {

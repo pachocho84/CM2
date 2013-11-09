@@ -13,14 +13,18 @@
 
 
 /* LAYOUT */
-#load_more_posts
+.load_more_container
+{
+    overflow-y: scroll;
+}
+.load_more
 {
     margin-top: 20px;
     clear: both;
     float: none;
     text-align: center;
 }
-#load_more_posts a
+.load_more a
 {
     display: block;
 }

@@ -35,12 +35,7 @@ $(function() {
             event.stopPropagation();
         }
     });
-    // $(document).on('scroll', '.dropdown-menu-body', function() {
-    //     if ($('#load_more_posts').length > 0 && $(window).height() + $(window).scrollTop() > ($('#load_more_posts').offset().top - $(window).height())) {
-    //         loadMorePosts();
-    //         $(window).unbind('scroll');
-    //     }
-    // });
+    
     $('#menu').hcSticky({
         noContainer: true
     });
