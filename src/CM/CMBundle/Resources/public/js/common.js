@@ -6,7 +6,7 @@ $(function() {
 
     $('body').on('click', '.load_more a', function(event) {
         event.preventDefault(); 
-        infiniteScroll($(event.target)); 
+        infiniteScroll($(event.target).closest('.load_more')); 
     });
     
     function infiniteScroll($target) {
