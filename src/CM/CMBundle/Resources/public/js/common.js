@@ -1,48 +1,36 @@
 $(function() {
-    // if ($('.load_more').length > 0) {
-    //     $('.load_more a').html('<img src="/bundles/cm/images/layout/loader.gif" />');
-    //     $('.load_more').each(function() {
-    //         target = this;
-    //         $.get($(this).children('a').attr('href'), function(data) {
-    //             $(target).replaceWith(data);
-    //         });
-    //     });
-    //     $.get($('.load_more a').attr('href'), function(data) {
-    //         $('.load_more').replaceWith(data);
-    //     })
+    /* INFINITE SCROLL */
+    $('.load_more').each(function() {
+        infiniteScroll($(this));
+    });
+
+    $('body').on('click', '.load_more a', function(event) {
+        event.preventDefault(); 
+        infiniteScroll($(event.target)); 
+    });
     
-    //     $('body').on('click', '.load_more a', function(event) {
-    //         event.preventDefault(); 
-    //         loadMorePosts(event.target); 
-    //     });    
-    // }
-    
-    // function loadMorePosts(target) {
-    //     $(target).children('a').html('<img src="/bundles/cm/images/layout/loader.gif" />');
-    //     $.get($(target).children('a').attr('href'), function(data) {
-    //         $(target).replaceWith(data);
-    //         loadOnScroll(); 
-    //         $('#menu').hcSticky('reinit');
-    //         $('.sidebar').hcSticky('reinit');
-    //     });
-    // }
-    
-    // function loadOnScroll() {
-    //     $(window).on('scroll', '.load_more', function(event) {
-    //         console.log(42);
-    //         if ($(event.target).length > 0 && $(event.target).closest('.load_more_container').height() + $(event.target).closest('.load_more_container').scrollTop() > ($(event.target).offset().top - $(event.target).closest('.load_more_container').height())) {
-    //             loadMorePosts(event.target);
-    //             $(window).unbind('scroll');
-    //         }
-    //     });
-    // }
-    // loadOnScroll();
-    $(document).on('scroll', function(event) {
-        $('.load_more').each(function(i) {
-            $container = $(this).closest('.load_more_container').length > 0 ? $(this).closest('.load_more_container') : $(window);
-            console.log(i, $container, [$container.height(), $container.scrollTop(), $(this).offset().top]);
+    function infiniteScroll($target) {
+        $target.children('a').html('<img src="/bundles/cm/images/layout/loader.gif" />');
+        $.get($target.children('a').attr('href'), function(data) {
+            $target.replaceWith(data);
+            // $('#menu').hcSticky('reinit');
+            // $('.sidebar').hcSticky('reinit');
         });
-        // console.log([$(event.target).offset(), $(event.target).children('.load_more').offset()]);
+    }
+
+    $('.load_more_container').on('scroll', function(event) {
+        event.stopPropagation();
+        if ($(this).find('.load_more').first().position().top < $(this).height()) {
+            infiniteScroll($(this).find('.load_more').first());
+        }
+    });
+    $(document).on('scroll', function(event) {
+        $('.load_more').each(function() {
+            $container = $(this).closest('.load_more_container').length > 0 ? $(this).closest('.load_more_container') : $(window);
+            if ($(this).offset().top - $container.height() < $container.scrollTop()) {
+                infiniteScroll($(this));
+            }
+        });
     });
     
     /* DELETE CONFIRMATION */

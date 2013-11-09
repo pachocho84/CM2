@@ -31,25 +31,11 @@
             </div>
 
             <div class="tab-pane" id="outgoingRequests">
-                {% if requestsOutgoing | length > 0 %}
-                    {% for request in requestsOutgoing %}
-                        <div class="media object object-request ajax-link-target">
-                            {{ show_img_box(request.user.img | imagine_filter('350'), {'width': 50, 'height': 50, 'offset': request.fromUser.offset,  'link': path('user_show', {'slug': request.fromUser.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) | raw }} 
-                            <div class="media-body">
-                                <p>{#<?php echo $request->getRawValue()->getText() ?>#}{{ request.id }}</p>
-                                <a href="{{ path('user_request_delete', {'object' : request.object, 'objectId': request.objectId}) }}" class="btn btn-default btn-sm ajax-link" data-loading-text="{{ 'Loading' | trans }}"><i class="glyphicon glyphicon-remove"></i> {{ 'Cancel' | trans }}</a>
-                            </div> 
-                        </div>
-                    {% endfor %}
-
-                    {#{% if requestsOutgoing.paginationData.current < requestsOutgoing.paginationData.last %}
-                        <div id="load_more_posts" class="well well-small">
-                            <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': requestsOutgoing.getPaginationData.next, 'outgoing': true })) }}">{{ 'Load more' | trans }}</a>
-                        </div>
-                    {% endif %}#}
-                {% else %}
-                    {{ "There are no requests." | trans }}
-                {% endif %}
+                <div class="objects">
+                    <ul class="media-list">
+                        {{ include('CMBundle:User:requestOutgoingList.html.twig', {'requests': requestsOutgoing}) }}
+                    </ul>
+                </div>
             </div>
 
         </div>

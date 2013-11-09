@@ -21,6 +21,7 @@ security:
         login:
             pattern:  ^/demo/secured/login$
             security: false
+            use_referer: true
 
         secured_area:
             pattern:    ^/demo/secured/

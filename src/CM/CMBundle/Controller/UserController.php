@@ -88,6 +88,10 @@ class UserController extends Controller
         $requestsOutgoing = $em->getRepository('CMBundle:Request')->getRequests($this->getUser()->getId(), 'outgoing');
         $paginationOutgoing = $this->get('knp_paginator')->paginate($requestsOutgoing, $page, $perPage);
 
+        if ($request->isXmlHttpRequest() && $request->get('outgoing')) {
+            return $this->render('CMBundle:User:requestOutgoingList.html.twig', array('requests' => $paginationOutgoing));
+        }
+
         return array('requests' => $pagination, 'requestsOutgoing' => $paginationOutgoing);
     }
 

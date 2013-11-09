@@ -4,8 +4,10 @@ namespace CM\CMBundle\Twig;
 
 use Symfony\Component\Translation\Translator;
 use CM\CMBundle\Service\Helper;
+use Symfony\Component\Security\Core\SecurityContext;
 use CM\CMBundle\Service\UserAuthentication;
 use CM\CMBundle\Entity\Image;
+use CM\CMBundle\Entity\Request;
 
 class CMExtension extends \Twig_Extension
 {
@@ -13,13 +15,16 @@ class CMExtension extends \Twig_Extension
 
     private $helper;
 
+    private $securityContext;
+
     private $userAuthentication;
 
     private $options;
 
-    public function __construct(Translator $translator, Helper $helper, UserAuthentication $userAuthentication, $options = array())
+    public function __construct(Translator $translator, Helper $helper, SecurityContext $securityContext, UserAuthentication $userAuthentication, $options = array())
     {
         $this->translator = $translator;
+        $this->securityContext = $securityContext;
         $this->userAuthentication = $userAuthentication;
         $this->options = array_merge(array(
             'images_abs_dir' => '/',
@@ -42,6 +47,7 @@ class CMExtension extends \Twig_Extension
             'related_object' => new \Twig_Function_Method($this, 'getRelatedObject'),
             'delete_link' => new \Twig_Function_Method($this, 'getDeleteLink'),
             'show_img_box' => new \Twig_Function_Method($this, 'getShowImgBox'),
+            'request_tag' => new \Twig_Function_Method($this, 'getRequestTag'),
         );
     }
 
@@ -243,6 +249,48 @@ elseif ($img_ratio > 1) {
         $link .= '>'.$imgBox.'</a>';
 
         return $link; // link_to($img_box, $options['link'], $options['link_attributes']);
+    }
+
+    public function getRequestTag(Request $request)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+        if ($user->getId() == $request->getUser()->getId() /*&& $request->getEntity()->getId()*/ && $user->getId() == $request->getEntity()->getPost()->getUserId()) {
+            switch ($request->getObject()) {
+                case 'Event':
+                    return $this->translator->trans('%user% would like to be added as protagonist to your event %object%.', array('%user%' => $request->getFromUser(), '%object%' => $request->getEntity()->getTitle()));
+                    // return __('%user% would like to be added as protagonist to your event %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                case 'Disc':
+                    // return __('%user% would like to be added as protagonist to your disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                case 'Article':
+                    // return __('%user% would like to be added as protagonist to your article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                case 'Group':
+                    // return __('%user% would like to join the group %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getRelatedObject(), $this->getRelatedObject()->getLinkShow())));
+            }
+        } elseif ($user->getId() == $request->getUser()->getId()) {
+            switch ($request->getObject()) {
+                case 'Event':
+                    return $this->translator->trans('%user% would like to add you as protagonist to the event %object%.', array('%user%' => $request->getFromUser(), '%object%' => $request->getEntity()->getTitle()));
+                    // return __('%user% would like to add you as protagonist to the event %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                case 'Disc':
+                    // return __('%user% would like to add you as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                case 'Article':
+                    // return __('%user% would like to add you as protagonist to the article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                case 'Group':
+                    // return __('%user% would like you to join the group %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getRelatedObject(), $this->getRelatedObject()->getLinkShow())));
+            }
+        } elseif ($user->getId() == $request->getFromUser()->getId()) {
+            switch ($request->getObject()) {
+                case 'Event':
+                    return "C";
+                    // return __('You requested %user% to be added as protagonist to the event %object%.', array('%user%' => link_to($this->getUserRelatedByUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                case 'Disc':
+                    // return __('You requested %user% to be added as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                case 'Article':
+                    // return __('You requested %user% to be added as protagonist to the article %object%.', array('%user%' => link_to($this->getUserRelatedByUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                case 'Group':
+                    // return __('You requested %user% to join the group %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getRelatedObject(), $this->getRelatedObject()->getLinkShow())));
+            }
+        }
     }
 
     public function getName()

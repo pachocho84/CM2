@@ -1,4 +1,4 @@
-{% if is_granted('ROLE_USER') and object.getUserId() != app.security.token.user.id and attribute(object, 'entity') is defined %}
+{% if is_granted('ROLE_USER') and object.creator.id != app.security.token.user.id and attribute(object, 'entity') is defined %}
     {% set protagonistStatus = -1 %}
     {% for entityUser in object.entity.entityUsers %}
         {% if entityUser.user.id == app.security.token.user.id %}

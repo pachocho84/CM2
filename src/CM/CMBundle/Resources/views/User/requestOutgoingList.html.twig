@@ -1,0 +1,22 @@
+{% if requests | length == 0 %}
+    {{ "There are no requests." | trans }}
+{% else %}
+    {% for request in requests %}
+        <li class="media object">
+            {{ show_img_box(request.fromUser.img | imagine_filter('350'), {'width': 50, 'height': 50, 'offset': request.fromUser.offset,  'link': path('user_show', {'slug': request.fromUser.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) | raw }}
+            <div class="media-body ajax-link-target">
+                {{ request.objectId }} : {{ request.status }}
+                {{ request_tag(request) }}
+                <p>{#<?php echo $request->getRawValue()->getText() ?>#}{{ request.id }}</p>
+                <a href="{{ path('user_request_delete', {'object' : request.object, 'objectId': request.objectId}) }}" class="btn btn-default btn-sm ajax-link" data-loading-text="{{ 'Loading' | trans }}"><i class="glyphicon glyphicon-remove"></i> {{ 'Cancel' | trans }}</a>
+            </div> 
+        </li>
+    {% endfor %}
+
+    {% if requests.paginationData.current < requests.paginationData.last %}
+        <div class="well well-small load_more">
+            asd
+            <a href="{{ path('user_requests', {'page': requests.getPaginationData.next, 'outgoing': true }) }}">{{ 'Load more' | trans }}</a>
+        </div>
+    {% endif %}
+{% endif %}
