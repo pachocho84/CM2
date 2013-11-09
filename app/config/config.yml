@@ -33,11 +33,11 @@ twig:
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
-    bundles:        [ CMBundle ]
-    #, MopaBootstrapBundle ]
-    node: /usr/local/bin/node
     use_controller: false
+    bundles:        [ CMBundle ]
+    node: /usr/local/bin/node
     filters:
+        cssrewrite: ~
         less:
             node_paths: [%kernel.root_dir%/Resources/node_modules/]
             apply_to: "\.less$"
