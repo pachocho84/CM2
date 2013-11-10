@@ -177,7 +177,7 @@ class EventController extends Controller
      */
     public function editAction(Request $request, $id = null, $slug = null)
     {
-        if (!$this->get('cm_user.authentication')->isAuthenticated()) {
+        if (!$this->get('cm.user_authentication')->isAuthenticated()) {
             return new RedirectResponse($this->generateUrl('fos_user_security_login'));
         }
 
@@ -244,7 +244,7 @@ class EventController extends Controller
         
         $form->handleRequest($request);
 
-        if (!$this->get('cm_user.authentication')->canManage($event)) {
+        if (!$this->get('cm.user_authentication')->canManage($event)) {
               throw new HttpException(401, 'Unauthorized access.');
         } elseif ($form->isValid()) {
             foreach ($event->getEventDates() as $eventDate) {
@@ -319,7 +319,7 @@ class EventController extends Controller
         $em = $this->getDoctrine()->getManager();
         $event = $em->getRepository('CMBundle:Event')->findOneById($id);
 
-        if (!$this->get('cm_user.authentication')->canManage($event)) {
+        if (!$this->get('cm.user_authentication')->canManage($event)) {
               throw new HttpException(401, 'Unauthorized access.');
         }
 

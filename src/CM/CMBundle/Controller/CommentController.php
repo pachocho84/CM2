@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -109,13 +110,28 @@ class CommentController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $comment = $em->getRepository('CMBundle:Comment')->findOneById($id);
+
+        if (!$this->get('cm.user_authentication')->canManage($comment)) {
+            throw new HttpException(401, 'Unauthorized access.');
+        }
+            
         $em->remove($comment);
         $em->flush();
-        // $comment = CommentQuery::create()->findOneById($request->getParameter('comment_id'));
 
-        // $this->forward404Unless($this->getUser()->canManage($comment) && $comment, $this->getContext()->getI18N()->__('Bad request.'));
-            
-        //     $comment->delete();
+        if ($request->isXmlHttpRequest()) {
+            if ($comment->getPost()->getId()) {
+                $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getPost()));
+            } elseif ($comment->getImage()->getId()) {
+                $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getImage()));
+            }
+
+            return new JsonResponse(array(
+                'commentCount' => $commentCount
+            ));
+        }
+
+        $this->get('session')->getFlashBag('confirm', 'You don\'t like this anymore.');
+        return new RedirectResponse($request->get('referer'));
             
         //     if ($request->isXmlHttpRequest()) {         
         //         if ($comment->getPostId()) {

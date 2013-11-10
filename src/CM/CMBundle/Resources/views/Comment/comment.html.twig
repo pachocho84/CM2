@@ -1,6 +1,7 @@
 <li class="media comment{{ (hide is defined and hide) ? ' hide' : '' }}">
 
-    {% if false %} {# TODO: user->canManage($comment) #}
+    {% if can_manage(comment) %}
+        <a href="{{ path('comment_delete', {'id': comment.id}) }}" class="close" data-placement="left" data-toggle="popover" data-content="<p>{{ 'Are you sure you want to delete this comment?' | trans }}</p><a href='{{ path('comment_delete', {'id': comment.id}) }}' class='btn btn-primary'>{{ 'Delete' | trans }}</a> <span class='btn popover-close'>{{ 'Cancel' | trans }}</span>"><i class="glyphicon glyphicon-remove"></i></a>
        {# {{ delete_link(path('comment_delete', {'id': comment.id}), 'comment', {'data-placement': 'left', 'class': 'close', 'text': '&times;', 'icon': false}) }} #}
     {% endif %}
 
@@ -12,6 +13,5 @@
             {{ '%date% at %time%' | trans({'%date%': comment.createdAt | format_date('d MMMM Y'), '%time%': comment.createdAt | format_date('HH:mm')}) }}
         </div>
     </div>
-
     
 </li>

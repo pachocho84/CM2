@@ -78,7 +78,7 @@ services:
             translator: @translator
             helper: @cm.helper
             securityContext: @security.context
-            userAuthentication: @cm_user.authentication
+            userAuthentication: @cm.user_authentication
             options: 
                 images_dir: %kernel.root_dir%/../web%images_full.dir%
                 sizes: %liip_imagine.filter_sets% 
@@ -116,7 +116,7 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    cm_user.authentication:
+    cm.user_authentication:
         class: CM\CMBundle\Service\UserAuthentication
         arguments:
             securityContext: @security.context

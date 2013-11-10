@@ -37,7 +37,7 @@ class EntityUserController extends Controller
      */
     public function addEntityUsersAction(Request $request)
     {
-        // if (!$request->isXmlHttpRequest() || !$this->get('cm_user.authentication')->isAuthenticated()) {
+        // if (!$request->isXmlHttpRequest() || !$this->get('cm.user_authentication')->isAuthenticated()) {
         //     throw new HttpException(401, 'Unauthorized access.');
         // }
         $em = $this->getDoctrine()->getManager();
