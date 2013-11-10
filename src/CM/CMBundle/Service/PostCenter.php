@@ -84,4 +84,10 @@ class PostCenter
 
         return $post;
     }
+
+    public function removePost($creator, $user, $object, $objectIds)
+    {
+        $this->em->getRepository('CMBundle:Post')->delete($creator, $user, $object, $objectIds);
+        $this->flushNeeded = true;
+    }
 }

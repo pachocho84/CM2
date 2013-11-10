@@ -256,10 +256,6 @@ class Post
     public function setEntity(Entity $entity)
     {
         $this->entity = $entity;
-        $entityClassName = new \ReflectionClass(get_class($entity));
-        $entityClassName = $entityClassName->getShortName();
-        $this->object = $entityClassName;
-        $this->objectId = $entity->getId();
     
         return $this;
     }

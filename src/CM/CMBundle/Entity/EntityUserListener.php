@@ -15,7 +15,6 @@ class EntityUserListener
         $group = $post->getGroup();
         $page = $post->getPage();
         $entity = $entityUser->getEntity();
-        $entityClassName = new \ReflectionClass(get_class($entity));
         
         switch ($entityUser->getStatus()) {
             case EntityUser::STATUS_PENDING:
@@ -23,7 +22,7 @@ class EntityUserListener
                 $request->setUser($entityUser->getUser())
                     ->setFromUser($user)
                     ->setEntity($entity)
-                    ->setObject($entityClassName->getShortName())
+                    ->setObject(get_class($entity))
                     ->setObjectId($entity->getId());
                 if (!is_null($page)) {
                     $request->setPage($page);
@@ -41,7 +40,7 @@ class EntityUserListener
                     $request->setUser($admin->getUser())
                         ->setFromUser($entityUser->getUser())
                         ->setEntity($entity)
-                        ->setObject($entityClassName->getShortName())
+                        ->setObject(get_class($entity))
                         ->setObjectId($entity->getId());
                 }
                 $em->persist($request);

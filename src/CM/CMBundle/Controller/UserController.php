@@ -140,6 +140,7 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        $this->get('cm.request_center')->removeRequest();
         $em->getRepository('CMBundle:Request')->delete($this->getUser()->getId(), $object, $objectId);
 
         return new Response;

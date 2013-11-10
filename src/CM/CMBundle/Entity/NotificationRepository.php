@@ -72,21 +72,15 @@ class NotificationRepository extends BaseRepository
             ->execute();
     }
 
-    // public function delete($userId, $object, $objectId)
-    // {
-    //     $this->createQueryBuilder('r')
-    //         ->delete('CMBundle:Request', 'r')
-    //         ->where('r.user = :user_id')->setParameter('user_id', $userId)
-    //         ->andWhere('r.object = :object')->setParameter('object', $object)
-    //         ->andWhere('r.objectId = :object_id')->setParameter('object_id', $objectId)
-    //         ->getQuery()
-    //         ->execute();
-
-    //     $this->getEntityManager()->createQueryBuilder()
-    //         ->delete('CMBundle:EntityUser', 'eu')
-    //         ->where('eu.user = :user_id')->setParameter('user_id', $userId)
-    //         ->andWhere('eu.entity = :entity_id')->setParameter('entity_id', $objectId)
-    //         ->getQuery()
-    //         ->execute();
-    // }
+    public function delete($userId, $object, $objectId, $type)
+    {
+        $this->createQueryBuilder('n')
+            ->delete('CMBundle:Notification', 'n')
+            ->where('n.fromUser = :user_id')->setParameter('user_id', $userId)
+            ->andWhere('n.object = :object')->setParameter('object', $object)
+            ->andWhere('n.objectId = :object_id')->setParameter('object_id', $objectId)
+            ->andWhere('n.type = '.$type)
+            ->getQuery()
+            ->execute();
+    }
 }

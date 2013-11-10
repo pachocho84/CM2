@@ -20,4 +20,20 @@ class PostRepository extends BaseRepository
             ->where('e.id = :id')->setParameter('id', $entityId)
             ->getQuery()->getSingleResult();
     }
+
+    public function delete($creatorId, $userId, $object, $objectIds, $entityId = null)
+    {
+        $query = $this->createQueryBuilder('p')
+            ->delete('CMBundle:Post', 'p')
+            ->where('p.creator = :creator_id')->setParameter('creator_id', $creatorId)
+            ->andWhere('p.user = :user_id')->setParameter('user_id', $userId)
+            ->andWhere('p.object = :object')->setParameter('object', $object);
+        if (!is_null($entityId)) {
+            $query->andWhere('p.entity = :entity_id')->setParameter('entity_id', $entityId);
+        } else {
+            $query->andWhere('p.objectIds = :object_ids')->setParameter('object_ids', $objectIds);
+        }
+        // TODO: make it usable for images
+        $query->getQuery()->execute();
+    }
 }

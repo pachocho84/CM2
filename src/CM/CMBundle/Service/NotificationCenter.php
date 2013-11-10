@@ -74,12 +74,10 @@ public function getNewNotificationsNumber($userId)
         return $this->getNewNotificationsNumber($userId);
     }
 
-    public function removeNotifications($toUser, $object, $objectId)
+    public function removeNotifications($fromUser, $object, $objectId, $type)
     {
-        $notifications = $this->em->getRepository('CMBundle:Notification')->getFor($toUser, $object, $objectId);
-        foreach ($notifications as $notification) {
-            $this->em->remove($notification);
-            $this->flushNeeded = true;
-        }
+        $this->em->getRepository('CMBundle:Notification')->delete($fromUser, $object, $objectId, $type);
+
+        $this->flushNeeded = true;
     }
 }

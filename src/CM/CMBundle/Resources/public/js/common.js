@@ -21,14 +21,12 @@ $('body').ready(function() {
 
 $(function() {
     /* INFINITE SCROLL */
-
-
     $('body').on('click', '.load_more a', function(event) {
         event.preventDefault(); 
         infiniteScroll($(event.target).closest('.load_more')); 
     });
 
-    $('.load_more_container').on('scroll', function(event) {
+    $('[load_more_container]').on('scroll', function(event) {
         event.stopPropagation();
         $loadMore = $(this).find('.load_more');
         if ($loadMore.length > 0 && $loadMore.is(':visible') && $loadMore.first().position().top < $(this).height()) {

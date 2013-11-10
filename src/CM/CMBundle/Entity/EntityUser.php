@@ -18,7 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * EntityUser
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="EntityUserRepository")
  * @ORM\Table(name="entity_user")
  * @ORM\HasLifecycleCallbacks
  */

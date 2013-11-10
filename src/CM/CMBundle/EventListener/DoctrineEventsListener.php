@@ -31,37 +31,42 @@ class DoctrineEventsListener
 
     public function postPersist(LifecycleEventArgs $args)
     {
-        $like = $args->getEntity();
+        $object = $args->getEntity();
         $em = $args->getEntityManager();
 
-        if ($like instanceof EntityUser) {
-            $this->entityUserRoutine($like, $em);
-        } elseif ($like instanceof Comment) {
-            $this->commentRoutine($like, $em);
-        } elseif($like instanceof Like) {
-            $this->likeRoutine($like, $em);
+        if ($object instanceof EntityUser) {
+            $this->entityUserRoutine($object, $em);
+        } elseif ($object instanceof Comment) {
+            $this->commentRoutine($object, $em);
+        } elseif($object instanceof Like) {
+            $this->likeRoutine($object, $em);
         }
     }
 
     public function postUpdate(LifecycleEventArgs $args)
     {
-        $like = $args->getEntity();
+        $object = $args->getEntity();
         $em = $args->getEntityManager();
 
-        if ($like instanceof EntityUser) {
-            if (array_key_exists('status', $em->getUnitOfWork()->getEntityChangeSet($like)))
+        if ($object instanceof EntityUser) {
+            if (array_key_exists('status', $em->getUnitOfWork()->getEntityChangeSet($object)))
             {
-                $this->entityUserRoutine($like, $em, true);
+                $this->entityUserRoutine($object, $em, true);
             }
         }
     }
 
-    public function postRemove(LifecycleEventArgs $args)
+    public function preRemove(LifecycleEventArgs $args)
     {
-        $like = $args->getEntity();
+        $object = $args->getEntity();
+        $em = $args->getEntityManager();
 
-        if ($like instanceof EntityUser) {
-            $this->entityUserRoutine($like, $em, true, false);
+        if ($object instanceof EntityUser) {
+            $this->entityUserRoutine($object, $em, true, false);
+        } elseif ($object instanceof Comment) {
+            $this->commentRemovedRoutine($object, $em);
+        } elseif ($object instanceof Like) {
+            $this->likeRemovedRoutine($object, $em);
         }
     }
 
@@ -87,16 +92,12 @@ class DoctrineEventsListener
         $user = $post->getUser();
         $group = $post->getGroup();
         $page = $post->getPage();
-        $entityClassName = new \ReflectionClass(get_class($entity));
-        $entityClassName = $entityClassName->getShortName();
-        $postClassName = new \ReflectionClass(get_class($post));
-        $postClassName = $postClassName->getShortName();
 
         $requestCenter = $this->get('cm.request_center');
         $notificationCenter = $this->get('cm.notification_center');
         
         if ($remove) {
-            $requestCenter->removeRequests($user, $entityClassName, $entity->getId());
+            $requestCenter->removeRequests($user, get_class($entity), $entity->getId());
         }
 
         if ($create) {
@@ -105,7 +106,7 @@ class DoctrineEventsListener
                     $requestCenter->newRequest(
                         $entityUser->getUser(),
                         $user,
-                        $entityClassName,
+                        get_class($entity),
                         $entity->getId(),
                         $entity,
                         $page,
@@ -117,7 +118,7 @@ class DoctrineEventsListener
                         Notification::TYPE_REQUEST_ACCEPTED,
                         $entityUser->getUser(),
                         $user,
-                        $postClassName,
+                        get_class($post),
                         $post->getId(),
                         $post,
                         $page,
@@ -129,7 +130,7 @@ class DoctrineEventsListener
                         $requestCenter->newRequest(
                             $admin->getUser(),
                             $entityUser->getUser(),
-                            $entityClassName,
+                            get_class($entity),
                             $entity->getId(),
                             $entity
                         );
@@ -141,24 +142,21 @@ class DoctrineEventsListener
 
     private function commentRoutine(Comment $comment, EntityManager $em)
     {
-        $className = new \ReflectionClass(get_class($comment));
-        $className = $className->getShortName();
-
         $this->get('cm.post_center')->newPost(
             $comment->getUser(),
             $comment->getUser(),
             Post::TYPE_CREATION,
-            $className,
+            get_class($comment),
             array($comment->getId())
         );
 
         $notifiedUserIds = array($comment->getUser()->getID());
 
         $this->get('cm.notification_center')->newNotification(
-            Notification::TYPE_LIKE,
+            Notification::TYPE_COMMENT,
             $comment->getPost()->getUser(),
             $comment->getUser(),
-            $className,
+            get_class($comment),
             $comment->getId(),
             $comment->getPost()
         );
@@ -169,7 +167,7 @@ class DoctrineEventsListener
                 Notification::TYPE_COMMENT,
                 $comment->getPost()->getCreator(),
                 $comment->getUser(),
-                $className,
+                get_class($comment),
                 $comment->getId(),
                 $comment->getPost()
             );
@@ -186,23 +184,32 @@ class DoctrineEventsListener
                 Notification::TYPE_COMMENT,
                 $toNotify->getUser(),
                 $comment->getUser(),
-                $className,
+                get_class($comment),
                 $comment->getId(),
                 $comment->getPost()
             );
         }
     }
 
+    private function commentRemovedRoutine(Comment $comment, EntityManager $em)
+    {
+        $this->get('cm.post_center')->removePost(
+            $comment->getUser(),
+            $comment->getUser(),
+            get_class($comment),
+            array($comment->getId())
+        );
+
+        $this->get('cm.notification_center')->removeNotifications($comment->getUser()->getId(), get_class($comment), $comment->getId(), Notification::TYPE_COMMENT);
+    }
+
     private function likeRoutine(Like $like, EntityManager $em)
     {
-        $className = new \ReflectionClass(get_class($like));
-        $className = $className->getShortName();
-
         $this->get('cm.post_center')->newPost(
             $like->getUser(),
             $like->getUser(),
             Post::TYPE_CREATION,
-            $className,
+            get_class($like),
             array($like->getId())
         );
 
@@ -210,7 +217,7 @@ class DoctrineEventsListener
             Notification::TYPE_LIKE,
             $like->getPost()->getUser(),
             $like->getUser(),
-            $className,
+            get_class($like),
             $like->getId(),
             $like->getPost()
         );
@@ -220,10 +227,22 @@ class DoctrineEventsListener
                 Notification::TYPE_LIKE,
                 $like->getPost()->getCreator(),
                 $like->getUser(),
-                $className,
+                get_class($like),
                 $like->getId(),
                 $like->getPost()
             );
         }
+    }
+
+    private function likeRemovedRoutine(Like $like, EntityManager $em)
+    {
+        $this->get('cm.post_center')->removePost(
+            $like->getUser(),
+            $like->getUser(),
+            get_class($like),
+            array($like->getId())
+        );
+
+        $this->get('cm.notification_center')->removeNotifications($like->getUser()->getId(), get_class($like), $like->getId(), Notification::TYPE_LIKE);
     }
 }

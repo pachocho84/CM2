@@ -102,10 +102,15 @@ class CommentController extends Controller
     }
 
     /**
-     * @Route("/delete/{id}", name="comment_delete")
+     * @Route("/delete/{id}", name="comment_delete", requirements={"id" = "\d+"})
      */ 
-    public function executeDelete(sfWebRequest $request)
+    public function deleteAction(Request $request, $id)
     {
+        $em = $this->getDoctrine()->getManager();
+
+        $comment = $em->getRepository('CMBundle:Comment')->findOneById($id);
+        $em->remove($comment);
+        $em->flush();
         // $comment = CommentQuery::create()->findOneById($request->getParameter('comment_id'));
 
         // $this->forward404Unless($this->getUser()->canManage($comment) && $comment, $this->getContext()->getI18N()->__('Bad request.'));

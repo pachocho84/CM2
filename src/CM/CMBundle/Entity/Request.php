@@ -251,9 +251,7 @@ class Request
     public function setEntity(Entity $entity)
     {
         $this->entity = $entity;
-        $entityClassName = new \ReflectionClass(get_class($entity));
-        $entityClassName = $entityClassName->getShortName();
-        $this->object = $entityClassName;
+        $this->object = get_class($entity);
         $this->objectId = $entity->getId();
     
         return $this;

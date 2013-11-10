@@ -83,10 +83,8 @@ class RequestCenter
 
     public function removeRequests($toUser, $object, $objectId)
     {
-        $requests = $this->em->getRepository('CMBundle:Request')->getFor($toUser, $object, $objectId);
-        foreach ($requests as $request) {
-            $this->em->remove($request);
-            $this->flushNeeded = true;
-        }
+        $requests = $this->em->getRepository('CMBundle:Request')->delete($toUser, $object, $objectId);
+        
+        $this->flushNeeded = true;
     }
 }

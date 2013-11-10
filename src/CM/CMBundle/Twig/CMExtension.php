@@ -49,6 +49,7 @@ class CMExtension extends \Twig_Extension
             'delete_link' => new \Twig_Function_Method($this, 'getDeleteLink'),
             'show_img_box' => new \Twig_Function_Method($this, 'getShowImgBox'),
             'request_tag' => new \Twig_Function_Method($this, 'getRequestTag'),
+            'notification_tag' => new \Twig_Function_Method($this, 'getNotificationTag'),
         );
     }
 
@@ -256,7 +257,7 @@ elseif ($img_ratio > 1) {
     {
         $user = $this->securityContext->getToken()->getUser();
         if ($user->getId() == $request->getUser()->getId() /*&& $request->getEntity()->getId()*/ && $user->getId() == $request->getEntity()->getPost()->getUserId()) {
-            switch ($request->getObject()) {
+            switch ($this->getClassName($request->getObject())) {
                 case 'Event':
                     return $this->translator->trans('%user% would like to be added as protagonist to your event %object%.', array('%user%' => $request->getFromUser(), '%object%' => $request->getEntity()->getTitle()));
                     // return __('%user% would like to be added as protagonist to your event %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
@@ -268,7 +269,7 @@ elseif ($img_ratio > 1) {
                     // return __('%user% would like to join the group %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getRelatedObject(), $this->getRelatedObject()->getLinkShow())));
             }
         } elseif ($user->getId() == $request->getUser()->getId()) {
-            switch ($request->getObject()) {
+            switch ($this->getClassName($request->getObject())) {
                 case 'Event':
                     return $this->translator->trans('%user% would like to add you as protagonist to the event %object%.', array('%user%' => $request->getFromUser(), '%object%' => $request->getEntity()->getTitle()));
                     // return __('%user% would like to add you as protagonist to the event %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
@@ -280,9 +281,9 @@ elseif ($img_ratio > 1) {
                     // return __('%user% would like you to join the group %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getRelatedObject(), $this->getRelatedObject()->getLinkShow())));
             }
         } elseif ($user->getId() == $request->getFromUser()->getId()) {
-            switch ($request->getObject()) {
+            switch ($this->getClassName($request->getObject())) {
                 case 'Event':
-                    return "C";
+                    return $this->translator->trans('You requested %user% to be added as protagonist to the event %object%.', array('%user%' => $request->getUser(), '%object%' => $request->getEntity()));;
                     // return __('You requested %user% to be added as protagonist to the event %object%.', array('%user%' => link_to($this->getUserRelatedByUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
                 case 'Disc':
                     // return __('You requested %user% to be added as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
@@ -296,22 +297,25 @@ elseif ($img_ratio > 1) {
 
     public function getNotificationTag(Notification $notification)
     {
-        $user = $this->securityContext->getToken()->getUser();
-        switch ($this->getPost()->getObject().'_'.$this->getType()) {
+        switch ($this->getClassName($notification->getPost()->getObject()).'_'.$notification->getType()) {
+            case 'Event_'.Notification::TYPE_LIKE:
+                return $this->translator->trans('%user% likes your event %object%.', array('%user%' => $notification->getFromUser(), '%object%' => $notification->getPost()->getEntity()));
+            case 'Event_'.Notification::TYPE_COMMENT:
+                return $this->translator->trans('%user% has commented your event %object%.', array('%user%' => $notification->getFromUser(), '%object%' => $notification->getPost()->getEntity()));
             case 'disc_protagonist':
-                return __('%user% added you as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
+                // return __('%user% added you as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
             case 'disc_protagonist_request_accepted':
-                return __('%user% has accepted to be added as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
+                // return __('%user% has accepted to be added as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
             case 'disc_like':
-                return __('%user% likes your disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
+                // return __('%user% likes your disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
             case 'disc_comment':
-                return __('%user% has commented your disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
+                // return __('%user% has commented your disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
             case 'user_like':
-                return __('%user% likes your %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to(__('post'), $this->getPost()->getLinkShow())));
+                // return __('%user% likes your %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to(__('post'), $this->getPost()->getLinkShow())));
             case 'user_fan':
-                return __('%user% became your fan.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow())));
+                // return __('%user% became your fan.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow())));
             default:
-                return 'Case: '.$this->getPost()->getObject().'_'.$this->getType().', PostId: '.$this->getPostId().', From: '.$this->getUserRelatedByFromUserId().', Type: '.$this->getType().', Object: '.get_object($this->getPost()->getObject(), $this->getPost()->getObjectIds());
+                // return 'Case: '.$notification->getPost()->getObject().'_'.$notification->getType().', PostId: '.$notification->getPostId().', From: '.$notification->getFromUser().', Type: '.$notification->getType().', Object: '.$notification->getObject();
         }
     }
 
