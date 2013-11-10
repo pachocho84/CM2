@@ -189,7 +189,10 @@ abstract class Entity
     {
         if (!$this->getPosts()->contains($post)) {
             $this->posts[] = $post;
-            $post->setEntity($this);
+            $className = new \ReflectionClass(get_class($comment));
+            $post->setEntity($this)
+                ->setObject($className->getShortName())
+                ->setObjectIds(array($this->getId()));
         }
     
         return $this;

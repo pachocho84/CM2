@@ -44,6 +44,14 @@ class Post
     /**
      * @var integer
      *
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="posts")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)    
+     */
+    private $user;
+
+    /**
+     * @var integer
+     *
      * @ORM\ManyToOne(targetEntity="Entity", inversedBy="posts")
      * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
      */
@@ -62,14 +70,6 @@ class Post
      * @ORM\Column(name="object_ids", type="simple_array")
      */
     private $objectIds;
-
-    /**
-     * @var integer
-     *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="posts")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)    
-     */
-    private $user;
 
     /**
      * @var integer
@@ -202,6 +202,52 @@ class Post
     }
 
     /**
+     * Set userId
+     *
+     * @param integer $userId
+     * @return Post
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+    
+        return $this;
+    }
+
+    /**
+     * Get userId
+     *
+     * @return integer 
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * Set entity
+     *
+     * @param Entity $entity
+     * @return Image
+     */
+    public function setUser(User $user = null)
+    {
+        $this->user = $user;
+    
+        return $this;
+    }
+
+    /**
+     * Get entity
+     *
+     * @return Entity 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
      * Set entity
      *
      * @param \CM\CMBundle\Entity\Event $entity
@@ -210,8 +256,10 @@ class Post
     public function setEntity(Entity $entity)
     {
         $this->entity = $entity;
-        $this->object = get_class($entity);
-        $this->objectIds[] = $entity->getId();
+        $entityClassName = new \ReflectionClass(get_class($entity));
+        $entityClassName = $entityClassName->getShortName();
+        $this->object = $entityClassName;
+        $this->objectId = $entity->getId();
     
         return $this;
     }
@@ -273,52 +321,6 @@ class Post
     }
 
     /**
-     * Set userId
-     *
-     * @param integer $userId
-     * @return Post
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-    
-        return $this;
-    }
-
-    /**
-     * Get userId
-     *
-     * @return integer 
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
-
-    /**
-     * Set entity
-     *
-     * @param Entity $entity
-     * @return Image
-     */
-    public function setUser(User $user = null)
-    {
-        $this->user = $user;
-    
-        return $this;
-    }
-
-    /**
-     * Get entity
-     *
-     * @return Entity 
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
      * Set entity
      *
      * @param Entity $entity
@@ -372,8 +374,10 @@ class Post
      */
     public function addComment(Comment $comment)
     {
-        $this->comments[] = $comment;
-        $comment->setPost($this);
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setPost($this);
+        }
     
         return $this;
     }
@@ -406,8 +410,10 @@ class Post
      */
     public function addLike(Like $like)
     {
-        $this->likes[] = $like;
-        $like->setPost($this);
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setPost($this);            
+        }
     
         return $this;
     }

@@ -203,10 +203,7 @@ class EventController extends Controller
 
             $event->addEventDate(new EventDate);
 
-            $post = new Post;
-            $post->setType(Post::TYPE_CREATION)
-                ->setCreator($user)
-                ->setUser($user);
+            $post = $this->get('cm.post_center')->getNewPost($user, $user);
 
             $event->addPost($post);
         } else {

@@ -8,7 +8,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * Notification
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="NotificationRepository")
  * @ORM\Table(name="notification")
  */
 class Notification
@@ -261,10 +261,6 @@ class Notification
     public function setPost(Post $post = null)
     {
         $this->post = $post;
-        $postClassName = new \ReflectionClass(get_class($post));
-        $postClassName = $postClassName->getShortName();
-        $this->object = $postClassName;
-        $this->objectId = $post->getId();
     
         return $this;
     }

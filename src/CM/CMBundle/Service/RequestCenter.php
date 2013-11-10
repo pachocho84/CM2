@@ -19,12 +19,12 @@ class RequestCenter
 
     public function flushNeeded()
     {
-        if ($this->flushNeeded) {
-            $this->flushNeeded = false;
-            return true;
-        }
+        return $this->flushNeeded;
+    }
 
-        return false;
+    public function flushed()
+    {
+        $this->flushNeeded = false;
     }
 
     public function newRequest(
@@ -65,7 +65,7 @@ class RequestCenter
 
     public function seeRequests($userId)
     {
-        $this->em->getRepository('CMBundle:Request')->updateStatus($userId, null, null, Request::STATUS_NEW, Request::STATUS_PENDING);
+        $this->em->getRepository('CMBundle:Request')->updateStatus($userId, null, null, Request::STATUS_NEW);
 
         return $this->getNewRequestsNumber($userId);
     }

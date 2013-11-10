@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use CM\CMBundle\Service\UserAuthentication;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Request;
+use CM\CMBundle\Entity\Notification;
 
 class CMExtension extends \Twig_Extension
 {
@@ -290,6 +291,27 @@ elseif ($img_ratio > 1) {
                 case 'Group':
                     // return __('You requested %user% to join the group %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getRelatedObject(), $this->getRelatedObject()->getLinkShow())));
             }
+        }
+    }
+
+    public function getNotificationTag(Notification $notification)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+        switch ($this->getPost()->getObject().'_'.$this->getType()) {
+            case 'disc_protagonist':
+                return __('%user% added you as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
+            case 'disc_protagonist_request_accepted':
+                return __('%user% has accepted to be added as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
+            case 'disc_like':
+                return __('%user% likes your disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
+            case 'disc_comment':
+                return __('%user% has commented your disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
+            case 'user_like':
+                return __('%user% likes your %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to(__('post'), $this->getPost()->getLinkShow())));
+            case 'user_fan':
+                return __('%user% became your fan.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow())));
+            default:
+                return 'Case: '.$this->getPost()->getObject().'_'.$this->getType().', PostId: '.$this->getPostId().', From: '.$this->getUserRelatedByFromUserId().', Type: '.$this->getType().', Object: '.get_object($this->getPost()->getObject(), $this->getPost()->getObjectIds());
         }
     }
 

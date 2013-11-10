@@ -19,12 +19,12 @@ class NotificationCenter
 
     public function flushNeeded()
     {
-        if ($this->flushNeeded) {
-            $this->flushNeeded = false;
-            return true;
-        }
+        return $this->flushNeeded;
+    }
 
-        return false;
+    public function flushed()
+    {
+        $this->flushNeeded = false;
     }
 
     public function newNotification(
@@ -41,8 +41,6 @@ class NotificationCenter
         if ($toUser->getId() == $fromUser->getId()) {
             return;
         }
-        // var_dump(array_keys(func_get_args()));
-        // throw new \Exception("Error Processing Request", 1);
 
         $notification = new Notification;
         $notification->setType($type)
@@ -50,7 +48,8 @@ class NotificationCenter
             ->setFromUser($fromUser);
         if (!is_null($post)) {
             $notification->setPost($post);
-        } else {
+        }
+        if (!is_null($object)) {
             $notification->setObject($object)
                 ->setObjectId($objectId);
         }
@@ -61,6 +60,18 @@ class NotificationCenter
         }
         $this->em->persist($notification);
         $this->flushNeeded = true;
+    }
+
+public function getNewNotificationsNumber($userId)
+    {
+        return $this->em->getRepository('CMBundle:Notification')->getNumberNew($userId);
+    }
+
+    public function seeNotifications($userId)
+    {
+        $this->em->getRepository('CMBundle:Notification')->updateStatus($userId, null, null, Notification::STATUS_NEW);
+
+        return $this->getNewNotificationsNumber($userId);
     }
 
     public function removeNotifications($toUser, $object, $objectId)

@@ -53,10 +53,8 @@ class UserController extends Controller
      */
     public function menuAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $newRequests = $em->getRepository('CMBundle:Request')->getNumberNew($this->getUser()->getId());
-        $newNotifications = $em->getRepository('CMBundle:User')->getNumberNewNotifications($this->getUser()->getId());
+        $newRequests = $this->get('cm.request_center')->getNewRequestsNumber($this->getUser()->getId());
+        $newNotifications = $this->get('cm.notification_center')->getNewNotificationsNumber($this->getUser()->getId());
 
         $inRequest = substr($request->get('realRoute'), 1, 7) == 'request';
         $inNotification = substr($request->get('realRoute'), 1, 12) == 'notification';
@@ -155,30 +153,16 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $notifications = $em->getRepository('CMBundle:User')->getNotifications($this->getUser()->getId());
+        $notifications = $em->getRepository('CMBundle:Notification')->getNotifications($this->getUser()->getId());
         $pagination = $this->get('knp_paginator')->paginate($notifications, $page, $perPage);
+
+        $this->get('cm.notification_center')->seeNotifications($this->getUser()->getId());
 
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:User:notificationList.html.twig', array('notifications' => $pagination));
         }
 
         return array('notifications' => $pagination);
-    }
-
-    /**
-     * @Route("/notificationsSeen", name="user_notifications_seen")
-     */
-    public function notificationsSeen(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $notificationIds = explode(',', $request->get('ids'));
-
-        $em->getRepository('CMBundle:User')->updateNotificationsStatus($this->getUser()->getId(), $notificationIds, Notification::STATUS_NEW);
-
-        $newNotifications = $em->getRepository('CMBundle:User')->getNumberNewNotifications($this->getUser()->getId());
-
-        return new JsonResponse(array('new' => $newNotifications));
     }
 
     /**

@@ -95,6 +95,11 @@ services:
         arguments:
             em: @doctrine.orm.entity_manager
 
+    cm.post_center:
+        class: CM\CMBundle\Service\PostCenter
+        arguments:
+            em: @doctrine.orm.entity_manager
+
     cm.doctrine_listener:
         class: CM\CMBundle\EventListener\DoctrineEventsListener
         arguments:
