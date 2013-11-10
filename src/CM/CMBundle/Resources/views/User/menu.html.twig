@@ -1,7 +1,7 @@
 <li class="dropdown menu-tab{% if inRequestPage %}active{% endif %}">
     
     <a href="{{ path('user_requests') }}" id="menu-requests" class="dropdown-toggle" data-toggle="dropdown">
-        <img src="/images/glyphicons/bell.png" />
+        <span class="glyphicon glyphicon-bell"></span>
         <span class="countNew" id="requestsCounter">{% if newRequests > 0 %}{{ newRequests }}{% endif %}</span>
     </a>
     
@@ -25,7 +25,7 @@
 <li class="dropdown menu-tab{% if inNotificationPage %}active{% endif %}">
 	
 	<a href="{{ path('user_notifications') }}" id="menu-notifications" class="dropdown-toggle" data-toggle="dropdown">
-		<img src="/images/glyphicons/globe.png" />
+        <span class="glyphicon glyphicon-globe"></span>
 		<span class="countNew" id="notificationsCounter">{% if newNotifications > 0 %}{{ newNotifications }}{% endif %}</span>
 	</a>
 	
@@ -37,7 +37,7 @@
 
 		<div class="dropdown-menu-body load_more_container">
             <ul class="media-list"></ul>
-            <div class="dropdown-menu-loader"><img src="/images/loader.gif" /></div>
+            <div class="dropdown-menu-loader"><img src="{{ asset('images/loader.gif') }}" /></div>
 		</div>
 	
 		<div class="dropdown-menu-footer"><a href="{{ path('user_notifications') }}">{{ 'View all notifications' | trans }}</a></div>

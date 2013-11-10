@@ -28,6 +28,7 @@
         "knplabs/doctrine-behaviors": "dev-master",
         "a2lix/translation-form-bundle": "1.*@dev",
         "friendsofsymfony/user-bundle": "~2.0@dev",
+        "jms/security-extra-bundle": "dev-master",
         "sonata-project/intl-bundle": ">=2.1",
         "knplabs/knp-paginator-bundle": "dev-master",
         "imagine/imagine": "0.5.*",

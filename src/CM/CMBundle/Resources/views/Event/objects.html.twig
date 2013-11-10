@@ -10,12 +10,12 @@
 
     {% if key == 0 or date.start | date('Y/m/d') != dates[key-1].start | date('Y/m/d') %}
     
-        {% if "#{dates.getPaginationData.current}_#{key}" != '1_0' and loop.index > 1 %}
+        {% if dates.getPaginationData.current != 1 or key != 0 and loop.index > 1 %}
             </ul>
         {% endif %}
         
-        <div class="box-top asd">
-            <h2><i class="glyphicon glyphicon-calendar"></i> {{ date.start | format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</h2>
+        <div class="box-top">
+            <h3><i class="glyphicon glyphicon-calendar"></i> <span>{{ date.start | format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</span></h3>
         </div>
         
         <ul class="media-list objects">

@@ -73,7 +73,7 @@ class UserController extends Controller
      * @Route("/requests/{page}/{perPage}", name="user_requests", requirements={"page" = "\d+"})
      * @Template
      */
-    public function requestsAction(Request $request, $page = 1, $perPage = 26)
+    public function requestsAction(Request $request, $page = 1, $perPage = 6)
     {
         $em = $this->getDoctrine()->getManager();
 
