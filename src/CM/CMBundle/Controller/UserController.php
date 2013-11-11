@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Event;
@@ -48,7 +49,6 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/menu", name="user_menu")
      * @Template
      */
     public function menuAction(Request $request)
@@ -69,6 +69,7 @@ class UserController extends Controller
 
     /**
      * @Route("/requests/{page}/{perPage}", name="user_requests", requirements={"page" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
     public function requestsAction(Request $request, $page = 1, $perPage = 6)
@@ -96,6 +97,7 @@ class UserController extends Controller
 
     /**
      * @Route("/requestAdd/{object}/{objectId}", name="user_request_add", requirements={"objectId"="\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
      */
     public function requestAddAction($object, $objectId)
     {
@@ -121,6 +123,7 @@ class UserController extends Controller
 
     /**
      * @Route("/requestUpdate/{object}/{objectId}/{choice}", name="user_request_update", requirements={"objectId"="\d+", "choice"="accept|refuse"})
+     * @JMS\Secure(roles="ROLE_USER")
      */
     public function requestUpdateAction($object, $objectId, $choice)
     {
@@ -135,6 +138,7 @@ class UserController extends Controller
     
     /**
      * @Route("/requestDelete/{object}/{objectId}", name="user_request_delete", requirements={"objectId"="\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
      */
     public function requestDeleteAction($object, $objectId)
     {
@@ -148,6 +152,7 @@ class UserController extends Controller
 
     /**
      * @Route("/notifications/{page}/{perPage}", name="user_notifications", requirements={"page" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
     public function notificationsAction(Request $request, $page = 1, $perPage = 6)

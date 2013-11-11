@@ -14,17 +14,17 @@ function infiniteScroll(target, container, condition, loop) {
     }
 }
 
-$('body').ready(function() {
-    $('.load_more').each(function() {
-        container = $(this).closest('.load_more_container').length > 0 ? $(this).closest('.load_more_container') : $(window);
-        infiniteScroll($(this), container, function(target, container) {
-            return target.is(':visible') && target.offset().top - container.height() < container.scrollTop();
-        }, true);
-    });
-});
-
 $(function() {
     /* INFINITE SCROLL */
+    $('body').ready(function() {
+        $('.load_more').each(function() {
+            container = $(this).closest('[load_more_container]').length > 0 ? $(this).closest('[load_more_container]') : $(window);
+            infiniteScroll($(this), container, function(target, container) {
+                return target.is(':visible') && target.offset().top - container.height() < container.scrollTop();
+            }, true);
+        });
+    });
+
     $('body').on('click', '.load_more a', function(event) {
         event.preventDefault(); 
         infiniteScroll($(event.target).closest('.load_more'), null, function() { return true; }, false); 
@@ -38,7 +38,7 @@ $(function() {
     });
     $(document).on('scroll', function(event) {
         $('.load_more').each(function() {
-            container = $(this).closest('.load_more_container').length > 0 ? $(this).closest('.load_more_container') : $(window);
+            container = $(this).closest('[load_more_container]').length > 0 ? $(this).closest('[load_more_container]') : $(window);
             infiniteScroll($(this), container, function(target, container) {
                 return target.is(':visible') && target.offset().top - container.height() - infiniteScrollOffset < container.scrollTop();
             }, true);

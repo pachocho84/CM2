@@ -9,6 +9,11 @@ parameters:
     images_full.dir: %images.dir%/full # if you change this, change it also in the Entity/Image.php file!
     session.attribute_bag.class: Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag
 
+twig:
+    form:
+        resources:
+            - 'CMBundle:Form:bootstrap.html.twig'
+
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main

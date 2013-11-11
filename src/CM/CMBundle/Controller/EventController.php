@@ -10,8 +10,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
 use CM\CMBundle\Entity\Post;
@@ -172,7 +172,8 @@ class EventController extends Controller
     
     /**
      * @Route("/new", name="event_new") 
-     * @Route("/{id}/{slug}/edit", name="event_edit", requirements={"id" = "\d+"}) 
+     * @Route("/{id}/{slug}/edit", name="event_edit", requirements={"id" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
     public function editAction(Request $request, $id = null, $slug = null)
@@ -313,6 +314,7 @@ class EventController extends Controller
 
     /**
      * @Route("/eventDelete/{id}", name="event_delete", requirements={"id" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
      */
     public function deleteAction(Request $request, $id)
     {
