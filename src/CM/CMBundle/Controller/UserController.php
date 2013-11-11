@@ -69,7 +69,7 @@ class UserController extends Controller
 
     /**
      * @Route("/requests/{page}/{perPage}", name="user_requests", requirements={"page" = "\d+"})
-     * @JMS\Secure(roles="ROLE_USER")
+     * @JMS\Secure(roles="ROLE_USER") 
      * @Template
      */
     public function requestsAction(Request $request, $page = 1, $perPage = 6)
