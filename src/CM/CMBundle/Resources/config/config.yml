@@ -9,7 +9,49 @@ parameters:
     images_full.dir: %images.dir%/full # if you change this, change it also in the Entity/Image.php file!
     session.attribute_bag.class: Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag
 
+assetic:
+    # assets:
+        # img_bootstrap_glyphicons_black:
+        #     inputs:
+        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/img/glyphicons-halflings.png"
+        #     output: "img/glyphicons-halflings.png"
+
+        # img_bootstrap_glyphicons_white:
+        #     inputs:
+        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/img/glyphicons-halflings-white.png"
+        # output: "img/glyphicons-halflings-white.png"
+
+        # css_bootstrap:
+        #     inputs:
+        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/less/bootstrap.less"
+        #     output: "css/bootstrap.css"
+        #     filters:
+        #         - lessphp
+        # fonts_bootstrap_eot:
+        #     inputs:
+        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/fonts/glyphicons-halflings-regular.eot"
+        #     output: "fonts/glyphicons-halflings-regular.eot"
+        # fonts_bootstrap_woff:
+        #     inputs:
+        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/fonts/glyphicons-halflings-regular.woff"
+        #     output: "fonts/glyphicons-halflings-regular.woff"
+        # fonts_bootstrap_ttf:
+        #     inputs:
+        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/fonts/glyphicons-halflings-regular.ttf"
+        #     output: "fonts/glyphicons-halflings-regular.ttf"
+        # fonts_bootstrap_svg:
+        #     inputs:
+        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/fonts/glyphicons-halflings-regular.svg"
+        #     output: "fonts/glyphicons-halflings-regular.svg"
+        # js_bootstrap:
+        #     inputs:
+        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/js/tooltip.js"
+        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/js/*.js"
+        #     output: "js/bootstrap.js"
+
 twig:
+    globals:
+        uploaded_images_full_dir: %images_full.dir%
     form:
         resources:
             - 'CMBundle:Form:bootstrap.html.twig'
@@ -31,7 +73,7 @@ fos_user:
 a2lix_translation_form:
     default_required: false
     manager_registry: doctrine
-    templating: "A2lixTranslationFormBundle::default.html.twig"
+    templating: A2lixTranslationFormBundle::default.html.twig
 
 # KNP Paginator    
 knp_paginator:

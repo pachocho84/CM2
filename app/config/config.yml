@@ -1,8 +1,8 @@
 imports:
     - { resource: parameters.yml }
-#     - { resource: security.yml }
-    - { resource: @CMBundle/Resources/config/config.yml }
+    # - { resource: security.yml }
     - { resource: ../../vendor/knplabs/doctrine-behaviors/config/orm-services.yml }
+    - { resource: @CMBundle/Resources/config/config.yml }
 
 framework:
     #esi:             ~
@@ -27,8 +27,6 @@ framework:
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
-    globals:
-        uploaded_images_full_dir: %images_full.dir%
 
 # Assetic Configuration
 assetic:
@@ -48,44 +46,6 @@ assetic:
             apply_to: "\.css$"
         # less:
         #     apply_to: "\.less$"
-    # assets:
-        # img_bootstrap_glyphicons_black:
-        #     inputs:
-        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/img/glyphicons-halflings.png"
-        #     output: "img/glyphicons-halflings.png"
-
-        # img_bootstrap_glyphicons_white:
-        #     inputs:
-        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/img/glyphicons-halflings-white.png"
-        # output: "img/glyphicons-halflings-white.png"
-
-        # css_bootstrap:
-        #     inputs:
-        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/less/bootstrap.less"
-        #     output: "css/bootstrap.css"
-        #     filters:
-        #         - lessphp
-        # fonts_bootstrap_eot:
-        #     inputs:
-        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/fonts/glyphicons-halflings-regular.eot"
-        #     output: "fonts/glyphicons-halflings-regular.eot"
-        # fonts_bootstrap_woff:
-        #     inputs:
-        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/fonts/glyphicons-halflings-regular.woff"
-        #     output: "fonts/glyphicons-halflings-regular.woff"
-        # fonts_bootstrap_ttf:
-        #     inputs:
-        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/fonts/glyphicons-halflings-regular.ttf"
-        #     output: "fonts/glyphicons-halflings-regular.ttf"
-        # fonts_bootstrap_svg:
-        #     inputs:
-        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/fonts/glyphicons-halflings-regular.svg"
-        #     output: "fonts/glyphicons-halflings-regular.svg"
-        # js_bootstrap:
-        #     inputs:
-        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/js/tooltip.js"
-        #         -  "%kernel.root_dir%/../vendor/twbs/bootstrap/js/*.js"
-        #     output: "js/bootstrap.js"
 
 # Doctrine Configuration
 doctrine:
