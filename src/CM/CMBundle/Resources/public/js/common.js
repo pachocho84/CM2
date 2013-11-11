@@ -46,6 +46,17 @@ $(function() {
         });
     });
 
+    /* FILE INPUT */
+    $(document).on('change', '.btn-file :file', function() {
+        var input = $(this),
+            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+        input.trigger('fileselect', [numFiles, label]);
+    });
+    $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+        $(event.target).closest('[btn-file-container]').find('input[readonly]').val(label);
+    });
+
     /* DELETE CONFIRMATION */
     $('body').popover({
         html:             true,
@@ -55,9 +66,9 @@ $(function() {
         }
     });
     $('body').on('click', 'a[data-toggle="popover"]', function(e) {
-      e.preventDefault();
+        e.preventDefault();
         event.stopPropagation();
-  });
+    });
     $('body').on('click', '.popover-close', function(event) {
         event.preventDefault();
         $(this).closest('.popover').prev('a[data-toggle="popover"]').popover('hide');

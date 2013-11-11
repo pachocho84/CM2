@@ -4,16 +4,19 @@
 {% spaceless %}
     {% set type = type|default('text') %}
     {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
-    {% if type == 'date' %}
-        <div class="form-group col-lg-5">
-    {% elseif type == 'time' %}
-        <div class="form-group col-lg-4">
+    {% if type == 'date' or type == 'time' %}
+        <div class="col-lg-6">
     {% elseif type == 'hidden' %}
         <div>
+    {% elseif type == 'file' %}
+        <div class="col-lg-9" btn-file-container><div class="col-lg-2"><span class="input-group-btn"><span class="btn btn-default btn-file">Browse
     {% else %}
         <div class="col-lg-9">
     {% endif %}
         <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    {% if type == 'file' %}
+        </span></span></div><div class="col-lg-10"><input type="text" class="form-control col-lg-4" readonly /></div>
+    {% endif %}
     </div>
 {% endspaceless %}
 {% endblock form_widget_simple %}
