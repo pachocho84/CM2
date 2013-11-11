@@ -4,15 +4,7 @@
         <meta charset="UTF-8" />            
         <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
         <title>{% block title %}Welcome!{% endblock %}</title>
-    
-        {#<link href="{{ asset('/lib/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" />
-        <link href="{{ asset('/bundles/cm/css/common.css') }}" rel="stylesheet" />
-        <link href="{{ asset('/bundles/cm/css/main.css') }}" rel="stylesheet" />#}
-        {#{% stylesheets filter="cssrewrite,lessphp"
-            '@css_bootstrap'
-        %}
-            <link rel="stylesheet" href="{{ asset_url }}" />
-        {% endstylesheets %}#}
+
         {% stylesheets filter='cssrewrite'
             'css/bootstrap.min.css'
             'css/bootstrap-theme.min.css'
@@ -127,31 +119,20 @@
             var script  = "{{ app.request.scriptname }}";
             var culture = "{{ app.request.locale }}";
         </script>
-        <script src="{{ asset('/js/jquery-2.0.3.min.js') }}"></script>
-        {#{% javascripts
-            '@js_bootstrap'
-        %}
-            <script src="{{ asset_url }}"></script>
-        {% endjavascripts %}#}
-        {#<script src="{{ asset('/lib/bootstrap/js/bootstrap.min.js') }}"></script>#}
-        <script src="{{ asset('js/bootstrap-min.js') }}"></script>
-        <script src="{{ asset('js/jquery.hcsticky-min.js') }}"></script>
-        <script src="{{ asset('js/jquery.cycle2.min.js') }}"></script>
-        <script src="{{ asset('js/jquery.cycle2.scrollVert.min.js') }}"></script>
-        <script src="{{ asset('js/jquery.form.min.js') }}"></script>
         {% javascripts
+            'js/jquery-2.0.3.min.js'
+            'js/bootstrap.min.js'
+            'js/jquery.hcsticky-min.js'
+            'js/jquery.cycle2.min.js'
+            'js/jquery.cycle2.scrollVert.min.js'
+            'js/jquery.form.min.js'
             'bundles/cm/js/common.js'
             'bundles/cm/js/interface.js'
         %}
             <script src="{{ asset_url }}"></script>
         {% endjavascripts %}
 
-        {#<script src="{{ asset('/bundles/cm/js/common.js') }}"></script>
-        <script src="{{ asset('/bundles/cm/js/interface.js') }}"></script>#}
         {% block javascripts %}{% endblock %}
-        
-        
-        
         
         {# PIWIK #}
         <!-- <script type="text/javascript">
