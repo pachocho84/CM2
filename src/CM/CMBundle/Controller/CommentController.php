@@ -23,26 +23,52 @@ use CM\CMBundle\Form\CommentType;
 class CommentController extends Controller
 {
     /**
-     * @Route("/{post_id}", name="comment_index", requirements={"post_id" = "\d+"})
+     * @Route("/{postId}", name="comment_index", requirements={"postId" = "\d+"})
+     * @Route("/new/{postId}", name="comment_new", requirements={"postId" = "\d+"}) 
      * @Template
      */
-    public function commentsAction(Post $post)
+    public function commentsAction(Request $request, $postId)
     {
         $em = $this->getDoctrine()->getManager();
-        // $comments = $em->getRepository('CMBundle:Comment')->getCommentsFor('post', $post->getId());
 
-        // echo '<pre>'.var_dump($comments); die;
+        $post = $em->getRepository('CMBundle:Post')->findOneById($postId);
 
         $form = null;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $comment = new Comment;
-
-            $form = $this->createForm(new CommentType(), $comment, array(
+            $form = $this->createForm(new CommentType, $comment, array(
                 'action' => $this->generateUrl('comment_new', array(
-                    'post_id' => $post->getId()
+                    'postId' => $post->getId()
                 )),
                 'cascade_validation' => true
-            ))->add('save', 'submit')->createView();
+            ));
+
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getEntityManager();
+                $comment->setUser($this->getUser())
+                    ->setPost($post);
+                $em->persist($comment);
+                $em->flush();
+    
+                if ($request->isXmlHttpRequest()) {
+                    if ($comment->getPost()->getId()) {
+                        $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getPost()));
+                    } elseif ($comment->getImage()->getId()) {
+                        $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getImage()));
+                    }
+    
+                    return new JsonResponse(array(
+                        'comment' => $this->renderView('CMBundle:Comment:comment.html.twig', array('comment' => $comment)),
+                        'commentCount' => $commentCount
+                    ));
+                }
+    
+                $this->get('session')->getFlashBag('confirm', 'Comment successfully added.');
+            } else {
+                $form = $form->createView();
+            }
         }
 
         return array(
@@ -50,56 +76,6 @@ class CommentController extends Controller
             'comments' => $post->getComments(),
             'form' => $form
         );
-        // $this->comments = $this->post->getComments();
-        
-        // if ($this->getContext()->getUser()->isAuthenticated())
-        // {
-        //     if (get_class($this->post) == 'Post') {
-        //         $this->form = new CommentForm(null, array('post_id' => $this->post->getId()));
-        //     } elseif (get_class($this->post) == 'Image') {
-        //         $this->form = new CommentForm(null, array('image_id' => $this->post->getId()));
-        //     }
-        // }
-    }
-    
-    /**
-     * @Route("/new/{post_id}", name="comment_new", requirements={"post_id" = "\d+"}) 
-     * @Template
-     */
-      public function newAction(Request $request, $post_id)
-    {
-        $comment = new Comment;
-        $form = $this->createForm(new CommentType(), $comment)->add('save', 'submit');
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
-            $comment
-                ->setUser($this->getUser())
-                ->setPost($em->getRepository('CMBundle:Post')->findOneById($post_id));
-            $em->persist($comment);
-            $em->flush();
-
-            if ($request->isXmlHttpRequest()) {
-                if ($comment->getPost()->getId()) {
-                    $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getPost()));
-                } elseif ($comment->getImage()->getId()) {
-                    $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getImage()));
-                }
-
-                return new JsonResponse(array(
-                    'comment' => $this->renderView('CMBundle:Comment:comment.html.twig', array('comment' => $comment)),
-                    'commentCount' => $commentCount
-                ));
-            }
-
-            $this->get('session')->getFlashBag('confirm', 'Comment successfully added.');
-        } else {
-            $this->get('session')->getFlashBag('error', 'Please fill in all the required fields.');
-        }
-
-        return new RedirectResponse($request->get('referer'));
     }
 
     /**
@@ -132,17 +108,5 @@ class CommentController extends Controller
 
         $this->get('session')->getFlashBag('confirm', 'You don\'t like this anymore.');
         return new RedirectResponse($request->get('referer'));
-            
-        //     if ($request->isXmlHttpRequest()) {         
-        //         if ($comment->getPostId()) {
-        //             $post = $comment->getPost();
-        //         } elseif ($comment->getImageId()) {
-        //             $post = $comment->getImage();
-        //         }
-        //         return $this->renderPartial('commentCount', array('post' => $post));
-        //     }
-            
-        //     $this->getUser()->setFlash('conferma', $this->getContext()->getI18N()->__('Comment successfully deleted.'));
-        //     $this->redirect($request->getReferer());
     }
 }

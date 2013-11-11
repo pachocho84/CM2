@@ -3,36 +3,35 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b6f66c4f131b4e0b4aac7112ece155ec",
+    "hash": "9feffe6630034833039813a852f4686a",
     "packages": [
         {
             "name": "a2lix/translation-form-bundle",
-            "version": "dev-master",
+            "version": "1.x-dev",
             "target-dir": "A2lix/TranslationFormBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/a2lix/TranslationFormBundle.git",
-                "reference": "7d382bf65a8acf7e27a161ca7a76c269b0274760"
+                "reference": "6388ad72a88c3c15e2eaee6c56ba046a60b47556"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/a2lix/TranslationFormBundle/zipball/7d382bf65a8acf7e27a161ca7a76c269b0274760",
-                "reference": "7d382bf65a8acf7e27a161ca7a76c269b0274760",
+                "url": "https://api.github.com/repos/a2lix/TranslationFormBundle/zipball/6388ad72a88c3c15e2eaee6c56ba046a60b47556",
+                "reference": "6388ad72a88c3c15e2eaee6c56ba046a60b47556",
                 "shasum": ""
             },
             "require": {
-                "symfony/symfony": ">=2.3"
+                "symfony/symfony": "2.3.*"
             },
             "suggest": {
                 "a2lix/i18n-doctrine-bundle": "For A2lix strategy",
-                "gedmo/doctrine-extensions": "For Gedmo strategy",
                 "knplabs/doctrine-behaviors": "For Knp strategy",
-                "prezent/doctrine-translatable-bundle": "For Prezent strategy"
+                "stof/doctrine-extensions-bundle": "For Gedmo strategy"
             },
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.x-dev"
+                    "dev-master": "1.x-dev"
                 }
             },
             "autoload": {
@@ -66,7 +65,7 @@
                 "translatable",
                 "translation"
             ],
-            "time": "2013-11-07 20:35:40"
+            "time": "2013-11-07 19:20:01"
         },
         {
             "name": "doctrine/annotations",
@@ -780,12 +779,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "0f5a110a1e6ae413e425912e6601643f91b069c1"
+                "reference": "37aacdae6507faad03c3df1624e7d3a6e6c1b388"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/0f5a110a1e6ae413e425912e6601643f91b069c1",
-                "reference": "0f5a110a1e6ae413e425912e6601643f91b069c1",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/37aacdae6507faad03c3df1624e7d3a6e6c1b388",
+                "reference": "37aacdae6507faad03c3df1624e7d3a6e6c1b388",
                 "shasum": ""
             },
             "require": {
@@ -832,7 +831,7 @@
                 "database",
                 "migrations"
             ],
-            "time": "2013-11-03 20:54:43"
+            "time": "2013-11-10 05:33:50"
         },
         {
             "name": "doctrine/orm",
@@ -1839,6 +1838,47 @@
                 "minification"
             ],
             "time": "2013-07-19 00:03:27"
+        },
+        {
+            "name": "leafo/lessphp",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/leafo/lessphp.git",
+                "reference": "bc4f33b4bfc889018ebe53611050729641b82dc6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/leafo/lessphp/zipball/bc4f33b4bfc889018ebe53611050729641b82dc6",
+                "reference": "bc4f33b4bfc889018ebe53611050729641b82dc6",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.4.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "lessc.inc.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Leaf Corcoran",
+                    "email": "leafot@gmail.com",
+                    "homepage": "http://leafo.net"
+                }
+            ],
+            "description": "lessphp is a compiler for LESS written in PHP.",
+            "homepage": "http://leafo.net/lessphp/",
+            "time": "2013-10-17 16:23:00"
         },
         {
             "name": "liip/imagine-bundle",
@@ -2933,12 +2973,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "463343af63344dbbc3db04f40b0b804baa919b7e"
+                "reference": "e7d6af003e6af02c26cc8864da72dc807f8f97a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/463343af63344dbbc3db04f40b0b804baa919b7e",
-                "reference": "463343af63344dbbc3db04f40b0b804baa919b7e",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/e7d6af003e6af02c26cc8864da72dc807f8f97a1",
+                "reference": "e7d6af003e6af02c26cc8864da72dc807f8f97a1",
                 "shasum": ""
             },
             "type": "library",
@@ -2967,7 +3007,7 @@
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-11-07 02:38:27"
+            "time": "2013-11-11 01:33:12"
         },
         {
             "name": "twig/extensions",
@@ -3078,6 +3118,7 @@
         "doctrine/data-fixtures": 20,
         "doctrine/doctrine-migrations-bundle": 20,
         "doctrine/migrations": 20,
+        "leafo/lessphp": 20,
         "twbs/bootstrap": 20,
         "knplabs/doctrine-behaviors": 20,
         "a2lix/translation-form-bundle": 20,

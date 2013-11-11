@@ -24,6 +24,7 @@
         "doctrine/data-fixtures" : "dev-master",
         "doctrine/doctrine-migrations-bundle": "dev-master",
         "doctrine/migrations": "dev-master",
+        "leafo/lessphp": "dev-master",
         "twbs/bootstrap": "dev-master",
         "knplabs/doctrine-behaviors": "dev-master",
         "a2lix/translation-form-bundle": "1.*@dev",

@@ -29,7 +29,7 @@
             {# <?php endif ?> #}
 
             {# <?php if ($sito->getCommentsEnabled() && $sito->getCommentsDisplay()): ?> #}
-                {{ render(controller('CMBundle:Comment:comments', {'post': post})) }}
+                {{ render(controller('CMBundle:Comment:comments', {'postId': post.id})) }}
             {# <?php endif ?> #}
 
         </ul>

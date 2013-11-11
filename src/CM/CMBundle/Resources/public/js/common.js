@@ -1,21 +1,25 @@
-function infiniteScroll($target) {
-    $target.children('a').html('<img src="/bundles/cm/images/layout/loader.gif" />');
-    $.get($target.children('a').attr('href'), function(data) {
-        $target.replaceWith(data);
-        // $('#menu').hcSticky('reinit');
-        // $('.sidebar').hcSticky('reinit');
-    });
+infiniteScrollOffset = 300;
+function infiniteScroll(target, container, condition, loop) {
+    if (condition(target, container)) {
+        target.children('a').html('<img src="/bundles/cm/images/layout/loader.gif" />');
+        $.get(target.children('a').attr('href'), function(data) {
+            parent = target.parent();
+            target.replaceWith(data);
+            target = parent.find('.load_more');
+        }).success(function() {
+            if (loop) {
+                infiniteScroll(target, container, condition, loop);
+            }
+        });
+    }
 }
 
-i=0;
 $('body').ready(function() {
     $('.load_more').each(function() {
-        $container = $(this).closest('.load_more_container').length > 0 ? $(this).closest('.load_more_container') : $(window);
-        while ($(this).is(':visible') && $(this).offset().top - $container.height() < $container.scrollTop()) {
-            if (i > 5) break;
-            i++;
-            infiniteScroll($(this));
-        }
+        container = $(this).closest('.load_more_container').length > 0 ? $(this).closest('.load_more_container') : $(window);
+        infiniteScroll($(this), container, function(target, container) {
+            return target.is(':visible') && target.offset().top - container.height() < container.scrollTop();
+        }, true);
     });
 });
 
@@ -23,31 +27,22 @@ $(function() {
     /* INFINITE SCROLL */
     $('body').on('click', '.load_more a', function(event) {
         event.preventDefault(); 
-        infiniteScroll($(event.target).closest('.load_more')); 
+        infiniteScroll($(event.target).closest('.load_more'), null, function() { return true; }, false); 
     });
 
     $('[load_more_container]').on('scroll', function(event) {
         event.stopPropagation();
-        $loadMore = $(this).find('.load_more');
-        if ($loadMore.length > 0 && $loadMore.is(':visible') && $loadMore.first().position().top < $(this).height()) {
-            infiniteScroll($loadMore.first());
-        }
+        infiniteScroll($(this).find('.load_more'), $(this), function(target, container) {
+            return target.length > 0 && target.is(':visible') && target.first().position().top - infiniteScrollOffset < container.height();
+        }, true);
     });
     $(document).on('scroll', function(event) {
         $('.load_more').each(function() {
-            $container = $(this).closest('.load_more_container').length > 0 ? $(this).closest('.load_more_container') : $(window);
-            if ($(this).is(':visible') && $(this).offset().top - $container.height() < $container.scrollTop()) {
-                infiniteScroll($(this));
-            }
+            container = $(this).closest('.load_more_container').length > 0 ? $(this).closest('.load_more_container') : $(window);
+            infiniteScroll($(this), container, function(target, container) {
+                return target.is(':visible') && target.offset().top - container.height() - infiniteScrollOffset < container.scrollTop();
+            }, true);
         });
-    });
-
-    i = 0;
-    
-    $(document).on('activate.bs.scrollspy', function(event) {
-        event.preventDefault();
-        // console.log(i, $(event.target));
-        i++;
     });
 
     /* DELETE CONFIRMATION */

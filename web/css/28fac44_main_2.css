@@ -167,7 +167,7 @@ body {
     padding: 0px;
 }
 .row h2, 
-.row h3 {
+.row h3 span {
     font-family: "Georgia", Times new roman, serif;
     font-weight: normal;
     font-variant: small-caps;
