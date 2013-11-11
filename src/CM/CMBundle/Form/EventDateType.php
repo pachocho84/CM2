@@ -16,7 +16,6 @@ class EventDateType extends AbstractType
     {
         $builder
             ->add('start', 'datetime', array(
-                'attr' => array('class' => 'col-lg-9'),
                 'date_widget'       => 'single_text',
 /*                 'date_format'       => \IntlDateFormatter::SHORT, */
                 'time_widget'       => 'single_text',
@@ -24,7 +23,6 @@ class EventDateType extends AbstractType
                 'view_timezone'     => 'Europe/Rome'
             ))
             ->add('end', 'datetime', array(
-                'attr' => array('class' => 'col-lg-9'),
                 'required'            => false,
                 'date_widget'       => 'single_text',
 /*                 'date_format'       => \IntlDateFormatter::SHORT, */
