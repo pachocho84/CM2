@@ -3,6 +3,7 @@
 {% form_theme form 'CMBundle:Form:bootstrap.html.twig' %}
 
 {% block stylesheets %}
+    {{ parent() }}
     {% stylesheets
         '@CMBundle/Resources/public/css/typeahead.js-bootstrap.css'
     %}
@@ -11,9 +12,6 @@
 {% endblock %}
 
 {% block body %}
-        {# {{ form(form) }} #}
-
-
     {{ form_start(form) }}
         {{ form_errors(form) }}
         
@@ -31,7 +29,6 @@
         </div>
 
     {{ form_end(form) }}
-
 {% endblock %}
 
 {% block javascripts %}
