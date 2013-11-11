@@ -11,7 +11,7 @@
     {% elseif type == 'hidden' %}
         <div>
     {% else %}
-        <div class="form-group col-lg-9">
+        <div class="col-lg-9">
     {% endif %}
         <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     </div>
@@ -40,23 +40,23 @@
         {% if form.parent is empty %}
             {{ form_errors(form) }}
         {% endif %}
-	<div style="clear: both;">
-        {{ block('form_rows_compound') }}
-  </div>
+	    <div style="clear: both;">
+            {{ block('form_rows_compound') }}
+        </div>
         {{ form_rest(form) }}
     </div>
 {% endspaceless %}
 {% endblock form_widget_compound %}
 
 {% block collection_widget %}
-<div class="well" style="clear: both;">
 {% spaceless %}
-    {% if prototype is defined %}
-        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
-    {% endif %}
-    {{ block('form_widget') }}
+    <div>
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+        {% endif %}
+        {{ block('form_widget') }}
+    </div>
 {% endspaceless %}
-</div>
 {% endblock collection_widget %}
 
 {% block choice_widget_collapsed %}
@@ -84,6 +84,12 @@
 {% endspaceless %}
 {% endblock choice_widget_collapsed %}
 
+{% block checkbox_widget %}
+{% spaceless %}
+    <div class="col-lg-9"><div class="checkbox"><input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} /></div></div>
+{% endspaceless %}
+{% endblock checkbox_widget %}
+
 {# Labels #}
 
 {% block form_label %}
@@ -98,8 +104,14 @@
         {% if label is empty %}
             {% set label = name|humanize %}
         {% endif %}
+        {% if 'collection' in form.vars.block_prefixes %}
+            <div class="form-group col-lg-12">
+        {% endif %}
         {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' col-lg-3 control-label')|trim}) %}
         <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }}</label>
+        {% if 'collection' in form.vars.block_prefixes %}
+            </div>
+        {% endif %}
     {% endif %}
 {% endspaceless %}
 {% endblock form_label %}
@@ -108,7 +120,7 @@
 
 {% block form_row %}
 {% spaceless %}
-    <div class="form-group">
+    <div class="clearfix">
         {{ form_label(form) }}
         {{ form_errors(form) }}
         {{ form_widget(form) }}

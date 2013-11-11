@@ -1,6 +1,6 @@
 infiniteScrollOffset = 300;
 function infiniteScroll(target, container, condition, loop) {
-    if (condition(target, container) && !target.attr('load_more_loading')) {
+    if (!target.attr('load_more_loading') && condition(target, container)) {
         target.attr('load_more_loading', 'load');
         target.children('a').html('<img src="/bundles/cm/images/layout/loader.gif" />');
         $.get(target.children('a').attr('href'), function(data) {

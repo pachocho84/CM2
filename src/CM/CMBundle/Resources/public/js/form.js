@@ -2,14 +2,6 @@ $(function() {
     /* PROTAGONIST */
     var protagonist_new_id = parseInt(1 + $('.protagonists_user:last').attr('protagonist_new_id')) + 5;
     var collection = $('.protagonist_typeahead').children('.collection-items');
-    collection.on('typeahead:autocompleted typeahead:selected', function (event, datum) {
-        // console.log(datum);
-        protagonist_new_id += 1;
-        $.get(script + '/protagonist/add?user_id=' + datum.id + '&protagonist_new_id=' + protagonist_new_id + '&entity_type=' + $('#protagonists').attr('object'), function (data) {
-            $('.protagonists_user:last').after(data);
-            $('#protagonists_finder').val('');
-        });
-    });
     $('#protagonists_finder_container').removeAttr('hidden');
     $('#protagonists_finder').typeahead({
         name: 'protagonists',
@@ -19,11 +11,27 @@ $(function() {
         remote:  {
             url: typeaheadHintRoute + '?query=%QUERY',
             replace: function (url, uriEncodedQuery) {
-
                 return url.replace('%QUERY', uriEncodedQuery) + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',');
             }
         },
     });
+    collection.on('typeahead:autocompleted typeahead:selected', function (event, datum) {
+        console.log(datum);
+        protagonist_new_id += 1;
+        $.get(script + '/protagonist/add?user_id=' + datum.id + '&protagonist_new_id=' + protagonist_new_id + '&entity_type=' + $('#protagonists').attr('object'), function (data) {
+            $('.protagonists_user:last').after(data);
+            console.log("OK");
+            // $('#protagonists_finder').val('');
+        });
+    });
+    // FIXME: this is a fix for bootstrap 3
+    $(document).on('typeahead:initialized', function(event) {
+        $('.twitter-typeahead').addClass('col-lg-9');
+    });
+    $('.twitter-typeahead').addClass('col-lg-9');
+    $('.typeahead.input-sm').siblings('input.tt-hint').addClass('hint-small');
+    $('.typeahead.input-lg').siblings('input.tt-hint').addClass('hint-large');
+
     $(document).on('click', '.protagonists_remove', function (event) {
         event.preventDefault();
         var removeId = $(event.target).attr('id');
