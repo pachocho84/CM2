@@ -1,37 +1,34 @@
 cm_cmbundle_locale:
     resource: "CM\\CMBundle\\Controller\\LocaleController"
     type:     annotation
-    prefix:   /
+
+cm_cmbundle_wall:
+    resource: "CM\\CMBundle\\Controller\\WallController"
+    type:     annotation
 
 cm_cmbundle_like:
     resource: "CM\\CMBundle\\Controller\\LikeController"
     type:     annotation
-    prefix:   /
 
 cm_cmbundle_comment:
     resource: "CM\\CMBundle\\Controller\\CommentController"
     type:     annotation
-    prefix:   /
 
 cm_cmbundle_event:
     resource: "CM\\CMBundle\\Controller\\EventController"
     type:     annotation
-    prefix:   /
 
 cm_cmbundle_page:
     resource: "CM\\CMBundle\\Controller\\PageController"
     type:     annotation
-    prefix:   /
 
 cm_cmbundle_group:
     resource: "CM\\CMBundle\\Controller\\GroupController"
     type:     annotation
-    prefix:   /
 
 cm_cmbundle_entityuser:
     resource: "CM\\CMBundle\\Controller\\EntityUserController"
     type:     annotation
-    prefix:   /
 
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
@@ -68,4 +65,3 @@ _imagine:
 cm_cmbundle_user:
     resource: "CM\\CMBundle\\Controller\\UserController"
     type:     annotation
-    prefix:   /

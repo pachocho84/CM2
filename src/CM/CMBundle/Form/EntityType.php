@@ -96,7 +96,6 @@ class EntityType extends AbstractType
     {
         $resolver->setDefaults(array(
             'roles' => array(),
-            'attr' => array('class' => 'form-horizontal'),
             'user_tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),

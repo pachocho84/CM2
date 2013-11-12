@@ -81,7 +81,7 @@ class RequestCenter
         $this->acceptRequest($userId, $object, $objectId, false);
     }
 
-    public function removeRequests($toUser, $object, $objectId)
+    public function removeRequest($toUser, $object, $objectId)
     {
         $requests = $this->em->getRepository('CMBundle:Request')->delete($toUser, $object, $objectId);
         

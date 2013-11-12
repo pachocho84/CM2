@@ -448,7 +448,7 @@
 
 /* FILE INPUT */
 .btn-file {
-    position: relative;
+    /*position: relative;*/
     overflow: hidden;
 }
 .btn-file input[type=file] {

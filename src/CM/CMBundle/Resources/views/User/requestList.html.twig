@@ -6,7 +6,7 @@
             {{ show_img_box(request.fromUser.img | imagine_filter('350'), {'width': 50, 'height': 50, 'offset': request.fromUser.offset,  'link': path('user_show', {'slug': request.fromUser.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) | raw }}
             <div class="media-body ajax-link-target">
                 {{ request.objectId }} : {{ request.status }}
-                {{ request_tag(request) }}
+                {{ request_tag(request) | raw }}
                 {#<?php echo $request->getRawValue()->getText() ?>#}
                 {% if request.isNewOrPending %}
                     <div class="pull-right">

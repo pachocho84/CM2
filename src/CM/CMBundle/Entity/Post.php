@@ -18,6 +18,11 @@ class Post
     use ORMBehaviors\Timestampable\Timestampable;
     
     const TYPE_CREATION = 0;
+    const TYPE_REGISTRATION = 1;
+    const TYPE_UPDATE = 2;
+    const TYPE_FAN = 3;
+    const TYPE_EDUCATION = 4;
+
 
     /**
      * @var integer

@@ -37,12 +37,16 @@ class UserController extends Controller
         foreach($users as $user)
         {
             if ($user['img'] == '' || $user['img'] == null) {
-                $user['img'] = '/uploads/utenti/avatar/50/default.jpg';
+                $user['img'] = '/bundles/cm/uploads/images/50/default.jpg';
             } else {
-                $user['img'] = '/uploads/utenti/avatar/50/'.$user['img'];
+                $user['img'] = '/bundles/cm/uploads/images/350/'.$user['img'];
             }
             $user['fullname'] = $user['firstName'].' '.$user['lastName'];
             $results[] = $user;
+
+            
+            // $view['view'] = $this->renderView('CMBundle:User:typeaheadHint.html.twig', array('user' => $user));
+            // $results[] = $view;
         }
 
         return new JsonResponse($results);
@@ -101,6 +105,8 @@ class UserController extends Controller
      */
     public function requestAddAction($object, $objectId)
     {
+        $object = $this->get('cm.helper')->fullClassName($object);
+
         $em = $this->getDoctrine()->getManager();
 
         switch ($object) {
@@ -127,6 +133,8 @@ class UserController extends Controller
      */
     public function requestUpdateAction($object, $objectId, $choice)
     {
+        $object = $this->get('cm.helper')->fullClassName($object);
+
         if ($choice == 'accept') {
             $this->get('cm.request_center')->acceptRequest($this->getUser()->getId(), $object, $objectId);
         } elseif ($choice == 'refuse') {
@@ -142,10 +150,11 @@ class UserController extends Controller
      */
     public function requestDeleteAction($object, $objectId)
     {
+        $object = $this->get('cm.helper')->fullClassName($object);
+        
         $em = $this->getDoctrine()->getManager();
 
-        $this->get('cm.request_center')->removeRequest();
-        $em->getRepository('CMBundle:Request')->delete($this->getUser()->getId(), $object, $objectId);
+        $this->get('cm.request_center')->removeRequest($this->getUser()->getId(), $object, $objectId);
 
         return new Response;
     }

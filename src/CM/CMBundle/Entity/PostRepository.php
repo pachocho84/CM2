@@ -12,6 +12,16 @@ use Doctrine\ORM\EntityRepository as BaseRepository;
  */
 class PostRepository extends BaseRepository
 {
+    static protected function getOptions(array $options = array())
+    {
+        return array_merge(array(
+            'exclude' => array(),
+            'userId' => null,
+            'paginate' => true,
+            'limit' => 25
+        ), $options);
+    }
+
     public function getEntity($entityId)
     {
         return $this->createQueryBuilder('p')
@@ -20,6 +30,53 @@ class PostRepository extends BaseRepository
             ->where('e.id = :id')->setParameter('id', $entityId)
             ->getQuery()->getSingleResult();
     }
+
+    public function getLastPosts(array $options = array())
+    {
+        $options = self::getOptions($options);
+
+        $query = $this->createQueryBuilder('p')
+            ->select('p, e, c, i')
+            ->leftJoin('p.entity', 'e')
+            ->leftJoin('e.entityCategory', 'c')
+            ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
+            ->leftJoin('e.entityUsers', 'eu')
+            ->leftJoin('eu.user', 'euu');
+        if (!empty($options['exclude'])) {
+            $query->leftJoin('p.user', 'u')
+                ->leftJoin('p.creator', 'cr')
+                ->andWhere('u.id NOT IN (:exclude)')
+                ->andWhere('cr.id NOT IN (:exclude)')
+                ->setParameter('exclude', implode(',', $options['exclude']));
+        }
+        if (!is_null($options['userId'])) {
+            $query->andWhere('euu.id = :user_id')->setParameter('user_id', $options['userId']);
+        }
+        $query->orderBy('p.updatedAt', 'desc');
+
+        return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+
+    // static public function getLastPosts($options = array())
+    // {
+    //     $options = self::getOptions($options);
+        
+    //     $query = PostQuery::create()->
+    //         init()->
+    //         _if($options['user_id'])->
+    //             leftJoin('Post.Protagonist')->
+    //             condition('owner', 'Post.UserId = ?', $options['user_id'])->
+    //             condition('protagonist_user', 'Protagonist.UserId = ?', $options['user_id'])->
+    //         condition('protagonist_active', 'Protagonist.Status = ?', 'active')->
+    //         combine(array('protagonist_user', 'protagonist_active'), 'and', 'protagonist')->
+    //         where(array('owner', 'protagonist'), 'or')->
+    //         _endIf()->
+    //         groupBy('Post.Id')->
+    //         orderByUpdatedAt('desc');
+            
+    //     return $options['paginate'] ? $query->paginate(sfContext::getInstance()->getRequest()->getParameter('page', 1), $options['per_page']) : $query->limit($options['limit'])->find();
+            
+    // }
 
     public function delete($creatorId, $userId, $object, $objectIds, $entityId = null)
     {

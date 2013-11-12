@@ -1,0 +1,120 @@
+{#<?php
+    switch ($sf_request->getParameter('action'))
+    {
+        case 'index':
+            $url    = '@wall?page=';
+            break;
+        case 'user':
+            $url    = '@wall_user?user='.$sf_request->getParameter('slug').'&page=';
+            break;   
+    }
+?>#}
+
+{% for post in posts if post.user.id %}
+
+    {% if format is defined and format == 'short' %}
+
+        <li class="media object object-small">
+            {{ show_img_box(post.entity.images[0] | imagine_filter('350'), {'width': 32, 'height': 32, 'link': '', 'link_attributes': {'class': 'pull-left thumbnail'}}) | raw }}
+            <?php show_img_box($post->getRelatedImg(), array('width' => 32, 'height' => 32, 'default' => $post->getEntityId() && in_array($post->getObject(), array('event', 'disc', 'article')) ? $post->getObject() : get_class($post->getRawValue()->getPublisher()), 'link' => $post->getRawValue()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left'))) ?>
+            <div class="media-body">
+                {{ post_text(post) | simple_format_text }}
+                <small class="text-muted">{{ post.updatedAt | format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</small>
+            </div>
+        </li>
+
+    {% else %}
+
+    
+        <li class="media object post{% if post.entity is not null and not post.entity.visible %} object-hidden{% endif %}">
+            {{ show_img_box(post.publisher.img | imagine_filter('350'), {'width': 50, 'height': 50, 'offset': post.publisher.offset,  'link': path('user_show', {'slug': post.publisher.slug}), 'link_attributes': {'class': 'pull.left'}, 'default': 'user'}) | raw }}
+ 
+            <div class="media-body">
+
+                <p>{{ post_text(post) | raw }}</p>
+
+                {% if post.type == 3 %} {# fan #}
+                    {{ include('CMBundle:Fan:post.html.twig') }}
+                {% else %}
+                    {{ include('CMBundle:'~(post.object | class_name)~':post.html.twig') }}
+                {% endif %}
+                
+                <p class="text-muted">
+                    {{ show_icon((post.object | class_name)~'_'~(post.type)) | raw }}
+                    <small>
+                        {{ post.updatedAt | format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
+                        {% if post.entity is not null and post.entity.entityUsers | length > 0 %}
+                            &middot; {{ 'with' | trans }}
+                            {% set protagonistCount = 0 %}
+                            {% for protagonist in post.entity.entityUsers if protagonist.status == 1 %} {# active #}
+                                {% set protagonistCount = protagonistCount + 1 %}
+                            {% endfor %}
+                            {% for protagonist in post.entity.entityUsers if protagonist.status == 1  %}
+                                {{ protagonist.user }}{% if loop.index > 1 and loop.index + 1 == protagonistCount %} and {% elseif loop.index < protagonistCount %}, {% else %}.{% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {#<?php if (!$post->getProtagonists()->isEmpty()): ?>
+                            &middot; <?php echo __('with') ?> <?php include_component('protagonist', 'protagonists', array('post' => $post)) ?>
+                        <?php endif ?>#}
+                    </small>
+                </p>
+                {#<?php include_partial('utility/bottom', array('post' => $post)) ?>#}
+
+            </div>
+        </li>
+
+    {% endif %}
+{% endfor %}
+
+{#
+<?php if (isset($format) && $format == 'short'): ?>
+    
+    <?php foreach ($posts as $post): ?>
+        <li class="media object object-small">
+            <?php show_img_box($post->getRelatedImg(), array('width' => 32, 'height' => 32, 'default' => $post->getEntityId() && in_array($post->getObject(), array('event', 'disc', 'article')) ? $post->getObject() : get_class($post->getRawValue()->getPublisher()), 'link' => $post->getRawValue()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left'))) ?>
+            <div class="media-body">
+                <?php echo simple_format_text($post->getRawValue()->getText()) ?>
+                <small class="text-muted"><?php echo format_datetime($post->getUpdatedAt(), 'EEEE d MMMM yyy H:mm') ?></small>
+            </div>
+        </li>
+    <?php endforeach ?>
+
+<?php else: ?>
+
+    <?php foreach ($posts as $post): ?>
+        <li class="media object post<?php $post->getEntity() && $post->getEntity()->getVisible() == 0 and print ' object-hidden' ?>">
+            <?php show_img_box($post->getPublisher()->getImg(), array('width' => 50, 'height' => 50, 'offset' => $post->getPublisher()->getImgOffset(), 'link' => $post->getPublisher()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left'), 'default' => strtolower(get_class($post->getRawValue()->getPublisher())))) ?>   
+    
+            <div class="media-body">
+            
+                <p><?php echo $post->getRawValue()->getText() ?></p>
+                
+                <?php if ($post->getType() != 'fan'): ?>
+                    <?php include_partial($post->getObject().'/post', array('post' => $post)) ?>
+                <?php else: ?>
+                    <?php include_partial($post->getType().'/post', array('post' => $post)) ?>
+                <?php endif ?>
+                
+                <p class="text-muted">
+                    <?php echo show_icon($post->getObject().'_'.$post->getType()) ?> 
+                    <small>
+                        <?php echo format_datetime($post->getUpdatedAt(), 'EEEE d MMMM yyy H:mm') ?> 
+                        <?php if (!$post->getProtagonists()->isEmpty()): ?>
+                            &middot; <?php echo __('with') ?> <?php include_component('protagonist', 'protagonists', array('post' => $post)) ?>
+                        <?php endif ?>
+                    </small>
+                </p>
+                <?php include_partial('utility/bottom', array('post' => $post)) ?>
+
+            </div>
+        </li>
+    <?php endforeach ?>
+    
+<?php endif ?>
+
+
+<?php if (get_class($posts->getRawValue()) == 'PropelModelPager' && $posts->getLastPage() != $posts->getPage()): ?>
+    <div id="load_more_posts" class="well well-small">
+        <?php echo link_to(__('Show more'), $url.$posts->getNextPage()) ?>
+    </div>
+<?php endif ?>#}

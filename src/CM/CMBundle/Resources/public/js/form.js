@@ -6,7 +6,8 @@ $(function() {
     $('#protagonists_finder').typeahead({
         name: 'protagonists',
         valueKey: 'fullname',
-        template: '<img src="{{ img }}" class="pull-left" /> <div class="media">{{ fullname }}</div>',
+        template: '<img src="{{ img }}" style="width:50px;height=50px;" class="pull-left" /> <div class="media">{{ fullname }}</div>',
+        // template: '{{ view }}',
         engine: Hogan,
         remote:  {
             url: typeaheadHintRoute + '?query=%QUERY',
@@ -16,11 +17,9 @@ $(function() {
         },
     });
     collection.on('typeahead:autocompleted typeahead:selected', function (event, datum) {
-        console.log(datum);
         protagonist_new_id += 1;
         $.get(script + '/protagonist/add?user_id=' + datum.id + '&protagonist_new_id=' + protagonist_new_id + '&entity_type=' + $('#protagonists').attr('object'), function (data) {
             $('.protagonists_user:last').after(data);
-            console.log("OK");
             // $('#protagonists_finder').val('');
         });
     });

@@ -78,16 +78,19 @@ class RequestRepository extends BaseRepository
         $query->set('r.status', $newStatus)
             ->getQuery()
             ->execute();
+
         if ($newStatus == Request::STATUS_ACCEPTED || $newStatus == Request::STATUS_REFUSED) {
             $request = $this->createQueryBuilder('r')
                 ->select('PARTIAL r.{id, object, objectId}')
-                ->where('r.userId = :user_id')->setParameter('user_id', $userId)
-                ->andWhere('r.object = :object')->setParameter('object', $object)
-                ->andWhere('r.objectId = :object_id')->setParameter('object_id', $objectId)
-                ->getQuery()->getSingleResult();
+                ->where('r.user = :user_id')->setParameter('user_id', $userId);
+            if (!is_null($object)) {
+                $request->andWhere('r.object = :object')->setParameter('object', $object)
+                    ->andWhere('r.objectId = :object_id')->setParameter('object_id', $objectId);
+            }
+            $request = $request->getQuery()->getSingleResult();
 
             switch ($request->getObject()) {
-                case 'Event':
+                case 'CM\CMBundle\Entity\Event':
                     $entityUser = $this->getEntityManager()->createQueryBuilder()
                         ->select('PARTIAL eu.{id, status}')
                         ->from('CMBundle:EntityUser', 'eu')

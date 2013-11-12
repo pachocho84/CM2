@@ -123,6 +123,7 @@ services:
         class: CM\CMBundle\Twig\CMExtension
         arguments: 
             translator: @translator
+            router: @router
             helper: @cm.helper
             securityContext: @security.context
             userAuthentication: @cm.user_authentication

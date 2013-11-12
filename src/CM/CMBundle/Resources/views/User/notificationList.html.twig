@@ -5,7 +5,7 @@
         <li class="media object">
             {{ show_img_box(notification.fromUser.img | imagine_filter('350'), {'width': 50, 'height': 50, 'offset': notification.fromUser.offset,  'link': path('user_show', {'slug': notification.fromUser.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) | raw }}
             <div class="media-body ajax-link-target">
-                {{ notification_tag(notification) }}
+                {{ notification_tag(notification) | raw }}
                 {#<?php echo $notification->getRawValue()->getText() ?>#}
                 <p class="text-muted">{#<?php echo show_icon($notification->getType()) ?>#} <small>{{ notification.createdAt | format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</small></p>
             </div> 

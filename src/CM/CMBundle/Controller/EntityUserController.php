@@ -70,7 +70,7 @@ class EntityUserController extends Controller
         }
 
         $event = new Event;
-            
+
         $protagonist_new_id = $request->query->get('protagonist_new_id');
 
         // add dummies
@@ -82,7 +82,7 @@ class EntityUserController extends Controller
             $event->addUser(
                 $user,
                 false, // admin
-                EntityUser::STATUS_ACTIVE,
+                EntityUser::STATUS_PENDING,
                 true // notifications
             );
         }
