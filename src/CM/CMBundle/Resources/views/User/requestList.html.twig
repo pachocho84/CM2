@@ -10,9 +10,9 @@
                 {#<?php echo $request->getRawValue()->getText() ?>#}
                 {% if request.isNewOrPending %}
                     <div class="pull-right">
-                        <a href="{{ path('user_request_update', {'choice': 'accept', 'object' : request.object, 'objectId': request.objectId}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading' | trans }}"><i class="glyphicon glyphicon-ok"></i> {{ 'Accept' | trans }}</a>
+                        <a href="{{ path('user_request_update', {'choice': 'accept', 'object' : request.object | class_name, 'objectId': request.objectId}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading' | trans }}"><i class="glyphicon glyphicon-ok"></i> {{ 'Accept' | trans }}</a>
     
-                        <a href="{{ path('user_request_update', {'choice': 'refuse', 'object' : request.object, 'objectId': request.objectId}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading' | trans }}"><i class="glyphicon glyphicon-remove"></i> {{ 'Refuse' | trans }}</a>
+                        <a href="{{ path('user_request_update', {'choice': 'refuse', 'object' : request.object | class_name, 'objectId': request.objectId}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading' | trans }}"><i class="glyphicon glyphicon-remove"></i> {{ 'Refuse' | trans }}</a>
                     </div>
                 {% endif %}
             </div> 

@@ -379,7 +379,7 @@ elseif ($img_ratio > 1) {
             case 'Comment_'.Post::TYPE_CREATION:
                 $object = $this->helper->getObject($post->getObject(), $post->getObjectIds()[0]);
                 $objectLink = $this->router->generate('event_show', array('id' => $object->getPost()->getEntity()->getId(), 'slug' => $object->getPost()->getEntity()->getSlug()));;
-                return $this->translator->trans('%user% commented %object%', array('%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>', '%object%' => '<a href="'.$objectLink.'">'.$object->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% commented on %object%', array('%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>', '%object%' => '<a href="'.$objectLink.'">'.$object->getPost()->getEntity().'</a>'));
             case 'Like_'.Post::TYPE_CREATION:
                 $object = $this->helper->getObject($post->getObject(), $post->getObjectIds()[0]);
                 $objectLink = $this->router->generate('event_show', array('id' => $object->getPost()->getEntity()->getId(), 'slug' => $object->getPost()->getEntity()->getSlug()));;
