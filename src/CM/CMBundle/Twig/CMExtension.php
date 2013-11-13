@@ -139,6 +139,9 @@ class CMExtension extends \Twig_Extension
         // Get image dimensions
         $fileName = preg_replace('/^\/.*\//', '', $img);
         $img_size = @getimagesize($this->options['images_dir'].'/'.$fileName);
+        if (!$img_size) {
+            return '';
+        }
         $img_w = $img_size[0];
         $img_h = $img_size[1];
 
