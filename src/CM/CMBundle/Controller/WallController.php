@@ -34,6 +34,10 @@ class WallController extends Controller
 
         $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('exclude' => array($this->getUser()->getId())));
         $pagination = $this->get('knp_paginator')->paginate($posts, $page, 25);
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Wall:posts.html.twig', array('posts' => $pagination));
+        }
 
         return array('posts' => $pagination);
     }
