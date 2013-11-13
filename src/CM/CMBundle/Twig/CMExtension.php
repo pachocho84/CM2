@@ -377,13 +377,11 @@ elseif ($img_ratio > 1) {
                 $categoryLink  = $this->router->generate('event_category', array('category_slug' => $post->getEntity()->getEntityCategory()->getSlug()));
                 return $this->translator->trans('%user% has published the event %object% in %category%', array('%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>', '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>', '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getEntityCategory()->getPlural()).'</a>'));
             case 'Comment_'.Post::TYPE_CREATION:
-                $object = $this->helper->getObject($post->getObject(), $post->getObjectIds()[0]);
-                $objectLink = $this->router->generate('event_show', array('id' => $object->getPost()->getEntity()->getId(), 'slug' => $object->getPost()->getEntity()->getSlug()));;
-                return $this->translator->trans('%user% commented on %object%', array('%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>', '%object%' => '<a href="'.$objectLink.'">'.$object->getPost()->getEntity().'</a>'));
+                $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));;
+                return $this->translator->trans('%user% commented on %object%', array('%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>', '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'));
             case 'Like_'.Post::TYPE_CREATION:
-                $object = $this->helper->getObject($post->getObject(), $post->getObjectIds()[0]);
-                $objectLink = $this->router->generate('event_show', array('id' => $object->getPost()->getEntity()->getId(), 'slug' => $object->getPost()->getEntity()->getSlug()));;
-                return $this->translator->trans('%user% likes %object%', array('%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>', '%object%' => '<a href="'.$objectLink.'">'.$object->getPost()->getEntity().'</a>'));
+                $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));;
+                return $this->translator->trans('%user% likes %object%', array('%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>', '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'));
             case 'disc_'.Post::TYPE_CREATION:
                 // return __('%user% has published %object% in %entity%.', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%entity%' => link_to(strtolower($post->getEntity()->getCategory()), $post->getEntity()->getLinkCategory()), '%object%' => link_to($post->getEntity(), $object_page)));
             case 'image_album_'.Post::TYPE_CREATION:
@@ -394,9 +392,9 @@ elseif ($img_ratio > 1) {
                 //         '%count%' => count($post->getObjectIds()),
                 //         '%object%'  => link_to($post->getEntity(), $post->getEntity()->getLinkShow())
                 //     ), count($post->getObjectIds()));
-            case 'biography_update':
+            case 'biography_'.Post::TYPE_UPDATE:
                 // return __('%user% has updated '.$post->getPublisherSex('his').' %biography%.', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%biography%' => link_to(__('biography'), '@biography_user?user='.$post->getUser()->getUsername())));
-            case 'user_registration':
+            case 'user_'.Post::TYPE_REGISTRATION:
                 // return __('%user% registered on Circuito Musica. - '.$post->getPublisherSex('M'), array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow())));
             case 'group_'.Post::TYPE_CREATION:
                 // return __('%user% has opened the group %group%', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%group%' => link_to($post->getRelatedObject()->getFirst(), $post->getRelatedObject()->getFirst()->getLinkShow())));

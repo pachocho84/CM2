@@ -1,3 +1,24 @@
+/* USER ACTIVE */
+var UserActive = {
+    timeout: null,
+    active: true,
+    isActive: function() {
+        return this.active;
+    },
+    begin: function() {
+        this.active = true;
+        this.watch();
+    },
+    watch: function() {
+        t = this;
+        $(document).on('mousemove mousedown scroll keypress', function() {
+            t.active = true;
+            if (t.timeout != null) clearTimeout(t.timeout);
+            t.timeout = setTimeout(function () { t.active = false; }, 300000);
+        });
+    },
+};
+
 infiniteScrollOffset = 300;
 function infiniteScroll(target, container, condition, loop) {
     if (!target.attr('load_more_loading') && condition(target, container)) {
@@ -15,7 +36,17 @@ function infiniteScroll(target, container, condition, loop) {
     }
 }
 
+function infiniteUpdate() {
+    if (UserActive.isActive()) {
+        $.get($('[update_more]:first').attr('update_more'), function(data) {
+            $('[update_more]:first').before(data);
+        }); 
+    }  
+}
+
 $(function() {
+    UserActive.begin();
+
     /* INFINITE SCROLL */
     $('body').ready(function() {
         $('.load_more').each(function() {
@@ -32,10 +63,11 @@ $(function() {
     });
 
     $('[load_more_container]').on('scroll', function(event) {
-        event.stopPropagation();
+        event.stopImmediatePropagation();
         infiniteScroll($(this).find('.load_more'), $(this), function(target, container) {
             return target.length > 0 && target.is(':visible') && target.first().position().top - infiniteScrollOffset < container.height();
         }, true);
+        return false;
     });
     $(document).on('scroll', function(event) {
         $('.load_more').each(function() {
@@ -45,6 +77,11 @@ $(function() {
             }, true);
         });
     });
+
+    /* INFINITE UPDATE */
+    if ($('[update_more]').length > 0) {
+        setInterval(infiniteUpdate, 60000);
+    }
 
     /* FILE INPUT */
     $(document).on('change', '.btn-file :file', function() {

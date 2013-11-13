@@ -35,12 +35,22 @@ class GroupUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @ORM\Column(name="group_id", type="integer")
+     */
+    private $groupId;
                 
     /**
      * @ORM\ManyToOne(targetEntity="Group", inversedBy="groupUsers")
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $group;
+
+    /**
+     * @ORM\Column(name="user_id", type="integer")
+     */
+    private $userId;
     
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="userGroups")
@@ -106,6 +116,16 @@ class GroupUser
     }
 
     /**
+     * Get entity
+     *
+     * @return User 
+     */
+    public function getGroupId()
+    {
+        return $this->groupId;
+    }
+
+    /**
      * Set entity
      *
      * @param Entity $entity
@@ -126,6 +146,16 @@ class GroupUser
     public function getGroup()
     {
         return $this->group;
+    }
+
+    /**
+     * Get entity
+     *
+     * @return User 
+     */
+    public function getUserId()
+    {
+        return $this->userId;
     }
 
     /**

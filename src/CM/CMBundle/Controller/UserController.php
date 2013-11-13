@@ -188,6 +188,49 @@ class UserController extends Controller
     {
         return array('username' => $slug);
     }
+
+    /**
+     * @Route("/{slug}/wall/{page}", name="user_wall", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function wallAction(Request $request, $slug, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+
+        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('userId' => $user->getId()));
+        $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Wall:posts.html.twig', array('posts' => $pagination));
+        }
+
+        return array('posts' => $pagination, 'user' => $user);
+    }
+
+    /**
+     * @Route("/{slug}/wall/{postId}/update", name="user_wall_update", requirements={"postId" = "\d+"})
+     * @Template("CMBundle:Wall:posts.html.twig")
+     */
+    public function postsAction(Request $request, $slug, $postId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+
+        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('after' => $postId, 'userId' => $user->getId(), 'paginate' => false));
+
+        return array('posts' => $posts);
+    }
     
     /**
 	 * @Route("/{slug}/events/{page}", name="user_events", requirements={"page" = "\d+"})

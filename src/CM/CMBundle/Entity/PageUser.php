@@ -35,12 +35,22 @@ class PageUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @ORM\Column(name="page_id", type="integer")
+     */
+    private $pageId;
                 
     /**
      * @ORM\ManyToOne(targetEntity="Page", inversedBy="pageUsers")
      * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $page;
+
+    /**
+     * @ORM\Column(name="user_id", type="integer")
+     */
+    private $userId;
     
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="userPages")
@@ -106,6 +116,16 @@ class PageUser
     }
 
     /**
+     * Get entity
+     *
+     * @return User 
+     */
+    public function getPageId()
+    {
+        return $this->pageId;
+    }
+
+    /**
      * Set entity
      *
      * @param Entity $entity
@@ -126,6 +146,16 @@ class PageUser
     public function getPage()
     {
         return $this->page;
+    }
+
+    /**
+     * Get entity
+     *
+     * @return User 
+     */
+    public function getUserId()
+    {
+        return $this->userId;
     }
 
     /**

@@ -108,7 +108,7 @@ class EntityUser
     }
 
     /**
-     * Get entity
+     * Get entityId
      *
      * @return Entity 
      */

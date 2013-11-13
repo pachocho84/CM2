@@ -1,6 +1,6 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
-{% block title %}{{ 'wall' | trans | capitalize }}{% endblock %}
+{% block title %}{{ page }}'s {{ 'wall' | trans }}{% endblock %}
 
 {% block body %}
     <h2>{{ block('title') }}</h2>
@@ -17,7 +17,7 @@
                     <h3>{{ show_icon('wall') | raw }} <span>{{ 'Last posts' | trans }}</span></h3>
                 </div>
                 <ul class="media-list objects">
-                    {{ include('CMBundle:Wall:posts.html.twig', {'updateMoreLink': path('wall_update', {'postId': posts[0].id})}) }}
+                    {{ include('CMBundle:Wall:posts.html.twig', {'updateMoreLink': path('group_wall_update', {'slug': page.slug, 'postId': posts[0].id})}) }}
                 </ul>
             </div>
         <!-- </div> -->

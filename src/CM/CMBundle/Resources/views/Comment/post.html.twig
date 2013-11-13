@@ -1,17 +1,17 @@
 <div class="media">
 
-    {% set comment = related_object(post.object, post.objectIds[0]) %}
+    {% set post = post.entity.post %}
 
-    {#{% if post.entity.images | length > 0 %}
-        {{ show_img_box(post.entity.images[0] | imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left thumbnail'}}) | raw }} {# TODO: add image show link # }
+    {% if post.entity.images | length > 0 %}
+        {{ show_img_box(post.entity.images[0] | imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left thumbnail'}}) | raw }} {# TODO: add image show link #}
     {% endif %}
 
     <div class="media-body">
     
-        <h4><a href="{{ path('event_show', {'id': post.entity.id, 'slug': post.entity.getSlug}) }}">{{ related_object(post.object, post.objectIds[0]) }}</a></h4>
+        <h4><a href="{{ path('event_show', {'id': post.entity.id, 'slug': post.entity.getSlug}) }}">{{ post.entity }}</a></h4>
 
         {{ entity_short_text(post.entity) | raw }}
 
-    </div><!-- END Media Body -->#}
+    </div><!-- END Media Body -->
 
 </div><!-- END Object -->

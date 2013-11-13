@@ -45,7 +45,8 @@ class PostCenter
         }
         if (!is_null($entity)) {
             $post->setEntity($entity);
-        } elseif (!is_null($object)) {
+        }
+        if (!is_null($object)) {
         	$post->setObject($object)
         		->setObjectIds($objectIds);
         }

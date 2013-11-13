@@ -24,7 +24,7 @@ use CM\CMBundle\Form\CommentType;
 class WallController extends Controller
 {
     /**
-     * @Route("/{page}", requirements={"page" = "\d+"}) 
+     * @Route("/{page}", name="wall_index", requirements={"page" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
@@ -33,12 +33,40 @@ class WallController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('exclude' => array($this->getUser()->getId())));
-        $pagination = $this->get('knp_paginator')->paginate($posts, $page, 25);
+        $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
         
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:Wall:posts.html.twig', array('posts' => $pagination));
         }
 
         return array('posts' => $pagination);
+    }
+
+    /**
+     * @Route("/{postId}/update", name="wall_update", requirements={"postId" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function postsAction(Request $request, $postId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('after' => $postId, 'exclude' => array($this->getUser()->getId()), 'paginate' => false));
+
+        return array('posts' => $posts);
+    }
+
+    /**
+     * @Route("/show/{postId}", name="wall_show", requirements={"postId" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function showAction(Request $request, $postId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $post = $em->getRepository('CMBundle:Post')->findOneById($postId);
+
+        return array('post' => $post);
     }
 }

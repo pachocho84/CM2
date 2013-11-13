@@ -24,6 +24,49 @@ class GroupController extends Controller
     {
         return array('name' => $slug);
     }
+
+    /**
+     * @Route("/wall/{page}", name="group_wall", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function wallAction(Request $request, $slug, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $publisher = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        
+        if (!$publisher) {
+            throw new NotFoundHttpException('Group not found.');
+        }
+
+        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('groupId' => $publisher->getId()));
+        $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Wall:posts.html.twig', array('posts' => $pagination));
+        }
+
+        return array('posts' => $pagination, 'group' => $publisher);
+    }
+
+    /**
+     * @Route("/wall/{postId}/update", name="group_wall_update", requirements={"postId" = "\d+"})
+     * @Template("CMBundle:Wall:posts.html.twig")
+     */
+    public function postsAction(Request $request, $slug, $postId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $publisher = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        
+        if (!$publisher) {
+            throw new NotFoundHttpException('Group not found.');
+        }
+
+        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('after' => $postId, 'pageId' => $publisher->getId(), 'paginate' => false));
+
+        return array('posts' => $posts);
+    }
     
     /**
 	 * @Route("/events/{page}", name = "group_events", requirements={"page" = "\d+"})

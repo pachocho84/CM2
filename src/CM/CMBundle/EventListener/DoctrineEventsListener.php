@@ -147,7 +147,8 @@ class DoctrineEventsListener
             $comment->getUser(),
             Post::TYPE_CREATION,
             get_class($comment),
-            array($comment->getId())
+            array($comment->getId()),
+            $comment->getPost()->getEntity()
         );
 
         $notifiedUserIds = array($comment->getUser()->getID());
@@ -210,7 +211,8 @@ class DoctrineEventsListener
             $like->getUser(),
             Post::TYPE_CREATION,
             get_class($like),
-            array($like->getId())
+            array($like->getId()),
+            $like->getPost()->getEntity()
         );
 
         $this->get('cm.notification_center')->newNotification(

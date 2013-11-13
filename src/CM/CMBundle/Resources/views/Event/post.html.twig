@@ -1,5 +1,5 @@
 <div class="media">
-asd
+
     {% if post.entity.images | length > 0 %}
         {{ show_img_box(post.entity.images[0] | imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left thumbnail'}}) | raw }} {# TODO: add image show link #}
     {% endif %}

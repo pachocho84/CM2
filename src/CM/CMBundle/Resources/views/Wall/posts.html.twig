@@ -14,59 +14,25 @@
 
     {% if format is defined and format == 'short' %}
 
-        <li class="media object object-small">
-            {{ show_img_box(post.entity.images[0] | imagine_filter('350'), {'width': 32, 'height': 32, 'link': '', 'link_attributes': {'class': 'pull-left thumbnail'}}) | raw }}
-            <?php show_img_box($post->getRelatedImg(), array('width' => 32, 'height' => 32, 'default' => $post->getEntityId() && in_array($post->getObject(), array('event', 'disc', 'article')) ? $post->getObject() : get_class($post->getRawValue()->getPublisher()), 'link' => $post->getRawValue()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left'))) ?>
+    asd {{ post.relatedImg }}
+
+        <li class="media object object-small"  update_more="{{ post.id }}">
+            {{ show_img_box(post.relatedImg | imagine_filter('350'), {'width': 32, 'height': 32,  'link': path('wall_show', {'postId': post.id}), 'link_attributes': {'class': 'pull.left'}, 'default': 'user'}) | raw }}
+           
             <div class="media-body">
-                {{ post_text(post) | simple_format_text }}
+                {{ post_text(post) | simple_format_text | raw }}
                 <small class="text-muted">{{ post.updatedAt | format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</small>
             </div>
         </li>
 
     {% else %}
 
-    
-        <li class="media object post{% if post.entity is not null and not post.entity.visible %} object-hidden{% endif %}">
-            {{ show_img_box(post.publisher.img | imagine_filter('350'), {'width': 50, 'height': 50, 'offset': post.publisher.offset,  'link': path('user_show', {'slug': post.publisher.slug}), 'link_attributes': {'class': 'pull.left'}, 'default': 'user'}) | raw }}
- 
-            <div class="media-body">
-
-                <p>{{ post_text(post) | raw }}</p>
-
-                {% if post.type == 3 %} {# fan #}
-                    {{ include('CMBundle:Fan:post.html.twig') }}
-                {% else %}
-                    {{ include('CMBundle:'~(post.object | class_name)~':post.html.twig') }}
-                {% endif %}
-                
-                <p class="text-muted">
-                    {{ show_icon((post.object | class_name)~'_'~(post.type)) | raw }}
-                    <small>
-                        {{ post.updatedAt | format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
-                        {% if post.entity is not null and post.entity.entityUsers | length > 0 %}
-                            &middot; {{ 'with' | trans }}
-                            {% set protagonistCount = 0 %}
-                            {% for protagonist in post.entity.entityUsers if protagonist.status == 1 %} {# active #}
-                                {% set protagonistCount = protagonistCount + 1 %}
-                            {% endfor %}
-                            {% for protagonist in post.entity.entityUsers if protagonist.status == 1  %}
-                                {{ protagonist.user }}{% if loop.index > 1 and loop.index + 1 == protagonistCount %} and {% elseif loop.index < protagonistCount %}, {% else %}.{% endif %}
-                            {% endfor %}
-                        {% endif %}
-                        {#<?php if (!$post->getProtagonists()->isEmpty()): ?>
-                            &middot; <?php echo __('with') ?> <?php include_component('protagonist', 'protagonists', array('post' => $post)) ?>
-                        <?php endif ?>#}
-                    </small>
-                </p>
-                {#<?php include_partial('utility/bottom', array('post' => $post)) ?>#}
-
-            </div>
-        </li>
+        {{ include('CMBundle:Wall:post.html.twig', {'updateMore': (loop.index == 1 and updateMoreLink is defined)})}}
 
     {% endif %}
 {% endfor %}
 
-{% if posts.paginationData.current < posts.paginationData.last %}
+{% if posts.paginationData is defined and posts.paginationData.current < posts.paginationData.last %}
     <div class="well well-small load_more">
         <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': posts.getPaginationData.next })) }}">{{ 'Load more' |  trans }}</a>
     </div>

@@ -47,12 +47,22 @@ class Post
     private $creator;
 
     /**
+     * @ORM\Column(name="user_id", type="integer")
+     */
+    private $userId;
+
+    /**
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="posts")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)    
      */
     private $user;
+
+    /**
+     * @ORM\Column(name="entity_id", type="integer")
+     */
+    private $entityId;
 
     /**
      * @var integer
@@ -207,19 +217,6 @@ class Post
     }
 
     /**
-     * Set userId
-     *
-     * @param integer $userId
-     * @return Post
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-    
-        return $this;
-    }
-
-    /**
      * Get userId
      *
      * @return integer 
@@ -253,6 +250,16 @@ class Post
     }
 
     /**
+     * Get userId
+     *
+     * @return integer 
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    /**
      * Set entity
      *
      * @param \CM\CMBundle\Entity\Event $entity
@@ -261,6 +268,7 @@ class Post
     public function setEntity(Entity $entity)
     {
         $this->entity = $entity;
+        $this->entityId = $entity->getId();
     
         return $this;
     }
@@ -482,5 +490,18 @@ class Post
         }
         
         return $this->getLikes()->count();
+    }
+
+    public function getRelatedImg()
+    {
+        if ($this->getEntityId()) {
+            echo $this->getEntity()->getImages()[0];
+        } elseif ($this->getPageId()) {
+            return $this->getPage()->getImg();
+        } elseif ($this->getGroupId()) {
+            return $this->getGroup()->getImg();
+        } else {
+            return $this->getUser()->getImg();
+        }
     }
 }

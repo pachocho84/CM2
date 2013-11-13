@@ -15,8 +15,11 @@ class PostRepository extends BaseRepository
     static protected function getOptions(array $options = array())
     {
         return array_merge(array(
+            'after' => null,
             'exclude' => array(),
             'userId' => null,
+            'pageId' => null,
+            'groupId' => null,
             'paginate' => true,
             'limit' => 25
         ), $options);
@@ -36,12 +39,20 @@ class PostRepository extends BaseRepository
         $options = self::getOptions($options);
 
         $query = $this->createQueryBuilder('p')
-            ->select('p, e, c, i')
+            ->select('p, e, t, c, i, eu, ep, epl, epc, eplu, epcu')
             ->leftJoin('p.entity', 'e')
+            ->leftJoin('e.translations', 't')
             ->leftJoin('e.entityCategory', 'c')
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
-            ->leftJoin('e.entityUsers', 'eu')
-            ->leftJoin('eu.user', 'euu');
+            ->leftJoin('e.entityUsers', 'eu', 'WITH', 'eu.status = '.EntityUser::STATUS_ACTIVE)
+            ->leftJoin('e.posts', 'ep', 'WITH', 'ep.type = '.Post::TYPE_CREATION)
+            ->leftJoin('ep.likes', 'epl')
+            ->leftJoin('ep.comments', 'epc')
+            ->leftJoin('epl.user', 'eplu')
+            ->leftJoin('epc.user', 'epcu');
+        if (!is_null($options['after'])) {
+            $query->andWhere('p.id > :after_id')->setParameter('after_id', $options['after']);
+        }
         if (!empty($options['exclude'])) {
             $query->leftJoin('p.user', 'u')
                 ->leftJoin('p.creator', 'cr')
@@ -50,11 +61,24 @@ class PostRepository extends BaseRepository
                 ->setParameter('exclude', implode(',', $options['exclude']));
         }
         if (!is_null($options['userId'])) {
-            $query->andWhere('euu.id = :user_id')->setParameter('user_id', $options['userId']);
+            $query->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId']);
+        }
+        if (!is_null($options['pageId'])) {
+            $query->leftJoin('eu.user', 'euu')
+                ->leftJoin('euu.userPages', 'up')
+                ->andWhere('up.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $query->leftJoin('eu.user', 'euu')
+                ->leftJoin('euu.userPages', 'ug')
+                ->andWhere('ug.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
         $query->orderBy('p.updatedAt', 'desc');
+        if (!is_null($options['limit'])) {
+            $query->setMaxResults($options['limit']);
+        }
 
-        return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+        return $options['paginate'] ? $query->getQuery() : $query->getQuery()->getResult();
     }
 
     // static public function getLastPosts($options = array())

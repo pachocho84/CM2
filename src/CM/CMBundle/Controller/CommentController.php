@@ -23,15 +23,16 @@ use CM\CMBundle\Form\CommentType;
 class CommentController extends Controller
 {
     /**
-     * @Route("/{postId}", name="comment_index", requirements={"postId" = "\d+"})
      * @Route("/new/{postId}", name="comment_new", requirements={"postId" = "\d+"}) 
      * @Template
      */
-    public function commentsAction(Request $request, $postId)
+    public function commentsAction(Request $request, Post $post = null, $postId = null)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $post = $em->getRepository('CMBundle:Post')->findOneById($postId);
+        if (is_null($post)) {
+            $post = $em->getRepository('CMBundle:Post')->findOneById($postId);
+        }
 
         $form = null;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
