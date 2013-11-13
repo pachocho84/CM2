@@ -26,7 +26,6 @@
         "doctrine/migrations": "dev-master",
         "leafo/lessphp": "dev-master",
         "twbs/bootstrap": "dev-master",
-        "twitter/recess": "dev-master",
         "knplabs/doctrine-behaviors": "dev-master",
         "a2lix/translation-form-bundle": "1.*@dev",
         "friendsofsymfony/user-bundle": "~2.0@dev",
