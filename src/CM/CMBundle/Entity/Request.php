@@ -37,7 +37,7 @@ class Request
     private $status = self::STATUS_NEW;
 
     /**
-     * @ORM\Column(name="user_id")
+     * @ORM\Column(name="user_id", type="integer")
      **/
     private $userId;
 
@@ -48,26 +48,46 @@ class Request
     private $user;
 
     /**
+     * @ORM\Column(name="from_user_id", type="integer")
+     **/
+    private $fromUserId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="requestsOutgoing")
      * @ORM\JoinColumn(name="from_user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $fromUser;
 
     /**
+     * @ORM\Column(name="from_group_id", type="integer", nullable=true)
+     **/
+    private $fromGroupId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Group", inversedBy="requestsOutgoing")
-     * @ORM\JoinColumn(name="from_group_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="from_group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $fromGroup;
 
     /**
+     * @ORM\Column(name="from_page_id", type="integer", nullable=true)
+     **/
+    private $fromPageId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Page", inversedBy="requestsOutgoing")
-     * @ORM\JoinColumn(name="from_page_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="from_page_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $fromPage;
 
     /**
+     * @ORM\Column(name="entity_id", type="integer", nullable=true)
+     **/
+    private $entityId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Entity")
-     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $entity;
 
@@ -143,6 +163,16 @@ class Request
     }
 
     /**
+     * Get user
+     *
+     * @return User 
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
      * Set user
      *
      * @param User $user
@@ -152,6 +182,7 @@ class Request
     {
         if ($user->addRequestIncoming($this)) {
             $this->user = $user;
+            $this->userId = $user->getId();
         }
     
         return $this;
@@ -168,6 +199,16 @@ class Request
     }
 
     /**
+     * Get user
+     *
+     * @return User 
+     */
+    public function getFromUserId()
+    {
+        return $this->fromUserId;
+    }
+
+    /**
      * Set fromUser
      *
      * @param User $fromUser
@@ -177,6 +218,7 @@ class Request
     {
         if ($fromUser->addRequestOutgoing($this)) {
             $this->fromUser = $fromUser;
+            $this->fromUserId = $fromUser->getId();
         }
     
         return $this;
@@ -193,6 +235,16 @@ class Request
     }
 
     /**
+     * Get fromUser
+     *
+     * @return User 
+     */
+    public function getFromGroupId()
+    {
+        return $this->fromGroupId;
+    }
+
+    /**
      * Set fromUser
      *
      * @param User $fromUser
@@ -202,6 +254,7 @@ class Request
     {
         if ($fromGroup->addNotificationOutgoing($this)) {
             $this->fromGroup = $fromGroup;
+            $this->fromGroupId = $fromGroup->getId();
         }
     
         return $this;
@@ -218,6 +271,16 @@ class Request
     }
 
     /**
+     * Get fromUser
+     *
+     * @return User 
+     */
+    public function getFromPageId()
+    {
+        return $this->fromPageId;
+    }
+
+    /**
      * Set fromUser
      *
      * @param User $fromUser
@@ -227,6 +290,7 @@ class Request
     {
         if ($fromPage->addNotificationOutgoing($this)) {
             $this->fromPage = $fromPage;
+            $this->fromPageId = $fromPage->getId();
         }
     
         return $this;
@@ -243,6 +307,16 @@ class Request
     }
 
     /**
+     * Get fromUser
+     *
+     * @return User 
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    /**
      * Set entity
      *
      * @param Entity $entity
@@ -253,6 +327,7 @@ class Request
         $this->entity = $entity;
         $this->object = get_class($entity);
         $this->objectId = $entity->getId();
+        $this->entityId = $entity->getId();
     
         return $this;
     }

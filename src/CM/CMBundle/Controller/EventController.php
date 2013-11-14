@@ -178,10 +178,6 @@ class EventController extends Controller
      */
     public function editAction(Request $request, $id = null, $slug = null)
     {
-        if (!$this->get('cm.user_authentication')->isAuthenticated()) {
-            return new RedirectResponse($this->generateUrl('fos_user_security_login'));
-        }
-
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
@@ -295,7 +291,7 @@ class EventController extends Controller
             //     echo $entityUser->getUser().' -> i: '.count($entityUser->getUser()->getRequestsIncoming()).', o: '.'<br/>';
             // }
             // die;
-                  
+
             return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
         }
 

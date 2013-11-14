@@ -32,16 +32,31 @@ class Comment
     private $comment;
 
     /**
+     * @ORM\Column(name="post_id", type="integer", nullable=true)
+     **/
+    private $postId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
      * @ORM\JoinColumn(name="post_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $post;
 
     /**
+     * @ORM\Column(name="image_id", type="integer", nullable=true)
+     **/
+    private $imageId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Image", inversedBy="comments")
      * @ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $image;
+
+    /**
+     * @ORM\Column(name="user_id", type="integer")
+     **/
+    private $userId;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="comments")
@@ -83,6 +98,16 @@ class Comment
     }
 
     /**
+     * Get post
+     *
+     * @return Posst 
+     */
+    public function getPostId()
+    {
+        return $this->postId;
+    }
+
+    /**
      * Set post
      *
      * @param Post $post
@@ -91,6 +116,7 @@ class Comment
     public function setPost(Post $post = null)
     {
         $this->post = $post;
+        $this->postId = $post->getId();
     
         return $this;
     }
@@ -106,6 +132,16 @@ class Comment
     }
 
     /**
+     * Get image
+     *
+     * @return Image 
+     */
+    public function getImageId()
+    {
+        return $this->imageId;
+    }
+
+    /**
      * Set image
      *
      * @param Image $image
@@ -114,6 +150,7 @@ class Comment
     public function setImage(Image $image = null)
     {
         $this->image = $image;
+        $this->imageId = $image->getId();
     
         return $this;
     }
@@ -129,6 +166,16 @@ class Comment
     }
 
     /**
+     * Get user
+     *
+     * @return User 
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
      * Set user
      *
      * @param User $user
@@ -137,6 +184,7 @@ class Comment
     public function setUser(User $user = null)
     {
         $this->user = $user;
+        $this->userId = $user->getId();
     
         return $this;
     }

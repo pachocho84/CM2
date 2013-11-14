@@ -197,6 +197,11 @@ class User extends BaseUser
      * @ORM\Column(name="notes", type="text", nullable=true)
      */
     private $notes;
+        
+    /**
+     * @ORM\OneToOne(targetEntity="Biography", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $biography;
 
     /**
      * @ORM\OneToMany(targetEntity="UserUserTag", mappedBy="user", cascade={"persist", "remove"})
@@ -263,7 +268,7 @@ class User extends BaseUser
 		parent::__construct();
         
         $this->roles = array('ROLE_USER');
-		
+        
         $this->userUserTags = new ArrayCollection;
         $this->userEntities = new ArrayCollection;
 		$this->userGroups = new ArrayCollection;
@@ -373,7 +378,7 @@ class User extends BaseUser
      */
     public function getSex()
     {
-        return $this->sex ? 'M' : 'F';
+        return $this->sex;
     }
 
     /**
@@ -604,6 +609,30 @@ class User extends BaseUser
     public function getNotes()
     {
         return $this->notes;
+    }
+
+    /**
+     * Set biography
+     *
+     * @param string $biography
+     * @return User
+     */
+    public function setBiography(Biography $biography)
+    {
+        $this->biography = $biography;
+        $biography->setUser($this);
+    
+        return $this;
+    }
+
+    /**
+     * Get notes
+     *
+     * @return string 
+     */
+    public function getBiography()
+    {
+        return $this->biography;
     }
 
     /**

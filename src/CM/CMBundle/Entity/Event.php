@@ -43,16 +43,13 @@ class Event extends Entity
     /**
      * Constructor
      */
-    public function __construct(EventDate $eventDate = null)
+    public function __construct()
     {
         parent::__construct();
 
         $this->posts = new ArrayCollection();
         
         $this->eventDates = new ArrayCollection();
-        if (! is_null($eventDate)) {
-            $this->addEventDate($eventDate);
-        }
     }
     
     /**

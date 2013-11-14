@@ -1,0 +1,37 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block title %}{{ '%user%&#39;s biography' | trans({'%user%': user}) | raw }}{% endblock %}
+
+{% block body %}
+
+    {#<?php include_partial('user/top', array('user' => $user)) ?>#}                                                           
+
+
+ 
+    {#<ul class="breadcrumb">
+      <li><?php echo link_to('Home', '@homepage') ?></li>
+      <li><?php echo link_to(__('Users'), '@user_list') ?></li>
+      <li><?php echo link_to($user, $user->getRawValue()->getLinkShow()) ?></li>
+      <li class="active"><?php echo __('Biography') ?></li>
+    </ul>#}
+
+
+
+    <div class="box">
+        <div class="box-top">
+            <h3>{{ show_icon('Biography') | raw }} <span>{{ block('title') }}</span></h3>
+        </div>
+        <div class="media objects">
+                {{ show_img_box(user.img | imagine_filter('350'), {'width': 200, 'height': 200, 'offset': user.offset, 'default': 'user', 'box_attributes': {'class': 'pull-left thumbnail'}}) | raw }}
+                <div class="meda-body text-justify">
+                    {{ user.biography }}
+                </div>
+        </div>
+    </div>
+
+
+
+    {#<?php slot('sidebar_slot3') ?>  
+        <?php include_component('fan', 'userFans', array('user' => $user)) ?>
+    <?php end_slot() ?>#}
+{% endblock %}

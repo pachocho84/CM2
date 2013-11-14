@@ -67,7 +67,7 @@
 
 
 {% if dates[dates | length - 1].start | date('U') >= 'now' | date ('U') %}
-	<div id="load_more_posts" class="well well-small">
+	<div class="well well-small load_more">
 	    <a href=" {{ path('event_calendar', { 'year': month.next_year, 'month': month.next_month }) }}"><i class="glyphicon glyphicon-calendar"></i> {{ dates[0].start | date_modify('+1 month') | format_date('MMMM Y') | capitalize }}</a>
 	</div>
 {% endif %}

@@ -20,10 +20,16 @@ class EntityTranslation
     use ORMBehaviors\Translatable\Translation;
 
     /**
+     * @ORM\OneToOne(targetEntity="Entity")
+     * @ORM\JoinColumn(name="translatable_id", referencedColumnName="id")
+     */
+    private $entity;
+
+    /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=150)
-     * @Assert\NotBlank
+     * @ORM\Column(name="title", type="string", length=150, nullable=true)
+     * @Assert\NotBlank(groups="event")
      * @Assert\Length(
      *      min = "2",
      *      max = "150",
@@ -76,6 +82,7 @@ class EntityTranslation
      * @ORM\Column(name="text", type="text")
      * @Assert\NotBlank
      * @Assert\Length(
+     *      groups="event",
      *      min = "12",
      *      minMessage = "The title must be at least {{ limit }} characters length"
      * )
@@ -90,6 +97,16 @@ class EntityTranslation
     public function __construct()
     {
         $this->locale = 'en';
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getEntity()
+    {
+        return $this->entity;
     }
 
     /**

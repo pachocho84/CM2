@@ -70,7 +70,7 @@ class PostRepository extends BaseRepository
         }
         if (!is_null($options['groupId'])) {
             $query->leftJoin('eu.user', 'euu')
-                ->leftJoin('euu.userPages', 'ug')
+                ->leftJoin('euu.userGroups', 'ug')
                 ->andWhere('ug.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
         $query->orderBy('p.updatedAt', 'desc');

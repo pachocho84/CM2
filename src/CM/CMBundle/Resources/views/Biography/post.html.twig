@@ -1,0 +1,11 @@
+<div class="media">
+
+    <div class="media-body">
+    
+        <h4><a href="{{ path('biography_show', {'slug': post.user.getSlug}) }}">
+
+        {{ entity_short_text(post.entity) | raw }}
+
+    </div><!-- END Media Body -->
+
+</div><!-- END Object -->

@@ -12,6 +12,8 @@ use CM\CMBundle\Entity\Notification;
 use CM\CMBundle\Entity\Comment;
 use CM\CMBundle\Entity\Like;
 use CM\CMBundle\Entity\Post;
+use CM\CMBundle\Entity\Biography;
+use CM\CMBundle\Entity\EntityTranslation;
 
 class DoctrineEventsListener
 {
@@ -35,11 +37,13 @@ class DoctrineEventsListener
         $em = $args->getEntityManager();
 
         if ($object instanceof EntityUser) {
-            $this->entityUserRoutine($object, $em);
+            $this->entityUserPersistedRoutine($object, $em);
         } elseif ($object instanceof Comment) {
-            $this->commentRoutine($object, $em);
+            $this->commentPersistedRoutine($object, $em);
         } elseif($object instanceof Like) {
-            $this->likeRoutine($object, $em);
+            $this->likePersistedRoutine($object, $em);
+        } elseif ($object instanceof Biography) {
+            $this->biographyPersistedRoutine($object, $em);
         }
     }
 
@@ -48,11 +52,10 @@ class DoctrineEventsListener
         $object = $args->getEntity();
         $em = $args->getEntityManager();
 
-        if ($object instanceof EntityUser) {
-            if (array_key_exists('status', $em->getUnitOfWork()->getEntityChangeSet($object)))
-            {
-                $this->entityUserRoutine($object, $em, true);
-            }
+        if ($object instanceof EntityUser && array_key_exists('status', $em->getUnitOfWork()->getEntityChangeSet($object))) {
+            $this->entityUserUpdatedRoutine($object, $em);
+        } elseif ($object instanceof EntityTranslation && $object->getEntity() instanceof Biography) {   
+            $this->biographyUpdatedRoutine($object->getEntity(), $em);
         }
     }
 
@@ -62,11 +65,14 @@ class DoctrineEventsListener
         $em = $args->getEntityManager();
 
         if ($object instanceof EntityUser) {
-            $this->entityUserRoutine($object, $em, true, false);
+            $this->entityUserRemovedRoutine($object, $em);
         } elseif ($object instanceof Comment) {
             $this->commentRemovedRoutine($object, $em);
         } elseif ($object instanceof Like) {
             $this->likeRemovedRoutine($object, $em);
+        } elseif ($object instanceof EntityTranslation && $object->getEntity() instanceof Biography) {
+            $this->biographyRemovedRoutine($object->getEntity(), $em);
+            
         }
     }
 
@@ -75,7 +81,8 @@ class DoctrineEventsListener
         if ($this->get('cm.request_center')->flushNeeded()
             || $this->get('cm.notification_center')->flushNeeded()
             || $this->get('cm.post_center')->flushNeeded()
-            || $this->flushNeeded) {
+            || $this->flushNeeded
+        ) {
             $args->getEntityManager()->flush();
 
             $this->get('cm.request_center')->flushed();
@@ -85,7 +92,62 @@ class DoctrineEventsListener
         }
     }
 
-    private function entityUserRoutine(EntityUser $entityUser, EntityManager $em, $remove = false, $create = true)
+    private function entityUserPersistedRoutine(EntityUser $entityUser, EntityManager $em)
+    {
+        $entity = $entityUser->getEntity();
+        $post = $entity->getPost();
+        $user = $post->getUser();
+        $group = $post->getGroup();
+        $page = $post->getPage();
+
+        $requestCenter = $this->get('cm.request_center');
+        $notificationCenter = $this->get('cm.notification_center');
+
+        switch ($entityUser->getStatus()) {
+            case EntityUser::STATUS_PENDING:
+                $requestCenter->newRequest(
+                    $entityUser->getUser(),
+                    $user,
+                    get_class($entity),
+                    $entity->getId(),
+                    $entity,
+                    $page,
+                    $group
+                );
+                break;
+            case EntityUser::STATUS_ACTIVE:
+                $notificationCenter->newNotification(
+                    Notification::TYPE_REQUEST_ACCEPTED,
+                    $entityUser->getUser(),
+                    $user,
+                    get_class($post),
+                    $post->getId(),
+                    $post,
+                    $page,
+                    $group
+                );
+                break;
+            case EntityUser::STATUS_REQUESTED:
+                foreach ($em->getRepository('CMBundle:Entity')->getAdmins($entity->getId()) as $admin) {
+                    $requestCenter->newRequest(
+                        $admin->getUser(),
+                        $entityUser->getUser(),
+                        get_class($entity),
+                        $entity->getId(),
+                        $entity
+                    );
+                }
+                break;
+        }
+    }
+
+    private function entityUserUpdatedRoutine(EntityUser $entityUser, EntityManager $em)
+    {
+        $this->entityUserRemovedRoutine($entityUser, $em);
+        $this->entityUserPersistedRoutine($entityUser, $em);
+    }
+
+    private function entityUserRemovedRoutine(EntityUser $entityUser, EntityManager $em)
     {
         $entity = $entityUser->getEntity();
         $post = $entity->getPost();
@@ -96,51 +158,10 @@ class DoctrineEventsListener
         $requestCenter = $this->get('cm.request_center');
         $notificationCenter = $this->get('cm.notification_center');
         
-        if ($remove) {
-            $requestCenter->removeRequests($user, get_class($entity), $entity->getId());
-        }
-
-        if ($create) {
-            switch ($entityUser->getStatus()) {
-                case EntityUser::STATUS_PENDING:
-                    $requestCenter->newRequest(
-                        $entityUser->getUser(),
-                        $user,
-                        get_class($entity),
-                        $entity->getId(),
-                        $entity,
-                        $page,
-                        $group
-                    );
-                    break;
-                case EntityUser::STATUS_ACTIVE:
-                    $notificationCenter->newNotification(
-                        Notification::TYPE_REQUEST_ACCEPTED,
-                        $entityUser->getUser(),
-                        $user,
-                        get_class($post),
-                        $post->getId(),
-                        $post,
-                        $page,
-                        $group
-                    );
-                    break;
-                case EntityUser::STATUS_REQUESTED:
-                    foreach ($em->getRepository('CMBundle:Entity')->getAdmins($entity->getId()) as $admin) {
-                        $requestCenter->newRequest(
-                            $admin->getUser(),
-                            $entityUser->getUser(),
-                            get_class($entity),
-                            $entity->getId(),
-                            $entity
-                        );
-                    }
-                    break;
-            }
-        }
+        $requestCenter->removeRequests($user, get_class($entity), $entity->getId());
     }
 
-    private function commentRoutine(Comment $comment, EntityManager $em)
+    private function commentPersistedRoutine(Comment $comment, EntityManager $em)
     {
         $this->get('cm.post_center')->newPost(
             $comment->getUser(),
@@ -204,7 +225,7 @@ class DoctrineEventsListener
         $this->get('cm.notification_center')->removeNotifications($comment->getUser()->getId(), get_class($comment), $comment->getId(), Notification::TYPE_COMMENT);
     }
 
-    private function likeRoutine(Like $like, EntityManager $em)
+    private function likePersistedRoutine(Like $like, EntityManager $em)
     {
         $this->get('cm.post_center')->newPost(
             $like->getUser(),
@@ -246,5 +267,47 @@ class DoctrineEventsListener
         );
 
         $this->get('cm.notification_center')->removeNotifications($like->getUser()->getId(), get_class($like), $like->getId(), Notification::TYPE_LIKE);
+    }
+
+    private function biographyPersistedRoutine(Biography $biography, EntityManager $em)
+    {
+        $this->get('cm.post_center')->newPost(
+            $biography->getUser(),
+            $biography->getUser(),
+            Post::TYPE_CREATION,
+            get_class($biography),
+            array($biography->getId()),
+            $biography
+        );
+    }
+
+    private function biographyUpdatedRoutine(Biography $biography, EntityManager $em)
+    {
+        $post = $biography->getLastPost();
+
+        if ($post->getUpdatedAt()->diff(new \DateTime('now'))->d < 1) {
+            $post->setType(Post::TYPE_UPDATE);
+            $em->persist($post);
+            $em->flush();
+        } else {
+            $this->get('cm.post_center')->newPost(
+                $biography->getUser(),
+                $biography->getUser(),
+                Post::TYPE_UPDATE,
+                get_class($biography),
+                array($biography->getId()),
+                $biography
+            );
+        }
+    }
+
+    private function biographyRemovedRoutine(Biography $biography, EntityManager $em)
+    {
+        $this->get('cm.post_center')->removePost(
+            $biography->getUser(),
+            $biography->getUser(),
+            get_class($biography),
+            array($biography->getId())
+        );
     }
 }

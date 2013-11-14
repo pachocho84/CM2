@@ -126,6 +126,7 @@ class EntityUser
     public function setEntity(Entity $entity = null)
     {
         $this->entity = $entity;
+        $this->entityId = $entity->getId();
     
         return $this;
     }
@@ -159,6 +160,7 @@ class EntityUser
     public function setUser(User $user = null)
     {
         $this->user = $user;
+        $this->userId = $user->getId();
     
         return $this;
     }

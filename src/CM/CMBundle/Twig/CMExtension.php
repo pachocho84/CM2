@@ -27,7 +27,14 @@ class CMExtension extends \Twig_Extension
 
     private $options;
 
-    public function __construct(Translator $translator, Router $router, Helper $helper, SecurityContext $securityContext, UserAuthentication $userAuthentication, $options = array())
+    public function __construct(
+        Translator $translator,
+        Router $router,
+        Helper $helper,
+        SecurityContext $securityContext,
+        UserAuthentication $userAuthentication,
+        $options = array()
+    )
     {
         $this->translator = $translator;
         $this->router = $router;
@@ -46,6 +53,7 @@ class CMExtension extends \Twig_Extension
             'ceil' => new \Twig_Filter_Method($this, 'ceil'),
             'class_name' => new \Twig_Filter_Method($this, 'getClassName'),
             'simple_format_text' => new \Twig_Filter_Method($this, 'getSimpleFormatText'),
+            'show_text' => new \Twig_Filter_Method($this, 'getShowText'),
         );
     }
 
@@ -73,10 +81,44 @@ class CMExtension extends \Twig_Extension
     {
         return Helper::className($object);
     }
-
+    
+    /**
+     * Returns +text+ transformed into html using very simple formatting rules
+     * Surrounds paragraphs with <tt>&lt;p&gt;</tt> tags, and converts line breaks into <tt>&lt;br /&gt;</tt>
+     * Two consecutive newlines(<tt>\n\n</tt>) are considered as a paragraph, one newline (<tt>\n</tt>) is
+     * considered a linebreak, three or more consecutive newlines are turned into two newlines
+     */
     public function getSimpleFormatText($text, $options = array())
     {
-        return Helper::simple_format_text($text, $options);
+        $css = (isset($options['class'])) ? ' class="'.$options['class'].'"' : '';
+
+        $text = Helper::pregtr($text, array(
+            "/(\r\n|\r)/" => "\n",            // lets make them newlines crossplatform
+            "/\n{2,}/"    => "</p><p$css>" // turn two and more newlines into paragraph
+        ));
+
+        // turn single newline into <br/>
+        $text = str_replace("\n", "\n<br />", $text);
+        return '<p'.$css.'>'.$text.'</p>'; // wrap the first and last line in paragraphs before we're done
+    }
+
+    /**
+     * show_text function.
+     * 
+     * @access public
+     * @param mixed $text
+     * @return void
+     */
+    function getShowText($text)
+    {
+        $actual_length = strlen($text);
+        $stripped_length = strlen(strip_tags($text));
+
+        if ($actual_length != $stripped_length) {
+            return $text;
+        } else {
+            return $this->getSimpleFormatText($text);
+        }
     }
 
     public function getCanManage($object)
@@ -348,6 +390,7 @@ elseif ($img_ratio > 1) {
     public function getEntityShortText(Entity $entity, $max = 400, $stripped = false)
     {
         $text = $entity->getExtract() && ($this->securityContext->isGranted('ROLE_ADMIN') || $this->securityContext->isGranted('ROLE_CLIENT')) ? $entity->getExtract() : $entity->getText();
+
         $text_stripped = strip_tags($text);
         
         if ($stripped) {
@@ -366,8 +409,8 @@ elseif ($img_ratio > 1) {
                 $text = rtrim(Helper::truncate_text($text_stripped, $max, '', true), ',.;!?:').'...';
             }
         }
-        
-        return $stripped ? Helper::simple_format_text($text) : Helper::show_text($text);
+
+        return $stripped ? $this->getSimpleFormatText($text) : $this->getShowText($text);
     }
 
     public function getPostText(Post $post)
@@ -376,14 +419,14 @@ elseif ($img_ratio > 1) {
         $userLink = $this->router->generate('user_show', array('slug' => $post->getPublisher()->getSlug()));
         switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Event_'.Post::TYPE_CREATION:
-                $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));;
+                $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
                 $categoryLink  = $this->router->generate('event_category', array('category_slug' => $post->getEntity()->getEntityCategory()->getSlug()));
                 return $this->translator->trans('%user% has published the event %object% in %category%', array('%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>', '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>', '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getEntityCategory()->getPlural()).'</a>'));
             case 'Comment_'.Post::TYPE_CREATION:
-                $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));;
+                $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
                 return $this->translator->trans('%user% commented on %object%', array('%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>', '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'));
             case 'Like_'.Post::TYPE_CREATION:
-                $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));;
+                $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
                 return $this->translator->trans('%user% likes %object%', array('%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>', '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'));
             case 'disc_'.Post::TYPE_CREATION:
                 // return __('%user% has published %object% in %entity%.', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%entity%' => link_to(strtolower($post->getEntity()->getCategory()), $post->getEntity()->getLinkCategory()), '%object%' => link_to($post->getEntity(), $object_page)));
@@ -395,8 +438,10 @@ elseif ($img_ratio > 1) {
                 //         '%count%' => count($post->getObjectIds()),
                 //         '%object%'  => link_to($post->getEntity(), $post->getEntity()->getLinkShow())
                 //     ), count($post->getObjectIds()));
-            case 'biography_'.Post::TYPE_UPDATE:
-                // return __('%user% has updated '.$post->getPublisherSex('his').' %biography%.', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%biography%' => link_to(__('biography'), '@biography_user?user='.$post->getUser()->getUsername())));
+            case 'Biography_'.Post::TYPE_CREATION:
+            case 'Biography_'.Post::TYPE_UPDATE:                
+                $objectLink = $this->router->generate('biography_show', array('slug' => $post->getUser()->getSlug()));
+                return $this->translator->trans('%user% has updated '.$post->getPublisherSex('his').' %biographyLinkStart%biography%biographyLinkEnd%', array('%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>', '%biographyLinkStart%' => '<a href="'.$objectLink.'">', '%biographyLinkEnd%' => '</a>'));
             case 'user_'.Post::TYPE_REGISTRATION:
                 // return __('%user% registered on Circuito Musica. - '.$post->getPublisherSex('M'), array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow())));
             case 'group_'.Post::TYPE_CREATION:

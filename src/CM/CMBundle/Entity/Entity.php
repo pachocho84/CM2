@@ -12,7 +12,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="entity")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"entity"="Entity","event"="Event"})
+ * @ORM\DiscriminatorMap({
+ *     "entity"="Entity",
+ *     "event"="Event",
+ *     "biography"="Biography"
+ * })
  * @ORM\HasLifecycleCallbacks
  */
 abstract class Entity
@@ -40,7 +44,7 @@ abstract class Entity
      * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")
      * @ORM\JoinColumn(name="entity_category_id", referencedColumnName="id")
      * @Assert\Valid
-     * @Assert\NotNull
+     * @Assert\NotNull(groups="event")
      */
     private $entityCategory;
     
@@ -177,6 +181,17 @@ abstract class Entity
                 return $post;
             }
         }
+    }
+
+    public function getLastPost()
+    {
+        $post = $this->posts[0];
+        foreach ($this->posts as $p) {
+            if ($p->getUpdatedAt() > $post->getUpdatedAt()) {
+                $post = $p;
+            }
+        }
+        return $post;
     }
 
     /**

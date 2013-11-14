@@ -3,7 +3,6 @@
 namespace CM\CMBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use CM\CMBundle\Entity\Event;
@@ -48,7 +47,8 @@ class EventType extends EntityType
         parent::setDefaultOptions($resolver);
         
         $resolver->setDefaults(array(
-            'data_class' => 'CM\CMBundle\Entity\Event'
+            'data_class' => 'CM\CMBundle\Entity\Event',
+            'groups' => array('event', 'Default'),
         ));
     }
 

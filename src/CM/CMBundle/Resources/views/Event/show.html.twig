@@ -13,8 +13,8 @@
             {% endif %}
         </header>
         <div>
-            <p>{{ event.getText }}</p>
-            {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'object': event.post}) }}
+            <p>{{ event.getText | raw }}</p>
+            {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'post': event.post}) }}
             <ul>
                 {% for protagonist in event.entityUsers if protagonist.status == 1 %} {# active #}
                     <li>

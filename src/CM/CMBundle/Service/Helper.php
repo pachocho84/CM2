@@ -115,36 +115,4 @@ class Helper
       
         return $text;
     }
-
-    /**
-     * Returns +text+ transformed into html using very simple formatting rules
-     * Surrounds paragraphs with <tt>&lt;p&gt;</tt> tags, and converts line breaks into <tt>&lt;br /&gt;</tt>
-     * Two consecutive newlines(<tt>\n\n</tt>) are considered as a paragraph, one newline (<tt>\n</tt>) is
-     * considered a linebreak, three or more consecutive newlines are turned into two newlines
-     */
-    public static function simple_format_text($text, $options = array())
-    {
-        $css = (isset($options['class'])) ? ' class="'.$options['class'].'"' : '';
-
-        $text = self::pregtr($text, array(
-            "/(\r\n|\r)/" => "\n",            // lets make them newlines crossplatform
-            "/\n{2,}/"    => "</p><p$css>" // turn two and more newlines into paragraph
-        ));
-
-        // turn single newline into <br/>
-        $text = str_replace("\n", "\n<br />", $text);
-        return '<p'.$css.'>'.$text.'</p>'; // wrap the first and last line in paragraphs before we're done
-    }
-
-    public static function show_text($text)
-    {
-        $actual_length = strlen($text);
-        $stripped_length = strlen(strip_tags($text));
-
-        if ($actual_length != $stripped_length) {
-            return $text;
-        } else {
-            return self::simple_format_text($text);
-        }
-    }
 }

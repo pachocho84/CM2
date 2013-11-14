@@ -23,7 +23,6 @@ class Post
     const TYPE_FAN = 3;
     const TYPE_EDUCATION = 4;
 
-
     /**
      * @var integer
      *
@@ -39,6 +38,11 @@ class Post
      * @ORM\Column(name="type", type="smallint")
      */
     private $type = self::TYPE_CREATION;
+
+    /**
+     * @ORM\Column(name="creator_id", type="integer")
+     */
+    private $creatorId;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
@@ -60,7 +64,7 @@ class Post
     private $user;
 
     /**
-     * @ORM\Column(name="entity_id", type="integer")
+     * @ORM\Column(name="entity_id", type="integer", nullable=true)
      */
     private $entityId;
 
@@ -87,12 +91,22 @@ class Post
     private $objectIds;
 
     /**
+     * @ORM\Column(name="group_id", type="integer", nullable=true)
+     **/
+    private $groupId;
+
+    /**
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Group", inversedBy="posts")
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
      */
     private $group;
+
+    /**
+     * @ORM\Column(name="page_id", type="integer", nullable=true)
+     **/
+    private $pageId;
 
     /**
      * @var integer
@@ -160,13 +174,14 @@ class Post
 
 	public function getPublisherSex($type = 'he')
     {
-		if ($this->getPageId() || $this->getGroupId()) {
+		if (!is_null($this->getPageId()) || !is_null($this->getGroupId())) {
 			$sex = array('he' => 'it', 'his' => 'its', 'M' => '');
-		} elseif (!$this->getUser()->getSex() || $this->getUser()->getSex() == 'M') {
+		} elseif ($this->getUser()->getSex() == User::SEX_M) {
 			$sex = array('he' => 'he', 'his' => 'his', 'M' => 'M');
 		} else {
 			$sex = array('he' => 'she', 'his' => 'her', 'M' => 'F');
 		}
+
 		return $sex[$type];
     }
 
@@ -194,6 +209,16 @@ class Post
     }
 
     /**
+     * Get userId
+     *
+     * @return integer 
+     */
+    public function getCreatorId()
+    {
+        return $this->creatorId;
+    }
+
+    /**
      * Set user
      *
      * @param User $user
@@ -202,6 +227,7 @@ class Post
     public function setCreator(User $creator = null)
     {
         $this->creator = $creator;
+        $this->creatorId = $creator->getId();
     
         return $this;
     }
@@ -235,6 +261,7 @@ class Post
     public function setUser(User $user = null)
     {
         $this->user = $user;
+        $this->userId = $user->getId();
     
         return $this;
     }
@@ -330,6 +357,16 @@ class Post
     }
 
     /**
+     * Get fromUser
+     *
+     * @return User 
+     */
+    public function getGroupId()
+    {
+        return $this->groupId;
+    }
+
+    /**
      * Set entity
      *
      * @param Entity $entity
@@ -338,6 +375,7 @@ class Post
     public function setGroup(Group $group = null)
     {
         $this->group = $group;
+        $this->groupId = $group->getId();
     
         return $this;
     }
@@ -353,6 +391,16 @@ class Post
     }
 
     /**
+     * Get entity
+     *
+     * @return Entity 
+     */
+    public function getPageId()
+    {
+        return $this->pageId;
+    }
+
+    /**
      * Set entity
      *
      * @param Entity $entity
@@ -361,6 +409,7 @@ class Post
     public function setPage(Page $page = null)
     {
         $this->page = $page;
+        $this->pageId = $page->getId();
     
         return $this;
     }

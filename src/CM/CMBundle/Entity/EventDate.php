@@ -23,6 +23,11 @@ class EventDate
     private $id;
 
     /**
+     * @ORM\Column(name="event_id", type="integer")
+     **/
+    private $eventId;
+
+    /**
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Event", inversedBy="eventDates")
@@ -113,6 +118,30 @@ class EventDate
     public function getEventId()
     {
         return $this->eventId;
+    }
+
+    /**
+     * Set event
+     *
+     * @param Event $event
+     * @return EventDate
+     */
+    public function setEvent(Event $event = null)
+    {
+        $this->event = $event;
+        $this->eventId = $event->getId();
+    
+        return $this;
+    }
+
+    /**
+     * Get event
+     *
+     * @return Event 
+     */
+    public function getEvent()
+    {
+        return $this->event;
     }
 
     /**
@@ -228,28 +257,5 @@ class EventDate
     public function getCoordinates()
     {
         return $this->coordinates;
-    }
-
-    /**
-     * Set event
-     *
-     * @param Event $event
-     * @return EventDate
-     */
-    public function setEvent(Event $event = null)
-    {
-        $this->event = $event;
-    
-        return $this;
-    }
-
-    /**
-     * Get event
-     *
-     * @return Event 
-     */
-    public function getEvent()
-    {
-        return $this->event;
     }
 }

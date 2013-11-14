@@ -22,7 +22,7 @@
                 <i class="glyphicon glyphicon-map-marker"></i> {{ date.location }} <small>({{ date.address }})</small>
             </p>
     
-            <p>{{ date.getEvent.getExtract }}</p>
+            <p>{{ date.getEvent.getExtract | raw }}</p>
 
             {{ include('CMBundle::social.html.twig', {'post': date.event.posts[0]}) }}
     

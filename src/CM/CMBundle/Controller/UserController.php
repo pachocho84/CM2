@@ -14,11 +14,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 use CM\CMBundle\Entity\EntityCategory;
+use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\Notification;
 use CM\CMBundle\Form\EventType;
+use CM\CMBundle\Form\BiographyType;
 
 class UserController extends Controller
 {
@@ -101,12 +103,11 @@ class UserController extends Controller
 
     /**
      * @Route("/requestAdd/{object}/{objectId}", name="user_request_add", requirements={"objectId"="\d+"})
+     * @Route("/requestAddBtn/{object}/{objectId}", name="user_request_add_btn", requirements={"objectId"="\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function requestAddAction($object, $objectId)
+    public function requestAddAction(Request $request, $object, $objectId)
     {
-        $object = $this->get('cm.helper')->fullClassName($object);
-
         $em = $this->getDoctrine()->getManager();
 
         switch ($object) {
@@ -119,44 +120,67 @@ class UserController extends Controller
                     true // notifications
                 );
                 $em->persist($event);
+                $post = $event->getPost();
                 break;
         }
 
-        $em->flush();
+        $em->flush(); // TODO: why so many sql queries?
 
-        return new Response;
+        if ($request->get('_route') == 'user_request_add_btn') {
+            $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('post' => $post));
+        }
+
+        return new Response($response);
     }
 
     /**
      * @Route("/requestUpdate/{object}/{objectId}/{choice}", name="user_request_update", requirements={"objectId"="\d+", "choice"="accept|refuse"})
+     * @Route("/requestUpdateBtn/{object}/{objectId}/{choice}", name="user_request_update_btn", requirements={"objectId"="\d+", "choice"="accept|refuse"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function requestUpdateAction($object, $objectId, $choice)
+    public function requestUpdateAction(Request $request, $object, $objectId, $choice)
     {
-        $object = $this->get('cm.helper')->fullClassName($object);
-
         if ($choice == 'accept') {
-            $this->get('cm.request_center')->acceptRequest($this->getUser()->getId(), $object, $objectId);
+            $this->get('cm.request_center')->acceptRequest($this->getUser()->getId(), $this->get('cm.helper')->fullClassName($object), $objectId);
         } elseif ($choice == 'refuse') {
-            $this->get('cm.request_center')->refuseRequest($this->getUser()->getId(), $object, $objectId);
+            $this->get('cm.request_center')->refuseRequest($this->getUser()->getId(), $this->get('cm.helper')->fullClassName($object), $objectId);
         }
 
-        return new Response;
+        switch ($object) {
+            case 'Event':
+                $post = $em->getRepository('CMBundle:Entity')->getCreationPost($objectId, $this->get('cm.helper')->fullClassName($object));
+                break;
+        }
+
+        if ($request->get('_route') == 'user_request_update_btn') {
+            $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('post' => $post));
+        }
+
+        return new Response($response);
     }
     
     /**
      * @Route("/requestDelete/{object}/{objectId}", name="user_request_delete", requirements={"objectId"="\d+"})
+     * @Route("/requestDeleteBtn/{object}/{objectId}", name="user_request_delete_btn", requirements={"objectId"="\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function requestDeleteAction($object, $objectId)
-    {
-        $object = $this->get('cm.helper')->fullClassName($object);
-        
+    public function requestDeleteAction(Request $request, $object, $objectId)
+    {        
         $em = $this->getDoctrine()->getManager();
 
-        $this->get('cm.request_center')->removeRequest($this->getUser()->getId(), $object, $objectId);
+        $this->get('cm.request_center')->removeRequest($this->getUser()->getId(), $this->get('cm.helper')->fullClassName($object), $objectId);
 
-        return new Response;
+        switch ($object) {
+            case 'Event':
+                $post = $em->getRepository('CMBundle:Entity')->getCreationPost($objectId, $this->get('cm.helper')->fullClassName($object));
+                break;
+        }
+
+        if ($request->get('_route') == 'user_request_delete_btn') {
+            $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('post' => $post));
+        }
+
+        return new Response($response);
     }
 
     /**
@@ -178,15 +202,6 @@ class UserController extends Controller
         }
 
         return array('notifications' => $pagination);
-    }
-
-    /**
-     * @Route("/{slug}", name="user_show")
-     * @Template
-     */
-    public function showAction($slug)
-    {
-        return array('username' => $slug);
     }
 
     /**
@@ -217,7 +232,7 @@ class UserController extends Controller
      * @Route("/{slug}/wall/{postId}/update", name="user_wall_update", requirements={"postId" = "\d+"})
      * @Template("CMBundle:Wall:posts.html.twig")
      */
-    public function postsAction(Request $request, $slug, $postId)
+    public function wallUpdateAction(Request $request, $slug, $postId)
     {
         $em = $this->getDoctrine()->getManager();
         
@@ -231,44 +246,110 @@ class UserController extends Controller
 
         return array('posts' => $posts);
     }
-    
+
     /**
-	 * @Route("/{slug}/events/{page}", name="user_events", requirements={"page" = "\d+"})
-	 * @Route("/{slug}/events/archive/{page}", name="user_events_archive", requirements={"page" = "\d+"}) 
-	 * @Route("/{slug}/events/category/{category_slug}/{page}", name="user_events_category", requirements={"page" = "\d+"})
+     * @Route("/{slug}/biography", name="biography_show")
+     * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-	public function eventsAction(Request $request, $slug, $page = 1, $category_slug = null)
-	{
-	    $em = $this->getDoctrine()->getManager();
-		
-		$user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
-		
-		if (!$user) {
-    		throw new NotFoundHttpException('User not found.');
-		}
-		    
-		if (!$request->isXmlHttpRequest()) {
-			$categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::EVENT, array('locale' => $request->getLocale()));
-		}
-		
-		if ($category_slug) {
-			$category = $em->getRepository('CMBundle:EntityCategory')->getCategory($category_slug, EntityCategory::EVENT, array('locale' => $request->getLocale()));
-		}
-			
-		$events = $em->getRepository('CMBundle:Event')->getEvents(array(
-			'locale'        => $request->getLocale(), 
-			'archive'       => $request->get('_route') == 'event_archive' ? true : null,
-			'category_id'   => $category_slug ? $category->getId() : null,
-			'user_id'       => $user->getId()		
+    public function biographyAction(Request $request, $slug)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+
+        return array('user' => $user);
+    }
+
+    /**
+     * @Route("/biography", name="biography_edit")
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function biographyEditAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $biography = $this->getUser()->getBiography();
+        if (is_null($biography)) {
+            $biography = new Biography;
+            $this->getUser()->setBiography($biography);
+        }
+ 
+        $form = $this->createForm(new BiographyType, $biography, array(
+/*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
+            'cascade_validation' => true,
+            'error_bubbling' => false,
+            'roles' => $this->getUser()->getRoles(),
+            'em' => $em,
+            'locales' => array('en'/* , 'fr', 'it' */),
+            'locale' => $request->getLocale()
+        ))->add('save', 'submit');
+        
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em->persist($biography);
+            $em->flush();
+
+            return new RedirectResponse($this->generateUrl('biography_show', array('slug' => $this->getUser()->getSlug())));
+        }
+        
+        return array(
+            'form' => $form->createView()
+        );
+    }
+    
+    /**
+     * @Route("/{slug}/events/{page}", name="user_events", requirements={"page" = "\d+"})
+     * @Route("/{slug}/events/archive/{page}", name="user_events_archive", requirements={"page" = "\d+"}) 
+     * @Route("/{slug}/events/category/{category_slug}/{page}", name="user_events_category", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function eventsAction(Request $request, $slug, $page = 1, $category_slug = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+            
+        if (!$request->isXmlHttpRequest()) {
+            $categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::EVENT, array('locale' => $request->getLocale()));
+        }
+        
+        if ($category_slug) {
+            $category = $em->getRepository('CMBundle:EntityCategory')->getCategory($category_slug, EntityCategory::EVENT, array('locale' => $request->getLocale()));
+        }
+            
+        $events = $em->getRepository('CMBundle:Event')->getEvents(array(
+            'locale'        => $request->getLocale(), 
+            'archive'       => $request->get('_route') == 'event_archive' ? true : null,
+            'category_id'   => $category_slug ? $category->getId() : null,
+            'user_id'       => $user->getId()       
         ));
         
-		$pagination = $this->get('knp_paginator')->paginate($events, $page, 10);
-		
-		if ($request->isXmlHttpRequest()) {
-    		return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'page' => $page));
-		}
-		
-		return array('categories' => $categories, 'user' => $user, 'dates' => $pagination, 'category' => $category, 'page' => $page);
-	}
+        $pagination = $this->get('knp_paginator')->paginate($events, $page, 10);
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'page' => $page));
+        }
+        
+        return array('categories' => $categories, 'user' => $user, 'dates' => $pagination, 'category' => $category, 'page' => $page);
+    }
+
+    /**
+     * @Route("/{slug}", name="user_show")
+     * @Template
+     */
+    public function showAction($slug)
+    {
+        return array('username' => $slug);
+    }
 }

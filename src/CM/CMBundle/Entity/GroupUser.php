@@ -134,6 +134,7 @@ class GroupUser
     public function setGroup(Group $group = null)
     {
         $this->group = $group;
+        $this->groupId = $group->getId();
     
         return $this;
     }
@@ -167,6 +168,7 @@ class GroupUser
     public function setUser(User $user = null)
     {
         $this->user = $user;
+        $this->userId = $user->getId();
     
         return $this;
     }

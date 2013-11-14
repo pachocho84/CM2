@@ -10,8 +10,6 @@
   border-radius: 4px;
 }
 
-
-
 /* LAYOUT */
 .load_more_container
 {
@@ -27,6 +25,14 @@
 .load_more a
 {
     display: block;
+}
+
+
+
+/* TOGGLE HIDDEN  DATA-TOGGLE */
+[data-toggle-hover]:hover [data-toggle]
+{
+    visibility: visible;
 }
 
 

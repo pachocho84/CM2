@@ -19,12 +19,24 @@ class EntityRepository extends BaseRepository
 		), $options);
 	}
 	
-    public function getAdmins($entity_id)
+    public function getAdmins($entityId)
 	{
         return $this->getEntityManager()->createQueryBuilder()
             ->select('partial eu.{id, entityId, userId}')
             ->from('CMBundle:EntityUser','eu')
-            ->where('identity(eu.entity) = :entity_id')->setParameter('entity_id', $entity_id)
+            ->where('identity(eu.entity) = :entity_id')->setParameter('entity_id', $entityId)
             ->getQuery()->getResult();
+    }
+
+    public function getCreationPost($entityId, $object) {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('p, e, eu')
+            ->from('CMBundle:Post', 'p')
+            ->leftJoin('p.entity', 'e')
+            ->leftJoin('e.entityUsers', 'eu')
+            ->where('p.type = '.Post::TYPE_CREATION)
+            ->andWhere('p.object = :object')->setParameter('object', $object)
+            ->andWhere('e.id = :entity_id')->setParameter('entity_id', $entityId)
+            ->getQuery()->getSingleResult();
     }
 }
