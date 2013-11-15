@@ -47,8 +47,8 @@
 
 {% block textarea_widget %}
 {% spaceless %}
-    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim, 'container_class': (attr.container_class|default('') ~ 'col-lg-9')|trim}) %}
-    <div class="{{ container_class }}">
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
+    <div {% if no_container_class is not defined %}class="col-lg-9"{% endif %}>
         <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
     </div>
 {% endspaceless %}

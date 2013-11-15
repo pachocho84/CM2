@@ -25,9 +25,9 @@ trait ImageTrait
     /**
      * @var integer
      *
-     * @ORM\Column(name="offset", type="smallint", nullable=true)
+     * @ORM\Column(name="img_offset", type="smallint", nullable=true)
      */
-    private $offset;
+    private $imgOffset;
 
     /**
      * @Assert\Image(
@@ -65,46 +65,46 @@ trait ImageTrait
     }
 
     /**
-     * Set offset
+     * Set imgOffset
      *
-     * @param integer $offset
+     * @param integer $imgOffset
      * @return Image
      */
-    public function setOffset($offset)
+    public function setImgOffset($imgOffset)
     {
-        $this->offset = $offset;
+        $this->imgOffset = $imgOffset;
     
         return $this;
     }
 
     /**
-     * Get offset
+     * Get imgOffset
      *
      * @return integer 
      */
-    public function getOffset()
+    public function getImgOffset()
     {
-        return $this->offset;
+        return $this->imgOffset;
     }
 
     /**
-     * Set file.
+     * Set imgFile.
      *
-     * @param UploadedFile $file
+     * @param UploadedFile $imgFile
      */
-    public function setFile(UploadedFile $file = null)
+    public function setImgFile(UploadedFile $imgFile = null)
     {
-        $this->file = $file;
+        $this->imgFile = $imgFile;
     }
 
     /**
-     * Get file.
+     * Get imgFile.
      *
      * @return UploadedFile
      */
-    public function getFile()
+    public function getImgFile()
     {
-        return $this->file;
+        return $this->imgFile;
     }
 
     protected abstract function getRootDir(); // return __DIR__ or similar
@@ -139,9 +139,9 @@ trait ImageTrait
      */
     public function sanitizeFileName()
     {
-        if (null !== $this->getFile()) {
-        	$fileName = md5(uniqid().$this->getFile()->getClientOriginalName().time());
-            $this->img = $fileName.'.'.$this->getFile()->guessExtension(); // FIXME: doesn't work with bmp files
+        if (null !== $this->getImgFile()) {
+        	$fileName = md5(uniqid().$this->getImgFile()->getClientOriginalName().time());
+            $this->img = $fileName.'.'.$this->getImgFile()->guessExtension(); // FIXME: doesn't work with bmp files
         }
     }
 
@@ -150,17 +150,17 @@ trait ImageTrait
      */
     public function upload()
     {
-        if (null === $this->getFile()) {
+        if (null === $this->getImgFile()) {
             return;
         }
 
         // if there is an error when moving the file, an exception will
         // be automatically thrown by move(). This will properly prevent
         // the entity from being persisted to the database on error
-        $this->getFile()->move($this->getUploadRootDir(), $this->img);
+        $this->getImgFile()->move($this->getUploadRootDir(), $this->img);
 
    		// clean up the file property as you won't need it anymore
-        $this->file = null;
+        $this->imgFile = null;
     }
 
     /**
@@ -168,8 +168,8 @@ trait ImageTrait
      */
     public function removeUpload()
     {
-        if ($file = $this->getAbsolutePath()) {
-            unlink($file);
+        if ($imgFile = $this->getAbsolutePath()) {
+            unlink($imgFile);
         }
     }
 }
