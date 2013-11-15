@@ -21,6 +21,10 @@ class User extends BaseUser
 	const SEX_M = true;
 	const SEX_F = false;
 
+    const BIRTHDATE_VISIBLE = 0;
+    const BIRTHDATE_NO_YEAR = 1;
+    const BIRTHDATE_INVISIBLE = 2;
+
     /**
      * @var integer
      *
@@ -130,8 +134,12 @@ class User extends BaseUser
     /**
      * @var boolean
      *
-     * @ORM\Column(name="birth_date_visible", type="boolean")
-     * @Assert\Choice(choices = {true, false})
+     * @ORM\Column(name="birth_date_visible", type="smallint")
+     * @Assert\Choice(choices = {
+     *     CM\CMBundle\Entity\User::BIRTHDATE_VISIBLE,
+     *     CM\CMBundle\Entity\User::BIRTHDATE_NO_YEAR,
+     *     CM\CMBundle\Entity\User::BIRTHDATE_INVISIBLE
+     * })
      */
     private $birthDateVisible;
 

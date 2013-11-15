@@ -36,10 +36,12 @@ class ProfileType extends BaseType
                 'widget' => 'single_text'
             ))
             ->add('birthDateVisible', 'choice', array(
-                'choices' => array(true => 'Visible', false => 'Not visible'),
+                'choices' => array(
+                    User::BIRTHDATE_VISIBLE => 'Visible',
+                    User::BIRTHDATE_NO_YEAR => 'Not visible',
+                    User::BIRTHDATE_INVISIBLE => 'Year not visible'),
                 'expanded' => true
-            ))
-            ->add('file', 'file', array('label' => 'Image'));
+            ));
     }
     
     /**

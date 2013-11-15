@@ -1,0 +1,48 @@
+{% extends "CMBundle::layout.html.twig" %}
+
+{% block body %}
+
+    {% trans_default_domain 'FOSUserBundle' %}
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div>
+            <input type="submit" value="{{ 'Save' | trans }}" />
+        </div>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">//<![CDATA[ 
+        $(function(){   
+            /* PROFILE & COVER PICTURE */
+            function image_position(img, target) {
+                img.css('cursor','move');
+              img.find('img').draggable({
+                scroll: false,
+                drag: function(event, ui) {
+                    if (ui.position.top >= 0) {
+                      ui.position.top = 0;
+                    } else if (ui.position.top <= img.height() - img.find('img').height()) {
+                      ui.position.top = img.height() - img.find('img').height();
+                    } 
+                    if (ui.position.left >= 0) {
+                      ui.position.left = 0;
+                    } else if (ui.position.left <= img.width() - img.find('img').width()) {
+                      ui.position.left = img.width() - img.find('img').width();
+                    } 
+                },
+                stop: function(event, ui) {
+    /*              console.log(img.width() + ' ' + img.find('img').width() + ' ' + img.height() + ' ' + img.find('img').height()); */
+                    target.val(((Math.abs(ui.position.top) != 0 ? Math.abs(ui.position.top) : Math.abs(ui.position.left)) * 100 / img.height()).toFixed(2));   
+                }
+              });  
+             }  
+             image_position($('#profile-pic'), $('#user_img_offset'));
+             image_position($('#cover-pic'), $('#user_cover_img_offset'));
+        });//]]>  
+    </script>
+{% endblock %}
+
