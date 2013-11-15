@@ -29,7 +29,7 @@ class EntityTranslation
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=150, nullable=true)
-     * @Assert\NotBlank(groups="event")
+     * @Assert\NotBlank(groups="Event")
      * @Assert\Length(
      *      min = "2",
      *      max = "150",
@@ -82,7 +82,7 @@ class EntityTranslation
      * @ORM\Column(name="text", type="text")
      * @Assert\NotBlank
      * @Assert\Length(
-     *      groups="event",
+     *      groups="Event",
      *      min = "12",
      *      minMessage = "The title must be at least {{ limit }} characters length"
      * )

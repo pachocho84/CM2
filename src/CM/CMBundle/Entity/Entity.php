@@ -44,7 +44,7 @@ abstract class Entity
      * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")
      * @ORM\JoinColumn(name="entity_category_id", referencedColumnName="id")
      * @Assert\Valid
-     * @Assert\NotNull(groups="event")
+     * @Assert\NotNull(groups="Event")
      */
     private $entityCategory;
     

@@ -38,17 +38,18 @@ class UserController extends Controller
         $results = array();
         foreach($users as $user)
         {
-            if ($user['img'] == '' || $user['img'] == null) {
-                $user['img'] = '/bundles/cm/uploads/images/50/default.jpg';
-            } else {
-                $user['img'] = '/bundles/cm/uploads/images/350/'.$user['img'];
-            }
-            $user['fullname'] = $user['firstName'].' '.$user['lastName'];
-            $results[] = $user;
+            // if ($user['img'] == '' || $user['img'] == null) {
+            //     $user['img'] = '/bundles/cm/uploads/images/50/default.jpg';
+            // } else {
+            //     $user['img'] = '/bundles/cm/uploads/images/350/'.$user['img'];
+            // }
+            // $user['fullname'] = $user['firstName'].' '.$user['lastName'];
+            // $results[] = $user;
 
-            
-            // $view['view'] = $this->renderView('CMBundle:User:typeaheadHint.html.twig', array('user' => $user));
-            // $results[] = $view;
+            $view['id'] = $user['id'];
+            $view['fullname'] = $user['firstName'].' '.$user['lastName'];
+            $view['view'] = $this->renderView('CMBundle:User:typeaheadHint.html.twig', array('user' => $user));
+            $results[] = $view;
         }
 
         return new JsonResponse($results);

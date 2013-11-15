@@ -44,12 +44,6 @@
     position: relative;
     overflow: hidden;
 }
-/*.image_box span 
-{ 
-    display: block;
-    overflow: hidden; 
-    position: relative; 
-}*/
 .image_box img 
 { 
     position: relative;

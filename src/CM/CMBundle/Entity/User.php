@@ -141,7 +141,7 @@ class User extends BaseUser
      * @ORM\Column(name="city_birth", type="string", length=50)
      * @Assert\NotBlank
      */
-    private $cityBirth;
+    private $cityBirth; // TODO: city validation
 
     /**
      * @var string
@@ -149,7 +149,7 @@ class User extends BaseUser
      * @ORM\Column(name="city_current", type="string", length=50)
      * @Assert\NotBlank
      */
-    private $cityCurrent;
+    private $cityCurrent; // TODO: city validation
 
     /**
      * @var boolean

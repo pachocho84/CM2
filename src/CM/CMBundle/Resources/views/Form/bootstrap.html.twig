@@ -47,8 +47,8 @@
 
 {% block textarea_widget %}
 {% spaceless %}
-    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
-    <div class="col-lg-9">
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim, 'container_class': (attr.container_class|default('') ~ 'col-lg-9')|trim}) %}
+    <div class="{{ container_class }}">
         <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
     </div>
 {% endspaceless %}
@@ -104,16 +104,24 @@
 {% endspaceless %}
 {% endblock choice_widget_collapsed %}
 
-{% block checkbox_widget %}
+{% block choice_widget_expanded %}
 {% spaceless %}
-    <div class="col-lg-9"><div class="checkbox"><input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} /></div></div>
+    <div {{ block('widget_container_attributes') }}><div class="col-lg-9">
+    {% for child in form %}<div class="{{ multiple ? 'checkbox' : 'radio' }}">
+        <label>
+            {{ form_widget(child) }}
+            {{ child.vars.label|humanize|trans({}, translation_domain) }}
+        </label>
+        </div>
+    {% endfor %}
+    </div></div>
 {% endspaceless %}
-{% endblock checkbox_widget %}
+{% endblock choice_widget_expanded %}
 
 {# Labels #}
 
 {% block form_label %}
-{% spaceless %} 
+{% spaceless %}
     {% if label is not sameas(false) and 'collection' not in form.parent.vars.block_prefixes %}
         {% if not compound %}
             {% set label_attr = label_attr|merge({'for': id}) %}
@@ -142,8 +150,8 @@
 {% spaceless %}
     <div class="clearfix">
         {{ form_label(form) }}
-        {{ form_errors(form) }}
         {{ form_widget(form) }}
+        {{ form_errors(form) }}
     </div>
 {% endspaceless %}
 {% endblock form_row %}
@@ -165,3 +173,15 @@
     {% endif %}
 {% endspaceless %}
 {% endblock form_start %}
+
+{% block form_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+    <ul class="col-lg-push-3 col-lg-6 red">
+        {% for error in errors %}
+            <li class="text-danger">{{ error.message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endspaceless %}
+{% endblock form_errors %}

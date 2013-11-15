@@ -171,13 +171,13 @@ services:
             session: @session
             entityManager: @doctrine.orm.entity_manager
 
-    cm_user.registration.type:
+    cm.user_registration.type:
         class: CM\CMBundle\Form\RegistrationType
         arguments: [%fos_user.model.user.class%]
         tags:
             - { name: form.type, alias: cm_cmbundle_user_registration }
             
-    cm_user.profile.type:
+    cm.user_profile.type:
         class: CM\CMBundle\Form\ProfileType
         arguments: [%fos_user.model.user.class%]
         tags:

@@ -5,6 +5,7 @@ namespace CM\CMBundle\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
+use CM\CMBundle\Entity\User;
 
 class RegistrationType extends BaseType
 {
@@ -14,25 +15,25 @@ class RegistrationType extends BaseType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-    	parent::buildForm($builder, $options);
+        parent::buildForm($builder, $options);
     
         $builder
-        	->add('firstName')
+            ->add('firstName')
             ->add('lastName')
             ->add('sex', 'choice', array(
-				'choices' => array('M' => 'Male', 'F' => 'Female'),
-				'expanded' => true
-			))
-			->add('cityBirth', 'text', array('label' => 'City of birth'))
-			->add('cityCurrent', 'text', array('label' => 'Current city'))
-			->add('birthDate', 'date', array(
-				'widget' => 'single_text'
-			))
-			->add('birthDateVisible', 'choice', array(
-				'choices' => array(true => 'Visible', false => 'Not visible'),
-				'expanded' => true
-			))
-			->add('file');
+                'choices' => array(User::SEX_M => 'Male', User::SEX_F => 'Female'),
+                'expanded' => true
+            ))
+            ->add('cityBirth', 'text', array('label' => 'City of birth'))
+            ->add('cityCurrent', 'text', array('label' => 'Current city'))
+            ->add('birthDate', 'date', array(
+                'widget' => 'single_text'
+            ))
+            ->add('birthDateVisible', 'choice', array(
+                'choices' => array(true => 'Visible', false => 'Not visible'),
+                'expanded' => true
+            ))
+            ->add('file');
     }
     
     /**

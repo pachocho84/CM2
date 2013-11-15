@@ -48,7 +48,7 @@ class EventType extends EntityType
         
         $resolver->setDefaults(array(
             'data_class' => 'CM\CMBundle\Entity\Event',
-            'groups' => array('event', 'Default'),
+            'groups' => array('Event', 'Default'),
         ));
     }
 
