@@ -62,12 +62,14 @@
 .image_box .image_box-inner {
     display: inline-block;
     position: relative;
-    right: -50%;
+    left: 50%;
+    height: 100%;
 }
 
 .image_box .image_box-inner img {
     position: relative;
-    left: -50%;
+    right: 50%;
+    height:100%;
 }
 
 

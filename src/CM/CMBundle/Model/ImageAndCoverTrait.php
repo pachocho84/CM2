@@ -33,7 +33,7 @@ trait ImageAndCoverTrait
      *     mimeTypes = {"image/png", "image/jpeg", }
      * )
      */
-    private $coverFile;
+    private $coverImgFile;
 
     /**
      * Set coverImg
@@ -86,9 +86,9 @@ trait ImageAndCoverTrait
      *
      * @param UploadedFile $file
      */
-    public function setCoverFile(UploadedFile $file = null)
+    public function setCoverImgFile(UploadedFile $file = null)
     {
-        $this->coverFile = $file;
+        $this->coverImgFile = $file;
     }
 
     /**
@@ -96,9 +96,9 @@ trait ImageAndCoverTrait
      *
      * @return UploadedFile
      */
-    public function getCoverFile()
+    public function getCoverImgFile()
     {
-        return $this->coverFile;
+        return $this->coverImgFile;
     }    
 
     public function getCoverAbsolutePath()
@@ -130,9 +130,9 @@ trait ImageAndCoverTrait
      */
     public function sanitizeCoverFileName()
     {
-        if (null !== $this->getCoverFile()) {
-        	$fileName = md5(uniqid().$this->getCoverFile()->getClientOriginalName().time());
-            $this->coverImg = $fileName.'.'.$this->getCoverFile()->guessExtension(); // FIXME: doesn't work with bmp files
+        if (null !== $this->getCoverImgFile()) {
+        	$fileName = md5(uniqid().$this->getCoverImgFile()->getClientOriginalName().time());
+            $this->coverImg = $fileName.'.'.$this->getCoverImgFile()->guessExtension(); // FIXME: doesn't work with bmp files
         }
     }
 
@@ -141,17 +141,17 @@ trait ImageAndCoverTrait
      */
     public function uploadCover()
     {
-        if (is_null($this->getCoverFile())) {
+        if (is_null($this->getCoverImgFile())) {
         	return;
         }
 
         // if there is an error when moving the file, an exception will
 		// be automatically thrown by move(). This will properly prevent
 		// the entity from being persisted to the database on error
-		$this->getCoverFile()->move($this->getUploadRootDir(), $this->coverImg);
+		$this->getCoverImgFile()->move($this->getUploadRootDir(), $this->coverImg);
 
 		// clean up the file property as you won't need it anymore
-		$this->coverFile = null;
+		$this->coverImgFile = null;
     }
 
     /**
