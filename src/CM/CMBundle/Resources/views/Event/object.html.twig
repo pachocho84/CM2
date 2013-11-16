@@ -2,7 +2,7 @@
     <div class="media">
         
         {% if date.getEvent.getImages | length > 0 %}
-            <a href="{{ path('event_show', { 'id': date.getEvent.id, 'slug': date.getEvent.getSlug }) }}" class="pull-left thumbnail">
+            <a href="{{ path('event_show', { 'id': date.id, 'slug': date.getEvent.getSlug }) }}" class="pull-left thumbnail">
                 <img src='{{ asset(uploaded_images_full_dir~'/'~date.getEvent.getImages[0].img) }}' width=200 />
             </a>
         {% endif %}
@@ -12,7 +12,7 @@
         
             {% set publisher = date.event.posts[0].publisher %}
             
-            <h4><a href="{{ path('event_show', {'id': date.getEvent.id, 'slug': date.getEvent.getSlug}) }}">{{ date.getEvent.getTitle }}</a></h4>
+            <h4><a href="{{ path('event_show', {'id': date.id, 'slug': date.getEvent.getSlug}) }}">{{ date.getEvent.getTitle }}</a></h4>
             <h5>
                 {{ "Published by %publisher% in %category%" | trans({'%publisher%': '<a href="'~path(date.event.posts[0].publisherRoute, {'slug': date.event.posts[0].publisher.slug})~'">'~date.event.posts[0].publisher~'</a>', '%category%': '<a href="'~path('event_category', { 'category_slug': date.event.entityCategory.getSlug })~'">'~date.event.entityCategory~'</a>' }) | raw }}
             </h5>
