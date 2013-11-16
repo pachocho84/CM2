@@ -263,20 +263,6 @@ $(function() {
     
     
     // Places autocomplete
-    $('[places-autocomplete]').typeahead({
-        name: 'places',
-        // minLength: 3,
-        // template: '<div>{{ value }}</div>',
-        // engine: Hogan,
-        remote: {
-            url: 'https://maps.googleapis.com/maps/api/place/autocomplete/json?key=AIzaSyAl9xA7j8_b8PiBO-B_ZxTGd6agUjoop04&input=%QUERY',
-            replace: function (url, uriEncodedQuery) {
-                console.log(666, url);
-                return url.replace('%QUERY', 'a');
-            }
-        }
-    });
-
     // $('form ul').on('focus', '[places-autocomplete]', function() {
     //     input = this;
     //     found = false;
@@ -324,6 +310,28 @@ $(function() {
     // }
      
 //     // Address autocomplete
+    $('[address-autocomplete]').typeahead({
+        name: 'address',
+        // minLength: 3,
+        template: '<div>{{ value }}</div>',
+        engine: Hogan,
+        remote: {
+            url: 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&culture=' + culture + '&address=%QUERY',
+            replace: function (url, uriEncodedQuery) {
+                return url.replace('%QUERY', uriEncodedQuery);
+            },
+            filter: function(data) {
+                if (data.status == 'OK') {
+                    return $.map(data.results, function(address) {
+                        return address.formatted_address;
+                    });
+                }
+            }
+        }
+    });
+    $('[address-autocomplete]').on('typeahead:autocompleted typeahead:selected', function (event, datum) {
+        
+    });
 //     $('form ul').on('focus', 'input[address-autocomplete]', function() {
 //         input = this;
 //         found = false;

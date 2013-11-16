@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Biography
  *
+ * @ORM\Entity(repositoryClass="BiographyRepository")
  * @ORM\Table(name="biography")
- * @ORM\Entity
  */
 class Biography extends Entity
 {

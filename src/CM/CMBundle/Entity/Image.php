@@ -10,8 +10,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * Image
  *
- * @ORM\Table(name="image")
  * @ORM\Entity(repositoryClass="ImageRepository")
+ * @ORM\Table(name="image")
  * @ORM\HasLifecycleCallbacks
  */
 class Image

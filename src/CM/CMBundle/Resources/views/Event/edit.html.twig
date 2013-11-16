@@ -37,6 +37,7 @@
         <script type="text/javascript">
             var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
         </script>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false&language={{ app.request.locale }}"></script>
         {% javascripts
             '@CMBundle/Resources/public/js/hogan-2.0.0.min.js'
             '@CMBundle/Resources/public/js/typeahead.min.js'
@@ -45,5 +46,4 @@
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
-        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false&language={{ app.request.locale }}"></script>
 {% endblock %}

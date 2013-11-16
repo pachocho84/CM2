@@ -1,0 +1,233 @@
+<?php
+
+namespace CM\CMBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
+/**
+ * Fan
+ *
+ * @ORM\Entity(repositoryClass="FanRepository")
+ * @ORM\Table(name="fan")
+ */
+class Fan
+{
+    use ORMBehaviors\Timestampable\Timestampable;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="fromUser_id", type="integer")
+     */
+    private $fromUserId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="requestsOutgoing")
+     * @ORM\JoinColumn(name="from_user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     **/
+    private $fromUser;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="user_id", type="integer")
+     */
+    private $userId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="requestsIncoming")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     **/
+    private $user;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="group_id", type="integer", nullable=true)
+     */
+    private $groupId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="Group", inversedBy="images")
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
+     */
+    private $group;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="page_id", type="integer", nullable=true)
+     */
+    private $pageId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="images")
+     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
+     */
+    private $page;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get fromUserId
+     *
+     * @return integer 
+     */
+    public function getFromUserId()
+    {
+        return $this->fromUserId;
+    }
+
+    /**
+     * Set fromUser
+     *
+     * @param User $fromUser
+     * @return Request
+     */
+    public function setFromUser(User $fromUser)
+    {
+        if ($fromUser->addRequestOutgoing($this)) {
+            $this->fromUser = $fromUser;
+            $this->fromUserId = $fromUser->getId();
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Get fromUser
+     *
+     * @return \CM\UserBundle\Entity\User 
+     */
+    public function getFromUser()
+    {
+        return $this->fromUser;
+    }
+
+    /**
+     * Get userId
+     *
+     * @return integer 
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * Set user
+     *
+     * @param User $user
+     * @return Request
+     */
+    public function setUser(User $user)
+    {
+        if ($user->addRequestIncoming($this)) {
+            $this->user = $user;
+            $this->userId = $user->getId();
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Get groupId
+     *
+     * @return integer 
+     */
+    public function getGroupId()
+    {
+        return $this->groupId;
+    }
+
+    /**
+     * Set group
+     *
+     * @param Group $group
+     * @return Image
+     */
+    public function setGroup(Group $group = null)
+    {
+        $this->group = $group;
+        $this->groupId = $group->getId();
+    
+        return $this;
+    }
+
+    /**
+     * Get group
+     *
+     * @return Group 
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * Get pageId
+     *
+     * @return integer 
+     */
+    public function getPageId()
+    {
+        return $this->pageId;
+    }
+
+    /**
+     * Set page
+     *
+     * @param Page $page
+     * @return Image
+     */
+    public function setPage(Page $page = null)
+    {
+        $this->page = $page;
+        $this->pageId = $page->getId();
+    
+        return $this;
+    }
+
+    /**
+     * Get page
+     *
+     * @return Page 
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
+}

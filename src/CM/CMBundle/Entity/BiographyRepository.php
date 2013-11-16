@@ -13,13 +13,13 @@ use Doctrine\ORM\Query;
  */
 class BiographyRepository extends BaseRepository
 {
-	public function getUserBiography($userId)
-	{
-		return $this->createQueryBuilder('b')
-			->select('b')
-			->leftJoin('b.posts', 'p', 'WITH', 'p.type ='.Post::TYPE_CREATION)
-			->leftJoin('p.user', 'u')
-			->where('u.id = :user_id')->setParameter('user_id', $userId)
-			->getQuery()->getSingleResult();
-	}
+    public function getUserBiography($userId)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('b')
+            ->leftJoin('b.posts', 'p', 'WITH', 'p.type ='.Post::TYPE_CREATION)
+            ->leftJoin('p.user', 'u')
+            ->where('u.id = :user_id')->setParameter('user_id', $userId)
+            ->getQuery()->getSingleResult();
+    }
 }
