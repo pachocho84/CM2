@@ -21,6 +21,7 @@ use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\Notification;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\BiographyType;
+use CM\CMBundle\Form\UserImageType;
 
 class UserController extends Controller
 {
@@ -267,7 +268,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/biography", name="biography_edit")
+     * @Route("/account/biography", name="user_biography_edit")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
@@ -295,6 +296,34 @@ class UserController extends Controller
 
         if ($form->isValid()) {
             $em->persist($biography);
+            $em->flush();
+
+            return new RedirectResponse($this->generateUrl('biography_show', array('slug' => $this->getUser()->getSlug())));
+        }
+        
+        return array(
+            'form' => $form->createView()
+        );
+    }
+
+    /**
+     * @Route("/account/image", name="user_image_edit")
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function imageEditAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+ 
+        $form = $this->createForm(new UserImageType, $this->getUser(), array(
+/*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
+            'cascade_validation' => true,
+        ))->add('save', 'submit');
+        
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em->persist($this->getUser());
             $em->flush();
 
             return new RedirectResponse($this->generateUrl('biography_show', array('slug' => $this->getUser()->getSlug())));

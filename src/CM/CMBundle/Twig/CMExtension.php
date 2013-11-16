@@ -264,15 +264,15 @@ class CMExtension extends \Twig_Extension
         
         // Align  
         if ($img_ratio > 1 && isset($options['offset'])) {
-            $img_style[] = 'left: -'.$options['offset'].'%'; 
+            $img_style[] = 'right: '.$options['offset'].'%'; 
         } /*
 elseif ($img_ratio > 1) {
             $img_style[] = 'left: -'.(abs($width - $img_r_w) / 2).'px';
         } 
 */elseif ($img_ratio < 1 && isset($options['offset'])) {
-            $img_style[] = 'top: -'.$options['offset'].'%'; 
+            $img_style[] = 'bottom: '.$options['offset'].'%'; 
         } elseif ($img_ratio < 1) {             
-            $img_style[] = 'top: -'.($img_r_h / 10).'px';
+            $img_style[] = 'bottom: '.($img_r_h / 10).'px';
         }
         
         // Write <img> tag

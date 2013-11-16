@@ -39,7 +39,7 @@ trait ImageTrait
      *     mimeTypes = {"image/png", "image/jpeg", }
      * )
      */
-    private $file;
+    private $imgFile;
 
     /**
      * Set img
@@ -92,9 +92,10 @@ trait ImageTrait
      *
      * @param UploadedFile $imgFile
      */
-    public function setImgFile(UploadedFile $imgFile = null)
+    public function setImgFile(UploadedFile $imgFile)
     {
         $this->imgFile = $imgFile;
+        $this->setImg($this->img.'.old'); // trigger update
     }
 
     /**
@@ -117,7 +118,7 @@ trait ImageTrait
 
     protected static function getImageDir()
     {
-   		// if you change this, change it also in the config.yml file!
+        // if you change this, change it also in the config.yml file!
         return self::getUploadDir().'full/';
     }
 
@@ -129,28 +130,28 @@ trait ImageTrait
 
     public function getAbsolutePath()
     {
-        return null === $this->img
-            ? null
-            : $this->getUploadRootDir().$this->img;
+        return is_null($this->img) ? null : $this->getUploadRootDir().$this->img;
     }
 
     /**
      * @ORM\PrePersist()
+     * @ORM\PreUpdate()
      */
     public function sanitizeFileName()
     {
-        if (null !== $this->getImgFile()) {
-        	$fileName = md5(uniqid().$this->getImgFile()->getClientOriginalName().time());
+        if (!is_null($this->getImgFile())) {
+            $fileName = md5(uniqid().$this->getImgFile()->getClientOriginalName().time());
             $this->img = $fileName.'.'.$this->getImgFile()->guessExtension(); // FIXME: doesn't work with bmp files
         }
     }
 
     /**
      * @ORM\PostPersist()
+     * @ORM\PostUpdate()
      */
     public function upload()
     {
-        if (null === $this->getImgFile()) {
+        if (is_null($this->getImgFile())) {
             return;
         }
 
@@ -159,7 +160,7 @@ trait ImageTrait
         // the entity from being persisted to the database on error
         $this->getImgFile()->move($this->getUploadRootDir(), $this->img);
 
-   		// clean up the file property as you won't need it anymore
+        // clean up the file property as you won't need it anymore
         $this->imgFile = null;
     }
 
