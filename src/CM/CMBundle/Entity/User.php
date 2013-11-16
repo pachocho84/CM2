@@ -205,11 +205,6 @@ class User extends BaseUser
      * @ORM\Column(name="notes", type="text", nullable=true)
      */
     private $notes;
-        
-    /**
-     * @ORM\OneToOne(targetEntity="Biography", mappedBy="user", cascade={"persist", "remove"})
-     */
-    private $biography;
 
     /**
      * @ORM\OneToMany(targetEntity="UserUserTag", mappedBy="user", cascade={"persist", "remove"})

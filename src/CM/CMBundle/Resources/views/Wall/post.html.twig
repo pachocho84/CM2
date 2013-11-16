@@ -1,5 +1,5 @@
 <li class="media object post{% if post.entity is not null and not post.entity.visible %} object-hidden{% endif %}"{% if updateMore is defined and updateMore %}update_more="{{ updateMoreLink }}"{% endif %}>
-    {{ show_img_box(post.publisher.img | imagine_filter('350'), {'width': 50, 'height': 50, 'offset': post.publisher.offset,  'link': path('user_show', {'slug': post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}, 'default': 'user'}) | raw }}
+    {{ show_img_box(post.publisher.img | imagine_filter('350'), {'width': 50, 'height': 50, 'offset': post.publisher.imgOffset,  'link': path('user_show', {'slug': post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}, 'default': 'user'}) | raw }}
     
     <div class="media-body">
 
@@ -27,8 +27,7 @@
             </small>
         </p>
 
-        {% if (post.object | class_name) == 'Biography' %}
-        {% elseif (post.object | class_name) == 'Comment' or (post.object | class_name) == 'Like' %}
+        {% if (post.object | class_name) == 'Comment' or (post.object | class_name) == 'Like' %}
             {{ include('CMBundle::social.html.twig', {'post': post.entity.post}) }}
         {% else  %}
             {{ include('CMBundle::social.html.twig') }}

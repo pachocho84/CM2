@@ -250,24 +250,6 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/{slug}/biography", name="biography_show")
-     * @JMS\Secure(roles="ROLE_USER")
-     * @Template
-     */
-    public function biographyAction(Request $request, $slug)
-    {
-        $em = $this->getDoctrine()->getManager();
-        
-        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
-        
-        if (!$user) {
-            throw new NotFoundHttpException('User not found.');
-        }
-
-        return array('user' => $user);
-    }
-
-    /**
      * @Route("/account/biography", name="user_biography_edit")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
@@ -276,10 +258,15 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $biography = $this->getUser()->getBiography();
-        if (is_null($biography)) {
+        $user = $this->getUser();
+
+        $biography = @$this->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
+        if (is_null($biography) || !$biography) {
             $biography = new Biography;
-            $this->getUser()->setBiography($biography);
+
+            $post = $this->get('cm.post_center')->getNewPost($user, $user);
+
+            $biography->addPost($post);
         }
  
         $form = $this->createForm(new BiographyType, $biography, array(
@@ -304,6 +291,24 @@ class UserController extends Controller
         return array(
             'form' => $form->createView()
         );
+    }
+
+    /**
+     * @Route("/{slug}/biography", name="biography_show")
+     * @Template
+     */
+    public function biographyAction(Request $request, $slug)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        $biography = @$this->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
+        
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+
+        return array('user' => $user, 'biography' => $biography);
     }
 
     /**

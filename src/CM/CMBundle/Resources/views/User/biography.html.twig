@@ -24,10 +24,14 @@
         <div class="media objects">
                 {{ show_img_box(user.img | imagine_filter('350'), {'width': 200, 'height': 200, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left thumbnail'}}) | raw }}
                 <div class="meda-body text-justify">
-                    {{ user.biography }}
+                    {{ biography }}
                 </div>
         </div>
     </div>
+
+    {% if is_granted('ROLE_USER') and biography.post is not null %}
+        {{ include('CMBundle::social.html.twig', {'post': biography.post}) }}
+    {% endif %}
 
 
 
