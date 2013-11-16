@@ -2,7 +2,6 @@ $(function() {
     /* PROTAGONIST */
     var protagonist_new_id = parseInt(1 + $('.protagonists_user:last').attr('protagonist_new_id')) + 5;
     var collection = $('.protagonist_typeahead').children('.collection-items');
-    $('#protagonists_finder_container').removeAttr('hidden');
     $('#protagonists_finder').typeahead({
         name: 'protagonists',
         valueKey: 'fullname',
@@ -201,7 +200,7 @@ $(function() {
     // City autocomplete
 
     $('[autocomplete-city]').typeahead({
-        name: 'geonames',
+        name: 'cities',
         minLength: 3,
         template: '<div>{{ value }}</div>',
         engine: Hogan,
@@ -214,6 +213,23 @@ $(function() {
             }
         }
     });
+
+    // $('form').on('click', '[autocomplete-city]', function() {
+    //     console.log(666);
+    //     $(this).typeahead({
+    //         minLength:      3,
+    //     source:             function (query, process) {
+    //       return $.getJSON('http://ws.geonames.org/searchJSON', { featureClass: 'P', style: 'full', username: 'circuitomusica', maxRows: 8, lang: culture, name_startsWith: query, type: 'json' }, function (data) {
+    //                 cities = new Array(); // CREDO NON SERVA PIU'
+    //                 return process(
+    //                     $.map(data.geonames, function(city) {
+    //                         return city.name + (city.adminName1 ? ", " + city.adminName1 : "") + ", " + city.countryName;
+    //                     })
+    //                 );
+    //       });
+    //     }
+    //     });
+    // });
     
 //     var GooglePlacesService = new google.maps.places.AutocompleteService();
     
@@ -246,55 +262,69 @@ $(function() {
     
     
     
-//     // Places autocomplete
-//     $('form ul').on('focus', 'input.places-autocomplete', function() {
-//         input = this;
-//         found = false;
+    // Places autocomplete
+    $('[places-autocomplete]').typeahead({
+        name: 'places',
+        // minLength: 3,
+        // template: '<div>{{ value }}</div>',
+        // engine: Hogan,
+        remote: {
+            url: 'https://maps.googleapis.com/maps/api/place/autocomplete/json?key=AIzaSyAl9xA7j8_b8PiBO-B_ZxTGd6agUjoop04&input=%QUERY',
+            replace: function (url, uriEncodedQuery) {
+                console.log(666, url);
+                return url.replace('%QUERY', 'a');
+            }
+        }
+    });
+
+    // $('form ul').on('focus', '[places-autocomplete]', function() {
+    //     input = this;
+    //     found = false;
     
-//         $(input).typeahead({
-//           source: function(query, process) {
-//             GooglePlacesService.getPlacePredictions({ input: query, types: ['establishment'] }, function(predictions, status) {
-//               if (status == google.maps.places.PlacesServiceStatus.OK) {
-//                 found = true;
-//                 process($.map(predictions, function(prediction) {
-//                   return prediction.description;
-//                 }));
-//               } else {
-//                 found = false;
-//                 process(new Array());
-//               }
-//             });
-//           },
-//           matcher: function(item) {
-//               return true;
-//             },
-//           updater: function (item) {
-//         geocodeInputPlace(item, input);
-//           }
-//         });
-//     });
+    //     $(input).typeahead({
+    //         source: function(query, process) {
+    //             GooglePlacesService.getPlacePredictions({input: query, types: ['establishment'] }, function(predictions, status) {
+    //             if (status == google.maps.places.PlacesServiceStatus.OK) {
+    //                 found = true;
+    //                 process($.map(predictions, function(prediction) {
+    //                 return prediction.description;
+    //               }));
+    //             } else {
+    //                 found = false;
+    //                 process(new Array());
+    //             }
+    //         });
+    //         },
+    //         matcher: function(item) {
+    //             return true;
+    //         },
+    //         updater: function (item) {
+    //             geocodeInputPlace(item, input);
+    //         }
+    //     });
+    // });
     
-//     function geocodeInputPlace(item, input) {
-//         GooglePlacesService.getPlacePredictions({ input: item, types: ['establishment'] }, function(predictions, status) {
-//             $(input).val(predictions[0].terms[0].value);
-//         });
-//         var geocoder = new google.maps.Geocoder();
-//     geocoder.geocode({ address: item }, function(results, status) {
-//         if (status == google.maps.GeocoderStatus.OK) {
-//         $(input).closest('.object').find('input.address-autocomplete').val(results[0].formatted_address);
-//         $(input).closest('.object').find('input.geocoordinates').val(results[0].geometry.location.jb + ',' + results[0].geometry.location.kb);
-//             map.setCenter(results[0].geometry.location);
-//             map.setZoom(18);
-//             var marker = new google.maps.Marker({
-//                 map: map,
-//                 position: results[0].geometry.location
-//               });
-//       }
-//     });
-//     }
+    // function geocodeInputPlace(item, input) {
+    //     GooglePlacesService.getPlacePredictions({ input: item, types: ['establishment'] }, function(predictions, status) {
+    //         $(input).val(predictions[0].terms[0].value);
+    //     });
+    //     var geocoder = new google.maps.Geocoder();
+    //     geocoder.geocode({ address: item }, function(results, status) {
+    //         if (status == google.maps.GeocoderStatus.OK) {
+    //         $(input).closest('.object').find('input.address-autocomplete').val(results[0].formatted_address);
+    //         $(input).closest('.object').find('input.geocoordinates').val(results[0].geometry.location.jb + ',' + results[0].geometry.location.kb);
+    //             map.setCenter(results[0].geometry.location);
+    //             map.setZoom(18);
+    //             var marker = new google.maps.Marker({
+    //                 map: map,
+    //                 position: results[0].geometry.location
+    //             });
+    //         }
+    //     });
+    // }
      
 //     // Address autocomplete
-//     $('form ul').on('focus', 'input.address-autocomplete', function() {
+//     $('form ul').on('focus', 'input[address-autocomplete]', function() {
 //         input = this;
 //         found = false;
         
@@ -336,21 +366,21 @@ $(function() {
 //         });
 //     });
     
-//     function geocodeInput(item, input) {
-//         var geocoder = new google.maps.Geocoder();
-//         geocoder.geocode({ address: item }, function(results, status) {
-//         if (status == google.maps.GeocoderStatus.OK) {
-//         $(input).val(results[0].formatted_address);
-//         $(input).closest('.object').find('input.geocoordinates').val(results[0].geometry.location.jb + ',' + results[0].geometry.location.kb);
-//             map.setCenter(results[0].geometry.location);
-//             map.setZoom(18);
-//             var marker = new google.maps.Marker({
-//                 map: map,
-//                 position: results[0].geometry.location
-//               });
-//         }
-//     });
-//     }
+    // function geocodeInput(item, input) {
+    //     var geocoder = new google.maps.Geocoder();
+    //     geocoder.geocode({ address: item }, function(results, status) {
+    //         if (status == google.maps.GeocoderStatus.OK) {
+    //         $(input).val(results[0].formatted_address);
+    //         $(input).closest('.object').find('input.geocoordinates').val(results[0].geometry.location.jb + ',' + results[0].geometry.location.kb);
+    //             map.setCenter(results[0].geometry.location);
+    //             map.setZoom(18);
+    //             var marker = new google.maps.Marker({
+    //                 map: map,
+    //                 position: results[0].geometry.location
+    //             });
+    //         }
+    //     });
+    // }
     
     
     
@@ -368,15 +398,5 @@ $(function() {
 //      event.preventDefault();
 //      $('input[name="' + $(event.currentTarget).attr('rel') + '"]').val('on');
 //      $(event.target).closest('li.object').fadeOut();
-//  });
-
-
-    /* FIX this is a fix for twitter bootstrap 3 */
-    $(document).on('typeahead:initialized', function(event) {
-        $('.twitter-typeahead').addClass('col-lg-9');
-    });
-    $('.twitter-typeahead').addClass('col-lg-9');
-    $('.typeahead.input-sm').siblings('input.tt-hint').addClass('hint-small');
-    $('.typeahead.input-lg').siblings('input.tt-hint').addClass('hint-large');
-     
+//  });     
 });

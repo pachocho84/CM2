@@ -21,11 +21,6 @@ class Biography extends Entity
      */
     protected $id;
 
-    /**
-     * @ORM\Column(name="user_id", type="integer")
-     */
-    private $userId;
-
     public function __construct()
     {
         parent::__construct();

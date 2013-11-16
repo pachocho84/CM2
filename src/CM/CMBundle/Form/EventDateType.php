@@ -30,11 +30,13 @@ class EventDateType extends AbstractType
                 'model_timezone'    => 'GMT',
                 'view_timezone'     => 'Europe/Rome',
             ))
-            ->add('location')
-            ->add('address')
-            ->add('coordinates', 'text', array(
-                'required' => false
-            ));
+            ->add('location', 'text', array(
+                'attr' => array('places-autocomplete' => '')
+            ))
+            ->add('address', 'text', array(
+                'attr' => array('address-autocomplete' => '')
+            ))
+            ->add('coordinates', 'hidden');
     }
     
     /**

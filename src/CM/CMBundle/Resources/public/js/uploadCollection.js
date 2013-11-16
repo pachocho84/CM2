@@ -3,8 +3,8 @@
 var datesCollectionHolder = $('#cm_cmbundle_event_eventDates');
 
 // setup an "add a tag" link
-var $addDateLink = $('<a href="#" class="add_date_link">Add a date</a>');
-var $newLinkForDate = $('<div></div>').append($addDateLink);
+// var $addDateLink = $('<a href="#" class="add_date_link">Add a date</a>');
+var $newLinkForDate = $('<div></div>'); //.append($addDateLink);
 
 function addEventDateFormDeleteLink($tagFormLi) {
     var $removeFormA = $('<a href="#">delete this tag</a>');
