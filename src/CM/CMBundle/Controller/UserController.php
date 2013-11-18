@@ -262,7 +262,7 @@ class UserController extends Controller
 
         $user = $this->getUser();
 
-        $biography = @$this->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
+        $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
         if (is_null($biography) || !$biography) {
             $biography = new Biography;
 
@@ -296,7 +296,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/{slug}/biography", name="biography_show")
+     * @Route("/{slug}/biography", name="user_biography")
      * @Template
      */
     public function biographyAction(Request $request, $slug)
@@ -304,10 +304,14 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         
         $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
-        $biography = @$this->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
         
         if (!$user) {
             throw new NotFoundHttpException('User not found.');
+        }
+
+        $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
+        if (count($biography) == 0) {
+            $biography = null;
         }
 
         return array('user' => $user, 'biography' => $biography);
@@ -395,6 +399,14 @@ class UserController extends Controller
             throw new NotFoundHttpException('User not found.');
         }
 
-        return array('user' => $user);
+        $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
+        if (count($biography) == 0) {
+            $biography = null;
+        }
+
+        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('userId' => $user->getId()));
+        $pagination = $this->get('knp_paginator')->paginate($posts, 1, 15);
+
+        return array('user' => $user, 'biography' => $biography, 'posts' => $pagination);
     }
 }

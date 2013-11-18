@@ -7,8 +7,8 @@ var datesCollectionHolder = $('#cm_cmbundle_event_eventDates');
 var $newLinkForDate = $('<div></div>'); //.append($addDateLink);
 
 function addEventDateFormDeleteLink($tagFormLi) {
-    var $removeFormA = $('<a href="#">delete this tag</a>');
-    $tagFormLi.append($removeFormA);
+    var $removeFormA = $('<a class="btn btn-default" href="#"><i class="glyphicon glyphicon-minus"></i> delete this date</a>');
+    $tagFormLi.find('.well').append($removeFormA);
 
     $removeFormA.on('click', function(e) {
         // prevent the link from creating a "#" on the URL
@@ -78,8 +78,10 @@ jQuery(document).ready(function() {
         $('#cm_cmbundle_event_eventDates').data('index', index + 1);
     
         // Display the form in the page in an li, before the "Add a tag" link li
-        var $newForm = $('<div></div>').append(newForm);
-        $newLinkForDate.before($newForm);
+        console.log($('#cm_cmbundle_event_eventDates').find('.well:last'));
+        var $newForm = $(newForm);
+        $('#cm_cmbundle_event_eventDates').find('.well:last').after($newForm);
+        // $newLinkForDate.before($newForm);
         addEventDateFormDeleteLink($newForm);
     });
     $addImageLink.on('click', function(e) {

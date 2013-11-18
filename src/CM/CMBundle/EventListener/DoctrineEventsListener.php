@@ -60,6 +60,8 @@ class DoctrineEventsListener
             $this->entityUserUpdatedRoutine($object, $em);
         } elseif ($object instanceof EntityTranslation && $object->getEntity() instanceof Biography) {   
             $this->biographyUpdatedRoutine($object->getEntity(), $em);
+        } elseif ($object instanceof Fan) {
+            $this->fanUpdatedRoutine($object, $em);
         }
     }
 
@@ -319,34 +321,57 @@ class DoctrineEventsListener
     private function fanPersistedRoutine(Fan $fan, EntityManager $em)
     {
         $post = $this->get('cm.post_center')->newPost(
-            $fan->getUser(),
-            $fan->getUser(),
-            Post::TYPE_CREATION,
+            $fan->getFromUser(),
+            $fan->getFromUser(),
+            Post::TYPE_FAN,
             get_class($fan),
             array($fan->getId())
         );
 
-        $this->get('cm.notification_center')->newNotification(
-            Notification::TYPE_FAN,
-            $fan->getUser(),
-            $fan->getFromUser(),
-            get_class($fan),
-            $fan->getId(),
-            $post,
-            $fan->getPage(),
-            $fan->getGroup()
-        );
+        $toNotify = array();
+        if (!is_null($fan->getUser())) {
+            $toNotify[] = $fan->getUser();
+        } elseif (!is_null($fan->getPage())) {
+            $toNotify = $em->getRepository('CMBundle:Page')->getAdmins($fan->getPage()->getId());
+        } elseif (!is_null($fan->getGroup())) {
+            $toNotify = $em->getRepository('CMBundle:Group')->getAdmins($fan->getGroup()->getId());
+        }
+
+        foreach ($toNotify as $user) {
+            $this->get('cm.notification_center')->newNotification(
+                Notification::TYPE_FAN,
+                $user,
+                $fan->getFromUser(),
+                get_class($fan),
+                $fan->getId(),
+                $post
+            );
+        }
+    }
+
+    private function fanUpdatedRoutine(Fan $fan, EntityManager $em)
+    {
+        $post = $em->getRepository('CMBundle:Post')->getPostsAfter(new \DateTime('-1h'), get_class($fan), array($fan->getFromUser()));
+        var_dump($post);die;
+
+        if ($post->getUpdatedAt()->diff(new \DateTime('now'))->d < 1) {
+            $post->setType(Post::TYPE_UPDATE);
+            $em->persist($post);
+            $em->flush();
+        } else {
+            $this->fanPersistedRoutine($fan, $em);
+        }
     }
 
     private function fanRemovedRoutine(Fan $fan, EntityManager $em)
     {
         $this->get('cm.post_center')->removePost(
-            $fan->getUser(),
-            $fan->getUser(),
+            $fan->getFromUser(),
+            $fan->getFromUser(),
             get_class($fan),
             array($fan->getId())
         );
 
-        $this->get('cm.notification_center')->removeNotifications($fan->getUser()->getId(), get_class($fan), $fan->getId(), Notification::TYPE_FAN);
+        $this->get('cm.notification_center')->removeNotifications($fan->getFromUser()->getId(), get_class($fan), $fan->getId(), Notification::TYPE_FAN);
     }
 }

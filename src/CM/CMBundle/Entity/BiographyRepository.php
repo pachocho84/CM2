@@ -20,6 +20,6 @@ class BiographyRepository extends BaseRepository
             ->leftJoin('b.posts', 'p', 'WITH', 'p.type ='.Post::TYPE_CREATION)
             ->leftJoin('p.user', 'u')
             ->where('u.id = :user_id')->setParameter('user_id', $userId)
-            ->getQuery()->getSingleResult();
+            ->getQuery()->getResult();
     }
 }

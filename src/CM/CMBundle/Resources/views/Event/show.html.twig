@@ -1,82 +1,51 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
 {% block body %}
-
-
-<div class="row">
-	<div class="col-lg-5">
-        <h2>{{ date.event.getTitle }}</h2>
-        <h3>{{ date.event.getSubtitle }}</h3>
-	</div>
-	
-	
-        {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'post': date.event.post}) }}
-        
-        
-{#
-	<div class="btn-toolbar pull-right">
-		<div class="btn-group btn-group-sm">
-			<?php include_partial('protagonist/requestButton', array('object' => $post)) ?>
-		</div>
-		<?php if ($sf_user->canManage($post)): ?>
-			<div class="btn-group btn-group-sm">
-				<?php include_partial('editMenu', array('post' => $post)) ?>
-			</div>
-		<?php endif ?>
-	</div>
-#}
-</div>  
-
-
-
-    
-    
-    
-    {% if can_manage(date.event) %}
-        <div class="media">
-            <div class="btn pull-left alert-info"><a href="{{ path('event_edit', {'id': date.event.id, 'slug': date.event.getSlug}) }}">{{ "Edit" | trans }}</a></div>
-            <div class="btn pull-right alert-danger"><a href="{{ path('event_delete', {'id': date.event.getId}) }}">{{ "Delete" | trans }}</a></div>
-        </div>
-    {% endif %}
-    
-    
-    
-    <div class="panel">
-        {{ date.event.getText | raw }}
-    </div>
-    
-    
-    
-{#
-    <div>
-        <p>{{ event.getText | raw }}</p>
-        {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'post': event.post}) }}
-        <ul>
-            {% for protagonist in event.entityUsers if protagonist.status == 1 %}
-                <li>
-                    {{ protagonist.id }} : {{ protagonist.user }}
-                    {% for userTag in protagonist.userTags %}
-                        <ul>
-                            <li>{{ tags[userTag] }}</li>
-                        </ul>
-                    {% endfor %}
-                </li>
-            {% endfor %}
-        </ul>
-        <ul>
-            {% for date in event.eventDates %}
-                <li>{{ date.start | format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-        {% for image in event.getImages %}
-            <img src="{{ asset(uploaded_images_full_dir~'/'~image.img) }}" width=200 />
-        {% endfor %}
-      
-        {{ include('CMBundle::social.html.twig', {'post': event.posts[0]}) }} 
+    <article class="blog">
+        <header>
+            <h2>{{ event.id }} {{ event.getTitle }}</h2>
+            <h3>{{ event.getSubtitle }}</h3>
+            {% if can_manage(event) %}
+                <div class="media">
+                    <div class="btn pull-left alert-info"><a href="{{ path('event_edit', {'id': event.id, 'slug': event.getSlug}) }}">{{ "Edit" | trans }}</a></div>
+                    <div class="btn pull-right alert-danger"><a href="{{ path('event_delete', {'id': event.id}) }}">{{ "Delete" | trans }}</a></div>
+                </div>
+            {% endif %}
+        </header>
         <div>
-            {{ form(form) }}
+            <p>{{ event.getText | raw }}</p>
+            {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'post': event.post}) }}
+            <ul>
+                {% for protagonist in event.entityUsers if protagonist.status == 1 %} {# active #}
+                    <li>
+                        {{ protagonist.id }} : {{ protagonist.user }}
+                        {% for userTag in protagonist.userTags %}
+                            <ul>
+                                <li>{{ tags[userTag] }}</li>
+                            </ul>
+                        {% endfor %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <ul>
+                {% for date in event.eventDates %}
+                    <li>{{ date.start | format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</li>
+                {% endfor %}
+            </ul>
         </div>
-    </div>
-#}
+            {% for image in event.getImages %}
+                <img src="{{ asset(uploaded_images_full_dir~'/'~image.img) }}" width=200 />
+            {% endfor %}
+          
+            {{ include('CMBundle::social.html.twig', {'post': event.posts[0]}) }} 
+            <div>
+                {{ form(form) }}
+            </div>
+        </div>
+    </article> 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/cm/js/uploadCollection.js') }}"></script>
 {% endblock %}

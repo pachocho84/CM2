@@ -32,7 +32,7 @@ class WallController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('exclude' => array($this->getUser()->getId())));
+        $posts = $em->getRepository('CMBundle:Post')->getLastPosts();
         $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
         
         if ($request->isXmlHttpRequest()) {
@@ -51,7 +51,7 @@ class WallController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('after' => $postId, 'exclude' => array($this->getUser()->getId()), 'paginate' => false));
+        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('after' => $postId, 'paginate' => false));
 
         return array('posts' => $posts);
     }

@@ -22,7 +22,11 @@ class PageController extends Controller
      */
     public function showAction($slug)
     {
-        return array('name' => $slug);
+        $em = $this->getDoctrine()->getManager();
+        
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+
+        return array('page' => $page);
     }
 
     /**

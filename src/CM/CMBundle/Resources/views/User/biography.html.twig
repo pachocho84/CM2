@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    {#<?php include_partial('user/top', array('user' => $user)) ?>#}                                                           
+    {{ include('CMBundle:User:top.html.twig', {'inPage': 'biography'}) }}                                                          
 
 
  
@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    {% if is_granted('ROLE_USER') and biography.post is not null %}
+    {% if is_granted('ROLE_USER') and biography is not null and biography.post is not null %}
         {{ include('CMBundle::social.html.twig', {'post': biography.post}) }}
     {% endif %}
 

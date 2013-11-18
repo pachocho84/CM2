@@ -19,36 +19,48 @@ class GroupRepository extends BaseRepository
         ), $options);
     }
 
-    public function getGroupExcludeUsers($group_id, $excludes)
+    public function getAdmins($groupId)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('u')
+            ->from('CMBundle:User', 'u')
+            ->leftJoin('u.userGroups', 'ug')
+            ->where('ug.admin = '.true)
+            ->andWhere('identity(ug.group) = :group_id')->setParameter('group_id', $groupId)
+            ->getQuery()->getResult();
+    }
+
+    public function getGroupExcludeUsers($groupId, $excludes)
     {
         return $this->createQueryBuilder('g')
             ->select('g, gu, u')
             ->leftJoin('g.groupUsers', 'gu')
             ->leftJoin('gu.user', 'u')
-            ->where('g.id = :group_id')->setParameter('group_id', $group_id)
+            ->where('g.id = :group_id')->setParameter('group_id', $groupId)
             ->andWhere('u.id NOT IN (:excludes)')->setParameter('excludes', $excludes)
             ->getQuery()->getSingleResult();
     }
 
-    public function filterGroupsForUser($user_id)
+    public function filterGroupsForUser($userId)
     {
         return $this->createQueryBuilder('g')
             ->select('g')
             ->leftJoin('g.groupUsers', 'gu')
-            ->where('gu.user = :user_id')->setParameter('user_id', $user_id);
+            ->where('gu.user = :user_id')->setParameter('user_id', $userId);
     }
 
-    public function getGroupsForUser($user_id)
+    public function getGroupsForUser($userId)
     {
-        return $this->filterGroupsForUser($user_id)->getQuery()->getResult();
+        return $this->filterGroupsForUser($userId)->getQuery()->getResult();
     }
 
-    public function getUserIdsFor($group_id, $excludes = array())
+    public function getUserIdsFor($groupId, $excludes = array())
     {
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('DISTINCT u.id')->from('CMBundle:User', 'u')
+            ->select('DISTINCT u.id')
+            ->from('CMBundle:User', 'u')
             ->leftJoin('u.userGroups', 'ug')
-            ->where('ug.group = :group_id')->setParameter('group_id', $group_id);
+            ->where('ug.group = :group_id')->setParameter('group_id', $groupId);
         if (count($excludes) > 0) {
             $query->andWhere('u.id NOT IN (:excludes)')->setParameter('excludes', $excludes);
         }

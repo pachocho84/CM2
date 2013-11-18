@@ -22,7 +22,11 @@ class GroupController extends Controller
      */
     public function showAction($slug)
     {
-        return array('name' => $slug);
+        $em = $this->getDoctrine()->getManager();
+        
+        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+
+        return array('group' => $group);
     }
 
     /**

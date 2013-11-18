@@ -265,12 +265,10 @@ class Notification
      * @param User $fromUser
      * @return Notification
      */
-    public function setFromGroup(User $fromGroup = null)
+    public function setFromGroup(Group $fromGroup = null)
     {
-        if ($fromGroup->addNotificationOutgoing($this)) {
-            $this->fromGroup = $fromGroup;
-            $this->fromGroupId = $fromGroup->getId();
-        }
+        $this->fromGroup = $fromGroup;
+        $this->fromGroupId = $fromGroup->getId();
     
         return $this;
     }
@@ -301,12 +299,10 @@ class Notification
      * @param User $fromUser
      * @return Notification
      */
-    public function setFromPage(User $fromPage = null)
+    public function setFromPage(Page $fromPage = null)
     {
-        if ($fromPage->addNotificationOutgoing($this)) {
-            $this->fromPage = $fromPage;
-            $this->fromPageId = $fromPage->getId();
-        }
+        $this->fromPage = $fromPage;
+        $this->fromPageId = $fromPage->getId();
     
         return $this;
     }

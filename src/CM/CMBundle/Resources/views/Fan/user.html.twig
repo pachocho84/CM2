@@ -1,7 +1,8 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
 {% block body %}
-    {#<?php include_partial('user/top', array('user' => $user)) ?>#}                                                            
+
+    {{ include('CMBundle:User:top.html.twig', {'inPage': 'fan'}) }}                                                    
 
 
      

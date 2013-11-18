@@ -1,1 +1,7 @@
-Group: {{ name }}!
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+    {{ group }} group
+    
+    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': group.id, 'object': 'Group'})) }}{% endif %}    
+{% endblock %}

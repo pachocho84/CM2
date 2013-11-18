@@ -122,6 +122,7 @@
     {% endfor %}
     </div></div>
 {% endspaceless %}
+{% endblock choice_widget_expanded %}
 
 {# Labels #}
 
@@ -180,7 +181,6 @@
     </div>
 {% endspaceless %}
 {% endblock form_row_simple %}
-{% endblock choice_widget_expanded %}
 
 {% block datetime_row %}
 {% spaceless %}
@@ -200,7 +200,10 @@
 
 {% block _cm_cmbundle_event_eventDates_row %}
 {% spaceless %}
-    <div class="panel panel-default">
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    <div class="panel panel-default" asd>
         <div class="panel-heading"><h3 class="panel-title">{{ 'Event Dates' | trans }}</h3></div>
         <div class="panel-body" {{ block('widget_container_attributes') }}>
             {{ block('form_rows') }}

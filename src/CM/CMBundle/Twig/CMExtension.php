@@ -364,11 +364,12 @@ elseif ($img_ratio > 1) {
     public function getNotificationTag(Notification $notification)
     {
         $userLink = $this->router->generate('user_show', array('slug' => $notification->getFromUser()->getSlug()));
-        $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
         switch ($this->getClassName($notification->getPost()->getObject()).'_'.$notification->getType()) {
             case 'Event_'.Notification::TYPE_LIKE:
+                $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
                 return $this->translator->trans('%user% likes your event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'Event_'.Notification::TYPE_COMMENT:
+                $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
                 return $this->translator->trans('%user% has commented your event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'disc_protagonist':
                 // return __('%user% added you as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
@@ -380,9 +381,11 @@ elseif ($img_ratio > 1) {
                 // return __('%user% has commented your disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
             case 'user_like':
                 // return __('%user% likes your %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to(__('post'), $this->getPost()->getLinkShow())));
-            case 'user_'.Post::TYPE_FAN:
+            case 'Fan_'.Notification::TYPE_FAN:
+                return $this->translator->trans('%user% became your fan.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>'));
                 // return __('%user% became your fan.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow())));
             default:
+                return $this->getClassName($notification->getPost()->getObject()).'_'.$notification->getType();
                 // return 'Case: '.$notification->getPost()->getObject().'_'.$notification->getType().', PostId: '.$notification->getPostId().', From: '.$notification->getFromUser().', Type: '.$notification->getType().', Object: '.$notification->getObject();
         }
     }

@@ -524,11 +524,11 @@ class Page
      * @param RequestOutcoming $requestOutcoming
      * @return Post
      */
-    public function addFans(Fan $fan)
+    public function addFan(Fan $fan)
     {
         if (!$this->fans->contains($fan)) {
             $this->fans[] = $fan;
-            $fan->setUser($this);
+            $fan->setPage($this);
         }
     
         return $this;
@@ -539,7 +539,7 @@ class Page
      *
      * @param RequestOutcoming $requestOutcoming
      */
-    public function removeFans(Fan $fan)
+    public function removeFan(Fan $fan)
     {
         $this->fans->removeElement($fan);
     }

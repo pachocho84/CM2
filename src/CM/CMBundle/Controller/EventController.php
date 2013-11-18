@@ -128,12 +128,53 @@ class EventController extends Controller
 
         return array('dates' => $dates, 'month' => $cMonth);
     }
-    
+
     /**
      * @Route("/{id}/{slug}", name="event_show", requirements={"id" = "\d+", "_locale" = "en|fr|it"})
      * @Template
      */
     public function showAction(Request $request, $id, $slug)
+    {
+        $em = $this->getDoctrine()->getManager();
+            
+        if ($request->isXmlHttpRequest()) {
+            $date = $em->getRepository('CMBundle:Event')->getDate($id, array('locale' => $request->getLocale()));
+            return $this->render('CMBundle:Event:object.html.twig', array('date' => $date));
+        }
+        
+        $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale(), 'protagonists' => true));
+        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+
+        $images = new ArrayCollection();
+
+        $form = $this->createForm(new ImageCollectionType(), $images, array(
+                'action' => $this->generateUrl('event_show', array(
+                'id' => $event->getId(),
+                'slug' => $event->getSlug()
+            )),
+            'cascade_validation' => true
+        ))->add('save', 'submit');
+
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+            $event->addImages($images);
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($event);
+            $em->flush();
+
+            return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
+        }
+        
+        return array('event' => $event, 'tags' => $tags, 'form' => $form->createView());
+    }
+    
+    /**
+     * @Route("/date/{id}/{slug}", name="event_dates_show", requirements={"id" = "\d+", "_locale" = "en|fr|it"})
+     * @Template
+     */
+    public function showDateAction(Request $request, $id, $slug)
     {
         $em = $this->getDoctrine()->getManager();
             

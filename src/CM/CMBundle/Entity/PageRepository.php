@@ -19,25 +19,36 @@ class PageRepository extends BaseRepository
         ), $options);
     }
 
-    public function filterPagesForUser($user_id)
+    public function getAdmins($pageId)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('u')
+            ->from('CMBundle:User', 'u')
+            ->leftJoin('u.userPages', 'up')
+            ->where('up.admin = '.true)
+            ->andWhere('identity(up.page) = :page_id')->setParameter('page_id', $pageId)
+            ->getQuery()->getResult();
+    }
+
+    public function filterPagesForUser($userId)
     {
         return $this->createQueryBuilder('p')
             ->select('p')
             ->leftJoin('p.pageUsers', 'pu')
-            ->where('pu.user = :user_id')->setParameter('user_id', $user_id);
+            ->where('pu.user = :user_id')->setParameter('user_id', $userId);
     }
 
-    public function getPagesForUser($user_id)
+    public function getPagesForUser($userId)
     {
-        return $this->filterPagesForUser($user_id)->getQuery()->getResult();
+        return $this->filterPagesForUser($userId)->getQuery()->getResult();
     }
 
-    public function getUserIdsFor($page_id, $excludes = null)
+    public function getUserIdsFor($pageId, $excludes = null)
     {
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('DISTINCT u.id')->from('CMBundle:User', 'u')
             ->leftJoin('u.userPages', 'ug')
-            ->where('ug.page = :page_id')->setParameter('page_id', $page_id);
+            ->where('ug.page = :page_id')->setParameter('page_id', $pageId);
         if (count($excludes) > 0) {
             $query->andWhere('u.id NOT IN (:excludes)')->setParameter('excludes', $excludes);
         }

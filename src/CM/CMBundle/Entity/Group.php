@@ -523,11 +523,11 @@ class Group
      * @param RequestOutcoming $requestOutcoming
      * @return Post
      */
-    public function addFans(Fan $fan)
+    public function addFan(Fan $fan)
     {
         if (!$this->fans->contains($fan)) {
             $this->fans[] = $fan;
-            $fan->setUser($this);
+            $fan->setGroup($this);
         }
     
         return $this;
@@ -538,7 +538,7 @@ class Group
      *
      * @param RequestOutcoming $requestOutcoming
      */
-    public function removeFans(Fan $fan)
+    public function removeFan(Fan $fan)
     {
         $this->fans->removeElement($fan);
     }

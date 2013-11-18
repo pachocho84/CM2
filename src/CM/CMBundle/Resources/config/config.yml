@@ -98,10 +98,10 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [350, 350], mode: inset }
-        750:
+        770:
             quality: 100
             filters:
-                thumbnail: { size: [750, 750], mode: inset }
+                thumbnail: { size: [770, 770], mode: inset }
 
 sonata_block:
     default_contexts: [cms]

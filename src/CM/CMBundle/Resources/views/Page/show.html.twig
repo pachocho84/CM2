@@ -1,1 +1,7 @@
-Page: {{ name }}!
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+    {{ page }} page
+    
+    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': page.id, 'object': 'Page'})) }}{% endif %}    
+{% endblock %}

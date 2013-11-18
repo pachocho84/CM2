@@ -57,7 +57,7 @@ class UserAuthentication
         $this->session->set('user/last_name', $user->getLastName());
         $this->session->set('user/full_name', (string)$user);
         $this->session->set('user/img', $user->getImg());
-        $this->session->set('user/img_offset', $user->getOffset());
+        $this->session->set('user/img_offset', $user->getImgOffset());
         $this->session->set('user/groups_admin', $groups);
         $this->session->set('user/pages_admin', $pages);
         // $this->session->set('siti_admin', $siti, 'user');

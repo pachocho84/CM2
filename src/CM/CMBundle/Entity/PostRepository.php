@@ -81,6 +81,22 @@ class PostRepository extends BaseRepository
         return $options['paginate'] ? $query->getQuery() : $query->getQuery()->getResult();
     }
 
+    public function getPostsAfter($time, $object = null, $objectIds = null)
+    {
+        $query = $this->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.updatedAt > :time')->setParameter('time', $time);
+        if (!is_null($object)) {
+            $query->andWhere('p.object = :object')->setParameter('object', $object);
+        }
+        if (!is_null($objectIds)) {
+            foreach ($objectIds as $key => $objectId) {
+                $query->andWhere(':object_id_'.$key.' member of p.objectIds')->setParameter('object_id_'.$key, $objectId);
+            }
+        }
+        return $query->getQuery()->getResult();
+    }
+
     // static public function getLastPosts($options = array())
     // {
     //     $options = self::getOptions($options);
@@ -112,7 +128,9 @@ class PostRepository extends BaseRepository
         if (!is_null($entityId)) {
             $query->andWhere('p.entity = :entity_id')->setParameter('entity_id', $entityId);
         } else {
-            $query->andWhere('p.objectIds = :object_ids')->setParameter('object_ids', $objectIds);
+            foreach ($objectIds as $key => $objectId) {
+                $query->andWhere(':object_id_'.$key.' member of p.objectIds')->setParameter('object_id_'.$key, $objectId);
+            }
         }
         // TODO: make it usable for images
         $query->getQuery()->execute();

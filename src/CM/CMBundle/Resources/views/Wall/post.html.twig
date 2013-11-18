@@ -5,11 +5,7 @@
 
         <p>{{ post_text(post) | raw }}</p>
 
-        {% if post.type == 3 %} {# fan #}
-            {{ include('CMBundle:Fan:post.html.twig') }}
-        {% else  %}
-            {{ include('CMBundle:'~(post.object | class_name)~':post.html.twig') }}
-        {% endif %}
+        {{ include('CMBundle:'~(post.object | class_name)~':post.html.twig') }}
         
         <p class="text-muted">
             {{ show_icon((post.object | class_name)~'_'~(post.type)) | raw }}

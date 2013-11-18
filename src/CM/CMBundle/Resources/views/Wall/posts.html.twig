@@ -10,7 +10,7 @@
     }
 ?>#}
 
-{% for post in posts if post.user.id %}
+{% for post in posts %}
 
     {% if format is defined and format == 'short' %}
 
@@ -34,7 +34,7 @@
 
 {% if posts.paginationData is defined and posts.paginationData.current < posts.paginationData.last %}
     <div class="well well-small load_more">
-        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': posts.getPaginationData.next })) }}">{{ 'Load more' |  trans }}</a>
+        <a href="{{ path('user_wall', app.request.attributes.get('_route_params')|merge({ 'page': posts.getPaginationData.next })) }}">{{ 'Load more' |  trans }}</a>
     </div>
 {% endif %}
 

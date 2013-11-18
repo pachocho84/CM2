@@ -46,6 +46,8 @@ class Helper
                 return $this->em->getRepository('CMBundle:Comment')->findOneById($objectId);
             case 'Like':
                 return $this->em->getRepository('CMBundle:Like')->findOneById($objectId);
+            case 'Fan':
+                return $this->em->getRepository('CMBundle:Fan')->findOneById($objectId);
             case 'image':
                 // return is_array($object_id) ? ImageQuery::create()->filterById($object_id)->orderByCreatedAt('desc')->find() : ImageQuery::create()->filterById($object_id)->findOne();
             case 'link':

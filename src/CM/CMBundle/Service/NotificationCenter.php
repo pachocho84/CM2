@@ -38,7 +38,7 @@ class NotificationCenter
         $group = null
     )
     {
-        if (!is_null($toUser) && $toUser->getId() == $fromUser->getId()) {
+        if ($toUser->getId() == $fromUser->getId()) {
             return;
         }
 
