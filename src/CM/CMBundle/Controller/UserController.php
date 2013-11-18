@@ -148,6 +148,8 @@ class UserController extends Controller
             $this->get('cm.request_center')->refuseRequest($this->getUser()->getId(), $this->get('cm.helper')->fullClassName($object), $objectId);
         }
 
+        $em = $this->getDoctrine()->getManager();
+
         switch ($object) {
             case 'Event':
                 $post = $em->getRepository('CMBundle:Entity')->getCreationPost($objectId, $this->get('cm.helper')->fullClassName($object));

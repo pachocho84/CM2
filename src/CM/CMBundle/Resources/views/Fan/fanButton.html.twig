@@ -1,15 +1,13 @@
 {% if userId != app.user.id %}
     {% if not imFan %}
-        {% if class is null %}{% set class = 'ajax-link ajax-link-target' %}{% endif %}
-        <a href="{{ path('fan_become', {'fanId': userId, 'object': object}) }}" class="btn fan-become {{ class }}">{% if fanBecomeText is defined %}{{ fanBecomeText|raw }}{% else %}<i class="glyphicon glyphicon-flag"></i> {{ 'Become fan'|trans }}{% endif %}</a>
+        <a href="{{ path('fan_become', {'fanId': userId, 'object': object}) }}" class="btn fan-become ajax-link ajax-link-target"><i class="glyphicon glyphicon-flag"></i> {{ 'Become fan'|trans }}</a>
     {% else %}
         <div class="btn-group ajax-link-target">
-          <button class="btn dropdown-toggle{% if class is defined%} {{ class }}{% endif %}" data-toggle="dropdown">
+          <button class="btn dropdown-toggle btn-default" data-toggle="dropdown">
                 <i class="glyphicon glyphicon-flag"></i> {{ 'You are fan'|trans }} <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            {% if class is null %}{% set class = 'ajax-link' %}{% endif %}
-            <li><a href="{{ path('fan_unbecome', {'fanId': userId, 'object': object}) }}" class="fan-become {{ class }}"><i class="glyphicon glyphicon-flag"></i> {{ 'Unbecome fan'|trans }}</a></li>
+            <li><a href="{{ path('fan_unbecome', {'fanId': userId, 'object': object}) }}" class="fan-become ajax-link"><i class="glyphicon glyphicon-flag"></i> {{ 'Unbecome fan'|trans }}</a></li>
           </ul>
         </div>
     {% endif %}

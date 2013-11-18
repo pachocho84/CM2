@@ -108,9 +108,13 @@ class FanController extends Controller
             $em->flush();
         }
 
-        if ($request->isXmlHttpRequest()) {
-            return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array('userId' => $fanId, 'imFan' => $imFan, 'class' => $request->get('class'), 'fanBecomeText' => $request->get('fanBecomeText'))));
-        }
+        // if ($request->isXmlHttpRequest()) {
+        return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array(
+            'userId' => $fanId,
+            'object' => $object,
+            'imFan' => true,
+        )));
+        // }
 
         return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array('userId' => $fanId, 'imFan' => $imFan, 'class' => $request->get('class'), 'fanBecomeText' => $request->get('fanBecomeText'))));
         
@@ -143,15 +147,19 @@ class FanController extends Controller
         $em->remove($fan);
         $em->flush();
         
-        if ($request->isXmlHttpRequest()) {
-            return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array('userId' => $fanId, 'imFan' => false)));
-        }   
+        // if ($request->isXmlHttpRequest()) {
+        return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array(
+            'userId' => $fanId,
+            'object' => $object,
+            'imFan' => false,
+        )));
+        // }
         
         return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array('userId' => $fanId, 'imFan' => false)));
 
 
-        $this->getUser()->setFlash('success', $this->getContext()->getI18N()->__('You are not fan anymore.'));
-        $this->redirect($request->getReferer() ? $request->getReferer() : '@homepage');     
+        // $this->getUser()->setFlash('success', $this->getContext()->getI18N()->__('You are not fan anymore.'));
+        // $this->redirect($request->getReferer() ? $request->getReferer() : '@homepage');     
     }
 
     
@@ -169,8 +177,6 @@ class FanController extends Controller
             'userId' => $userId,
             'object' => $object,
             'imFan' => $imFan,
-            'class' => $request->get('class'),
-            'fanBecomeText' => $request->get('fanBecomeText')
         );
     }
     
@@ -178,7 +184,5 @@ class FanController extends Controller
     {
         $this->fans = FanQuery::getUserFans($this->user->getId(), $this->limit ? $this->limit : 28);
         $this->nbFans = FanQuery::countUserFans($this->user->getId());
-
-        return new Response;
     }
 }

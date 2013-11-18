@@ -3,5 +3,5 @@
 {% block body %}
     {{ user }} profile
     
-    {{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id, 'fanBecomeText': '<i class="glyphicon glyphicon-flag"></i> '~('Become fan of %user%'|trans({'%user%': user.firstName}))})) }}
+    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id})) }}{% endif %}    
 {% endblock %}
