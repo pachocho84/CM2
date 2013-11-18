@@ -21,7 +21,7 @@
             <h3>{{ show_icon('Fan')|raw }} <span>{{ 'Fans'|trans }}</span></h3>
         </div>
 
-        <div class="media text-center">
+        <div class=" text-center">
             {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id})) }}{% endif %}
             {#<?php include_partial('fanButton', array('user_id' => $user->getId(), 'imFan' => in_array($user->getId(), $whoImFanOf->getRawValue()->toArray()), 'class' => 'btn-large', 'fanBecomeText' => '<i class="glyphicon glyphicon-flag"></i> '.__('Become fan of %user%', array('%user%' => $user->getFirstName())))) ?>#}
         </div>

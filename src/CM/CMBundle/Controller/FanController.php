@@ -18,16 +18,10 @@ use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Fan;
 use CM\CMBundle\Form\CommentType;
 
-
-     // * @JMS\Secure(roles="ROLE_USER")
-
-/**
- * @Route("/fan")
- */
 class FanController extends Controller
 {
     /**
-     * @Route("/user/{slug}", name="fan_user")
+     * @Route("/{slug}/fans", name="fan_user")
      * @Template
      */
     public function userAction(Request $request, $slug)
@@ -79,7 +73,7 @@ class FanController extends Controller
     }
     
     /**
-     * @Route("/become/{object}/{fanId}", name="fan_become", requirements={"fanId" = "\d+"})
+     * @Route("/fan/become/{object}/{fanId}", name="fan_become", requirements={"fanId" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
     public function becomeFanAction(Request $request, $object, $fanId)
@@ -123,7 +117,7 @@ class FanController extends Controller
     }
     
     /**
-     * @Route("/unbecome/{object}/{fanId}", name="fan_unbecome", requirements={"fanId" = "\d+"})
+     * @Route("/fan/unbecome/{object}/{fanId}", name="fan_unbecome", requirements={"fanId" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
     public function unbecomeFanAction(Request $request, $object, $fanId)

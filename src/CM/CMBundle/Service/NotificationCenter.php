@@ -38,7 +38,7 @@ class NotificationCenter
         $group = null
     )
     {
-        if ($toUser->getId() == $fromUser->getId()) {
+        if (!is_null($toUser) && $toUser->getId() == $fromUser->getId()) {
             return;
         }
 
@@ -74,9 +74,9 @@ public function getNewNotificationsNumber($userId)
         return $this->getNewNotificationsNumber($userId);
     }
 
-    public function removeNotifications($fromUser, $object, $objectId, $type)
+    public function removeNotifications($fromUserId, $object, $objectId, $type)
     {
-        $this->em->getRepository('CMBundle:Notification')->delete($fromUser, $object, $objectId, $type);
+        $this->em->getRepository('CMBundle:Notification')->delete($fromUserId, $object, $objectId, $type);
 
         $this->flushNeeded = true;
     }

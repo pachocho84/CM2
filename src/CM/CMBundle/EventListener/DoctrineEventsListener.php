@@ -15,6 +15,7 @@ use CM\CMBundle\Entity\Like;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\EntityTranslation;
+use CM\CMBundle\Entity\Fan;
 
 class DoctrineEventsListener
 {
@@ -45,6 +46,8 @@ class DoctrineEventsListener
             $this->likePersistedRoutine($object, $em);
         } elseif ($object instanceof Biography) {
             $this->biographyPersistedRoutine($object, $em);
+        } elseif ($object instanceof Fan) {
+            $this->fanPersistedRoutine($object, $em);
         }
     }
 
@@ -73,7 +76,8 @@ class DoctrineEventsListener
             $this->likeRemovedRoutine($object, $em);
         } elseif ($object instanceof EntityTranslation && $object->getEntity() instanceof Biography) {
             $this->biographyRemovedRoutine($object->getEntity(), $em);
-            
+        } elseif ($object instanceof Fan) {
+            $this->fanRemovedRoutine($object, $em);
         }
     }
 
@@ -310,5 +314,39 @@ class DoctrineEventsListener
             get_class($biography),
             array($biography->getId())
         );
+    }
+
+    private function fanPersistedRoutine(Fan $fan, EntityManager $em)
+    {
+        $post = $this->get('cm.post_center')->newPost(
+            $fan->getUser(),
+            $fan->getUser(),
+            Post::TYPE_CREATION,
+            get_class($fan),
+            array($fan->getId())
+        );
+
+        $this->get('cm.notification_center')->newNotification(
+            Notification::TYPE_FAN,
+            $fan->getUser(),
+            $fan->getFromUser(),
+            get_class($fan),
+            $fan->getId(),
+            $post,
+            $fan->getPage(),
+            $fan->getGroup()
+        );
+    }
+
+    private function fanRemovedRoutine(Fan $fan, EntityManager $em)
+    {
+        $this->get('cm.post_center')->removePost(
+            $fan->getUser(),
+            $fan->getUser(),
+            get_class($fan),
+            array($fan->getId())
+        );
+
+        $this->get('cm.notification_center')->removeNotifications($fan->getUser()->getId(), get_class($fan), $fan->getId(), Notification::TYPE_FAN);
     }
 }
