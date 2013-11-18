@@ -18,7 +18,7 @@ class FanRepository extends BaseRepository
         return $this->getEntityManager()->createQueryBuilder()
             ->select('u')
             ->from('CMBundle:User', 'u')
-            ->leftJoin('u.fans', 'f')
+            ->leftJoin('u.fanOf', 'f')
             ->where('identity(f.user) = :user_id')->setParameter('user_id', $userId)
             ->getQuery()->getResult(); // TODO: integrate with clients
         // return UserQuery::create()->

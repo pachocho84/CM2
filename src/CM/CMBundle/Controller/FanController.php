@@ -41,9 +41,11 @@ class FanController extends Controller
         }
 
         $fans = $em->getRepository('CMBundle:Fan')->getUserFans($user->getId());
+
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $imFanOf = $em->getRepository('CMBundle:Fan')->getFanOf($this->getUser()->getId());
-            $imFanOf = empty($imFanOf) ? false : $imFanOf->contains($user);
+
+            $imFanOf = empty($imFanOf) ? false : in_array($this->getUser(), $imFanOf);
         }
         
         // $this->getResponse()->setTitle($this->getContext()->getI18N()->__($this->user->getId() == $this->getUser()->getId() ? 'Your fans' : '%user%\'s fans', array('%user%' => $this->user)));
@@ -106,7 +108,7 @@ class FanController extends Controller
         }
 
         if ($request->isXmlHttpRequest()) {
-            return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array('userId' => $fanId, 'imFan' => $imFan)));
+            return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array('userId' => $fanId, 'imFan' => $imFan, 'class' => $request->get('class'), 'fanBecomeText' => $request->get('fanBecomeText'))));
         }
 
         return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array('userId' => $fanId, 'imFan' => $imFan, 'class' => $request->get('class'), 'fanBecomeText' => $request->get('fanBecomeText'))));
