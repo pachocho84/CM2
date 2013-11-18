@@ -263,13 +263,10 @@ class CMExtension extends \Twig_Extension
         }
         
         // Align  
+        $inner_box_style = array();
         if ($img_ratio > 1 && isset($options['offset'])) {
-            $img_style[] = 'right: '.$options['offset'].'%'; 
-        } /*
-elseif ($img_ratio > 1) {
-            $img_style[] = 'left: -'.(abs($width - $img_r_w) / 2).'px';
-        } 
-*/elseif ($img_ratio < 1 && isset($options['offset'])) {
+            $inner_box_style[] = 'right: '.$options['offset'].'%'; 
+        } elseif ($img_ratio < 1 && isset($options['offset'])) {
             $img_style[] = 'bottom: '.$options['offset'].'%'; 
         } elseif ($img_ratio < 1) {             
             $img_style[] = 'bottom: '.($img_r_h / 10).'px';
@@ -296,7 +293,11 @@ elseif ($img_ratio > 1) {
         foreach ($options['box_attributes'] as $key => $attr) {
             $imgBox .= ' '.$key.'="'.$attr.'"';
         }
-        $imgBox .= '><div class="image_box-inner">'.$img.'</div></div>';
+        $imgBox .= '><div class="image_box-inner" style="';
+        foreach ($inner_box_style as $attr) {
+            $imgBox .= $attr;
+        }
+        $imgBox .= '">'.$img.'</div></div>';
 
         if (is_null($options['link'])) {
             return $imgBox;

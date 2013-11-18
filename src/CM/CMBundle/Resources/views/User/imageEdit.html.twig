@@ -23,7 +23,6 @@
 
                 {{ form_row(form.imgFile) }}
                 {{ form_row(form.imgOffset) }}
-                {{ app.user.imgOffset }}
                 {% if app.user.img is not null %}
                     <div class="alert alert-info"><i class="glyphicon glyphicon-exclamation-sign"></i> {{ 'Drag the image to adjust position.' | trans }}</div>
                     {{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ app.user.img), {'width': 150, 'height': 150, 'offset': app.user.imgOffset, 'box_attributes': {'id': 'profile-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px;'}}) | raw }}
@@ -48,26 +47,26 @@
         $(function(){   
             /* PROFILE & COVER PICTURE */
             function image_position(box, target, offset) {
-                console.log(offset);
-                box.css('cursor','move');
+                box.css('cursor', 'move');
                 box.find('.image_box-inner').draggable({
                     scroll: false,
                     drag: function(event, ui) {
-                        console.log(ui.position.top, ui.position.left);
+                        img = box.find('img');
                         if (ui.position.top > offset[1]) {
                             ui.position.top = offset[1];
-                        } else if (ui.position.top < box.height() + offset[1] - box.find('img').height()) {
-                            ui.position.top = box.height() + offset[1] - box.find('img').height();
+                        } else if (ui.position.top < box.outerHeight() + offset[1] - img.height()) {
+                            ui.position.top = box.outerHeight() + offset[1] - img.height();
                         } 
                         if (ui.position.left > offset[0]) {
                             ui.position.left = offset[0];
-                        } else if (ui.position.left < box.width() + offset[0] - box.find('img').width()) {
-                            ui.position.left = box.width() + offset[0] - box.find('img').width();
-                        } 
+                        } else if (ui.position.left < box.outerWidth() + offset[0] - img.width()) {
+                            ui.position.left = box.outerWidth() + offset[0] - img.width();
+                        }
                     },
                     stop: function(event, ui) {
-                        // console.log(box.width() + ' ' + box.find('box').width() + ' ' + box.height() + ' ' + box.find('box').height()); 
-                        target.val(((Math.abs(ui.position.top) != 0 ? Math.abs(ui.position.top) : Math.abs(ui.position.left)) * 100 / box.height()).toFixed(2));   
+                        offsetX = Math.abs(100 * (offset[0] - ui.position.left) / box.find('img').outerWidth());
+                        offsetY = Math.abs(100 * (offset[1] - ui.position.top) / box.find('img').outerHeight());
+                        target.val(img.width() >= img.height() ? offsetX : offsetY);   
                     }
                 });  
             }

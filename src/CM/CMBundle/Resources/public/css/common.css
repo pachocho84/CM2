@@ -64,12 +64,12 @@
     position: relative;
     left: 50%;
     height: 100%;
+    width: 100%;
 }
 
 .image_box .image_box-inner img {
     position: relative;
     right: 50%;
-    height:100%;
 }
 
 

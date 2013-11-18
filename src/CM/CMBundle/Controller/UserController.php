@@ -337,7 +337,7 @@ class UserController extends Controller
             $em->persist($this->getUser());
             $em->flush();
 
-            return new RedirectResponse($this->generateUrl('biography_show', array('slug' => $this->getUser()->getSlug())));
+            return new RedirectResponse($this->generateUrl('user_show', array('slug' => $this->getUser()->getSlug())));
         }
         
         return array(
