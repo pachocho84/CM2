@@ -156,14 +156,15 @@ class FanController extends Controller
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function fanButtonAction(Request $request, $userId, $imFan)
+    public function fanButtonAction(Request $request, $userId, $imFan = null)
     {
-        throw new \Exception("Error Processing Request", 1);
-        
-        $this->imFan = FanQuery::checkIfImFan($this->user_id);
+        $em = $this->getDoctrine()->getManager();
+
+        $imFan = $em->getRepository('CMBundle:Fan')->checkIfIsFanOf($this->getUser(), $userId, 'User');
 
         return array(
-            'imFan' => $em->getRepository('CMBundle:Fan')->countUserFans($this->getUser()),
+            'userId' => $userId,
+            'imFan' => $imFan,
             'class' => $request->get('class'),
             'fanBecomeText' => $request->get('fanBecomeText')
         );

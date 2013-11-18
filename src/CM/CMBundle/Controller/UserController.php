@@ -385,6 +385,14 @@ class UserController extends Controller
      */
     public function showAction($slug)
     {
-        return array('username' => $slug);
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+
+        return array('user' => $user);
     }
 }

@@ -1,5 +1,7 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
 {% block body %}
-    Hello {{ username }}!
+    {{ user }} profile
+    
+    {{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id, 'class': 'btn-large', 'fanBecomeText': '<i class="glyphicon glyphicon-flag"></i> '~('Become fan of %user%'|trans({'%user%': user.firstName}))})) }}
 {% endblock %}

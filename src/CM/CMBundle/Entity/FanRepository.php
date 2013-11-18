@@ -55,7 +55,7 @@ class FanRepository extends BaseRepository
     public function countUserFans($userId)
     {
         return $this->createQueryBuilder('f')
-            ->select('count(f.id')
+            ->select('count(f.id)')
             ->where('identity(f.user) = :user_id')->setParameter('user_id', $userId)
             // leftJoin('f.user', 'u', 'WITH', 'u.enabled ='.true.' AND u.isActive = '.true)
             ->getQuery()->getSingleScalarResult();

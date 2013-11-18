@@ -1,7 +1,7 @@
 {% if userId != app.user.id %}
     {% if not imFan %}
         {% if class is not defined %}{% set class = ' ajax-link ajax-link-target' %}{% endif %}
-        <a href="{{ path('fan_become', {'fanId': userId, 'object': 'User', 'class': 'btn fan-become'~class}) }}">{% if fanBecomeText is defined %}{{ fanBecomeText }}{% else %}<i class="glyphicon glyphicon-flag"></i> {{ 'Become fan'|trans }}{% endif %}</a>
+        <a href="{{ path('fan_become', {'fanId': userId, 'object': 'User', 'class': 'btn fan-become'~class}) }}">{% if fanBecomeText is defined %}{{ fanBecomeText|raw }}{% else %}<i class="glyphicon glyphicon-flag"></i> {{ 'Become fan'|trans }}{% endif %}</a>
     {% else %}
         {% if class is not defined %}{% set class = ' ajax-link' %}{% endif %}
         <div class="btn-group ajax-link-target">
