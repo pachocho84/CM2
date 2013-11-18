@@ -42,6 +42,7 @@ class FanController extends Controller
 
         $fans = $em->getRepository('CMBundle:Fan')->getUserFans($user->getId());
 
+        $imFanOf = null;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $imFanOf = $em->getRepository('CMBundle:Fan')->getFanOf($this->getUser()->getId());
 
@@ -158,14 +159,15 @@ class FanController extends Controller
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function fanButtonAction(Request $request, $userId, $imFan = null)
+    public function fanButtonAction(Request $request, $userId, $object = 'User')
     {
         $em = $this->getDoctrine()->getManager();
 
-        $imFan = $em->getRepository('CMBundle:Fan')->checkIfIsFanOf($this->getUser(), $userId, 'User');
+        $imFan = $em->getRepository('CMBundle:Fan')->checkIfIsFanOf($this->getUser(), $userId, $object);
 
         return array(
             'userId' => $userId,
+            'object' => $object,
             'imFan' => $imFan,
             'class' => $request->get('class'),
             'fanBecomeText' => $request->get('fanBecomeText')
