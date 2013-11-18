@@ -97,6 +97,11 @@ class Page
 	 */
 	private $requestsOutgoing;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Fan", mappedBy="page", cascade={"persist", "remove"})
+     */
+    private $fans;
+    
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -512,6 +517,42 @@ class Page
 	{
 	    return $this->$requestOutgoing;
 	}
+
+    /**
+     * Add requestOutcoming
+     *
+     * @param RequestOutcoming $requestOutcoming
+     * @return Post
+     */
+    public function addFans(Fan $fan)
+    {
+        if (!$this->fans->contains($fan)) {
+            $this->fans[] = $fan;
+            $fan->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Remove requestsOutcoming
+     *
+     * @param RequestOutcoming $requestOutcoming
+     */
+    public function removeFans(Fan $fan)
+    {
+        $this->fans->removeElement($fan);
+    }
+
+    /**
+     * Get requestOutcoming
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFans()
+    {
+        return $this->$fans;
+    }
 
     /**
      * Get sluggable fields

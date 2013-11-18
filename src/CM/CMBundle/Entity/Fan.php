@@ -32,7 +32,7 @@ class Fan
     private $fromUserId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="requestsOutgoing")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="fanOf")
      * @ORM\JoinColumn(name="from_user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $fromUser;
@@ -40,13 +40,13 @@ class Fan
     /**
      * @var integer
      *
-     * @ORM\Column(name="user_id", type="integer")
+     * @ORM\Column(name="user_id", type="integer", nullable=true)
      */
     private $userId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="requestsIncoming")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="fans")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $user;
 
@@ -60,7 +60,7 @@ class Fan
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="Group", inversedBy="images")
+     * @ORM\ManyToOne(targetEntity="Group", inversedBy="fans")
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
      */
     private $group;
@@ -75,7 +75,7 @@ class Fan
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="Page", inversedBy="images")
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="fans")
      * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
      */
     private $page;
@@ -109,10 +109,8 @@ class Fan
      */
     public function setFromUser(User $fromUser)
     {
-        if ($fromUser->addRequestOutgoing($this)) {
-            $this->fromUser = $fromUser;
-            $this->fromUserId = $fromUser->getId();
-        }
+        $this->fromUser = $fromUser;
+        $this->fromUserId = $fromUser->getId();
     
         return $this;
     }
@@ -145,10 +143,8 @@ class Fan
      */
     public function setUser(User $user)
     {
-        if ($user->addRequestIncoming($this)) {
-            $this->user = $user;
-            $this->userId = $user->getId();
-        }
+        $this->user = $user;
+        $this->userId = $user->getId();
     
         return $this;
     }

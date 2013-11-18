@@ -6,6 +6,10 @@ cm_cmbundle_wall:
     resource: "CM\\CMBundle\\Controller\\WallController"
     type:     annotation
 
+cm_cmbundle_fan:
+    resource: "CM\\CMBundle\\Controller\\FanController"
+    type:     annotation
+
 cm_cmbundle_like:
     resource: "CM\\CMBundle\\Controller\\LikeController"
     type:     annotation

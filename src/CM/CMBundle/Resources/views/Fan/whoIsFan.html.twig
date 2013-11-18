@@ -1,0 +1,57 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{#<?php slot('page_top') ?>
+    
+    <?php if ($sf_context->getSito()->getBreadcrumbsDisplay()): ?>
+        <ul class="breadcrumb">
+            <li><?php echo link_to(__($sf_context->getSito()->getHomeLabel()), '@homepage') ?>  <span class="divider"><?php echo $sf_context->getSito()->getRawValue()->getBreadcrumbsSeparator() ?></span></li> 
+            <li class="active"><?php echo __($sf_context->getSito()->getFanLabel()) ?></li>
+        </ul>
+    <?php endif ?>
+    
+    <h2><?php echo __($sf_response->getTitle()) ?></h2>
+    
+    <?php $sf_context->getSito()->getListShowCount() && $oggetti->count() > 0 and print '<p class="center text-muted">'.format_number_choice('[1]%user% has 1 fan.|(1,+Inf]%user% has %count% fans.', array('%count%' => $oggetti->count(), '%user%' => $sf_context->getUtente()), $oggetti->count()).'</p>' ?>
+    
+    <div id="fan-top-button">
+        <?php include_partial('fanButton', array('utente' => $sf_context->getUtente(), 'imFan' => in_array($sf_context->getUtente()->getUserId(), $whoImFanOf->getRawValue()->toArray()), 'class' => 'btn-large btn-block')) ?>
+    </div>
+    
+<?php end_slot() ?>#}
+
+
+{% block body %}
+
+    {#<?php if(!$sf_user->isAuthenticated() && sfConfig::get('app_opzioni_avvisi_cm')): ?>
+        <div class="infoCM">
+            <div class="infoCM-inner">
+                <p><?php echo __('Su %CM% puoi diventare Fan dei musicisti a cui sei interessato e ci&ograve; ti permette di rimanere sempre informato sulle loro attivit&agrave;.<br />
+                Per diventare fan di %sito% effettua il %login% e premi il pulsante "Diventa Fan".', array('%CM%' => link_to('Circuito Musica', 'http://www.circuitomusica.it', array('target' => '_blank')), '%sito%' => sfConfig::get('app_dati_sito_nome'), '%login%' => link_to(__('Login'), '@sf_guard_signin'))) ?></p>
+                <p><?php echo __('Se non conosci %CM% e vuoi sapere di cosa si tratta, %clicca_qui% per un breve tour.', array('%CM%' => link_to('Circuito Musica', 'http://www.circuitomusica.it', array('target' => '_blank')), '%clicca_qui%' => link_to('clicca qui', 'http://www.circuitomusica.it/progetto', array('target' => '_blank')))) ?></p>                                                                                                                                                                                                                               
+            </div>
+        </div>
+    <?php endif ?>#}
+
+
+
+    <div id="fans" class="media-list">       
+        <?php foreach ($oggetti as $oggetto): ?>
+            <div class="media object">
+                <?php show_img_box('uploads/utenti/avatar/200/', $oggetto->getImg(), 200, 200/1.77, $oggetto->getRawValue()->getLinkShow(), false, 'pull-left image_box thumbnail') ?>
+                <div class="media-body">
+                    <h3>
+                        <?php echo link_to($oggetto, $oggetto->getRawValue()->getLinkShow()) ?>
+                        <?php include_partial('fanButton', array('utente' => $oggetto, 'imFan' => in_array($oggetto->getUserId(), $whoImFanOf->getRawValue()->toArray()), 'class' => 'btn-small pull-right')) ?>
+                    </h3>
+                    <h4>
+                        <?php foreach ($oggetto->getUtentiTags() as $tag): ?>
+                            <i class="glyphicon glyphicon-tag"></i> <?php echo $tag ?>
+                        <?php endforeach ?>
+                    </h4>
+                    <?php $oggetto->getRawValue()->getBiografies()->getFirst() and print show_extract($oggetto->getRawValue()->getBiografies()->getFirst()->getEstratto(), $oggetto->getRawValue()->getBiografies()->getFirst()->getBiografia(), false, 500) ?>
+                </div>
+            </div>
+        <?php endforeach ?>
+    </div>
+
+{% endblock %}

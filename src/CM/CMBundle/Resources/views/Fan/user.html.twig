@@ -1,0 +1,50 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+    {#<?php include_partial('user/top', array('user' => $user)) ?>#}                                                            
+
+
+     
+    {#
+    <ul class="breadcrumb">
+      <li><?php echo link_to('Home', '@homepage') ?></li>
+      <li><?php echo link_to(__('Users'), '@user_list') ?></li>
+      <li><?php echo link_to($user, $user->getRawValue()->getLinkShow()) ?></li>
+      <li class="active"><?php echo __($sf_response->getRawValue()->getTitle()) ?></li>
+    </ul>
+    #}
+
+
+
+    <div class="box">
+        <div class="box-top">
+            <h3>{{ show_icon('Fan')|raw }} <span>{{ 'Fans'|trans }}</span></h3>
+        </div>
+
+        <div class="media text-center">
+            {{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id, 'imFan': imFanOf, 'class': 'btn-large', 'fanBecomeText': '<i class="glyphicon glyphicon-flag"></i> '~('Become fan of %user%'|trans({'%user%': user.firstName}))})) }}
+            {#<?php include_partial('fanButton', array('user_id' => $user->getId(), 'imFan' => in_array($user->getId(), $whoImFanOf->getRawValue()->toArray()), 'class' => 'btn-large', 'fanBecomeText' => '<i class="glyphicon glyphicon-flag"></i> '.__('Become fan of %user%', array('%user%' => $user->getFirstName())))) ?>#}
+        </div>
+
+        {% if fans|length > 0 %}
+            <p class="text-center text-muted">{% if fans|length == 1 %}{{ '%user% has one fan.'|trans({'%user%': user}) }}{% else %}{{ '%user% has %count% fans.'|trans({'%user%': user, '%count%': fans|length}) }}{% endif %} 
+        {% endif %} 
+        
+        <ul class="media-list objects">
+            {% for fan in fans %}
+                <li class="media object">
+                    {{ show_img_box(fan.img | imagine_filter('350'), {'width': 200, 'height': 120, 'offset': fan.imgOffset,  'link': path('user_show', {'slug': fan.slug}), 'default': 'user', 'link_attributes': {'class': 'pull-left thumbnail'}}) | raw }}
+                    <div class="media-body">
+                        <h4>
+                            <a href="{{ path('user_show', {'slug': fan.slug}) }}">{{ fan }}</a>
+                            {#<small><?php echo rtrim(implode($user->getRawValue()->getUserTagRels()->toKeyValue('Id', 'UserTag'), ', '), ', ') ?></small>#}
+                        </h4>
+                        {#<?php $user->getPosts()->getFirst() and print $user->getRawValue()->getPosts()->getFirst()->getEntity()->getShortText() ?>#}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        
+    </div>
+
+{% endblock %}

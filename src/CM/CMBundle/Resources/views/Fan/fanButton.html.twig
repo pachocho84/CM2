@@ -1,0 +1,31 @@
+{% if userId != app.user.id %}
+    {% if not imFan %}
+        {% if class is not defined %}{% set class = ' ajax-link ajax-link-target' %}{% endif %}
+        <a href="{{ path('fan_become', {'fanId': userId, 'object': 'User', 'class': 'btn fan-become'~class}) }}">{% if fanBecomeText is defined %}{{ fanBecomeText }}{% else %}<i class="glyphicon glyphicon-flag"></i> {{ 'Become fan'|trans }}{% endif %}</a>
+    {% else %}
+        {% if class is not defined %}{% set class = ' ajax-link' %}{% endif %}
+        <div class="btn-group ajax-link-target">
+          <button class="btn dropdown-toggle<?php isset($class) and print ' '.$class ?>" data-toggle="dropdown">
+                <i class="glyphicon glyphicon-flag"></i> {{ 'You are fan'|trans }} <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="{{ path('fan_unbecome', {'fanId': userId, 'object': 'User', 'class': 'fan-become'~class}) }}"><i class="glyphicon glyphicon-flag"></i> {{ 'Unbecome fan'|trans }}</a></li>
+          </ul>
+        </div>
+    {% endif %}
+{% endif %}
+
+{#<?php if ($user_id != $sf_user->getId()): ?>
+    <?php if (!$imFan): ?>
+        <?php echo link_to(isset($fanBecomeText) ? $sf_data->getRaw('fanBecomeText') : '<i class="glyphicon glyphicon-flag"></i> '.__('Become fan'), '@become_fan?object=user&fan_id='.$user_id, array('class' => isset($class) ? 'btn fan-become'.' '.$class : 'btn fan-become ajax-link ajax-link-target')) ?>
+    <?php elseif ($imFan): ?>
+        <div class="btn-group ajax-link-target">
+          <button class="btn dropdown-toggle<?php isset($class) and print ' '.$class ?>" data-toggle="dropdown">
+                <i class="glyphicon glyphicon-flag"></i> <?php echo __('You are fan') ?> <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><?php echo link_to(__('Unbecome fan'), '@unbecome_fan?object=user&fan_id='.$user_id, array('class' => isset($class) ? 'fan-become'.' '.$class : 'fan-become ajax-link')) ?></li>
+          </ul>
+        </div>
+    <?php endif ?>  
+<?php endif ?>#}

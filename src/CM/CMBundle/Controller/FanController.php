@@ -15,11 +15,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation as JMS;
 use Symfony\Component\Process\Exception\RuntimeException;
 use CM\CMBundle\Entity\Post;
-use CM\CMBundle\Entity\Comment;
+use CM\CMBundle\Entity\Fan;
 use CM\CMBundle\Form\CommentType;
 
 
-     // * @JMS\Secure(roles="ROLE_USER") 
+     // * @JMS\Secure(roles="ROLE_USER")
 
 /**
  * @Route("/fan")
@@ -28,10 +28,9 @@ class FanController extends Controller
 {
     /**
      * @Route("/user/{slug}", name="fan_user")
-     * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function executeUser(Request $request)
+    public function userAction(Request $request, $slug)
     {
         $em = $this->getDoctrine()->getManager();
         
@@ -40,79 +39,141 @@ class FanController extends Controller
         if (!$user) {
             throw new NotFoundHttpException('User not found.');
         }
+
+        $fans = $em->getRepository('CMBundle:Fan')->getUserFans($user->getId());
+        if ($this->get('security.context')->isGranted('ROLE_USER')) {
+            $imFanOf = $em->getRepository('CMBundle:Fan')->getFanOf($this->getUser()->getId());
+            $imFanOf = empty($imFanOf) ? false : $imFanOf->contains($user);
+        }
         
         // $this->getResponse()->setTitle($this->getContext()->getI18N()->__($this->user->getId() == $this->getUser()->getId() ? 'Your fans' : '%user%\'s fans', array('%user%' => $this->user)));
         
         return array(
-            'fans' => $em->getRepository('CMBundle:Fan')->getUserFans($this->user->getId()),
-            'whoImFanOf' => $em->getRepository('CMBundle:Fan')->getWhoImFanOf()
+            'user' => $user,
+            'fans' => $fans,
+            'imFanOf' => $imFanOf
         );
     }
     
-    public function executeWhoIsFan(Request $request)
-    {         
+    public function whoIsFanAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
         // $this->oggetti = FansQuery::findFans(null, true);
         // $this->whoImFanOf = FansQuery::whoImFanOf();
         
         // $this->getResponse()->setTitle($this->getContext()->getI18N()->__($this->getContext()->getSito()->getFanLabel()));
+
+        $fans = $em->getRepository('CMBundle:Fan')->getUserFans($user->getId());
+        if ($this->get('security.context')->isGranted('ROLE_USER')) {
+            $whoImFanOf = $em->getRepository('CMBundle:Fan')->getFansOf($this->getUser()->getId());
+        }
+
         return array(
-            'objects' => $em->getRepository('CMBundle:Fan')->findFans(),
+            'objects' => $em->getRepository('CMBundle:Fan')->getUserFans($user->getId()),
             'whoImFanOf' => $em->getRepository('CMBundle:Fan')->getWhoImFanOf()
         );
     }
     
-    public function executeBecomeFan(Request $request, $fanId, $object)
-    { 
-        $imFan = $em->getRepository('CMBundle:Fan')->checkIfImFan($this->getUser(), $fanId, $object);
+    /**
+     * @Route("/become/{object}/{fanId}", name="fan_become", requirements={"fanId" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     */
+    public function becomeFanAction(Request $request, $object, $fanId)
+    {
+        $fanId = intval($fanId);
+
+        if ($fanId == $this->getUser()->getId()) {
+            throw new HttpException(403, 'You cannot become fan of yourself.');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $imFan = $em->getRepository('CMBundle:Fan')->checkIfIsFanOf($this->getUser(), $fanId, $object);
         
         if ($imFan == false) {      
-            $fan = new Fan();
+            $fan = new Fan;
+            $this->getUser()->addFanOf($fan);
             if ($object == 'User') {
-                $fan->setUserId($fanId);
+                $em->getRepository('CMBundle:User')->findOneById($fanId)->addFan($fan);
             } elseif ($object == 'Page') {
-                $fan->setPageId($fanId);
+                $em->getRepository('CMBundle:Page')->findOneById($fanId)->addFan($fan);
             } elseif ($object == 'Group') {
-                $fan->setGroupId($fanId);
+                $em->getRepository('CMBundle:Group')->findOneById($fanId)->addFan($fan);
             }
-            $fan->setFromUserId($this->getUser()->getId());
-            $imFan = $fan->save();
+            $em->persist($fan);
+            $em->flush();
         }
-        
+
         if ($request->isXmlHttpRequest()) {
-            return $this->renderView('CMBundle:Fan:fanButton', array('userId' => $fanId, 'imFan' => $imFan));
+            return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array('userId' => $fanId, 'imFan' => $imFan)));
         }
+
+        return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array('userId' => $fanId, 'imFan' => $imFan, 'class' => $request->get('class'), 'fanBecomeText' => $request->get('fanBecomeText'))));
         
         // $this->getUser()->setFlash('success', $this->getContext()->getI18N()->__('You became fan.'));
         // $this->redirect($request->getReferer() ? $request->getReferer() : '@homepage');
     }
     
-    public function executeUnbecomeFan(Request $request)
+    /**
+     * @Route("/unbecome/{object}/{fanId}", name="fan_unbecome", requirements={"fanId" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     */
+    public function unbecomeFanAction(Request $request, $object, $fanId)
     {
-        if ($request->getParameter('object') == 'user') {
-            $fan = FanQuery::create()->findByArray(array('UserId' => $request->getParameter('fan_id'), 'FromUserId' => $this->getUser()->getId()));
-        } elseif ($request->getParameter('object') == 'page') {
-            $fan = FanQuery::create()->findByArray(array('PageId' => $request->getParameter('fan_id'), 'FromUserId' => $this->getUser()->getId()));
-        } elseif ($request->getParameter('object') == 'group') {
-            $fan = FanQuery::create()->findByArray(array('GroupId' => $request->getParameter('fan_id'), 'FromUserId' => $this->getUser()->getId()));
+        $fanId = intval($fanId);
+
+        if ($fanId == $this->getUser()->getId()) {
+            throw new HttpException(403, 'You cannot become fan of yourself.');
         }
-        $fan->delete();
+
+        $em = $this->getDoctrine()->getManager();
+
+        if ($object == 'User') {
+            $fan = $em->getRepository('CMBundle:Fan')->findOneBy(array('userId' => $fanId, 'fromUserId' => $this->getUser()->getId()));
+        } elseif ($object == 'Page') {
+            $fan = $em->getRepository('CMBundle:Fan')->findOneBy(array('pageId' => $fanId, 'fromUserId' => $this->getUser()->getId()));
+        } elseif ($object == 'Group') {
+            $fan = $em->getRepository('CMBundle:Fan')->findOneBy(array('groupId' => $fanId, 'fromUserId' => $this->getUser()->getId()));
+        }
+
+        $em->remove($fan);
+        $em->flush();
         
         if ($request->isXmlHttpRequest()) {
-            return $this->renderPartial('fanButton', array('user_id' => $request->getParameter('fan_id'), 'imFan' => false));
+            return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array('userId' => $fanId, 'imFan' => false)));
         }   
         
+        return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array('userId' => $fanId, 'imFan' => false)));
+
+
         $this->getUser()->setFlash('success', $this->getContext()->getI18N()->__('You are not fan anymore.'));
         $this->redirect($request->getReferer() ? $request->getReferer() : '@homepage');     
     }
 
-    public function executeFanButton(Request $request)
+    
+    /**
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function fanButtonAction(Request $request, $userId, $imFan)
     {
+        throw new \Exception("Error Processing Request", 1);
+        
         $this->imFan = FanQuery::checkIfImFan($this->user_id);
+
+        return array(
+            'imFan' => $em->getRepository('CMBundle:Fan')->countUserFans($this->getUser()),
+            'class' => $request->get('class'),
+            'fanBecomeText' => $request->get('fanBecomeText')
+        );
     }
     
     public function executeUserFans(Request $request)
     {
         $this->fans = FanQuery::getUserFans($this->user->getId(), $this->limit ? $this->limit : 28);
         $this->nbFans = FanQuery::countUserFans($this->user->getId());
+
+        return new Response;
     }
 }

@@ -13,93 +13,91 @@ use Doctrine\ORM\Query;
  */
 class FanRepository extends BaseRepository
 {
-    public function getUserBiography($userId)
+    public function getUserFans($userId, $limit = null)
     {
-        return $this->createQueryBuilder('b')
-            ->select('b')
-            ->leftJoin('b.posts', 'p', 'WITH', 'p.type ='.Post::TYPE_CREATION)
-            ->leftJoin('p.user', 'u')
-            ->where('u.id = :user_id')->setParameter('user_id', $userId)
-            ->getQuery()->getSingleResult();
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('u')
+            ->from('CMBundle:User', 'u')
+            ->leftJoin('u.fans', 'f')
+            ->where('identity(f.user) = :user_id')->setParameter('user_id', $userId)
+            ->getQuery()->getResult(); // TODO: integrate with clients
+        // return UserQuery::create()->
+        //  useFanRelatedByFromUserIdQuery()->
+        //      filterByUserId($user_id)->
+        //  endUse()->
+        //  _if($limit)->
+        //      limit($limit)->
+        //      orderByImg('desc')->
+        //  _else()->
+        //      leftJoinWithUserTagRel()->
+        //      useUserTagRelQuery(null, 'left join')->
+        //          leftJoinWithUserTag()->
+        //          useUserTagQuery(null, 'left join')->
+        //              joinWithI18n()->
+        //          endUse()->
+        //      endUse()->
+        //      leftJoinWithPost()->
+        //      usePostQuery(null, 'left join')->
+        //          joinWithEntity()->
+        //          useEntityQuery()->
+        //              joinWithI18n('en')->
+        //          endUse()->
+        //      endUse()->
+        //      addJoinCondition('Post', 'Post.Object = ?', 'biography')->
+        //      orderByLastName()->
+        //  _endIf()->
+        //  joinWithsfGuardUser()->
+        //  where('User.Enabled = ?', true)->
+        //  where('sfGuardUser.IsActive = ?', true)->
+        //  find();
+    }
+    
+    public function countUserFans($userId)
+    {
+        return $this->createQueryBuilder('f')
+            ->select('count(f.id')
+            ->where('identity(f.user) = :user_id')->setParameter('user_id', $userId)
+            // leftJoin('f.user', 'u', 'WITH', 'u.enabled ='.true.' AND u.isActive = '.true)
+            ->getQuery()->getSingleScalarResult();
     }
 
+    public function getFanOf($userId, $object = 'User')
+    {
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('o');
+        switch($object) {
+            default:
+            case 'User':
+                $query->from('CMBundle:User', 'o');
+                break;
+            case 'Page':
+                $query->from('CMBundle:Page', 'o');
+                break;
+            case 'Group':
+                $query->from('CMBundle:User', 'o');
+                break;
+        }
+        return $query->leftJoin('o.fans', 'f')
+            ->where('identity(f.fromUser) = :user_id')->setParameter('user_id', $userId)
+            ->getQuery()->getResult();
+    }
 
-	public static function getUserFans($user_id, $limit = null)
-	{
-		return $this->createQueryBuilder('f')
-			->select('f, u, uut, ut')
-			->leftJoin()
-		return UserQuery::create()->
-			useFanRelatedByFromUserIdQuery()->
-				filterByUserId($user_id)->
-			endUse()->
-			_if($limit)->
-				limit($limit)->
-				orderByImg('desc')->
-			_else()->
-				leftJoinWithUserTagRel()->
-				useUserTagRelQuery(null, 'left join')->
-					leftJoinWithUserTag()->
-					useUserTagQuery(null, 'left join')->
-						joinWithI18n()->
-					endUse()->
-				endUse()->
-				leftJoinWithPost()->
-				usePostQuery(null, 'left join')->
-					joinWithEntity()->
-					useEntityQuery()->
-						joinWithI18n('en')->
-					endUse()->
-				endUse()->
-				addJoinCondition('Post', 'Post.Object = ?', 'biography')->
-				orderByLastName()->
-			_endIf()->
-			joinWithsfGuardUser()->
-			where('User.Enabled = ?', true)->
-			where('sfGuardUser.IsActive = ?', true)->
-			find();
-	}
-	
-	public static function countUserFans($user_id)
-	{
-		return FanQuery::create()->
-			filterByUserId($user_id)->
-			useUserRelatedByFromUserIdQuery()->
-				joinWithsfGuardUser()->
-			endUse()->
-			with('UserRelatedByFromUserId')->
-			where('UserRelatedByFromUserId.Enabled = ?', true)->
-			where('sfGuardUser.IsActive = ?', true)->
-			count();
-	}
-
-  static public function getWhoImFanOf()
-  {
-		if (sfContext::getInstance()->getUser()->isAuthenticated()) {
-	    return FanQuery::create()->
-	      select('UserId')->
-	      filterByFromUserId(sfContext::getInstance()->getUser()->getId())->
-	      find();
-		} else {
-			return new PropelObjectCollection();
-		}
-  }
-
-  static public function checkIfImFan($fan_id, $object = 'user')
-  {
-		if (sfContext::getInstance()->getUser()->isAuthenticated()) {
-	    return FanQuery::create()->
-				_if($object == 'user')->
-	      	filterByUserId($fan_id)->
-				_elseif($object == 'page')->
-	      	filterByPageId($fan_id)->
-				_elseif($object == 'group')->
-	      	filterByGroupId($fan_id)->
-				_endIf()->
-	      filterByFromUserId(sfContext::getInstance()->getUser()->getId())->
-	      findOne();
-		} else {
-			return false;
-		}
-  }
+    public function checkIfIsFanOf($userId, $fanId, $object = 'User')
+    {
+        $query = $this->createQueryBuilder('f')
+            ->select('count(f.id)')
+            ->where('identity(f.fromUser) = :user_id')->setParameter('user_id', $userId);
+        switch($object) {
+            case 'User':
+                $query->andWhere('identity(f.user) = :fan_id');
+                break;
+            case 'Page':
+                $query->andWhere('identity(f.page) = :fan_id');
+                break;
+            case 'Group':
+                $query->andWhere('identity(f.group) = :fan_id');
+                break;
+        }
+        return $query->setParameter('fan_id', $fanId)->getQuery()->getSingleScalarResult() > 0;
+    }
 }

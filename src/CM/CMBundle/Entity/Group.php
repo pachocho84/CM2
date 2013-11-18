@@ -89,6 +89,11 @@ class Group
 	 */
 	private $requestsOutgoing;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Fan", mappedBy="group", cascade={"persist", "remove"})
+     */
+    private $fans;
+    
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -511,6 +516,42 @@ class Group
 	{
 	    return $this->$requestOutgoing;
 	}
+
+    /**
+     * Add requestOutcoming
+     *
+     * @param RequestOutcoming $requestOutcoming
+     * @return Post
+     */
+    public function addFans(Fan $fan)
+    {
+        if (!$this->fans->contains($fan)) {
+            $this->fans[] = $fan;
+            $fan->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Remove requestsOutcoming
+     *
+     * @param RequestOutcoming $requestOutcoming
+     */
+    public function removeFans(Fan $fan)
+    {
+        $this->fans->removeElement($fan);
+    }
+
+    /**
+     * Get requestOutcoming
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFans()
+    {
+        return $this->$fans;
+    }
 
     /**
      * Get sluggable fields

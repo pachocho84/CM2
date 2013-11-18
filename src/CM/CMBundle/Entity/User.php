@@ -260,11 +260,21 @@ class User extends BaseUser
 	 * @ORM\OneToMany(targetEntity="Request", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	private $requestsIncoming;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="Request", mappedBy="fromUser", cascade={"persist", "remove"})
-	 */
-	private $requestsOutgoing;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Request", mappedBy="fromUser", cascade={"persist", "remove"})
+     */
+    private $requestsOutgoing;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Fan", mappedBy="fromUser", cascade={"persist", "remove"})
+     */
+    private $fanOf;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Fan", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $fans;
 
 	public function __construct()
 	{
@@ -283,7 +293,9 @@ class User extends BaseUser
 		$this->notificationsIncoming = new ArrayCollection;
 		$this->notificationsOutgoing = new ArrayCollection;
 		$this->requestsIncoming = new ArrayCollection;
-		$this->requestsOutgoing = new ArrayCollection;
+        $this->requestsOutgoing = new ArrayCollection;
+        $this->fanOf = new ArrayCollection;
+		$this->fans = new ArrayCollection;
 	}
 	
 	public function __toString()
@@ -612,30 +624,6 @@ class User extends BaseUser
     public function getNotes()
     {
         return $this->notes;
-    }
-
-    /**
-     * Set biography
-     *
-     * @param string $biography
-     * @return User
-     */
-    public function setBiography(Biography $biography)
-    {
-        $this->biography = $biography;
-        $biography->setUser($this);
-    
-        return $this;
-    }
-
-    /**
-     * Get notes
-     *
-     * @return string 
-     */
-    public function getBiography()
-    {
-        return $this->biography;
     }
 
     /**
@@ -1006,39 +994,111 @@ class User extends BaseUser
 	    return $this->requestsIncoming;
 	}
 
-	/**
-	 * Add requestOutcoming
-	 *
-	 * @param RequestOutcoming $requestOutcoming
-	 * @return Post
-	 */
-	public function addRequestOutgoing(Request $requestOutgoing)
-	{
+    /**
+     * Add requestOutcoming
+     *
+     * @param RequestOutcoming $requestOutcoming
+     * @return Post
+     */
+    public function addRequestOutgoing(Request $requestOutgoing)
+    {
         if (!$this->requestsOutgoing->contains($requestOutgoing)) {
-	        $this->requestsOutgoing[] = $requestOutgoing;
-	        return true;
-	    }
-	
-	    return false;
-	}
+            $this->requestsOutgoing[] = $requestOutgoing;
+            return true;
+        }
+    
+        return false;
+    }
 
-	/**
-	 * Remove requestsOutcoming
-	 *
-	 * @param RequestOutcoming $requestOutcoming
-	 */
-	public function removeRequestOutgoing(Request $requestOutgoing)
-	{
-	    $this->requestsOutgoing->removeElement($requestOutgoing);
-	}
+    /**
+     * Remove requestsOutcoming
+     *
+     * @param RequestOutcoming $requestOutcoming
+     */
+    public function removeRequestOutgoing(Request $requestOutgoing)
+    {
+        $this->requestsOutgoing->removeElement($requestOutgoing);
+    }
 
-	/**
-	 * Get requestOutcoming
-	 *
-	 * @return \Doctrine\Common\Collections\Collection 
-	 */
-	public function getRequestsOutgoing()
-	{
-	    return $this->$requestsOutgoing;
-	}
+    /**
+     * Get requestOutcoming
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRequestsOutgoing()
+    {
+        return $this->$requestsOutgoing;
+    }
+
+    /**
+     * Add requestOutcoming
+     *
+     * @param RequestOutcoming $requestOutcoming
+     * @return Post
+     */
+    public function addFanOf(Fan $fan)
+    {
+        if (!$this->fanOf->contains($fan)) {
+            $this->fanOf[] = $fan;
+            $fan->setFromUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Remove requestsOutcoming
+     *
+     * @param RequestOutcoming $requestOutcoming
+     */
+    public function removeFanOf(Fan $fan)
+    {
+        $this->fanOf->removeElement($fan);
+    }
+
+    /**
+     * Get requestOutcoming
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFanOf()
+    {
+        return $this->$fanOf;
+    }
+
+    /**
+     * Add requestOutcoming
+     *
+     * @param RequestOutcoming $requestOutcoming
+     * @return Post
+     */
+    public function addFan(Fan $fan)
+    {
+        if (!$this->fans->contains($fan)) {
+            $this->fans[] = $fan;
+            $fan->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Remove requestsOutcoming
+     *
+     * @param RequestOutcoming $requestOutcoming
+     */
+    public function removeFan(Fan $fan)
+    {
+        $this->fans->removeElement($fan);
+    }
+
+    /**
+     * Get requestOutcoming
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFans()
+    {
+        return $this->$fans;
+    }
 }
