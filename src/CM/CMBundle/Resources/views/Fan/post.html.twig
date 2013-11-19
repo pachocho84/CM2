@@ -1,14 +1,32 @@
-{% set fan = related_object(post.object, post.objectIds[0]) %}
+{# puoi usare 'post' e 'relatedObjects', che è un array con tutti gli utenti/i gruppi/le pagine già presi in una query sola #}
 
-{% if fan.user is defined %}
+{% if relatedObjects[0].user is not null %}
+    user
+{% elseif relatedObjects[0].group is not null %}
+    group
+{% else %}
+    page
+{% endif %}
+
+{#<?php if (get_class($post->getRawValue()->getRelatedObject()->getFirst()) == 'User'): ?>
     <div class="media">
         <?php foreach ($post->getRelatedObject() as $user): ?>
             <?php show_img_box($user->getImg(), array('width' => 50, 'height' => 50, 'offset' => $user->getImgOffset(), 'link' => $user->getLinkShow(), 'default' => 'user', 'link_attributes' => array('class' => 'pull-left', 'data-toggle' => 'tooltip', 'title' => $user))) ?>  
         <?php endforeach ?>
     </div>
-{% else %}
-    page/group
-{% endif %}
+<?php else: ?>
+    <ul class="media-list">
+        <?php foreach ($post->getRelatedObject() as $i => $fan): ?>
+            <li class="media object clearfix<?php $sf_request->getParameter('action') != 'show' && $i > 2 and print ' hide' ?>">
+                <?php show_img_box($fan->getImg(), array('width' => 100, 'height' => 100, 'link' => $fan->getLinkShow(), 'link_attributes' => array('class' => 'pull-left thumbnail'))) ?>
+                <div class="media-body">    
+                    <h4><?php echo link_to($fan, $fan->getRawValue()->getLinkShow()) ?></h4>
+                    <?php echo simple_format_text($fan->getRawValue()->getDescription()) ?>
+                </div>
+            </li>
+        <?php endforeach ?>
+    </ul>
+<?php endif ?>
 
 {#<?php if (get_class($post->getRawValue()->getRelatedObject()->getFirst()) == 'User'): ?>
     <div class="media">

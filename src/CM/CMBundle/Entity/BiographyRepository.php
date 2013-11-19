@@ -17,9 +17,10 @@ class BiographyRepository extends BaseRepository
     {
         return $this->createQueryBuilder('b')
             ->select('b')
-            ->leftJoin('b.posts', 'p', 'WITH', 'p.type ='.Post::TYPE_CREATION)
+            ->leftJoin('b.posts', 'p')
             ->leftJoin('p.user', 'u')
             ->where('u.id = :user_id')->setParameter('user_id', $userId)
+            ->setMaxResults(1)
             ->getQuery()->getResult();
     }
 }

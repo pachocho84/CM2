@@ -100,4 +100,15 @@ class FanRepository extends BaseRepository
         }
         return $query->setParameter('fan_id', $fanId)->getQuery()->getSingleScalarResult() > 0;
     }
+
+    public function getFans($ids)
+    {
+        return $this->createQueryBuilder('f')
+            ->select('f')
+            ->leftJoin('f.user', 'u')
+            ->leftJoin('f.page', 'p')
+            ->leftJoin('f.group', 'g')
+            ->where('f.id in (:ids)')->setParameter('ids', $ids)
+            ->getQuery()->getResult();
+    }
 }

@@ -12,6 +12,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  *
  * @ORM\Entity(repositoryClass="PostRepository")
  * @ORM\Table(name="post")
+ * @ORM\HasLifecycleCallbacks
  */
 class Post
 {
@@ -20,8 +21,10 @@ class Post
     const TYPE_CREATION = 0;
     const TYPE_REGISTRATION = 1;
     const TYPE_UPDATE = 2;
-    const TYPE_FAN = 3;
-    const TYPE_EDUCATION = 4;
+    const TYPE_FAN_USER = 3;
+    const TYPE_FAN_GROUP = 4;
+    const TYPE_FAN_PAGE = 5;
+    const TYPE_EDUCATION = 6;
 
     /**
      * @var integer
@@ -86,9 +89,11 @@ class Post
     /**
      * @var array
      *
-     * @ORM\Column(name="object_ids", type="simple_array")
+     * @ORM\Column(name="object_ids", type="text", nullable=true)
      */
     private $objectIds;
+
+    private $objectIdsArray = array();
 
     /**
      * @ORM\Column(name="group_id", type="integer", nullable=true)
@@ -341,9 +346,32 @@ class Post
      */
     public function setObjectIds($objectIds)
     {
-        $this->objectIds = $objectIds;
+        $this->objectIdsArray = $objectIds;
+        $this->objectIds = 'changed';
     
         return $this;
+    }
+
+    /**
+     * Set objectIds
+     *
+     * @param array $objectIds
+     * @return Post
+     */
+    public function addObjectId($objectIds)
+    {
+        $this->objectIdsArray = array_merge($this->objectIdsArray, array($objectIds));
+        $this->objectIds = 'changed';
+    
+        return $this;
+    }
+
+    public function removeObjectId($objectId)
+    {
+        if (($key = array_search($objectId, $this->objectIdsArray)) !== false) {
+            unset($this->objectIdsArray[$key]);
+            $this->objectIds = 'changed';
+        }
     }
 
     /**
@@ -353,7 +381,7 @@ class Post
      */
     public function getObjectIds()
     {
-        return $this->objectIds;
+        return $this->objectIdsArray;
     }
 
     /**
@@ -551,6 +579,32 @@ class Post
             return $this->getGroup()->getImg();
         } else {
             return $this->getUser()->getImg();
+        }
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function arrayToString()
+    {
+        if (count($this->objectIdsArray) == 0) {
+            $this->objectIds = '';
+        } else {
+            $this->objectIds = ',';
+            foreach ($this->objectIdsArray as $id) {
+                $this->objectIds .= $id.',';
+            }
+        }
+    }
+
+    /**
+     * @ORM\PostLoad()
+     */
+    public function stringToArray()
+    {        
+        foreach (preg_split('@,@', $this->objectIds, null, PREG_SPLIT_NO_EMPTY) as $id) {
+            $this->objectIdsArray[] = $id;
         }
     }
 }

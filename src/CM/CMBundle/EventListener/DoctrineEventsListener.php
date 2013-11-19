@@ -33,6 +33,11 @@ class DoctrineEventsListener
         return $this->serviceContainer->get($service);
     }
 
+    private function getUser()
+    {
+        return $this->get('security.context')->getToken()->getUser();
+    }
+
     public function postPersist(LifecycleEventArgs $args)
     {
         $object = $args->getEntity();
@@ -279,8 +284,8 @@ class DoctrineEventsListener
     private function biographyPersistedRoutine(Biography $biography, EntityManager $em)
     {
         $this->get('cm.post_center')->newPost(
-            $biography->getUser(),
-            $biography->getUser(),
+            $this->getUser(),
+            $this->getUser(),
             Post::TYPE_CREATION,
             get_class($biography),
             array($biography->getId()),
@@ -298,8 +303,8 @@ class DoctrineEventsListener
             $em->flush();
         } else {
             $this->get('cm.post_center')->newPost(
-                $biography->getUser(),
-                $biography->getUser(),
+                $this->getUser(),
+                $this->getUser(),
                 Post::TYPE_UPDATE,
                 get_class($biography),
                 array($biography->getId()),
@@ -311,8 +316,8 @@ class DoctrineEventsListener
     private function biographyRemovedRoutine(Biography $biography, EntityManager $em)
     {
         $this->get('cm.post_center')->removePost(
-            $biography->getUser(),
-            $biography->getUser(),
+            $this->getUser(),
+            $this->getUser(),
             get_class($biography),
             array($biography->getId())
         );
@@ -320,13 +325,30 @@ class DoctrineEventsListener
 
     private function fanPersistedRoutine(Fan $fan, EntityManager $em)
     {
-        $post = $this->get('cm.post_center')->newPost(
-            $fan->getFromUser(),
-            $fan->getFromUser(),
-            Post::TYPE_FAN,
-            get_class($fan),
-            array($fan->getId())
-        );
+        if (!is_null($fan->getUser())) {
+            $postType = Post::TYPE_FAN_USER;
+        } elseif (!is_null($fan->getPage())) {
+            $postType = Post::TYPE_FAN_PAGE;
+        } elseif (!is_null($fan->getGroup())) {
+            $postType = Post::TYPE_FAN_GROUP;
+        }
+
+        $post = $em->getRepository('CMBundle:Post')->getLastPostFor($fan->getFromUser()->getId(), $postType, get_class($fan), null, array('after' => new \DateTime('-12 hours'), 'limit' => 1));
+
+        if (count($post) > 0) {
+            $post = $post[0];
+            $post->addObjectId($fan->getId());
+            $em->persist($post);
+            $this->flushNeeded = true;
+        } else {
+            $post = $this->get('cm.post_center')->newPost(
+                $fan->getFromUser(),
+                $fan->getFromUser(),
+                $postType,
+                get_class($fan),
+                array($fan->getId())
+            );
+        }
 
         $toNotify = array();
         if (!is_null($fan->getUser())) {
@@ -349,28 +371,29 @@ class DoctrineEventsListener
         }
     }
 
-    private function fanUpdatedRoutine(Fan $fan, EntityManager $em)
-    {
-        $post = $em->getRepository('CMBundle:Post')->getPostsAfter(new \DateTime('-1h'), get_class($fan), array($fan->getFromUser()));
-        var_dump($post);die;
-
-        if ($post->getUpdatedAt()->diff(new \DateTime('now'))->d < 1) {
-            $post->setType(Post::TYPE_UPDATE);
-            $em->persist($post);
-            $em->flush();
-        } else {
-            $this->fanPersistedRoutine($fan, $em);
-        }
-    }
-
     private function fanRemovedRoutine(Fan $fan, EntityManager $em)
     {
-        $this->get('cm.post_center')->removePost(
-            $fan->getFromUser(),
-            $fan->getFromUser(),
-            get_class($fan),
-            array($fan->getId())
-        );
+        if (!is_null($fan->getUser())) {
+            $postType = Post::TYPE_FAN_USER;
+        } elseif (!is_null($fan->getPage())) {
+            $postType = Post::TYPE_FAN_PAGE;
+        } elseif (!is_null($fan->getGroup())) {
+            $postType = Post::TYPE_FAN_GROUP;
+        }
+
+        $post = $em->getRepository('CMBundle:Post')->getLastPostFor($fan->getFromUser()->getId(), $postType, get_class($fan), $fan->getId(), array('limit' => 1));
+
+        if (count($post) > 0) {
+            $post = $post[0];
+            $post->removeObjectId($fan->getId());
+
+            if (count($post->getObjectIds()) == 0) {
+                $em->remove($post);
+            } else {
+                $em->persist($post);
+            }
+            $this->flushNeeded = true;
+        }
 
         $this->get('cm.notification_center')->removeNotifications($fan->getFromUser()->getId(), get_class($fan), $fan->getId(), Notification::TYPE_FAN);
     }

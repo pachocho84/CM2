@@ -27,7 +27,7 @@
                     {{ user }}
                     <small>{{ user.userTags|join(', ')|trim }}</small>
                 </h4>
-                {% if biography is not null %}{{ entity_short_text(biography) }}{% endif %}
+                {% if biography is not null %}{{ entity_short_text(biography)|raw }}{% endif %}
             </div>
         </div>
     </div>

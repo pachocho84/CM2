@@ -246,7 +246,8 @@ class UserController extends Controller
             throw new NotFoundHttpException('User not found.');
         }
 
-        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('after' => $postId, 'userId' => $user->getId(), 'paginate' => false));
+        $lastPost = $em->getRepository('CMBundle:Post')->findOneById($postId);
+        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('after' => $lastPost->getUpdatedAt(), 'userId' => $user->getId(), 'paginate' => false));
 
         return array('posts' => $posts);
     }
@@ -269,6 +270,8 @@ class UserController extends Controller
             $post = $this->get('cm.post_center')->getNewPost($user, $user);
 
             $biography->addPost($post);
+        } else {
+            $biography = $biography[0];
         }
  
         $form = $this->createForm(new BiographyType, $biography, array(
@@ -287,7 +290,7 @@ class UserController extends Controller
             $em->persist($biography);
             $em->flush();
 
-            return new RedirectResponse($this->generateUrl('biography_show', array('slug' => $this->getUser()->getSlug())));
+            return new RedirectResponse($this->generateUrl('user_biography', array('slug' => $this->getUser()->getSlug())));
         }
         
         return array(
@@ -312,6 +315,8 @@ class UserController extends Controller
         $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
         if (count($biography) == 0) {
             $biography = null;
+        } else {
+            $biography = $biography[0];
         }
 
         return array('user' => $user, 'biography' => $biography);
@@ -402,6 +407,8 @@ class UserController extends Controller
         $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
         if (count($biography) == 0) {
             $biography = null;
+        } else {
+            $biography = $biography[0];
         }
 
         $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('userId' => $user->getId()));

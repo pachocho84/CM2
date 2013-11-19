@@ -16,12 +16,11 @@ class PostRepository extends BaseRepository
     {
         return array_merge(array(
             'after' => null,
-            'exclude' => array(),
             'userId' => null,
             'pageId' => null,
             'groupId' => null,
             'paginate' => true,
-            'limit' => 25
+            'limit' => null
         ), $options);
     }
 
@@ -45,23 +44,17 @@ class PostRepository extends BaseRepository
             ->leftJoin('e.entityCategory', 'c')
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
             ->leftJoin('e.entityUsers', 'eu', 'WITH', 'eu.status = '.EntityUser::STATUS_ACTIVE)
-            ->leftJoin('e.posts', 'ep', 'WITH', 'ep.type = '.Post::TYPE_CREATION)
+            ->leftJoin('e.posts', 'ep')
             ->leftJoin('ep.likes', 'epl')
             ->leftJoin('ep.comments', 'epc')
             ->leftJoin('epl.user', 'eplu')
             ->leftJoin('epc.user', 'epcu');
         if (!is_null($options['after'])) {
-            $query->andWhere('p.id > :after_id')->setParameter('after_id', $options['after']);
-        }
-        if (!empty($options['exclude'])) {
-            $query->leftJoin('p.user', 'u')
-                ->leftJoin('p.creator', 'cr')
-                ->andWhere('u.id NOT IN (:exclude)')
-                ->andWhere('cr.id NOT IN (:exclude)')
-                ->setParameter('exclude', implode(',', $options['exclude']));
+            $count->andWhere('p.updatedAt > :after')->setParameter('after', $options['after']);
         }
         if (!is_null($options['userId'])) {
-            $query->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId']);
+            $query->orWhere('p.user = :user_id')->setParameter('user_id', $options['userId'])
+                ->orWhere('eu.userId = :user_id');
         }
         if (!is_null($options['pageId'])) {
             $query->leftJoin('eu.user', 'euu')
@@ -73,26 +66,35 @@ class PostRepository extends BaseRepository
                 ->leftJoin('euu.userGroups', 'ug')
                 ->andWhere('ug.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
-        $query->orderBy('p.updatedAt', 'desc');
-        if (!is_null($options['limit'])) {
+        $query->orderBy('p.updatedAt', 'desc')
+            ->addOrderBy('p.id', 'desc');
+        if (is_null($options['paginate']) && !is_null($options['limit'])) {
             $query->setMaxResults($options['limit']);
         }
 
         return $options['paginate'] ? $query->getQuery() : $query->getQuery()->getResult();
     }
 
-    public function getPostsAfter($time, $object = null, $objectIds = null)
+    public function getLastPostFor($userId, $type, $object = null, $objectId = null, $options = array())
     {
+        $options = self::getOptions($options);
+
         $query = $this->createQueryBuilder('p')
             ->select('p')
-            ->where('p.updatedAt > :time')->setParameter('time', $time);
+            ->where('identity(p.user) = :user_id')->setParameter('user_id', $userId)
+            ->andWhere('p.type = '.$type);
+        if (!is_null($options['after'])) {
+            $query->andWhere('p.updatedAt > :time')->setParameter('time', $options['after']);
+        }
         if (!is_null($object)) {
             $query->andWhere('p.object = :object')->setParameter('object', $object);
         }
-        if (!is_null($objectIds)) {
-            foreach ($objectIds as $key => $objectId) {
-                $query->andWhere(':object_id_'.$key.' member of p.objectIds')->setParameter('object_id_'.$key, $objectId);
-            }
+        if (!is_null($objectId)) {
+            $query->andWhere('p.objectIds like :object_id')->setParameter('object_id', '%,'.$objectId.',%');
+        }
+        $query->orderBy('p.updatedAt', 'desc');
+        if (!is_null($options['limit'])) {
+            $query->setMaxResults($options['limit']);
         }
         return $query->getQuery()->getResult();
     }
@@ -127,10 +129,6 @@ class PostRepository extends BaseRepository
             ->andWhere('p.object = :object')->setParameter('object', $object);
         if (!is_null($entityId)) {
             $query->andWhere('p.entity = :entity_id')->setParameter('entity_id', $entityId);
-        } else {
-            foreach ($objectIds as $key => $objectId) {
-                $query->andWhere(':object_id_'.$key.' member of p.objectIds')->setParameter('object_id_'.$key, $objectId);
-            }
         }
         // TODO: make it usable for images
         $query->getQuery()->execute();

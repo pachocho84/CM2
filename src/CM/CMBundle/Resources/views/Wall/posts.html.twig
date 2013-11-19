@@ -12,15 +12,17 @@
 
 {% for post in posts %}
 
+    {% set relatedObjects = related_object(post.object, post.objectIds) %}
+
     {% if format is defined and format == 'short' %}
 
     {{ post.relatedImg }}
 
         <li class="media object object-small"  update_more="{{ post.id }}">
-            {{ show_img_box(post.relatedImg | imagine_filter('350'), {'width': 32, 'height': 32,  'link': path('wall_show', {'postId': post.id}), 'link_attributes': {'class': 'pull.left'}, 'default': 'user'}) | raw }}
+            {{ show_img_box(post.relatedImg|imagine_filter('350'), {'width': 32, 'height': 32,  'link': path('wall_show', {'postId': post.id}), 'link_attributes': {'class': 'pull.left'}, 'default': 'user'}) | raw }}
            
             <div class="media-body">
-                {{ post_text(post) | simple_format_text | raw }}
+                {{ post_text(post, relatedObjects)|simple_format_text|raw }}
                 <small class="text-muted">{{ post.updatedAt | format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</small>
             </div>
         </li>
@@ -34,7 +36,7 @@
 
 {% if posts.paginationData is defined and posts.paginationData.current < posts.paginationData.last %}
     <div class="well well-small load_more">
-        <a href="{{ path('user_wall', app.request.attributes.get('_route_params')|merge({ 'page': posts.getPaginationData.next })) }}">{{ 'Load more' |  trans }}</a>
+        <a href="{{ path('user_wall', app.request.attributes.get('_route_params')|merge({ 'page': posts.getPaginationData.next })) }}">{{ 'Load more'|trans }}</a>
     </div>
 {% endif %}
 
