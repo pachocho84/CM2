@@ -25,7 +25,7 @@
             <div class="tab-pane fade in active" id="incomingRequests">
                 <div class="objects">
                     <ul class="media-list">
-                        {{ include('CMBundle:User:requestList.html.twig') }}
+                        {{ include('CMBundle:Request:requestList.html.twig') }}
                     </ul>
                 </div>
             </div>
@@ -33,7 +33,7 @@
             <div class="tab-pane fade" id="outgoingRequests">
                 <div class="objects">
                     <ul class="media-list">
-                        {{ include('CMBundle:User:requestOutgoingList.html.twig', {'requests': requestsOutgoing}) }}
+                        {{ include('CMBundle:Request:requestOutgoingList.html.twig', {'requests': requestsOutgoing}) }}
                     </ul>
                 </div>
             </div>

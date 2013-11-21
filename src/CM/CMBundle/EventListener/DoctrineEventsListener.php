@@ -167,10 +167,8 @@ class DoctrineEventsListener
         $group = $post->getGroup();
         $page = $post->getPage();
 
-        $requestCenter = $this->get('cm.request_center');
-        $notificationCenter = $this->get('cm.notification_center');
-        
-        $requestCenter->removeRequests($user, get_class($entity), $entity->getId());
+        $em->getRepository('CMBundle:EntityUser')->delete($user->getId(), $entity->getId());
+        $this->get('cm.request_center')->removeRequests($user, get_class($entity), $entity->getId());
     }
 
     private function commentPersistedRoutine(Comment $comment, EntityManager $em)

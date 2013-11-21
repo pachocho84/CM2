@@ -2,7 +2,7 @@
     <div class="media">
         {{ show_img_box(user.img|imagine_filter('350'), {'width': 35, 'height': 35, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
         <div class="media-body">
-            <h2{{ user }}</h2>
+            <h2>{{ user }}</h2>
         </div>
     </div>
 {% endif %}

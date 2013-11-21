@@ -13,14 +13,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 class EntityRepository extends BaseRepository
 {
-	static protected function getOptions(array $options = array())
-	{
-		return array_merge(array(
-		), $options);
-	}
-	
+    static protected function getOptions(array $options = array())
+    {
+        return array_merge(array(
+        ), $options);
+    }
+    
     public function getAdmins($entityId)
-	{
+    {
         return $this->getEntityManager()->createQueryBuilder()
             ->select('partial eu.{id, entityId, userId}')
             ->from('CMBundle:EntityUser','eu')

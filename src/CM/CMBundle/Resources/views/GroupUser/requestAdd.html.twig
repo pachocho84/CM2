@@ -1,0 +1,5 @@
+{% if not requested %}
+    <a href="{{ path('request_add', {'object': group|class_name, 'objectId': group.id}) }}" class="btn btn-default fan-become ajax-link ajax-link-target"><i class="glyphicon glyphicon-fire"></i> {{ 'Request join group'|trans }}</a>
+{% else %}
+    <a href="{{ path('request_delete', {'object': group|class_name, 'objectId': group.id, 'slug': app.user.slug}) }}" class="btn btn-default ajax-link ajax-link-target" data-loading-text="{{ 'Loading'|trans}}"><i class="glyphicon glyphicon-remove"></i> {{ 'Cancel join request'|trans }}</a>
+{% endif %}

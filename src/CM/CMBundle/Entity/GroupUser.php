@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * EntityUser
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="GroupUserRepository")
  * @ORM\Table(name="group_user")
  */
 class GroupUser

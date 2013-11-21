@@ -4,6 +4,7 @@ namespace CM\CMBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -76,118 +77,6 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/requests/{page}/{perPage}", name="user_requests", requirements={"page" = "\d+"})
-     * @JMS\Secure(roles="ROLE_USER") 
-     * @Template
-     */
-    public function requestsAction(Request $request, $page = 1, $perPage = 6)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $requests = $em->getRepository('CMBundle:Request')->getRequests($this->getUser()->getId());
-        $pagination = $this->get('knp_paginator')->paginate($requests, $page, $perPage);
-
-        $this->get('cm.request_center')->seeRequests($this->getUser()->getId());
-
-        if ($request->isXmlHttpRequest() && !$request->get('outgoing')) {
-            return $this->render('CMBundle:User:requestList.html.twig', array('requests' => $pagination));
-        }
-
-        $requestsOutgoing = $em->getRepository('CMBundle:Request')->getRequests($this->getUser()->getId(), 'outgoing');
-        $paginationOutgoing = $this->get('knp_paginator')->paginate($requestsOutgoing, $page, $perPage);
-
-        if ($request->isXmlHttpRequest() && $request->get('outgoing')) {
-            return $this->render('CMBundle:User:requestOutgoingList.html.twig', array('requests' => $paginationOutgoing));
-        }
-
-        return array('requests' => $pagination, 'requestsOutgoing' => $paginationOutgoing);
-    }
-
-    /**
-     * @Route("/requestAdd/{object}/{objectId}", name="user_request_add", requirements={"objectId"="\d+"})
-     * @Route("/requestAddBtn/{object}/{objectId}", name="user_request_add_btn", requirements={"objectId"="\d+"})
-     * @JMS\Secure(roles="ROLE_USER")
-     */
-    public function requestAddAction(Request $request, $object, $objectId)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        switch ($object) {
-            case 'Event':
-                $event = $em->getRepository('CMBundle:Event')->findOneById($objectId);
-                $event->addUser(
-                    $this->getUser(),
-                    false, // admin
-                    EntityUser::STATUS_REQUESTED,
-                    true // notifications
-                );
-                $em->persist($event);
-                $post = $event->getPost();
-                break;
-        }
-
-        $em->flush(); // TODO: why so many sql queries?
-
-        if ($request->get('_route') == 'user_request_add_btn') {
-            $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('post' => $post));
-        }
-
-        return new Response($response);
-    }
-
-    /**
-     * @Route("/requestUpdate/{object}/{objectId}/{choice}", name="user_request_update", requirements={"objectId"="\d+", "choice"="accept|refuse"})
-     * @Route("/requestUpdateBtn/{object}/{objectId}/{choice}", name="user_request_update_btn", requirements={"objectId"="\d+", "choice"="accept|refuse"})
-     * @JMS\Secure(roles="ROLE_USER")
-     */
-    public function requestUpdateAction(Request $request, $object, $objectId, $choice)
-    {
-        if ($choice == 'accept') {
-            $this->get('cm.request_center')->acceptRequest($this->getUser()->getId(), $this->get('cm.helper')->fullClassName($object), $objectId);
-        } elseif ($choice == 'refuse') {
-            $this->get('cm.request_center')->refuseRequest($this->getUser()->getId(), $this->get('cm.helper')->fullClassName($object), $objectId);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        switch ($object) {
-            case 'Event':
-                $post = $em->getRepository('CMBundle:Entity')->getCreationPost($objectId, $this->get('cm.helper')->fullClassName($object));
-                break;
-        }
-
-        if ($request->get('_route') == 'user_request_update_btn') {
-            $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('post' => $post));
-        }
-
-        return new Response($response);
-    }
-    
-    /**
-     * @Route("/requestDelete/{object}/{objectId}", name="user_request_delete", requirements={"objectId"="\d+"})
-     * @Route("/requestDeleteBtn/{object}/{objectId}", name="user_request_delete_btn", requirements={"objectId"="\d+"})
-     * @JMS\Secure(roles="ROLE_USER")
-     */
-    public function requestDeleteAction(Request $request, $object, $objectId)
-    {        
-        $em = $this->getDoctrine()->getManager();
-
-        $this->get('cm.request_center')->removeRequest($this->getUser()->getId(), $this->get('cm.helper')->fullClassName($object), $objectId);
-
-        switch ($object) {
-            case 'Event':
-                $post = $em->getRepository('CMBundle:Entity')->getCreationPost($objectId, $this->get('cm.helper')->fullClassName($object));
-                break;
-        }
-
-        if ($request->get('_route') == 'user_request_delete_btn') {
-            $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('post' => $post));
-        }
-
-        return new Response($response);
-    }
-
-    /**
      * @Route("/notifications/{page}/{perPage}", name="user_notifications", requirements={"page" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
@@ -219,35 +108,37 @@ class UserController extends Controller
         $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
         
         if (!$user) {
-            throw new NotFoundHttpException('User not found.');
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
         }
 
         $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('userId' => $user->getId()));
         $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
         
         if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Wall:posts.html.twig', array('posts' => $pagination));
+            return $this->render('CMBundle:Wall:posts.html.twig', array('posts' => $pagination, 'slug' => $user->getSlug()));
         }
 
         return array('posts' => $pagination, 'user' => $user);
     }
 
     /**
-     * @Route("/{slug}/wall/{postId}/update", name="user_wall_update", requirements={"postId" = "\d+"})
+     * @Route("/{slug}/wall/{lastUpdated}/update", name="user_wall_update")
+     * @Route("/{slug}/wall/{lastUpdated}/update", name="user_show_update")
      * @Template("CMBundle:Wall:posts.html.twig")
      */
-    public function wallUpdateAction(Request $request, $slug, $postId)
+    public function wallUpdateAction(Request $request, $slug, $lastUpdated)
     {
         $em = $this->getDoctrine()->getManager();
         
         $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
         
         if (!$user) {
-            throw new NotFoundHttpException('User not found.');
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
         }
 
-        $lastPost = $em->getRepository('CMBundle:Post')->findOneById($postId);
-        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('after' => $lastPost->getUpdatedAt(), 'userId' => $user->getId(), 'paginate' => false));
+        $after = new \DateTime;
+        $after->setTimestamp($lastUpdated);
+        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('after' => $after, 'userId' => $user->getId(), 'paginate' => false));
 
         return array('posts' => $posts);
     }
@@ -309,7 +200,7 @@ class UserController extends Controller
         $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
         
         if (!$user) {
-            throw new NotFoundHttpException('User not found.');
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
         }
 
         $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
@@ -346,7 +237,8 @@ class UserController extends Controller
         }
         
         return array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'user' => $this->getUser()
         );
     }
     
@@ -363,7 +255,7 @@ class UserController extends Controller
         $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
         
         if (!$user) {
-            throw new NotFoundHttpException('User not found.');
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
         }
             
         if (!$request->isXmlHttpRequest()) {
@@ -401,7 +293,7 @@ class UserController extends Controller
         $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
         
         if (!$user) {
-            throw new NotFoundHttpException('User not found.');
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
         }
 
         $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId());

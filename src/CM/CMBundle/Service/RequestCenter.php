@@ -81,9 +81,17 @@ class RequestCenter
         $this->acceptRequest($userId, $object, $objectId, false);
     }
 
-    public function removeRequest($toUser, $object, $objectId)
+    public function removeRequest($user, $object, $objectId, $direction = 'received')
     {
-        $requests = $this->em->getRepository('CMBundle:Request')->delete($toUser, $object, $objectId);
+        switch ($direction) {
+            default:
+            case 'received':
+                $this->em->getRepository('CMBundle:Request')->delete($user, $object, $objectId, true);
+                break;
+            case 'sent':
+                $this->em->getRepository('CMBundle:Request')->delete($user, $object, $objectId, false);
+                break;
+         }
         
         $this->flushNeeded = true;
     }

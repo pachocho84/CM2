@@ -28,6 +28,8 @@ class Helper
                 return 'CM\CMBundle\Entity\Entity';
             case 'Event':
                 return 'CM\CMBundle\Entity\Event';
+            case 'Group':
+                return 'CM\CMBundle\Entity\Group';
             default:
                 throw new \Exception('add class name '.$shortName);
         }

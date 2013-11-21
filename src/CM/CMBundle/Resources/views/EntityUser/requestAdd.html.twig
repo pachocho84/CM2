@@ -5,51 +5,53 @@
         {% set protagonistStatus = entityUser.status %}
     {% endfor %}
 
-    {% if protagonistStatus == 0 %} {# pending #}
+    {% if protagonistStatus == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_PENDING') %}
         
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 <i class="glyphicons crown"></i> {{ 'You have been added as protagonsit' | trans }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="{{ path('user_request_update_btn', {'choice': 'accept', 'object' : post.object | class_name , 'objectId': post.entityId}) }}" class="ajax-link"><i class="glyphicon glyphicon-ok"></i> {{ 'Accept' | trans }}</a></li>
-                <li><a href="{{ path('user_request_update_btn', {'choice': 'refuse', 'object' : post.object | class_name , 'objectId': post.entityId}) }}" class="ajax-link"><i class="glyphicon glyphicon-remove"></i> {{ 'Refuse' | trans }}</a></li>
+                <li><a href="{{ path('request_update', {'choice': 'accept', 'object' : post.object | class_name , 'objectId': post.entityId}) }}" class="ajax-link"><i class="glyphicon glyphicon-ok"></i> {{ 'Accept' | trans }}</a></li>
+                <li><a href="{{ path('request_update', {'choice': 'refuse', 'object' : post.object | class_name , 'objectId': post.entityId}) }}" class="ajax-link"><i class="glyphicon glyphicon-remove"></i> {{ 'Refuse' | trans }}</a></li>
             </ul>
         </div>
 
-    {% elseif protagonistStatus == 1 %} {# active #}
+    {% elseif protagonistStatus == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_ACTIVE') %}
 
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 <i class="glyphicons crown"></i> {{ 'You are a protagonist' | trans }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="{{ path('user_request_delete_btn', {'object': post.object | class_name , 'objectId': post.entityId}) }}" class="ajax-link">{{ 'Cancel participation' | trans }}</a></li>
+                <li><a href="{{ path('request_delete', {'object': post.object | class_name , 'objectId': post.entityId}) }}" class="ajax-link">{{ 'Cancel participation' | trans }}</a></li>
             </ul>
         </div>
 
-    {% elseif protagonistStatus == 2 %} {# requested #}
+    {% elseif protagonistStatus == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_REQUESTED') %}
 
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 <i class="glyphicons crown"></i> {{ 'Request sent' | trans }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="{{ path('user_request_delete_btn', {'object': post.object | class_name , 'objectId': post.entityId}) }}" class="ajax-link">{{ 'Cancel request' | trans }}</a></li>
+                <li><a href="{{ path('request_delete', {'object': post.object | class_name , 'objectId': post.entityId}) }}" class="ajax-link">{{ 'Cancel request' | trans }}</a></li>
             </ul>
         </div>
 
-    {% elseif protagonistStatus == 3 %} {# refused_admin #}
+    {% elseif protagonistStatus == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_REFUSED_ADMIN') %}
         
         <span class="btn btn-default disabled"><i class="glyphicons crown"></i> {{ 'Your request has been refused' | trans }}</span>
 
-    {% elseif protagonistStatus == 4 %} {# refused_entity_user #}
+    {% elseif protagonistStatus == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_REFUSED_ENTITY_USER') %}
         
         <span class="btn btn-default disabled"><i class="glyphicons crown"></i> {{ 'You refused the protagonist request' | trans }}</span>
         
     {% else %}
         
-        <a href="{{ path('user_request_add_btn', {'object': post.object | class_name , 'objectId': post.entityId}) }}" class="btn btn-default ajax-link ajax-link-target" data-loading-text="{{ 'Loading' | trans }}" data-toggle="tooltip" data-container="body" title="{{ 'Send a request to join and to show this element on your profile' | trans }}" data-placement="left"><i class="glyphicons crown"></i> {{ 'Request protagonist' | trans }}</a>
+        <div class="btn-group btn-group-sm">
+            <a href="{{ path('request_add', {'object': post.object | class_name , 'objectId': post.entityId}) }}" class="btn btn-default ajax-link ajax-link-target" data-loading-text="{{ 'Loading' | trans }}" data-toggle="tooltip" data-container="body" title="{{ 'Send a request to join and to show this element on your profile' | trans }}" data-placement="top"><i class="glyphicons crown"></i> {{ 'Request protagonist'|trans }}</a>
+        </div>
         
     {% endif %}
 {% endif %}

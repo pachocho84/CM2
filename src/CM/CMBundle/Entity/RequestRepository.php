@@ -47,7 +47,7 @@ class RequestRepository extends BaseRepository
         } elseif ($direction == 'outgoing') {
             $query->leftJoin('r.fromUser', 'u');
         }
-        $query->where('u.id = :id')->setParameter('id', $userId)
+        $query->andWhere('u.id = :id')->setParameter('id', $userId)
             ->andWhere('r.status NOT IN ('.Request::STATUS_ACCEPTED.','.Request::STATUS_REFUSED.')')
             ->orderBy('r.createdAt', 'desc');
 
@@ -129,20 +129,17 @@ class RequestRepository extends BaseRepository
         }
     }
 
-    public function delete($userId, $object, $objectId)
+    public function delete($userId, $object, $objectId, $received = true)
     {
-        $this->createQueryBuilder('r')
-            ->delete('CMBundle:Request', 'r')
-            ->where('r.user = :user_id')->setParameter('user_id', $userId)
-            ->andWhere('r.object = :object')->setParameter('object', $object)
+        $query = $this->createQueryBuilder('r')
+            ->delete('CMBundle:Request', 'r');
+        if ($received) {
+            $query->where('r.user = :user_id')->setParameter('user_id', $userId);
+        } else {
+            $query->where('r.fromUser = :user_id')->setParameter('user_id', $userId);
+        }  
+        $query->andWhere('r.object = :object')->setParameter('object', $object)
             ->andWhere('r.objectId = :object_id')->setParameter('object_id', $objectId)
-            ->getQuery()
-            ->execute();
-
-        $this->getEntityManager()->createQueryBuilder()
-            ->delete('CMBundle:EntityUser', 'eu')
-            ->where('eu.user = :user_id')->setParameter('user_id', $userId)
-            ->andWhere('eu.entity = :entity_id')->setParameter('entity_id', $objectId)
             ->getQuery()
             ->execute();
     }

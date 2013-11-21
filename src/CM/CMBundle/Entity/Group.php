@@ -237,6 +237,15 @@ class Group
         return $this->groupUsers;
     }
 
+    public function getPost()
+    {
+        foreach ($this->posts as $post) {
+            if ($post->getType() == Post::TYPE_CREATION) {
+                return $post;
+            }
+        }
+    }
+
     /**
      * @param \CM\CMBundle\Entity\Image $images
      * @return Entity

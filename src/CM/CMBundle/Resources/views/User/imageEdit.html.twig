@@ -22,17 +22,17 @@
             {{ form_start(form) }}
 
                 {{ form_row(form.imgFile) }}
-                {{ form_row(form.imgOffset) }}
-                {% if app.user.img is not null %}
+                {{ form_row(form.imgOffset, {'attr': {'img-offset-field': null}}) }}
+                {% if user.img is not null %}
                     <div class="alert alert-info"><i class="glyphicon glyphicon-exclamation-sign"></i> {{ 'Drag the image to adjust position.' | trans }}</div>
-                    {{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ app.user.img), {'width': 150, 'height': 150, 'offset': app.user.imgOffset, 'box_attributes': {'id': 'profile-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px;'}}) | raw }}
+                    {{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.img), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'box_attributes': {'id': 'profile-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px;'}}) | raw }}
                 {% endif %}
             
                 {{ form_row(form.coverImgFile) }}
-                {{ form_row(form.coverImgOffset) }}
-                {% if app.user.coverImg is not null %}
+                {{ form_row(form.coverImgOffset, {'attr': {'cover-img-offset-field': null}}) }}
+                {% if user.coverImg is not null %}
                     <div class="alert alert-info"><i class="glyphicon glyphicon-exclamation-sign"></i> {{ 'Drag the image to adjust position.' | trans }}</div>
-                    {{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ app.user.coverImg), {'width': 570, 'height': 211, 'offset': app.user.coverImgOffset, 'box_attributes': {'id': 'cover-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px;' }}) | raw }}
+                    {{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.coverImg), {'width': 570, 'height': 211, 'offset': user.coverImgOffset, 'box_attributes': {'id': 'cover-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px;' }}) | raw }}
                 {% endif %}
             
             {{ form_end(form) }}
@@ -71,10 +71,10 @@
                 });  
             }
             if ($('#profile-pic').length == 1) {
-                image_position($('#profile-pic'), $('#cm_cmbundle_user_image_imgOffset'), [$('#profile-pic .image_box-inner').position().left, -$('#profile-pic img').position().top]);
+                image_position($('#profile-pic'), $('[img-offset-field]'), [$('#profile-pic .image_box-inner').position().left, -$('#profile-pic img').position().top]);
             }
             if ($('#cover-pic').length == 1) {
-                image_position($('#cover-pic'), $('#cm_cmbundle_user_cover_image_imgOffset'), [$('#cover-pic .image_box-inner').position().left, -$('#cover-pic img').position().top]);
+                image_position($('#cover-pic'), $('[cover-img-offset-field]'), [$('#cover-pic .image_box-inner').position().left, -$('#cover-pic img').position().top]);
             }
         });//]]>  
     </script>

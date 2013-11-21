@@ -18,6 +18,10 @@ cm_cmbundle_comment:
     resource: "CM\\CMBundle\\Controller\\CommentController"
     type:     annotation
 
+cm_cmbundle_request:
+    resource: "CM\\CMBundle\\Controller\\RequestController"
+    type:     annotation
+
 cm_cmbundle_event:
     resource: "CM\\CMBundle\\Controller\\EventController"
     type:     annotation

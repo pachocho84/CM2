@@ -43,15 +43,17 @@ class WallController extends Controller
     }
 
     /**
-     * @Route("/{postId}/update", name="wall_update", requirements={"postId" = "\d+"})
+     * @Route("/{lastUpdated}/update", name="wall_index_update")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function postsAction(Request $request, $postId)
+    public function postsAction(Request $request, $lastUpdated)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('after' => $postId, 'paginate' => false));
+        $after = new \DateTime;
+        $after->setTimestamp($lastUpdated);
+        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('after' => $after, 'paginate' => false));
 
         return array('posts' => $posts);
     }

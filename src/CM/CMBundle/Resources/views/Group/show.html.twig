@@ -1,7 +1,44 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
 {% block body %}
-    {{ group }} group
+
+    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': group.id})) }}{% endif %}
+
+    {{ include('CMBundle:GroupUser:requestAdd.html.twig') }}
+
+    {{ include('CMBundle:Group:top.html.twig', {'inPage': 'profile'}) }}
+
+
+    {#<ul class="breadcrumb">
+      <li><?php echo link_to('Home', '@homegroup') ?></li>
+      <li><?php echo link_to(__('Users'), '@group_list') ?></li>
+      <li class="active"><?php echo $group ?></li>
+    </ul>#}
+
+
+
+    <div class="box">
+        <div class="box-top">
+                    <a href="{{ path('group_biography', {'slug': group.slug}) }}">{{ show_icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
+            <h3>{{ show_icon('Biography')|raw }} <a href="{{ path('group_biography', {'slug': group.slug}) }}">{{ 'Biography'|trans }}</a> <small><a href="{{ path('group_biography', {'slug': group.slug}) }}">{{ 'show complete biography'|trans }}</small></a></h2>
+        </div>
+        <div class="media objects">
+            {{ show_img_box(group.img | imagine_filter('350'), {'width': 200, 'offset': group.imgOffset, 'default': 'group', 'box_attributes': {'class': 'pull-left thumbnail'}}) | raw }}
+            <div class="meda-body">
+                <h4>
+                    {{ group }}
+                </h4>
+                {% if biography is not null %}{{ entity_short_text(biography)|raw }}{% endif %}
+            </div>
+        </div>
+    </div>
+
+
+    {{ include('CMBundle:Wall:posts.html.twig', {'slug': group.slug}) }}
     
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': group.id, 'object': 'Group'})) }}{% endif %}    
+
+    {#<?php slot('sidebar_slot3') ?>  
+        <?php include_component('fan', 'groupFans', array('group' => $group)) ?>
+    <?php end_slot() ?>#}
+  
 {% endblock %}

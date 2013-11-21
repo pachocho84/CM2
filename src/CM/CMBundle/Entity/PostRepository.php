@@ -50,7 +50,7 @@ class PostRepository extends BaseRepository
             ->leftJoin('epl.user', 'eplu')
             ->leftJoin('epc.user', 'epcu');
         if (!is_null($options['after'])) {
-            $count->andWhere('p.updatedAt > :after')->setParameter('after', $options['after']);
+            $query->andWhere('p.updatedAt > :after')->setParameter('after', $options['after']);
         }
         if (!is_null($options['userId'])) {
             $query->orWhere('p.user = :user_id')->setParameter('user_id', $options['userId'])

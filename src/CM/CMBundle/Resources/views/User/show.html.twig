@@ -33,12 +33,10 @@
     </div>
 
 
-    {{ include('CMBundle:Wall:posts.html.twig') }}
-    {#<?php include_component('wall', 'lastPosts', array('user' => $user)) ?>
+    {{ include('CMBundle:Wall:posts.html.twig', {'slug': user.slug}) }}
+    
 
-
-
-    <?php slot('sidebar_slot3') ?>  
+    {#<?php slot('sidebar_slot3') ?>  
         <?php include_component('fan', 'userFans', array('user' => $user)) ?>
     <?php end_slot() ?>#}
   

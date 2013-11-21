@@ -16,7 +16,7 @@
             <h3>{{ show_icon('Wall') | raw }} <span>{{ 'Last posts' | trans }}</span></h3>
         </div>
         <ul class="media-list objects">
-            {{ include('CMBundle:Wall:posts.html.twig', {'updateMoreLink': path('user_wall_update', {'slug': user.slug, 'postId': posts[0].id})}) }}
+            {{ include('CMBundle:Wall:posts.html.twig', {'slug': user.slug}) }}
         </ul>
     </div>
 

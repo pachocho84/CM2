@@ -1,0 +1,100 @@
+{% if not group.coverImg or group.coverImg == '' %}
+    <div class="media">
+        {{ show_img_box(group.img|imagine_filter('350'), {'width': 35, 'height': 35, 'offset': group.imgOffset, 'default': 'group', 'box_attributes': {'class': 'pull-left'}})|raw }}
+        <div class="media-body">
+            <h2>{{ group }}</h2>
+        </div>
+    </div>
+{% endif %}
+
+<div class="profile-header shadow">
+    {% if group.coverImg != '' %}
+        <div class="cover image_box">
+            {{ show_img_box(group.coverImg|imagine_filter('770'), {'width': 770, 'height': 285, 'offset': group.coverImgOffset, 'img_only': true})|raw }}
+            <div class="cover-shadow"></div>
+            <h2>{{ group }}</h2>
+        </div>
+    {% endif %}
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse navbar-ex1-collapse user-menu">
+            <ul class="nav navbar-nav">
+                <li{% if inPage == 'profile' %} class="active"{% endif %}>
+                    <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ show_icon('User')|raw }} {{ 'Profile'|trans }}</a>
+                </li>
+                <li{% if inPage == 'wall' %} class="active"{% endif %}>
+                    <a href="{{ path('group_wall', {'slug': group.slug}) }}">{{ show_icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
+                </li>
+                <li{% if inPage == 'biography' %} class="active"{% endif %}>
+                    <a href="{{ path('group_biography', {'slug': group.slug}) }}">{{ show_icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
+                </li>
+                <li{% if inPage == 'event' %} class="active"{% endif %}>
+                    <a href="{{ path('group_events', {'slug': group.slug}) }}">{{ show_icon('Event')|raw }} {{ 'Events'|trans }}</a>
+                </li>
+                <li{% if inPage == 'image' %} class="active"{% endif %}>
+                    <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ show_icon('Image')|raw }} {{ 'Images [TODO]'|trans }}</a>
+                </li>
+                <li{% if inPage == 'disc' %} class="active"{% endif %}>
+                    <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs [TODO]'|trans }}</a>
+                </li>
+                {#<li{% if $inPage == 'fan' %} class="active"{% endif %}><?php echo link_to(show_icon('fan').' '.__('Fans'), '@fan_group?group='.$group->getUsername()) ?></li>#}
+            </ul>
+            <ul class="nav nav navbar-nav pull-right">
+                <li class="dropdown{% if inPage == 'fan' or inPage == 'education' %} active{% endif %}">
+                    <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">{{ 'More'|trans }} <b class="caret"></b></a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+                        <li>
+                            <a href="{#{{ path('fan_group', {'slug': group.slug}) }}#}">{{ show_icon('Fan')|raw }} {{ 'Fans'|trans }}</a>
+                        </li>
+                        <li role="presentation" class="divider"></li>
+                        <li>
+                            <a href="{#{{ path('fan_group', {'slug': group.slug}) }}#}">{{ show_icon('Work')|raw }} {{ 'Work and education [TODO]'|trans }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+
+{#<?php if (!$group->getCoverImg() || !is_file('uploads/images/770/'.$group->getCoverImg())): ?>
+    <div class="media">
+        
+        <?php show_img_box($group->getImg(), array('width' => 35, 'height' => 35, 'offset' => $group->getImgOffset(), 'default' => 'group', 'box_attributes' => array('class' => 'pull-left'))) ?>
+        <div class="media-body">
+            <h2><?php echo $group ?></h2>
+        </div>
+    </div>
+<?php endif ?>
+
+<div class="profile-header shadow">
+    <?php if ($group->getCoverImg() && is_file('uploads/images/770/'.$group->getCoverImg())): ?>
+        <div class="cover image_box">
+            <?php show_img_box($group->getCoverImg(), array('width' => 770, 'height' => 285, 'offset' => $group->getCoverImgOffset(), 'img_only' => true)) ?>
+            <div class="cover-shadow"></div>
+            <h2><?php echo $group ?></h2>
+        </div>
+    <?php endif ?>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse navbar-ex1-collapse group-menu">
+            <ul class="nav navbar-nav">
+                <li<?php $inPage == 'show' and print ' class="active"' ?>><?php echo link_to(show_icon('group').' '.__('Profile'), $group->getRawValue()->getLinkShow()) ?></li>
+                <li<?php $inPage == 'wall' and print ' class="active"' ?>><?php echo link_to(show_icon('wall').' '.__('Wall'), '@wall_group?group='.$group->getUsername()) ?></li>
+                <li<?php $inPage == 'biography' and print ' class="active"' ?>><?php echo link_to(show_icon('biography').' '.__('Biography'), '@biography_group?group='.$group->getUsername()) ?></li>
+                <li<?php $inPage == 'event' and print ' class="active"' ?>><?php echo link_to(show_icon('event').' '.__('Events'), '@image_group?group='.$group->getUsername()) ?></li>
+                <li<?php $inPage == 'image' and print ' class="active"' ?>><?php echo link_to(show_icon('image').' '.__('Images'), '@image_group?group='.$group->getUsername()) ?></li>
+                <li<?php $inPage == 'disc' and print ' class="active"' ?>><?php echo link_to(show_icon('disc').' '.__('Discs'), '@disc_group?group='.$group->getUsername()) ?></li>
+            </ul>
+            <ul class="nav nav navbar-nav pull-right">
+                <li class="dropdown<?php in_array($inPage, array('fan', 'education')) and print ' active' ?>">
+            <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><?php echo __('More') ?> <b class="caret"></b></a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+                <li><?php echo link_to(show_icon('fan').' '.__('Fans'), '@fan_group?group='.$group->getUsername()) ?></li>
+              <li role="presentation" class="divider"></li>
+                <li><?php echo link_to(show_icon('work').' '.__('Work and education'), '@work_education_group?group='.$group->getUsername()) ?></li>
+            </ul>
+          </li>
+            </ul>
+        </div>
+    </nav>
+</div>#}

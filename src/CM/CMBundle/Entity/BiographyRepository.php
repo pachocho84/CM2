@@ -23,4 +23,15 @@ class BiographyRepository extends BaseRepository
             ->setMaxResults(1)
             ->getQuery()->getResult();
     }
+
+    public function getGroupBiography($groupId)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('b')
+            ->leftJoin('b.posts', 'p')
+            ->leftJoin('p.group', 'g')
+            ->where('g.id = :group_id')->setParameter('group_id', $groupId)
+            ->setMaxResults(1)
+            ->getQuery()->getResult();
+    }
 }
