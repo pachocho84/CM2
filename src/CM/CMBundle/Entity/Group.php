@@ -85,9 +85,9 @@ class Group
 	private $notificationsOutgoing;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="Request", mappedBy="fromGroup", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="Request", mappedBy="group", cascade={"persist", "remove"})
 	 */
-	private $requestsOutgoing;
+	private $requests;
     
     /**
      * @ORM\OneToMany(targetEntity="Fan", mappedBy="group", cascade={"persist", "remove"})
@@ -96,12 +96,12 @@ class Group
     
     public function __construct()
     {
-        $this->users = new ArrayCollection();
-        $this->images = new ArrayCollection();
+        $this->users = new ArrayCollection;
+        $this->images = new ArrayCollection;
+        $this->posts = new ArrayCollection;
 		$this->notificationsIncoming = new ArrayCollection;
 		$this->notificationsOutgoing = new ArrayCollection;
-		$this->requestsIncoming = new ArrayCollection;
-		$this->requestsOutgoing = new ArrayCollection;
+		$this->requests = new ArrayCollection;
 	}
 	
 	public function __toString()
@@ -197,9 +197,10 @@ class Group
      * @param \CM\CMBundle\Entity\EntityUser $comment
      * @return Entity
      */
-    public function addGroupUser(
+    public function addUser(
         User $user,
         $admin = false,
+        $status = GroupUser::STATUS_PENDING,
         $joinEvent = GroupUser::JOIN_REQUEST,
         $joinDisc = GroupUser::JOIN_REQUEST,
         $joinArticle = GroupUser::JOIN_REQUEST,
@@ -211,6 +212,7 @@ class Group
         $groupUser->setGroup($this)
             ->setUser($user)
             ->setAdmin($admin)
+            ->setStatus($status)
             ->setJoinEvent($joinEvent)
             ->setJoinDisc($joinDisc)
             ->setJoinArticle($joinArticle)
@@ -218,6 +220,16 @@ class Group
             ->setNotification($notification);
         $this->groupUsers[] = $groupUser;
     
+        return $this;
+    }
+
+    public function addGroupUser(GroupUser $groupUser)
+    {
+        if (!$this->groupUsers->contains($groupUser)) {
+            $this->entityUsers[] = $groupUser;
+            $groupUser->setGroup($this);
+        }
+
         return $this;
     }
 
@@ -254,7 +266,9 @@ class Group
     {
         if (!$this->posts->contains($post)) {
             $this->posts[] = $post;
-            $post->setGroup($this);
+            $post->setGroup($this)
+                ->setObject(get_class($this))
+                ->setObjectIds(array($this->getId()));
         }
     
         return $this;
@@ -320,36 +334,6 @@ class Group
     public function getVip()
     {
         return $this->vip;
-    }
-
-    /**
-     * @param User $comment
-     * @return Entity
-     */
-    public function addUser(User $user)
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addUserGroup($this);
-        }
-    
-        return $this;
-    }
-
-    /**
-     * @param User $users
-     */
-    public function removeUser(User $user)
-    {
-        $this->users->removeElement($user);
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getUsers()
-    {
-        return $this->users;
     }
 
     /**
@@ -455,51 +439,15 @@ class Group
 	}
 
 	/**
-	 * Add requestIncoming
-	 *
-	 * @param RequestIncoming $requestIncoming
-	 * @return Post
-	 */
-	public function addRequestIncoming(Request $requestIncoming)
-	{
-        if ($this->requestsIncoming->contains($requestIncoming)) {
-	        $this->requestsIncoming[] = $requestIncoming;
-	        return true;
-	    }
-	
-	    return false;
-	}
-
-	/**
-	 * Remove requestsIncoming
-	 *
-	 * @param RequestIncoming $requestIncoming
-	 */
-	public function removeRequestIncoming(Request $requestIncoming)
-	{
-	    $this->requestsIncoming->removeElement($requestIncoming);
-	}
-
-	/**
-	 * Get requestIncoming
-	 *
-	 * @return \Doctrine\Common\Collections\Collection 
-	 */
-	public function getRequestsIncoming()
-	{
-	    return $this->requestsIncoming;
-	}
-
-	/**
 	 * Add requestOutcoming
 	 *
 	 * @param RequestOutcoming $requestOutcoming
 	 * @return Post
 	 */
-	public function addRequestOutgoing(Request $requestOutgoing)
+	public function addRequest(Request $request)
 	{
-        if ($this->requestsOutgoing->contains($requestOutgoing)) {
-	        $this->requestsOutgoing[] = $requestOutgoing;
+        if (!$this->requests->contains($request)) {
+	        $this->requests[] = $request;
 	        return true;
 	    }
 	
@@ -511,9 +459,9 @@ class Group
 	 *
 	 * @param RequestOutcoming $requestOutcoming
 	 */
-	public function removeRequestOutgoing(Request $requestOutgoing)
+	public function removeRequest(Request $request)
 	{
-	    $this->requestsOutcoming->removeElement($requestOutgoing);
+	    $this->requests->removeElement($request);
 	}
 
 	/**
@@ -521,9 +469,9 @@ class Group
 	 *
 	 * @return \Doctrine\Common\Collections\Collection 
 	 */
-	public function getRequestsOutgoing()
+	public function getRequests()
 	{
-	    return $this->$requestOutgoing;
+	    return $this->$requests;
 	}
 
     /**

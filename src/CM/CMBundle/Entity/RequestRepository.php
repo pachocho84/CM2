@@ -16,7 +16,11 @@ class RequestRepository extends BaseRepository
     {
         return array_merge(array(
             'paginate'      => true,
-            'limit'         => 25
+            'limit'         => 25,
+            'entityId' => null,
+            'groupId' => null,
+            'object' => null,
+            'exclude' => false
         ), $options);
     }
 
@@ -63,14 +67,22 @@ class RequestRepository extends BaseRepository
             ->getQuery()->getSingleScalarResult();
     }
 
-    public function updateStatus($userId, $object = null, $objectId = null, $oldStatus = null, $newStatus = Request::STATUS_PENDING)
+    public function updateStatus($userId, $options = array(), $oldStatus = null, $newStatus = Request::STATUS_PENDING)
     {
+        $options = self::getOptions($options);
+
         $query = $this->createQueryBuilder('r')
             ->update('CMBundle:Request', 'r')
             ->where('r.user = :user_id')->setParameter('user_id', $userId);
-        if (!is_null($object)) {
-            $query->andWhere('r.object = :object')->setParameter('object', $object)
-                ->andWhere('r.objectId = :object_id')->setParameter('object_id', $objectId);
+        if (!is_null($options['entityId'])) {
+            $query->andWhere('r.entityId = :entity_id')->setParameter('entity_id', $options['entityId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $query->andWhere('r.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+        if (!is_null($options['object'])) {
+            $query->andWhere('r.object = :object')->setParameter('object', $options['object'])
+                ->andWhere('r.objectId = :object_id')->setParameter('object_id', $options['objectId']);
         }
         if (!is_null($oldStatus)) {
             $query->andWhere('r.status = '.$oldStatus);
@@ -81,66 +93,46 @@ class RequestRepository extends BaseRepository
 
         if ($newStatus == Request::STATUS_ACCEPTED || $newStatus == Request::STATUS_REFUSED) {
             $request = $this->createQueryBuilder('r')
-                ->select('PARTIAL r.{id, object, objectId}')
+                ->select('r')
                 ->where('r.user = :user_id')->setParameter('user_id', $userId);
-            if (!is_null($object)) {
-                $request->andWhere('r.object = :object')->setParameter('object', $object)
-                    ->andWhere('r.objectId = :object_id')->setParameter('object_id', $objectId);
+            if (!is_null($options['entityId'])) {
+                $request->andWhere('r.entityId = :entity_id')->setParameter('entity_id', $options['entityId']);
             }
-            $request = $request->getQuery()->getSingleResult();
+            if (!is_null($options['groupId'])) {
+                
+                $request->andWhere('r.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+            }
+            if (!is_null($options['object'])) {
+                $request->andWhere('r.object = :object')->setParameter('object', $options['object'])
+                    ->andWhere('r.objectId = :object_id')->setParameter('object_id', $options['objectId']);
+            }
 
-            switch ($request->getObject()) {
-                case 'CM\CMBundle\Entity\Event':
-                    $entityUser = $this->getEntityManager()->createQueryBuilder()
-                        ->select('PARTIAL eu.{id, status}')
-                        ->from('CMBundle:EntityUser', 'eu')
-                        ->where('eu.userId = :user_id')->setParameter('user_id', $userId)
-                        ->andWhere('eu.entityId = :entity_id')->setParameter('entity_id', $request->getObjectId())
-                        ->getQuery()
-                        ->getSingleResult();
-                        
-                    if ($newStatus == Request::STATUS_ACCEPTED) {
-                        $this->getEntityManager()->createQueryBuilder()
-                            ->update('CMBundle:EntityUser', 'eu')
-                            ->where('eu.user = :user_id')->setParameter('user_id', $userId)
-                            ->andWhere('eu.entity = :entity_id')->setParameter('entity_id', $objectId)
-                            ->set('eu.status', EntityUser::STATUS_ACTIVE)
-                            ->getQuery()
-                            ->execute();
-                    } elseif ($newStatus == Request::STATUS_REFUSED) {
-                        $newEntityUserStatus = $entityUser->getStatus() == EntityUser::STATUS_PENDING ? EntityUser::STATUS_REFUSED_ENTITY_USER : EntityUser::STATUS_REFUSED_ADMIN;
-                        $this->getEntityManager()->createQueryBuilder()
-                            ->update('CMBundle:EntityUser', 'eu')
-                            ->where('eu.user = :user_id')->setParameter('user_id', $userId)
-                            ->andWhere('eu.entity = :entity_id')->setParameter('entity_id', $objectId)
-                            ->set('eu.status', $newEntityUserStatus)
-                            ->getQuery()
-                            ->execute();
-                        $this->createQueryBuilder('r')
-                            ->delete('CMBundle:Request', 'r')
-                            ->where('r.fromUser = :user_id')->setParameter('user_id', $userId)
-                            ->andWhere('r.object = :object')->setParameter('object', $request->getObject())
-                            ->andWhere('r.objectId = :object_id')->setParameter('object_id', $request->getObjectId())
-                            ->getQuery()
-                            ->execute();
-                    }
-                    break;
-            }
+            return $request->getQuery()->getSingleResult();
         }
     }
 
-    public function delete($userId, $object, $objectId, $received = true)
+    public function delete($userId, $options = array(), $received = true)
     {
+        $options = self::getOptions($options);
+
         $query = $this->createQueryBuilder('r')
             ->delete('CMBundle:Request', 'r');
         if ($received) {
             $query->where('r.user = :user_id')->setParameter('user_id', $userId);
-        } else {
-            $query->where('r.fromUser = :user_id')->setParameter('user_id', $userId);
-        }  
-        $query->andWhere('r.object = :object')->setParameter('object', $object)
-            ->andWhere('r.objectId = :object_id')->setParameter('object_id', $objectId)
-            ->getQuery()
-            ->execute();
+        }
+        if ($options['exclude']) {
+            $query->andWhere('r.user != :exclude')->setParameter('exclude', $userId);
+        }
+        if (!is_null($options['entityId'])) {
+            $query->andWhere('r.entityId = :entity_id')->setParameter('entity_id', $options['entityId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $query->andWhere('r.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+        if (!is_null($options['object'])) {
+            $query->andWhere('r.object = :object')->setParameter('object', $options['object'])
+                ->andWhere('r.objectId = :object_id')->setParameter('object_id', $options['objectId']);
+        }
+        $query->getQuery()->execute();
     }
 }

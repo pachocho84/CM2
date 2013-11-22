@@ -317,11 +317,11 @@ class CMExtension extends \Twig_Extension
     public function getRequestTag(Request $request)
     {
         $user = $this->securityContext->getToken()->getUser();
-        if ($user->getId() == $request->getUser()->getId() /*&& $request->getEntity()->getId()*/ && $user->getId() == $request->getEntity()->getPost()->getUserId()) {
+        if ($user->getId() == $request->getUser()->getId() && !is_null($request->getEntity()) && $user->getId() == $request->getEntity()->getPost()->getUserId()) {
             $userLink = $this->router->generate('user_show', array('slug' => $request->getFromUser()->getSlug()));
-            $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
             switch ($this->getClassName($request->getObject())) {
                 case 'Event':
+                    $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
                     return $this->translator->trans('%user% would like to be added as protagonist to your event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
                     // return __('%user% would like to be added as protagonist to your event %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
                 case 'Disc':
@@ -329,13 +329,15 @@ class CMExtension extends \Twig_Extension
                 case 'Article':
                     // return __('%user% would like to be added as protagonist to your article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getE.'</a>'ntity(), $this->getEntity()->getLinkShow())));
                 case 'Group':
-                    // return __('%user% would like to join the group %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getRelatedObject(), $this->getRelatedObject()->getLinkShow())));
+                    $group = $this->helper->getObject($request->getObject(), $request->getObjectId());
+                    $groupLink = $this->router->generate('group_show', array('slug' => $group->getSlug()));
+                    return $this->translator->trans('%user% would like to join the group %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
             }
         } elseif ($user->getId() == $request->getUser()->getId()) {
             $userLink = $this->router->generate('user_show', array('slug' => $request->getFromUser()->getSlug()));
-            $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
             switch ($this->getClassName($request->getObject())) {
                 case 'Event':
+                    $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
                     return $this->translator->trans('%user% would like to add you as protagonist to the event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
                     // return __('%user% would like to add you as protagonist to the event %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
                 case 'Disc':
@@ -343,13 +345,16 @@ class CMExtension extends \Twig_Extension
                 case 'Article':
                     // return __('%user% would like to add you as protagonist to the article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
                 case 'Group':
+                    $group = $this->helper->getObject($request->getObject(), $request->getObjectId());
+                    $groupLink = $this->router->generate('group_show', array('slug' => $group->getSlug()));
+                    return $this->translator->trans('%user% would like you to join the group %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
                     // return __('%user% would like you to join the group %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getRelatedObject(), $this->getRelatedObject()->getLinkShow())));
             }
         } elseif ($user->getId() == $request->getFromUser()->getId()) {
             $userLink = $this->router->generate('user_show', array('slug' => $request->getUser()->getSlug()));
-            $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
             switch ($this->getClassName($request->getObject())) {
                 case 'Event':
+                    $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
                     return $this->translator->trans('You requested %user% to be added as protagonist to the event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
                     // return __('You requested %user% to be added as protagonist to the event %object%.', array('%user%' => link_to($this->getUserRelatedByUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
                 case 'Disc':
@@ -357,6 +362,9 @@ class CMExtension extends \Twig_Extension
                 case 'Article':
                     // return __('You requested %user% to be added as protagonist to the article %object%.', array('%user%' => link_to($this->getUserRelatedByUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
                 case 'Group':
+                    $group = $this->helper->getObject($request->getObject(), $request->getObjectId());
+                    $groupLink = $this->router->generate('group_show', array('slug' => $group->getSlug()));
+                    return $this->translator->trans('You requested %user% to join the group %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
                     // return __('You requested %user% to join the group %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getRelatedObject(), $this->getRelatedObject()->getLinkShow())));
             }
         }
@@ -382,6 +390,9 @@ class CMExtension extends \Twig_Extension
                 // return __('%user% has commented your disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getPost()->getEntity(), $this->getLinkShow())));
             case 'user_like':
                 // return __('%user% likes your %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to(__('post'), $this->getPost()->getLinkShow())));
+            case 'Group_'.Notification::TYPE_REQUEST_ACCEPTED:
+                return $this->translator->trans('%user% joined the group %group%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>'));
+                break;
             case 'Fan_'.Notification::TYPE_FAN:
                 return $this->translator->trans('%user% became your fan.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>'));
                 // return __('%user% became your fan.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow())));

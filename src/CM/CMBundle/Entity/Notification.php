@@ -104,14 +104,14 @@ class Notification
     /**
      * @var string
      *
-     * @ORM\Column(name="object", type="string", length=50)
+     * @ORM\Column(name="object", type="string", length=50, nullable=true)
      */
     private $object;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="object_id", type="smallint")
+     * @ORM\Column(name="object_id", type="smallint", nullable=true)
      */
     private $objectId;
 

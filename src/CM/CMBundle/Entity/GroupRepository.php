@@ -30,6 +30,17 @@ class GroupRepository extends BaseRepository
             ->getQuery()->getResult();
     }
 
+    public function getCreationPost($groupId, $object) {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('p, g, gu')
+            ->from('CMBundle:Post', 'p')
+            ->leftJoin('p.group', 'g')
+            ->leftJoin('g.groupUsers', 'gu')
+            ->where('p.type = '.Post::TYPE_CREATION)
+            ->andWhere('g.id = :group_id')->setParameter('group_id', $groupId)
+            ->getQuery()->getSingleResult();
+    }
+
     public function getGroupExcludeUsers($groupId, $excludes)
     {
         return $this->createQueryBuilder('g')

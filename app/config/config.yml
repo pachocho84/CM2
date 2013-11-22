@@ -30,8 +30,9 @@ twig:
 
 # Assetic Configuration
 assetic:
-    debug:          %kernel.debug%
-    use_controller: false
+    debug:          true
+    #%kernel.debug%
+    use_controller: true
     bundles:        [ CMBundle, FOSUserBundle ]
     node: /bin/node
     node_paths: [%kernel.root_dir%/Resources/node_modules/]

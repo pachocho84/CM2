@@ -9,6 +9,7 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use CM\CMBundle\Entity\Group;
+use CM\CMBundle\Entity\GroupUser;
 
 class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
@@ -39,10 +40,15 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
             for ($j = 1; $j < rand(1, 3); $j++) {
                 $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
             }
+
+            $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+
+            $group->addPost($post);
             
-            $group->addGroupUser(
+            $group->addUser(
                 $user,
                 true, // admin
+                GroupUser::STATUS_ACTIVE,
                 rand(0, 2), // join event
                 rand(0, 2), // join disc
                 rand(0, 2), // join article
@@ -61,9 +67,10 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
                     $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
                 }
 
-                $group->addGroupUser(
+                $group->addUser(
                     $otherUser,
                     !rand(0, 3), // admin
+                    GroupUser::STATUS_PENDING,
                     rand(0, 2), // join event
                     rand(0, 2), // join disc
                     rand(0, 2), // join article

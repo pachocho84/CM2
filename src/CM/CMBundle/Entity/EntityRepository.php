@@ -35,7 +35,6 @@ class EntityRepository extends BaseRepository
             ->leftJoin('p.entity', 'e')
             ->leftJoin('e.entityUsers', 'eu')
             ->where('p.type = '.Post::TYPE_CREATION)
-            ->andWhere('p.object = :object')->setParameter('object', $object)
             ->andWhere('e.id = :entity_id')->setParameter('entity_id', $entityId)
             ->getQuery()->getSingleResult();
     }

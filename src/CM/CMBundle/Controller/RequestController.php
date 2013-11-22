@@ -19,6 +19,7 @@ use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
+use CM\CMBundle\Entity\GroupUser;
 use CM\CMBundle\Entity\Notification;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\BiographyType;
@@ -31,7 +32,7 @@ class RequestController extends Controller
      * @JMS\Secure(roles="ROLE_USER") 
      * @Template
      */
-    public function requestsAction(Request $request, $page = 1, $perPage = 6)
+    public function indexAction(Request $request, $page = 1, $perPage = 6)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -47,6 +48,7 @@ class RequestController extends Controller
         $requestsOutgoing = $em->getRepository('CMBundle:Request')->getRequests($this->getUser()->getId(), 'outgoing');
         $paginationOutgoing = $this->get('knp_paginator')->paginate($requestsOutgoing, $page, $perPage);
 
+        
         if ($request->isXmlHttpRequest() && $request->get('outgoing')) {
             return $this->render('CMBundle:Request:requestOutgoingList.html.twig', array('requests' => $paginationOutgoing));
         }
@@ -58,7 +60,7 @@ class RequestController extends Controller
      * @Route("/requestAdd/{object}/{objectId}", name="request_add", requirements={"objectId"="\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function requestAddAction(Request $request, $object, $objectId)
+    public function addAction(Request $request, $object, $objectId)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -79,19 +81,18 @@ class RequestController extends Controller
                 $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('post' => $post));
                 break;
             case 'Group':
-                if (!empty($em->getRepository('CMBundle:Request')->findOneBy(array('user' => $this->getUser(), 'object' => $object, 'objectId' => $objectId)))
-                    || !empty($em->getRepository('CMBundle:GroupUser')->findOneBy(array('user' => $this->getUser(), 'groupId' => $objectId)))) {
+                if (!empty($em->getRepository('CMBundle:GroupUser')->findOneBy(array('user' => $this->getUser(), 'groupId' => $objectId)))) {
                     throw new HttpException(403, $this->get('translator')->trans('Request already sent.', array(), 'http-errors'));
                 }
                 $group = $em->getRepository('CMBundle:Group')->findOneById($objectId);
-                foreach ($em->getRepository('CMBundle:Group')->getAdmins() as $admin) {
-                    $this->get('cm.request_center')->newRequest(
-                        $admin,
-                        $this->getUser(),
-                        $object,
-                        $objectId
-                    );
-                }
+                $group->addUser(
+                    $this->getUser(),
+                    false, // admin
+                    GroupUser::STATUS_REQUESTED,
+                    true // notifications
+                );
+                $em->persist($group);
+                $post = $group->getPost();
                 $response = $this->renderView('CMBundle:GroupUser:requestAdd.html.twig', array('post' => $post));
                 break;
         }
@@ -102,24 +103,72 @@ class RequestController extends Controller
     }
 
     /**
-     * @Route("/requestUpdate/{object}/{objectId}/{choice}", name="request_update", requirements={"objectId"="\d+", "choice"="accept|refuse"})
+     * @Route("/requestUpdate/{object}/{objectId}/{choice}/{slug}", name="request_update", requirements={"objectId"="\d+", "choice"="accept|refuse"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function requestUpdateAction(Request $request, $object, $objectId, $choice)
+    public function updateAction(Request $request, $object, $objectId, $choice, $slug = null)
     {
-        if ($choice == 'accept') {
-            $this->get('cm.request_center')->acceptRequest($this->getUser()->getId(), $this->get('cm.helper')->fullClassName($object), $objectId);
-        } elseif ($choice == 'refuse') {
-            $this->get('cm.request_center')->refuseRequest($this->getUser()->getId(), $this->get('cm.helper')->fullClassName($object), $objectId);
-        }
-
         $em = $this->getDoctrine()->getManager();
 
         switch ($object) {
             case 'Event':
+                if (!is_null($slug)) {
+                    $event = $em->getRepository('CMBundle:Event')->findOneById($objectId);
+
+                    if (!$this->get('cm.user_authentication')->canManage($event)) {
+                        throw new HttpException(401, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                    }
+
+                    $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+                    if (!$user) {
+                        throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+                    }
+
+                    $this->get('cm.request_center')->removeRequest($user->getId(), array('entityId' => $objectId, 'exclude' => $this->getUser()->getId()), 'sent');
+                } else {
+                    $user = $this->getUser();
+                }
+
+                if ($choice == 'accept') {
+                    $this->get('cm.request_center')->acceptRequest($user->getId(), array('entityId' => $objectId));
+                } elseif ($choice == 'refuse') {
+                    $this->get('cm.request_center')->refuseRequest($user->getId(), array('entityId' => $objectId));
+                }
+
                 $post = $em->getRepository('CMBundle:Entity')->getCreationPost($objectId, $this->get('cm.helper')->fullClassName($object));
                 $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('post' => $post));
                 break;
+            case 'Group':
+                if (!is_null($slug)) {
+                    $group = $em->getRepository('CMBundle:Group')->findOneById($objectId);
+
+                    if (!$this->get('cm.user_authentication')->canManage($group)) {
+                        throw new HttpException(401, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                    }
+
+                    $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+                    if (!$user) {
+                        throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+                    }
+
+                    $this->get('cm.request_center')->removeRequest($user->getId(), array('groupId' => $objectId, 'exclude' => $this->getUser()->getId()), 'sent');
+                } else {
+                    $user = $this->getUser();
+                }
+                
+                if ($choice == 'accept') {
+                    $this->get('cm.request_center')->acceptRequest($user->getId(), array('groupId' => $objectId));
+                } elseif ($choice == 'refuse') {
+                    $this->get('cm.request_center')->refuseRequest($user->getId(), array('groupId' => $objectId));
+                }
+
+                $post = $em->getRepository('CMBundle:Group')->getCreationPost($objectId, $this->get('cm.helper')->fullClassName($object));
+                $response = $this->renderView('CMBundle:GroupUser:requestAdd.html.twig', array('post' => $post));
+                break;
+        }
+
+        if ($this->get('cm.request_center')->flushNeeded()) {
+            $em->flush();
         }
 
         return new Response($response);
@@ -129,7 +178,7 @@ class RequestController extends Controller
      * @Route("/requestDelete/{object}/{objectId}/{slug}", name="request_delete", requirements={"objectId"="\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function requestDeleteAction(Request $request, $object, $objectId, $slug = null)
+    public function deleteAction(Request $request, $object, $objectId, $slug = null)
     {        
         $em = $this->getDoctrine()->getManager();
 
@@ -149,31 +198,42 @@ class RequestController extends Controller
 
                     $direction = "received";
                 } else {
-                    $user = $this->getUser;
+                    $user = $this->getUser();
 
                     $direction = "sent";
                 }
 
-                $this->get('cm.request_center')->removeRequest($user->getId(), $this->get('cm.helper')->fullClassName($object), $objectId, $direction);
+                $this->get('cm.request_center')->removeRequest($user->getId(), array('entityId' => $objectId), $direction);
+                $em->getRepository('CMBundle:EntityUser')->delete($userId, $objectId);
 
                 $post = $em->getRepository('CMBundle:Entity')->getCreationPost($objectId, $this->get('cm.helper')->fullClassName($object));
                 $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('post' => $post));
                 break;
             case 'Group':
-                if (empty($em->getRepository('CMBundle:Request')->findOneBy(array('user' => $this->getUser(), 'object' => $object, 'objectId' => $objectId)))) {
-                    throw new HttpException(401, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                if (!is_null($slug)) {
+                    $group = $em->getRepository('CMBundle:Group')->findOneById($objectId);
+
+                    if (!$this->get('cm.user_authentication')->canManage($group)) {
+                        throw new HttpException(401, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                    }
+
+                    $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+                    if (!$user) {
+                        throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+                    }
+
+                    $direction = "received";
+                } else {
+                    $user = $this->getUser();
+
+                    $direction = "sent";
                 }
-                $group = $em->getRepository('CMBundle:Group')->findOneById($objectId);
 
-                $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
-                if (!$user) {
-                    throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
-                }
+                $this->get('cm.request_center')->removeRequest($user->getId(), array('groupId' => $objectId), $direction);
+                $em->getRepository('CMBundle:GroupUser')->delete($user->getId(), $objectId);
 
-                $em->getRepository('CMBundle:GroupUser')->delete($user->getId(), $group->getId());
-                $this->get('cm.request_center')->removeRequest($user->getId(), $this->get('cm.helper')->fullClassName($object), $objectId);
-
-                $response = $this->renderView('CMBundle:GroupUser:requestAdd.html.twig', array('requested' => false, 'group' => $group));
+                $post = $em->getRepository('CMBundle:Group')->getCreationPost($objectId, $this->get('cm.helper')->fullClassName($object));
+                $response = $this->renderView('CMBundle:GroupUser:requestAdd.html.twig', array('post' => $post));
                 break;
         }
 

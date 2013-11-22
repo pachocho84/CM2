@@ -2,9 +2,10 @@
 
 {% block body %}
 
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': group.id})) }}{% endif %}
-
-    {{ include('CMBundle:GroupUser:requestAdd.html.twig') }}
+    {% if is_granted('ROLE_USER') %}
+        {{ render(controller('CMBundle:Fan:fanButton', {'userId': group.id})) }}
+        {{ include('CMBundle:GroupUser:requestAdd.html.twig', {'post': group.post}) }}
+    {% endif %}
 
     {{ include('CMBundle:Group:top.html.twig', {'inPage': 'profile'}) }}
 

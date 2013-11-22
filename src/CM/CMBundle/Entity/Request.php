@@ -59,15 +59,15 @@ class Request
     private $fromUser;
 
     /**
-     * @ORM\Column(name="from_group_id", type="integer", nullable=true)
+     * @ORM\Column(name="group_id", type="integer", nullable=true)
      **/
-    private $fromGroupId;
+    private $groupId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Group", inversedBy="requestsOutgoing")
-     * @ORM\JoinColumn(name="from_group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Group", inversedBy="requests")
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
-    private $fromGroup;
+    private $group;
 
     /**
      * @ORM\Column(name="from_page_id", type="integer", nullable=true)
@@ -94,14 +94,14 @@ class Request
     /**
      * @var string
      *
-     * @ORM\Column(name="object", type="string", length=50)
+     * @ORM\Column(name="object", type="string", length=50, nullable=true)
      */
     private $object;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="object_id", type="smallint")
+     * @ORM\Column(name="object_id", type="smallint", nullable=true)
      */
     private $objectId;
 
@@ -239,9 +239,9 @@ class Request
      *
      * @return User 
      */
-    public function getFromGroupId()
+    public function getGroupId()
     {
-        return $this->fromGroupId;
+        return $this->groupId;
     }
 
     /**
@@ -250,11 +250,11 @@ class Request
      * @param User $fromUser
      * @return Notification
      */
-    public function setFromGroup(User $fromGroup = null)
+    public function setGroup(Group $group)
     {
-        if ($fromGroup->addNotificationOutgoing($this)) {
-            $this->fromGroup = $fromGroup;
-            $this->fromGroupId = $fromGroup->getId();
+        if ($group->addRequest($this)) {
+            $this->group = $group;
+            $this->groupId = $group->getId();
         }
     
         return $this;
@@ -265,9 +265,9 @@ class Request
      *
      * @return User 
      */
-    public function getFromGroup()
+    public function getGroup()
     {
-        return $this->fromGroup;
+        return $this->group;
     }
 
     /**
@@ -286,9 +286,9 @@ class Request
      * @param User $fromUser
      * @return Notification
      */
-    public function setFromPage(User $fromPage = null)
+    public function setFromPage(Page $fromPage = null)
     {
-        if ($fromPage->addNotificationOutgoing($this)) {
+        if ($fromPage->addRequest($this)) {
             $this->fromPage = $fromPage;
             $this->fromPageId = $fromPage->getId();
         }

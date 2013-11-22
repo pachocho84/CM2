@@ -1,5 +1,83 @@
-{% if not requested %}
-    <a href="{{ path('request_add', {'object': group|class_name, 'objectId': group.id}) }}" class="btn btn-default fan-become ajax-link ajax-link-target"><i class="glyphicon glyphicon-fire"></i> {{ 'Request join group'|trans }}</a>
-{% else %}
-    <a href="{{ path('request_delete', {'object': group|class_name, 'objectId': group.id, 'slug': app.user.slug}) }}" class="btn btn-default ajax-link ajax-link-target" data-loading-text="{{ 'Loading'|trans}}"><i class="glyphicon glyphicon-remove"></i> {{ 'Cancel join request'|trans }}</a>
+{% if is_granted('ROLE_USER') and post.creatorId != app.security.token.user.id and post.group is not null %}
+
+    {% set protagonistStatus = -1 %}
+    {% for groupUser in post.group.groupUsers if groupUser.userId == app.security.token.user.id %}
+        {% set protagonistStatus = groupUser.status %}
+    {% endfor %}
+
+    {% if protagonistStatus == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_PENDING') %}
+        
+        <div class="btn-group btn-group-sm ajax-link-target">
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <i class="glyphicons crown"></i> {{ 'You have been added as member'|trans }} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="{{ path('request_update', {'choice': 'accept', 'id' : post.object|class_name , 'objectId': post.groupId}) }}" class="ajax-link"><i class="glyphicon glyphicon-ok"></i> {{ 'Accept'|trans }}</a></li>
+                <li><a href="{{ path('request_update', {'choice': 'refuse', 'object' : post.object|class_name , 'objectId': post.groupId}) }}" class="ajax-link"><i class="glyphicon glyphicon-remove"></i> {{ 'Refuse'|trans }}</a></li>
+            </ul>
+        </div>
+
+    {% elseif protagonistStatus == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_ACTIVE') %}
+
+        <div class="btn-group btn-group-sm ajax-link-target">
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <i class="glyphicons crown"></i> {{ 'You are a member'|trans }} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="{{ path('request_delete', {'object': post.object|class_name , 'objectId': post.groupId}) }}" class="ajax-link">{{ 'Cancel participation'|trans }}</a></li>
+            </ul>
+        </div>
+
+    {% elseif protagonistStatus == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_REQUESTED') %}
+
+        <div class="btn-group btn-group-sm ajax-link-target">
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <i class="glyphicons crown"></i> {{ 'Request sent'|trans }} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="{{ path('request_delete', {'object': post.object|class_name , 'objectId': post.groupId}) }}" class="ajax-link">{{ 'Cancel request'|trans }}</a></li>
+            </ul>
+        </div>
+
+    {% elseif protagonistStatus == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_REFUSED_ADMIN') %}
+        
+        <span class="btn btn-default disabled"><i class="glyphicons crown"></i> {{ 'Your request has been refused'|trans }}</span>
+
+    {% elseif protagonistStatus == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_REFUSED_GROUP_USER') %}
+        
+        <span class="btn btn-default disabled"><i class="glyphicons crown"></i> {{ 'You refused the join request'|trans }}</span>
+        
+    {% else %}
+        
+        <div class="btn-group btn-group-sm">
+            <a href="{{ path('request_add', {'object': post.object|class_name , 'objectId': post.groupId}) }}" class="btn btn-default ajax-link ajax-link-target" data-loading-text="{{ 'Loading'|trans }}" data-toggle="tooltip" data-container="body" title="{{ 'Send a request to join'|trans }}" data-placement="top"><i class="glyphicons crown"></i> {{ 'Request protagonist'|trans }}</a>
+        </div>
+        
+    {% endif %}
 {% endif %}
+
+{#{% if requested == 'sent' %}
+    <div class="btn-group btn-group-sm ajax-link-target">
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <i class="glyphicons crown"></i> {{ 'Join request sent'|trans }} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="{{ path('request_delete', {'object': object, 'objectId': objectId}) }}" class="ajax-link">{{ 'Cancel request'|trans }}</a></li>
+        </ul>
+    </div>
+{% elseif requested == 'received' %}
+
+    <div class="btn-group btn-group-sm ajax-link-target">
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <i class="glyphicons crown"></i> {{ 'You have been requested to join this group'|trans }} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="{{ path('request_update', {'choice': 'accept', 'object': object, 'objectId': objectId}) }}" class="ajax-link"><i class="glyphicon glyphicon-ok"></i> {{ 'Accept'|trans }}</a></li>
+            <li><a href="{{ path('request_update', {'choice': 'refuse', 'object': object, 'objectId': objectId}) }}" class="ajax-link"><i class="glyphicon glyphicon-remove"></i> {{ 'Refuse'|trans }}</a></li>
+        </ul>
+    </div>
+{% elseif requested == 'joined' %}
+    <span class="btn btn-default disabled"><i class="glyphicons crown"></i> {{ 'You are a member'|trans }}</span>
+{% else %}
+    <a href="{{ path('request_add', {'object': object, 'objectId': objectId}) }}" class="btn btn-default fan-become ajax-link ajax-link-target"><i class="glyphicon glyphicon-fire"></i> {{ 'Request join group'|trans }}</a>
+{% endif %}#}
