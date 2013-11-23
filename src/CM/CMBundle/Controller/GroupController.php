@@ -230,6 +230,10 @@ class GroupController extends Controller
             throw new NotFoundHttpException('User not found.');
         }
 
+        if ($this->get('security.context')->isGranted('ROLE_USER')) {
+            $request = $em->getRepository('CMBundle:Request')->getRequestWith($this->getUser()->getId(), 'outgoing', array('groupId' => $group->getId()));
+        }
+
         $biography = $em->getRepository('CMBundle:Biography')->getGroupBiography($group->getId());
         if (count($biography) == 0) {
             $biography = null;
@@ -240,6 +244,6 @@ class GroupController extends Controller
         $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('groupId' => $group->getId()));
         $pagination = $this->get('knp_paginator')->paginate($posts, 1, 15);
 
-        return array('group' => $group, 'biography' => $biography, 'posts' => $pagination);
+        return array('group' => $group, 'request' => $request, 'biography' => $biography, 'posts' => $pagination);
     }
 }

@@ -170,6 +170,7 @@ services:
             securityContext: @security.context
             session: @session
             entityManager: @doctrine.orm.entity_manager
+            helper: @cm.helper
 
     cm.user_registration.type:
         class: CM\CMBundle\Form\RegistrationType

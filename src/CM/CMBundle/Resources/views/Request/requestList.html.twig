@@ -5,13 +5,21 @@
         <li class="media object">
             {{ show_img_box(request.fromUser.img|imagine_filter('350'), {'width': 50, 'height': 50, 'offset': request.fromUser.imgOffset,  'link': path('user_show', {'slug': request.fromUser.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
             <div class="media-body ajax-link-target">
-                {{ request_tag(request)|raw }}
-                {#<?php echo $request->getRawValue()->getText() ?>#}
+                
+                {{ request.id }}: {{ request_tag(request)|raw }}
+
                 {% if request.isNewOrPending %}
                     <div class="pull-right">
-                        <a href="{{ path('request_update', {'choice': 'accept', 'object' : request.object|class_name, 'objectId': request.objectId}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading'|trans }}"><i class="glyphicon glyphicon-ok"></i> {{ 'Accept'|trans }}</a>
+                        {% if request.entityId is not null %}
+                            {% set object = request.entity %}{% set objectId = request.entityId %}
+                        {% elseif request.groupId is not null %}
+                            {% set object = request.group %}{% set objectId = request.groupId %}
+                        {% else %}
+                            {% set object = request.object %}{% set objectId = request.objectId %}
+                        {% endif %}
+                        <a href="{{ path('request_update', {'choice': 'accept', 'id': request.id}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading'|trans }}"><i class="glyphicon glyphicon-ok"></i> {{ 'Accept'|trans }}</a>
     
-                        <a href="{{ path('request_update', {'choice': 'refuse', 'object' : request.object|class_name, 'objectId': request.objectId}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading'|trans }}"><i class="glyphicon glyphicon-remove"></i> {{ 'Refuse'|trans }}</a>
+                        <a href="{{ path('request_update', {'choice': 'refuse', 'id': request.id}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading'|trans }}"><i class="glyphicon glyphicon-remove"></i> {{ 'Refuse'|trans }}</a>
                     </div>
                 {% endif %}
             </div> 

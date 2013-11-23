@@ -7,7 +7,7 @@
             <div class="media-body ajax-link-target">
                 {{ request_tag(request)|raw }}
                 <div class="pull-right">
-                    <a href="{{ path('request_delete', {'object' : request.object|class_name, 'objectId': request.objectId, 'slug':request.user.slug}) }}" class="btn btn-mini btn-sm ajax-link" data-loading-text="{{ 'Loading'|trans }}"><i class="glyphicon glyphicon-remove"></i> {{ 'Cancel'|trans }}</a>
+                    <a href="{{ path('request_delete', {'id': request.id}) }}" class="btn btn-mini btn-sm ajax-link" data-loading-text="{{ 'Loading'|trans }}"><i class="glyphicon glyphicon-remove"></i> {{ 'Cancel'|trans }}</a>
                 </div>
             </div> 
         </li>

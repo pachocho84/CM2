@@ -16,13 +16,16 @@ class UserAuthentication
 
     private $session;
 
-    private $entityManager;
+    private $em;
 
-    public function __construct(SecurityContext $securityContext, Session $session, EntityManager $entityManager)
+    private $helper;
+
+    public function __construct(SecurityContext $securityContext, Session $session, EntityManager $em, Helper $helper)
     {
         $this->securityContext = $securityContext;
         $this->session = $session;
-        $this->entityManager = $entityManager;
+        $this->em = $em;
+        $this->helper = $helper;
     }
 
     public function isAuthenticated($role = 'ROLE_USER')
@@ -45,9 +48,9 @@ class UserAuthentication
     public function updateProfile()
     {            
         $user = $this->securityContext->getToken()->getUser();
-        $groups = $this->entityManager->getRepository('CMBundle:User')->getCreatedGroupsIds($user->getId());
+        $groups = $this->em->getRepository('CMBundle:User')->getAdminGroupsIds($user->getId());
         // $groups = GroupUserQuery::create()->filterByUserId($user->getId())->filterByAdmin(1)->select(array('GroupId'))->setFormatter('PropelSimpleArrayFormatter')->find()->toArray();
-        $pages = $this->entityManager->getRepository('CMBundle:User')->getCreatedPagesIds($user->getId());
+        $pages = $this->em->getRepository('CMBundle:User')->getAdminPagesIds($user->getId());
         // $pages = PageUserQuery::create()->filterByUserId($user->getId())->filterByAdmin(1)->select(array('PageId'))->setFormatter('PropelSimpleArrayFormatter')->find()->toArray();
         // $siti = SitiQuery::create()->filterByUserId($user->getId())->select(array('Id'))->setFormatter('PropelSimpleArrayFormatter')->find()->toArray();
 
@@ -96,6 +99,21 @@ class UserAuthentication
             $this->updateProfileComplete();
         }
         return $this->session->get('user/profile_complete');
+    }
+
+    public function isAdminOf($object)
+    {
+        switch ($this->helper->className($object)) {
+            case 'Group':
+                return in_array($object->getId(), (array)$this->session->get('user/groups_admin'));
+                break;
+            case 'Page':
+                return in_array($object->getId(), (array)$this->session->get('user/pages_admin'));
+                break;
+            default:
+                return false;
+                break;
+        }
     }
 
     /**

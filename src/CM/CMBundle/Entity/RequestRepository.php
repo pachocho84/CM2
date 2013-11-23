@@ -17,10 +17,11 @@ class RequestRepository extends BaseRepository
         return array_merge(array(
             'paginate'      => true,
             'limit'         => 25,
+            'fromUserId' => null,
+            'exclude' => false,
             'entityId' => null,
             'groupId' => null,
             'object' => null,
-            'exclude' => false
         ), $options);
     }
 
@@ -56,6 +57,42 @@ class RequestRepository extends BaseRepository
             ->orderBy('r.createdAt', 'desc');
 
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+
+    public function getRequestWith($userId, $direction = 'incoming', array $options = array())
+    {
+        $options = self::getOptions($options);
+        
+        $query = $this->createQueryBuilder('r')
+            ->select('r');
+        if (!is_null($options['entityId'])) {
+            $query->addSelect('e, eu')
+                ->leftJoin('r.entity', 'e')
+                ->leftJoin('e.entityUsers', 'eu')
+                ->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId'])
+                ->andWhere('eu.userId = :user_id');
+        }
+        if (!is_null($options['groupId'])) {
+            $query->addSelect('g, gu')
+                ->leftJoin('r.group', 'g')
+                ->leftJoin('g.groupUsers', 'gu')
+                ->andWhere('g.id = :group_id')->setParameter('group_id', $options['groupId'])
+                ->andWhere('gu.userId = :user_id');
+        }
+        if ($direction == 'incoming') {
+            $query->leftJoin('r.user', 'u');
+        } elseif ($direction == 'outgoing') {
+            $query->leftJoin('r.fromUser', 'u');
+        }
+        $query->setParameter('user_id', $userId);
+
+        $request = $query->setMaxResults(1)->getQuery()->getResult();
+        if (is_array($request) && count($request) > 0) {
+            $request = $request[0];
+        } else {
+            $request = null;
+        }
+        return $request;
     }
 
     public function getNumberNew($userId)
@@ -111,17 +148,19 @@ class RequestRepository extends BaseRepository
         }
     }
 
-    public function delete($userId, $options = array(), $received = true)
+    public function delete($userId, $options = array())
     {
         $options = self::getOptions($options);
 
         $query = $this->createQueryBuilder('r')
             ->delete('CMBundle:Request', 'r');
-        if ($received) {
-            $query->where('r.user = :user_id')->setParameter('user_id', $userId);
-        }
         if ($options['exclude']) {
-            $query->andWhere('r.user != :exclude')->setParameter('exclude', $userId);
+            $query->andWhere('r.userId != :user_id')->setParameter('user_id', $userId);
+        } else {
+            $query->andWhere('r.userId = :user_id')->setParameter('user_id', $userId);
+        }
+        if (!is_null($options['fromUserId'])) {
+            $query->andWhere('r.fromUserId = :from_user_id')->setParameter('from_user_id', $options['fromUserId']);
         }
         if (!is_null($options['entityId'])) {
             $query->andWhere('r.entityId = :entity_id')->setParameter('entity_id', $options['entityId']);

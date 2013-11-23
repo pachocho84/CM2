@@ -24,22 +24,26 @@ class UserRepository extends BaseRepository
         ), $options);
     }
 
-    public function getCreatedGroupsIds($user_id)
+    public function getAdminGroupsIds($user_id)
     {
-        return $this->getEntityManager()->createQueryBuilder()
+        $query = $this->getEntityManager()->createQueryBuilder()
             ->select('g.id')->from('CMBundle:Group', 'g')
-            ->leftJoin('g.creator', 'c')
-            ->where('c.id = :user_id')->setParameter('user_id', $user_id)
-            ->getQuery()->getResult();
+            ->leftJoin('g.groupUsers', 'gu')
+            ->where('gu.userId = :user_id')->setParameter('user_id', $user_id)
+            ->andWhere('gu.admin = '.true)
+            ->getQuery()->getArrayResult();
+        return array_map('current', $query);
     }
 
-    public function getCreatedPagesIds($user_id)
+    public function getAdminPagesIds($user_id)
     {
-        return $this->getEntityManager()->createQueryBuilder()
+        $query = $this->getEntityManager()->createQueryBuilder()
             ->select('p.id')->from('CMBundle:Page', 'p')
-            ->leftJoin('p.creator', 'c')
-            ->where('c.id = :user_id')->setParameter('user_id', $user_id)
-            ->getQuery()->getResult();
+            ->leftJoin('p.pageUsers', 'pu')
+            ->where('pu.userId = :user_id')->setParameter('user_id', $user_id)
+            ->andWhere('pu.admin = '.true)
+            ->getQuery()->getArrayResult();
+        return array_map('current', $query);
     }
 
     public function getFromAutocomplete($fullname, $exclude = array())

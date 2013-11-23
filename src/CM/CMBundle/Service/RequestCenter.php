@@ -104,7 +104,7 @@ class RequestCenter
         $request = $this->em->getRepository('CMBundle:Request')->updateStatus($userId, $options, null, Request::STATUS_REFUSED);
         
         if (!is_null($request->getEntity())) {
-            $entityUser = $this->em->getRepository('CMBundle:EntityUser')->findOneBy(array('userId' => $userId, 'entityId' => $options['entityId']));
+            $entityUser = $this->em->getRepository('CMBundle:EntityUser')->findOneBy(array('userId' => $userId, 'entityId' => $request->getEntityId()));
             $newEntityUserStatus = $entityUser->getStatus() == EntityUser::STATUS_PENDING ? EntityUser::STATUS_REFUSED_ENTITY_USER : EntityUser::STATUS_REFUSED_ADMIN;
             $entityUser->setStatus($newEntityUserStatus);
             $this->em->persist($entityUser);
@@ -112,13 +112,13 @@ class RequestCenter
             $this->em->createQueryBuilder('r')
                 ->delete('CMBundle:Request', 'r')
                 ->where('r.fromUser = :user_id')->setParameter('user_id', $userId)
-                ->andWhere('r.entityId = :entity_id')->setParameter('entity_id', $options['entityId'])
+                ->andWhere('r.entityId = :entity_id')->setParameter('entity_id', $request->getEntityId())
                 ->getQuery()
                 ->execute();
 
             $this->flushNeeded = true;
         } elseif (!is_null($request->getGroup())) {
-            $groupUser = $this->em->getRepository('CMBundle:GroupUser')->findOneBy(array('userId' => $userId, 'groupId' => $request->getObjectId()));
+            $groupUser = $this->em->getRepository('CMBundle:GroupUser')->findOneBy(array('userId' => $userId, 'groupId' => $request->getGroupId()));
             $newGroupUserStatus = $groupUser->getStatus() == GroupUser::STATUS_PENDING ? GroupUser::STATUS_REFUSED_GROUP_USER : GroupUser::STATUS_REFUSED_ADMIN;
             $groupUser->setStatus($newGroupUserStatus);
             $this->em->persist($groupUser);
@@ -145,6 +145,6 @@ class RequestCenter
 
     public function removeRequest($user, $options = array())
     {
-        $this->em->getRepository('CMBundle:Request')->delete($user, $options, true);
+        $this->em->getRepository('CMBundle:Request')->delete($user, $options);
     }
 }
