@@ -166,8 +166,13 @@ class EventController extends Controller
 
             return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
         }
+
+        if ($this->get('security.context')->isGranted('ROLE_USER')) {
+            $req = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('entityId' => $event->getId()));
+        }
+        // var_dump($req['entity']);die;
         
-        return array('event' => $event, 'tags' => $tags, 'form' => $form->createView());
+        return array('event' => $event, 'request' => $req, 'tags' => $tags, 'form' => $form->createView());
     }
     
     /**

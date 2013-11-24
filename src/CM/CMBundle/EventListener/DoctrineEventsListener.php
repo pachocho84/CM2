@@ -162,10 +162,6 @@ class DoctrineEventsListener
 
     private function entityUserUpdatedRoutine(EntityUser $entityUser, EntityManager $em)
     {
-        if (in_array($entityUser->getStatus(), array(EntityUser::STATUS_PENDING, EntityUser::STATUS_ACTIVE, EntityUser::STATUS_REQUESTED))) {
-            $this->entityUserRemovedRoutine($entityUser, $em);
-            $this->entityUserPersistedRoutine($entityUser, $em);
-        }
     }
 
     private function entityUserRemovedRoutine(EntityUser $entityUser, EntityManager $em)
@@ -231,11 +227,6 @@ class DoctrineEventsListener
 
     private function groupUserUpdatedRoutine(GroupUser $groupUser, EntityManager $em)
     {
-        if (in_array($groupUser->getStatus(), array(GroupUser::STATUS_ACTIVE, GroupUser::STATUS_REFUSED_ADMIN))) {
-            // delete requests to other admins
-        }
-        // $this->groupUserRemovedRoutine($groupUser, $em);
-        // $this->groupUserPersistedRoutine($groupUser, $em);
     }
 
     private function groupUserRemovedRoutine(GroupUser $groupUser, EntityManager $em)

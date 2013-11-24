@@ -117,7 +117,6 @@ class EntityUserController extends Controller
         if (!is_null($request->query->get('group_id'))) {
             $group_ids = explode(',', $request->query->get('group_id'));
             $user_ids = $em->getRepository('CMBundle:Group')->getUserIdsFor($group_ids);
-        var_dump($user_ids); die;
         } elseif (!is_null($request->query->get('page_id'))) {
             $page_ids = explode(',', $request->query->get('page_id'));
             $user_ids = $em->getRepository('CMBundle:Page')->getUserIdsFor($page_ids);

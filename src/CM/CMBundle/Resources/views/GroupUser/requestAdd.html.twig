@@ -1,6 +1,8 @@
-{% if is_granted('ROLE_USER') %}
+{% if is_granted('ROLE_USER') and group.post.creatorId != app.user.id %}
 
-    {% if request is not null and request.group.groupUsers.first.status == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_PENDING') %}
+    {{ dump(request.group.groupUsers) }}
+
+    {#{% if request is not null and request.group.groupUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_PENDING') %}
         
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -12,7 +14,7 @@
             </ul>
         </div>
 
-    {% elseif request is not null and request.group.groupUsers.first.status == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_ACTIVE') %}
+    {% elseif request is not null and request.group.groupUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_ACTIVE') %}
 
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -23,7 +25,7 @@
             </ul>
         </div>
 
-    {% elseif request is not null and request.group.groupUsers.first.status == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_REQUESTED') %}
+    {% elseif request is not null and request.group.groupUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_REQUESTED') %}
 
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -34,11 +36,11 @@
             </ul>
         </div>
 
-    {% elseif request is not null and request.group.groupUsers.first.status == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_REFUSED_ADMIN') %}
+    {% elseif request is not null and request.group.groupUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_REFUSED_ADMIN') %}
         
         <span class="btn btn-default disabled"><i class="glyphicons crown"></i> {{ 'Your request has been refused'|trans }}</span>
 
-    {% elseif request is not null and request.group.groupUsers.first.status == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_REFUSED_GROUP_USER') %}
+    {% elseif request is not null and request.group.groupUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_REFUSED_GROUP_USER') %}
         
         <span class="btn btn-default disabled"><i class="glyphicons crown"></i> {{ 'You refused the join request'|trans }}</span>
         
@@ -48,7 +50,7 @@
             <a href="{{ path('request_add', {'object': group|class_name, 'objectId': group.id, 'userId': app.user.id}) }}" class="btn btn-default ajax-link ajax-link-target" data-loading-text="{{ 'Loading'|trans }}" data-toggle="tooltip" data-container="body" title="{{ 'Send a request to join'|trans }}" data-placement="top"><i class="glyphicons crown"></i> {{ 'Request protagonist'|trans }}</a>
         </div>
         
-    {% endif %}
+    {% endif %}#}
 {% endif %}
 
 {#{% if requested == 'sent' %}

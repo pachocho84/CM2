@@ -70,15 +70,15 @@ class Request
     private $group;
 
     /**
-     * @ORM\Column(name="from_page_id", type="integer", nullable=true)
+     * @ORM\Column(name="page_id", type="integer", nullable=true)
      **/
-    private $fromPageId;
+    private $pageId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Page", inversedBy="requestsOutgoing")
-     * @ORM\JoinColumn(name="from_page_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="requests")
+     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
-    private $fromPage;
+    private $page;
 
     /**
      * @ORM\Column(name="entity_id", type="integer", nullable=true)
@@ -275,9 +275,9 @@ class Request
      *
      * @return User 
      */
-    public function getFromPageId()
+    public function getPageId()
     {
-        return $this->fromPageId;
+        return $this->pageId;
     }
 
     /**
@@ -286,11 +286,11 @@ class Request
      * @param User $fromUser
      * @return Notification
      */
-    public function setFromPage(Page $fromPage = null)
+    public function setPage(Page $page = null)
     {
-        if ($fromPage->addRequest($this)) {
-            $this->fromPage = $fromPage;
-            $this->fromPageId = $fromPage->getId();
+        if ($page->addRequest($this)) {
+            $this->page = $page;
+            $this->pageId = $page->getId();
         }
     
         return $this;
@@ -301,9 +301,9 @@ class Request
      *
      * @return User 
      */
-    public function getFromPage()
+    public function getPage()
     {
-        return $this->fromPage;
+        return $this->page;
     }
 
     /**
@@ -325,8 +325,6 @@ class Request
     public function setEntity(Entity $entity)
     {
         $this->entity = $entity;
-        $this->object = get_class($entity);
-        $this->objectId = $entity->getId();
         $this->entityId = $entity->getId();
     
         return $this;

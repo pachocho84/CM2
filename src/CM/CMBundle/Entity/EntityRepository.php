@@ -22,9 +22,11 @@ class EntityRepository extends BaseRepository
     public function getAdmins($entityId)
     {
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('partial eu.{id, entityId, userId}')
-            ->from('CMBundle:EntityUser','eu')
-            ->where('identity(eu.entity) = :entity_id')->setParameter('entity_id', $entityId)
+            ->select('u')
+            ->from('CMBundle:User', 'u')
+            ->leftJoin('u.userEntities', 'ue')
+            ->where('ue.admin = '.true)
+            ->where('identity(ue.entity) = :entity_id')->setParameter('entity_id', $entityId)
             ->getQuery()->getResult();
     }
 

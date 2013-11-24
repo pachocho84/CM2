@@ -35,31 +35,50 @@ class RequestRepository extends BaseRepository
             ->getQuery()->getResult();
     }
 
+    public function getRequest($id)
+    {
+        return $this->createQueryBuilder('r')
+            ->select('r, e, eu, g, gu, p, pu')
+            ->where('r.id = :id')->setParameter('id', $id)
+            ->leftJoin('r.entity', 'e')
+            ->leftJoin('e.entityUsers', 'eu', '', '', 'eu.userId')
+            ->leftJoin('r.group', 'g')
+            ->leftJoin('g.groupUsers', 'gu', '', '', 'gu.userId')
+            ->leftJoin('r.page', 'p')
+            ->leftJoin('p.pageUsers', 'pu', '', '', 'pu.userId')
+            ->getQuery()->getSingleResult();
+    }
+
     public function getRequests($userId, $direction = 'incoming', array $options = array())
     {
         $options = self::getOptions($options);
         
         $query = $this->createQueryBuilder('r')
-            ->select('r, u, e, t, p, pu, pp, pg')
+            ->select('r, u, e, eu, t, g, gu, p, pu, po, pou, pop, pog')
             ->leftJoin('r.entity', 'e')
+            ->leftJoin('e.entityUsers', 'eu', 'with', 'eu.userId = :user_id', 'eu.userId')
             ->leftJoin('e.translations', 't')
-            ->leftJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
-            ->leftJoin('p.user', 'pu')
-            ->leftJoin('p.page', 'pp')
-            ->leftJoin('p.group', 'pg');
+            ->leftJoin('e.posts', 'po', 'WITH', 'po.type = '.Post::TYPE_CREATION)
+            ->leftJoin('r.group', 'g')
+            ->leftJoin('g.groupUsers', 'gu', 'WITH', 'gu.userId = :user_id', 'gu.userId')
+            ->leftJoin('r.page', 'p')
+            ->leftJoin('p.pageUsers', 'pu', 'WITH', 'pu.userId = :user_id', 'pu.userId')
+            ->leftJoin('po.user', 'pou')
+            ->leftJoin('po.group', 'pog')
+            ->leftJoin('po.page', 'pop');
         if ($direction == 'incoming') {
             $query->leftJoin('r.user', 'u');
         } elseif ($direction == 'outgoing') {
             $query->leftJoin('r.fromUser', 'u');
         }
-        $query->andWhere('u.id = :id')->setParameter('id', $userId)
+        $query->andWhere('u.id = :user_id')->setParameter('user_id', $userId)
             ->andWhere('r.status NOT IN ('.Request::STATUS_ACCEPTED.','.Request::STATUS_REFUSED.')')
             ->orderBy('r.createdAt', 'desc');
 
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
-    public function getRequestWith($userId, $direction = 'incoming', array $options = array())
+    public function getRequestWithUserStatus($userId, $direction = 'incoming', array $options = array())
     {
         $options = self::getOptions($options);
         
@@ -68,21 +87,25 @@ class RequestRepository extends BaseRepository
         if (!is_null($options['entityId'])) {
             $query->addSelect('e, eu')
                 ->leftJoin('r.entity', 'e')
-                ->leftJoin('e.entityUsers', 'eu')
-                ->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId'])
-                ->andWhere('eu.userId = :user_id');
+                ->leftJoin('e.entityUsers', 'eu', 'WITH', 'eu.userId = :user_id', 'eu.userId')
+                ->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId']);
         }
         if (!is_null($options['groupId'])) {
             $query->addSelect('g, gu')
                 ->leftJoin('r.group', 'g')
-                ->leftJoin('g.groupUsers', 'gu')
-                ->andWhere('g.id = :group_id')->setParameter('group_id', $options['groupId'])
-                ->andWhere('gu.userId = :user_id');
+                ->leftJoin('g.groupUsers', 'gu', 'WITH', 'gu.userId = :user_id', 'gu.userId')
+                ->andWhere('g.id = :group_id')->setParameter('group_id', $options['groupId']);
         }
         if ($direction == 'incoming') {
-            $query->leftJoin('r.user', 'u');
+            $query->andWhere('r.userId = :user_id');
         } elseif ($direction == 'outgoing') {
-            $query->leftJoin('r.fromUser', 'u');
+            $query->andWhere('r.fromUserId = :user_id');
+        } elseif ($direction == 'any') {
+            $query->andWhere($query->expr()->orX(
+                $query->expr()->eq('r.userId', ':user_id'),
+                $query->expr()->eq('r.fromUserId', ':user_id')
+            ));
+                
         }
         $query->setParameter('user_id', $userId);
 
@@ -156,7 +179,7 @@ class RequestRepository extends BaseRepository
             ->delete('CMBundle:Request', 'r');
         if ($options['exclude']) {
             $query->andWhere('r.userId != :user_id')->setParameter('user_id', $userId);
-        } else {
+        } elseif (!is_null($userId)) {
             $query->andWhere('r.userId = :user_id')->setParameter('user_id', $userId);
         }
         if (!is_null($options['fromUserId'])) {

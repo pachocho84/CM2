@@ -22,6 +22,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 class PageUser
 {
     use ORMBehaviors\Timestampable\Timestampable;
+
+    const STATUS_PENDING = 0;
+    const STATUS_ACTIVE = 1;
+    const STATUS_REQUESTED = 2;
+    const STATUS_REFUSED_ADMIN = 3;
+    const STATUS_REFUSED_GROUP_USER = 4;
     
     const JOIN_NO = 0;
     const JOIN_YES = 1;
@@ -64,6 +70,13 @@ class PageUser
      * @ORM\Column(name="admin", type="boolean")
      */
     private $admin = false;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="smallint", nullable=false)
+     */
+    private $status = self::STATUS_PENDING;
 
     /**
      * @var integer
@@ -204,6 +217,29 @@ class PageUser
     public function getAdmin()
     {
         return $this->admin;
+    }
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     * @return EntityUser
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer 
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**

@@ -93,9 +93,9 @@ class Page
 	private $notificationsOutgoing;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="Request", mappedBy="fromPage", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="Request", mappedBy="page", cascade={"persist", "remove"})
 	 */
-	private $requestsOutgoing;
+	private $requests;
     
     /**
      * @ORM\OneToMany(targetEntity="Fan", mappedBy="page", cascade={"persist", "remove"})
@@ -108,8 +108,7 @@ class Page
         $this->pagesUsers = new ArrayCollection();
 		$this->notificationsIncoming = new ArrayCollection;
 		$this->notificationsOutgoing = new ArrayCollection;
-		$this->requestsIncoming = new ArrayCollection;
-		$this->requestsOutgoing = new ArrayCollection;
+		$this->requests = new ArrayCollection;
     }
 	
 	public function __toString()
@@ -382,7 +381,7 @@ class Page
 	 */
 	public function addNotificationIncoming(Notification $notificationIncoming)
 	{
-        if ($this->notificationsIncoming->contains($notificationIncoming)) {
+        if (!$this->notificationsIncoming->contains($notificationIncoming)) {
 	        $this->notificationsIncoming[] = $notificationIncoming;
 	        return true;
 	    }
@@ -418,7 +417,7 @@ class Page
 	 */
 	public function addNotificationOutgoing(Notification $notificationOutgoing)
 	{
-        if ($this->notificationOutgoing->contains($notificationOutgoing)) {
+        if (!$this->notificationOutgoing->contains($notificationOutgoing)) {
 	        $this->notificationOutgoing[] = $notificationOutgoing;
 	        return true;
 	    }
@@ -447,15 +446,15 @@ class Page
 	}
 
 	/**
-	 * Add requestIncoming
+	 * Add request
 	 *
-	 * @param RequestIncoming $requestIncoming
+	 * @param Request $request
 	 * @return Post
 	 */
-	public function addRequestIncoming(Request $requestIncoming)
+	public function addRequest(Request $request)
 	{
-        if ($this->requestsIncoming->contains($requestIncoming)) {
-	        $this->requestsIncoming[] = $requestIncoming;
+        if (!$this->requests->contains($request)) {
+	        $this->requests[] = $request;
 	        return true;
 	    }
 	
@@ -463,23 +462,23 @@ class Page
 	}
 
 	/**
-	 * Remove requestsIncoming
+	 * Remove requests
 	 *
-	 * @param RequestIncoming $requestIncoming
+	 * @param Request $request
 	 */
-	public function removeRequestIncoming(Request $requestIncoming)
+	public function removeRequest(Request $request)
 	{
-	    $this->requestsIncoming->removeElement($requestIncoming);
+	    $this->requests->removeElement($request);
 	}
 
 	/**
-	 * Get requestIncoming
+	 * Get request
 	 *
 	 * @return \Doctrine\Common\Collections\Collection 
 	 */
-	public function getRequestsIncoming()
+	public function getRequests()
 	{
-	    return $this->requestsIncoming;
+	    return $this->requests;
 	}
 
 	/**

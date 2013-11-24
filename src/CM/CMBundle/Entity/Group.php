@@ -374,7 +374,7 @@ class Group
 	 */
 	public function addNotificationIncoming(Notification $notificationIncoming)
 	{
-        if ($this->notificationsIncoming->contains($notificationIncoming)) {
+        if (!$this->notificationsIncoming->contains($notificationIncoming)) {
 	        $this->notificationsIncoming[] = $notificationIncoming;
 	        return true;
 	    }
@@ -410,7 +410,7 @@ class Group
 	 */
 	public function addNotificationOutgoing(Notification $notificationOutgoing)
 	{
-        if ($this->notificationOutgoing->contains($notificationOutgoing)) {
+        if (!$this->notificationOutgoing->contains($notificationOutgoing)) {
 	        $this->notificationOutgoing[] = $notificationOutgoing;
 	        return true;
 	    }

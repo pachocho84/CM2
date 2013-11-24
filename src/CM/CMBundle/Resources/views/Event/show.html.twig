@@ -14,7 +14,7 @@
         </header>
         <div>
             <p>{{ event.getText | raw }}</p>
-            {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'post': event.post}) }}
+            {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'entity': event}) }}
             <ul>
                 {% for protagonist in event.entityUsers if protagonist.status == 1 %} {# active #}
                     <li>

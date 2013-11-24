@@ -60,7 +60,7 @@ class EventRepository extends BaseRepository
             ->where('t.locale in (:locales)');
             
         if ($options['protagonists']) {
-            $query->leftJoin('e.entityUsers', 'eu')
+            $query->leftJoin('e.entityUsers', 'eu', 'eu.userId')
                 ->leftJoin('eu.user', 'us');
         }
         

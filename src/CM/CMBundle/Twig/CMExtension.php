@@ -8,6 +8,7 @@ use CM\CMBundle\Service\Helper;
 use Symfony\Component\Security\Core\SecurityContext;
 use CM\CMBundle\Service\UserAuthentication;
 use CM\CMBundle\Entity\Entity;
+use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Request;
 use CM\CMBundle\Entity\Notification;
@@ -320,17 +321,17 @@ class CMExtension extends \Twig_Extension
 
         if ($user->getId() == $request->getUser()->getId()) {
             $userLink = $this->router->generate('user_show', array('slug' => $request->getFromUser()->getSlug()));
-            if (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event' && $user->getId() == $request->getEntity()->getPost()->getUserId()) {
+            if (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
                 $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
                 return $this->translator->trans('%user% would like to be added as protagonist to your event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event') {
                 $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
                 return $this->translator->trans('%user% would like to add you as protagonist to the event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
-            } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Disc' && $user->getId() == $request->getEntity()->getPost()->getUserId()) {
+            } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Disc' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
                 // return __('%user% would like to be added as protagonist to your disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Disc') {
                 // return __('%user% would like to add you as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
-            } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Article' && $user->getId() == $request->getEntity()->getPost()->getUserId()) {
+            } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Article' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
                 // return __('%user% would like to be added as protagonist to your article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getE.'</a>'ntity(), $this->getEntity()->getLinkShow())));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Article') {
                 // return __('%user% would like to add you as protagonist to the article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));

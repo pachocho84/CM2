@@ -231,7 +231,7 @@ class GroupController extends Controller
         }
 
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
-            $request = $em->getRepository('CMBundle:Request')->getRequestWith($this->getUser()->getId(), 'outgoing', array('groupId' => $group->getId()));
+            $request = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('groupId' => $group->getId()));
         }
 
         $biography = $em->getRepository('CMBundle:Biography')->getGroupBiography($group->getId());
