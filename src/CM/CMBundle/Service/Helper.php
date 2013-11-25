@@ -35,7 +35,7 @@ class Helper
         }
     }
 
-    function getObject($object, $objectId)
+    function getObject($object, $objectId, $container = null)
     {
         switch (self::className($object))
         {
@@ -51,7 +51,7 @@ class Helper
             case 'Fan':
                 return $this->em->getRepository('CMBundle:Fan')->getFans($objectId);
             case 'Group':
-                return $this->em->getRepository('CMBundle:Group')->findOneById($objectId);
+                return null;
             case 'image':
                 // return is_array($object_id) ? ImageQuery::create()->filterById($object_id)->orderByCreatedAt('desc')->find() : ImageQuery::create()->filterById($object_id)->findOne();
             case 'link':

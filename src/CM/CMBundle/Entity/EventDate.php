@@ -38,7 +38,7 @@ class EventDate
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="start", type="datetimetz")
+     * @ORM\Column(name="start", type="datetimetz", nullable=false)
      * @Assert\DateTime
      * @Assert\NotNull
      */

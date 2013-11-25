@@ -285,7 +285,7 @@ class RequestController extends Controller
 
             $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('entity' => $request->getEntity(), 'request' => null));
         } elseif (!is_null($request->getGroupId())) {
-            if ($request->getGroup()->getPost()->getCreatorId() == $this->getUser()->getId()) {
+            if ($request->getGroup()->getCreatorId() == $this->getUser()->getId()) {
                 throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }
 
@@ -303,7 +303,7 @@ class RequestController extends Controller
 
             $response = $this->renderView('CMBundle:GroupUser:requestAdd.html.twig', array('group' => $request->getGroup(), 'request' => null));
         } elseif (!is_null($request->getPageId())) {
-            if ($request->getPage()->getPost()->getCreatorId() == $this->getUser()->getId()) {
+            if ($request->getPage()->getCreatorId() == $this->getUser()->getId()) {
                 throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }
 

@@ -57,14 +57,10 @@ class PostRepository extends BaseRepository
                 ->orWhere('eu.userId = :user_id');
         }
         if (!is_null($options['pageId'])) {
-            $query->leftJoin('eu.user', 'euu')
-                ->leftJoin('euu.userPages', 'up')
-                ->andWhere('up.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+            $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
         if (!is_null($options['groupId'])) {
-            $query->leftJoin('eu.user', 'euu')
-                ->leftJoin('euu.userGroups', 'ug')
-                ->andWhere('ug.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
         $query->orderBy('p.updatedAt', 'desc')
             ->addOrderBy('p.id', 'desc');

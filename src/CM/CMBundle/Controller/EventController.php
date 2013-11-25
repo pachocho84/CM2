@@ -230,6 +230,9 @@ class EventController extends Controller
             $event->addPost($post);
         } else {
             $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale(), 'protagonists' => true));
+            if (!$this->get('cm.user_authentication')->canManage($event)) {
+                throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+            }
             // TODO: retrieve images from event
         }
 
@@ -266,9 +269,7 @@ class EventController extends Controller
         
         $form->handleRequest($request);
 
-        if (!$this->get('cm.user_authentication')->canManage($event)) {
-              throw new HttpException(401, 'Unauthorized access.');
-        } elseif ($form->isValid()) {
+        if ($form->isValid()) {
             foreach ($event->getEventDates() as $eventDate) {
                 foreach ($oldEventDates as $key => $toDel) {
                     if ($toDel->getId() === $eventDate->getId()) {

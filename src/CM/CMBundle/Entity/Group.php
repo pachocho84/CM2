@@ -20,6 +20,8 @@ class Group
     use \CM\CMBundle\Model\ImageAndCoverTrait;
     
     const TYPE_DUO = 0;
+    const TYPE_TRIO = 1;
+    const TYPE_QUARTET = 2;
     
     /**
      * @var integer
@@ -43,6 +45,11 @@ class Group
      * @ORM\Column(name="name", type="string", length=150)
      */
     private $name;
+
+    /**
+     * @ORM\Column(name="creator_id", type="integer")
+     */
+    private $creatorId;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
@@ -168,6 +175,16 @@ class Group
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get entity
+     *
+     * @return User 
+     */
+    public function getCreatorId()
+    {
+        return $this->creatorId;
     }
 
     /**

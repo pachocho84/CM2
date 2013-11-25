@@ -10,18 +10,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation as JMS;
+use CM\CMBundle\Entity\Group;
+use CM\CMBundle\Entity\GroupUser;
 use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\EntityCategory;
+use CM\CMBundle\Form\GroupType;
 use CM\CMBundle\Form\BiographyType;
 use CM\CMBundle\Form\GroupImageType;
 
 /**
- * @Route("/groups/{slug}")
+ * @Route("/groups")
  */
 class GroupController extends Controller
 {
     /**
-     * @Route("/wall/{page}", name="group_wall", requirements={"page" = "\d+"})
+     * @Route("/{slug}/wall/{page}", name="group_wall", requirements={"page" = "\d+"})
      * @Template
      */
     public function wallAction(Request $request, $slug, $page = 1)
@@ -45,8 +48,8 @@ class GroupController extends Controller
     }
 
     /**
-     * @Route("/wall/{lastUpdated}/update", name="group_wall_update")
-     * @Route("/wall/{lastUpdated}/update", name="group_show_update")
+     * @Route("/{slug}/wall/{lastUpdated}/update", name="group_wall_update")
+     * @Route("/{slug}/wall/{lastUpdated}/update", name="group_show_update")
      * @Template("CMBundle:Wall:posts.html.twig")
      */
     public function postsAction(Request $request, $slug, $lastUpdated)
@@ -65,9 +68,72 @@ class GroupController extends Controller
 
         return array('posts' => $posts);
     }
+    
+    /**
+     * @Route("/new", name="group_new") 
+     * @Route("/{slug}/edit", name="group_edit")
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function editAction(Request $request, $slug = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+        
+        if ($slug == null) {
+            
+            $group = new Group;
+            $group->setCreator($user);
+
+            $group->addUser(
+                $user,
+                true, // admin
+                GroupUser::STATUS_ACTIVE
+            );
+
+            $post = $this->get('cm.post_center')->getNewPost($user, $user);
+
+            $group->addPost($post);
+        } else {
+            $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+          
+            if (!$this->get('cm.user_authentication')->canManage($group)) {
+                throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+            }
+        }
+        
+        if ($request->get('_route') == 'event_edit') {
+            $formRoute = 'event_edit';
+            $formRouteArgs = array('id' => $event->getId(), 'slug' => $event->getSlug());
+        } else {
+            $formRoute = 'event_new';
+            $formRouteArgs = array();
+        }
+ 
+        $form = $this->createForm(new GroupType, $group, array(
+/*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
+            'cascade_validation' => true,
+            'error_bubbling' => false
+        ))->add('save', 'submit');
+        
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em->persist($group);
+
+            $em->flush();
+
+            return new RedirectResponse($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+        }
+        
+        return array(
+            'form' => $form->createView()
+        );
+    }
 
     /**
-     * @Route("/account/biography", name="group_biography_edit")
+     * @Route("/{slug}/account/biography", name="group_biography_edit")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
@@ -118,7 +184,7 @@ class GroupController extends Controller
     }
 
     /**
-     * @Route("/biography", name="group_biography")
+     * @Route("/{slug}/biography", name="group_biography")
      * @Template
      */
     public function biographyAction(Request $request, $slug)
@@ -142,7 +208,7 @@ class GroupController extends Controller
     }
 
     /**
-     * @Route("/account/image", name="group_image_edit")
+     * @Route("/{slug}/account/image", name="group_image_edit")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template("CMBundle:User:imageEdit.html.twig")
      */
@@ -177,47 +243,47 @@ class GroupController extends Controller
     }
     
     /**
-	 * @Route("/events/{page}", name = "group_events", requirements={"page" = "\d+"})
-	 * @Route("/events/archive/{page}", name="group_events_archive", requirements={"page" = "\d+"}) 
-	 * @Route("/events/category/{category_slug}/{page}", name="group_events_category", requirements={"page" = "\d+"})
+     * @Route("/{slug}/events/{page}", name = "group_events", requirements={"page" = "\d+"})
+     * @Route("/{slug}/events/archive/{page}", name="group_events_archive", requirements={"page" = "\d+"}) 
+     * @Route("/{slug}/events/category/{category_slug}/{page}", name="group_events_category", requirements={"page" = "\d+"})
      * @Template
      */
-	public function eventsAction(Request $request, $slug, $page = 1, $category_slug = null)
-	{
-	    $em = $this->getDoctrine()->getManager();
-		
-		$group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
-		
-		if (!$group) {
-    		throw new NotFoundHttpException('Group not found.');
-		}
-		    
-		if (!$request->isXmlHttpRequest()) {
-			$categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::EVENT, array('locale' => $request->getLocale()));
-		}
-		
-		if ($category_slug) {
-			$category = $em->getRepository('CMBundle:EntityCategory')->getCategory($category_slug, EntityCategory::EVENT, array('locale' => $request->getLocale()));
-		}
-			
-		$events = $em->getRepository('CMBundle:Event')->getEvents(array(
-			'locale'        => $request->getLocale(), 
-			'archive'       => $request->get('_route') == 'group_events_archive' ? true : null,
-			'category_id'   => $category_slug ? $category->getId() : null,
-			'group_id'      => $group->getId()		
+    public function eventsAction(Request $request, $slug, $page = 1, $category_slug = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        
+        if (!$group) {
+            throw new NotFoundHttpException('Group not found.');
+        }
+            
+        if (!$request->isXmlHttpRequest()) {
+            $categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::EVENT, array('locale' => $request->getLocale()));
+        }
+        
+        if ($category_slug) {
+            $category = $em->getRepository('CMBundle:EntityCategory')->getCategory($category_slug, EntityCategory::EVENT, array('locale' => $request->getLocale()));
+        }
+            
+        $events = $em->getRepository('CMBundle:Event')->getEvents(array(
+            'locale'        => $request->getLocale(), 
+            'archive'       => $request->get('_route') == 'group_events_archive' ? true : null,
+            'category_id'   => $category_slug ? $category->getId() : null,
+            'group_id'      => $group->getId()      
         ));
         
-		$pagination = $this->get('knp_paginator')->paginate($events, $page, 10);
-		
-		if ($request->isXmlHttpRequest()) {
-    		return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'page' => $page));
-		}
-		
-		return array('categories' => $categories, 'dates' => $pagination, 'category' => $category, 'page' => $page);
-	}
+        $pagination = $this->get('knp_paginator')->paginate($events, $page, 10);
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'page' => $page));
+        }
+        
+        return array('categories' => $categories, 'group' => $group, 'dates' => $pagination, 'category' => $category, 'page' => $page);
+    }
 
     /**
-     * @Route("/", name="group_show")
+     * @Route("/{slug}", name="group_show")
      * @Template
      */
     public function showAction($slug)
@@ -229,6 +295,8 @@ class GroupController extends Controller
         if (!$group) {
             throw new NotFoundHttpException('User not found.');
         }
+
+        $members = $em->getRepository('CMBundle:GroupUser')->getMembers($group->getId(), array('paginate' => false, 'limit' => 10));
 
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $request = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('groupId' => $group->getId()));
@@ -244,6 +312,6 @@ class GroupController extends Controller
         $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('groupId' => $group->getId()));
         $pagination = $this->get('knp_paginator')->paginate($posts, 1, 15);
 
-        return array('group' => $group, 'request' => $request, 'biography' => $biography, 'posts' => $pagination);
+        return array('group' => $group, 'members' => $members, 'request' => $request, 'biography' => $biography, 'posts' => $pagination);
     }
 }

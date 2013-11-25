@@ -266,7 +266,9 @@ class CMExtension extends \Twig_Extension
         // Align  
         $inner_box_style = array();
         if ($img_ratio > 1 && isset($options['offset'])) {
-            $inner_box_style[] = 'right: '.$options['offset'].'%'; 
+            $img_style[] = 'right: '.$options['offset'].'%'; 
+        } elseif ($img_ratio > 1) {             
+            $img_style[] = 'right: '.($img_r_w / 2).'px';
         } elseif ($img_ratio < 1 && isset($options['offset'])) {
             $img_style[] = 'bottom: '.$options['offset'].'%'; 
         } elseif ($img_ratio < 1) {             
@@ -467,7 +469,7 @@ class CMExtension extends \Twig_Extension
                 //         '%object%'  => link_to($post->getEntity(), $post->getEntity()->getLinkShow())
                 //     ), count($post->getObjectIds()));
             case 'Biography_'.Post::TYPE_CREATION:
-            case 'Biography_'.Post::TYPE_UPDATE:                
+            case 'Biography_'.Post::TYPE_UPDATE:
                 $objectLink = $this->router->generate('user_biography', array('slug' => $post->getUser()->getSlug()));
                 return $this->translator->trans('%user% has updated '.$post->getPublisherSex('his').' %biographyLinkStart%biography%biographyLinkEnd%', array(
                     '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
@@ -475,9 +477,20 @@ class CMExtension extends \Twig_Extension
                 ));
             case 'user_'.Post::TYPE_REGISTRATION:
                 // return __('%user% registered on Circuito Musica. - '.$post->getPublisherSex('M'), array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow())));
-            case 'group_'.Post::TYPE_CREATION:
-                // return __('%user% has opened the group %group%', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%group%' => link_to($post->getRelatedObject()->getFirst(), $post->getRelatedObject()->getFirst()->getLinkShow())));
-            case 'page_'.Post::TYPE_CREATION:
+            case 'Group_'.Post::TYPE_CREATION:
+                $userLink = $this->router->generate('user_show', array('slug' => $post->getGroup()->getCreator()->getSlug()));
+                $objectLink = $this->router->generate('group_show', array('slug' => $post->getGroup()->getSlug()));
+                return $this->translator->trans('%user% has opened the group %group%', array(
+                    '%user%' => '<a href="'.$userLink.'">'.$post->getGroup()->getCreator().'</a>',
+                    '%group%' => '<a href="'.$objectLink.'">'.$post->getGroup().'</a>'
+                ));
+            case 'Page_'.Post::TYPE_CREATION:
+                $userLink = $this->router->generate('user_show', array('slug' => $post->getPage()->getCreator()->getSlug()));
+                $objectLink = $this->router->generate('page_show', array('slug' => $post->getPage()->getSlug()));
+                return $this->translator->trans('%user% has opened the page %page%', array(
+                    '%user%' => '<a href="'.$userLink.'">'.$post->getPage()->getCreator().'</a>',
+                    '%page%' => '<a href="'.$objectLink.'">'.$post->getPage().'</a>'
+                ));
                 // return __('%user% has opened the page %page%', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%page%' => link_to($post->getRelatedObject()->getFirst(), $post->getRelatedObject()->getFirst()->getLinkShow())));
             case 'user_img_update':
                 // return __('%user% has updated '.$post->getPublisherSex('his').' profile picture.', array('%user%'   => link_to($post->getUser(), $post->getUser()->getLinkShow())));

@@ -18,9 +18,9 @@ trait ImageTrait
     /**
      * @var string
      *
-     * @ORM\Column(name="img", type="string", length=100)
+     * @ORM\Column(name="img", type="string", length=100, nullable=true)
      */
-    private $img;
+    private $img = "default.png";
 
     /**
      * @var integer

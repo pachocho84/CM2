@@ -10,21 +10,24 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation as JMS;
+use CM\CMBundle\Entity\Page;
+use CM\CMBundle\Entity\PageUser;
 use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\EntityCategory;
+use CM\CMBundle\Form\PageType;
 use CM\CMBundle\Form\BiographyType;
 use CM\CMBundle\Form\PageImageType;
 
 /**
- * @Route("/pages/{slug}")
+ * @Route("/pages")
  */
 class PageController extends Controller
 {
     /**
-     * @Route("/wall/{page}", name="page_wall", requirements={"page" = "\d+"})
+     * @Route("/{slug}/wall/{pageNum}", name="page_wall", requirements={"pageNum" = "\d+"})
      * @Template
      */
-    public function wallAction(Request $request, $slug, $page = 1)
+    public function wallAction(Request $request, $slug, $pageNum = 1)
     {
         $em = $this->getDoctrine()->getManager();
         
@@ -35,7 +38,7 @@ class PageController extends Controller
         }
 
         $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('pageId' => $page->getId()));
-        $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
+        $pagination = $this->get('knp_paginator')->paginate($posts, $pageNum, 15);
         
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:Wall:posts.html.twig', array('posts' => $pagination, 'slug' => $page->getSlug()));
@@ -45,8 +48,8 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/wall/{lastUpdated}/update", name="page_wall_update")
-     * @Route("/wall/{lastUpdated}/update", name="page_show_update")
+     * @Route("/{slug}/wall/{lastUpdated}/update", name="page_wall_update")
+     * @Route("/{slug}/wall/{lastUpdated}/update", name="page_show_update")
      * @Template("CMBundle:Wall:posts.html.twig")
      */
     public function postsAction(Request $request, $slug, $lastUpdated)
@@ -65,9 +68,72 @@ class PageController extends Controller
 
         return array('posts' => $posts);
     }
+    
+    /**
+     * @Route("/new", name="page_new") 
+     * @Route("/{slug}/edit", name="page_edit")
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function editAction(Request $request, $slug = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+        
+        if ($slug == null) {
+            
+            $page = new Page;
+            $page->setCreator($user);
+
+            $page->addUser(
+                $user,
+                true, // admin
+                PageUser::STATUS_ACTIVE
+            );
+
+            $post = $this->get('cm.post_center')->getNewPost($user, $user);
+
+            $page->addPost($post);
+        } else {
+            $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+          
+            if (!$this->get('cm.user_authentication')->canManage($page)) {
+                throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+            }
+        }
+        
+        if ($request->get('_route') == 'event_edit') {
+            $formRoute = 'event_edit';
+            $formRouteArgs = array('id' => $event->getId(), 'slug' => $event->getSlug());
+        } else {
+            $formRoute = 'event_new';
+            $formRouteArgs = array();
+        }
+ 
+        $form = $this->createForm(new PageType, $page, array(
+/*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
+            'cascade_validation' => true,
+            'error_bubbling' => false
+        ))->add('save', 'submit');
+        
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em->persist($page);
+
+            $em->flush();
+
+            return new RedirectResponse($this->generateUrl('page_show', array('slug' => $page->getSlug())));
+        }
+        
+        return array(
+            'form' => $form->createView()
+        );
+    }
 
     /**
-     * @Route("/account/biography", name="page_biography_edit")
+     * @Route("/{slug}/account/biography", name="page_biography_edit")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
@@ -118,7 +184,7 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/biography", name="page_biography")
+     * @Route("/{slug}/biography", name="page_biography")
      * @Template
      */
     public function biographyAction(Request $request, $slug)
@@ -142,7 +208,7 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/account/image", name="page_image_edit")
+     * @Route("/{slug}/account/image", name="page_image_edit")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template("CMBundle:User:imageEdit.html.twig")
      */
@@ -177,19 +243,19 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/events/{page}", name = "page_events", requirements={"page" = "\d+"})
-     * @Route("/events/archive/{page}", name="page_events_archive", requirements={"page" = "\d+"}) 
-     * @Route("/events/category/{category_slug}/{page}", name="page_events_category", requirements={"page" = "\d+"})
+     * @Route("/{slug}/events/{pageNum}", name = "page_events", requirements={"pageNum" = "\d+"})
+     * @Route("/{slug}/events/archive/{pageNum}", name="page_events_archive", requirements={"pageNum" = "\d+"}) 
+     * @Route("/{slug}/events/category/{category_slug}/{pageNum}", name="page_events_category", requirements={"pageNum" = "\d+"})
      * @Template
      */
-    public function eventsAction(Request $request, $slug, $page = 1, $category_slug = null)
+    public function eventsAction(Request $request, $slug, $pageNum = 1, $category_slug = null)
     {
         $em = $this->getDoctrine()->getManager();
         
-        $_page = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
         
-        if (!$_page) {
-            throw new NotFoundHttpException('Group not found.');
+        if (!$page) {
+            throw new NotFoundHttpException('Page not found.');
         }
             
         if (!$request->isXmlHttpRequest()) {
@@ -202,22 +268,22 @@ class PageController extends Controller
             
         $events = $em->getRepository('CMBundle:Event')->getEvents(array(
             'locale'        => $request->getLocale(), 
-            'archive'       => $request->get('_route') == '_page_events_archive' ? true : null,
+            'archive'       => $request->get('_route') == 'page_events_archive' ? true : null,
             'category_id'   => $category_slug ? $category->getId() : null,
-            'page_id'      => $_page->getId()      
+            'page_id'      => $page->getId()      
         ));
         
-        $pagination = $this->get('knp_paginator')->paginate($events, $page, 10);
+        $pagination = $this->get('knp_paginator')->paginate($events, $pageNum, 10);
         
         if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'page' => $page));
+            return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'pageNum' => $pageNum));
         }
         
-        return array('categories' => $categories, 'dates' => $pagination, 'category' => $category, 'page' => $page);
+        return array('categories' => $categories, 'page' => $page, 'dates' => $pagination, 'category' => $category, 'pageNum' => $pageNum);
     }
 
     /**
-     * @Route("/", name="page_show")
+     * @Route("/{slug}", name="page_show")
      * @Template
      */
     public function showAction($slug)
@@ -229,6 +295,8 @@ class PageController extends Controller
         if (!$page) {
             throw new NotFoundHttpException('User not found.');
         }
+
+        $members = $em->getRepository('CMBundle:GroupUser')->getMembers($page->getId(), array('paginate' => false, 'limit' => 10));
 
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $request = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('pageId' => $page->getId()));
@@ -244,6 +312,6 @@ class PageController extends Controller
         $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('pageId' => $page->getId()));
         $pagination = $this->get('knp_paginator')->paginate($posts, 1, 15);
 
-        return array('page' => $page, 'request' => $request, 'biography' => $biography, 'posts' => $pagination);
+        return array('page' => $page, 'members' => $members, 'request' => $request, 'biography' => $biography, 'posts' => $pagination);
     }
 }

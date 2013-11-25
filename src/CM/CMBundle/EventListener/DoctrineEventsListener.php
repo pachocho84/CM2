@@ -54,8 +54,6 @@ class DoctrineEventsListener
             $this->commentPersistedRoutine($object, $em);
         } elseif($object instanceof Like) {
             $this->likePersistedRoutine($object, $em);
-        } elseif ($object instanceof Biography) {
-            $this->biographyPersistedRoutine($object, $em);
         } elseif ($object instanceof Fan) {
             $this->fanPersistedRoutine($object, $em);
         }
@@ -199,7 +197,7 @@ class DoctrineEventsListener
                     $groupUser->getUser(),
                     $user,
                     null,
-                    nulll,
+                    null,
                     $post,
                     $page,
                     $group
@@ -397,18 +395,6 @@ class DoctrineEventsListener
         );
 
         $this->get('cm.notification_center')->removeNotifications($like->getUser()->getId(), get_class($like), $like->getId(), Notification::TYPE_LIKE);
-    }
-
-    private function biographyPersistedRoutine(Biography $biography, EntityManager $em)
-    {
-        $this->get('cm.post_center')->newPost(
-            $this->getUser(),
-            $this->getUser(),
-            Post::TYPE_CREATION,
-            get_class($biography),
-            array($biography->getId()),
-            $biography
-        );
     }
 
     private function biographyUpdatedRoutine(Biography $biography, EntityManager $em)

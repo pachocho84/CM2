@@ -1,0 +1,15 @@
+<div class="media">
+
+    {% if post.page.images | length > 0 %}
+        {{ show_img_box(post.page.images[0] | imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left thumbnail'}}) | raw }} {# TODO: add image show link #}
+    {% endif %}
+
+    <div class="media-body">
+    
+        <h4><a href="{{ path('event_show', {'id': post.page.id, 'slug': post.page.getSlug}) }}">{{ post.page }}</a></h4>
+
+        {{ post.page.description }}
+
+    </div><!-- END Media Body -->
+
+</div><!-- END Object -->

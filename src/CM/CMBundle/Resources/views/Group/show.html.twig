@@ -17,14 +17,13 @@
     </ul>#}
 
 
-
     <div class="box">
         <div class="box-top">
                     <a href="{{ path('group_biography', {'slug': group.slug}) }}">{{ show_icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
             <h3>{{ show_icon('Biography')|raw }} <a href="{{ path('group_biography', {'slug': group.slug}) }}">{{ 'Biography'|trans }}</a> <small><a href="{{ path('group_biography', {'slug': group.slug}) }}">{{ 'show complete biography'|trans }}</small></a></h2>
         </div>
         <div class="media objects">
-            {{ show_img_box(group.img | imagine_filter('350'), {'width': 200, 'offset': group.imgOffset, 'default': 'group', 'box_attributes': {'class': 'pull-left thumbnail'}}) | raw }}
+            {{ show_img_box(group.img|imagine_filter('350'), {'width': 200, 'offset': group.imgOffset, 'default': 'group', 'box_attributes': {'class': 'pull-left thumbnail'}}) | raw }}
             <div class="meda-body">
                 <h4>
                     {{ group }}
@@ -33,6 +32,8 @@
             </div>
         </div>
     </div>
+
+    {{ include('CMBundle:Group:members.html.twig') }}
 
 
     {{ include('CMBundle:Wall:posts.html.twig', {'slug': group.slug}) }}

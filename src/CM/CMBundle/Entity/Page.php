@@ -46,6 +46,11 @@ class Page
     private $name;
 
     /**
+     * @ORM\Column(name="creator_id", type="integer")
+     */
+    private $creatorId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="creator_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
@@ -176,6 +181,16 @@ class Page
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get entity
+     *
+     * @return User 
+     */
+    public function getCreatorId()
+    {
+        return $this->creatorId;
     }
 
     /**

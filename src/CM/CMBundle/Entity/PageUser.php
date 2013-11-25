@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * EntityUser
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PageUserRepository")
  * @ORM\Table(name="page_user")
  */
 class PageUser
