@@ -343,6 +343,14 @@ class CMExtension extends \Twig_Extension
                 $group = $request->getGroup();
                 $groupLink = $this->router->generate('group_show', array('slug' => $group->getSlug()));
                 return $this->translator->trans('%user% would like you to join the group %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
+            } elseif (!is_null($request->getPage()) && $this->userAuthentication->isAdminOf($request->getPage())) {
+                $page = $request->getPage();
+                $pageLink = $this->router->generate('page_show', array('slug' => $page->getSlug()));
+                return $this->translator->trans('%user% would like to join the page %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
+            } elseif (!is_null($request->getPage())) {
+                $page = $request->getPage();
+                $pageLink = $this->router->generate('page_show', array('slug' => $page->getSlug()));
+                return $this->translator->trans('%user% would like you to join the page %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
             }
         } elseif ($user->getId() == $request->getFromUser()->getId()) {
             $userLink = $this->router->generate('user_show', array('slug' => $request->getUser()->getSlug()));
@@ -357,6 +365,10 @@ class CMExtension extends \Twig_Extension
                 $group = $request->getGroup();
                 $groupLink = $this->router->generate('group_show', array('slug' => $group->getSlug()));
                 return $this->translator->trans('You requested %user% to join the group %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
+            } elseif (!is_null($request->getPage())) {
+                $page = $request->getPage();
+                $pageLink = $this->router->generate('page_show', array('slug' => $page->getSlug()));
+                return $this->translator->trans('You requested %user% to join the page %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
             }
         }
     }

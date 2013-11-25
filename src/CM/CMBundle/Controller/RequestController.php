@@ -133,6 +133,39 @@ class RequestController extends Controller
 
                 $response = $this->renderView('CMBundle:GroupUser:requestAdd.html.twig', array('group' => $request->getGroup(), 'request' => $request));
                 break;
+            case 'Page':
+                if (count($em->getRepository('CMBundle:PageUser')->findBy(array('pageId' => $objectId, 'userId' => $userId))) > 0) {
+                    throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                }
+
+                $page = $em->getRepository('CMBundle:Page')->findOneById($objectId);
+                if ($userId != $this->getUser()->getId()) {
+                    if (!$this->get('cm.user_authentication')->isAdminOf($page)) {
+                        throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                    }
+
+                    $user = $em->getRepository('CMBundle:User')->findOneById($userId);
+                    if (!$user) {
+                        throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+                    }
+                    $status = PageUser::STATUS_PENDING;
+                } else {
+                    throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                }
+
+                $page->addUser(
+                    $user,
+                    false, // admin
+                    $status
+                );
+                $em->persist($page);
+
+                $em->flush();
+
+                $request = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($user->getId(), 'any', array('pageId' => $page->getId()));
+
+                $response = $this->renderView('CMBundle:PageUser:requestAdd.html.twig', array('page' => $request->getPage(), 'request' => $request));
+                break;
         }
 
         return new Response($response);
@@ -196,6 +229,22 @@ class RequestController extends Controller
             $em->persist($groupUser);
 
             $response = $this->renderView('CMBundle:GroupUser:requestAdd.html.twig', array('group' => $request->getGroup(), 'request' => $request));
+        } elseif (!is_null($request->getPageId())) {
+            $userId = $this->getUser()->getId();
+
+            $pageUser = $em->getRepository('CMBundle:PageUser')->findOneBy(array('userId' => $userId, 'pageId' => $request->getPageId()));
+            if ($choice == 'accept') {
+                $pageUser->setStatus(PageUser::STATUS_ACTIVE);
+                
+                $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_ACCEPTED);
+            } elseif ($choice == 'refuse') {
+                $pageUser->setStatus($pageUser->getStatus() == PageUser::STATUS_PENDING ? PageUser::STATUS_REFUSED_GROUP_USER : PageUser::STATUS_REFUSED_ADMIN);
+
+                $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_REFUSED);
+            }
+            $em->persist($pageUser);
+
+            $response = $this->renderView('CMBundle:PageUser:requestAdd.html.twig', array('page' => $request->getPage(), 'request' => $request));
         }
 
         $em->persist($request);
@@ -253,6 +302,20 @@ class RequestController extends Controller
             
 
             $response = $this->renderView('CMBundle:GroupUser:requestAdd.html.twig', array('group' => $request->getGroup(), 'request' => null));
+        } elseif (!is_null($request->getPageId())) {
+            if ($request->getPage()->getPost()->getCreatorId() == $this->getUser()->getId()) {
+                throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+            }
+
+            if ($this->get('cm.user_authentication')->isAdminOf($request->getPage())) {
+                $userId = $request->getUserId();
+                $em->getRepository('CMBundle:Request')->delete($userId, array('fromUserId' => $this->getUser()->getId(), 'pageId' => $request->getPageId()));
+            }
+
+            $em->getRepository('CMBundle:PageUser')->delete($userId, $request->getPageId());
+            
+
+            $response = $this->renderView('CMBundle:PageUser:requestAdd.html.twig', array('page' => $request->getPage(), 'request' => null));
         }
 
         return new Response($response);

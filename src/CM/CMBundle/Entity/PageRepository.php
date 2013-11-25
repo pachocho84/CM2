@@ -24,18 +24,40 @@ class PageRepository extends BaseRepository
         return $this->getEntityManager()->createQueryBuilder()
             ->select('u')
             ->from('CMBundle:User', 'u')
-            ->leftJoin('u.userPages', 'up')
-            ->where('up.admin = '.true)
-            ->andWhere('identity(up.page) = :page_id')->setParameter('page_id', $pageId)
+            ->leftJoin('u.userPages', 'ug')
+            ->where('ug.admin = '.true)
+            ->andWhere('identity(ug.page) = :page_id')->setParameter('page_id', $pageId)
             ->getQuery()->getResult();
+    }
+
+    public function getCreationPost($pageId, $object) {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('p, g, gu')
+            ->from('CMBundle:Post', 'p')
+            ->leftJoin('p.page', 'g')
+            ->leftJoin('g.pageUsers', 'gu')
+            ->where('p.type = '.Post::TYPE_CREATION)
+            ->andWhere('g.id = :page_id')->setParameter('page_id', $pageId)
+            ->getQuery()->getSingleResult();
+    }
+
+    public function getPageExcludeUsers($pageId, $excludes)
+    {
+        return $this->createQueryBuilder('g')
+            ->select('g, gu, u')
+            ->leftJoin('g.pageUsers', 'gu')
+            ->leftJoin('gu.user', 'u')
+            ->where('g.id = :page_id')->setParameter('page_id', $pageId)
+            ->andWhere('u.id NOT IN (:excludes)')->setParameter('excludes', $excludes)
+            ->getQuery()->getSingleResult();
     }
 
     public function filterPagesForUser($userId)
     {
-        return $this->createQueryBuilder('p')
-            ->select('p')
-            ->leftJoin('p.pageUsers', 'pu')
-            ->where('pu.user = :user_id')->setParameter('user_id', $userId);
+        return $this->createQueryBuilder('g')
+            ->select('g')
+            ->leftJoin('g.pageUsers', 'gu')
+            ->where('gu.user = :user_id')->setParameter('user_id', $userId);
     }
 
     public function getPagesForUser($userId)
@@ -43,10 +65,11 @@ class PageRepository extends BaseRepository
         return $this->filterPagesForUser($userId)->getQuery()->getResult();
     }
 
-    public function getUserIdsFor($pageId, $excludes = null)
+    public function getUserIdsFor($pageId, $excludes = array())
     {
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('DISTINCT u.id')->from('CMBundle:User', 'u')
+            ->select('DISTINCT u.id')
+            ->from('CMBundle:User', 'u')
             ->leftJoin('u.userPages', 'ug')
             ->where('ug.page = :page_id')->setParameter('page_id', $pageId);
         if (count($excludes) > 0) {

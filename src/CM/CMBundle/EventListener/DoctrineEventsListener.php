@@ -48,6 +48,8 @@ class DoctrineEventsListener
             $this->entityUserPersistedRoutine($object, $em);
         } elseif ($object instanceof GroupUser) {
             $this->groupUserPersistedRoutine($object, $em);
+        } elseif ($object instanceof PageUser) {
+            $this->groupUserPersistedRoutine($object, $em);
         } elseif ($object instanceof Comment) {
             $this->commentPersistedRoutine($object, $em);
         } elseif($object instanceof Like) {
@@ -64,11 +66,7 @@ class DoctrineEventsListener
         $object = $args->getEntity();
         $em = $args->getEntityManager();
 
-        if ($object instanceof EntityUser && array_key_exists('status', $em->getUnitOfWork()->getEntityChangeSet($object))) {
-            $this->entityUserUpdatedRoutine($object, $em);
-        } elseif ($object instanceof GroupUser && array_key_exists('status', $em->getUnitOfWork()->getEntityChangeSet($object))) {
-            $this->groupUserUpdatedRoutine($object, $em);
-        } elseif ($object instanceof EntityTranslation && $object->getEntity() instanceof Biography) {   
+        if ($object instanceof EntityTranslation && $object->getEntity() instanceof Biography) {   
             $this->biographyUpdatedRoutine($object->getEntity(), $em);
         } elseif ($object instanceof Fan) {
             $this->fanUpdatedRoutine($object, $em);
@@ -83,7 +81,9 @@ class DoctrineEventsListener
         if ($object instanceof EntityUser) {
             $this->entityUserRemovedRoutine($object, $em);
         } elseif ($object instanceof GroupUser) {
-            $this->groupUserPRemovedRoutine($object, $em);
+            $this->groupUserRemovedRoutine($object, $em);
+        } elseif ($object instanceof PageUser) {
+            $this->pageUserRemovedRoutine($object, $em);
         } elseif ($object instanceof Comment) {
             $this->commentRemovedRoutine($object, $em);
         } elseif ($object instanceof Like) {
@@ -160,10 +160,6 @@ class DoctrineEventsListener
         }
     }
 
-    private function entityUserUpdatedRoutine(EntityUser $entityUser, EntityManager $em)
-    {
-    }
-
     private function entityUserRemovedRoutine(EntityUser $entityUser, EntityManager $em)
     {
         $entity = $entityUser->getEntity();
@@ -225,10 +221,6 @@ class DoctrineEventsListener
         }
     }
 
-    private function groupUserUpdatedRoutine(GroupUser $groupUser, EntityManager $em)
-    {
-    }
-
     private function groupUserRemovedRoutine(GroupUser $groupUser, EntityManager $em)
     {
         $group = $groupUser->getGroup();
@@ -237,6 +229,66 @@ class DoctrineEventsListener
         $page = $post->getPage();
 
         $this->get('cm.request_center')->removeRequest($user, get_class($group), $group->getId(), 'sent');
+    }
+
+    private function pageUserPersistedRoutine(PageUser $pageUser, EntityManager $em)
+    {
+        $page = $pageUser->getPage();
+        $post = $page->getPost();
+        $user = $post->getUser();
+        $page = $post->getPage();
+
+        $requestCenter = $this->get('cm.request_center');
+        $notificationCenter = $this->get('cm.notification_center');
+
+        switch ($pageUser->getStatus()) {
+            case PageUser::STATUS_PENDING:
+                $requestCenter->newRequest(
+                    $pageUser->getUser(),
+                    $user,
+                    null,
+                    null,
+                    null,
+                    null,
+                    $page
+                );
+                break;
+            case PageUser::STATUS_ACTIVE:
+                $notificationCenter->newNotification(
+                    Notification::TYPE_REQUEST_ACCEPTED,
+                    $pageUser->getUser(),
+                    $user,
+                    null,
+                    nulll,
+                    $post,
+                    $page,
+                    $page
+                );
+                break;
+            case PageUser::STATUS_REQUESTED:
+                foreach ($em->getRepository('CMBundle:Page')->getAdmins($page->getId()) as $admin) {
+                    $requestCenter->newRequest(
+                        $admin,
+                        $pageUser->getUser(),
+                        null,
+                        null,
+                        null,
+                        $page,
+                        $page
+                    );
+                }
+                break;
+        }
+    }
+
+    private function pageUserRemovedRoutine(PageUser $pageUser, EntityManager $em)
+    {
+        $page = $pageUser->getPage();
+        $post = $page->getPost();
+        $user = $post->getUser();
+        $page = $post->getPage();
+
+        $this->get('cm.request_center')->removeRequest($user, get_class($page), $page->getId(), 'sent');
     }
 
     private function commentPersistedRoutine(Comment $comment, EntityManager $em)

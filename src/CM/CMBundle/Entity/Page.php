@@ -106,6 +106,7 @@ class Page
     {
         $this->images = new ArrayCollection();
         $this->pagesUsers = new ArrayCollection();
+        $this->posts = new ArrayCollection();
 		$this->notificationsIncoming = new ArrayCollection;
 		$this->notificationsOutgoing = new ArrayCollection;
 		$this->requests = new ArrayCollection;
@@ -204,9 +205,10 @@ class Page
      * @param \CM\CMBundle\Entity\EntityUser $comment
      * @return Entity
      */
-    public function addPageUser(
+    public function addUser(
         User $user,
         $admin = false,
+        $status = PageUser::STATUS_PENDING,
         $joinEvent = PageUser::JOIN_REQUEST,
         $joinDisc = PageUser::JOIN_REQUEST,
         $joinArticle = PageUser::JOIN_REQUEST,
@@ -218,6 +220,7 @@ class Page
         $pageUser->setPage($this)
             ->setUser($user)
             ->setAdmin($admin)
+            ->setStatus($status)
             ->setJoinEvent($joinEvent)
             ->setJoinDisc($joinDisc)
             ->setJoinArticle($joinArticle)
@@ -225,6 +228,16 @@ class Page
             ->setNotification($notification);
         $this->pageUsers[] = $pageUser;
     
+        return $this;
+    }
+
+    public function addPageUser(PageUser $pageUser)
+    {
+        if (!$this->pageUsers->contains($pageUser)) {
+            $this->pageUsers[] = $pageUser;
+            $pageUser->setGroup($this);
+        }
+
         return $this;
     }
 
@@ -244,6 +257,15 @@ class Page
         return $this->pageUsers;
     }
 
+    public function getPost()
+    {
+        foreach ($this->posts as $post) {
+            if ($post->getType() == Post::TYPE_CREATION) {
+                return $post;
+            }
+        }
+    }
+
     /**
      * @param \CM\CMBundle\Entity\Image $images
      * @return Entity
@@ -252,7 +274,9 @@ class Page
     {
         if (!$this->posts->contains($post)) {
             $this->posts[] = $post;
-            $post->setPage($this);
+            $post->setPage($this)
+                ->setObject(get_class($this))
+                ->setObjectIds(array($this->getId()));
         }
     
         return $this;

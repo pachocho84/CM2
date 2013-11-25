@@ -34,4 +34,15 @@ class BiographyRepository extends BaseRepository
             ->setMaxResults(1)
             ->getQuery()->getResult();
     }
+
+    public function getPageBiography($pageId)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('b')
+            ->leftJoin('b.posts', 'p')
+            ->leftJoin('p.page', 'pg')
+            ->where('pg.id = :page_id')->setParameter('page_id', $pageId)
+            ->setMaxResults(1)
+            ->getQuery()->getResult();
+    }
 }

@@ -2,30 +2,32 @@
 
 {% block body %}
 
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id})) }}{% endif %}  
+    {% if is_granted('ROLE_USER') %}
+        {{ render(controller('CMBundle:Fan:fanButton', {'userId': page.id, 'object': page|class_name})) }}
+        {{ include('CMBundle:PageUser:requestAdd.html.twig') }}
+    {% endif %}
 
-    {{ include('CMBundle:User:top.html.twig', {'inPage': 'profile'}) }}
+    {{ include('CMBundle:Page:top.html.twig', {'inPage': 'profile'}) }}
 
 
     {#<ul class="breadcrumb">
       <li><?php echo link_to('Home', '@homepage') ?></li>
-      <li><?php echo link_to(__('Users'), '@user_list') ?></li>
-      <li class="active"><?php echo $user ?></li>
+      <li><?php echo link_to(__('Users'), '@page_list') ?></li>
+      <li class="active"><?php echo $page ?></li>
     </ul>#}
 
 
 
     <div class="box">
         <div class="box-top">
-                    <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ show_icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
-            <h3>{{ show_icon('Biography')|raw }} <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ 'Biography'|trans }}</a> <small><a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ 'show complete biography'|trans }}</small></a></h2>
+                    <a href="{{ path('page_biography', {'slug': page.slug}) }}">{{ show_icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
+            <h3>{{ show_icon('Biography')|raw }} <a href="{{ path('page_biography', {'slug': page.slug}) }}">{{ 'Biography'|trans }}</a> <small><a href="{{ path('page_biography', {'slug': page.slug}) }}">{{ 'show complete biography'|trans }}</small></a></h2>
         </div>
         <div class="media objects">
-            {{ show_img_box(user.img | imagine_filter('350'), {'width': 200, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left thumbnail'}}) | raw }}
+            {{ show_img_box(page.img | imagine_filter('350'), {'width': 200, 'offset': page.imgOffset, 'default': 'page', 'box_attributes': {'class': 'pull-left thumbnail'}}) | raw }}
             <div class="meda-body">
                 <h4>
-                    {{ user }}
-                    <small>{{ user.userTags|join(', ')|trim }}</small>
+                    {{ page }}
                 </h4>
                 {% if biography is not null %}{{ entity_short_text(biography)|raw }}{% endif %}
             </div>
@@ -33,11 +35,11 @@
     </div>
 
 
-    {{ include('CMBundle:Wall:posts.html.twig') }}
+    {{ include('CMBundle:Wall:posts.html.twig', {'slug': page.slug}) }}
     
 
     {#<?php slot('sidebar_slot3') ?>  
-        <?php include_component('fan', 'userFans', array('user' => $user)) ?>
+        <?php include_component('fan', 'pageFans', array('page' => $page)) ?>
     <?php end_slot() ?>#}
   
 {% endblock %}

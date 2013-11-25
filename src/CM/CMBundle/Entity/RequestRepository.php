@@ -21,6 +21,7 @@ class RequestRepository extends BaseRepository
             'exclude' => false,
             'entityId' => null,
             'groupId' => null,
+            'pageId' => null,
             'object' => null,
         ), $options);
     }
@@ -96,6 +97,12 @@ class RequestRepository extends BaseRepository
                 ->leftJoin('g.groupUsers', 'gu', 'WITH', 'gu.userId = :user_id', 'gu.userId')
                 ->andWhere('g.id = :group_id')->setParameter('group_id', $options['groupId']);
         }
+        if (!is_null($options['pageId'])) {
+            $query->addSelect('g, gu')
+                ->leftJoin('r.page', 'g')
+                ->leftJoin('g.pageUsers', 'gu', 'WITH', 'gu.userId = :user_id', 'gu.userId')
+                ->andWhere('g.id = :page_id')->setParameter('page_id', $options['pageId']);
+        }
         if ($direction == 'incoming') {
             $query->andWhere('r.userId = :user_id');
         } elseif ($direction == 'outgoing') {
@@ -140,6 +147,9 @@ class RequestRepository extends BaseRepository
         if (!is_null($options['groupId'])) {
             $query->andWhere('r.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
+        if (!is_null($options['pageId'])) {
+            $query->andWhere('r.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+        }
         if (!is_null($options['object'])) {
             $query->andWhere('r.object = :object')->setParameter('object', $options['object'])
                 ->andWhere('r.objectId = :object_id')->setParameter('object_id', $options['objectId']);
@@ -159,8 +169,10 @@ class RequestRepository extends BaseRepository
                 $request->andWhere('r.entityId = :entity_id')->setParameter('entity_id', $options['entityId']);
             }
             if (!is_null($options['groupId'])) {
-                
                 $request->andWhere('r.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+            }
+            if (!is_null($options['pageId'])) {
+                $request->andWhere('r.pageId = :page_id')->setParameter('page_id', $options['pageId']);
             }
             if (!is_null($options['object'])) {
                 $request->andWhere('r.object = :object')->setParameter('object', $options['object'])
@@ -190,6 +202,9 @@ class RequestRepository extends BaseRepository
         }
         if (!is_null($options['groupId'])) {
             $query->andWhere('r.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+        if (!is_null($options['pageId'])) {
+            $query->andWhere('r.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
         if (!is_null($options['object'])) {
             $query->andWhere('r.object = :object')->setParameter('object', $options['object'])

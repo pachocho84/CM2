@@ -9,21 +9,20 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use CM\CMBundle\Entity\Page;
+use CM\CMBundle\Entity\PageUser;
 
 class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
-	private $images = array('ff9398d3d47436e2b4f72874a2c766fd.jpeg', '00b7b971d96ce05797e6757e5a0a4232.jpeg');
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setContainer(ContainerInterface $container = null)
-	{
-	    $this->container = $container;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
 
-	public function load(ObjectManager $manager)
-	{
+    public function load(ObjectManager $manager)
+    {
         for ($i = 1; $i < 21; $i++) {
             $userNum = rand(1, 5);
             $user = $manager->merge($this->getReference('user-'.$userNum));
@@ -42,10 +41,15 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             for ($j = 1; $j < rand(1, 3); $j++) {
                 $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
             }
-                            
-            $page->addPageUser(
+
+            $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+
+            $page->addPost($post);
+            
+            $page->addUser(
                 $user,
                 true, // admin
+                PageUser::STATUS_ACTIVE,
                 rand(0, 2), // join event
                 rand(0, 2), // join disc
                 rand(0, 2), // join article
@@ -64,9 +68,10 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                     $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
                 }
 
-                $page->addPageUser(
+                $page->addUser(
                     $otherUser,
                     !rand(0, 3), // admin
+                    PageUser::STATUS_PENDING,
                     rand(0, 2), // join event
                     rand(0, 2), // join disc
                     rand(0, 2), // join article
@@ -75,14 +80,14 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                 );
             }
             
-			$this->addReference('page-'.$i, $page);
+            $this->addReference('page-'.$i, $page);
         }
 
         $manager->flush();
-	}
+    }
 
-	public function getOrder()
-	{
-        return 4;
+    public function getOrder()
+    {
+        return 3;
     }
 }

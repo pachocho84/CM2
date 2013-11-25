@@ -226,7 +226,7 @@ class Group
     public function addGroupUser(GroupUser $groupUser)
     {
         if (!$this->groupUsers->contains($groupUser)) {
-            $this->entityUsers[] = $groupUser;
+            $this->groupUsers[] = $groupUser;
             $groupUser->setGroup($this);
         }
 
