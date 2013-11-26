@@ -310,7 +310,7 @@ class GroupController extends Controller
             }
         }
 
-        $members = $em->getRepository('CMBundle:GroupUser')->getMembers($group->getId(), array('paginate' => false, 'limit' => 10));
+        $members = $em->getRepository('CMBundle:GroupUser')->getMembers($group->getId(), array('paginate' => false, 'limit' => 10, 'status' => array(GroupUser::STATUS_ACTIVE, GroupUser::STATUS_PENDING)));
 
         $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
         

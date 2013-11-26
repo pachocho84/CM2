@@ -17,18 +17,21 @@ class GroupUserRepository extends BaseRepository
         return array_merge(array(
             'paginate'      => true,
             'limit'         => 25,
+            'status' => array(GroupUser::STATUS_ACTIVE)
         ), $options);
     }
 
     public function getMembers($groupId, $options = array())
     {
         $options = self::getOptions($options);
+
+        var_dump(implode(',', $options['status']));
         
         $query = $this->createQueryBuilder('gu')
             ->select('gu')
             ->leftJoin('gu.user', 'u')
             ->leftJoin('gu.group', 'g')
-            ->where('gu.status in ('.GroupUser::STATUS_ACTIVE.','.GroupUser::STATUS_PENDING.')')
+            ->where('gu.status in (:status)')->setParameter('status', $options['status'])
             ->andWhere('gu.groupId = :group_id')->setParameter('group_id', $groupId)
             ->andWhere('gu.userId != g.creatorId')
             ->orderBy('gu.admin', 'desc');
