@@ -24,8 +24,6 @@ class GroupUserRepository extends BaseRepository
     public function getMembers($groupId, $options = array())
     {
         $options = self::getOptions($options);
-
-        var_dump(implode(',', $options['status']));
         
         $query = $this->createQueryBuilder('gu')
             ->select('gu')
