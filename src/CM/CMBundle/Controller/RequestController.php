@@ -60,13 +60,9 @@ class RequestController extends Controller
      * @Route("/requestAdd/{object}/{objectId}/{userId}", name="request_add", requirements={"objectId"="\d+", "userId"="\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function addAction(Request $request, $object, $objectId, $userId = null)
+    public function addAction(Request $request, $object, $objectId, $userId)
     {
         $em = $this->getDoctrine()->getManager();
-
-        if (is_null($userId)) {
-            $userId = $request->get('user_id');
-        }
 
         switch ($object) {
             case 'Event':

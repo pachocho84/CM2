@@ -351,6 +351,33 @@ class GroupController extends Controller
     }
 
     /**
+     * @Route("/add/{groupId}", name="group_member_add", requirements={"groupId"="\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template("CMBundle:Group:member.html.twig")
+     */
+    public function addAction(Request $request, $groupId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $userId = $request->get('user_id');
+
+        $this->forward('CMBundle:Request:add', array('object' => 'Group', 'objectId' => $groupId, 'userId' => $userId));
+
+        $groupUser = $em->getRepository('CMBundle:GroupUser')->findOneBy(array('groupId' => $groupId, 'userId' => $userId));
+
+        if (!$this->get('cm.user_authentication')->isAdminOf($groupUser->getGroup())) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+
+        return array(
+            'member' => $groupUser,
+            'tags' => $tags
+        );
+    }
+
+    /**
      * @Route("/member/remove/{id}", name="group_remove_user", requirements={"id" = "\d+"})
      */
     public function removeAction($id)
