@@ -33,7 +33,11 @@
         </div>
     </div>
 
-    {{ include('CMBundle:Group:members.html.twig') }}
+    {{ include('CMBundle:Group:membersMini.html.twig') }}
+
+    {% if is_admin(group) %}
+        <a href="{{ path('group_members_settings', {'slug': group.slug}) }}">{{ 'Manage members'|trans }}</a>
+    {% endif %}
 
 
     {{ include('CMBundle:Wall:posts.html.twig', {'slug': group.slug}) }}

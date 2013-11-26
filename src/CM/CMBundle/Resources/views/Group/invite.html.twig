@@ -1,0 +1,56 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+        '@CMBundle/Resources/public/css/typeahead.js-bootstrap.css'
+    %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    <div class="member_typeahead">
+        <div id="members_finder_container" class="form-group">
+            <label class="control-label col-lg-3">Add new member</label>
+            <div class="col-lg-9"><input type="text" id="members_finder" class="form-control" /></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+        <script type="text/javascript">
+            var typeaheadHintRoute = "{{ path('group_typeahead_hint') }}";
+        </script>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false&language={{ app.request.locale }}"></script>
+        {% javascripts
+            '@CMBundle/Resources/public/js/hogan-2.0.0.min.js'
+            '@CMBundle/Resources/public/js/typeahead.min.js'
+            '@CMBundle/Resources/public/js/form.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+{% endblock %}
+
+{#<div id="request-dialog" title="{{ 'Invite people to Group'|trans }}" class="dialog">
+
+    <div id="request-dialog-content" class="dialog-content">
+        <form action="<?php echo url_for('@group_invite?slug='.$group->getSlug()) ?>" method="post" class="form-ajax">
+            <input type="text" class="form-select-peopleAutocomplete" name="invitedPeople" id="invitedPeople">
+        </form>
+        
+        <br /><br />
+        <h3><?php echo __('Selected people to invite to group'); ?></h3>
+        <div id="selectedPeople"></div>
+    
+    </div>
+
+
+
+    <div id="request-dialog-bottom" class="dialog-bottom">
+        <button id="request-dialog-confirm" type='submit' class='dialog-conferma pulsante'><?php echo __('Invite') ?></button>
+        <button id="request-dialog-close" class="dialog-close pulsante"><?php echo __('Annulla') ?></button>
+    </div>
+    
+</div>#}

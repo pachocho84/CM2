@@ -62,6 +62,7 @@ class CMExtension extends \Twig_Extension
     {
         return array(
             'can_manage' => new \Twig_Function_Method($this, 'getCanManage'),
+            'is_admin' => new \Twig_Function_Method($this, 'getIsAdmin'),
             'related_object' => new \Twig_Function_Method($this, 'getRelatedObject'),
             'delete_link' => new \Twig_Function_Method($this, 'getDeleteLink'),
             'show_img_box' => new \Twig_Function_Method($this, 'getShowImgBox'),
@@ -125,6 +126,11 @@ class CMExtension extends \Twig_Extension
     public function getCanManage($object)
     {
         return $this->userAuthentication->canManage($object);
+    }
+
+    public function getIsAdmin($object)
+    {
+        return $this->userAuthentication->isAdminOf($object);
     }
 
     public function getRelatedObject($object, $objectId)
@@ -645,61 +651,64 @@ class CMExtension extends \Twig_Extension
     function getShowIcon($object)
     {
         switch ($object) {
+            case 'Back':
+                 return '<i class="glyphicon glyphicon-chevron-left"></i>';
+                break;
             case 'Event':
             case 'Event_'.Post::TYPE_CREATION:
-              return '<i class="glyphicon glyphicon-calendar"></i>';
+                 return '<i class="glyphicon glyphicon-calendar"></i>';
             case 'Disc':
             case 'Disc_'.Post::TYPE_CREATION:
-              return '<i class="glyphicon glyphicon-headphones"></i>';
+               return '<i class="glyphicon glyphicon-headphones"></i>';
             case 'Article':
             case 'Article_'.Post::TYPE_CREATION:
-              return '<i class="glyphicon glyphicon-print"></i>';
+                  return '<i class="glyphicon glyphicon-print"></i>';
             case 'Link':
             case 'Link_'.Post::TYPE_CREATION:
-              return '<i class="glyphicon glyphicon-bookmark"></i>';
+                  return '<i class="glyphicon glyphicon-bookmark"></i>';
             case 'Image':
-              return '<i class="glyphicon glyphicon-picture"></i>';
+                 return '<i class="glyphicon glyphicon-picture"></i>';
             case 'Multimedia':
-              return '<i class="glyphicon glyphicon-film"></i>';
+                 return '<i class="glyphicon glyphicon-film"></i>';
             case 'Page':
             case 'Page_'.Post::TYPE_CREATION:
-              return '<i class="glyphicon-bank"></i>';
+                 return '<i class="glyphicon glyphicon-bank"></i>';
             case 'Group':
             case 'Group_'.Post::TYPE_CREATION:
-              return '<i class="glyphicon-group"></i>';
+                 return '<i class="glyphicon glyphicon-fire"></i>';
             case 'Fan':
             case 'User_'.Post::TYPE_FAN_USER:
             case 'Group_'.Post::TYPE_FAN_GROUP:
             case 'Page_'.Post::TYPE_FAN_PAGE:
-              return '<i class="glyphicon glyphicon-flag"></i>';
+                 return '<i class="glyphicon glyphicon-flag"></i>';
             case 'User':
-              return '<i class="glyphicon glyphicon-user"></i>';
+                 return '<i class="glyphicon glyphicon-user"></i>';
             case 'User_'.Post::TYPE_REGISTRATION:
-              return '<i class="glyphicon-user-add"></i>';
+                 return '<i class="glyphicon-user-add"></i>';
             case 'Biography':
             case 'Biography_'.Post::TYPE_UPDATE:
-              return '<i class="glyphicon glyphicon-book"></i>';
+                 return '<i class="glyphicon glyphicon-book"></i>';
             case 'Like':
-              return '<i class="glyphicon glyphicon-thumbs-up"></i>';
+                 return '<i class="glyphicon glyphicon-thumbs-up"></i>';
             case 'Comment':
-              return '<i class="glyphicon glyphicon-comment"></i>';
+                 return '<i class="glyphicon glyphicon-comment"></i>';
             case 'Wall':
             case 'Post':
-              return '<i class="glyphicon glyphicon-th-list"></i>';
+                 return '<i class="glyphicon glyphicon-th-list"></i>';
             case 'Tag':
-              return '<i class="glyphicon glyphicon-tag"></i>';
+                 return '<i class="glyphicon glyphicon-tag"></i>';
             case 'Tags':
-              return '<i class="glyphicon glyphicon-tags"></i>';
+                 return '<i class="glyphicon glyphicon-tags"></i>';
             case 'Work_'.Post::TYPE_EDUCATION:
             case 'Work':
             case 'Job':
             case 'Job_'.Post::TYPE_UPDATE:
-              return '<i class="glyphicon glyphicon-briefcase"></i>';
+                 return '<i class="glyphicon glyphicon-briefcase"></i>';
             case 'Education':
             case 'Education_'.Post::TYPE_UPDATE:
-              return '<i class="glyphicon-book-open"></i>';
+                 return '<i class="glyphicon glyphicon-book-open"></i>';
             default:
-              return false;
+                 return '';
         }
     }
 

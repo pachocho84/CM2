@@ -69,7 +69,7 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
 
                 $group->addUser(
                     $otherUser,
-                    !rand(0, 3), // admin
+                    false, // admin
                     GroupUser::STATUS_PENDING,
                     rand(0, 2), // join event
                     rand(0, 2), // join disc

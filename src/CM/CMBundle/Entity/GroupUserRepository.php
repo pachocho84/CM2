@@ -27,11 +27,22 @@ class GroupUserRepository extends BaseRepository
         $query = $this->createQueryBuilder('gu')
             ->select('gu')
             ->leftJoin('gu.user', 'u')
-            ->where('gu.status = '.GroupUser::STATUS_ACTIVE)
+            ->leftJoin('gu.group', 'g')
+            ->where('gu.status in ('.GroupUser::STATUS_ACTIVE.','.GroupUser::STATUS_PENDING.')')
             ->andWhere('gu.groupId = :group_id')->setParameter('group_id', $groupId)
+            ->andWhere('gu.userId != g.creatorId')
             ->orderBy('gu.admin', 'desc');
 
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+
+    public function updateUserTags($id, array $userTags)
+    {  
+        $this->createQueryBuilder('gu')
+            ->update('CMBundle:GroupUser', 'gu')
+            ->where('gu.id = :id')->setParameter('id', $id)
+            ->set('gu.userTags', '\''.implode(',', $userTags).'\'')
+            ->getQuery()->execute();
     }
 
     public function delete($userId, $groupId)

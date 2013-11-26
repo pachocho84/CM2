@@ -1,0 +1,98 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+        '@CMBundle/Resources/public/css/typeahead.js-bootstrap.css'
+    %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+    <style type="text/css"> #columnMask, #columnCenter { overflow: visible; } </style>
+{% endblock %}
+
+{% block body %}
+
+    {#<?php include_partial('colonnaProfiloEdit', array('group' => $group)) ?>#}
+
+    <div id="columnCenterTop">
+        <div class="profiloTopButtons">
+            <a href="{{ path('group_show', {'slug': group.slug}) }}" class="pulsante">{{ show_icon('Back')|raw }} {{ 'Back to the group'|trans }}</a>                    
+        </div> 
+        <h3>
+            {{ show_icon('Group')|raw }}
+            <span>{{ group }} <img src="/images/layout/triangolino_sx.png" /> {{ 'Members'|trans }}</span>
+        </h3>
+    </div>
+
+
+    <div id="columnCenter">
+
+
+        {#<div class="navigazione">
+            <div class="breadcrumbs">
+                <?php echo link_to('Home', '@homepage') ?> &gt; 
+                <?php echo link_to(__('Groups'), '@group_list') ?> &gt; 
+                <?php echo link_to($group, $group->getLinkShow()) ?> &gt; 
+                <?php echo __('Members') ?>
+            </div>
+        </div>#}
+
+
+
+        <form action="" method="post" class="form-horizontal">
+
+            <div class="object element form-group">
+
+                {{ 'Founder'|trans }}:
+                <div class="immagine">
+                    {{ show_img_box(group.creator.img|imagine_filter('350'), {'width': 75, 'height': 75, 'offset': group.creator.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+                </div>
+
+                <div class="contenuto">
+                    <h3><a href="{{ path('user_show', {'slug': group.creator.slug}) }}" title="{{ 'Founder'|trans }}">{{ group.creator }}</a></h3>
+                </div>
+            </div>
+
+
+            <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('request_add', {'object': group|class_name, 'objectId': group.id}) }}">
+                <div class="col-lg-12 collection-items">
+                    <div id="protagonists_finder_container" class="form-group">
+                        <label class="control-label col-lg-3">Add new member</label>
+                        <div class="col-lg-9"><input type="text" id="protagonists_finder" class="form-control" /></div>
+                    </div>                    {% for member in members %}
+
+                        {{ include('CMBundle:Group:member.html.twig') }}
+
+                    {% else %}
+                        <p>{{ 'There are no group members'|trans }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <a href="{#{{ path('group_invite_email', {'slug': group.slug}) }}#}" class="btn btn-default">{{ 'Invite members to group by email?'|trans }}</a>
+
+
+
+            <input class="btn btn-default" type="submit" value="{{ 'Save group settings'|trans }}" class="pulsante-attivo" />
+
+        </form>
+
+
+
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+        <script type="text/javascript">
+            var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
+        </script>
+        {% javascripts
+            '@CMBundle/Resources/public/js/hogan-2.0.0.min.js'
+            '@CMBundle/Resources/public/js/typeahead.min.js'
+            '@CMBundle/Resources/public/js/form.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+{% endblock %}

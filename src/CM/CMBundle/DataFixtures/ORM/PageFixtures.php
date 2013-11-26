@@ -70,7 +70,7 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 
                 $page->addUser(
                     $otherUser,
-                    !rand(0, 3), // admin
+                    false, // admin
                     PageUser::STATUS_PENDING,
                     rand(0, 2), // join event
                     rand(0, 2), // join disc

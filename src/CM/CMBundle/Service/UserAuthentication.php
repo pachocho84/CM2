@@ -103,6 +103,10 @@ class UserAuthentication
 
     public function isAdminOf($object)
     {
+        if (! $this->isAuthenticated()) {
+            return false;
+        }
+
         switch ($this->helper->className($object)) {
             case 'Group':
                 return in_array($object->getId(), (array)$this->session->get('user/groups_admin'));

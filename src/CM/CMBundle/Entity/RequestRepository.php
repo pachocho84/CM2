@@ -36,6 +36,35 @@ class RequestRepository extends BaseRepository
             ->getQuery()->getResult();
     }
 
+    public function getRequestFor($userId, $options = array())
+    {
+        $options = self::getOptions($options);
+
+        $query = $this->createQueryBuilder('r')
+            ->select('r');
+        $query->andWhere($query->expr()->orX(
+                $query->expr()->eq('r.userId', ':user_id'),
+                $query->expr()->eq('r.fromUserId', ':user_id')
+            ))->setParameter('user_id', $userId);;
+        if (!is_null($options['entityId'])) {
+            $query->andWhere('r.entityId = :entity_id')->setParameter('entity_id', $options['entityId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $query->andWhere('r.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+        if (!is_null($options['pageId'])) {
+            $query->andWhere('r.pageIid = :page_id')->setParameter('page_id', $options['pageId']);
+        }
+
+        $request = $query->setMaxResults(1)->getQuery()->getResult();
+        if (is_array($request) && count($request) > 0) {
+            $request = $request[0];
+        } else {
+            $request = null;
+        }
+        return $request;
+    }
+
     public function getRequest($id)
     {
         return $this->createQueryBuilder('r')
@@ -111,8 +140,7 @@ class RequestRepository extends BaseRepository
             $query->andWhere($query->expr()->orX(
                 $query->expr()->eq('r.userId', ':user_id'),
                 $query->expr()->eq('r.fromUserId', ':user_id')
-            ));
-                
+            ));    
         }
         $query->setParameter('user_id', $userId);
 

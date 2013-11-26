@@ -283,6 +283,96 @@ class GroupController extends Controller
     }
 
     /**
+     * @Route("/{slug}/account/members/{page}", name="group_members_settings", requirements={"page" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")1
+     * @Template
+     */
+    public function membersSettingsAction(Request $request, $slug, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        
+        if (!$group) {
+            throw new NotFoundHttpException('Group not found.');
+        }
+
+        if (!$this->get('cm.user_authentication')->isAdminOf($group)) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        if ($request->isMethod('post')) {
+
+            $tagsUsers = $request->get('tags');
+
+            foreach ($tagsUsers as $groupUserId => $userTags) {
+                $em->getRepository('CMBundle:GroupUser')->updateUserTags($groupUserId, $userTags);
+            }
+        }
+
+        $members = $em->getRepository('CMBundle:GroupUser')->getMembers($group->getId(), array('paginate' => false, 'limit' => 10));
+
+        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+        
+        $pagination = $this->get('knp_paginator')->paginate($members, $page, 30);
+
+        return array(
+            'group' => $group,
+            'members' => $members,
+            'tags' => $tags
+        );
+    }
+
+    /**
+     * @Route("/member/promoteAdmin/{id}", name="group_promote_admin", requirements={"id" = "\d+"})
+     * @Route("/member/removeAdmin/{id}", name="group_remove_admin", requirements={"id" = "\d+"})
+     * @Template("CMBundle:Group:member.html.twig")
+     */
+    public function adminAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $groupUser = $em->getRepository('CMBundle:GroupUser')->findOneById($id);
+
+        if (!$this->get('cm.user_authentication')->isAdminOf($groupUser->getGroup())) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $groupUser->setAdmin(($request->get('_route') == 'group_promote_admin'));
+        $em->persist($groupUser);
+        $em->flush();
+
+        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+
+        return array(
+            'member' => $groupUser,
+            'tags' => $tags
+        );
+    }
+
+    /**
+     * @Route("/member/remove/{id}", name="group_remove_user", requirements={"id" = "\d+"})
+     */
+    public function removeAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $groupUser = $em->getRepository('CMBundle:GroupUser')->findOneById($id);
+
+        if (!$this->get('cm.user_authentication')->isAdminOf($groupUser->getGroup())) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $request = $em->getRepository('CMBundle:Request')->getRequestFor($groupUser->getUserId(), array('groupId' => $groupUser->getGroupId()));
+
+        if (is_null($request)) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this. 2', array(), 'http-errors'));
+        }
+
+        return $this->forward('CMBundle:Request:delete', array('id'  => $request->getId()));
+    }
+
+    /**
      * @Route("/{slug}", name="group_show")
      * @Template
      */

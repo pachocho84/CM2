@@ -102,9 +102,9 @@ class GroupUser
     /**
      * @var array
      *
-     * @ORM\Column(name="user_tags", type="array", nullable=true)
+     * @ORM\Column(name="user_tags", type="simple_array", nullable=true)
      */
-    private $userTags;
+    private $userTags = array();
 
     /**
      * @var boolean
@@ -115,7 +115,6 @@ class GroupUser
     
     public function __construct()
     {
-        $this->userTags = new ArrayCollection;
     }
 
     /**
@@ -317,10 +316,10 @@ class GroupUser
      * @param UserTag $userTag
      * @return EntityUser
      */
-    public function addUserTags($userTags)
+    public function addUserTags(array $userTags)
     {
         foreach ($userTags as $userTag) {
-            $this->addUserTag($userTags);
+            $this->addUserTag($userTag);
         }
         
         return $this;
@@ -334,7 +333,7 @@ class GroupUser
      */
     public function addUserTag($userTag)
     {
-        if (!$this->userTags->contains($userTag)) {
+        if (!in_array($userTag, $this->userTags)) {
             $this->userTags[] = $userTag;
         }
         
@@ -349,7 +348,9 @@ class GroupUser
      */
     public function removeUserTag($userTag)
     {
-        $this->userTags->removeElement($userTag);
+        if(($key = array_search($userTag, $this->getUserTags())) !== false) {
+            unset($this->userTags[$key]);
+        }
     }
     
     /**
@@ -360,6 +361,17 @@ class GroupUser
     public function getUserTags()
     {
         return $this->userTags;
+    }
+    
+    /**
+     * Add userTag
+     *
+     * @param UserTag $userTag
+     * @return EntityUser
+     */
+    public function hasUserTag($userTag)
+    {
+        return in_array($userTag, $this->userTags);
     }
 
     /**

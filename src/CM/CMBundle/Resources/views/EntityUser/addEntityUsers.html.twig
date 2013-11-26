@@ -7,44 +7,44 @@
         {% set user = entityUser.user %}
 
         {% if newEntry %}
-            {% if target is defined and target | length == 2 and target.type == 'group' %}
+            {% if target is defined and target|length == 2 and target.type == 'group' %}
                 {% if attribute(target.obj.groupUsers[loop.index0 - protagonist_new_id], joinEntityType) == 0 %} {# no #}
-                    {% set requestText = ('%user% will not recive a request and this element will not be visible to his profile due to his group settings.' | trans({'%user%': user})) %}
+                    {% set requestText = ('%user% will not recive a request and this element will not be visible to his profile due to his group settings.'|trans({'%user%': user})) %}
                     {% set alertClass = 'alert-danger' %}
                 {% elseif attribute(target.obj.groupUsers[loop.index0 - protagonist_new_id], joinEntityType) == 1 %} {# yes #}
-                    {% set requestText = ('This element will be automatically added to %user%&#39;s profile due to his group settings.' | trans({'%user%': user})) %}
+                    {% set requestText = ('This element will be automatically added to %user%&#39;s profile due to his group settings.'|trans({'%user%': user})) %}
                     {% set alertClass = 'alert-success' %}
                 {% elseif attribute(target.obj.groupUsers[loop.index0 - protagonist_new_id], joinEntityType) == 2 %} {# request #}
-                    {% set requestText = ('%user% will recive a request to add this element to his profile.' | trans({'%user%': user})) %}
+                    {% set requestText = ('%user% will recive a request to add this element to his profile.'|trans({'%user%': user})) %}
                     {% set alertClass = 'alert-warning' %}
                 {% endif %}
             {% else %}
                 {% if user.id == app.security.token.user.id %}
-                    {% set requestText = ('This element will appear on your profile.' | trans) %}
+                    {% set requestText = ('This element will appear on your profile.'|trans) %}
                     {% set alertClass = 'alert-success' %}
                 {% else %}
-                    {% set requestText = ('%user% will recive a request to add this element to his profile.' | trans({'%user%': user})) %}
+                    {% set requestText = ('%user% will recive a request to add this element to his profile.'|trans({'%user%': user})) %}
                     {% set alertClass = 'alert-warning' %}
                 {% endif %}
             {% endif %}
         {% elseif not newEntry %}
             {% if entityUser.status == 0 %} {# pending #}
-                {% set requestText = ('%user% has not accepted the request yet.' | trans({'%user%': user})) %}
+                {% set requestText = ('%user% has not accepted the request yet.'|trans({'%user%': user})) %}
                 {% set alertClass = '' %}
             {% elseif entityUser.status == 1 and user.id == app.security.token.user.id %} {# active #}
-                {% set requestText = ('This element appears on your profile.' | trans) %}
+                {% set requestText = ('This element appears on your profile.'|trans) %}
                 {% set alertClass = 'alert-success' %}
             {% elseif entityUser.status == 1 %} {# active #}
-                {% set requestText = ('This element appears on %user%&#39;s profile.' | trans({'%user%': user})) %}
+                {% set requestText = ('This element appears on %user%&#39;s profile.'|trans({'%user%': user})) %}
                 {% set alertClass = 'alert-success' %}
             {% elseif entityUser.status == 2 %} {# requested #}
-                {% set requestText = ('%user% has sent a request to be added to the protagonists.' | trans({'%user%': user})) %}
+                {% set requestText = ('%user% has sent a request to be added to the protagonists.'|trans({'%user%': user})) %}
                 {% set alertClass = 'alert-info' %}
             {% elseif entityUser.status == 3 %} {# refused admin #}
-                {% set requestText = ('%user%&#39;s request has been denied and this element does not appear on his profile.' | trans({'%user%': user})) %}
+                {% set requestText = ('%user%&#39;s request has been denied and this element does not appear on his profile.'|trans({'%user%': user})) %}
                 {% set alertClass = 'alert-danger' %}
             {% elseif entityUser.status == 4 %} {# refused entity user #}
-                {% set requestText = ('%user% has denied the request and this element does not appear on his profile.' | trans({'%user%': user})) %}
+                {% set requestText = ('%user% has denied the request and this element does not appear on his profile.'|trans({'%user%': user})) %}
                 {% set alertClass = 'alert-danger' %}
             {% endif %}
         {% else %}
@@ -52,10 +52,10 @@
             {% set alertClass = '' %}
         {% endif %}
 
-        <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user media alert {{ alertClass }}" user_id="{{ user.id }}" {% if target is defined and target | length == 2 %}{{ target.type }}_id="{{ target.obj.id }}"{% endif %}>
+        <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user media alert {{ alertClass }}" user_id="{{ user.id }}" {% if target is defined and target|length == 2 %}{{ target.type }}_id="{{ target.obj.id }}"{% endif %}>
             {{ form_errors(field) }}
             {% if user.id != app.security.token.user.id %}<a class="protagonists_remove close" aria-hidden="true" id="protagonists_remove_{{ loop.index0 }}">&times;</a>{% endif %}
-            {{ show_img_box(user.img | imagine_filter('350'), {'width': 75, 'height': 75, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'thumbnail pull-left'}}) | raw }}
+            {{ show_img_box(user.img|imagine_filter('350'), {'width': 75, 'height': 75, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'thumbnail pull-left'}})|raw }}
             <div class="media-body">
                 <h4 class="media-heading">{{ user }}</h4>
                 <p>{{ requestText }}</p>

@@ -57,12 +57,16 @@ class RequestController extends Controller
     }
 
     /**
-     * @Route("/requestAdd/{object}/{objectId}/{userId}", name="request_add", requirements={"objectId"="\d+"})
+     * @Route("/requestAdd/{object}/{objectId}/{userId}", name="request_add", requirements={"objectId"="\d+", "userId"="\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function addAction(Request $request, $object, $objectId, $userId)
+    public function addAction(Request $request, $object, $objectId, $userId = null)
     {
         $em = $this->getDoctrine()->getManager();
+
+        if (is_null($userId)) {
+            $userId = $request->get('user_id');
+        }
 
         switch ($object) {
             case 'Event':
@@ -258,7 +262,7 @@ class RequestController extends Controller
      * @JMS\Secure(roles="ROLE_USER")
      */
     public function deleteAction($id)
-    {        
+    {
         $em = $this->getDoctrine()->getManager();
 
         $request = $em->getRepository('CMBundle:Request')->getRequest($id);
@@ -268,10 +272,6 @@ class RequestController extends Controller
         }
 
         if (!is_null($request->getEntityId())) {
-            if ($request->getEntity()->getPost()->getCreatorId() == $this->getUser()->getId()) {
-                throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-            }
-
             if ($this->get('cm.user_authentication')->isAdminOf($request->getEntity())) {
                 $userId = $request->getUserId();
                 $em->getRepository('CMBundle:Request')->delete($userId, array('fromUserId' => $this->getUser()->getId(), 'entityId' => $request->getEntityId()));
@@ -285,10 +285,6 @@ class RequestController extends Controller
 
             $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('entity' => $request->getEntity(), 'request' => null));
         } elseif (!is_null($request->getGroupId())) {
-            if ($request->getGroup()->getCreatorId() == $this->getUser()->getId()) {
-                throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-            }
-
             if ($this->get('cm.user_authentication')->isAdminOf($request->getGroup())) {
                 $userId = $request->getUserId();
                 $em->getRepository('CMBundle:Request')->delete($userId, array('fromUserId' => $this->getUser()->getId(), 'groupId' => $request->getGroupId()));
@@ -303,10 +299,6 @@ class RequestController extends Controller
 
             $response = $this->renderView('CMBundle:GroupUser:requestAdd.html.twig', array('group' => $request->getGroup(), 'request' => null));
         } elseif (!is_null($request->getPageId())) {
-            if ($request->getPage()->getCreatorId() == $this->getUser()->getId()) {
-                throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-            }
-
             if ($this->get('cm.user_authentication')->isAdminOf($request->getPage())) {
                 $userId = $request->getUserId();
                 $em->getRepository('CMBundle:Request')->delete($userId, array('fromUserId' => $this->getUser()->getId(), 'pageId' => $request->getPageId()));
