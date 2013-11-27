@@ -35,8 +35,6 @@
 
     {{ include('CMBundle:Group:membersMini.html.twig') }}
 
-    {{ dump(is_admin(group)) }}
-
     {% if is_admin(group) %}
         <a href="{{ path('group_members_settings', {'slug': group.slug}) }}">{{ 'Manage members'|trans }}</a>
     {% endif %}
