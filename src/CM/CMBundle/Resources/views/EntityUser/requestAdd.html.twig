@@ -1,8 +1,6 @@
 {% if is_granted('ROLE_USER') and entity.post.creatorId != app.user.id %}
 
-    {{ dump(request.entity.entityUsers) }}
-
-    {#{% if request is not null and request.entity.entityUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_PENDING') %}
+    {% if request is not null and request.entity.entityUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_PENDING') %}
         
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -50,5 +48,5 @@
             <a href="{{ path('request_add', {'object': entity|class_name , 'objectId': entity.id, 'userId': app.user.id}) }}" class="btn btn-default ajax-link ajax-link-target" data-loading-text="{{ 'Loading'|trans }}" data-toggle="tooltip" data-container="body" title="{{ 'Send a request to join and to show this element on your profile'|trans }}" data-placement="top"><i class="glyphicons crown"></i> {{ 'Request protagonist'|trans }}</a>
         </div>
         
-    {% endif %}#}
+    {% endif %}
 {% endif %}

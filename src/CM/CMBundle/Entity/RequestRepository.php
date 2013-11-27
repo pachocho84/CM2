@@ -86,7 +86,7 @@ class RequestRepository extends BaseRepository
         $query = $this->createQueryBuilder('r')
             ->select('r, u, e, eu, t, g, gu, p, pu, po, pou, pop, pog')
             ->leftJoin('r.entity', 'e')
-            ->leftJoin('e.entityUsers', 'eu', 'with', 'eu.userId = :user_id', 'eu.userId')
+            ->leftJoin('e.entityUsers', 'eu', 'WITH', 'eu.userId = :user_id', 'eu.userId')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.posts', 'po', 'WITH', 'po.type = '.Post::TYPE_CREATION)
             ->leftJoin('r.group', 'g')
