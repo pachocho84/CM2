@@ -630,7 +630,7 @@ class User extends BaseUser
      * @param \CM\CMBundle\Entity\EntityUser $comment
      * @return Entity
      */
-    public function addUserUserTag(
+    public function addUserTag(
         UserTag $userTag,
         $order = null
     )
@@ -655,6 +655,14 @@ class User extends BaseUser
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
+    public function clearUserTags()
+    {
+        return $this->userUserTags->clear();
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
     public function getUserUserTags()
     {
         return $this->userUserTags;
@@ -668,6 +676,18 @@ class User extends BaseUser
         $userTags = array();
         foreach ($this->userUserTags as $tag) {
             $userTags[] = $tag->getUserTag();
+        }
+        return $userTags;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserTagsIds()
+    {
+        $userTags = array();
+        foreach ($this->userUserTags as $tag) {
+            $userTags[] = $tag->getUserTag()->getId();
         }
         return $userTags;
     }

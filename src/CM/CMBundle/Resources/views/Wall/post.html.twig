@@ -29,6 +29,7 @@
 
         {% if (post.object|class_name) == 'Comment' or (post.object|class_name) == 'Like' or (post.object|class_name) == 'Biography' %}
             {{ include('CMBundle::social.html.twig', {'post': post.entity.post}) }}
+        {% elseif (post.object|class_name) == 'Fan' %}
         {% else  %}
             {{ include('CMBundle::social.html.twig') }}
         {% endif %}

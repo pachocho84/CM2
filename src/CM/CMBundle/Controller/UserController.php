@@ -241,6 +241,41 @@ class UserController extends Controller
             'user' => $this->getUser()
         );
     }
+
+    /**
+     * @Route("/account/tags", name="user_tags_edit")
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function tagsEditAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+
+        if ($request->isMethod('post')) {
+
+            $userTags = explode(',', $request->get('userTagsVal'));
+
+            if (!empty($userTags)) {
+                foreach ($this->getUser()->getUserUserTags() as $userTag) {
+                    $em->remove($userTag);
+                }
+                $em->flush();
+
+                foreach ($userTags as $key => $tag) {
+                    $this->getUser()->addUserTag($tags[intval($tag)], $key);
+                }
+
+                $em->persist($this->getUser());
+                $em->flush();
+            }
+        }
+        
+        return array(
+            'tags' => $tags
+        );
+    }
     
     /**
      * @Route("/{slug}/events/{page}", name="user_events", requirements={"page" = "\d+"})

@@ -145,7 +145,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             for ($j = 0; $j < count($person['user_tags']); $j++) {
                 $userTag = $manager->merge($this->getReference('user_tag-'.$person['user_tags'][$j]));
                 
-                $user->addUserUserTag($userTag);
+                $user->addUserTag($userTag, $j);
             }
 
 			$this->addReference('user-'.($i + 1), $user);

@@ -1,11 +1,10 @@
 {% extends "CMBundle::layout.html.twig" %}
 
+{% block title %}{{ 'Profile & cover pictures'|trans }}{% endblock %}
+
 {% block body %}
 
-    <h2>
-        {#{{ image_tag('glyphicons/nameplatealt') }}#}
-        {{ block('title') }}
-    </h2>                                                           
+    <h3>{{ show_icon('Nameplatealt') }} <span>{{ block('title') }}</span></h3>                             
 
 
      
