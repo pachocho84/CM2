@@ -400,10 +400,10 @@ class GroupController extends Controller
     }
 
     /**
-     * @Route("/{slug}", name="group_show")
+     * @Route("/{slug}/{page}", name="group_show", requirements={"page" = "\d+"})
      * @Template
      */
-    public function showAction($slug)
+    public function showAction(Request $request, $slug, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
         
@@ -416,7 +416,7 @@ class GroupController extends Controller
         $members = $em->getRepository('CMBundle:GroupUser')->getMembers($group->getId(), array('paginate' => false, 'limit' => 10));
 
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
-            $request = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('groupId' => $group->getId()));
+            $req = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('groupId' => $group->getId()));
         }
 
         $biography = $em->getRepository('CMBundle:Biography')->getGroupBiography($group->getId());
@@ -427,8 +427,12 @@ class GroupController extends Controller
         }
 
         $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('groupId' => $group->getId()));
-        $pagination = $this->get('knp_paginator')->paginate($posts, 1, 15);
+        $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Wall:posts.html.twig', array('slug' => $group->getSlug(), 'posts' => $pagination, 'page' => $page));
+        }
 
-        return array('group' => $group, 'members' => $members, 'request' => $request, 'biography' => $biography, 'posts' => $pagination);
+        return array('group' => $group, 'members' => $members, 'request' => $req, 'biography' => $biography, 'posts' => $pagination);
     }
 }

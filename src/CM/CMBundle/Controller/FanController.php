@@ -88,7 +88,7 @@ class FanController extends Controller
 
         $imFan = $em->getRepository('CMBundle:Fan')->checkIfIsFanOf($this->getUser(), $fanId, $object);
         
-        if ($imFan == false) {      
+        if ($imFan == false) {
             $fan = new Fan;
             $this->getUser()->addFanOf($fan);
             if ($object == 'User') {

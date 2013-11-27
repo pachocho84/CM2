@@ -38,8 +38,8 @@ class PostRepository extends BaseRepository
         $options = self::getOptions($options);
 
         $query = $this->createQueryBuilder('p')
-            ->select('p, e, t, c, i, eu, ep, epl, epc, eplu, epcu')
-            ->leftJoin('p.entity', 'e')
+            ->select('p, e, t, c, i, eu, ep, epl, epc, eplu, epcu');
+        $query->leftJoin('p.entity', 'e')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.entityCategory', 'c')
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
@@ -54,7 +54,14 @@ class PostRepository extends BaseRepository
         }
         if (!is_null($options['userId'])) {
             $query->orWhere('p.user = :user_id')->setParameter('user_id', $options['userId'])
-                ->orWhere('eu.userId = :user_id');
+                ->orWhere('eu.userId = :user_id')
+                ->andWhere($query->expr()->orX(
+                    $query->expr()->orX(
+                        $query->expr()->eq('p.userId', ':user_id'),
+                        $query->expr()->eq('p.creatorId', ':user_id')
+                    ),
+                    $query->expr()->eq('e.visible', '1')
+                ));
         }
         if (!is_null($options['pageId'])) {
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);

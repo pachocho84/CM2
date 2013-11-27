@@ -283,10 +283,10 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/{slug}", name="user_show")
+     * @Route("/{slug}/{page}", name="user_show", requirements={"page" = "\d+"})
      * @Template
      */
-    public function showAction($slug)
+    public function showAction(Request $request, $slug, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
         
@@ -304,7 +304,11 @@ class UserController extends Controller
         }
 
         $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('userId' => $user->getId()));
-        $pagination = $this->get('knp_paginator')->paginate($posts, 1, 15);
+        $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Wall:posts.html.twig', array('slug' => $user->getSlug(), 'posts' => $pagination, 'page' => $page));
+        }
 
         return array('user' => $user, 'biography' => $biography, 'posts' => $pagination);
     }
