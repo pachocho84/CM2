@@ -27,7 +27,7 @@ class PageUser
     const STATUS_ACTIVE = 1;
     const STATUS_REQUESTED = 2;
     const STATUS_REFUSED_ADMIN = 3;
-    const STATUS_REFUSED_GROUP_USER = 4;
+    const STATUS_REFUSED_PAGE_USER = 4;
     
     const JOIN_NO = 0;
     const JOIN_YES = 1;

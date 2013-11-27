@@ -200,7 +200,7 @@ class RequestController extends Controller
                 
                 $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_ACCEPTED);
             } elseif ($choice == 'refuse') {
-                $entityUser->setStatus($entityUser->getStatus() == EntityUser::STATUS_PENDING ? EntityUser::STATUS_REFUSED_GROUP_USER : EntityUser::STATUS_REFUSED_ADMIN);
+                $entityUser->setStatus($entityUser->getStatus() == EntityUser::STATUS_PENDING ? EntityUser::STATUS_REFUSED_ENTITY_USER : EntityUser::STATUS_REFUSED_ADMIN);
 
                 $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_REFUSED);
             }
@@ -238,7 +238,7 @@ class RequestController extends Controller
                 
                 $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_ACCEPTED);
             } elseif ($choice == 'refuse') {
-                $pageUser->setStatus($pageUser->getStatus() == PageUser::STATUS_PENDING ? PageUser::STATUS_REFUSED_GROUP_USER : PageUser::STATUS_REFUSED_ADMIN);
+                $pageUser->setStatus($pageUser->getStatus() == PageUser::STATUS_PENDING ? PageUser::STATUS_REFUSED_PAGE_USER : PageUser::STATUS_REFUSED_ADMIN);
 
                 $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_REFUSED);
             }

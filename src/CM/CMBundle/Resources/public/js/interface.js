@@ -2,6 +2,8 @@ $(function() {
     /* AJAX LINK */
     $(document).on('click', '.ajax-link', function(event) {
         event.preventDefault();
+        event.stopPropagation();
+
         $(this).closest('*[rel="tooltip"]').tooltip('destroy');
         if ($(this).attr('data-loading-text')) {
             $(this).closest('.btn').html('<img src="/images/loader.gif" /> ' + $(this).attr('data-loading-text'));
