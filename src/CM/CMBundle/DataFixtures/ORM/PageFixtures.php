@@ -13,6 +13,33 @@ use CM\CMBundle\Entity\PageUser;
 
 class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
+    private $pages = array(
+        array('name' => 'Sony Classical Italia',
+            'type' => Page::TYPE_ASSOCIATION,
+            'creator' => 6,
+            'description' => 'Sony Classical in Italia',
+            'website' => 'www.sony.it',
+            'img' => '650e5c4e916d35d9c4dd12f070f8c39f07ef26c9.jpg',
+            'vip' => false
+        ),
+        array('name' => 'Società del Quartetto di Milano',
+            'type' => Page::TYPE_ASSOCIATION,
+            'creator' => 7,
+            'description' => '1° settembre 1863 il manifesto di Tito Ricordi per una società con il compito di “incoraggiare i cultori della buona musica”.',
+            'website' => 'www.quartettomilano.it',
+            'img' => '22bd92a5ada9b1d8184c980ea1e226f9ee7c5130.jpg',
+            'vip' => false
+        ),
+        array('name' => 'laVerdi',
+            'type' => Page::TYPE_ASSOCIATION,
+            'creator' => 8,
+            'description' => 'Fondazione Orchestra Sinfonica e Coro Sinfonico di Milano Giuseppe Verdi',
+            'website' => 'www.laverdi.org',
+            'img' => '9834dc0cc993aa4397bdb860cea2e4ac970a65f5.jpg',
+            'vip' => false
+        ),
+    );
+
     /**
      * {@inheritDoc}
      */
@@ -23,17 +50,16 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 
     public function load(ObjectManager $manager)
     {
-        for ($i = 1; $i < 21; $i++) {
-            $userNum = rand(1, 5);
-            $user = $manager->merge($this->getReference('user-'.$userNum));
+        foreach ($this->pages as $i => $p) {
+            $user = $manager->merge($this->getReference('user-'.$p['creator']));
             $page = new Page;
-            $page->setType(Page::TYPE_ASSOCIATION)
-                ->setName('Page '.$i)
+            $page->setType($p['type'])
+                ->setName($p['name'])
                 ->setCreator($user)
-                ->setDescription('description '.$i)
-                ->setWebsite('www.google.com')
-                ->setImg('ff9398d3d47436e2b4f72874a2c766fd.jpeg')
-                ->setVip(rand(0, 1));
+                ->setDescription($p['description'])
+                ->setWebsite($p['website'])
+                ->setImg($p['img'])
+                ->setVip($p['vip']);
             
             $manager->persist($page);
                         
@@ -57,10 +83,10 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                 $userTags
             );
 
-            $numbers = range(1, 5);
-            unset($numbers[$userNum - 1]);
+            $numbers = range(1, 8);
+            unset($numbers[$p['creator'] - 1]);
             shuffle($numbers);
-            for ($j = 0; $j < 4; $j++) {
+            for ($j = 0; $j < rand(0, 7); $j++) {
                 $otherUser = $manager->merge($this->getReference('user-'.$numbers[$j]));
                 
                 $userTags = array();
@@ -80,7 +106,7 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                 );
             }
             
-            $this->addReference('page-'.$i, $page);
+            $this->addReference('page-'.($i + 1), $page);
         }
 
         $manager->flush();

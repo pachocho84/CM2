@@ -17,6 +17,7 @@ class PageUserRepository extends BaseRepository
         return array_merge(array(
             'paginate'      => true,
             'limit'         => 25,
+            'status' => array(PageUser::STATUS_ACTIVE)
         ), $options);
     }
 
@@ -24,22 +25,33 @@ class PageUserRepository extends BaseRepository
     {
         $options = self::getOptions($options);
         
-        $query = $this->createQueryBuilder('gu')
-            ->select('gu')
-            ->leftJoin('gu.user', 'u')
-            ->where('gu.status = '.PageUser::STATUS_ACTIVE)
-            ->andWhere('gu.pageId = :page_id')->setParameter('page_id', $pageId)
-            ->orderBy('gu.admin', 'desc');
+        $query = $this->createQueryBuilder('pu')
+            ->select('pu')
+            ->leftJoin('pu.user', 'u')
+            ->leftJoin('pu.page', 'g')
+            ->where('pu.status in (:status)')->setParameter('status', $options['status'])
+            ->andWhere('pu.pageId = :page_id')->setParameter('page_id', $pageId)
+            ->andWhere('pu.userId != g.creatorId')
+            ->orderBy('pu.admin', 'desc');
 
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
+    public function updateUserTags($id, array $userTags)
+    {  
+        $this->createQueryBuilder('pu')
+            ->update('CMBundle:PageUser', 'pu')
+            ->where('pu.id = :id')->setParameter('id', $id)
+            ->set('pu.userTags', '\''.implode(',', $userTags).'\'')
+            ->getQuery()->execute();
+    }
+
     public function delete($userId, $pageId)
     {
-        $this->createQueryBuilder('gu')
-            ->delete('CMBundle:PageUser', 'gu')
-            ->where('gu.user = :user_id')->setParameter('user_id', $userId)
-            ->andWhere('gu.page = :page_id')->setParameter('page_id', $pageId)
+        $this->createQueryBuilder('pu')
+            ->delete('CMBundle:PageUser', 'pu')
+            ->where('pu.user = :user_id')->setParameter('user_id', $userId)
+            ->andWhere('pu.page = :page_id')->setParameter('page_id', $pageId)
             ->getQuery()
             ->execute();
     }

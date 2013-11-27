@@ -22,7 +22,8 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'city_birth' => 'Padua',
             'city_current' => 'Milan',
             'birth_date' => array(1984, 6, 17),
-            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg',
+            'birth_date_visible' => User::BIRTHDATE_VISIBLE,
+            'image' => '1074169_10201332211257910_2077101884_o.jpg',
             'user_tags' => array(1, 5)
         ),
         array('firstname' => 'Fabrizio', 
@@ -33,6 +34,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'city_birth' => 'Milan',
             'city_current' => 'Milan',
             'birth_date' => array(1990, 4, 19),
+            'birth_date_visible' => User::BIRTHDATE_VISIBLE,
             'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg',
             'user_tags' => array(4)
         ),
@@ -44,7 +46,8 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'city_birth' => 'Taranto',
             'city_current' => 'Milan',
             'birth_date' => array(1900, 4, 15),
-            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg',
+            'birth_date_visible' => User::BIRTHDATE_NO_YEAR,
+            'image' => '664508_4284090172825_1093880282_o.jpg',
             'user_tags' => array(1)
         ),
         array('firstname' => 'Luca',
@@ -55,7 +58,8 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'city_birth' => 'Padua',
             'city_current' => 'Milan',
             'birth_date' => array(1990, 5, 15),
-            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg',
+            'birth_date_visible' => User::BIRTHDATE_VISIBLE,
+            'image' => '263757_2174482600735_3488733_n.jpg',
             'user_tags' => array()
         ),
         array('firstname' => 'Virginia Alexandra',
@@ -66,7 +70,44 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'city_birth' => 'Milan',
             'city_current' => 'Milan',
             'birth_date' => array(1994, 3, 29),
-            'image' => '00b7b971d96ce05797e6757e5a0a4232.jpeg',
+            'birth_date_visible' => User::BIRTHDATE_INVISIBLE,
+            'image' => '1394182_652549711456783_1108378362_n.jpg',
+            'user_tags' => array()
+        ),
+        array('firstname' => 'Mario',
+            'lastname' => 'Marcarini',
+            'username' => 'mariomarcarini',
+            'email' => 'mamarcarini@circuitomusica.it',
+            'sex' => User::SEX_M,
+            'city_birth' => 'Milan',
+            'city_current' => 'Milan',
+            'birth_date' => array(1971, 3, 21),
+            'birth_date_visible' => User::BIRTHDATE_VISIBLE,
+            'image' => '8d89c5d232b971a8fbad65abe5fa21b0de7e1048.jpg',
+            'user_tags' => array(9, 8, 10)
+        ),
+        array('firstname' => 'Dora',
+            'lastname' => 'Alberti',
+            'username' => 'doralberti',
+            'email' => 'doralberti@circuitomusica.it',
+            'sex' => User::SEX_F,
+            'city_birth' => 'Milan',
+            'city_current' => 'Milan',
+            'birth_date' => array(1971, 3, 12),
+            'birth_date_visible' => User::BIRTHDATE_VISIBLE,
+            'image' => 'e9ad7f19c9c4909fb82ff647d5fb43527e4f1aad.jpg',
+            'user_tags' => array()
+        ),
+        array('firstname' => 'Francesca',
+            'lastname' => 'Cremonini',
+            'username' => 'fracremonini',
+            'email' => 'fracremonini@circuitomusica.it',
+            'sex' => User::SEX_F,
+            'city_birth' => 'Milan',
+            'city_current' => 'Milan',
+            'birth_date' => array(1964, 11, 17),
+            'birth_date_visible' => User::BIRTHDATE_NO_YEAR,
+            'image' => 'b0702dfa74da4333342e764750476cfddd4c5b12.jpg',
             'user_tags' => array()
         ),
     );
@@ -83,9 +124,8 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 	{
 		$userManager = $this->container->get('fos_user.user_manager');
 
-		for ($i = 1; $i < count($this->people) + 1; $i++) {
+        foreach ($this->people as $i => $person) {
 			$user = $userManager->createUser();
-			$person = $this->people[$i - 1];
 			$date = new \DateTime;
 			$user->setEmail($person['email'])
 		  	   ->setUsername($person['username'])
@@ -97,20 +137,18 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 		  	   ->setCityBirth($person['city_birth'])
 		  	   ->setCityCurrent($person['city_current'])
 		  	   ->setBirthDate($date->setDate($person['birth_date'][0], $person['birth_date'][1], $person['birth_date'][2]))
-		  	   ->setBirthDateVisible(false)
+		  	   ->setBirthDateVisible($person['birth_date_visible'])
 		  	   ->setImg($person['image']);
 
 			$manager->persist($user);
 
-            $numbers =range(1, 10);
-            shuffle($numbers);
-            for ($j = 1; $j < rand(2, 5); $j++) {
-                $userTag = $manager->merge($this->getReference('user_tag-'.$numbers[$j]));
+            for ($j = 0; $j < count($person['user_tags']); $j++) {
+                $userTag = $manager->merge($this->getReference('user_tag-'.$person['user_tags'][$j]));
                 
                 $user->addUserUserTag($userTag);
             }
 
-			$this->addReference('user-'.$i, $user);
+			$this->addReference('user-'.($i + 1), $user);
 		}
         
         $manager->flush();

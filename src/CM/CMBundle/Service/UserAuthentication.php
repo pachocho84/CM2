@@ -107,6 +107,8 @@ class UserAuthentication
             return false;
         }
 
+        var_dump($this->session->get('user'));
+
         switch ($this->helper->className($object)) {
             case 'Group':
                 return in_array($object->getId(), (array)$this->session->get('user/groups_admin'));

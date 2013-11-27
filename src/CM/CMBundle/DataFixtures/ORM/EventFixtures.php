@@ -151,7 +151,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             
             if (rand(0, 4) > 0) {
 
-                $user = $manager->merge($this->getReference('user-'.rand(1, 5)));
+                $user = $manager->merge($this->getReference('user-'.rand(1, 8)));
 
                 $image = new Image;
                 $image
@@ -174,7 +174,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
     
             }
             
-            $userNum = rand(1, 5);
+            $userNum = rand(1, 8);
             $user = $manager->merge($this->getReference('user-'.$userNum));
             
             $category = $manager->merge($this->getReference('entity_category-'.rand(1, 3)));
@@ -199,8 +199,11 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                 $userTags
             );
 
-            for ($j = $userNum + 1; $j < 6; $j++) {
-                $otherUser = $manager->merge($this->getReference('user-'.$j));
+            $numbers = range(1, 8);
+            unset($numbers[$userNum - 1]);
+            shuffle($numbers);
+            for ($j = 0; $j < rand(0, 6); $j++) {
+                $otherUser = $manager->merge($this->getReference('user-'.$numbers[$j]));
                 
                 $userTags = array();
                 for ($k = 1; $k < rand(1, 3); $k++) {

@@ -21,6 +21,9 @@ class UserTagFixtures extends AbstractFixture implements OrderedFixtureInterface
         array('name-en' => 'oboist', 'name-fr' => 'hautboïste', 'name-it' => 'oboista'),
         array('name-en' => 'clarinettist', 'name-fr' => 'clarinettiste', 'name-it' => 'clarinettista'),
         array('name-en' => 'trumpeter', 'name-fr' => 'trompettiste', 'name-it' => 'trombettista'),
+        array('name-en' => 'tenor', 'name-fr' => 'ténor', 'name-it' => 'tenore'),
+        array('name-en' => 'music critic', 'name-fr' => 'critique de musique', 'name-it' => 'critico musicale'),
+        array('name-en' => 'musicologist', 'name-fr' => 'musicologue', 'name-it' => 'musicologo'),
         array('name-en' => 'composer', 'name-fr' => 'compositeur', 'name-it' => 'compositore'),
         array('name-en' => 'director', 'name-fr' => 'directeur', 'name-it' => 'direttore'),
     );

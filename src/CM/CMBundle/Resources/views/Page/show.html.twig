@@ -33,7 +33,12 @@
         </div>
     </div>
 
-    {{ include('CMBundle:Page:members.html.twig') }}
+    {{ include('CMBundle:Page:membersMini.html.twig') }}
+
+    {% if is_admin(page) %}
+        <a href="{{ path('page_members_settings', {'slug': page.slug}) }}">{{ 'Manage members'|trans }}</a>
+    {% endif %}
+
 
     {{ include('CMBundle:Wall:posts.html.twig', {'slug': page.slug}) }}
     
