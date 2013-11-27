@@ -37,6 +37,17 @@ $(function() {
             event.stopPropagation();
         }
     });
+    $('#menu ul.nav.pull-right .dropdown-menu-body').on('mousewheel', function(event) {
+        totalHeight = 0;
+        $(this).children().each(function(){
+            totalHeight = totalHeight + $(this).outerHeight();
+        });
+
+        // TODO: 8-damned-px
+        if (($(this).scrollTop() <= 0 && event.originalEvent.deltaY < 0) || ($(this).scrollTop() - 8 >= totalHeight - $(this).outerHeight() && event.originalEvent.deltaY > 0)) {
+            event.preventDefault();
+        }
+    });
     
     $('#menu').hcSticky({
         noContainer: true

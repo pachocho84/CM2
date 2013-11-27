@@ -18,7 +18,7 @@
 
     {{ post.relatedImg }}
 
-        <li class="media object object-small"  update_more="{{ post.id }}">
+        <li class="media object object-small" {#update_more="{{ post.id }}"#}>
             {{ show_img_box(post.relatedImg|imagine_filter('350'), {'width': 32, 'height': 32,  'link': path('wall_show', {'postId': post.id}), 'link_attributes': {'class': 'pull.left'}, 'default': 'user'}) | raw }}
            
             <div class="media-body">
