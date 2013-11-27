@@ -1,0 +1,85 @@
+<div id="pageMembers" class="columnLeft-sezione" ajaxUrl="{#<?php echo url_for('@page_members?id='.$page->getId()) ?>#}">
+    
+    <div id="pageMembers-top" class="columnLeft-sezione-top">
+        <h3>{{ 'Members'|trans }}</h3>
+        <div id="pageMembers-count" class="leftColumnUsers-count">
+            {#<?php echo link_to($pageMembersCount.' '.( $pageMembersCount == 1 ? __('member') : __('members') ), '@page_members?id='.$page->getId(), array('class' => 'whoIsFan', 'title' => __('Page members'))) ?>#}
+        </div>
+        <div id="pageMembers-show" class="leftColumnUsers-show">
+            {#<?php echo link_to(__('Show all'), '@page_members?id='.$page->getId(), array('class' => 'whoIsMember', 'title' => __('View all members'))) ?>#}
+        </div>
+    </div> 
+    
+    
+    
+    <ul id="pageMembers-content" class="leftColumnUsers-content media-grid">
+        <div class="row">
+            <li class="col-md-3">
+                <a href="{{ path('user_show', {'slug': page.creator.slug}) }}" title="{{ 'Founder'|trans }}">
+                    {{ show_img_box(page.creator.img|imagine_filter('350'), {'width': 32, 'height': 32, 'offset': page.creator.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+                    <div class="leftColumnListUser-content">                                                                          
+                        <span class="leftColumnListUser-name">{{ page.creator.firstName }}</span>   
+                        {#<span class="leftColumnListUser-role"><?php echo $member->getTagName() ?></span>#}
+                    </div>        
+                </a>
+            </li>
+            {% for member in members %}
+                <li class="col-md-3">
+                    <a href="{{ path('user_show', {'slug': member.user.slug}) }}" class="leftColumnListUser-img">
+                        {{ show_img_box(member.user.img|imagine_filter('350'), {'width': 32, 'height': 32, 'offset': member.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+                        <div class="leftColumnListUser-content">                                                                          
+                            <span class="leftColumnListUser-name"><a href="{{ path('user_show', {'slug': member.user.slug}) }}" class="leftColumnListUser-img">{{ member.user.firstName }}</span>   
+                            {#<span class="leftColumnListUser-role"><?php echo $member->getTagName() ?></span>#}
+                        </div>  
+                    </a>       
+                </li>
+                {% if loop.index % 4 == 0 %}
+                    </div>
+                    <div class="row">
+                {% endif %}
+            {% endfor %}
+        </div>
+    </ul>   
+    
+    
+    
+</div>
+
+
+{#<?php if ($pageMembersCount > 0): ?>
+    
+    <div id="pageMembers" class="columnLeft-sezione" ajaxUrl="<?php echo url_for('@page_members?id='.$page->getId()) ?>">
+    
+        <div id="pageMembers-top" class="columnLeft-sezione-top">
+            <h3><?php echo __('Members') ?></h3>
+            <div id="pageMembers-count" class="leftColumnUsers-count">
+                <?php echo link_to($pageMembersCount.' '.( $pageMembersCount == 1 ? __('member') : __('members') ), '@page_members?id='.$page->getId(), array('class' => 'whoIsFan', 'title' => __('Page members'))) ?>
+            </div>
+            <div id="pageMembers-show" class="leftColumnUsers-show">
+                <?php echo link_to(__('Show all'), '@page_members?id='.$page->getId(), array('class' => 'whoIsMember', 'title' => __('View all members'))) ?>
+            </div>
+        </div> 
+        
+        
+        
+        <div id="pageMembers-content" class="leftColumnUsers-content">
+            <?php foreach ($pageMembers as $member): ?>
+                <div class="leftColumnListUser">
+                    <a href="<?php echo url_for('@utenti_show?slug='.$member->getSlug()) ?>" class="leftColumnListUser-img">
+                        <?php echo $member->getImg() != '' && file_exists('uploads/utenti/avatar/50/'.$member->getImg()) ? image_tag('/uploads/utenti/avatar/50/'.$member->getImg()) : image_tag('/uploads/utenti/avatar/50/default.jpg') ?>
+                    </a>  
+                    <div class="leftColumnListUser-content">                                                                          
+                <span class="leftColumnListUser-name"><?php echo link_to($member->getName(), '@utenti_show?slug='.$member->getSlug()) ?></span>   
+                <span class="leftColumnListUser-role"><?php echo $member->getTagName() ?></span>
+            </div>        
+                </div>
+            <?php endforeach ?>
+        </div>   
+        
+        
+        
+    </div>
+
+<?php else: ?>
+    <div id="pageMembers" ajaxUrl="<?php echo url_for('@page_members?id='.$page->getId()) ?>"></div>
+<?php endif ?>#}

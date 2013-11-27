@@ -283,6 +283,123 @@ class PageController extends Controller
     }
 
     /**
+     * @Route("/{slug}/account/members/{pageNum}", name="page_members_settings", requirements={"pageNum" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")1
+     * @Template
+     */
+    public function membersSettingsAction(Request $request, $slug, $pageNum = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+        
+        if (!$page) {
+            throw new NotFoundHttpException('Page not found.');
+        }
+
+        if (!$this->get('cm.user_authentication')->isAdminOf($page)) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        if ($request->isMethod('post')) {
+
+            $tagsUsers = $request->get('tags');
+
+            foreach ($tagsUsers as $pageUserId => $userTags) {
+                $em->getRepository('CMBundle:PageUser')->updateUserTags($pageUserId, $userTags);
+            }
+        }
+
+        $members = $em->getRepository('CMBundle:PageUser')->getMembers($page->getId(), array('paginate' => false, 'limit' => 10, 'status' => array(PageUser::STATUS_ACTIVE, PageUser::STATUS_PENDING)));
+
+        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+        
+        $pagination = $this->get('knp_paginator')->paginate($members, $pageNum, 30);
+
+        return array(
+            'page' => $page,
+            'members' => $members,
+            'tags' => $tags
+        );
+    }
+
+    /**
+     * @Route("/member/promoteAdmin/{id}", name="page_promote_admin", requirements={"id" = "\d+"})
+     * @Route("/member/removeAdmin/{id}", name="page_remove_admin", requirements={"id" = "\d+"})
+     * @Template("CMBundle:Page:member.html.twig")
+     */
+    public function adminAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $pageUser = $em->getRepository('CMBundle:PageUser')->findOneById($id);
+
+        if (!$this->get('cm.user_authentication')->isAdminOf($pageUser->getPage())) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $pageUser->setAdmin(($request->get('_route') == 'page_promote_admin'));
+        $em->persist($pageUser);
+        $em->flush();
+
+        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+
+        return array(
+            'member' => $pageUser,
+            'tags' => $tags
+        );
+    }
+
+    /**
+     * @Route("/add/{pageId}", name="page_member_add", requirements={"pageId"="\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template("CMBundle:Page:member.html.twig")
+     */
+    public function addAction(Request $request, $pageId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $userId = $request->get('user_id');
+
+        $this->forward('CMBundle:Request:add', array('object' => 'Page', 'objectId' => $pageId, 'userId' => $userId));
+
+        $pageUser = $em->getRepository('CMBundle:PageUser')->findOneBy(array('pageId' => $pageId, 'userId' => $userId));
+
+        if (!$this->get('cm.user_authentication')->isAdminOf($pageUser->getPage())) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+
+        return array(
+            'member' => $pageUser,
+            'tags' => $tags
+        );
+    }
+
+    /**
+     * @Route("/member/remove/{id}", name="page_remove_user", requirements={"id" = "\d+"})
+     */
+    public function removeAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $pageUser = $em->getRepository('CMBundle:PageUser')->findOneById($id);
+
+        if (!$this->get('cm.user_authentication')->isAdminOf($pageUser->getPage())) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $request = $em->getRepository('CMBundle:Request')->getRequestFor($pageUser->getUserId(), array('pageId' => $pageUser->getPageId()));
+
+        if (is_null($request)) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this. 2', array(), 'http-errors'));
+        }
+
+        return $this->forward('CMBundle:Request:delete', array('id'  => $request->getId()));
+    }
+
+    /**
      * @Route("/{slug}", name="page_show")
      * @Template
      */

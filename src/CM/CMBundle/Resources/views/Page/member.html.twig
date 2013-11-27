@@ -1,0 +1,36 @@
+<div protagonist_new_id="0" class="collection-item protagonists_user media ajax-link-target alert alert-{% if member.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_ACTIVE') %}success{% else %}warning{% endif %}" user_id="{{ member.userId }}">
+
+    <div class="immagine">
+        {{ show_img_box(member.user.img|imagine_filter('350'), {'width': 75, 'height': 75, 'offset': member.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+    </div>
+
+    <div class="contenuto">
+
+        <h3><a href="{{ path('user_show', {'slug': member.user.slug}) }}">{{ member.user }}</a></h3>
+
+        <select name="tags[{{ member.id }}][]" multiple id="roles_{{ member.userId }}" style="width: 500px;" class="form-control col-lg-offset-2 col-lg-10">
+            {% for tag in tags %}
+                <option value="{{ tag.id }}"{% if member.hasUserTag(tag.id) %} selected{% endif %}>{{ tag }}</option>
+            {% endfor %}
+        </select>
+
+        <div class="btn-page">
+
+            {% if app.user.id != member.userId %}
+            {#<?php if ($page->getUserId() != $member->getUserId()): ?>#}
+
+                {% if member.admin %}
+                    <a href="{{ path('page_remove_admin', {'id': member.id}) }}" class="btn btn-default ajax-link"><i class="glyphicon glyphicon-chevron-down" ></i> {{ 'Remove as admin'|trans }}</a>
+                {% else %}
+                    <a href="{{ path('page_promote_admin', {'id': member.id}) }}" class="btn btn-default ajax-link"><i class="glyphicon glyphicon-chevron-up" ></i> {{ 'Promote to admin'|trans }}</a>
+                {% endif %}
+
+                <a href="{{ path('page_remove_user', {'id': member.id})}}" class="btn btn-default ajax-link"><i class="glyphicon glyphicon-minus" ></i> {{ 'Remove member'|trans }}</a>
+
+            {% endif %}
+
+        </div><!-- end bottom -->
+
+    </div><!-- end contenuto -->
+
+</div><!-- end oggetto elemento -->
