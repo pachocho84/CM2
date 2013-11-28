@@ -66,7 +66,7 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                 $page->setCoverImg($p['cover']);
             }
             if (!is_null($p['background'])) {
-                $page->setCoverImg($p['background']);
+                $page->setBackgroundImg($p['background']);
             }
             
             $manager->persist($page);

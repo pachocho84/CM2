@@ -260,7 +260,7 @@ class CMExtension extends \Twig_Extension
         // Attributes
         $options['box_attributes']['style'] = array_key_exists('style', $options['box_attributes']) ? 'width: '.$width.'px;  height: '.$height.'px; '.$options['box_attributes']['style'] : 'width: '.$width.'px;  height: '.$height.'px;';
         $options['box_attributes']['class'] = array_key_exists('class', $options['box_attributes']) ? 'image_box '.$options['box_attributes']['class'] : 'image_box';
-        
+
         $img_style   = array();
         $img_style[] = 'width: '.$img_r_w.'px;';
         $img_style[] = 'height: '.$img_r_h.'px;';  
@@ -270,15 +270,14 @@ class CMExtension extends \Twig_Extension
         }
         
         // Align  
-        $inner_box_style = array();
         if ($img_ratio > 1 && isset($options['offset'])) {
-            $img_style[] = 'right: '.$options['offset'].'%'; 
+            $img_style[] = 'left: -'.$options['offset'].'%'; 
         } elseif ($img_ratio > 1) {             
-            $img_style[] = 'right: '.($img_r_w / 2).'px';
+            $img_style[] = 'left: -'.(($img_r_w - $width) / 2).'px';
         } elseif ($img_ratio < 1 && isset($options['offset'])) {
-            $img_style[] = 'bottom: '.$options['offset'].'%'; 
+            $img_style[] = 'top: -'.$options['offset'].'%'; 
         } elseif ($img_ratio < 1) {             
-            $img_style[] = 'bottom: '.($img_r_h / 10).'px';
+            $img_style[] = 'top: -'.(($img_r_h - $height) / 10).'px';
         }
         
         // Write <img> tag
@@ -302,11 +301,7 @@ class CMExtension extends \Twig_Extension
         foreach ($options['box_attributes'] as $key => $attr) {
             $imgBox .= ' '.$key.'="'.$attr.'"';
         }
-        $imgBox .= '><div class="image_box-inner" style="';
-        foreach ($inner_box_style as $attr) {
-            $imgBox .= $attr;
-        }
-        $imgBox .= '">'.$img.'</div></div>';
+        $imgBox .= '><div class="image_box-inner">'.$img.'</div></div>';
 
         if (is_null($options['link'])) {
             return $imgBox;

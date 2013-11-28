@@ -15,7 +15,7 @@ class GroupImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('imgFile', 'file')
-            ->add('imgOffset')
+            ->add('imgOffset', 'hidden')
             ->add('coverImgFile', 'file')
             ->add('coverImgOffset', 'hidden');
     }

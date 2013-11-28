@@ -8,6 +8,7 @@
     {% elseif type == 'hidden' %}
         <div>
     {% elseif type == 'file' %}
+        {% set required = false %}
         <div class="clearfix" btn-file-container><div class="col-lg-2"><span class="input-group-btn"><span class="btn btn-default btn-file">Browse
     {% else %}
         <div class="col-lg-9">

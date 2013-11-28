@@ -10,7 +10,7 @@
 <div class="profile-header shadow">
     {% if group.coverImg != '' %}
         <div class="cover image_box">
-            {{ show_img_box(group.coverImg|imagine_filter('770'), {'width': 750, 'height': 285, 'offset': group.coverImgOffset})|raw }}
+            {{ show_img_box(group.coverImg|imagine_filter('770'), {'width': 750, 'height': 285, 'offset': group.coverImgOffset, 'img_only': true})|raw }}
             <div class="cover-shadow"></div>
             <h2>{{ group }}</h2>
         </div>
