@@ -127,10 +127,10 @@ class RequestRepository extends BaseRepository
                 ->andWhere('g.id = :group_id')->setParameter('group_id', $options['groupId']);
         }
         if (!is_null($options['pageId'])) {
-            $query->addSelect('g, gu')
-                ->leftJoin('r.page', 'g')
-                ->leftJoin('g.pageUsers', 'gu', 'WITH', 'gu.userId = :user_id', 'gu.userId')
-                ->andWhere('g.id = :page_id')->setParameter('page_id', $options['pageId']);
+            $query->addSelect('p, pu')
+                ->leftJoin('r.page', 'p')
+                ->leftJoin('p.pageUsers', 'pu', 'WITH', 'pu.userId = :user_id', 'pu.userId')
+                ->andWhere('p.id = :page_id')->setParameter('page_id', $options['pageId']);
         }
         if ($direction == 'incoming') {
             $query->andWhere('r.userId = :user_id');

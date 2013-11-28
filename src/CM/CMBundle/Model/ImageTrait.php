@@ -36,7 +36,7 @@ trait ImageTrait
      *     minHeight = 150,
      *     maxHeight = 5000,
      *     maxSize = "8M",
-     *     mimeTypes = {"image/png", "image/jpeg", }
+     *     mimeTypes = {"image/png", "image/jpeg", "image/jpg"}
      * )
      */
     private $imgFile;

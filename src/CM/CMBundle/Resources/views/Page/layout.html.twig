@@ -1,0 +1,17 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% if page.backgroundImg is not null %}
+        <style media="screen" type="text/css">
+            html, body { 
+                background: url({{ images_full.dir~page.backgroundImg }}) no-repeat top center fixed; 
+                background-color: transparent; 
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover; 
+            }
+        </style>
+    {% endif %}
+{% endblock %}

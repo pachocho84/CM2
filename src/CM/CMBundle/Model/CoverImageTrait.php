@@ -5,10 +5,8 @@ namespace CM\CMBundle\Model;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
-trait ImageAndCoverTrait
+trait CoverImageTrait
 {
-	use ImageTrait;
-
     /**
      * @var string
      *
@@ -30,7 +28,7 @@ trait ImageAndCoverTrait
      *     minHeight = 250,
      *     maxHeight = 750,
      *     maxSize = "8M",
-     *     mimeTypes = {"image/png", "image/jpeg", }
+     *     mimeTypes = {"image/png", "image/jpeg", "image/jpg"}
      * )
      */
     private $coverImgFile;
@@ -108,50 +106,35 @@ trait ImageAndCoverTrait
             : $this->getUploadRootDir().'/'.$this->coverImg;
     }
 
-    protected function getCoverRootDir()
-    {
-    	return $this->getRootDir();
-    }
-
-    protected static function getCoverUploadDir()
-    {
-   		// if you change this, change it also in the config.yml file!
-        return 'uploads/images/full';
-    }
-
-    protected function getCoverUploadRootDir()
-    {
-        // the absolute directory path where uploaded images should be saved
-        return $this->getRootDir().$this->getUploadDir();
-    }
-
     /**
      * @ORM\PrePersist()
+     * @ORM\PreUpdate()
      */
     public function sanitizeCoverFileName()
     {
         if (null !== $this->getCoverImgFile()) {
-        	$fileName = md5(uniqid().$this->getCoverImgFile()->getClientOriginalName().time());
+            $fileName = md5(uniqid().$this->getCoverImgFile()->getClientOriginalName().time());
             $this->coverImg = $fileName.'.'.$this->getCoverImgFile()->guessExtension(); // FIXME: doesn't work with bmp files
         }
     }
 
     /**
      * @ORM\PostPersist()
+     * @ORM\PostUpdate()
      */
     public function uploadCover()
     {
         if (is_null($this->getCoverImgFile())) {
-        	return;
+            return;
         }
 
         // if there is an error when moving the file, an exception will
-		// be automatically thrown by move(). This will properly prevent
-		// the entity from being persisted to the database on error
-		$this->getCoverImgFile()->move($this->getUploadRootDir(), $this->coverImg);
+        // be automatically thrown by move(). This will properly prevent
+        // the entity from being persisted to the database on error
+        $this->getCoverImgFile()->move($this->getUploadRootDir(), $this->coverImg);
 
-		// clean up the file property as you won't need it anymore
-		$this->coverImgFile = null;
+        // clean up the file property as you won't need it anymore
+        $this->coverImgFile = null;
     }
 
     /**

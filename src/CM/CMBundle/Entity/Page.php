@@ -18,7 +18,9 @@ class Page
 {
     use ORMBehaviors\Sluggable\Sluggable;
     use ORMBehaviors\Timestampable\Timestampable;
-    use \CM\CMBundle\Model\ImageAndCoverTrait;
+    use \CM\CMBundle\Model\ImageTrait;
+    use \CM\CMBundle\Model\CoverImageTrait;
+    use \CM\CMBundle\Model\BackgroundImageTrait;
 
     const TYPE_ASSOCIATION = 0;
 

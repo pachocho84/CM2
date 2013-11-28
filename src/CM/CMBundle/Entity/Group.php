@@ -17,7 +17,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Group
 {
     use ORMBehaviors\Sluggable\Sluggable;
-    use \CM\CMBundle\Model\ImageAndCoverTrait;
+    use \CM\CMBundle\Model\ImageTrait;
+    use \CM\CMBundle\Model\CoverImageTrait;
     
     const TYPE_DUO = 0;
     const TYPE_TRIO = 1;

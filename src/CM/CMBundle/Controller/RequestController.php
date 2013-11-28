@@ -20,6 +20,7 @@ use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\GroupUser;
+use CM\CMBundle\Entity\PageUser;
 use CM\CMBundle\Entity\Notification;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\BiographyType;

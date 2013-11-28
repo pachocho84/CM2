@@ -16,7 +16,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class User extends BaseUser
 {
-	use \CM\CMBundle\Model\ImageAndCoverTrait;
+	use \CM\CMBundle\Model\ImageTrait;
+    use \CM\CMBundle\Model\CoverImageTrait;
 
 	const SEX_M = true;
 	const SEX_F = false;

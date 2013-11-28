@@ -17,7 +17,8 @@ class PageImageType extends AbstractType
         $builder->add('imgFile', 'file')
             ->add('imgOffset')
             ->add('coverImgFile', 'file')
-            ->add('coverImgOffset', 'hidden');
+            ->add('coverImgOffset', 'hidden')
+            ->add('backgroundImgFile', 'file');
     }
     
     /**
