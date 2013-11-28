@@ -64,8 +64,8 @@
                         }
                     },
                     stop: function(event, ui) {
-                        offsetX = Math.abs(100 * ui.position.left / box.outerWidth());
-                        offsetY = Math.abs(100 * ui.position.top / box.outerHeight());
+                        offsetX = Math.abs(100 * ui.position.left / box.outerWidth()).toFixed(2);
+                        offsetY = Math.abs(100 * ui.position.top / box.outerHeight()).toFixed(2);
                         target.val(img.width() >= img.height() ? offsetX : offsetY);   
                     }
                 });  

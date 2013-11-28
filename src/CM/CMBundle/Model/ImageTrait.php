@@ -25,7 +25,7 @@ trait ImageTrait
     /**
      * @var integer
      *
-     * @ORM\Column(name="img_offset", type="float", nullable=true)
+     * @ORM\Column(name="img_offset", type="decimal", precision=10, scale=2, nullable=true)
      */
     private $imgOffset;
 

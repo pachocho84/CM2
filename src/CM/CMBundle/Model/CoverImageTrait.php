@@ -17,7 +17,7 @@ trait CoverImageTrait
     /**
      * @var integer
      *
-     * @ORM\Column(name="cover_img_offset", type="float", nullable=true)
+     * @ORM\Column(name="cover_img_offset", type="decimal", precision=10, scale=2, nullable=true)
      */
     private $coverImgOffset;
 

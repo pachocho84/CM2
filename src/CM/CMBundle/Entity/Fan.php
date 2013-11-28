@@ -27,7 +27,7 @@ class Fan
     /**
      * @var integer
      *
-     * @ORM\Column(name="fromUser_id", type="integer")
+     * @ORM\Column(name="from_user_id", type="integer")
      */
     private $fromUserId;
 
