@@ -55,6 +55,8 @@ trait BackgroundImageTrait
     public function setBackgroundImgFile(UploadedFile $file = null)
     {
         $this->backgroundImgFile = $file;
+        $this->setBackgroundImg($this->img.'.old'); // trigger update
+        
     }
 
     /**
@@ -71,14 +73,14 @@ trait BackgroundImageTrait
     {
         return is_null($this->backgroundImg) ? null : $this->getUploadRootDir().$this->backgroundImg;
     }
-    
+
     /**
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
     public function sanitizeBackgroundFileName()
     {
-        if (null !== $this->getBackgroundImgFile()) {
+        if (!is_null($this->getBackgroundImgFile())) {
             $fileName = md5(uniqid().$this->getBackgroundImgFile()->getClientOriginalName().time());
             $this->backgroundImg = $fileName.'.'.$this->getBackgroundImgFile()->guessExtension(); // FIXME: doesn't work with bmp files
         }

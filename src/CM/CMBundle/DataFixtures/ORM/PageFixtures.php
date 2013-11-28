@@ -28,6 +28,8 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'description' => '1° settembre 1863 il manifesto di Tito Ricordi per una società con il compito di “incoraggiare i cultori della buona musica”.',
             'website' => 'www.quartettomilano.it',
             'img' => '22bd92a5ada9b1d8184c980ea1e226f9ee7c5130.jpg',
+            'cover' => '2ce34d578aefc1b266fdd608b2c30090.jpeg',
+            'background' => 'aaa8c7e3cae78c8861e2549942537a34.jpeg',
             'vip' => false
         ),
         array('name' => 'laVerdi',
@@ -60,6 +62,12 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                 ->setWebsite($p['website'])
                 ->setImg($p['img'])
                 ->setVip($p['vip']);
+            if (!is_null($p['cover'])) {
+                $page->setCoverImg($p['cover']);
+            }
+            if (!is_null($p['background'])) {
+                $page->setCoverImg($p['background']);
+            }
             
             $manager->persist($page);
                         

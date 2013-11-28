@@ -23,8 +23,8 @@ trait CoverImageTrait
 
     /**
      * @Assert\Image(
-     *     minWidth = 250,
-     *     maxWidth = 750,
+     *     minWidth = 900,
+     *     maxWidth = 1000,
      *     minHeight = 250,
      *     maxHeight = 750,
      *     maxSize = "8M",
@@ -87,6 +87,7 @@ trait CoverImageTrait
     public function setCoverImgFile(UploadedFile $file = null)
     {
         $this->coverImgFile = $file;
+        $this->setCoverImg($this->img.'.old'); // trigger update
     }
 
     /**
@@ -101,9 +102,7 @@ trait CoverImageTrait
 
     public function getCoverAbsolutePath()
     {
-        return null === $this->coverImg
-            ? null
-            : $this->getUploadRootDir().'/'.$this->coverImg;
+        return is_null($this->coverImg) ? null : $this->getUploadRootDir().'/'.$this->coverImg;
     }
 
     /**

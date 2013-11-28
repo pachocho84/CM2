@@ -5,7 +5,7 @@
     {% if page.backgroundImg is not null %}
         <style media="screen" type="text/css">
             html, body { 
-                background: url({{ images_full.dir~page.backgroundImg }}) no-repeat top center fixed; 
+                background: url({{ uploaded_images_full_dir~'/'~page.backgroundImg }}) no-repeat top center fixed; 
                 background-color: transparent; 
                 -webkit-background-size: cover;
                 -moz-background-size: cover;

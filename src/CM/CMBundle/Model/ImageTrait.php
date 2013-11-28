@@ -128,7 +128,7 @@ trait ImageTrait
         return $this->getRootDir().$this->getImageDir();
     }
 
-    public function getAbsolutePath()
+    public function getImgAbsolutePath()
     {
         return is_null($this->img) ? null : $this->getUploadRootDir().$this->img;
     }
