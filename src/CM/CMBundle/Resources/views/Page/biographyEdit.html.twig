@@ -10,7 +10,10 @@
 {% endblock %}
 
 {% block body %}
-    {{ form(form) }}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.translations, {'attr': {'required': false, 'class': 'tinymce-advanced'}}) }}
+    {{ form_end(form) }}
 {% endblock %}
 
 {% block javascripts %}

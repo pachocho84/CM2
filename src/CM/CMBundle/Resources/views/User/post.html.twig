@@ -1,0 +1,15 @@
+<div class="media">
+
+    {% if post.user.images | length > 0 %}
+        {{ show_img_box(post.user.images[0] | imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}}) | raw }} {# TODO: add image show link #}
+    {% endif %}
+
+    <div class="media-body">
+    
+        <h4><a href="{{ path('user_show', {'slug': post.user.getSlug}) }}">{{ post.user }}</a></h4>
+
+        {{ '%user% joined %cm%'|trans({'%user%': '<a href="'~path('user_show', {'slug': user.slug})~'">'~user~'</a>', '%cm%': 'Circuito Musica'})|raw }}
+
+    </div><!-- END Media Body -->
+
+</div><!-- END Object -->

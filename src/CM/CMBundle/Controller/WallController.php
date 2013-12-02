@@ -25,7 +25,6 @@ class WallController extends Controller
 {
     /**
      * @Route("/{page}", name="wall_index", requirements={"page" = "\d+"})
-     * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
     public function indexAction(Request $request, $page = 1)
@@ -44,7 +43,6 @@ class WallController extends Controller
 
     /**
      * @Route("/{lastUpdated}/update", name="wall_index_update")
-     * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
     public function postsAction(Request $request, $lastUpdated)
@@ -60,7 +58,6 @@ class WallController extends Controller
 
     /**
      * @Route("/show/{postId}", name="wall_show", requirements={"postId" = "\d+"})
-     * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
     public function showAction(Request $request, $postId)

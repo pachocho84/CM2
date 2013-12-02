@@ -284,9 +284,7 @@ class Group
     {
         if (!$this->posts->contains($post)) {
             $this->posts[] = $post;
-            $post->setGroup($this)
-                ->setObject(get_class($this))
-                ->setObjectIds(array($this->getId()));
+            $post->setGroup($this);
         }
     
         return $this;

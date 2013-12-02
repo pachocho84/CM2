@@ -17,6 +17,10 @@ use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\EntityTranslation;
 use CM\CMBundle\Entity\Fan;
+use CM\CMBundle\Entity\ImageAlbum;
+use CM\CMBundle\Entity\User;
+use CM\CMBundle\Entity\Page;
+use CM\CMBundle\Entity\Group;
 
 class DoctrineEventsListener
 {
@@ -44,17 +48,31 @@ class DoctrineEventsListener
         $object = $args->getEntity();
         $em = $args->getEntityManager();
 
+        if ($object instanceof User) {
+            $this->userPersistedRoutine($object, $em);
+        }
+        if ($object instanceof Page) {
+            $this->pagePersistedRoutine($object, $em);
+        }
+        if ($object instanceof Group) {
+            $this->groupPersistedRoutine($object, $em);
+        }
         if ($object instanceof EntityUser) {
             $this->entityUserPersistedRoutine($object, $em);
-        } elseif ($object instanceof GroupUser) {
+        }
+        if ($object instanceof GroupUser) {
             $this->groupUserPersistedRoutine($object, $em);
-        } elseif ($object instanceof PageUser) {
+        }
+        if ($object instanceof PageUser) {
             $this->groupUserPersistedRoutine($object, $em);
-        } elseif ($object instanceof Comment) {
+        }
+        if ($object instanceof Comment) {
             $this->commentPersistedRoutine($object, $em);
-        } elseif($object instanceof Like) {
+        }
+        if($object instanceof Like) {
             $this->likePersistedRoutine($object, $em);
-        } elseif ($object instanceof Fan) {
+        } 
+        if ($object instanceof Fan) {
             $this->fanPersistedRoutine($object, $em);
         }
     }
@@ -66,8 +84,15 @@ class DoctrineEventsListener
 
         if ($object instanceof EntityTranslation && $object->getEntity() instanceof Biography) {   
             $this->biographyUpdatedRoutine($object->getEntity(), $em);
-        } elseif ($object instanceof Fan) {
+        }
+        if ($object instanceof Fan) {
             $this->fanUpdatedRoutine($object, $em);
+        }
+        if (($object instanceof User || $object instanceof Page || $object instanceof Group)
+            && (array_key_exists('img', $em->getUnitOfWork()->getEntityChangeSet($object)) 
+                || array_key_exists('cover_img', $em->getUnitOfWork()->getEntityChangeSet($object)) 
+                || array_key_exists('background_img', $em->getUnitOfWork()->getEntityChangeSet($object)))) {
+            $this->imgUpdatedRoutine($object, $em);
         }
     }
 
@@ -76,20 +101,35 @@ class DoctrineEventsListener
         $object = $args->getEntity();
         $em = $args->getEntityManager();
 
+        if ($object instanceof Page) {
+            $this->pagePersistedRoutine($object, $em);
+        }
+        if ($object instanceof Group) {
+            $this->groupPersistedRoutine($object, $em);
+        }
         if ($object instanceof EntityUser) {
             $this->entityUserRemovedRoutine($object, $em);
-        } elseif ($object instanceof GroupUser) {
+        }
+        if ($object instanceof GroupUser) {
             $this->groupUserRemovedRoutine($object, $em);
-        } elseif ($object instanceof PageUser) {
+        }
+        if ($object instanceof PageUser) {
             $this->pageUserRemovedRoutine($object, $em);
-        } elseif ($object instanceof Comment) {
+        }
+        if ($object instanceof Comment) {
             $this->commentRemovedRoutine($object, $em);
-        } elseif ($object instanceof Like) {
+        }
+        if ($object instanceof Like) {
             $this->likeRemovedRoutine($object, $em);
-        } elseif ($object instanceof EntityTranslation && $object->getEntity() instanceof Biography) {
+        }
+        if ($object instanceof EntityTranslation && $object->getEntity() instanceof Biography) {
             $this->biographyRemovedRoutine($object->getEntity(), $em);
-        } elseif ($object instanceof Fan) {
+        }
+        if ($object instanceof Fan) {
             $this->fanRemovedRoutine($object, $em);
+        }
+        if ($object instanceof User || $object instanceof Page || $object instanceof Group) {
+            $this->imgRemovedRoutine($object, $em);
         }
     }
 
@@ -107,6 +147,36 @@ class DoctrineEventsListener
             $this->get('cm.post_center')->flushed();
             $this->flushNeeded = false;
         }
+    }
+
+    private function userPersistedRoutine(user $user, EntityManager $em)
+    {
+        $post = $this->get('cm.post_center')->getNewPost($user, $user);
+        $post->setObject(get_class($user));
+
+        $user->addPost($post);
+
+        $this->flushNeeded = true;
+    }
+
+    private function pagePersistedRoutine(Page $page, EntityManager $em)
+    {
+        $post = $this->get('cm.post_center')->getNewPost($page->getCreator(), $page->getCreator());
+        $post->setObject(get_class($page));
+
+        $page->addPost($post);
+
+        $this->flushNeeded = true;
+    }
+
+    private function groupPersistedRoutine(Group $group, EntityManager $em)
+    {
+        $post = $this->get('cm.post_center')->getNewPost($group->getCreator(), $group->getCreator());
+        $post->setObject(get_class($group));
+
+        $group->addPost($post);
+     
+        $this->flushNeeded = true;
     }
 
     private function entityUserPersistedRoutine(EntityUser $entityUser, EntityManager $em)
@@ -402,11 +472,10 @@ class DoctrineEventsListener
         $post = $biography->getLastPost();
 
         if ($post->getUpdatedAt()->diff(new \DateTime('now'))->d < 1) {
-            $post->setType(Post::TYPE_UPDATE);
+            $post->setUpdatedAt(new \DateTime);
             $em->persist($post);
-            $em->flush();
         } else {
-            $this->get('cm.post_center')->newPost(
+            $post = $this->get('cm.post_center')->newPost(
                 $this->getUser(),
                 $this->getUser(),
                 Post::TYPE_UPDATE,
@@ -414,7 +483,10 @@ class DoctrineEventsListener
                 array($biography->getId()),
                 $biography
             );
+            $biography->addPost($post);
+            $em->persist($biography);
         }
+        $this->flushNeeded = true;
     }
 
     private function biographyRemovedRoutine(Biography $biography, EntityManager $em)
@@ -500,5 +572,175 @@ class DoctrineEventsListener
         }
 
         $this->get('cm.notification_center')->removeNotifications($fan->getFromUser()->getId(), get_class($fan), $fan->getId(), Notification::TYPE_FAN);
+    }
+
+    private function imgUpdatedRoutine($publisher, EntityManager $em)
+    {
+        $user = null;
+        if ($publisher instanceof User) {
+            $user = $publisher;
+        }
+        $page = null;
+        if ($publisher instanceof Page) {
+            $page = $publisher;
+        }
+        $group = null;
+        if ($publisher instanceof Group) {
+            $group = $publisher;
+        }
+
+        if (array_key_exists('img', $em->getUnitOfWork()->getEntityChangeSet($publisher))) {
+            $album = $em->getRepository('CMBundle:ImageAlbum')->getImageAlbum(array(
+                'userId' => is_null($user) ? null : $user->getId(),
+                'groupId' => is_null($group) ? null : $group->getId(),
+                'pageId' => is_null($page) ? null : $page->getId(),
+                'type' => ImageAlbum::TYPE_PROFILE,
+            ));
+            if (is_null($album)) {
+                $album = new ImageAlbum;
+                $album->setType(ImageAlbum::TYPE_PROFILE);
+            }
+
+            $image = new Image;
+            $image->setImg($publisher->getImg())
+                ->setImgOffset($publisher->getImgOffset())
+                ->setMain(true)
+                ->setUser($user)
+                ->setPage($page)
+                ->setGroup($group);
+            $album->addImage($image);
+
+            $post = $em->getRepository('CMBundle:ImageAlbum')->getLastPost($album->getId(), array(
+                'userId' => is_null($user) ? null : $user->getId(),
+                'groupId' => is_null($group) ? null : $group->getId(),
+                'pageId' => is_null($page) ? null : $page->getId(),
+                'type' => ImageAlbum::TYPE_PROFILE,
+                'after' => new \DateTime('-12 hours')
+            ));
+            if (!is_null($post)) {
+                $post->setUpdatedAt(new \DateTime);
+                $em->persist($post);
+            } else {
+                $post = $this->get('cm.post_center')->newPost(
+                    $this->getUser(),
+                    $user,
+                    Post::TYPE_UPDATE,
+                    'Img',
+                    array(),
+                    $album,
+                    $page,
+                    $group
+                );
+                $album->addPost($post);
+
+                $em->persist($album);
+            }
+        }
+        if (array_key_exists('cover_img', $em->getUnitOfWork()->getEntityChangeSet($publisher))) {
+            $album = $em->getRepository('CMBundle:ImageAlbum')->getImageAlbum(array(
+                'userId' => is_null($user) ? null : $user->getId(),
+                'groupId' => is_null($group) ? null : $group->getId(),
+                'pageId' => is_null($page) ? null : $page->getId(),
+                'type' => ImageAlbum::TYPE_COVER,
+            ));
+            if (is_null($album)) {
+                $album = new ImageAlbum;
+                $album->setType(ImageAlbum::TYPE_COVER);
+            }
+
+            $image = new Image;
+            $image->setImg($publisher->getImg())
+                ->setImgOffset($publisher->getImgOffset())
+                ->setMain(true)
+                ->setUser($user)
+                ->setPage($page)
+                ->setGroup($group);
+            $album->addImage($image);
+
+            $post = $em->getRepository('CMBundle:ImageAlbum')->getLastPost($album->getId(), array(
+                'userId' => is_null($user) ? null : $user->getId(),
+                'groupId' => is_null($group) ? null : $group->getId(),
+                'pageId' => is_null($page) ? null : $page->getId(),
+                'type' => ImageAlbum::TYPE_COVER,
+                'after' => new \DateTime('-12 hours')
+            ));
+            if (!is_null($post)) {
+                $post->setUpdatedAt(new \DateTime);
+                $em->persist($post);
+            } else {
+                $post = $this->get('cm.post_center')->newPost(
+                    $this->getUser(),
+                    $user,
+                    Post::TYPE_UPDATE,
+                    'CoverImg',
+                    array(),
+                    $album,
+                    $page,
+                    $group
+                );
+                $album->addPost($post);
+
+                $em->persist($album);
+            }
+        }
+        if (array_key_exists('background_img', $em->getUnitOfWork()->getEntityChangeSet($publisher))) {
+            $album = $em->getRepository('CMBundle:ImageAlbum')->getImageAlbum(array(
+                'userId' => is_null($user) ? null : $user->getId(),
+                'groupId' => is_null($group) ? null : $group->getId(),
+                'pageId' => is_null($page) ? null : $page->getId(),
+                'type' => ImageAlbum::TYPE_BACKGROUND,
+            ));
+            if (is_null($album)) {
+                $album = new ImageAlbum;
+                $album->setType(ImageAlbum::TYPE_BACKGROUND);
+            }
+
+            $image = new Image;
+            $image->setImg($publisher->getImg())
+                ->setImgOffset($publisher->getImgOffset())
+                ->setMain(true)
+                ->setUser($user)
+                ->setPage($page)
+                ->setGroup($group);
+            $album->addImage($image);
+
+            $post = $em->getRepository('CMBundle:ImageAlbum')->getLastPost($album->getId(), array(
+                'userId' => is_null($user) ? null : $user->getId(),
+                'groupId' => is_null($group) ? null : $group->getId(),
+                'pageId' => is_null($page) ? null : $page->getId(),
+                'type' => ImageAlbum::TYPE_BACKGROUND,
+                'after' => new \DateTime('-12 hours')
+            ));
+            if (!is_null($post)) {
+                $post->setUpdatedAt(new \DateTime);
+                $em->persist($post);
+            } else {
+                $post = $this->get('cm.post_center')->newPost(
+                    $this->getUser(),
+                    $user,
+                    Post::TYPE_UPDATE,
+                    'BackgroundImg',
+                    array(),
+                    $album,
+                    $page,
+                    $group
+                );
+                $album->addPost($post);
+
+                $em->persist($album);
+            }
+        }
+
+        $this->flushNeeded = true;
+    }
+
+    private function imgRemovedRoutine($publisher, EntityManager $em)
+    {
+        $this->get('cm.post_center')->removePost(
+            $this->getUser(),
+            $this->getUser(),
+            get_class($biography),
+            array($biography->getId())
+        );
     }
 }

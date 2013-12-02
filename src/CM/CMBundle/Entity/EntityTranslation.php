@@ -37,9 +37,9 @@ class EntityTranslation
      *      maxMessage = "The title cannot be longer than {{ limit }} characters length"
      * )
      * @Assert\Regex(
-     *     pattern="/\b[A-Z]{3}/",
+     *     pattern="/\b[A-Z]{3,}(?!M{0,2}(CM|CD|D?C{0,1})(XC|XL|L?X{0,1})(IX|IV|V?I{0,1})\b)/",
      *     match=false,
-     *     message="Please remove all UPPERCASE words"
+     *     message="Please remove all UPPERCASE words (roman numbers allowed)"
      * )
      */
     private $title;
@@ -53,9 +53,9 @@ class EntityTranslation
      *      maxMessage = "The subtitle cannot be longer than {{ limit }} characters length"
      * )
      * @Assert\Regex(
-     *     pattern="/\b[A-Z]{3}/",
+     *     pattern="/\b[A-Z]{3,}(?!M{0,2}(CM|CD|D?C{0,1})(XC|XL|L?X{0,1})(IX|IV|V?I{0,1})\b)/",
      *     match=false,
-     *     message="Please remove all UPPERCASE words"
+     *     message="Please remove all UPPERCASE words (roman numbers allowed)"
      * )
      */
     private $subtitle;
@@ -69,9 +69,9 @@ class EntityTranslation
      *      maxMessage = "The extract cannot be longer than {{ limit }} characters length"
      * )
      * @Assert\Regex(
-     *     pattern="/\b[A-Z]{3}/",
+     *     pattern="/\b[A-Z]{3,}(?!M{0,2}(CM|CD|D?C{0,1})(XC|XL|L?X{0,1})(IX|IV|V?I{0,1})\b)/",
      *     match=false,
-     *     message="Please remove all UPPERCASE words"
+     *     message="Please remove all UPPERCASE words (roman numbers allowed)"
      * )
      */
     private $extract;
@@ -79,7 +79,7 @@ class EntityTranslation
     /**
      * @var string
      *
-     * @ORM\Column(name="text", type="text")
+     * @ORM\Column(name="text", type="text", nullable=true)
      * @Assert\NotBlank
      * @Assert\Length(
      *      groups="Event",
@@ -87,9 +87,9 @@ class EntityTranslation
      *      minMessage = "The title must be at least {{ limit }} characters length"
      * )
      * @Assert\Regex(
-     *     pattern="/\b[A-Z]{3}/",
+     *     pattern="/\b[A-Z]{3,}(?!M{0,2}(CM|CD|D?C{0,1})(XC|XL|L?X{0,1})(IX|IV|V?I{0,1})\b)/",
      *     match=false,
-     *     message="Please remove all UPPERCASE words"
+     *     message="Please remove all UPPERCASE words (roman numbers allowed)"
      * )
      */
     private $text;

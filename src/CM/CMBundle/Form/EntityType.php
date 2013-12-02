@@ -35,14 +35,20 @@ class EntityType extends AbstractType
                     'fields' => array(
                         'title' => array(),
                         'subtitle' => array(
-                            'display' => in_array('ROLE_CLIENT', $options['roles']),
                             'required' => false,
                         ),
                         'extract' => array(
-                            'display' => in_array('ROLE_CLIENT', $options['roles']),
+                            'attr' => array(
+                                'class' => 'tinymce',
+                            ),
                             'required' => false
                         ),
-                        'text' => array(),
+                        'text' => array(
+                            // 'type' => 'textarea',
+                            'attr' => array(
+                                'class' => 'tinymce-advanced',
+                            )
+                        ),
                         'slug' => array('display' => false)
                     )
                 ));

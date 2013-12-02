@@ -81,7 +81,7 @@ class GroupController extends Controller
 
         $user = $this->getUser();
         
-        if ($slug == null) {
+        if (is_null($slug)) {
             
             $group = new Group;
             $group->setCreator($user);

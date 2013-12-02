@@ -346,6 +346,8 @@ $(function() {
     /* AJAX LINK */
     $(document).on('click', '.ajax-link', function(event) {
         event.preventDefault();
+        event.stopPropagation();
+
         $(this).closest('*[rel="tooltip"]').tooltip('destroy');
         if ($(this).attr('data-loading-text')) {
             $(this).closest('.btn').html('<img src="/images/loader.gif" /> ' + $(this).attr('data-loading-text'));
@@ -379,6 +381,17 @@ $(function() {
             event.stopPropagation();
         }
     });
+    $('#menu ul.nav.pull-right .dropdown-menu-body').on('mousewheel', function(event) {
+        totalHeight = 0;
+        $(this).children().each(function(){
+            totalHeight = totalHeight + $(this).outerHeight();
+        });
+
+        // TODO: 8-damned-px
+        if (($(this).scrollTop() <= 0 && event.originalEvent.deltaY < 0) || ($(this).scrollTop() - 8 >= totalHeight - $(this).outerHeight() && event.originalEvent.deltaY > 0)) {
+            event.preventDefault();
+        }
+    });
     
     $('#menu').hcSticky({
         noContainer: true
@@ -408,21 +421,17 @@ $(function() {
     
     
     /* TINY MCE */
-/*
     $('textarea.mceSimple').tinymce({
-        language: 'it',
-      script_url: '/lib/tiny_mce/tiny_mce.js',
-      theme: 'simple',
+        language: culture,
+        theme: 'modern',
     });
     $('textarea.mceAdvanced').tinymce({
-        language: 'it',
-      script_url: '/lib/tiny_mce/tiny_mce.js',
-      theme: 'advanced',
-      plugins: 'inlinepopups,contextmenu,paste,advhr,advimage,advlink',
-      theme_advanced_buttons1: 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,cleanup,code',
-      theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image',
+        language: culture,
+        theme: 'modern',
+        plugins: 'inlinepopups,contextmenu,paste,advhr,advimage,advlink',
+        theme_advanced_buttons1: 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,cleanup,code',
+        theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image',
     });
-*/
     
     
     

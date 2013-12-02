@@ -115,9 +115,9 @@ $(function() {
     });
     collection.on('typeahead:autocompleted typeahead:selected', function (event, datum) {
         protagonist_new_id += 1;
-        $.get(script + '/protagonist/add?user_id=' + datum.id + '&protagonist_new_id=' + protagonist_new_id + '&entity_type=' + $('#protagonists').attr('object'), function (data) {
+        $.get($(event.currentTarget).closest('.protagonist_typeahead').attr('typeahead-callback') + '?user_id=' + datum.id + '&protagonist_new_id=' + protagonist_new_id + '&entity_type=' + $('#protagonists').attr('object'), function (data) {
             $('.protagonists_user:last').after(data);
-            // $('#protagonists_finder').val('');
+            $('#protagonists_finder').val('');
         });
     });
 

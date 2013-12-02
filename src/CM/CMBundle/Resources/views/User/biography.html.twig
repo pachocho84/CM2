@@ -22,7 +22,7 @@
             <h3>{{ show_icon('Biography') | raw }} <span>{{ block('title') }}</span></h3>
         </div>
         <div class="media objects">
-                {{ show_img_box(user.img | imagine_filter('350'), {'width': 200, 'height': 200, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left thumbnail'}}) | raw }}
+                {{ show_img_box(user.img | imagine_filter('350'), {'width': 200, 'height': 200, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left img-thumbnail'}}) | raw }}
                 <div class="meda-body text-justify">
                     {{ biography }}
                 </div>

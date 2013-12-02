@@ -139,6 +139,9 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 		  	   ->setBirthDate($date->setDate($person['birth_date'][0], $person['birth_date'][1], $person['birth_date'][2]))
 		  	   ->setBirthDateVisible($person['birth_date_visible'])
 		  	   ->setImg($person['image']);
+            if (!is_null($person['cover'])) {
+                $user->setCoverImg($person['cover']);
+            }
 
 			$manager->persist($user);
 

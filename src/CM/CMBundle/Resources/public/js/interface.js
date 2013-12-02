@@ -75,23 +75,23 @@ $(function() {
     // });
     
     
-    
-    /* TINY MCE */
-/*
-    $('textarea.mceSimple').tinymce({
-        language: 'it',
-      script_url: '/lib/tiny_mce/tiny_mce.js',
-      theme: 'simple',
-    });
-    $('textarea.mceAdvanced').tinymce({
-        language: 'it',
-      script_url: '/lib/tiny_mce/tiny_mce.js',
-      theme: 'advanced',
-      plugins: 'inlinepopups,contextmenu,paste,advhr,advimage,advlink',
-      theme_advanced_buttons1: 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,cleanup,code',
-      theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image',
-    });
-*/
+
+    // /* TINY MCE */
+    // tinymce.init({
+    //     selector: 'textarea.mceSimple',
+    //     skin_url: 'lib/tinymce/themes/modern/theme.min.js',
+    //     theme_url: 'lib/tinymce/themes/modern/theme.min.js',
+    //     language: culture,
+    //     theme: 'modern',
+    // });
+
+    // $('textarea.mceAdvanced').tinymce({
+    //     language: culture,
+    //     theme: 'modern',
+    //     plugins: 'inlinepopups,contextmenu,paste,advhr,advimage,advlink',
+    //     theme_advanced_buttons1: 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,cleanup,code',
+    //     theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image',
+    // });
     
     
     

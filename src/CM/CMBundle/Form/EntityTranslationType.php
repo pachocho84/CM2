@@ -17,7 +17,7 @@ class EntityTranslationType extends AbstractType
         if ($options['title']) {
             $builder->add('title', 'text', array('error_bubbling' => false));
         }
-        $builder->add('text', 'text', array('error_bubbling' => false));
+        $builder->add('text', 'textarea', array('error_bubbling' => false));
     }
     
     /**

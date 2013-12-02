@@ -291,9 +291,7 @@ class Page
     {
         if (!$this->posts->contains($post)) {
             $this->posts[] = $post;
-            $post->setPage($this)
-                ->setObject(get_class($this))
-                ->setObjectIds(array($this->getId()));
+            $post->setPage($this);
         }
     
         return $this;

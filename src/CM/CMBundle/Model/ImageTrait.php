@@ -20,7 +20,7 @@ trait ImageTrait
      *
      * @ORM\Column(name="img", type="string", length=100, nullable=true)
      */
-    private $img = "default.png";
+    private $img;
 
     /**
      * @var integer
@@ -61,7 +61,7 @@ trait ImageTrait
      */
     public function getImg()
     {
-        return $this->img;
+        return empty($this->img) ? "default.png" : $this->img;
     }
 
     /**

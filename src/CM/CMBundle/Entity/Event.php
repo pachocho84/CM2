@@ -46,6 +46,9 @@ class Event extends Entity
     public function __construct()
     {
         parent::__construct();
+        
+        $this->translate('en');
+        $this->mergeNewTranslations();
 
         $this->posts = new ArrayCollection();
         

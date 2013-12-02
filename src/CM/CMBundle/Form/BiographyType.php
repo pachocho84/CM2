@@ -20,7 +20,20 @@ class BiographyType extends EntityType
                     'locales' => $options['locales'],
                     'required' => true,
                     'fields' => array(
-                        'text' => array()
+                        'title' => array('display' => false),
+                        'subtitle' => array('display' => false),
+                        'extract' => array(
+                            'attr' => array(
+                                'class' => 'tinymce',
+                            ),
+                            'required' => false
+                        ),
+                        'text' => array(
+                            'attr' => array(
+                                'class' => 'tinymce-advanced',
+                            )
+                        ),
+                        'slug' => array('display' => false)
                     )
                 ));
         } else {

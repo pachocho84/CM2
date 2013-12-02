@@ -214,7 +214,7 @@ class Image
      * @param Entity $entity
      * @return Image
      */
-    public function setEntity(Event $entity = null)
+    public function setEntity(Entity $entity = null)
     {
         $this->entity = $entity;
     

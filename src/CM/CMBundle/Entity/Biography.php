@@ -25,8 +25,11 @@ class Biography extends Entity
     {
         parent::__construct();
         
+        $this->translate('en');
+        $this->mergeNewTranslations();
+        
         $this->setVisible(true);
-        $this->setTitle('bio');
+        // $this->setTitle('bio');
     }
 
     public function __toString()

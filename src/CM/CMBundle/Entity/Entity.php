@@ -15,7 +15,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\DiscriminatorMap({
  *     "entity"="Entity",
  *     "event"="Event",
- *     "biography"="Biography"
+ *     "biography"="Biography",
+ *     "image_album"="ImageAlbum"
  * })
  * @ORM\HasLifecycleCallbacks
  */
@@ -68,8 +69,6 @@ abstract class Entity
     
     public function __construct()
     {
-        $this->translate('en');
-        $this->mergeNewTranslations();
         $this->images = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->entityUsers = new ArrayCollection();

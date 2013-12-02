@@ -37,7 +37,7 @@
     <div id="fans" class="media-list">       
         <?php foreach ($oggetti as $oggetto): ?>
             <div class="media object">
-                <?php show_img_box('uploads/utenti/avatar/200/', $oggetto->getImg(), 200, 200/1.77, $oggetto->getRawValue()->getLinkShow(), false, 'pull-left image_box thumbnail') ?>
+                <?php show_img_box('uploads/utenti/avatar/200/', $oggetto->getImg(), 200, 200/1.77, $oggetto->getRawValue()->getLinkShow(), false, 'pull-left image_box img-thumbnail') ?>
                 <div class="media-body">
                     <h3>
                         <?php echo link_to($oggetto, $oggetto->getRawValue()->getLinkShow()) ?>

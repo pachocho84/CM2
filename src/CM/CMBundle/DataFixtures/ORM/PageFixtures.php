@@ -75,10 +75,6 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             for ($j = 1; $j < rand(1, 3); $j++) {
                 $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
             }
-
-            $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
-
-            $page->addPost($post);
             
             $page->addUser(
                 $user,
@@ -122,6 +118,6 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 
     public function getOrder()
     {
-        return 3;
+        return 4;
     }
 }

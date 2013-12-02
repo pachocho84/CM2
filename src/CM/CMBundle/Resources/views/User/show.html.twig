@@ -21,7 +21,7 @@
             <h3>{{ show_icon('Biography')|raw }} <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ 'Biography'|trans }}</a> <small><a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ 'show complete biography'|trans }}</small></a></h2>
         </div>
         <div class="media objects">
-            {{ show_img_box(user.img | imagine_filter('350'), {'width': 200, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left thumbnail'}}) | raw }}
+            {{ show_img_box(user.img | imagine_filter('350'), {'width': 200, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left img-thumbnail'}}) | raw }}
             <div class="meda-body">
                 <h4>
                     {{ user }}
