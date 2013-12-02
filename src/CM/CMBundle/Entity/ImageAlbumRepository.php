@@ -19,7 +19,9 @@ class ImageAlbumRepository extends BaseRepository
             'groupId'      => null,
             'pageId'       => null,
             'type'       => ImageAlbum::TYPE_ALBUM,
-            'after' => null
+            'after' => null,
+            'paginate'      => true,
+            'limit'         => 25,
         ), $options);
     }
 
@@ -58,7 +60,7 @@ class ImageAlbumRepository extends BaseRepository
             ->from('CMBundle:Post', 'p')
             ->leftJoin('p.entity', 'e')
             ->innerJoin('CMBundle:ImageAlbum', 'a', 'with', 'e.id = a.id')
-            ->where('e.discr = \'image_album\'')
+            ->where('e.discr = :discr')->setParameter('discr', 'image_album')
             ->where('a.id = :id')->setParameter('id', $id);
         if (!is_null($options['userId'])) {
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
@@ -81,6 +83,30 @@ class ImageAlbumRepository extends BaseRepository
             $post = null;
         }
         return $post;
+    }
+
+    public function getAlbums($options)
+    {
+        $options = self::getOptions($options);
+        
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('p, a')
+            ->from('CMBundle:Post', 'p')
+            ->leftJoin('p.entity', 'e')
+            ->innerJoin('CMBundle:ImageAlbum', 'a', 'with', 'e.id = a.id')
+            ->where('e.discr = :discr')->setParameter('discr', 'image_album');
+        if (!is_null($options['userId'])) {
+            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
+        }
+        if (!is_null($options['pageId'])) {
+            $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+        $query->orderBy('a.type');
+
+        return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
     public function getUserImageAlbum($userId)

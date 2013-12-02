@@ -211,7 +211,34 @@ class UserController extends Controller
         }
 
         return array('user' => $user, 'biography' => $biography);
+    }     
+
+    /**
+     * @Route("/{slug}/albums/{page}", name="user_albums", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function albumsAction(Request $request, $slug, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+        }
+
+        $albums = $em->getRepository('CMBundle:ImageAlbum')->getAlbums(array(
+            'userId' => $user->getId()
+        ));
+        
+        $pagination = $this->get('knp_paginator')->paginate($albums, $page, 10);
+        var_dump($pagination);die;
+
+
+        return array(
+        );
     }
+
 
     /**
      * @Route("/account/image", name="user_image_edit")

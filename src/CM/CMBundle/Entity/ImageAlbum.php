@@ -12,10 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ImageAlbum extends Entity 
 {
-    const TYPE_ALBUM = 0;
-    const TYPE_PROFILE = 1;
-    const TYPE_COVER = 2;
-    const TYPE_BACKGROUND = 3;
+    const TYPE_PROFILE = 0;
+    const TYPE_COVER = 1;
+    const TYPE_BACKGROUND = 2;
+    const TYPE_ALBUM = 3;
 
     /**
      * @var integer

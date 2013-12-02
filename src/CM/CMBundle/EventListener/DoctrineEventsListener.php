@@ -75,6 +75,10 @@ class DoctrineEventsListener
         if ($object instanceof Fan) {
             $this->fanPersistedRoutine($object, $em);
         }
+        if (($object instanceof User || $object instanceof Page || $object instanceof Group)
+            && (!empty($object->getImg()) || !empty($object->getCoverImg()) || (property_exists($publisher, 'backgroundImg') && !empty($publisher->getBackgroundImg())))) {
+            $this->imgPersistedRoutine($object, $em);
+        }
     }
 
     public function postUpdate(LifecycleEventArgs $args)
@@ -574,6 +578,73 @@ class DoctrineEventsListener
         $this->get('cm.notification_center')->removeNotifications($fan->getFromUser()->getId(), get_class($fan), $fan->getId(), Notification::TYPE_FAN);
     }
 
+    private function imgPersistedRoutine($publisher, EntityManager $em)
+    {
+        $user = null;
+        if ($publisher instanceof User) {
+            $user = $publisher;
+        }
+        $page = null;
+        if ($publisher instanceof Page) {
+            $page = $publisher;
+            $user = is_null($this->get('security.context')->getToken()) ? $page->getCreator() : $this->getUser();
+        }
+        $group = null;
+        if ($publisher instanceof Group) {
+            $group = $publisher;
+            $user = is_null($this->get('security.context')->getToken()) ? $group->getCreator() : $this->getUser();
+        }
+
+        if (!empty($publisher->getImg())) {
+            $album = new ImageAlbum;
+            $album->setType(ImageAlbum::TYPE_PROFILE);
+
+            $image = new Image;
+            $image->setImg($publisher->getImg())
+                ->setImgOffset($publisher->getImgOffset())
+                ->setMain(true)
+                ->setUser($user)
+                ->setPage($page)
+                ->setGroup($group);
+            $album->addImage($image);
+
+            $em->persist($album);
+        }
+        if (!empty($publisher->getCoverImg())) {
+            $album = new ImageAlbum;
+            $album->setType(ImageAlbum::TYPE_COVER);
+
+
+            $image = new Image;
+            $image->setImg($publisher->getImg())
+                ->setImgOffset($publisher->getImgOffset())
+                ->setMain(true)
+                ->setUser($user)
+                ->setPage($page)
+                ->setGroup($group);
+            $album->addImage($image);
+
+            $em->persist($album);
+        }
+        if (property_exists($publisher, 'backgroundImg') && !empty($publisher->getBackgroundImg())) {
+            $album = new ImageAlbum;
+            $album->setType(ImageAlbum::TYPE_BACKGROUND);
+
+            $image = new Image;
+            $image->setImg($publisher->getImg())
+                ->setImgOffset($publisher->getImgOffset())
+                ->setMain(true)
+                ->setUser($user)
+                ->setPage($page)
+                ->setGroup($group);
+            $album->addImage($image);
+
+            $em->persist($album);
+        }
+
+        $this->flushNeeded = true;
+    }
+
     private function imgUpdatedRoutine($publisher, EntityManager $em)
     {
         $user = null;
@@ -633,8 +704,8 @@ class DoctrineEventsListener
                 );
                 $album->addPost($post);
 
-                $em->persist($album);
             }
+            $em->persist($album);
         }
         if (array_key_exists('cover_img', $em->getUnitOfWork()->getEntityChangeSet($publisher))) {
             $album = $em->getRepository('CMBundle:ImageAlbum')->getImageAlbum(array(
@@ -680,8 +751,8 @@ class DoctrineEventsListener
                 );
                 $album->addPost($post);
 
-                $em->persist($album);
             }
+            $em->persist($album);
         }
         if (array_key_exists('background_img', $em->getUnitOfWork()->getEntityChangeSet($publisher))) {
             $album = $em->getRepository('CMBundle:ImageAlbum')->getImageAlbum(array(
@@ -727,8 +798,8 @@ class DoctrineEventsListener
                 );
                 $album->addPost($post);
 
-                $em->persist($album);
             }
+            $em->persist($album);
         }
 
         $this->flushNeeded = true;
