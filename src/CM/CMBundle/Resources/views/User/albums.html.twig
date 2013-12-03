@@ -4,7 +4,7 @@
 
     {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id})) }}{% endif %}  
 
-    {{ include('CMBundle:User:top.html.twig', {'inuser': 'image'}) }}
+    {{ include('CMBundle:User:top.html.twig', {'inPage': 'image'}) }}
 
 
     {#<ul class="breadcrumb">
@@ -14,27 +14,30 @@
     </ul>#}
 
 
-
     <div class="box">
         <div class="box-top">
-            <h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3>
+            <ul class="nav nav-tabs nav-justified">
+                <li><a href="{{ path('user_images', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
+                <li class="active"><a href="{{ path('user_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
+                <li><a href="{{ path('user_entities_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
+            </ul>
         </div>
         <div class="media-list objects">
-            {% for post in posts %}
-                {% set album = post.entity %}
+            {% for album in albums %}
                 <div class="media object">
                     <div class="meda-body">
                         {% if album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_PROFILE') %}
-                            <h4 class="media-heading">{{ 'Profile images'|trans }}</h4>
+                            <h4 class="media-heading">{{ album.id }}: {{ 'Profile images'|trans }}</h4>
                             {{ show_img_box(user.getImg | imagine_filter('350'), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
                         {% elseif album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_COVER') %}
-                            <h4 class="media-heading">{{ 'Cover images'|trans }}</h4>
-                            {#{{ show_img_box(post.publisher.getCoverImg | imagine_filter('350'), {'width': 150, 'height': 150, 'offset': post.publisher.coverImgOffset, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}#}
+                            <h4 class="media-heading">{{ album.id }}: {{ 'Cover images'|trans }}</h4>
+                            {{ show_img_box(user.getCoverImg | imagine_filter('350'), {'width': 150, 'height': 150, 'offset': user.coverImgOffset, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
                         {% elseif album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_BACKGROUND') %}
-                            <h4 class="media-heading">{{ 'Background images'|trans }}</h4>
-                            {#{{ show_img_box(post.publisher.getBackgroundImg | imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}#}
+                            <h4 class="media-heading">{{ album.id }}: {{ 'Background images'|trans }}</h4>
+                            {{ show_img_box(user.getBackgroundImg | imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
                         {% elseif album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_ALBUM') %}
-                            <h4 class="media-heading">{{ album }}</h4>
+                            <h4 class="media-heading">{{ album.id }}: {{ album }}</h4>
+
                         {% endif %}
                     </div>
                 </div>
@@ -48,3 +51,6 @@
     <?php end_slot() ?>#}
   
 {% endblock %}
+
+
+{#path('user_album_show', {'slug': user.slug, 'albumSlug': 'profile'})#}

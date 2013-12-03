@@ -57,7 +57,7 @@ class ImageRepository extends BaseRepository
             ->where('e not instance of :image_album')->setParameter('image_album', get_class(new ImageAlbum))
             ->innerJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
             ->leftJoin('e.images', 'i')
-            ->andWhere('size(e.images) > 1');
+            ->andWhere('size(e.images) > 2');
         if (!is_null($options['userId'])) {
             $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
                 ->andWhere('p.pageId is NULL')
@@ -74,9 +74,9 @@ class ImageRepository extends BaseRepository
             ->select('e')
             ->from('CMBundle:Entity', 'e')
             ->where('e not instance of :image_album')->setParameter('image_album', get_class(new ImageAlbum))
-            ->innerJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
+            ->leftJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
             ->leftJoin('e.images', 'i')
-            ->andWhere('size(e.images) > 1');
+            ->andWhere('size(e.images) > 2');
         if (!is_null($options['userId'])) {
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
                 ->andWhere('p.pageId is NULL')

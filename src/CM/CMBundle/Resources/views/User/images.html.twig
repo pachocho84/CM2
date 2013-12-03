@@ -1,0 +1,42 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+
+    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id})) }}{% endif %}  
+
+    {{ include('CMBundle:User:top.html.twig', {'inPage': 'image'}) }}
+
+
+    {#<ul class="breadcrumb">
+      <li><?php echo link_to('Home', '@homeuser') ?></li>
+      <li><?php echo link_to(__('Users'), '@user_list') ?></li>
+      <li class="active"><?php echo $user ?></li>
+    </ul>#}
+
+
+    <div class="box">
+        <div class="box-top">
+            <ul class="nav nav-tabs nav-justified">
+                <li class="active"><a href="{{ path('user_images', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
+                <li><a href="{{ path('user_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
+                <li><a href="{{ path('user_entities_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
+            </ul>
+        </div>
+        <div class="objects">
+            {% for image in images %}
+                {% if loop.index % 4 == 1 %}<div class="row">{% endif %}
+                    <div class="col-lg-3 object">
+                        {{ show_img_box(image.getImg|imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+                        <p>{{ image.text }}</p>
+                    </div>
+                {% if loop.index % 4 == 0 or loop.index == images|length %}</div>{% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    
+
+    {#<?php slot('sidebar_slot3') ?>  
+        <?php include_component('fan', 'userFans', array('user' => $user)) ?>
+    <?php end_slot() ?>#}
+  
+{% endblock %}

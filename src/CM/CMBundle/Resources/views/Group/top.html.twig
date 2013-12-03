@@ -31,7 +31,7 @@
                     <a href="{{ path('group_events', {'slug': group.slug}) }}">{{ show_icon('Event')|raw }} {{ 'Events'|trans }}</a>
                 </li>
                 <li{% if inPage == 'image' %} class="active"{% endif %}>
-                    <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ show_icon('Image')|raw }} {{ 'Images [TODO]'|trans }}</a>
+                    <a href="{{ path('group_images', {'slug': group.slug}) }}">{{ show_icon('Image')|raw }} {{ 'Images'|trans }}</a>
                 </li>
                 <li{% if inPage == 'disc' %} class="active"{% endif %}>
                     <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs [TODO]'|trans }}</a>

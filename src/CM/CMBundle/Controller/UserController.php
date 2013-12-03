@@ -214,6 +214,33 @@ class UserController extends Controller
     }
 
     /**
+     * @Route("/{slug}/images/{page}", name="user_images", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function imagesAction(Request $request, $slug, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+
+        $images = $em->getRepository('CMBundle:Image')->getImages(array(
+            'userId' => $user->getId()
+        ));
+        
+        $pagination = $this->get('knp_paginator')->paginate($images, $page, 10);
+        // var_dump($pagination);die;
+
+        return array(
+            'user' => $user,
+            'images' => $pagination
+        );
+    }
+
+    /**
      * @Route("/{slug}/albums/{page}", name="user_albums", requirements={"page" = "\d+"})
      * @Template
      */
@@ -229,16 +256,41 @@ class UserController extends Controller
 
         $albums = $em->getRepository('CMBundle:ImageAlbum')->getAlbums(array(
             'userId' => $user->getId(),
-            'paginate' => false
         ));
         
-        // var_dump($albums);die;
-        // $pagination = $this->get('knp_paginator')->paginate($albums, $page, 10);
-
+        $pagination = $this->get('knp_paginator')->paginate($albums, $page, 10);
 
         return array(
             'user' => $user,
-            'albums' => $albums
+            'albums' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/{slug}/albums/entities/{page}", name="user_entities_albums", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function imagesEntitiesAction(Request $request, $slug, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+
+        $entities = $em->getRepository('CMBundle:Image')->getEventsImages(array(
+            'userId' => $user->getId(),
+            'paginate' => false
+        ));
+        
+        // $pagination = $this->get('knp_paginator')->paginate($entities, $page, 10);
+        // var_dump($pagination);die;
+
+        return array(
+            'user' => $user,
+            'entities' => $entities
         );
     }
 

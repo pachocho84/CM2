@@ -1,0 +1,56 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+
+    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'groupId': group.id})) }}{% endif %}  
+
+    {{ include('CMBundle:Group:top.html.twig', {'inPage': 'image'}) }}
+
+
+    {#<ul class="breadcrumb">
+      <li><?php echo link_to('Home', '@homegroup') ?></li>
+      <li><?php echo link_to(__('Users'), '@group_list') ?></li>
+      <li class="active"><?php echo $group ?></li>
+    </ul>#}
+
+
+    <div class="box">
+        <div class="box-top">
+            <ul class="nav nav-tabs nav-justified">
+                <li><a href="{{ path('group_images', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
+                <li class="active"><a href="{{ path('group_albums', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
+                <li><a href="{{ path('group_entities_albums', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
+            </ul>
+        </div>
+        <div class="media-list objects">
+            {% for album in albums %}
+                <div class="media object">
+                    <div class="meda-body">
+                        {% if album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_PROFILE') %}
+                            <h4 class="media-heading">{{ album.id }}: {{ 'Profile images'|trans }}</h4>
+                            {{ show_img_box(group.getImg | imagine_filter('350'), {'width': 150, 'height': 150, 'offset': group.imgOffset, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+                        {% elseif album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_COVER') %}
+                            <h4 class="media-heading">{{ album.id }}: {{ 'Cover images'|trans }}</h4>
+                            {{ show_img_box(group.getCoverImg | imagine_filter('350'), {'width': 150, 'height': 150, 'offset': group.coverImgOffset, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+                        {% elseif album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_BACKGROUND') %}
+                            <h4 class="media-heading">{{ album.id }}: {{ 'Background images'|trans }}</h4>
+                            {{ show_img_box(group.getBackgroundImg | imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+                        {% elseif album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_ALBUM') %}
+                            <h4 class="media-heading">{{ album.id }}: {{ album }}</h4>
+
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+
+    {#<?php slot('sidebar_slot3') ?>  
+        <?php include_component('fan', 'groupFans', array('group' => $group)) ?>
+    <?php end_slot() ?>#}
+  
+{% endblock %}
+
+
+{#path('group_album_show', {'slug': group.slug, 'albumSlug': 'profile'})#}

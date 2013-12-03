@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block body %}
+
+    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id})) }}{% endif %}  
+
+    {{ include('CMBundle:User:top.html.twig', {'inPage': 'event'}) }}
+
+
     <div class='box'>
         {{ include('CMBundle:Event:objects.html.twig') }}
     </div>

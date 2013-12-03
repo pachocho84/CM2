@@ -208,6 +208,86 @@ class GroupController extends Controller
     }
 
     /**
+     * @Route("/{slug}/images/{page}", name="group_images", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function imagesAction(Request $request, $slug, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        
+        if (!$group) {
+            throw new NotFoundHttpException('Group not found.');
+        }
+
+        $images = $em->getRepository('CMBundle:Image')->getImages(array(
+            'pageId' => $group->getId()
+        ));
+        
+        $pagination = $this->get('knp_paginator')->paginate($images, $page, 10);
+        // var_dump($pagination);die;
+
+        return array(
+            'group' => $group,
+            'images' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/{slug}/albums/{page}", name="group_albums", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function albumsAction(Request $request, $slug, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        
+        if (!$group) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Group not found.', array(), 'http-errors'));
+        }
+
+        $albums = $em->getRepository('CMBundle:ImageAlbum')->getAlbums(array(
+            'groupId' => $group->getId(),
+        ));
+        
+        $pagination = $this->get('knp_paginator')->paginate($albums, $page, 10);
+
+        return array(
+            'group' => $group,
+            'albums' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/{slug}/albums/entities/{page}", name="group_entities_albums", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function imagesEntitiesAction(Request $request, $slug, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        
+        if (!$group) {
+            throw new NotFoundHttpException('Group not found.');
+        }
+
+        $entities = $em->getRepository('CMBundle:Image')->getEventsImages(array(
+            'pageId' => $group->getId()
+        ));
+        
+        $pagination = $this->get('knp_paginator')->paginate($entities, $page, 10);
+        // var_dump($pagination);die;
+
+        return array(
+            'group' => $group,
+            'entities' => $pagination
+        );
+    }
+
+    /**
      * @Route("/{slug}/account/image", name="group_image_edit")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template("CMBundle:User:imageEdit.html.twig")

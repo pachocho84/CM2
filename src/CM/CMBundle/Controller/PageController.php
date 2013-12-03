@@ -208,10 +208,10 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/{slug}/images/{pageNun}", name="page_images", requirements={"pageNun" = "\d+"})
+     * @Route("/{slug}/images/{pageNum}", name="page_images", requirements={"pageNum" = "\d+"})
      * @Template
      */
-    public function imagesAction(Request $request, $slug, $pageNun = 1)
+    public function imagesAction(Request $request, $slug, $pageNum = 1)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -225,7 +225,7 @@ class PageController extends Controller
             'pageId' => $page->getId()
         ));
         
-        $pagination = $this->get('knp_paginator')->paginate($images, $pageNun, 10);
+        $pagination = $this->get('knp_paginator')->paginate($images, $pageNum, 10);
         // var_dump($pagination);die;
 
         return array(
@@ -235,10 +235,10 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/{slug}/albums/{pageNun}", name="page_albums", requirements={"pageNun" = "\d+"})
+     * @Route("/{slug}/albums/{pageNum}", name="page_albums", requirements={"pageNum" = "\d+"})
      * @Template
      */
-    public function albumsAction(Request $request, $slug, $pageNun = 1)
+    public function albumsAction(Request $request, $slug, $pageNum = 1)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -252,7 +252,7 @@ class PageController extends Controller
             'pageId' => $page->getId()
         ));
         
-        $pagination = $this->get('knp_paginator')->paginate($albums, $pageNun, 10);
+        $pagination = $this->get('knp_paginator')->paginate($albums, $pageNum, 10);
         // var_dump($pagination);die;
 
         return array(
@@ -262,10 +262,10 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/{slug}/albums/entities/{pageNun}", name="page_entities_albums", requirements={"pageNun" = "\d+"})
+     * @Route("/{slug}/albums/entities/{pageNum}", name="page_entities_albums", requirements={"pageNum" = "\d+"})
      * @Template
      */
-    public function imagesEntitiesAction(Request $request, $slug, $pageNun = 1)
+    public function imagesEntitiesAction(Request $request, $slug, $pageNum = 1)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -279,7 +279,7 @@ class PageController extends Controller
             'pageId' => $page->getId()
         ));
         
-        $pagination = $this->get('knp_paginator')->paginate($entities, $pageNun, 10);
+        $pagination = $this->get('knp_paginator')->paginate($entities, $pageNum, 10);
         // var_dump($pagination);die;
 
         return array(

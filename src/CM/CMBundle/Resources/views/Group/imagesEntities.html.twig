@@ -1,0 +1,53 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+
+    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'groupId': group.id})) }}{% endif %}  
+
+    {{ include('CMBundle:Group:top.html.twig', {'inPage': 'image'}) }}
+
+
+    {#<ul class="breadcrumb">
+      <li><?php echo link_to('Home', '@homegroup') ?></li>
+      <li><?php echo link_to(__('Users'), '@group_list') ?></li>
+      <li class="active"><?php echo $group ?></li>
+    </ul>#}
+
+
+    <div class="box">
+        <div class="box-top">
+            <ul class="nav nav-tabs nav-justified">
+                <li><a href="{{ path('group_images', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
+                <li><a href="{{ path('group_albums', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
+                <li class="active"><a href="{{ path('group_entities_albums', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
+            </ul>
+        </div>
+        <div class="objects">
+            {% for entity in entities %}
+                {% if loop.index % 4 == 1 %}<div class="row">{% endif %}
+                    <div class="object col-lg-3 cycle-slideshow" data-cycle-slides="> div" data-cycle-fx="scrollVert">
+                        <h4 class="media-heading">{{ entity.id }}: {{ entity }}</h4>
+                        <div>
+                            {{ show_img_box(entity.images[0].getImg | imagine_filter('350'), {'width': 150, 'height': 150, 'offset': group.imgOffset, 'link': ''})|raw }}
+                        </div>
+                        <div>
+                            {{ show_img_box(entity.images[1].getImg | imagine_filter('350'), {'width': 150, 'height': 150, 'offset': group.imgOffset, 'link': ''})|raw }}
+                        </div>
+                        <div>
+                            {{ show_img_box(entity.images[2].getImg | imagine_filter('350'), {'width': 150, 'height': 150, 'offset': group.imgOffset, 'link': ''})|raw }}
+                        </div>
+                    </div>
+                {% if loop.index % 4 == 0 or loop.index == entities|length %}</div>{% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    
+
+    {#<?php slot('sidebar_slot3') ?>  
+        <?php include_component('fan', 'groupFans', array('group' => $group)) ?>
+    <?php end_slot() ?>#}
+  
+{% endblock %}
+
+
+{#path('group_entity_show', {'slug': group.slug, 'entitySlug': 'profile'})#}
