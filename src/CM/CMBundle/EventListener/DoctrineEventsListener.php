@@ -607,6 +607,18 @@ class DoctrineEventsListener
                 ->setPage($page)
                 ->setGroup($group);
             $album->addImage($image);
+            
+            $post = $this->get('cm.post_center')->newPost(
+                $user,
+                $user,
+                Post::TYPE_CREATION,
+                get_class($album),
+                array(),
+                $album,
+                $page,
+                $group
+            );
+            $album->addPost($post);
 
             $em->persist($album);
         }
@@ -614,15 +626,26 @@ class DoctrineEventsListener
             $album = new ImageAlbum;
             $album->setType(ImageAlbum::TYPE_COVER);
 
-
             $image = new Image;
-            $image->setImg($publisher->getImg())
-                ->setImgOffset($publisher->getImgOffset())
+            $image->setImg($publisher->getCoverImg())
+                ->setImgOffset($publisher->getCoverImgOffset())
                 ->setMain(true)
                 ->setUser($user)
                 ->setPage($page)
                 ->setGroup($group);
             $album->addImage($image);
+            
+            $post = $this->get('cm.post_center')->newPost(
+                $user,
+                $user,
+                Post::TYPE_CREATION,
+                get_class($album),
+                array(),
+                $album,
+                $page,
+                $group
+            );
+            $album->addPost($post);
 
             $em->persist($album);
         }
@@ -631,13 +654,24 @@ class DoctrineEventsListener
             $album->setType(ImageAlbum::TYPE_BACKGROUND);
 
             $image = new Image;
-            $image->setImg($publisher->getImg())
-                ->setImgOffset($publisher->getImgOffset())
+            $image->setImg($publisher->getBackgroundImg())
                 ->setMain(true)
                 ->setUser($user)
                 ->setPage($page)
                 ->setGroup($group);
             $album->addImage($image);
+
+            $post = $this->get('cm.post_center')->newPost(
+                $user,
+                $user,
+                Post::TYPE_CREATION,
+                get_class($album),
+                array(),
+                $album,
+                $page,
+                $group
+            );
+            $album->addPost($post);
 
             $em->persist($album);
         }
@@ -696,7 +730,7 @@ class DoctrineEventsListener
                     $this->getUser(),
                     $user,
                     Post::TYPE_UPDATE,
-                    'Img',
+                    get_class($album),
                     array(),
                     $album,
                     $page,
@@ -720,8 +754,8 @@ class DoctrineEventsListener
             }
 
             $image = new Image;
-            $image->setImg($publisher->getImg())
-                ->setImgOffset($publisher->getImgOffset())
+            $image->setImg($publisher->getCoverImg())
+                ->setImgOffset($publisher->getCoverImgOffset())
                 ->setMain(true)
                 ->setUser($user)
                 ->setPage($page)
@@ -743,14 +777,13 @@ class DoctrineEventsListener
                     $this->getUser(),
                     $user,
                     Post::TYPE_UPDATE,
-                    'CoverImg',
+                    get_class($album),
                     array(),
                     $album,
                     $page,
                     $group
                 );
                 $album->addPost($post);
-
             }
             $em->persist($album);
         }
@@ -767,8 +800,7 @@ class DoctrineEventsListener
             }
 
             $image = new Image;
-            $image->setImg($publisher->getImg())
-                ->setImgOffset($publisher->getImgOffset())
+            $image->setImg($publisher->getBackgroundImg())
                 ->setMain(true)
                 ->setUser($user)
                 ->setPage($page)
@@ -790,7 +822,7 @@ class DoctrineEventsListener
                     $this->getUser(),
                     $user,
                     Post::TYPE_UPDATE,
-                    'BackgroundImg',
+                    get_class($album),
                     array(),
                     $album,
                     $page,

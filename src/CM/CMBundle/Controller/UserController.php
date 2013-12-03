@@ -211,7 +211,7 @@ class UserController extends Controller
         }
 
         return array('user' => $user, 'biography' => $biography);
-    }     
+    }
 
     /**
      * @Route("/{slug}/albums/{page}", name="user_albums", requirements={"page" = "\d+"})
@@ -228,17 +228,19 @@ class UserController extends Controller
         }
 
         $albums = $em->getRepository('CMBundle:ImageAlbum')->getAlbums(array(
-            'userId' => $user->getId()
+            'userId' => $user->getId(),
+            'paginate' => false
         ));
         
-        $pagination = $this->get('knp_paginator')->paginate($albums, $page, 10);
-        var_dump($pagination);die;
+        // var_dump($albums);die;
+        // $pagination = $this->get('knp_paginator')->paginate($albums, $page, 10);
 
 
         return array(
+            'user' => $user,
+            'albums' => $albums
         );
     }
-
 
     /**
      * @Route("/account/image", name="user_image_edit")

@@ -208,6 +208,87 @@ class PageController extends Controller
     }
 
     /**
+     * @Route("/{slug}/images/{pageNun}", name="page_images", requirements={"pageNun" = "\d+"})
+     * @Template
+     */
+    public function imagesAction(Request $request, $slug, $pageNun = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+        
+        if (!$page) {
+            throw new NotFoundHttpException('Page not found.');
+        }
+
+        $images = $em->getRepository('CMBundle:Image')->getImages(array(
+            'pageId' => $page->getId()
+        ));
+        
+        $pagination = $this->get('knp_paginator')->paginate($images, $pageNun, 10);
+        // var_dump($pagination);die;
+
+        return array(
+            'page' => $page,
+            'images' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/{slug}/albums/{pageNun}", name="page_albums", requirements={"pageNun" = "\d+"})
+     * @Template
+     */
+    public function albumsAction(Request $request, $slug, $pageNun = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+        
+        if (!$page) {
+            throw new NotFoundHttpException('Page not found.');
+        }
+
+        $albums = $em->getRepository('CMBundle:ImageAlbum')->getAlbums(array(
+            'pageId' => $page->getId()
+        ));
+        
+        $pagination = $this->get('knp_paginator')->paginate($albums, $pageNun, 10);
+        // var_dump($pagination);die;
+
+        return array(
+            'page' => $page,
+            'albums' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/{slug}/albums/entities/{pageNun}", name="page_entities_albums", requirements={"pageNun" = "\d+"})
+     * @Template
+     */
+    public function imagesEntitiesAction(Request $request, $slug, $pageNun = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+        
+        if (!$page) {
+            throw new NotFoundHttpException('Page not found.');
+        }
+
+        $entities = $em->getRepository('CMBundle:Image')->getEventsImages(array(
+            'pageId' => $page->getId()
+        ));
+        
+        $pagination = $this->get('knp_paginator')->paginate($entities, $pageNun, 10);
+        // var_dump($pagination);die;
+
+        return array(
+            'page' => $page,
+            'entities' => $pagination
+        );
+    }
+
+    /**
      * @Route("/{slug}/account/image", name="page_image_edit")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template("CMBundle:User:imageEdit.html.twig")

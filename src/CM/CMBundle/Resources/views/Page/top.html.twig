@@ -31,7 +31,7 @@
                     <a href="{{ path('page_events', {'slug': page.slug}) }}">{{ show_icon('Event')|raw }} {{ 'Events'|trans }}</a>
                 </li>
                 <li{% if inPage == 'image' %} class="active"{% endif %}>
-                    <a href="{{ path('page_show', {'slug': page.slug}) }}">{{ show_icon('Image')|raw }} {{ 'Images [TODO]'|trans }}</a>
+                    <a href="{{ path('page_albums', {'slug': page.slug}) }}">{{ show_icon('Image')|raw }} {{ 'Images'|trans }}</a>
                 </li>
                 <li{% if inPage == 'disc' %} class="active"{% endif %}>
                     <a href="{{ path('page_show', {'slug': page.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs [TODO]'|trans }}</a>

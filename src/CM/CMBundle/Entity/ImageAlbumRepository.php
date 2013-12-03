@@ -59,8 +59,7 @@ class ImageAlbumRepository extends BaseRepository
             ->select('p')
             ->from('CMBundle:Post', 'p')
             ->leftJoin('p.entity', 'e')
-            ->innerJoin('CMBundle:ImageAlbum', 'a', 'with', 'e.id = a.id')
-            ->where('e.discr = :discr')->setParameter('discr', 'image_album')
+            ->leftJoin('p.entity', 'a', 'with', 'a instance of CMBundle:ImageAlbum')
             ->where('a.id = :id')->setParameter('id', $id);
         if (!is_null($options['userId'])) {
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
@@ -88,15 +87,14 @@ class ImageAlbumRepository extends BaseRepository
     public function getAlbums($options)
     {
         $options = self::getOptions($options);
-        
-        $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('p, a')
-            ->from('CMBundle:Post', 'p')
-            ->leftJoin('p.entity', 'e')
-            ->innerJoin('CMBundle:ImageAlbum', 'a', 'with', 'e.id = a.id')
-            ->where('e.discr = :discr')->setParameter('discr', 'image_album');
+
+        $query = $this->createQueryBuilder('a')
+            ->select('a')
+            ->innerJoin('a.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION);
         if (!is_null($options['userId'])) {
-            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
+            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('p.pageId is NULL')
+                ->andWhere('p.groupId is NULL');
         }
         if (!is_null($options['pageId'])) {
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
@@ -107,101 +105,5 @@ class ImageAlbumRepository extends BaseRepository
         $query->orderBy('a.type');
 
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
-    }
-
-    public function getUserImageAlbum($userId)
-    {
-        return $this->createQueryBuilder('a')
-            ->select('a')
-            ->leftJoin('a.posts', 'p')
-            ->leftJoin('p.user', 'u')
-            ->where('u.id = :user_id')->setParameter('user_id', $userId)
-            ->andWhere('a.type = '.ImageAlbum::TYPE_PROFILE)
-            ->setMaxResults(1)
-            ->getQuery()->getResult();
-    }
-
-    public function getUserCoverImageAlbum($userId)
-    {
-        return $this->createQueryBuilder('a')
-            ->select('a')
-            ->leftJoin('a.posts', 'p')
-            ->leftJoin('p.user', 'u')
-            ->where('u.id = :user_id')->setParameter('user_id', $userId)
-            ->andWhere('a.type = '.ImageAlbum::TYPE_COVER)
-            ->setMaxResults(1)
-            ->getQuery()->getResult();
-    }
-
-    public function getUseraackgroundImageAlbum($userId)
-    {
-        return $this->createQueryBuilder('a')
-            ->select('a')
-            ->leftJoin('a.posts', 'p')
-            ->leftJoin('p.user', 'u')
-            ->where('u.id = :user_id')->setParameter('user_id', $userId)
-            ->andWhere('a.type = '.ImageAlbum::TYPE_BACKGROUND)
-            ->setMaxResults(1)
-            ->getQuery()->getResult();
-    }
-
-    public function getGroupImageAlbum($groupId)
-    {
-        return $this->createQueryBuilder('a')
-            ->select('a')
-            ->leftJoin('a.posts', 'p')
-            ->leftJoin('p.group', 'g')
-            ->where('g.id = :group_id')->setParameter('group_id', $groupId)
-            ->andWhere('a.type = '.ImageAlbum::TYPE_PROFILE)
-            ->setMaxResults(1)
-            ->getQuery()->getResult();
-    }
-
-    public function getGroupCoverImageAlbum($groupId)
-    {
-        return $this->createQueryBuilder('a')
-            ->select('a')
-            ->leftJoin('a.posts', 'p')
-            ->leftJoin('p.group', 'g')
-            ->where('g.id = :group_id')->setParameter('group_id', $groupId)
-            ->andWhere('a.type = '.ImageAlbum::TYPE_COVER)
-            ->setMaxResults(1)
-            ->getQuery()->getResult();
-    }
-
-    public function getPageImageAlbum($pageId)
-    {
-        return $this->createQueryBuilder('a')
-            ->select('a')
-            ->leftJoin('a.posts', 'p')
-            ->leftJoin('p.page', 'pg')
-            ->where('pg.id = :page_id')->setParameter('page_id', $pageId)
-            ->andWhere('a.type = '.ImageAlbum::TYPE_PROFILE)
-            ->setMaxResults(1)
-            ->getQuery()->getResult();
-    }
-
-    public function getPageCoverImageAlbum($pageId)
-    {
-        return $this->createQueryBuilder('a')
-            ->select('a')
-            ->leftJoin('a.posts', 'p')
-            ->leftJoin('p.page', 'pg')
-            ->where('pg.id = :page_id')->setParameter('page_id', $pageId)
-            ->andWhere('a.type = '.ImageAlbum::TYPE_COVER)
-            ->setMaxResults(1)
-            ->getQuery()->getResult();
-    }
-
-    public function getPageaackgroundImageAlbum($pageId)
-    {
-        return $this->createQueryBuilder('a')
-            ->select('a')
-            ->leftJoin('a.posts', 'p')
-            ->leftJoin('p.page', 'pg')
-            ->where('pg.id = :page_id')->setParameter('page_id', $pageId)
-            ->andWhere('a.type = '.ImageAlbum::TYPE_BACKGROUND)
-            ->setMaxResults(1)
-            ->getQuery()->getResult();
     }
 }

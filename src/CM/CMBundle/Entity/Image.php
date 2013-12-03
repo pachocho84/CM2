@@ -29,12 +29,22 @@ class Image
     private $id;
 
     /**
+     * @ORM\Column(name="entity_id", type="integer", nullable=true)
+     **/
+    private $entityId;
+
+    /**
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Entity", inversedBy="images")
      * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     private $entity;
+
+    /**
+     * @ORM\Column(name="user_id", type="integer")
+     **/
+    private $userId;
 
     /**
      * @var integer
@@ -45,12 +55,22 @@ class Image
     private $user;
 
     /**
+     * @ORM\Column(name="group_id", type="integer", nullable=true)
+     **/
+    private $groupId;
+
+    /**
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="Group", inversedBy="images")
      * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
      */
     private $group;
+
+    /**
+     * @ORM\Column(name="page_id", type="integer", nullable=true)
+     **/
+    private $pageId;
 
     /**
      * @var integer
@@ -114,29 +134,6 @@ class Image
     public function getId()
     {
         return $this->id;
-    }
-    
-    /**
-     * Set entityId
-     *
-     * @param integer $entityId
-     * @return Image
-     */
-    public function setEntityId($entityId)
-    {
-        $this->entityId = $entityId;
-    
-        return $this;
-    }
-
-    /**
-     * Get entityId
-     *
-     * @return integer 
-     */
-    public function getEntityId()
-    {
-        return $this->entityId;
     }
 
     /**
@@ -209,6 +206,16 @@ class Image
     }
 
     /**
+     * Get entityId
+     *
+     * @return integer 
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    /**
      * Set entity
      *
      * @param Entity $entity
@@ -229,6 +236,16 @@ class Image
     public function getEntity()
     {
         return $this->entity;
+    }
+
+    /**
+     * Get user
+     *
+     * @return User 
+     */
+    public function getUserId()
+    {
+        return $this->userId;
     }
 
     /**
@@ -255,6 +272,16 @@ class Image
     }
 
     /**
+     * Get fromUser
+     *
+     * @return User 
+     */
+    public function getGroupId()
+    {
+        return $this->groupId;
+    }
+
+    /**
      * Set group
      *
      * @param Group $group
@@ -275,6 +302,16 @@ class Image
     public function getGroup()
     {
         return $this->group;
+    }
+
+    /**
+     * Get fromUser
+     *
+     * @return User 
+     */
+    public function getPageId()
+    {
+        return $this->pageId;
     }
 
     /**
