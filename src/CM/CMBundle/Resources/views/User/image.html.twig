@@ -17,13 +17,13 @@
     <div class="box">
         <div class="box-top">
             <ul class="nav nav-tabs nav-justified">
-                <li><a href="{{ path('user_images', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
+                <li class="active"><a href="{{ path('user_images', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
                 <li><a href="{{ path('user_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
-                <li class="active"><a href="{{ path('user_entities_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
+                <li><a href="{{ path('user_entities_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
             </ul>
         </div>
-        <div class="objects">
-            {{ include('CMBundle:ImageAlbum:imageEntityList.html.twig', {'link': 'user_image_entity', 'publisher': user}) }}
+        <div class="media-list objects">
+            {{ include('CMBundle:ImageAlbum:image.html.twig') }}
         </div>
     </div>
     
@@ -35,4 +35,4 @@
 {% endblock %}
 
 
-{#path('user_entity_show', {'slug': user.slug, 'entitySlug': 'profile'})#}
+{#path('', {'slug': user.slug, 'albumSlug': 'profile'})#}

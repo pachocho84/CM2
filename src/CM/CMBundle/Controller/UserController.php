@@ -224,19 +224,56 @@ class UserController extends Controller
         $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
         
         if (!$user) {
-            throw new NotFoundHttpException('User not found.');
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
         }
 
-        $images = $em->getRepository('CMBundle:Image')->getImages(array(
-            'userId' => $user->getId()
-        ));
+        $images = $em->getRepository('CMBundle:Image')->getImages(array('userId' => $user->getId()));
         
-        $pagination = $this->get('knp_paginator')->paginate($images, $page, 10);
-        // var_dump($pagination);die;
+        $pagination = $this->get('knp_paginator')->paginate($images, $page, 32);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:ImageAlbum:imageList.html.twig', array(
+                'user' => $user,
+                'images' => $pagination
+            ));
+        }
 
         return array(
             'user' => $user,
             'images' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/{slug}/image/{id}/{page}", name="user_image", requirements={"id" = "\d+", "page" = "\d+"})
+     * @Template
+     */
+    public function imageAction(Request $request, $slug, $id, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+        }
+
+        try {
+            $image = $em->getRepository('CMBundle:Image')->getImage($id, array('userId' => $user->getId()));
+        } catch (\Exception $e) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));
+        }
+
+        // if ($request->isXmlHttpRequest()) {
+        //     return $this->render('CMBundle:ImageAlbum:imageList.html.twig', array(
+        //         'user' => $user,
+        //         'images' => $pagination
+        //     ));
+        // }
+
+        return array(
+            'user' => $user,
+            'image' => $image
         );
     }
 
@@ -258,7 +295,14 @@ class UserController extends Controller
             'userId' => $user->getId(),
         ));
         
-        $pagination = $this->get('knp_paginator')->paginate($albums, $page, 10);
+        $pagination = $this->get('knp_paginator')->paginate($albums, $page, 32);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:ImageAlbum:albumList.html.twig', array(
+                'user' => $user,
+                'albums' => $pagination
+            ));
+        }
 
         return array(
             'user' => $user,
@@ -267,7 +311,46 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/{slug}/albums/entities/{page}", name="user_entities_albums", requirements={"page" = "\d+"})
+     * @Route("/{slug}/album/{id}/{page}", name="user_album", requirements={"id" = "\d+", "page" = "\d+"})
+     * @Template
+     */
+    public function albumAction(Request $request, $slug, $id, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+        }
+
+        try {
+            $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id, array('userId' => $user->getId()));
+        } catch (Exception $e) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Album not found.', array(), 'http-errors'));
+        }
+
+        $images = $em->getRepository('CMBundle:Image')->getImages(array('albumId' => $id));
+        
+        $pagination = $this->get('knp_paginator')->paginate($images, $page, 32);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:ImageAlbum:imageList.html.twig', array(
+                'user' => $user,
+                'album' => $album,
+                'images' => $pagination
+            ));
+        }
+
+        return array(
+            'user' => $user,
+            'album' => $album,
+            'images' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/{slug}/images/entities/{page}", name="user_entities_albums", requirements={"page" = "\d+"})
      * @Template
      */
     public function imagesEntitiesAction(Request $request, $slug, $page = 1)
@@ -285,12 +368,57 @@ class UserController extends Controller
             'paginate' => false
         ));
         
-        // $pagination = $this->get('knp_paginator')->paginate($entities, $page, 10);
-        // var_dump($pagination);die;
+        $pagination = $this->get('knp_paginator')->paginate($entities, $page, 32);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:ImageAlbum:imageEntityList.html.twig', array(
+                'user' => $user,
+                'entities' => $pagination
+            ));
+        }
 
         return array(
             'user' => $user,
-            'entities' => $entities
+            'entities' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/{slug}/image/entity/{id}/{page}", name="user_image_entity", requirements={"id" = "\d+", "page" = "\d+"})
+     * @Template("CMBundle:User:images.html.twig")
+     */
+    public function imageEntityAction(Request $request, $slug, $id, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+        }
+
+        try {
+            $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id, array('userId' => $user->getId()));
+        } catch (Exception $e) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Album not found.', array(), 'http-errors'));
+        }
+
+        $images = $em->getRepository('CMBundle:Image')->getImages(array('albumId' => $id));
+        
+        $pagination = $this->get('knp_paginator')->paginate($images, $page, 32);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:ImageAlbum:imageList.html.twig', array(
+                'user' => $user,
+                'album' => $album,
+                'images' => $pagination
+            ));
+        }
+
+        return array(
+            'user' => $user,
+            'album' => $album,
+            'images' => $pagination
         );
     }
 

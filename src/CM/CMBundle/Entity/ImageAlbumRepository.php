@@ -25,7 +25,7 @@ class ImageAlbumRepository extends BaseRepository
         ), $options);
     }
 
-    public function getImageAlbum($options)
+    public function getImageAlbum($options = array())
     {
         $options = self::getOptions($options);
 
@@ -51,7 +51,7 @@ class ImageAlbumRepository extends BaseRepository
         return $album;
     }
 
-    public function getLastPost($id, $options)
+    public function getLastPost($id, $options = array())
     {
         $options = self::getOptions($options);
 
@@ -84,13 +84,29 @@ class ImageAlbumRepository extends BaseRepository
         return $post;
     }
 
-    public function getAlbums($options)
+    public function getAlbums($options = array())
     {
         $options = self::getOptions($options);
 
+        $count = $this->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->innerJoin('a.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION);
+        if (!is_null($options['userId'])) {
+            $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('p.pageId is NULL')
+                ->andWhere('p.groupId is NULL');
+        }
+        if (!is_null($options['pageId'])) {
+            $count->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $count->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+
         $query = $this->createQueryBuilder('a')
             ->select('a')
-            ->innerJoin('a.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION);
+            ->innerJoin('a.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
+            ->leftJoin('a.images', 'i');
         if (!is_null($options['userId'])) {
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
                 ->andWhere('p.pageId is NULL')
@@ -102,8 +118,32 @@ class ImageAlbumRepository extends BaseRepository
         if (!is_null($options['groupId'])) {
             $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
-        $query->orderBy('a.type');
+        $query->orderBy('i.updatedAt', 'desc')
+            ->addOrderBy('a.type');
 
-        return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+
+    public function getAlbum($id, $options = array())
+    {
+        $options = self::getOptions($options);
+
+        $query = $this->createQueryBuilder('a')
+            ->select('a')
+            ->innerJoin('a.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
+            ->where('a.id = :id')->setParameter('id', $id);
+        if (!is_null($options['userId'])) {
+            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('p.pageId is NULL')
+                ->andWhere('p.groupId is NULL');
+        }
+        if (!is_null($options['pageId'])) {
+            $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+
+        return $query->getQuery()->getSingleResult();
     }
 }

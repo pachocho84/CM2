@@ -12,7 +12,7 @@ use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Form\EntityTranslationType;
 use CM\CMBundle\Form\DataTransformer\ArrayCollectionToEntityTransformer;
 
-class EntityType extends AbstractType
+class EntityType extends BaseEntityType
 {
     protected $options;
 
@@ -28,38 +28,8 @@ class EntityType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (in_array('ROLE_CLIENT', $options['roles'])) {
-            $builder->add('translations', 'a2lix_translations', array(
-                    'locales' => $options['locales'],
-                    'required' => true,
-                    'fields' => array(
-                        'title' => array(),
-                        'subtitle' => array(
-                            'required' => false,
-                        ),
-                        'extract' => array(
-                            'attr' => array(
-                                'class' => 'tinymce',
-                            ),
-                            'required' => false
-                        ),
-                        'text' => array(
-                            // 'type' => 'textarea',
-                            'attr' => array(
-                                'class' => 'tinymce-advanced',
-                            )
-                        ),
-                        'slug' => array('display' => false)
-                    )
-                ));
-        } else {
-            $builder->add($builder->create('translations', new EntityTranslationType, array('label' => 'Body',
-                    'error_bubbling' => false,))->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 'en')));
-
-            // $builder->add('translations', 'collection', array(
-            //         'type' => new EntityTranslationType
-            //     ));
-        }
+        parent::buildForm($builder, $options);
+        
         $builder->add('entityCategory', 'entity', array(
                 'label' => 'Category',
                 'class' => 'CMBundle:EntityCategory',
@@ -105,6 +75,8 @@ class EntityType extends AbstractType
             'user_tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),
+            'add_category' => true,
+            'add_users' => true,
             'data_class' => 'CM\CMBundle\Entity\Entity'
         ));
 

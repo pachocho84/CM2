@@ -36,6 +36,10 @@ cm_cmbundle_group:
 
 cm_cmbundle_entityuser:
     resource: "CM\\CMBundle\\Controller\\EntityUserController"
+    type:   
+
+cm_cmbundle_imagealbum:
+    resource: "CM\\CMBundle\\Controller\\ImageAlbumController"
     type:     annotation
 
 fos_user_security:

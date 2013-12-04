@@ -24,22 +24,7 @@
             <div class="col-lg-4 active"><h3><a href="{{ path('page_entities_albums', {'slug': page.slug}) }}">{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</a></h3></div>
         </div>
         <div class="objects">
-            {% for entity in entities %}
-                {% if loop.index % 4 == 1 %}<div class="row">{% endif %}
-                    <div class="object col-lg-3 cycle-slideshow" data-cycle-slides="> div" data-cycle-fx="scrollVert">
-                        <h4 class="media-heading">{{ entity.id }}: {{ entity }}</h4>
-                        <div>
-                            {{ show_img_box(entity.images[0].getImg | imagine_filter('350'), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'link': ''})|raw }}
-                        </div>
-                        <div>
-                            {{ show_img_box(entity.images[1].getImg | imagine_filter('350'), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'link': ''})|raw }}
-                        </div>
-                        <div>
-                            {{ show_img_box(entity.images[2].getImg | imagine_filter('350'), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'link': ''})|raw }}
-                        </div>
-                    </div>
-                {% if loop.index % 4 == 0 or loop.index == entities|length %}</div>{% endif %}
-            {% endfor %}
+            {{ include('CMBundle:ImageAlbum:imagesEntitiesList.html.twig') }}
         </div>
     </div>
     

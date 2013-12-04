@@ -1,0 +1,14 @@
+{% for image in images %}
+    {% if loop.index % 4 == 1 %}<div class="row">{% endif %}
+        <div class="col-lg-3">
+            {{ show_img_box(image.getImg|imagine_filter('350'), {'width': 150, 'height': 150, 'link': path(link, {'slug': publisher.slug, 'id': image.id}), 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+            <p>{{ image.text }}</p>
+        </div>
+    {% if loop.index % 4 == 0 or loop.index == images|length %}</div>{% endif %}
+{% endfor %}
+
+{% if images.paginationData.current < images.paginationData.last %}
+    <div class="well well-small load_more">
+        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': images.getPaginationData.next })) }}">{{ 'Load more' | trans }}</a>
+    </div>
+{% endif %}

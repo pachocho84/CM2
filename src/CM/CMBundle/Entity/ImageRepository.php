@@ -15,6 +15,7 @@ class ImageRepository extends BaseRepository
     static protected function getOptions(array $options = array())
     {
         return array_merge(array(
+            'albumId' => null,
             'userId'       => null,
             'groupId'      => null,
             'pageId'       => null,
@@ -24,12 +25,15 @@ class ImageRepository extends BaseRepository
         ), $options);
     }
 
-    public function getImages($options)
+    public function getImages($options = array())
     {
         $options = self::getOptions($options);
 
         $query = $this->createQueryBuilder('i')
             ->select('i');
+        if (!is_null($options['albumId'])) {
+            $query->andWhere('i.entityId = :album_id')->setParameter('album_id', $options['albumId']);
+        }
         if (!is_null($options['userId'])) {
             $query->andWhere('i.userId = :user_id')->setParameter('user_id', $options['userId'])
                 ->andWhere('i.pageId is NULL')
@@ -47,7 +51,7 @@ class ImageRepository extends BaseRepository
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
-    public function getEventsImages($options)
+    public function getEventsImages($options = array())
     {
         $options = self::getOptions($options);
 
@@ -76,7 +80,7 @@ class ImageRepository extends BaseRepository
             ->where('e not instance of :image_album')->setParameter('image_album', get_class(new ImageAlbum))
             ->leftJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
             ->leftJoin('e.images', 'i')
-            ->andWhere('size(e.images) > 2');
+            ->andWhere('size(e.images) > 1');
         if (!is_null($options['userId'])) {
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
                 ->andWhere('p.pageId is NULL')
@@ -92,5 +96,27 @@ class ImageRepository extends BaseRepository
         //     ->addOrderBy('i.sequence');
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+
+    public function getImage($id, $options = array())
+    {
+        $options = self::getOptions($options);
+
+        $query = $this->createQueryBuilder('i')
+            ->select('i')
+            ->where('i.id = :id')->setParameter('id', $id);
+        if (!is_null($options['userId'])) {
+            $query->andWhere('i.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('i.pageId is NULL')
+                ->andWhere('i.groupId is NULL');
+        }
+        if (!is_null($options['pageId'])) {
+            $query->andWhere('i.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $query->andWhere('i.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+
+        return $query->getQuery()->getSingleResult();
     }
 }

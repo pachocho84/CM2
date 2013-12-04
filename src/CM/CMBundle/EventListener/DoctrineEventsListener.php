@@ -76,7 +76,7 @@ class DoctrineEventsListener
             $this->fanPersistedRoutine($object, $em);
         }
         if (($object instanceof User || $object instanceof Page || $object instanceof Group)
-            && (!empty($object->getImg()) || !empty($object->getCoverImg()) || (property_exists($publisher, 'backgroundImg') && !empty($publisher->getBackgroundImg())))) {
+            && ($object->getImg() || $object->getCoverImg() || (property_exists($publisher, 'backgroundImg') && $publisher->getBackgroundImg()))) {
             $this->imgPersistedRoutine($object, $em);
         }
     }
@@ -595,7 +595,7 @@ class DoctrineEventsListener
             $user = is_null($this->get('security.context')->getToken()) ? $group->getCreator() : $this->getUser();
         }
 
-        if (!empty($publisher->getImg())) {
+        if ($publisher->getImg()) {
             $album = new ImageAlbum;
             $album->setType(ImageAlbum::TYPE_PROFILE);
 
@@ -622,7 +622,7 @@ class DoctrineEventsListener
 
             $em->persist($album);
         }
-        if (!empty($publisher->getCoverImg())) {
+        if ($publisher->getCoverImg()) {
             $album = new ImageAlbum;
             $album->setType(ImageAlbum::TYPE_COVER);
 
@@ -649,7 +649,7 @@ class DoctrineEventsListener
 
             $em->persist($album);
         }
-        if (property_exists($publisher, 'backgroundImg') && !empty($publisher->getBackgroundImg())) {
+        if (property_exists($publisher, 'backgroundImg') && $publisher->getBackgroundImg()) {
             $album = new ImageAlbum;
             $album->setType(ImageAlbum::TYPE_BACKGROUND);
 

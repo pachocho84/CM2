@@ -25,15 +25,8 @@
                 <li><a href="{{ path('page_entities_albums', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
             </ul>
         </div>
-        <div class="">
-            {% for image in images %}
-                {% if loop.index % 4 == 1 %}<div class="row">{% endif %}
-                    <div class="col-lg-3">
-                        {{ show_img_box(image.getImg|imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
-                        <p>{{ image.text }}</p>
-                    </div>
-                {% if loop.index % 4 == 0 or loop.index == images|length %}</div>{% endif %}
-            {% endfor %}
+        <div>
+            {{ include('CMBundle:ImageAlbum:imageList.html.twig')}}
         </div>
     </div>
     
