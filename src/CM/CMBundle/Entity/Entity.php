@@ -176,7 +176,7 @@ abstract class Entity
     public function getPost()
     {
         foreach ($this->posts as $post) {
-            if ($post->getType() == Post::TYPE_CREATION) {
+            if ($post->getType() == Post::TYPE_CREATION && $post->getObject() == get_class($this)) {
                 return $post;
             }
         }

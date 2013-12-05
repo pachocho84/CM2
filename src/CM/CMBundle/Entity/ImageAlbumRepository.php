@@ -128,10 +128,10 @@ class ImageAlbumRepository extends BaseRepository
     {
         $options = self::getOptions($options);
 
-        $query = $this->createQueryBuilder('a')
-            ->select('a')
-            ->innerJoin('a.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
-            ->where('a.id = :id')->setParameter('id', $id);
+        $query = $this->getEntityManager()->createQueryBuilder('e')
+            ->select('e')->from('CMBundle:Entity', 'e')
+            ->innerJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
+            ->where('e.id = :id')->setParameter('id', $id);
         if (!is_null($options['userId'])) {
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
                 ->andWhere('p.pageId is NULL')

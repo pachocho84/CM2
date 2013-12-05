@@ -32,10 +32,10 @@ class LikeController extends Controller
             $like = new Like();
             $like->setUser($this->getUser());
             if ($type == 'post') {
-                $post = $em->getRepository('CMBundle:Post')->find($id);
+                $post = $em->getRepository('CMBundle:Post')->findOneById($id);
                 $like->setPost($post);
             } elseif ($type == 'image') {
-                $post = $em->getRepository('CMBundle:Image')->find($id);
+                $post = $em->getRepository('CMBundle:Image')->findOneById($id);
                 $like->setImage($post);
             }
             $em->persist($like);

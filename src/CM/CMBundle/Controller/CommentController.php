@@ -23,15 +23,21 @@ use CM\CMBundle\Form\CommentType;
 class CommentController extends Controller
 {
     /**
-     * @Route("/new/{postId}", name="comment_new", requirements={"postId" = "\d+"}) 
+     * @Route("/new/{id}/{isImage}", name="comment_new", requirements={"id" = "\d+"}) 
      * @Template
      */
-    public function commentsAction(Request $request, Post $post = null, $postId = null)
+    public function commentsAction(Request $request, $id = null, $isImage = false)
     {
         $em = $this->getDoctrine()->getManager();
 
-        if (is_null($post)) {
-            $post = $em->getRepository('CMBundle:Post')->findOneById($postId);
+        if (!$isImage) {
+            $post = $em->getRepository('CMBundle:Post')->getPostWithComments($id);
+            $image = null;
+            $link = '';//$this->generateUrl('comment_new', array('postId' => $post->getId());
+        } else {
+            $post = null;
+            $image = $em->getRepository('CMBundle:Image')->getImageWithComments($id);
+            $link = '';//$this->generateUrl('comment_new', array('postId' => $post->getId());
         }
 
         $form = null;
@@ -39,7 +45,8 @@ class CommentController extends Controller
             $comment = new Comment;
             $form = $this->createForm(new CommentType, $comment, array(
                 'action' => $this->generateUrl('comment_new', array(
-                    'postId' => $post->getId()
+                    'id' => $id,
+                    'isImage' => $isImage
                 )),
                 'cascade_validation' => true
             ));
@@ -49,14 +56,15 @@ class CommentController extends Controller
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getEntityManager();
                 $comment->setUser($this->getUser())
-                    ->setPost($post);
+                    ->setPost($post)
+                    ->setImage($image);
                 $em->persist($comment);
                 $em->flush();
     
                 if ($request->isXmlHttpRequest()) {
-                    if ($comment->getPost()->getId()) {
+                    if (!is_null($post)) {
                         $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getPost()));
-                    } elseif ($comment->getImage()->getId()) {
+                    } else {
                         $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getImage()));
                     }
     
@@ -73,8 +81,8 @@ class CommentController extends Controller
         }
 
         return array(
-            'post' => $post,
-            'comments' => $post->getComments(),
+            'link' => $link,
+            'comments' => is_null($post) ? $image->getComments() : $post->getComments(),
             'form' => $form
         );
     }

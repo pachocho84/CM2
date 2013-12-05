@@ -37,7 +37,7 @@
                 <img src="{{ asset(uploaded_images_full_dir~'/'~image.img) }}" width=200 />
             {% endfor %}
           
-            {{ include('CMBundle::social.html.twig', {'post': event.posts[0]}) }} 
+            {{ include('CMBundle::social.html.twig', {'post': event.post}) }} 
             <div>
                 {{ form(form) }}
             </div>

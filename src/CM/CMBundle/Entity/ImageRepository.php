@@ -45,8 +45,7 @@ class ImageRepository extends BaseRepository
         if (!is_null($options['groupId'])) {
             $query->andWhere('i.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
-        $query->orderBy('i.main')
-            ->addOrderBy('i.sequence');
+        $query->addOrderBy('i.sequence', 'desc');
 
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
@@ -103,7 +102,14 @@ class ImageRepository extends BaseRepository
         $options = self::getOptions($options);
 
         $query = $this->createQueryBuilder('i')
-            ->select('i')
+            ->select('i, e, t, p, l, lu, c, cu')
+            ->leftJoin('i.entity', 'e')
+            ->leftJoin('e.translations', 't')
+            ->leftJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
+            ->leftJoin('i.likes', 'l')
+            ->leftJoin('l.user', 'lu')
+            ->leftJoin('i.comments', 'c')
+            ->leftJoin('c.user', 'cu')
             ->where('i.id = :id')->setParameter('id', $id);
         if (!is_null($options['userId'])) {
             $query->andWhere('i.userId = :user_id')->setParameter('user_id', $options['userId'])
@@ -118,5 +124,15 @@ class ImageRepository extends BaseRepository
         }
 
         return $query->getQuery()->getSingleResult();
+    }
+
+    public function getImageWithComments($id)
+    {
+        return $this->createQueryBuilder('i')
+            ->select('i, c, cu')
+            ->leftJoin('i.comments', 'c')
+            ->leftJoin('c.user', 'cu')
+            ->where('i.id = :id')->setParameter('id', $id)
+            ->getQuery()->getSingleResult();
     }
 }

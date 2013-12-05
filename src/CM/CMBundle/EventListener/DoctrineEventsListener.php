@@ -365,40 +365,54 @@ class DoctrineEventsListener
 
     private function commentPersistedRoutine(Comment $comment, EntityManager $em)
     {
+        if (!is_null($comment->getPost())) {
+            $post = $comment->getPost();
+            $entity = $post->getEntity();
+            $object = $post;
+            $toUser = $post->getUser();
+            $toCreator = $post->getCreator();
+        } else {
+            $post = null;
+            $entity = null;
+            $object = $comment->getImage();
+            $toUser = $object->getUser();
+            $toCreator = $object->getUser();
+        }
+
         $this->get('cm.post_center')->newPost(
             $comment->getUser(),
             $comment->getUser(),
             Post::TYPE_CREATION,
             get_class($comment),
             array($comment->getId()),
-            $comment->getPost()->getEntity()
+            $entity
         );
 
         $notifiedUserIds = array($comment->getUser()->getID());
 
         $this->get('cm.notification_center')->newNotification(
             Notification::TYPE_COMMENT,
-            $comment->getPost()->getUser(),
+            $toUser,
             $comment->getUser(),
             get_class($comment),
             $comment->getId(),
-            $comment->getPost()
+            $post
         );
-        $notifiedUserIds[] = $comment->getPost()->getUser()->getId();
+        $notifiedUserIds[] = $toUser->getId();
 
-        if ($comment->getPost()->getCreator()->getId() != $comment->getPost()->getUser()->getId()) {
+        if ($toCreator->getId() != $toUser->getId()) {
             $this->get('cm.notification_center')->newNotification(
                 Notification::TYPE_COMMENT,
-                $comment->getPost()->getCreator(),
+                $toCreator,
                 $comment->getUser(),
                 get_class($comment),
                 $comment->getId(),
-                $comment->getPost()
+                $post
             );
-            $notifiedUserIds[] = $comment->getPost()->getCreator()->getId();
+            $notifiedUserIds[] = $toCreator->getId();
         }
 
-        foreach (array_merge($comment->getPost()->getComments()->toArray(), $comment->getPost()->getLikes()->toArray()) as $toNotify) {
+        foreach (array_merge($object->getComments()->toArray(), $object->getLikes()->toArray()) as $toNotify) {
             if (in_array($toNotify->getUser()->getId(), $notifiedUserIds)) {
                 continue;
             }
@@ -429,32 +443,46 @@ class DoctrineEventsListener
 
     private function likePersistedRoutine(Like $like, EntityManager $em)
     {
+        if (!is_null($like->getPost())) {
+            $post = $like->getPost();
+            $entity = $post->getEntity();
+            $object = $post;
+            $toUser = $post->getUser();
+            $toCreator = $post->getCreator();
+        } else {
+            $post = null;
+            $entity = null;
+            $object = $like->getImage();
+            $toUser = $object->getUser();
+            $toCreator = $object->getUser();
+        }
+
         $this->get('cm.post_center')->newPost(
             $like->getUser(),
             $like->getUser(),
             Post::TYPE_CREATION,
             get_class($like),
             array($like->getId()),
-            $like->getPost()->getEntity()
+            $entity
         );
 
         $this->get('cm.notification_center')->newNotification(
             Notification::TYPE_LIKE,
-            $like->getPost()->getUser(),
+            $toUser,
             $like->getUser(),
             get_class($like),
             $like->getId(),
-            $like->getPost()
+            $post
         );
 
-        if ($like->getPost()->getCreator()->getId() != $like->getPost()->getUser()->getId()) {
+        if ($toCreator->getId() != $toUser->getId()) {
             $this->get('cm.notification_center')->newNotification(
                 Notification::TYPE_LIKE,
-                $like->getPost()->getCreator(),
+                $toCreator,
                 $like->getUser(),
                 get_class($like),
                 $like->getId(),
-                $like->getPost()
+                $post
             );
         }
     }

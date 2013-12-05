@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -134,5 +135,52 @@ class ImageAlbumController extends Controller
             'newEntry' => ($formRoute == 'album_new'),
             'joinEntityType' => 'joinalbum'
         );
+    }
+
+    /**
+     * @Route("/{slug}/sort/{id}", name="imagealbum_sort", requirements={"id" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function sortAction(Request $request, $slug, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+
+        try {
+            $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id, array('userId' => $user->getId()));
+        } catch (\Exception $e) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Album not found.', array(), 'http-errors'));
+        }
+
+        if (!$this->get('cm.user_authentication')->canManage($album)) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+        
+        $images = $em->getRepository('CMBundle:Image')->getImages(array('albumId' => $id, 'paginate' => false, 'limit' => null));
+        
+        foreach ($images as $image) {
+            if ($request->get($image->getId())) {
+                $image->setSequence($request->get($image->getId()));
+                $em->persist($image);
+            }
+        }
+
+        $em->flush();
+
+        switch ($request->get('publisher')) {
+            case 'User':
+                return $this->redirect($this->generateUrl('user_album', array('slug' => $slug, 'id' => $id)), 301);
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        // $this->getUser()->setFlash('success', 'Images successfully sorted.');
+        
+        // $this->redirect('@image_album_show?id='.$this->album->getEntityId());
     }
 }

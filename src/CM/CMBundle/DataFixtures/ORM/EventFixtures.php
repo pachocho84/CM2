@@ -149,10 +149,10 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                 $event->addEventDate($eventDate);
             }
             
+            $userNum = rand(1, 8);
+            $user = $manager->merge($this->getReference('user-'.$userNum));
+
             if (rand(0, 4) > 0) {
-
-                $user = $manager->merge($this->getReference('user-'.rand(1, 8)));
-
                 $image = new Image;
                 $image
                     ->setImg($this->events[$eventNum]['img'])
@@ -173,9 +173,6 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                 }
     
             }
-            
-            $userNum = rand(1, 8);
-            $user = $manager->merge($this->getReference('user-'.$userNum));
             
             $category = $manager->merge($this->getReference('entity_category-'.rand(1, 3)));
             $category->addEntity($event);

@@ -116,7 +116,9 @@ class Comment
     public function setPost(Post $post = null)
     {
         $this->post = $post;
-        $this->postId = $post->getId();
+        if (!is_null($post)) {
+            $this->postId = $post->getId();
+        }
     
         return $this;
     }

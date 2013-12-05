@@ -136,4 +136,14 @@ class PostRepository extends BaseRepository
         // TODO: make it usable for images
         $query->getQuery()->execute();
     }
+
+    public function getPostWithComments($id)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p, c, cu')
+            ->leftJoin('p.comments', 'c')
+            ->leftJoin('c.user', 'cu')
+            ->where('p.id = :id')->setParameter('id', $id)
+            ->getQuery()->getSingleResult();
+    }
 }

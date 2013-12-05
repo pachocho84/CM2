@@ -370,6 +370,51 @@ class Image
     {
         return $this->likes;
     }
+    
+    public function getLikesWithoutUser($user)
+    {
+        if (is_null($user)) {
+            return $this->getLikes();
+        }
+    
+        $likes = new ArrayCollection;
+        foreach ($this->getLikes() as $like) {
+            if ($like->getUser() != $user) {
+                $likes[] = $like;
+            }
+        }
+        return $likes;
+    }
+    
+    public function getUserLikesIt($user, $authenticated)
+    {
+        if (is_null($user) || !$authenticated) {
+            return false;
+        }
+        
+        foreach ($this->getLikes() as $like) {
+            if ($like->getUser() == $user) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+  
+    public function getWhoLikesIt($user, $authenticated)
+    {
+        if (!is_null($user) && $authenticated) {
+            $count = 0;
+            foreach ($this->getLikes() as $like) {
+                if ($like->getUser() != $user) {
+                    $count++;
+                }
+            };
+            return $count;
+        }
+        
+        return $this->getLikes()->count();
+    }
 
     /**
      * Add comment
