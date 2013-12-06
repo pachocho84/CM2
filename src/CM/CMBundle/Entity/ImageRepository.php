@@ -50,14 +50,14 @@ class ImageRepository extends BaseRepository
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
-    public function getEventsImages($options = array())
+    public function getEntityImages($options = array())
     {
         $options = self::getOptions($options);
 
         $count = $this->getEntityManager()->createQueryBuilder()
             ->select('count(e.id)')
             ->from('CMBundle:Entity', 'e')
-            ->where('e not instance of :image_album')->setParameter('image_album', get_class(new ImageAlbum))
+            // ->where('e not instance of :image_album')->setParameter('image_album', $object)
             ->innerJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
             ->leftJoin('e.images', 'i')
             ->andWhere('size(e.images) > 2');
@@ -76,7 +76,7 @@ class ImageRepository extends BaseRepository
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('e')
             ->from('CMBundle:Entity', 'e')
-            ->where('e not instance of :image_album')->setParameter('image_album', get_class(new ImageAlbum))
+            // ->where('e not instance of :image_album')->setParameter('image_album', $object)
             ->leftJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
             ->leftJoin('e.images', 'i')
             ->andWhere('size(e.images) > 1');

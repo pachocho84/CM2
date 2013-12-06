@@ -1,53 +1,8 @@
 {% for image in images %}
-    {% if loop.index % 4 == 1 %}<div class="row">{% endif %}
-        <li class="object image" data-type="image" data-id="{{ image.id }}">
-            
-            {% if can_manage(image) %}
-                <div class="btn-group pull-right hide">
-                  <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="glyphicon glyphicon-chevron-down"></i>
-                  </a>
-                  <ul class="dropdown-menu">
-                    {% if album is defined %}<li><a href="{#{{ path('make_album_cover', {'id': image.id, 'albumId': album.id}) }}#}">{{ 'Make album cover'|trans }}</a></li>{% endif %}
-                    <li class="divider"></li>
-                    <li><a href="{#{{ path('make_profile', {'id': image.id}) }}#}">{{ 'Make profile picture'|trans }}</a></li>
-                    <li><a href="{#{{ path('make_cover', {'id': image.id}) }}#}">{{ 'Make cover picture'|trans }}</a></li>
-                    <li class="divider"></li>
-                    <li><a href="{#{{ path('rotate_left', {'id': image.id}) }}#}">{{ 'Rotate left'|trans }}</a></li>
-                    <li><a href="{#{{ path('rotate_right', {'id': image.id}) }}#}">{{ 'Rotate right'|trans }}</a></li>
-                  </ul>
-                </div>
-            {% endif %}
-            
-            <div class="image-container">
-                <a href="{{ path(link, {'slug': publisher.slug, 'id': image.id}) }}">
-                    {{ show_img_box(image.getImg|imagine_filter('350'), {'width': 150, 'height': 150, 'box_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
-                    <div class="image-overlay"></div>
-                </a>
-                <p>{{ image.text }}</p>
-                <div class="image-overlay-content">
-                    {#<h4><?php echo link_to(__($image->getImageAlbum()), '@image_album_show?id='.$image->getEntityId()) ?></h4>
-                    <div class="image-overlay-content-bottom">
-                        <?php if ($sf_context->getSito()->getLikesEnabled() && $sf_context->getSito()->getLikesDisplay()): ?>   
-                            <?php include_partial('like/likeActions', array('post' => $image)) ?>
-                        <?php endif ?>
-                        <div class="pull-right">
-                            <?php if ($sf_context->getSito()->getLikesEnabled() && $sf_context->getSito()->getLikesDisplay()): ?>   
-                                <?php include_partial('like/likeCount', array('post' => $image)) ?>
-                            <?php endif ?>
-                            <?php if ($sf_context->getSito()->getCommentsEnabled() && $sf_context->getSito()->getCommentsDisplay()): ?> 
-                                <?php include_partial('comment/commentCount', array('post' => $image)) ?>
-                            <?php endif ?>
-                        </div>
-                    </div>#}
-                </div>
-            </div>
-            <input type="hidden" name="{{ image.id }}" />
-        </li>
-    {% if loop.index % 4 == 0 or loop.index == images|length %}</div>{% endif %}
+    {{ include('CMBundle:ImageAlbum:singleImage.html.twig') }}
 {% endfor %}
 
-{% if images.paginationData.current < images.paginationData.last %}
+{% if images.paginationData is defined and images.paginationData.current < images.paginationData.last %}
     <div class="well well-small load_more">
         <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': images.getPaginationData.next })) }}">{{ 'Load more' | trans }}</a>
     </div>

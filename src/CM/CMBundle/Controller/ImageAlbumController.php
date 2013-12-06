@@ -19,6 +19,7 @@ use CM\CMBundle\Entity\ImageAlbum;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Form\ImageAlbumType;
+use CM\CMBundle\Form\ImageType;
 
 /**
  * @Route("/albums")
@@ -28,7 +29,7 @@ class ImageAlbumController extends Controller
     
     /**
      * @Route("/new/{object}/{objectId}", name="imagealbum_new", requirements={"objectId" = "\d+"}) 
-     * @Route("/{id}/{slug}/edit/{object}/{objectId}", name="imagealbum_edit", requirements={"id" = "\d+", "objectId" = "\d+"})
+     * @Route("/{id}/edit/{object}", name="imagealbum_edit", requirements={"id" = "\d+", "objectId" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
@@ -40,7 +41,7 @@ class ImageAlbumController extends Controller
         $page = null;
         $group = null;
         $showRoute = 'user_album';
-        if (!is_null($object)) {
+        if (!is_null($objectId)) {
             switch ($object) {
                 case 'Page':
                     $page = $em->getRepository('CMBundle:Page')->findOneById($objectId);
@@ -80,7 +81,7 @@ class ImageAlbumController extends Controller
 
             $album->addPost($post);
         } else {
-            $album = $em->getRepository('CMBundle:album')->getAlbum($id, array('locale' => $request->getLocale()));
+            $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id, array('locale' => $request->getLocale()));
             if (!$this->get('cm.user_authentication')->canManage($album)) {
                 throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }
@@ -134,6 +135,60 @@ class ImageAlbumController extends Controller
             'entity' => $album,
             'newEntry' => ($formRoute == 'album_new'),
             'joinEntityType' => 'joinalbum'
+        );
+    }
+
+    /**
+     * @Route("/addImage/{id}", name="imagealbum_add_image", requirements={"id" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template("CMBundle:ImageAlbum:singleImage.html.twig")
+     */
+    public function addImageAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id, array('locale' => $request->getLocale()));
+
+        if (!$this->get('cm.user_authentication')->canManage($album)) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $image = new Image;
+        $image->setMain(false)
+            ->setUser($this->getUser());
+        if (!is_null($album->getPost()->getPage())) {
+            $image->setPage($album->getPost()->getPage());
+            $publisher = $album->getPost()->getPage();
+            $link = 'page_image';
+        } elseif (!is_null($album->getPost()->getGroup())) {
+            $image->setGroup($album->getPost()->getGroup());
+            $publisher = $album->getPost()->getGroup();
+            $link = 'group_image';
+        } else {
+            $publisher = $this->getUser();
+            $link = 'user_image';
+        }
+
+        foreach ($request->files as $file) {
+            $image->setImgFile($file);
+        }
+
+        $errors = $this->get('validator')->validate($image);
+
+        if (count($errors) > 0) {
+            throw new HttpException(403, $this->get('translator')->trans('Error in file.', array(), 'http-errors'));
+        }
+            
+        $album->addImage($image);
+
+        $em->persist($album);
+        $em->flush();
+
+        return array(
+            'album' => $album,
+            'image' => $image,
+            'link' => $link,
+            'publisher' => $publisher
         );
     }
 

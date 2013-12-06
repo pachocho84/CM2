@@ -16,6 +16,7 @@ use JMS\SecurityExtraBundle\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Biography;
+use CM\CMBundle\Entity\Entity;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
@@ -356,7 +357,7 @@ class UserController extends Controller
             throw new NotFoundHttpException('User not found.');
         }
 
-        $entities = $em->getRepository('CMBundle:Image')->getEventsImages(array(
+        $entities = $em->getRepository('CMBundle:Image')->getEntityImages(array(
             'userId' => $user->getId(),
             'paginate' => false
         ));

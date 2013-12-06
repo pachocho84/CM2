@@ -224,6 +224,9 @@ class Image
     public function setEntity(Entity $entity = null)
     {
         $this->entity = $entity;
+        if (!is_null($entity)) {
+            $this->entityId = $entity->getId();
+        }
     
         return $this;
     }
@@ -257,6 +260,9 @@ class Image
     public function setUser(User $user = null)
     {
         $this->user = $user;
+        if (!is_null($user)) {
+            $this->userId = $user->getId();
+        }
     
         return $this;
     }
@@ -290,6 +296,9 @@ class Image
     public function setGroup(Group $group = null)
     {
         $this->group = $group;
+        if (!is_null($entity)) {
+            $this->groupId = $group->getId();
+        }
     
         return $this;
     }
@@ -323,6 +332,9 @@ class Image
     public function setPage(Page $page = null)
     {
         $this->page = $page;
+        if (!is_null($entity)) {
+            $this->pageId = $page->getId();
+        }
     
         return $this;
     }
