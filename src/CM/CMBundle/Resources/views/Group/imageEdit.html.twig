@@ -1,0 +1,82 @@
+{% extends "CMBundle::layout.html.twig" %}
+
+{% block title %}{{ 'Profile & cover pictures'|trans }}{% endblock %}
+
+{% block body %}
+
+    <h3>{{ show_icon('Nameplatealt') }} <span>{{ block('title') }}</span></h3>                             
+
+
+     
+    {#<ul class="breadcrumb">
+      <li><?php echo link_to('Home', '@homepage') ?></li>
+      <li><?php echo link_to(__('Account'), '@account') ?></li>
+      <li class="active"><?php echo $sf_response->getTitle() ?></li>
+    </ul>#}
+
+
+
+    <div class="box">
+        <div class="objects">
+            {{ form_start(form) }}
+
+                {{ form_row(form.imgFile) }}
+                {{ form_row(form.imgOffset, {'attr': {'img-offset-field': null}}) }}
+                {% if group.img is not null %}
+                    <div class="alert alert-info"><i class="glyphicon glyphicon-exclamation-sign"></i> {{ 'Drag the image to adjust position.' | trans }}</div>
+                    {{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ group.img), {'width': 150, 'height': 150, 'offset': group.imgOffset, 'box_attributes': {'id': 'profile-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px;'}}) | raw }}
+                {% endif %}
+            
+                {{ form_row(form.coverImgFile) }}
+                {{ form_row(form.coverImgOffset, {'attr': {'cover-img-offset-field': null}}) }}
+                {% if group.coverImg is not null %}
+                    <div class="alert alert-info"><i class="glyphicon glyphicon-exclamation-sign"></i> {{ 'Drag the image to adjust position.' | trans }}</div>
+                    <div>{{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ group.coverImg), {'width': 700, 'height': 266, 'offset': group.coverImgOffset, 'box_attributes': {'id': 'cover-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px; width: 702px; height 266px;' }}) | raw }}</div>
+                {% endif %}
+            
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">//<![CDATA[ 
+        $(function(){   
+            /* PROFILE & COVER PICTURE */
+            function image_position(box, target) {
+                box.css('cursor', 'move');
+                img = box.find('img');
+                offset = [img.position().left, img.position().top];
+                img.draggable({
+                    scroll: false,
+                    drag: function(event, ui) {
+                        if (ui.position.top > 0) {
+                            ui.position.top = 0;
+                        } else if (ui.position.top < box.outerHeight() - img.height()) {
+                            ui.position.top = box.outerHeight() - img.height();
+                        } 
+                        if (ui.position.left > 0) {
+                            ui.position.left = 0;
+                        } else if (ui.position.left < box.outerWidth() - img.width()) {
+                            ui.position.left = box.outerWidth() - img.width();
+                        }
+                    },
+                    stop: function(event, ui) {
+                        offsetX = Math.abs(100 * ui.position.left / box.outerWidth()).toFixed(2);
+                        offsetY = Math.abs(100 * ui.position.top / box.outerHeight()).toFixed(2);
+                        target.val(img.width() >= img.height() ? offsetX : offsetY);   
+                    }
+                });  
+            }
+            if ($('#profile-pic').length == 1) {
+                image_position($('#profile-pic'), $('[img-offset-field]'));
+            }
+            if ($('#cover-pic').length == 1) {
+                image_position($('#cover-pic'), $('[cover-img-offset-field]'));
+            }
+        });//]]>  
+    </script>
+{% endblock %}
+

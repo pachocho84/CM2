@@ -17,13 +17,13 @@
     <div class="box">
         <div class="box-top">
             <ul class="nav nav-tabs nav-justified">
-                <li><a href="{{ path('page_images', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
+                <li class="active"><a href="{{ path('page_images', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
                 <li><a href="{{ path('page_albums', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
-                <li class="active"><a href="{{ path('page_entities_albums', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
+                <li><a href="{{ path('page_entities_albums', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
             </ul>
         </div>
-        <div class="objects">
-            {{ include('CMBundle:ImageAlbum:imageEntityList.html.twig', {'link': 'page_album', 'publisher': page}) }}
+        <div class="media-list objects">
+            {{ include('CMBundle:ImageAlbum:image.html.twig') }}
         </div>
     </div>
     
@@ -33,3 +33,6 @@
     <?php end_slot() ?>#}
   
 {% endblock %}
+
+
+{#path('', {'slug': page.slug, 'albumSlug': 'profile'})#}

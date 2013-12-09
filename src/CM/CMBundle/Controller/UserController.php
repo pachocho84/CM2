@@ -111,7 +111,7 @@ class UserController extends Controller
         if (!$user) {
             throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
         }
-
+        
         $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('userId' => $user->getId()));
         $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
         
@@ -359,7 +359,7 @@ class UserController extends Controller
 
         $entities = $em->getRepository('CMBundle:Image')->getEntityImages(array(
             'userId' => $user->getId(),
-            'paginate' => false
+            // 'paginate' => false
         ));
         
         $pagination = $this->get('knp_paginator')->paginate($entities, $page, 32);

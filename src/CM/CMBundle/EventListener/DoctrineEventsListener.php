@@ -75,6 +75,9 @@ class DoctrineEventsListener
         if ($object instanceof Fan) {
             $this->fanPersistedRoutine($object, $em);
         }
+        if ($object instanceof Image) {
+            $this->imagePersistedRoutine($object, $em);
+        }
         if (($object instanceof User || $object instanceof Page || $object instanceof Group)
             && ($object->getImg() || $object->getCoverImg() || (property_exists($publisher, 'backgroundImg') && $publisher->getBackgroundImg()))) {
             $this->imgPersistedRoutine($object, $em);
@@ -82,7 +85,7 @@ class DoctrineEventsListener
     }
 
     public function postUpdate(LifecycleEventArgs $args)
-    {
+    {      
         $object = $args->getEntity();
         $em = $args->getEntityManager();
 
@@ -91,6 +94,9 @@ class DoctrineEventsListener
         }
         if ($object instanceof Fan) {
             $this->fanUpdatedRoutine($object, $em);
+        }
+        if ($object instanceof ImageAlbum) {
+            $this->imageAlbumUpdatedRoutine($object, $em);
         }
         if (($object instanceof User || $object instanceof Page || $object instanceof Group)
             && (array_key_exists('img', $em->getUnitOfWork()->getEntityChangeSet($object)) 
@@ -131,6 +137,9 @@ class DoctrineEventsListener
         }
         if ($object instanceof Fan) {
             $this->fanRemovedRoutine($object, $em);
+        }
+        if ($object instanceof ImageAlbum) {
+            // $this->imageAlbumRemovedRoutine($object, $em);
         }
         if ($object instanceof User || $object instanceof Page || $object instanceof Group) {
             $this->imgRemovedRoutine($object, $em);
@@ -606,6 +615,74 @@ class DoctrineEventsListener
         $this->get('cm.notification_center')->removeNotifications($fan->getFromUser()->getId(), get_class($fan), $fan->getId(), Notification::TYPE_FAN);
     }
 
+    private function imagePersistedRoutine(Image $image, EntityManager $em)
+    {
+        $entity = $image->getEntity();
+        $user = $image->getUser();
+        $page = $image->getPage();
+        $group = $image->getGroup();
+
+        $post = $em->getRepository('CMBundle:Post')->getLastPosts(array(
+            'entityId' => $entity->getId(),
+            'object' => get_class($image),
+            'userId' => is_null($user) ? null : $user->getId(),
+            'groupId' => is_null($group) ? null : $group->getId(),
+            'pageId' => is_null($page) ? null : $page->getId(),
+            'after' => new \DateTime('-12 hours'),
+            'paginate' => false,
+            'limit' => 1
+        ));
+        if (count($post) >= 1) {
+            $post = $post[0];
+            $post->addObjectId($image->getId());
+        } else {
+            $post = $this->get('cm.post_center')->newPost(
+                $user,
+                $image->getUser(),
+                Post::TYPE_UPDATE,
+                get_class($image),
+                array($image->getId()),
+                $entity,
+                $image->getPage(),
+                $image->getGroup()
+            );
+        }
+        $em->persist($post);
+
+        $this->flushNeeded = true;
+    }
+
+    public function imageAlbumUpdatedRoutine(ImageAlbum $album, EntityManager $em)
+    {
+        $post = $em->getRepository('CMBundle:Post')->getLastPosts(array(
+            'entityId' => $album->getId(),
+            'after' => new \DateTime('-12 hours'),
+            'paginate' => false,
+            'limit' => 1
+        ));
+        if (count($post) >= 1) {
+            $post = $post[0];
+            $post->setUpdatedAt(new \DateTime);
+            $em->persist($post);
+        } else {
+            $creationPost = $album->getPost();
+            $post = $this->get('cm.post_center')->newPost(
+                $user,
+                $creationPost->getUser(),
+                Post::TYPE_UPDATE,
+                get_class($album),
+                array($image->getId()),
+                $album,
+                $creationPost->getPage(),
+                $creationPost->getGroup()
+            );
+            $album->addPost($post);
+        }
+        $em->persist($post);
+
+        $this->flushNeeded = true;
+    }
+
     private function imgPersistedRoutine($publisher, EntityManager $em)
     {
         $user = null;
@@ -635,7 +712,9 @@ class DoctrineEventsListener
                 ->setPage($page)
                 ->setGroup($group);
             $album->addImage($image);
-            
+
+            $em->persist($album);
+
             $post = $this->get('cm.post_center')->newPost(
                 $user,
                 $user,
@@ -646,9 +725,8 @@ class DoctrineEventsListener
                 $page,
                 $group
             );
-            $album->addPost($post);
 
-            $em->persist($album);
+            $album->addPost($post);
         }
         if ($publisher->getCoverImg()) {
             $album = new ImageAlbum;
@@ -662,7 +740,9 @@ class DoctrineEventsListener
                 ->setPage($page)
                 ->setGroup($group);
             $album->addImage($image);
-            
+
+            $em->persist($album);
+
             $post = $this->get('cm.post_center')->newPost(
                 $user,
                 $user,
@@ -673,9 +753,8 @@ class DoctrineEventsListener
                 $page,
                 $group
             );
-            $album->addPost($post);
 
-            $em->persist($album);
+            $album->addPost($post);
         }
         if (property_exists($publisher, 'backgroundImg') && $publisher->getBackgroundImg()) {
             $album = new ImageAlbum;
@@ -689,6 +768,8 @@ class DoctrineEventsListener
                 ->setGroup($group);
             $album->addImage($image);
 
+            $em->persist($album);
+
             $post = $this->get('cm.post_center')->newPost(
                 $user,
                 $user,
@@ -699,9 +780,8 @@ class DoctrineEventsListener
                 $page,
                 $group
             );
-            $album->addPost($post);
 
-            $em->persist($album);
+            $album->addPost($post);
         }
 
         $this->flushNeeded = true;
@@ -743,30 +823,6 @@ class DoctrineEventsListener
                 ->setGroup($group);
             $album->addImage($image);
 
-            $post = $em->getRepository('CMBundle:ImageAlbum')->getLastPost($album->getId(), array(
-                'userId' => is_null($user) ? null : $user->getId(),
-                'groupId' => is_null($group) ? null : $group->getId(),
-                'pageId' => is_null($page) ? null : $page->getId(),
-                'type' => ImageAlbum::TYPE_PROFILE,
-                'after' => new \DateTime('-12 hours')
-            ));
-            if (!is_null($post)) {
-                $post->setUpdatedAt(new \DateTime);
-                $em->persist($post);
-            } else {
-                $post = $this->get('cm.post_center')->newPost(
-                    $this->getUser(),
-                    $user,
-                    Post::TYPE_UPDATE,
-                    get_class($album),
-                    array(),
-                    $album,
-                    $page,
-                    $group
-                );
-                $album->addPost($post);
-
-            }
             $em->persist($album);
         }
         if (array_key_exists('cover_img', $em->getUnitOfWork()->getEntityChangeSet($publisher))) {
@@ -790,29 +846,6 @@ class DoctrineEventsListener
                 ->setGroup($group);
             $album->addImage($image);
 
-            $post = $em->getRepository('CMBundle:ImageAlbum')->getLastPost($album->getId(), array(
-                'userId' => is_null($user) ? null : $user->getId(),
-                'groupId' => is_null($group) ? null : $group->getId(),
-                'pageId' => is_null($page) ? null : $page->getId(),
-                'type' => ImageAlbum::TYPE_COVER,
-                'after' => new \DateTime('-12 hours')
-            ));
-            if (!is_null($post)) {
-                $post->setUpdatedAt(new \DateTime);
-                $em->persist($post);
-            } else {
-                $post = $this->get('cm.post_center')->newPost(
-                    $this->getUser(),
-                    $user,
-                    Post::TYPE_UPDATE,
-                    get_class($album),
-                    array(),
-                    $album,
-                    $page,
-                    $group
-                );
-                $album->addPost($post);
-            }
             $em->persist($album);
         }
         if (array_key_exists('background_img', $em->getUnitOfWork()->getEntityChangeSet($publisher))) {
@@ -835,30 +868,6 @@ class DoctrineEventsListener
                 ->setGroup($group);
             $album->addImage($image);
 
-            $post = $em->getRepository('CMBundle:ImageAlbum')->getLastPost($album->getId(), array(
-                'userId' => is_null($user) ? null : $user->getId(),
-                'groupId' => is_null($group) ? null : $group->getId(),
-                'pageId' => is_null($page) ? null : $page->getId(),
-                'type' => ImageAlbum::TYPE_BACKGROUND,
-                'after' => new \DateTime('-12 hours')
-            ));
-            if (!is_null($post)) {
-                $post->setUpdatedAt(new \DateTime);
-                $em->persist($post);
-            } else {
-                $post = $this->get('cm.post_center')->newPost(
-                    $this->getUser(),
-                    $user,
-                    Post::TYPE_UPDATE,
-                    get_class($album),
-                    array(),
-                    $album,
-                    $page,
-                    $group
-                );
-                $album->addPost($post);
-
-            }
             $em->persist($album);
         }
 

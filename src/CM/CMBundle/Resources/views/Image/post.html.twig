@@ -1,0 +1,11 @@
+<div class="media">
+
+    <div class="media-body">
+
+        {% for image in relatedObjects|slice(0, 6) %}
+            {{ show_img_box(image.getImg|imagine_filter('350'), {'width': 150, 'height': 150, 'box_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+        {% endfor %}
+
+    </div><!-- END Media Body -->
+
+</div><!-- END Object -->

@@ -16,48 +16,49 @@
 
     <div class="box">
 
-        {#<div class="box-top box-top-big clearfix">
+
+        <div class="box-top box-top-big clearfix">
             <div class="media">
                 <div class="pull-right">
-                    <?php if ($sf_page->canManage($album)): ?>
+                    {% if album is defined and can_manage(album) %}
                         <span class="btn btn-default btn-sm fileinput-button" data-redirect="<?php echo url_for('@image_album_edit?id='.$album->getEntityId()) ?>">
-                            <i class="glyphicon glyphicon-plus"></i> <?php echo __('Add photos') ?>
-                            <form action="<?php echo url_for('image/imagesAdd?album_id='.$album->getEntityId()) ?>" method="post" enctype="multipart/form-data">
+                            <i class="glyphicon glyphicon-plus"></i> {{ 'Add photos'|trans }}
+                            <form action="{{ path('imagealbum_add_image', {'id': album.id}) }}" method="post" enctype="multipart/form-data">
                                 <input id="images" type="file" name="images" multiple />
                             </form>
                         </span>
-                        <?php echo link_to('<i class="glyphicon glyphicon-pencil"></i> '.__('Edit'), '@image_album_edit?id='.$album->getEntityId(), array('class' => 'btn btn-default btn-sm')) ?>
+                        {% if album is defined and album|class_name == 'ImageAlbum' %}<a href="{{ path('imagealbum_edit', {'id': album.id, 'slug': page.slug, 'publisher': page|class_name}) }}" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-pencil"></i> {{ 'Edit'|trans }}</a> '<i class="glyphicon glyphicon-pencil"></i></a>{% endif %}
                         <?php $album->getImageAlbum()->getType() == 'album' and print delete_link('@image_album_delete?id='.$album->getEntityId(), 'album', array('class' => 'btn btn-default btn-sm', 'data-placement' => 'left')) ?>
-                    <?php endif ?>
+                    {% endif %}
                 </div>
                 <div class="media-body">
                     <h2><?php echo image_tag('glyphicons/picture') ?> <?php echo __($album->getEntity()) ?></h2>
                 </div>
             </div>
-            <?php $album->getEntity()->getText('en') and print simple_format_text($album->getRawValue()->getEntity()->getText('en')) ?>
+            {#<?php $album->getEntity()->getText('en') and print simple_format_text($album->getRawValue()->getEntity()->getText('en')) ?>
             
-            <?php include_partial('menu', array('page' => $page, 'nb_images' => $imagesCount, 'nb_albums' => $albumsCount, 'section' => 'album')) ?>
-        </div>#}
+            <?php include_partial('menu', array('page' => $page, 'nb_images' => $imagesCount, 'nb_albums' => $albumsCount, 'section' => 'album')) ?>#}
+        </div>
 
 
-        {#<?php if ($page->getId() == $sf_page->getId()): ?>
-            <div class="objects hide">
+        {% if album is defined and can_manage(album) %}
+            <div class="objects hidden">
                 <div class="progress progress-striped active" style="margin-bottom: 0;">
                     <div class="bar bar-success" style="width: 0%;"></div>
+                </div>
             </div>
-            </div>
-        <?php endif ?>#}
+        {% endif %}
 
 
         <div class="box-top">
             <ul class="nav nav-tabs nav-justified">
-                <li class="active"><a href="{{ path('page_images', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
-                <li><a href="{{ path('page_albums', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
+                <li><a href="{{ path('page_images', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
+                <li class="active"><a href="{{ path('page_albums', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
                 <li><a href="{{ path('page_entities_albums', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
             </ul>
         </div>
 
-        <ul class="list-unstyled objects images{% if album is defined %} images-sortable{% endif %} clearfix">
+        <ul class="list-unstyled objects images{% if album is defined and can_manage(album) and images|length > 1 %} images-sortable{% endif %} clearfix">
             {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %}
                 <form action="{{ path('imagealbum_sort', {'id': album.id, 'slug': page.slug, 'publisher': page|class_name}) }}" method="post">
                     <div class="alert alert-info">
@@ -86,9 +87,42 @@
     {{ parent() }}
     {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %}
         {% javascripts
+            'lib/fileupload/js/jquery.fileupload.js'
+            'lib/fileupload/js/jquery.fileupload-ui.js'
+            'lib/fileupload/js/jquery.iframe-transport.js'
             '@CMBundle/Resources/public/js/images.js'
         %}
             <script src="{{ asset_url }}"></script>
         {% endjavascripts %}
     {% endif %}
 {% endblock %}
+
+{#
+
+<div class="box">
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+    
+    <div class="objects">
+        <div class="object">
+            <?php include_partial('utility/bottom', array('post' => $album)) ?>
+        </div>
+    </div>
+    
+</div>
+
+
+
+<?php slot('sidebar_slot3') ?>  
+    <?php include_component('fan', 'pageFans', array('page' => $page)) ?>
+<?php end_slot() ?>#}

@@ -22,6 +22,9 @@
                 <li><a href="{{ path('user_entities_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
             </ul>
         </div>
+
+        <a href="{{ path('imagealbum_new') }}">{{ 'Create a new album'|trans }}</a>
+
         <div class="media-list objects">
             {{ include('CMBundle:ImageAlbum:albumList.html.twig', {'link': 'user_album', 'publisher': user}) }}
         </div>

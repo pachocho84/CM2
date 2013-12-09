@@ -25,6 +25,21 @@ class ImageRepository extends BaseRepository
         ), $options);
     }
 
+    public function getImagesByIds($ids, $options = array())
+    {
+        $options = self::getOptions($options);
+
+        $query = $this->createQueryBuilder('i')
+            ->select('i')
+            ->where('i.id in (:ids)')->setParameter('ids', $ids);
+        if (!is_null($options['limit'])) {
+            $query->setMaxResults($options['limit']);
+        }
+        $query->orderBy('i.updatedAt', 'desc');
+
+        return $query->getQuery()->getResult();
+    }
+
     public function getImages($options = array())
     {
         $options = self::getOptions($options);
@@ -57,8 +72,14 @@ class ImageRepository extends BaseRepository
         $count = $this->getEntityManager()->createQueryBuilder()
             ->select('count(e.id)')
             ->from('CMBundle:Entity', 'e')
-            // ->where('e not instance of :image_album')->setParameter('image_album', $object)
+            ->where('e not instance of :image_album')->setParameter('image_album', 'image_album')
             ->innerJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
+            ->andWhere('p.object in (:objects)')->setParameter('objects', array(
+                'CM\CMBundle\Entity\Entity',
+                'CM\CMBundle\Entity\Event',
+                'CM\CMBundle\Entity\Biography',
+                'CM\CMBundle\Entity\Disc'
+            ))
             ->leftJoin('e.images', 'i')
             ->andWhere('size(e.images) > 2');
         if (!is_null($options['userId'])) {
@@ -74,10 +95,17 @@ class ImageRepository extends BaseRepository
         }
 
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('e')
+            ->select('e, t, i')
             ->from('CMBundle:Entity', 'e')
-            // ->where('e not instance of :image_album')->setParameter('image_album', $object)
+            ->leftJoin('e.translations', 't')
+            ->where('e not instance of :image_album')->setParameter('image_album', 'image_album')
             ->leftJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
+            ->andWhere('p.object in (:objects)')->setParameter('objects', array(
+                'CM\CMBundle\Entity\Entity',
+                'CM\CMBundle\Entity\Event',
+                'CM\CMBundle\Entity\Biography',
+                'CM\CMBundle\Entity\Disc'
+            ))
             ->leftJoin('e.images', 'i')
             ->andWhere('size(e.images) > 1');
         if (!is_null($options['userId'])) {

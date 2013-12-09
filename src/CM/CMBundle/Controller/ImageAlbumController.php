@@ -57,6 +57,8 @@ class ImageAlbumController extends Controller
         
         if (is_null($id)) {
             $album = new ImageAlbum;
+            $album->translate('en');
+            $album->mergeNewTranslations();
             $album->setType(ImageAlbum::TYPE_ALBUM);
 
             $image = new Image;
@@ -117,7 +119,7 @@ class ImageAlbumController extends Controller
 
             switch ($object) {
                 case 'Page':
-                    return new RedirectResponse($this->generateUrl('page_album', array('id' => $album->getId(), 'slug' => $user->getSlug())));
+                    return new RedirectResponse($this->generateUrl('page_album', array('id' => $album->getId(), 'slug' => $page->getSlug())));
                 case 'Group':
                     return new RedirectResponse($this->generateUrl('group_album', array('id' => $album->getId(), 'slug' => $group->getSlug())));
                 default:

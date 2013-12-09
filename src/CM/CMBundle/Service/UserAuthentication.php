@@ -139,14 +139,13 @@ class UserAuthentication
             }
                   
             $user_id = $this->securityContext->getToken()->getUser()->getId();
-            if (method_exists($object, 'getCreator')) {
-                $creator_id = $object->getCreator()->getId();
-            } elseif (method_exists($object, 'getUser'))
-            {
-                $creator_id = $object->getUser()->getId();
+            if (method_exists($object, 'getCreatorId')) {
+                $creator_id = $object->getCreatorId();
+            } elseif (method_exists($object, 'getUserId')) {
+                $creator_id = $object->getUserId();
             } elseif (method_exists($object, 'getPost')) {
                 if (!is_null($object->getPost())) {
-                    $creator_id = $object->getPost()->getCreator()->getId();
+                    $creator_id = $object->getPost()->getCreatorId();
                 } else {
                     return true; // is a newly created entity!
                 }
@@ -169,12 +168,12 @@ class UserAuthentication
             }
                   
             // 4) GROUP
-            if (!empty($group_id) && in_array($group_id, $this->session->get('user/groups_admin'))) {
+            if (!is_null($group_id) && in_array($group_id, $this->session->get('user/groups_admin'))) {
                 return true;
             }      
                   
             // 5) PAGE 
-            if (!empty($page_id) && in_array($page_id, $this->session->get('user/pages_admin'))) {
+            if (!is_null($page_id) && in_array($page_id, $this->session->get('user/pages_admin'))) {
                 return true;
             }  
     
@@ -182,13 +181,12 @@ class UserAuthentication
             if (method_exists($object, 'getEntityUsers') && !$object->getEntityUsers()->isEmpty()) {
                 $protagonists = $object->getEntityUsers();
                 foreach ($protagonists as $protagonist) {
-                    if ($protagonist->getUser()->getId() == $user_id && $protagonist->isAdmin() && $protagonist->getStatus() == EntityUser::STATUS_ACTIVE) {
+                    if ($protagonist->getUserId() == $user_id && $protagonist->isAdmin() && $protagonist->getStatus() == EntityUser::STATUS_ACTIVE) {
                         return true;
                     }
                 }
             }
-        } else {  // Not authenticated
-            return false;
         }
+        return false;
     }
 }

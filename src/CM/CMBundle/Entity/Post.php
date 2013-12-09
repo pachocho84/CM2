@@ -169,11 +169,11 @@ class Post
     public function getPublisherRoute()
     {
 		if ($this->getPage()) {
-			return 'page_show';
+			return 'page';
 		} elseif ($this->getGroup()) {
-			return 'group_show';
+			return 'group';
 		} else {
-			return 'user_show';
+			return 'user';
 		}
     }
 
@@ -360,6 +360,7 @@ class Post
      */
     public function addObjectId($objectIds)
     {
+        $this->removeObjectId('changed');
         $this->objectIdsArray = array_merge($this->objectIdsArray, array($objectIds));
         $this->objectIds = 'changed';
     

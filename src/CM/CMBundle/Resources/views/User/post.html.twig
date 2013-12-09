@@ -8,7 +8,7 @@
     
         <h4><a href="{{ path('user_show', {'slug': post.user.getSlug}) }}">{{ post.user }}</a></h4>
 
-        {{ '%user% joined %cm%'|trans({'%user%': '<a href="'~path('user_show', {'slug': user.slug})~'">'~user~'</a>', '%cm%': 'Circuito Musica'})|raw }}
+        {{ '%user% joined %cm%'|trans({'%user%': '<a href="'~path('user_show', {'slug': post.user.slug})~'">'~user~'</a>', '%cm%': 'Circuito Musica'})|raw }}
 
     </div><!-- END Media Body -->
 

@@ -15,6 +15,8 @@ class PostRepository extends BaseRepository
     static protected function getOptions(array $options = array())
     {
         return array_merge(array(
+            'entityId' => null,
+            'object' => null,
             'after' => null,
             'userId' => null,
             'pageId' => null,
@@ -33,7 +35,7 @@ class PostRepository extends BaseRepository
             ->getQuery()->getSingleResult();
     }
 
-    public function getLastPosts(array $options = array())
+    public function getLastPosts($options = array())
     {
         $options = self::getOptions($options);
 
@@ -49,25 +51,28 @@ class PostRepository extends BaseRepository
             ->leftJoin('ep.comments', 'epc')
             ->leftJoin('epl.user', 'eplu')
             ->leftJoin('epc.user', 'epcu');
+        if (!is_null($options['entityId'])) {
+            $query->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId']);
+        }
+        if (!is_null($options['object'])) {
+            $query->andWhere('p.object = :object')->setParameter('object', $options['object']);
+        }
         if (!is_null($options['after'])) {
             $query->andWhere('p.updatedAt > :after')->setParameter('after', $options['after']);
         }
-        if (!is_null($options['userId'])) {
-            $query->orWhere('p.user = :user_id')->setParameter('user_id', $options['userId'])
-                ->orWhere('eu.userId = :user_id')
+        if (!is_null($options['pageId'])) {
+            $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+        } elseif (!is_null($options['groupId'])) {
+            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        } elseif (!is_null($options['userId'])) {
+            $query->andWhere('p.userId = :user_id')
                 ->andWhere($query->expr()->orX(
                     $query->expr()->orX(
                         $query->expr()->eq('p.userId', ':user_id'),
                         $query->expr()->eq('p.creatorId', ':user_id')
                     ),
                     $query->expr()->eq('e.visible', '1')
-                ));
-        }
-        if (!is_null($options['pageId'])) {
-            $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
-        }
-        if (!is_null($options['groupId'])) {
-            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+                ))->setParameter('user_id', $options['userId']);
         }
         $query->orderBy('p.updatedAt', 'desc')
             ->addOrderBy('p.id', 'desc');

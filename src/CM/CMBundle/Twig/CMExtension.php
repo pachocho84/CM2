@@ -13,6 +13,7 @@ use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Request;
 use CM\CMBundle\Entity\Notification;
 use CM\CMBundle\Entity\Post;
+use CM\CMBundle\Entity\ImageAlbum;
 
 class CMExtension extends \Twig_Extension
 {
@@ -437,7 +438,7 @@ class CMExtension extends \Twig_Extension
     public function getPostText(Post $post, $relatedObjects = null)
     {
         // $object_page = '@'.$post->getObject().'_index';
-        $userLink = $this->router->generate('user_show', array('slug' => $post->getPublisher()->getSlug()));
+        $userLink = $this->router->generate($post->getPublisherRoute().'_show', array('slug' => $post->getPublisher()->getSlug()));
         switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Event_'.Post::TYPE_CREATION:
                 $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
@@ -493,6 +494,30 @@ class CMExtension extends \Twig_Extension
                     '%page%' => '<a href="'.$objectLink.'">'.$post->getPage().'</a>'
                 ));
                 // return __('%user% has opened the page %page%', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%page%' => link_to($post->getRelatedObject()->getFirst(), $post->getRelatedObject()->getFirst()->getLinkShow())));
+            case 'ImageAlbum_'.Post::TYPE_CREATION:
+                $albumLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
+                return $this->translator->trans('%user% has created '.$post->getPublisherSex('his').' album %album%', array(
+                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%album%' => '<a href="'.$albumLink.'">'.$post->getEntity().'</a>'
+                ));
+            case 'Image_'.Post::TYPE_UPDATE:
+                switch ($this->getClassName($post->getEntity())) {
+                    case 'Event':
+                        $entityLink = $this->router->generate('event_show', array('id' => $post->getEntityId(), 'slug' => $post->getEntity()->getSlug()));
+                        $entityString = ' event';
+                        break;
+                    case 'ImageAlbum':
+                        $entityLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
+                        $albumString = $post->getEntity()->getType() == ImageAlbum::TYPE_ALBUM ? ' album' : '';
+                        break;
+                    default:
+                        $entityLink = '';
+                        break;
+                }
+                return $this->translator->trans('%user% has added images to '.$post->getPublisherSex('his').$entityString.' %entity%', array(
+                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>'
+                ));
             case 'user_img_update':
                 // return __('%user% has updated '.$post->getPublisherSex('his').' profile picture.', array('%user%'   => link_to($post->getUser(), $post->getUser()->getLinkShow())));
             case 'user_cover_img_update':

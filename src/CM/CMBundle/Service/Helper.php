@@ -39,11 +39,8 @@ class Helper
     {
         switch (self::className($object))
         {
-            case 'Entity':
-            case 'Event':
-            case 'Disc':
-            case 'Article':
-                return $this->em->getRepository('CMBundle:Post')->getEntity($objectId);
+            case 'Image':
+                return $this->em->getRepository('CMBundle:Image')->getImagesByIds($objectId, array('limit' => 6));
             case 'Comment':
                 return $this->em->getRepository('CMBundle:Comment')->findOneById($objectId);
             case 'Like':
@@ -68,6 +65,11 @@ class Helper
                 // return is_array($object_id) ? JobQuery::create()->filterById($object_id)->orderByDateTo('desc')->find() : JobQuery::create()->filterById($object_id)->findOne();
             case 'education_masterclass':
                 // return is_array($object_id) ? EducationMasterclassQuery::create()->filterById($object_id)->orderByDateTo('desc')->find() : EducationMasterclassQuery::create()->filterById($object_id)->findOne();
+            case 'Entity':
+            case 'Event':
+            case 'ImageAlbum':
+            case 'Disc':
+            case 'Article':
             default:
                 return null;
         }

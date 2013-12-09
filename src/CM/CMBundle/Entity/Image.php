@@ -296,7 +296,7 @@ class Image
     public function setGroup(Group $group = null)
     {
         $this->group = $group;
-        if (!is_null($entity)) {
+        if (!is_null($group)) {
             $this->groupId = $group->getId();
         }
     
@@ -332,7 +332,7 @@ class Image
     public function setPage(Page $page = null)
     {
         $this->page = $page;
-        if (!is_null($entity)) {
+        if (!is_null($page)) {
             $this->pageId = $page->getId();
         }
     

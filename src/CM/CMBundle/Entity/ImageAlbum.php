@@ -41,6 +41,30 @@ class ImageAlbum extends Entity
     }
 
     /**
+     * __toString function.
+     * 
+     * @access public
+     * @return void
+     */
+    public function __toString()
+    {
+        switch ($this->type) {
+            case self::TYPE_PROFILE:
+                return 'profile pictures';
+                break;
+            case self::TYPE_COVER:
+                return 'cover pictures';
+                break;
+            case self::TYPE_BACKGROUND:
+                return 'background pictures';
+                break;
+            case self::TYPE_ALBUM:
+                return $this->getTitle();
+                break;
+        }
+    }
+
+    /**
      * Get id
      *
      * @return integer 

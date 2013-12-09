@@ -2,14 +2,14 @@
 
 {% block body %}
 
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'groupId': group.id})) }}{% endif %}  
+    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': group.id, 'object': group|class_name})) }}{% endif %}
 
     {{ include('CMBundle:Group:top.html.twig', {'inPage': 'image'}) }}
 
 
     {#<ul class="breadcrumb">
       <li><?php echo link_to('Home', '@homegroup') ?></li>
-      <li><?php echo link_to(__('Users'), '@group_list') ?></li>
+      <li><?php echo link_to(__('Groups'), '@group_list') ?></li>
       <li class="active"><?php echo $group ?></li>
     </ul>#}
 
@@ -23,7 +23,7 @@
             </ul>
         </div>
         <div class="objects">
-            {{ include('CMBundle:ImageAlbum:imagesEntitiesList.html.twig') }}
+            {{ include('CMBundle:ImageAlbum:imageEntityList.html.twig', {'link': 'group_album', 'publisher': group}) }}
         </div>
     </div>
     
@@ -33,6 +33,3 @@
     <?php end_slot() ?>#}
   
 {% endblock %}
-
-
-{#path('group_entity_show', {'slug': group.slug, 'entitySlug': 'profile'})#}
