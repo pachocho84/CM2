@@ -518,6 +518,12 @@ class CMExtension extends \Twig_Extension
                     '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                     '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>'
                 ));
+            case 'Multimedia_'.Post::TYPE_CREATION:
+                $multimediaLink = $this->router->generate($post->getPublisherRoute().'_multimedia_show', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
+                return $this->translator->trans('%user% added a new %albumLinkStart%'.$post->getEntity()->typeString().'%albumLinkEnd%', array(
+                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%albumLinkStart%' => '<a href="'.$multimediaLink.'">', '%albumLinkEnd%' => '</a>'
+                ));
             case 'user_img_update':
                 // return __('%user% has updated '.$post->getPublisherSex('his').' profile picture.', array('%user%'   => link_to($post->getUser(), $post->getUser()->getLinkShow())));
             case 'user_cover_img_update':

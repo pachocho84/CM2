@@ -68,8 +68,6 @@ class ImageAlbumController extends Controller
                 ->setGroup($group);
             $album->addImage($image);
 
-            $album->addImage($image);
-
             $post = $this->get('cm.post_center')->newPost(
                 $user,
                 $user,

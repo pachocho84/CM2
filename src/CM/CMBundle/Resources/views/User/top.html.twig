@@ -33,10 +33,12 @@
                 <li{% if inPage == 'image' %} class="active"{% endif %}>
                     <a href="{{ path('user_images', {'slug': user.slug}) }}">{{ show_icon('Image')|raw }} {{ 'Images'|trans }}</a>
                 </li>
+                <li{% if inPage == 'multimedia' %} class="active"{% endif %}>
+                    <a href="{{ path('user_multimedia', {'slug': user.slug}) }}">{{ show_icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
+                </li>
                 <li{% if inPage == 'disc' %} class="active"{% endif %}>
                     <a href="{{ path('user_show', {'slug': user.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs [TODO]'|trans }}</a>
                 </li>
-                {#<li{% if $inPage == 'fan' %} class="active"{% endif %}><?php echo link_to(show_icon('fan').' '.__('Fans'), '@fan_user?user='.$user->getUsername()) ?></li>#}
             </ul>
             <ul class="nav nav navbar-nav pull-right">
                 <li class="dropdown{% if inPage == 'fan' or inPage == 'education' %} active{% endif %}">

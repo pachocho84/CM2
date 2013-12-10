@@ -407,6 +407,62 @@ class UserController extends Controller
     }
 
     /**
+     * @Route("/{slug}/multimedia/{page}", name="user_multimedia")
+     * @Template
+     */
+    public function multimediaAction(Request $request, $slug, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+        
+        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimediaList(array('userId' => $user->getId()));
+        $pagination = $this->get('knp_paginator')->paginate($multimedia, $page, 10);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Multimedia:multimediaList.html.twig', array(
+                'user' => $user,
+                'multimediaList' => $pagination
+            ));
+        }
+
+        return array(
+            'user' => $user,
+            'multimediaList' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/{slug}/multimedia/{id}/show", name="user_multimedia_show", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function multimediaShowAction($slug, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+        
+        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimedia($id, array('userId' => $user->getId()));
+
+        if (!$multimedia) {
+            throw new NotFoundHttpException('Multimedia not found.');
+        }
+
+        return array(
+            'user' => $user,
+            'multimedia' => $multimedia
+        );
+    }
+
+    /**
      * @Route("/account/tags", name="user_tags_edit")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template

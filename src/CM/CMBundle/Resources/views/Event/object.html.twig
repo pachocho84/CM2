@@ -14,7 +14,7 @@
             
             <h4><a href="{{ path('event_show', {'id': date.event.id, 'slug': date.getEvent.getSlug}) }}">{{ date.getEvent.getTitle }}</a></h4>
             <h5>
-                {{ "Published by %publisher% in %category%" | trans({'%publisher%': '<a href="'~path(date.event.posts[0].publisherRoute, {'slug': date.event.posts[0].publisher.slug})~'">'~date.event.posts[0].publisher~'</a>', '%category%': '<a href="'~path('event_category', { 'category_slug': date.event.entityCategory.getSlug })~'">'~date.event.entityCategory~'</a>' }) | raw }}
+                {{ "Published by %publisher% in %category%" | trans({'%publisher%': '<a href="'~path(date.event.posts[0].publisherRoute ~ '_show', {'slug': date.event.posts[0].publisher.slug})~'">'~date.event.posts[0].publisher~'</a>', '%category%': '<a href="'~path('event_category', { 'category_slug': date.event.entityCategory.getSlug })~'">'~date.event.entityCategory~'</a>' }) | raw }}
             </h5>
                         
             <p class="text-muted">

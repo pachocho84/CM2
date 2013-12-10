@@ -16,7 +16,7 @@
             <p>{{ event.getText | raw }}</p>
             {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'entity': event}) }}
             <ul>
-                {% for protagonist in event.entityUsers if protagonist.status == 1 %} {# active #}
+                {% for protagonist in event.entityUsers if protagonist.status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_ACTIVE') %}
                     <li>
                         {{ protagonist.id }} : {{ protagonist.user }}
                         {% for userTag in protagonist.userTags %}

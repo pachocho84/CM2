@@ -1,5 +1,3 @@
-
-
 <div class="objects text-center images ajax-link-target">
 
 
@@ -19,9 +17,9 @@
 
         <div class="col-lg-7">
             <div class="media">
-                {{ show_img_box(image.entity.post.publisher.img|imagine_filter('350'), {'width': 32, 'height': 32, 'offset': image.entity.post.publisher.imgOffset, 'link': path(image.entity.post.publisherRoute, {'slug': image.entity.post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}}) | raw }}
+                {{ show_img_box(image.entity.post.publisher.img|imagine_filter('350'), {'width': 32, 'height': 32, 'offset': image.entity.post.publisher.imgOffset, 'link': path(image.entity.post.publisherRoute ~ '_show', {'slug': image.entity.post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}}) | raw }}
                 <div class="media-body">
-                    <h4><a href="{{ path(image.entity.post.publisherRoute, {'slug': image.entity.post.publisher.slug}) }}">{{ image.entity.post.publisher }}</a></h4>
+                    <h4><a href="{{ path(image.entity.post.publisherRoute ~ '_show', {'slug': image.entity.post.publisher.slug}) }}">{{ image.entity.post.publisher }}</a></h4>
                     
                     {{ include('CMBundle::social.html.twig', {'post': image, 'isImage': true}) }} 
                 

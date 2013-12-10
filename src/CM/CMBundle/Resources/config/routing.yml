@@ -36,10 +36,14 @@ cm_cmbundle_group:
 
 cm_cmbundle_entityuser:
     resource: "CM\\CMBundle\\Controller\\EntityUserController"
-    type:   
+    type:     annotation
 
 cm_cmbundle_imagealbum:
     resource: "CM\\CMBundle\\Controller\\ImageAlbumController"
+    type:     annotation
+
+cm_cmbundle_multimedia:
+    resource: "CM\\CMBundle\\Controller\\MultimediaController"
     type:     annotation
 
 fos_user_security:
