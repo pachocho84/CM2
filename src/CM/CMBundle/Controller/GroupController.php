@@ -398,6 +398,62 @@ class GroupController extends Controller
             'group' => $this->getGroup()
         );
     }
+
+    /**
+     * @Route("/{slug}/multimedia/{page}", name="group_multimedia")
+     * @Template
+     */
+    public function multimediaAction(Request $request, $slug, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group not found.');
+        }
+        
+        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimediaList(array('groupId' => $group->getId()));
+        $pagination = $this->get('knp_paginator')->paginate($multimedia, $page, 10);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Multimedia:multimediaList.html.twig', array(
+                'group' => $group,
+                'multimediaList' => $pagination
+            ));
+        }
+
+        return array(
+            'group' => $group,
+            'multimediaList' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/{slug}/multimedia/{id}/show", name="group_multimedia_show", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function multimediaShowAction($slug, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group not found.');
+        }
+        
+        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimedia($id, array('groupId' => $group->getId()));
+
+        if (!$multimedia) {
+            throw new NotFoundHttpException('Multimedia not found.');
+        }
+
+        return array(
+            'group' => $group,
+            'multimedia' => $multimedia
+        );
+    }
     
     /**
      * @Route("/{slug}/events/{page}", name = "group_events", requirements={"page" = "\d+"})

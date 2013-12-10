@@ -33,6 +33,9 @@
                 <li{% if inPage == 'image' %} class="active"{% endif %}>
                     <a href="{{ path('group_images', {'slug': group.slug}) }}">{{ show_icon('Image')|raw }} {{ 'Images'|trans }}</a>
                 </li>
+                <li{% if inPage == 'multimedia' %} class="active"{% endif %}>
+                    <a href="{{ path('group_multimedia', {'slug': group.slug}) }}">{{ show_icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
+                </li>
                 <li{% if inPage == 'disc' %} class="active"{% endif %}>
                     <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs [TODO]'|trans }}</a>
                 </li>

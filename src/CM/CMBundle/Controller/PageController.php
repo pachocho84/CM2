@@ -398,6 +398,62 @@ class PageController extends Controller
             'page' => $this->getPage()
         );
     }
+
+    /**
+     * @Route("/{slug}/multimedia/{pageNum}", name="page_multimedia")
+     * @Template
+     */
+    public function multimediaAction(Request $request, $slug, $pageNum = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+
+        if (!$page) {
+            throw new NotFoundHttpException('Page not found.');
+        }
+        
+        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimediaList(array('pageId' => $page->getId()));
+        $pagination = $this->get('knp_paginator')->paginate($multimedia, $pageNum, 10);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Multimedia:multimediaList.html.twig', array(
+                'page' => $page,
+                'multimediaList' => $pagination
+            ));
+        }
+
+        return array(
+            'page' => $page,
+            'multimediaList' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/{slug}/multimedia/{id}/show", name="page_multimedia_show", requirements={"pageNum" = "\d+"})
+     * @Template
+     */
+    public function multimediaShowAction($slug, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+
+        if (!$page) {
+            throw new NotFoundHttpException('Page not found.');
+        }
+        
+        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimedia($id, array('pageId' => $page->getId()));
+
+        if (!$multimedia) {
+            throw new NotFoundHttpException('Multimedia not found.');
+        }
+
+        return array(
+            'page' => $page,
+            'multimedia' => $multimedia
+        );
+    }
     
     /**
      * @Route("/{slug}/events/{pageNum}", name = "page_events", requirements={"pageNum" = "\d+"})

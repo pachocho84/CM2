@@ -40,9 +40,15 @@ class MultimediaController extends Controller
             switch ($object) {
                 case 'Page':
                     $page = $em->getRepository('CMBundle:Page')->findOneById($objectId);
+                    if (!$this->get('cm.user_authentication')->isAdminOf($page)) {
+                        throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                    }
                     break;
                 case 'Group':
                     $group = $em->getRepository('CMBundle:Group')->findOneById($objectId);
+                    if (!$this->get('cm.user_authentication')->isAdminOf($group)) {
+                        throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                    }
                     break;
             }
             if (is_null($page) && is_null($group)) {
@@ -125,56 +131,25 @@ class MultimediaController extends Controller
     }
 
     /**
-     * @Route("/addImage/{id}", name="imagealbum_add_image", requirements={"id" = "\d+"})
-     * @JMS\Secure(roles="ROLE_USER")
-     * @Template("CMBundle:ImageAlbum:singleImage.html.twig")
+     * @Route("/{page}", name="multimedia_list")
+     * @Template
      */
-    public function addImageAction(Request $request, $id)
+    public function listAction(Request $request, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
+        
+        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimediaList();
+        $pagination = $this->get('knp_paginator')->paginate($multimedia, $page, 10);
 
-        $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id, array('locale' => $request->getLocale()));
-
-        if (!$this->get('cm.user_authentication')->canManage($album)) {
-            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Multimedia:multimediaList.html.twig', array(
+                'group' => $group,
+                'multimediaList' => $pagination
+            ));
         }
-
-        $image = new Image;
-        $image->setMain(false)
-            ->setUser($this->getUser());
-        if (!is_null($album->getPost()->getPage())) {
-            $image->setPage($album->getPost()->getPage());
-            $publisher = $album->getPost()->getPage();
-            $link = 'page_image';
-        } elseif (!is_null($album->getPost()->getGroup())) {
-            $image->setGroup($album->getPost()->getGroup());
-            $publisher = $album->getPost()->getGroup();
-            $link = 'group_image';
-        } else {
-            $publisher = $this->getUser();
-            $link = 'user_image';
-        }
-
-        foreach ($request->files as $file) {
-            $image->setImgFile($file);
-        }
-
-        $errors = $this->get('validator')->validate($image);
-
-        if (count($errors) > 0) {
-            throw new HttpException(403, $this->get('translator')->trans('Error in file.', array(), 'http-errors'));
-        }
-            
-        $album->addImage($image);
-
-        $em->persist($album);
-        $em->flush();
 
         return array(
-            'album' => $album,
-            'image' => $image,
-            'link' => $link,
-            'publisher' => $publisher
+            'multimediaList' => $pagination
         );
     }
 }
