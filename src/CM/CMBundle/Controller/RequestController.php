@@ -246,6 +246,13 @@ class RequestController extends Controller
             $em->persist($pageUser);
 
             $response = $this->renderView('CMBundle:PageUser:requestAdd.html.twig', array('page' => $request->getPage(), 'request' => $request));
+        } elseif (get_class($relation->getObject()) == 'Relation') {
+            $response = $this->forward('CMBundle:PageUser:requestAdd.html.twig', array('page' => $request->getPage(), 'request' => $request));
+            if ($choice == 'accept') {
+                $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_ACCEPTED);
+            } elseif ($choice == 'refuse') {
+                $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_REFUSED);
+            }
         }
 
         $em->persist($request);

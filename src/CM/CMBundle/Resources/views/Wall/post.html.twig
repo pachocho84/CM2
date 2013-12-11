@@ -10,7 +10,7 @@
         <p>{{ post.id }} {{ post_text(post, relatedObjects)|raw }}</p>
 
         {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
-        
+
         <p class="text-muted">
             {{ show_icon((post.object|class_name)~'_'~(post.type))|raw }}
             <small>

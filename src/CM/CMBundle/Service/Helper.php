@@ -96,7 +96,7 @@ class Helper
         {
             return '';
         }
-      
+
         $mbstring = extension_loaded('mbstring');
         if($mbstring)
         {
@@ -105,7 +105,7 @@ class Helper
         }
         $strlen = ($mbstring) ? 'mb_strlen' : 'strlen';
         $substr = ($mbstring) ? 'mb_substr' : 'substr';
-      
+
         if ($strlen($text) > $length)
         {
             $truncate_text = $substr($text, 0, $length - $strlen($truncate_string));
@@ -115,12 +115,12 @@ class Helper
             }
             $text = $truncate_text.$truncate_string;
         }
-      
+
         if ($mbstring)
         {
            @mb_internal_encoding($old_encoding);
         }
-      
+
         return $text;
     }
 }

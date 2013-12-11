@@ -16,7 +16,7 @@
 
     <div class="box">
 
-        {% if app.user.id == user.id %}<a href="{{ path('imagealbum_new') }}">{{ 'Add a new multimidia'|trans }}</a>{% endif %}
+        {% if is_granted('ROLE_CLIENT') and app.user.id == user.id %}<a href="{{ path('imagealbum_new') }}">{{ 'Add a new multimidia'|trans }}</a>{% endif %}
 
         <ul class="media-list objects">
             {{ include('CMBundle:Multimedia:multimediaList.html.twig', {'link': 'user_multimedia_show', 'publisher': user}) }}

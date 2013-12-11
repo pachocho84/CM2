@@ -146,4 +146,19 @@ class ImageAlbumRepository extends BaseRepository
 
         return $query->getQuery()->getSingleResult();
     }
+
+    public function setMain($id, $albumId)
+    {
+        $this->getEntityManager()->createQueryBuilder('i')
+            ->update('CMBundle:Image', 'i')
+            ->set('i.main', 0)
+            ->where('i.entityId = :entity_id')->setParameter('entity_id', $albumId)
+            ->getQuery()->execute();
+
+        $this->getEntityManager()->createQueryBuilder('i')
+            ->update('CMBundle:Image', 'i')
+            ->set('i.main', 1)
+            ->where('i.id = :id')->setParameter('id', $id)
+            ->getQuery()->execute();
+    }
 }

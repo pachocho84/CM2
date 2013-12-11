@@ -3,25 +3,25 @@
 {# <?php $sito = $sf_context->getSito() ?> #}
 
 {# <?php if (($sito->getCommentsEnabled() && $sito->getCommentsDisplay()) || ($sito->getLikesEnabled() && $sito->getLikesDisplay())): ?> #}
-    
+
     <div class="media-list bottom{# <?php $sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == false and print ' well well-small' ?> #}">
-    
+
         {% include('CMBundle::socialActions.html.twig') %}
 
 
         {# <?php if ($sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == false): ?> #}
-            <div class="pull-right">                    
+            <div class="pull-right">
                 {# <?php if ($sito->getLikesEnabled() && $sito->getLikesDisplay()): ?> #}
                     {% include('CMBundle:Like:likeCount.html.twig') %}
-                {# <?php endif ?> #} 
+                {# <?php endif ?> #}
                 {# <?php if ($sito->getCommentsEnabled() && $sito->getCommentsDisplay()): ?> #}
                     {% include('CMBundle:Comment:commentCount.html.twig') %}
                 {# <?php endif ?> #}
             </div>
         {# <?php endif ?> #}
-    
-    
-    
+
+
+
         <ul class="media-list{# <?php $sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == false and print ' hide' ?><?php $sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == true && ($post->getComments()->count() > 0 || $post->getWhoLikesIt() + $post->getILikeIt() > 0) and print ' triangle' ?> #}">
 
             {# <?php if ($sito->getLikesEnabled() && $sito->getLikesDisplay() && ($sito->getLikesCommentsExpanded() == true || $sf_request->getParameter('action') == 'show')): ?> #}
@@ -34,7 +34,7 @@
             {# <?php endif ?> #}
 
         </ul>
-    
+
     </div>
 
 {# <?php endif ?> #}

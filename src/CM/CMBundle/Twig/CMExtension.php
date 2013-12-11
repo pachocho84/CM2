@@ -84,7 +84,7 @@ class CMExtension extends \Twig_Extension
     {
         return Helper::className($object);
     }
-    
+
     /**
      * Returns +text+ transformed into html using very simple formatting rules
      * Surrounds paragraphs with <tt>&lt;p&gt;</tt> tags, and converts line breaks into <tt>&lt;br /&gt;</tt>
@@ -107,7 +107,7 @@ class CMExtension extends \Twig_Extension
 
     /**
      * show_text function.
-     * 
+     *
      * @access public
      * @param mixed $text
      * @return void
@@ -151,7 +151,7 @@ class CMExtension extends \Twig_Extension
             'icon' => 'trash',
             'class' => null,
         ), $options);
-      
+
         $text = $options['text'];
         if ($options['icon']) {
             $text = '<i class="glyphicon glyphicon-'.$options['icon'].'"></i> '.$text;
@@ -162,7 +162,7 @@ class CMExtension extends \Twig_Extension
         }
 
         return '<a href="'.$link.'" >'.$text.'</a>';
-        
+
         // echo link_to($text, $link, $options);
     }
 
@@ -184,7 +184,7 @@ class CMExtension extends \Twig_Extension
         $height = intval($options['height']);
 
         // Get max dimension for filtered image
-        $maxDim = preg_filter(['/\/(?:.(?!\/))+$/', '/^(.*\/)*/'], ['', ''], $img); 
+        $maxDim = preg_filter(['/\/(?:.(?!\/))+$/', '/^(.*\/)*/'], ['', ''], $img);
 
         // Get image dimensions
         $fileName = preg_replace('/^\/.*\//', '', $img);
@@ -215,9 +215,9 @@ class CMExtension extends \Twig_Extension
         //     }
         // }
 
-        
+
         // // No height
-        if (!$height) { 
+        if (!$height) {
             $imgBox = '<div><img src="/'.$folder.$img.' width="'.$width.'"';
             foreach ($options['box_attributes'] as $key => $attr) {
                 $imgBox .= ' '.$key.'="'.$attr.'"';
@@ -236,7 +236,7 @@ class CMExtension extends \Twig_Extension
         $img_ratio = $img_w / $img_h;
         $box_ratio = $width / $height;
         $ratio = $img_ratio - $box_ratio;
-        
+
         // Image format
         if ($img_ratio == 1) {
             $img_r_w = $width;
@@ -248,39 +248,39 @@ class CMExtension extends \Twig_Extension
             $img_r_h = $width / $img_ratio;
             $img_r_w = $width;
         }
-        
+
         // Resized image size (checks if the resized height is still high enough, otherwise the resized is based on the height instead of the width)
         // if ($img_h / ($img_w / $width) >= $height) {
         //     $img_r_w = $width;
-        //     $img_r_h = intval($img_h / ($img_w / $width)); 
+        //     $img_r_h = intval($img_h / ($img_w / $width));
         // } else {
         //     $img_r_h = $height;
-        //     $img_r_w = intval($img_w / ($img_h / $height)); 
-        // } 
-        
+        //     $img_r_w = intval($img_w / ($img_h / $height));
+        // }
+
         // Attributes
         $options['box_attributes']['style'] = array_key_exists('style', $options['box_attributes']) ? 'width: '.$width.'px;  height: '.$height.'px; '.$options['box_attributes']['style'] : 'width: '.$width.'px;  height: '.$height.'px;';
         $options['box_attributes']['class'] = array_key_exists('class', $options['box_attributes']) ? 'image_box '.$options['box_attributes']['class'] : 'image_box';
 
         $img_style   = array();
         $img_style[] = 'width: '.$img_r_w.'px;';
-        $img_style[] = 'height: '.$img_r_h.'px;';  
+        $img_style[] = 'height: '.$img_r_h.'px;';
         if (array_key_exists('style', $options['img_attributes'])) {
             $img_style[] = $options['img_attributes']['style'];
             unset($options['img_attributes']['style']);
         }
-        
-        // Align  
+
+        // Align
         if ($img_ratio > 1 && isset($options['offset'])) {
-            $img_style[] = 'left: -'.$options['offset'].'%'; 
-        } elseif ($img_ratio > 1) {             
+            $img_style[] = 'left: -'.$options['offset'].'%';
+        } elseif ($img_ratio > 1) {
             $img_style[] = 'left: -'.(($img_r_w - $width) / 2).'px';
         } elseif ($img_ratio < 1 && isset($options['offset'])) {
-            $img_style[] = 'top: -'.$options['offset'].'%'; 
-        } elseif ($img_ratio < 1) {             
+            $img_style[] = 'top: -'.$options['offset'].'%';
+        } elseif ($img_ratio < 1) {
             $img_style[] = 'top: -'.(($img_r_h - $height) / 10).'px';
         }
-        
+
         // Write <img> tag
         $img = '<img src="'.$img.'" style="';
         foreach ($img_style as $attr) {
@@ -414,19 +414,19 @@ class CMExtension extends \Twig_Extension
         $text = $entity->getExtract() && ($this->securityContext->isGranted('ROLE_ADMIN') || $this->securityContext->isGranted('ROLE_CLIENT')) ? $entity->getExtract() : $entity->getText();
 
         $text_stripped = strip_tags($text);
-        
+
         if ($stripped) {
             $text = $text_stripped;
-        } 
-        
+        }
+
         if ($text == '') {
             return false;
-        } 
-                
+        }
+
         if (strlen($text_stripped) > $max) {
             preg_match("#^.{1,".$max."}(\.|\:|\!|\?)#s", $text_stripped, $matches);
             if (array_key_exists(0, $matches)) {
-                $text = rtrim($matches[0], '.:'); 
+                $text = rtrim($matches[0], '.:');
             } else {
                 $text = rtrim(Helper::truncate_text($text_stripped, $max, '', true), ',.;!?:').'...';
             }
@@ -466,7 +466,7 @@ class CMExtension extends \Twig_Extension
                 // return __('%user% has created the album %object%.', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%object%' => link_to(__($post->getEntity()), $post->getEntity()->getLinkShow('image_album'))));
             case 'image_album_image_add':
                 // return format_number_choice('[1]%user% added a new photo to the album %object%.|(1,+Inf]%user% added %count% new photos to the album %object%.', array(
-                //         '%user%'    => link_to($post->getUser(), $post->getUser()->getLinkShow()), 
+                //         '%user%'    => link_to($post->getUser(), $post->getUser()->getLinkShow()),
                 //         '%count%' => count($post->getObjectIds()),
                 //         '%object%'  => link_to($post->getEntity(), $post->getEntity()->getLinkShow())
                 //     ), count($post->getObjectIds()));

@@ -2,7 +2,10 @@
 
 {% block body %}
 
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id})) }}{% endif %}  
+    {% if is_granted('ROLE_USER') %}
+        {{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id})) }}
+        {{ render(controller('CMBundle:Relation:button', {'user': user})) }}
+    {% endif %}  
 
     {{ include('CMBundle:User:top.html.twig', {'inPage': 'profile'}) }}
 

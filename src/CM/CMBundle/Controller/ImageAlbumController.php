@@ -26,7 +26,6 @@ use CM\CMBundle\Form\ImageType;
  */
 class ImageAlbumController extends Controller
 {
-    
     /**
      * @Route("/new/{object}/{objectId}", name="imagealbum_new", requirements={"objectId" = "\d+"}) 
      * @Route("/{id}/edit/{object}", name="imagealbum_edit", requirements={"id" = "\d+", "objectId" = "\d+"})
@@ -202,6 +201,10 @@ class ImageAlbumController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+        }
 
         try {
             $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id, array('userId' => $user->getId()));
@@ -237,5 +240,28 @@ class ImageAlbumController extends Controller
         // $this->getUser()->setFlash('success', 'Images successfully sorted.');
         
         // $this->redirect('@image_album_show?id='.$this->album->getEntityId());
+    }
+
+    /**
+     * @Route("/main/{id}", name="imagealbum_main", requirements={"id" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     */
+    public function makeMainAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $image = $em->getRepository('CMBundle:Image')->findOneById($id);
+        
+        if (!$image) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));
+        }
+
+        if (!$this->get('cm.user_authentication')->canManage($image) || ($image->getEntity() instanceof ImageAlbum && $image->getEntity()->getType() != ImageAlbum::TYPE_ALBUM)) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+        
+        $em->getRepository('CMBundle:ImageAlbum')->setMain($id, $image->getEntityId());
+
+        return new Response;
     }
 }

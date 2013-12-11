@@ -21,6 +21,7 @@ use CM\CMBundle\Entity\ImageAlbum;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\Page;
 use CM\CMBundle\Entity\Group;
+use CM\CMBundle\Entity\Relation;
 
 class DoctrineEventsListener
 {
@@ -82,6 +83,9 @@ class DoctrineEventsListener
             && ($object->getImg() || $object->getCoverImg() || (property_exists($publisher, 'backgroundImg') && $publisher->getBackgroundImg()))) {
             $this->imgPersistedRoutine($object, $em);
         }
+        if ($object instanceof Relation && !$object->getAccepted()) {
+            $this->relationPersistedRoutine($object, $em);
+        }
     }
 
     public function postUpdate(LifecycleEventArgs $args)
@@ -103,6 +107,9 @@ class DoctrineEventsListener
                 || array_key_exists('cover_img', $em->getUnitOfWork()->getEntityChangeSet($object)) 
                 || array_key_exists('background_img', $em->getUnitOfWork()->getEntityChangeSet($object)))) {
             $this->imgUpdatedRoutine($object, $em);
+        }
+        if ($object instanceof Relation && $object->getAccepted()) {
+            $this->relationUpdatedRoutine($object, $em);
         }
     }
 
@@ -143,6 +150,9 @@ class DoctrineEventsListener
         }
         if ($object instanceof User || $object instanceof Page || $object instanceof Group) {
             $this->imgRemovedRoutine($object, $em);
+        }
+        if ($object instanceof Relation) {
+            $this->relationDeletedRoutine($object, $em);
         }
     }
 
@@ -876,6 +886,52 @@ class DoctrineEventsListener
 
     private function imgRemovedRoutine($publisher, EntityManager $em)
     {
+        $this->get('cm.post_center')->removePost(
+            $this->getUser(),
+            $this->getUser(),
+            get_class($biography),
+            array($biography->getId())
+        );
+    }
+
+    private function relationPersistedRoutine(Relation $relation, EntityManager $em)
+    {
+        $inverse = new Relation;
+        $inverse->setAccepted(true)
+            ->setType($relation->getInverseType())
+            ->setFromUser($relation->getUser())
+            ->setUser($relation->getFromUser());
+        $em->persist($inverse);
+
+        $this->flushNeeded = true;
+
+        $this->get('cm.request_center')->newRequest(
+            $inverse->getUser(),
+            $inverse->getFromUser(),
+            get_class($inverse),
+            $inverse
+        );
+    }
+
+    private function relationUpdatedRoutine(Relation $relation, EntityManager $em)
+    {
+        $post = $this->get('cm.post_center')->newPost(
+            $relation->getFromUser(),
+            $relation->getFromUser(),
+            Post::TYPE_CREATION,
+            get_class($relation),
+            array($relation->getId())
+        );
+    }
+
+    private function relationRemovedRoutine(Relation $relation, EntityManager $em)
+    {
+        $em->getRepository('CMBundle:Relation')->remove(array(
+            'type' => $relation->getInverseType(),
+            'userFromId' => $relation->getUserId(),
+            'userId' => $relation->getFromUserId()
+        ));
+
         $this->get('cm.post_center')->removePost(
             $this->getUser(),
             $this->getUser(),

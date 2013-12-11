@@ -35,18 +35,18 @@ class UserAuthentication
         } elseif (!$this->securityContext->isGranted('ROLE_USER') && !is_null($this->session->get('user/username'))) {
             $this->session->remove('user');
         }
-    
+
         return $this->securityContext->isGranted($role);
-    }  
-  
+    }
+
     /**
      * updateProfile function.
-     * 
+     *
      * @access public
      * @return void
      */
     public function updateProfile()
-    {            
+    {
         $user = $this->securityContext->getToken()->getUser();
         $groups = $this->em->getRepository('CMBundle:User')->getAdminGroupsIds($user->getId());
         // $groups = GroupUserQuery::create()->filterByUserId($user->getId())->filterByAdmin(1)->select(array('GroupId'))->setFormatter('PropelSimpleArrayFormatter')->find()->toArray();
@@ -65,31 +65,31 @@ class UserAuthentication
         $this->session->set('user/pages_admin', $pages);
         // $this->session->set('siti_admin', $siti, 'user');
         // $this->session->set('languages', explode(', ', $user->getSiti()->getLingue()), 'user');
-          
-        $this->updateProfileComplete();                                               
+
+        $this->updateProfileComplete();
     }
-  
+
     /**
      * updateProfileComplete function.
-     * 
+     *
      * @access public
      * @return void
      */
     public function updateProfileComplete()
-    {            
+    {
         $user = $this->securityContext->getToken()->getUser();
-        // $biography = BiographyQuery::getUserBiography($user->getId()); // TODO: fix                                                                                                                             
+        // $biography = BiographyQuery::getUserBiography($user->getId()); // TODO: fix
 
         if (($user->getBirthDate() || $user->getCityBirth() || $user->getCityCurrent() || $user->getSex()) && $user->getImg() /*&& $biography */&& $user->getUserUserTags()->count() >= 1) {
             $this->session->set('user/profile_complete', true);
-        } else {  
-            $this->session->set('user/profile_complete', false); 
-        }                                                         
+        } else {
+            $this->session->set('user/profile_complete', false);
+        }
     }
-    
+
     /**
      * isProfileComplete function.
-     * 
+     *
      * @access public
      * @return void
      */
@@ -122,7 +122,7 @@ class UserAuthentication
 
     /**
      * canManage function.
-     * 
+     *
      * @access public
      * @static
      * @param mixed $object
@@ -137,7 +137,7 @@ class UserAuthentication
             if ($this->isAuthenticated('ROLE_SUPER_ADMIN')) {
                 return true;
             }
-                  
+
             $user_id = $this->securityContext->getToken()->getUser()->getId();
             if (method_exists($object, 'getCreatorId')) {
                 $creator_id = $object->getCreatorId();
@@ -152,31 +152,31 @@ class UserAuthentication
             } else {
                 throw new \BadMethodCallException('Neither \'getCreator\' nor \'getUser\' methods exsist in class '.get_class($object));
             }
-            
+
             // 3) CREATOR
             if ($user_id == $creator_id) {
                 return true;
-            }  
-    
-            if ($object instanceof Post || $object instanceof Image) {
-                $group_id = $object->getGroup()->getId();  
-                $page_id = $object->getPage()->getId();   
-            } elseif ($object instanceof Groups) {
-                $group_id = $object->getId();        
-            } elseif ($object instanceof Pages) {
-                $page_id = $object->getId();        
             }
-                  
+
+            if ($object instanceof Post || $object instanceof Image) {
+                $group_id = $object->getGroup()->getId();
+                $page_id = $object->getPage()->getId();
+            } elseif ($object instanceof Groups) {
+                $group_id = $object->getId();
+            } elseif ($object instanceof Pages) {
+                $page_id = $object->getId();
+            }
+
             // 4) GROUP
             if (!is_null($group_id) && in_array($group_id, $this->session->get('user/groups_admin'))) {
                 return true;
-            }      
-                  
-            // 5) PAGE 
+            }
+
+            // 5) PAGE
             if (!is_null($page_id) && in_array($page_id, $this->session->get('user/pages_admin'))) {
                 return true;
-            }  
-    
+            }
+
             // 6) PROTAGONISTS
             if (method_exists($object, 'getEntityUsers') && !$object->getEntityUsers()->isEmpty()) {
                 $protagonists = $object->getEntityUsers();

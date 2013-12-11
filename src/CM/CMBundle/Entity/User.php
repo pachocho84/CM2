@@ -276,6 +276,16 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Fan", mappedBy="user", cascade={"persist", "remove"})
      */
     private $fans;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Relation", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $relationsIncoming;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Relation", mappedBy="fromUser", cascade={"persist", "remove"})
+     */
+    private $relationsOutgoing;
 
 	public function __construct()
 	{
@@ -1121,5 +1131,77 @@ class User extends BaseUser
     public function getFans()
     {
         return $this->$fans;
+    }
+
+    /**
+     * Add relationIncoming
+     *
+     * @param RelationIncoming $relationIncoming
+     * @return Post
+     */
+    public function addRelationIncoming(Relation $relationIncoming)
+    {
+        if (!$this->relationsIncoming->contains($relationIncoming)) {
+            $this->relationsIncoming[] = $relationIncoming;
+            return true;
+        }
+    
+        return false;
+    }
+
+    /**
+     * Remove relationsIncoming
+     *
+     * @param RelationIncoming $relationIncoming
+     */
+    public function removeRelationIncoming(Relation $relationIncoming)
+    {
+        $this->relationsIncoming->removeElement($relationIncoming);
+    }
+
+    /**
+     * Get relationIncoming
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRelationsIncoming()
+    {
+        return $this->relationsIncoming;
+    }
+
+    /**
+     * Add relationOutcoming
+     *
+     * @param RelationOutcoming $relationOutcoming
+     * @return Post
+     */
+    public function addRelationOutgoing(Relation $relationOutgoing)
+    {
+        if (!$this->relationsOutgoing->contains($relationOutgoing)) {
+            $this->relationsOutgoing[] = $relationOutgoing;
+            return true;
+        }
+    
+        return false;
+    }
+
+    /**
+     * Remove relationsOutcoming
+     *
+     * @param RelationOutcoming $relationOutcoming
+     */
+    public function removeRelationOutgoing(Relation $relationOutgoing)
+    {
+        $this->relationsOutgoing->removeElement($relationOutgoing);
+    }
+
+    /**
+     * Get relationOutcoming
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRelationsOutgoing()
+    {
+        return $this->$relationsOutgoing;
     }
 }

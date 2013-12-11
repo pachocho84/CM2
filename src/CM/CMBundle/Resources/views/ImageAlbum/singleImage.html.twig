@@ -1,13 +1,15 @@
-<li class="object image" data-type="image" data-id="{{ image.id }}">
+<li class="object image" data-type="image" data-id="{{ image.id }}" data-toggle-hover>
 
     {% if can_manage(image) %}
-        <div class="btn-group pull-right hide">
+        <div class="btn-group pull-right invisible" data-toggle>
             <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="glyphicon glyphicon-chevron-down"></i>
             </a>
             <ul class="dropdown-menu">
-                {% if album is defined %}<li><a href="{#{{ path('make_album_cover', {'id': image.id, 'albumId': album.id}) }}#}">{{ 'Make album cover'|trans }}</a></li>{% endif %}
-                <li class="divider"></li>
+                {% if album is defined and (album|class_name != 'ImageAlbum' or album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_ALBUM')) %}
+                    <li><a class="ajax-link" href="{{ path('imagealbum_main', {'id': image.id}) }}">{{ 'Make album cover'|trans }}</a></li>
+                    <li class="divider"></li>
+                {% endif %}
                 <li><a href="{#{{ path('make_profile', {'id': image.id}) }}#}">{{ 'Make profile picture'|trans }}</a></li>
                 <li><a href="{#{{ path('make_cover', {'id': image.id}) }}#}">{{ 'Make cover picture'|trans }}</a></li>
                 <li class="divider"></li>

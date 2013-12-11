@@ -102,7 +102,7 @@ class RequestCenter
     public function refuseRequest($userId, $options = array())
     {
         $request = $this->em->getRepository('CMBundle:Request')->updateStatus($userId, $options, null, Request::STATUS_REFUSED);
-        
+
         if (!is_null($request->getEntity())) {
             $entityUser = $this->em->getRepository('CMBundle:EntityUser')->findOneBy(array('userId' => $userId, 'entityId' => $request->getEntityId()));
             $newEntityUserStatus = $entityUser->getStatus() == EntityUser::STATUS_PENDING ? EntityUser::STATUS_REFUSED_ENTITY_USER : EntityUser::STATUS_REFUSED_ADMIN;
@@ -122,7 +122,7 @@ class RequestCenter
             $newGroupUserStatus = $groupUser->getStatus() == GroupUser::STATUS_PENDING ? GroupUser::STATUS_REFUSED_GROUP_USER : GroupUser::STATUS_REFUSED_ADMIN;
             $groupUser->setStatus($newGroupUserStatus);
             $this->em->persist($groupUser);
-            
+
             $this->em->createQueryBuilder('r')
                 ->delete('CMBundle:Request', 'r')
                 ->where('r.fromUser = :user_id')->setParameter('user_id', $userId)
