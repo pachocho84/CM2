@@ -25,10 +25,10 @@
             <div class="media object">
                 <a href="{{ path('user_biography', {'slug': user.slug}) }}" class="pull-left img-thumbnail"><img src='{{ asset(uploaded_images_full_dir~'/'~user.img) }}' width=200 class="media-object" /></a>
                 <div class="meda-body text-justify">
-                    <h4 class="media-heading">
+                    <h3 class="media-heading">
                         {{ user }}
                         <small>{{ user.userTags|join(', ')|trim }}</small>
-                    </h4>
+                    </h3>
                     {{ biography }}                
                 
                     {% if is_granted('ROLE_USER') and biography is not null and biography.post is not null %}

@@ -117,6 +117,7 @@
 }
 .object h3
 {
+    font-size: 18px;
     margin-top: 0px;
 }
 .object h4
@@ -633,8 +634,11 @@
 a {
     color: #990000;
 }
+a:hover {
+    color: #333333;
+}
 .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
-    background-color: #990000;
+    background-color: #660000;
 }
 .nav-tabs > li > a,
 .dropdown-menu {
@@ -779,6 +783,7 @@ body {
 }
 .row h2 i {
     font-size: 16px;
+    font-variant: normal;
 }
 .row h2 small,
 .row h3 small {
