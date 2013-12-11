@@ -7,31 +7,35 @@
     "packages": [
         {
             "name": "a2lix/translation-form-bundle",
-            "version": "1.x-dev",
+            "version": "dev-master",
             "target-dir": "A2lix/TranslationFormBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/a2lix/TranslationFormBundle.git",
-                "reference": "6388ad72a88c3c15e2eaee6c56ba046a60b47556"
+                "reference": "e3ee1dfcc183316e8bdf7ad451eec5fd6f454188"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/a2lix/TranslationFormBundle/zipball/6388ad72a88c3c15e2eaee6c56ba046a60b47556",
-                "reference": "6388ad72a88c3c15e2eaee6c56ba046a60b47556",
+                "url": "https://api.github.com/repos/a2lix/TranslationFormBundle/zipball/e3ee1dfcc183316e8bdf7ad451eec5fd6f454188",
+                "reference": "e3ee1dfcc183316e8bdf7ad451eec5fd6f454188",
                 "shasum": ""
             },
             "require": {
-                "symfony/symfony": "2.3.*"
+                "symfony/symfony": ">=2.3"
+            },
+            "require-dev": {
+                "gedmo/doctrine-extensions": "dev-wip-v2.4.0"
             },
             "suggest": {
                 "a2lix/i18n-doctrine-bundle": "For A2lix strategy",
+                "gedmo/doctrine-extensions": "For Gedmo strategy",
                 "knplabs/doctrine-behaviors": "For Knp strategy",
-                "stof/doctrine-extensions-bundle": "For Gedmo strategy"
+                "prezent/doctrine-translatable-bundle": "For Prezent strategy"
             },
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.x-dev"
+                    "dev-master": "2.x-dev"
                 }
             },
             "autoload": {
@@ -65,7 +69,7 @@
                 "translatable",
                 "translation"
             ],
-            "time": "2013-11-07 19:20:01"
+            "time": "2013-11-10 12:45:33"
         },
         {
             "name": "doctrine/annotations",
@@ -1887,12 +1891,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/liip/LiipImagineBundle.git",
-                "reference": "61e56cb903c07919c3db32d46fd0c229498dae53"
+                "reference": "61597fc20329ccce762b07c89f6ba2d8fa0f4c09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liip/LiipImagineBundle/zipball/61e56cb903c07919c3db32d46fd0c229498dae53",
-                "reference": "61e56cb903c07919c3db32d46fd0c229498dae53",
+                "url": "https://api.github.com/repos/liip/LiipImagineBundle/zipball/61597fc20329ccce762b07c89f6ba2d8fa0f4c09",
+                "reference": "61597fc20329ccce762b07c89f6ba2d8fa0f4c09",
                 "shasum": ""
             },
             "require": {
@@ -1904,6 +1908,7 @@
                 "symfony/options-resolver": ">=2.0.16,~2.0"
             },
             "require-dev": {
+                "doctrine/cache": "~1.1",
                 "symfony/yaml": ">=2.0.16,~2.0",
                 "twig/twig": ">=1.0,<2.0-dev"
             },
@@ -1932,7 +1937,7 @@
                 "image",
                 "imagine"
             ],
-            "time": "2013-11-05 13:03:23"
+            "time": "2013-11-11 13:41:33"
         },
         {
             "name": "monolog/monolog",
@@ -2231,12 +2236,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataAdminBundle.git",
-                "reference": "3290929cc9d28ea100ba5f0856bc84f556349194"
+                "reference": "d7402590f87334f5bff49f9ec268d304c7d410c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataAdminBundle/zipball/3290929cc9d28ea100ba5f0856bc84f556349194",
-                "reference": "3290929cc9d28ea100ba5f0856bc84f556349194",
+                "url": "https://api.github.com/repos/sonata-project/SonataAdminBundle/zipball/d7402590f87334f5bff49f9ec268d304c7d410c0",
+                "reference": "d7402590f87334f5bff49f9ec268d304c7d410c0",
                 "shasum": ""
             },
             "require": {
@@ -2301,7 +2306,7 @@
                 "bootstrap",
                 "sonata"
             ],
-            "time": "2013-11-08 13:10:20"
+            "time": "2013-11-12 14:10:21"
         },
         {
             "name": "sonata-project/block-bundle",
@@ -2372,18 +2377,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataDoctrineORMAdminBundle.git",
-                "reference": "a50225ee07a9864c7664af2fe0b8f818b6f600b0"
+                "reference": "0663803ca2e95fe23a038134e2e30fc7357bee5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataDoctrineORMAdminBundle/zipball/a50225ee07a9864c7664af2fe0b8f818b6f600b0",
-                "reference": "a50225ee07a9864c7664af2fe0b8f818b6f600b0",
+                "url": "https://api.github.com/repos/sonata-project/SonataDoctrineORMAdminBundle/zipball/0663803ca2e95fe23a038134e2e30fc7357bee5f",
+                "reference": "0663803ca2e95fe23a038134e2e30fc7357bee5f",
                 "shasum": ""
             },
             "require": {
                 "doctrine/orm": "~2.3",
                 "sonata-project/admin-bundle": ">=2.2.2",
-                "symfony/symfony": ">=2.2,<2.4"
+                "symfony/symfony": "~2.2"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -2420,7 +2425,7 @@
                 "generator",
                 "sonata"
             ],
-            "time": "2013-11-07 09:51:41"
+            "time": "2013-11-12 15:41:10"
         },
         {
             "name": "sonata-project/exporter",
@@ -2973,12 +2978,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "e7d6af003e6af02c26cc8864da72dc807f8f97a1"
+                "reference": "c1c2a8e18867bfa1644928428c693b367a5617a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/e7d6af003e6af02c26cc8864da72dc807f8f97a1",
-                "reference": "e7d6af003e6af02c26cc8864da72dc807f8f97a1",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/c1c2a8e18867bfa1644928428c693b367a5617a1",
+                "reference": "c1c2a8e18867bfa1644928428c693b367a5617a1",
                 "shasum": ""
             },
             "type": "library",
@@ -3007,7 +3012,7 @@
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-11-11 01:33:12"
+            "time": "2013-11-11 22:44:40"
         },
         {
             "name": "twig/extensions",
