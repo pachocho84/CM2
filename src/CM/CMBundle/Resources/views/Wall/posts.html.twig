@@ -1,15 +1,3 @@
-{#<?php
-    switch ($sf_request->getParameter('action'))
-    {
-        case 'index':
-            $url    = '@wall?page=';
-            break;
-        case 'user':
-            $url    = '@wall_user?user='.$sf_request->getParameter('slug').'&page=';
-            break;   
-    }
-?>#}
-
 {% for post in posts %}
 
     {% set relatedObjects = related_object(post.object, post.objectIds) %}

@@ -19,19 +19,21 @@
 
     <div class="box">
         <div class="box-top">
-            <h3>{{ show_icon('Biography') | raw }} <span>{{ block('title') }}</span></h3>
+            <h2>{{ show_icon('Biography') | raw }} <span>{{ block('title') }}</span></h2>
         </div>
-        <div class="media objects">
+        <div class="objects">
+            <div class="object">
                 {{ show_img_box(user.img | imagine_filter('350'), {'width': 200, 'height': 200, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left img-thumbnail'}}) | raw }}
                 <div class="meda-body text-justify">
-                    {{ biography }}
+                    {{ biography }}                
+                
+                    {% if is_granted('ROLE_USER') and biography is not null and biography.post is not null %}
+                        {{ include('CMBundle::social.html.twig', {'post': biography.post}) }}
+                    {% endif %}
                 </div>
+            </div>
         </div>
     </div>
-
-    {% if is_granted('ROLE_USER') and biography is not null and biography.post is not null %}
-        {{ include('CMBundle::social.html.twig', {'post': biography.post}) }}
-    {% endif %}
 
 
 
