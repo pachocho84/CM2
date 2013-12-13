@@ -3,6 +3,7 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Relation
@@ -12,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Relation
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+    
     const TYPE_TEACHER = 1;
     const TYPE_STUDENT = -1;
     const TYPE_AGENT = 2;

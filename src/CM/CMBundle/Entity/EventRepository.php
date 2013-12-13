@@ -49,7 +49,7 @@ class EventRepository extends BaseRepository
             ->join('d.event', 'e')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
-            ->leftJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
+            ->innerJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
             ->leftJoin('p.likes', 'l')
             ->leftJoin('p.comments', 'c')
             ->leftJoin('p.user', 'u')
@@ -66,7 +66,7 @@ class EventRepository extends BaseRepository
         
         if ($options['user_id']) {
             $count->join('d.event', 'e')
-                ->join('e.posts', 'p')
+                ->join('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
                 ->andWhere('p.user = :user_id')
                 ->setParameter(':user_id', $options['user_id']);
             $query->andWhere('p.user = :user_id');
@@ -75,7 +75,7 @@ class EventRepository extends BaseRepository
         
         if ($options['page_id']) {
             $count->join('d.event', 'e')
-                ->join('e.posts', 'p')
+                ->join('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
                 ->andWhere('p.page = :page_id')
                 ->setParameter(':page_id', $options['page_id']);
             $query->andWhere('p.page = :page_id');
@@ -84,7 +84,7 @@ class EventRepository extends BaseRepository
         
         if ($options['group_id']) {
             $count->join('d.event', 'e')
-                ->join('e.posts', 'p')
+                ->join('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
                 ->andWhere('p.group = :group_id')
                 ->setParameter(':group_id', $options['group_id']);
             $query->andWhere('p.group = :group_id');

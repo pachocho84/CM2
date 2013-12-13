@@ -41,11 +41,14 @@
                 </li>
             </ul>
             <ul class="nav nav navbar-nav pull-right">
-                <li class="dropdown{% if inPage == 'fan' or inPage == 'education' %} active{% endif %}">
+                <li class="dropdown{% if inPage == 'fan' or inPage == 'relation' or inPage == 'education' %} active{% endif %}">
                     <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">{{ 'More'|trans }} <b class="caret"></b></a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
                         <li>
                             <a href="{{ path('fan_user', {'slug': user.slug}) }}">{{ show_icon('Fan')|raw }} {{ 'Fans'|trans }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('relation_user', {'slug': user.slug}) }}">{{ show_icon('Relation')|raw }} {{ 'Relations'|trans }}</a>
                         </li>
                         <li role="presentation" class="divider"></li>
                         <li>

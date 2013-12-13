@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\DiscriminatorMap({
  *     "entity"="Entity",
  *     "event"="Event",
+ *     "disc"="Disc",
  *     "biography"="Biography",
  *     "image_album"="ImageAlbum",
  *     "multimedia"="Multimedia"

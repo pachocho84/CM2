@@ -1,0 +1,51 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+
+    {{ include('CMBundle:User:top.html.twig', {'inPage': 'relation'}) }}                                                    
+
+
+     
+    {#
+    <ul class="breadcrumb">
+      <li><?php echo link_to('Home', '@homepage') ?></li>
+      <li><?php echo link_to(__('Users'), '@user_list') ?></li>
+      <li><?php echo link_to($user, $user->getRawValue()->getLinkShow()) ?></li>
+      <li class="active"><?php echo __($sf_response->getRawValue()->getTitle()) ?></li>
+    </ul>
+    #}
+
+
+
+    <div class="box">
+        <div class="box-top">
+            <h3>{{ show_icon('Fan')|raw }} <span>{{ 'Fans'|trans }}</span></h3>
+        </div>
+
+        <div class=" text-center">
+            {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Relation:button', {'user': user})) }}{% endif %}
+            {#<?php include_partial('relationButton', array('user_id' => $user->getId(), 'imFan' => in_array($user->getId(), $whoImFanOf->getRawValue()->toArray()), 'class' => 'btn-large', 'relationBecomeText' => '<i class="glyphicon glyphicon-flag"></i> '.__('Become relation of %user%', array('%user%' => $user->getFirstName())))) ?>#}
+        </div>
+
+        {% if relations|length > 0 %}
+            <p class="text-center text-muted">{% if relations|length == 1 %}{{ '%user% has one relation.'|trans({'%user%': user}) }}{% else %}{{ '%user% has %count% relations.'|trans({'%user%': user, '%count%': relations|length}) }}{% endif %} 
+        {% endif %}
+        
+        <ul class="media-list objects">
+            {% for relation in relations %}
+                <li class="media object{% if not inverses[relation.userId].accepted %}object-hidden{% endif %}">
+                    {{ show_img_box(relation.user.img|imagine_filter('350'), {'width': 200, 'height': 120, 'offset': relation.user.imgOffset,  'link': path('user_show', {'slug': relation.user.slug}), 'default': 'user', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+                    <div class="media-body">
+                        <h4>
+                            <a href="{{ path('user_show', {'slug': relation.user.slug}) }}">{{ inverses[relation.userId]|trans }}</a>
+                            {#<small><?php echo rtrim(implode($user->getRawValue()->getUserTagRels()->toKeyValue('Id', 'UserTag'), ', '), ', ') ?></small>#}
+                        </h4>
+                        {#<?php $user->getPosts()->getFirst() and print $user->getRawValue()->getPosts()->getFirst()->getEntity()->getShortText() ?>#}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        
+    </div>
+
+{% endblock %}

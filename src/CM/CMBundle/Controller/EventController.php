@@ -170,7 +170,6 @@ class EventController extends Controller
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $req = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('entityId' => $event->getId()));
         }
-        // var_dump($req['entity']);die;
         
         return array('event' => $event, 'request' => $req, 'tags' => $tags, 'form' => $form->createView());
     }

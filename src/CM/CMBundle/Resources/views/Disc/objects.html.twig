@@ -1,0 +1,49 @@
+{#
+<pre>{% for key, param in discs.getPaginationData %}
+    {{ key }}: {{ param }}<br/>
+{% endfor %}</pre>
+
+{'foreground': {'r': 248, 'b': 103, 'g': 190}, 'middleground': {'r': 231, 'b': 81, 'g': 150}, 'background': {'r': 57, 'b': 42, 'g': 38}} folia
+{'foreground': {'r': 203, 'b': 163, 'g': 189}, 'middleground': {'r': 200, 'b': 155, 'g': 180}, 'background': {'r': 66, 'b': 65, 'g': 71}} 
+#}
+
+
+<div class="box">
+    {% for disc in discs %}
+
+
+            
+        <div class="box-top">
+            <h3>{{ show_icon('Disc')|raw }} <span>{{ disc }}</span></h3>
+        </div>
+        
+        <div class="media-list objects">
+            <div class="media object">
+                {% if disc.getImages|length > 0 %}
+                    <a href="{{ path('disc_show', { 'id': disc.id, 'slug': disc.getSlug }) }}" class="pull-left img-thumbnail">
+                        <img src='{{ asset(uploaded_images_full_dir ~ '/' ~ disc.images[0].img) }}' width="200px" />
+                    </a>
+                {% endif %}
+
+                <dl>
+                    <dt>Author</dt>
+                    <dd>{{ disc.authors }}</dd>
+                    <dt>Interpreter</dt>
+                    <dd>{{ disc.interpreters }}</dd>
+                    <dt>Label</dt>
+                    <dd>{{ disc.label }}</dd>
+                    <dt>Year</dt>
+                    <dd>{{ disc.year|date('Y') }}</dd>
+                </dl>
+
+                {{ include('CMBundle::social.html.twig', {'post': disc.post}) }}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% if discs.paginationData.current < discs.paginationData.last %}
+    <div class="well well-small load_more">
+        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': discs.getPaginationData.next })) }}">{{ 'Load more' | trans }}</a>
+    </div>
+{% endif %}

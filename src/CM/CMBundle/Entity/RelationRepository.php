@@ -12,6 +12,17 @@ use Doctrine\ORM\EntityRepository as BaseRepository;
  */
 class RelationRepository extends BaseRepository
 {
+    public function getUserRelations($userId)
+    {
+        return $this->createQueryBuilder('r')
+            ->select('r, u, fu')
+            ->leftJoin('r.user', 'u')
+            ->leftJoin('r.fromUser', 'fu')
+            ->where('r.fromUserId = :from_user_id')->setParameter('from_user_id', $userId)
+            ->orWhere('r.userId = :user_id')->setParameter('user_id', $userId)
+            ->getQuery()->getResult();
+    }
+
     public function getInverse($type, $userId, $fromUserId)
     {
         return $this->createQueryBuilder('r')

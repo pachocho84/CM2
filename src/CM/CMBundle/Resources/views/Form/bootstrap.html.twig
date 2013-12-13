@@ -45,6 +45,22 @@
 {% endspaceless %}
 {% endblock datetime_widget %}
 
+{% block time_widget %}
+{% spaceless %}
+    {% if widget == 'single_text' %}
+        {{ block('form_widget_simple') }}
+    {% else %}
+        {% set vars = widget == 'text' ? { 'attr': { 'size': 1 }} : {} %}
+        {% set vars = vars|merge({'type': 'time'}) %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_widget(form.hour, vars|merge({'prefix': 'h'})) }}
+            {% if with_minutes %}{{ form_widget(form.minute, vars|merge({'prefix': 'm'})) }}{% endif %}
+            {% if with_seconds %}{{ form_widget(form.second, vars|merge({'prefix': 's'})) }}{% endif %}
+        </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock time_widget %}
+
 {% block hidden_widget %}
 {% spaceless %}
     {% set type = type|default('hidden') %}
@@ -88,11 +104,13 @@
 
 {% block choice_widget_collapsed %}
 {% spaceless %}
+    {% set type = type|default('text') %}
     {% if required and empty_value is none and not empty_value_in_choices %}
         {% set required = false %}
     {% endif %}
     {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
-    <div class="col-lg-9">
+    <div class="col-lg-{% if type == 'time' %}3{% else %}9{% endif %}">
+        {% if type == 'time' %}<div class="input-group"><span class="input-group-addon">{{ prefix }}</span>{% endif %}
         <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
             {% if empty_value is not none %}
                 <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
@@ -107,6 +125,7 @@
             {% set options = choices %}
             {{ block('choice_widget_options') }}
         </select>
+        {% if type == 'time' %}</div>{% endif %}
     </div>
 {% endspaceless %}
 {% endblock choice_widget_collapsed %}
@@ -189,6 +208,12 @@
 {% endspaceless %}
 {% endblock %}
 
+{% block time_row %}
+{% spaceless %}
+    {{ block('form_row_simple') }}
+{% endspaceless %}
+{% endblock %}
+
 {% block cm_cmbundle_eventdate_row %}
 {% spaceless %}
     <div class="well well-sm">
@@ -213,6 +238,62 @@
     </div>
 {% endspaceless %}
 {% endblock %}
+
+{% block cm_cmbundle_disctrack_row %}
+{% spaceless %}
+    <div class="well well-sm">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_disc_discTracks_row %}
+{% spaceless %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    <div class="panel panel-default" asd>
+        <div class="panel-heading"><h3 class="panel-title">{{ 'Disc Tracks' | trans }}</h3></div>
+        <div class="panel-body" {{ block('widget_container_attributes') }}>
+            {{ block('form_rows') }}
+            <a href="#" class="btn btn-default add_track_link"><i class="glyphicon glyphicon-plus"></i> Add a track</a>
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_disc_year_row %}
+{% spaceless %}
+    <div class="form-group">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock  %}
+
+{% block _cm_cmbundle_disc_year_widget %}
+{% spaceless %}
+    {% if widget == 'single_text' %}
+        {{ block('form_widget_simple') }}
+    {% else %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ date_pattern|replace({
+                '{{ year }}':  form_widget(form.year),
+                '{{ month }}': form_widget(form.month, { 'attr' : { 'class': 'hidden' }}), 
+                '{{ day }}':  form_widget(form.day, { 'attr' : { 'class': 'hidden' }}),
+            })|raw }}
+            {#{{ date_pattern|replace({
+                '{{ year }}':  form_widget(form.year),
+                '{{ month }}': form_widget(form.month),
+                '{{ day }}':   form_widget(form.day),
+            })|raw }}#}
+        </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock  %}
 
 {# Misc #}
 

@@ -38,13 +38,19 @@
 
                 <ul class="nav navbar-nav pull-left">
                     <li class="dropdown">
-                        <a href="{{ path('event_index') }}">Events</a>
+                        <a href="{{ path('event_index') }}">{{ 'Events'|trans }}</a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ path('event_index') }}">Events</a></li>
+                            <li><a href="{{ path('event_index') }}">{{ 'Events'|trans }}</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="{{ path('user_locale') }}">Locales</a>
+                        <a href="{{ path('disc_index') }}">{{ 'Discs'|trans }}</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('disc_index') }}">{{ 'Discs'|trans }}</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="{{ path('user_locale') }}">{{ 'Locales'|trans }}</a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ path('user_locale', {'_locale': "en" }) }}">En</a></li>
                             <li><a href="{{ path('user_locale', {'_locale': "fr" }) }}">Fr</a></li>

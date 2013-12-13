@@ -18,11 +18,39 @@ use Symfony\Component\Process\Exception\RuntimeException;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\Relation;
 
-/**
- * @Route("/relation")
- */
 class RelationController extends Controller
 {
+    /**
+     * @Route("/{slug}/relations", name="relation_user")
+     * @Template
+     */
+    public function userAction(Request $request, $slug)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+
+        $relations = $em->getRepository('CMBundle:Relation')->getUserRelations($user->getId());
+
+        $inverses = array();
+        foreach ($relations as $key => $relation) {
+            if ($relation->getUserId() == $user->getId()) {
+                $inverses[$relation->getFromUserId()] = $relation;
+                unset($relations[$key]);
+            }
+        }
+        
+        return array(
+            'user' => $user,
+            'relations' => $relations,
+            'inverses' => $inverses
+        );
+    }
+
     /**
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
@@ -56,7 +84,7 @@ class RelationController extends Controller
     }
 
     /**
-     * @Route("/add/{slug}", name="relation_add")
+     * @Route("/relation/add/{slug}", name="relation_add")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template("CMBundle:Relation:button.html.twig")
      */
@@ -83,7 +111,7 @@ class RelationController extends Controller
     }
     
     /**
-     * @Route("/accept/{slug}/{id}", name="relation_accept")
+     * @Route("/relation/accept/{slug}/{id}", name="relation_accept")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template("CMBundle:Relation:button.html.twig")
      */
@@ -112,7 +140,7 @@ class RelationController extends Controller
     }
     
     /**
-     * @Route("/delete/{slug}/{id}", name="relation_delete")
+     * @Route("/relation/delete/{slug}/{id}", name="relation_delete")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template("CMBundle:Relation:button.html.twig")
      */

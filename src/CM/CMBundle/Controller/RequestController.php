@@ -100,6 +100,40 @@ class RequestController extends Controller
 
                 $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('entity' => $request->getEntity(), 'request' => $request));
                 break;
+            case 'Disc':
+                if (count($em->getRepository('CMBundle:EntityUser')->findBy(array('entityId' => $objectId, 'userId' => $userId))) > 0) {
+                     throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                }
+
+                $disc = $em->getRepository('CMBundle:Disc')->findOneById($objectId);
+                if ($userId != $this->getUser()->getId()) {
+                    if (!$this->get('cm.user_authentication')->canManage($disc)) {
+                        throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                    }
+
+                    $user = $em->getRepository('CMBundle:User')->findOneById($userId);
+                    if (!$user) {
+                        throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+                    }
+                    $status = EntityUser::STATUS_PENDING;
+                } else {
+                    $user = $this->getUser();
+                    $status = EntityUser::STATUS_REQUESTED;
+                }
+
+                $disc->addUser(
+                    $user,
+                    false, // admin
+                    $status
+                );
+                $em->persist($disc);
+
+                $em->flush();
+
+                $request = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($user->getId(), 'any', array('entityId' => $disc->getId()));
+
+                $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('entity' => $request->getEntity(), 'request' => $request));
+                break;
             case 'Group':
                 if (count($em->getRepository('CMBundle:GroupUser')->findBy(array('groupId' => $objectId, 'userId' => $userId))) > 0) {
                      throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));

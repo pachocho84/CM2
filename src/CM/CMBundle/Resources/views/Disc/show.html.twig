@@ -1,0 +1,72 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+
+    <div class="box-top">
+        <h3>{{ show_icon('Disc')|raw }} <span>{{ disc }}</span></h3>
+    </div>
+
+    {% if can_manage(disc) %}
+        <div class="media">
+            <div class="btn pull-left alert-info"><a href="{{ path('disc_edit', {'id': disc.id, 'slug': disc.getSlug}) }}">{{ "Edit"|trans }}</a></div>
+            <div class="btn pull-right alert-danger"><a href="{{ path('disc_delete', {'id': disc.id}) }}">{{ "Delete"|trans }}</a></div>
+        </div>
+    {% endif %}
+
+
+    {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'entity': disc}) }}
+
+
+    <ul>
+        {% for protagonist in disc.entityUsers if protagonist.status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_ACTIVE') %}
+            <li>
+                {{ protagonist.id }} : {{ protagonist.user }}
+                {% for userTag in protagonist.userTags %}
+                    <ul>
+                        <li>{{ tags[userTag] }}</li>
+                    </ul>
+                {% endfor %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="media">
+        {% if disc.getImages|length > 0 %}
+            <img src='{{ asset(uploaded_images_full_dir ~ '/' ~ disc.images[0].img) }}' width="200px" />
+        {% endif %}
+
+        <dl>
+            <dt>Author</dt>
+            <dd>{{ disc.authors }}</dd>
+            <dt>Interpreter</dt>
+            <dd>{{ disc.interpreters }}</dd>
+            <dt>Label</dt>
+            <dd>{{ disc.label }}</dd>
+            <dt>Year</dt>
+            <dd>{{ disc.year|date('Y') }}</dd>
+            <dt>Tracks</dt>
+            <dd>
+                <ul>
+                    {% for track in disc.discTracks %}
+                        <li>
+                            {{ track.number }}
+                            <dl>
+                                <dd>{{ track }}</dd>
+                                <dt>Composer</dt>
+                                <dd>{{ track.composer }}</dd>
+                                <dt>Movement</dt>
+                                <dd>{{ track.movement }}</dd>
+                                <dt>Artists</dt>
+                                <dd>{{ track.artists }}</dd>
+                                <dt>Duration</dt>
+                                <dd>{{ track.duration|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}</dd>
+                            </dl>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </dd>
+        </dl>
+    </div>
+
+    {{ include('CMBundle::social.html.twig', {'post': disc.post}) }}
+{% endblock %}

@@ -39,7 +39,7 @@ class Event extends Entity
 /*         return $this->id; */
         return parent::getId();
     }
-        
+
     /**
      * Constructor
      */
@@ -49,8 +49,6 @@ class Event extends Entity
         
         $this->translate('en');
         $this->mergeNewTranslations();
-
-        $this->posts = new ArrayCollection();
         
         $this->eventDates = new ArrayCollection();
     }

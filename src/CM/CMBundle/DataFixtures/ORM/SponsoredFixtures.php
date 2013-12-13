@@ -34,6 +34,6 @@ class SponsoredFixtures extends AbstractFixture implements OrderedFixtureInterfa
     
     public function getOrder()
     {
-        return 8;
+        return 80;
     }
 }

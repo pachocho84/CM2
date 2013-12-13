@@ -228,6 +228,6 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
     
     public function getOrder()
     {
-        return 6;
+        return 60;
     }
 }

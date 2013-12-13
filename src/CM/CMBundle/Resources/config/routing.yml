@@ -30,6 +30,10 @@ cm_cmbundle_event:
     resource: "CM\\CMBundle\\Controller\\EventController"
     type:     annotation
 
+cm_cmbundle_disc:
+    resource: "CM\\CMBundle\\Controller\\DiscController"
+    type:     annotation
+
 cm_cmbundle_page:
     resource: "CM\\CMBundle\\Controller\\PageController"
     type:     annotation

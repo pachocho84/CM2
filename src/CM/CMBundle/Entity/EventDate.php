@@ -98,19 +98,6 @@ class EventDate
     }
 
     /**
-     * Set eventId
-     *
-     * @param integer $eventId
-     * @return EventDate
-     */
-    public function setEventId($eventId)
-    {
-        $this->eventId = $eventId;
-    
-        return $this;
-    }
-
-    /**
      * Get eventId
      *
      * @return integer 
