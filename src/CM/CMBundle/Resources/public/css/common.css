@@ -106,10 +106,9 @@
 }
 .object p
 {
-/*    font-size: 13px;
-    line-height: 15px;
-    margin-bottom: 0px;*/
-/*    text-align: justify;*/
+   font-size: 13px;
+   line-height: 1.38;
+   margin-bottom: 0px;
 }
 .objects .object dl
 {
