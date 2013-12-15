@@ -10,13 +10,20 @@
 {% endblock %}
 
 {% block body %}
+    <div class="row">
+        <div class="col-lg-5">
+            <h2>{{ block('title') }}</h2>
+        </div>
+        {{ include('CMBundle:Disc:menu.html.twig') }}
+    </div>
+    
     {{ form_start(form) }}
         {{ form_errors(form) }}
         
         {{ form_row(form.translations) }}
         {{ form_row(form.entityCategory) }}
 
-        <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('entityuser_add') }}">
+        <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('entityuser_add', {'object': 'Disc'}) }}">
             <div class="form-group col-lg-12"><label class="control-label col-lg-3 control-label required">{{ "Protagonists" | trans }}</label></div>
             <div class="col-lg-12 collection-items">
                 <div class="cm_cmbundle_disc_entityUsers_control_group">

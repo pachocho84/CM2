@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
+use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Disc;
 use CM\CMBundle\Entity\EntityUser;
@@ -31,23 +32,33 @@ class DiscController extends Controller
 {
     /**
      * @Route("/{page}", name = "disc_index", requirements={"page" = "\d+"})
+     * @Route("/category/{categorySlug}/{page}", name="disc_category", requirements={"page" = "\d+"})
      * @Template
      */
-    public function indexAction(Request $request, $page = 1)
+    public function indexAction(Request $request, $page = 1, $categorySlug = null)
     {
         $em = $this->getDoctrine()->getManager();
             
+        if (!$request->isXmlHttpRequest()) {
+            $categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::DISC, array('locale' => $request->getLocale()));
+        }
+        
+        if (!is_null($categorySlug)) {
+            $category = $em->getRepository('CMBundle:EntityCategory')->getCategory($categorySlug, EntityCategory::DISC, array('locale' => $request->getLocale()));
+        }
+            
         $discs = $em->getRepository('CMBundle:Disc')->getDiscs(array(
-            'locale'  => $request->getLocale()
+            'locale' => $request->getLocale(),
+            'categoryId' => $categorySlug ? $category->getId() : null
         ));
         
         $pagination = $this->get('knp_paginator')->paginate($discs, $page, 10);
         
         if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Disc:objects.html.twig', array('discs' => $pagination, 'page' => $page));
+            return $this->render('CMBundle:Disc:objects.html.twig', array('discs' => $pagination));
         }
         
-        return array('discs' => $pagination);
+        return array('categories' => $categories, 'discs' => $pagination, 'category' => $category);
     }
 
     /**
@@ -147,6 +158,8 @@ class DiscController extends Controller
         
         $form->handleRequest($request);
 
+        var_dump($request);
+
         if ($form->isValid()) {
             foreach ($disc->getDiscTracks() as $discDate) {
                 foreach ($oldDiscTracks as $key => $toDel) {
@@ -203,10 +216,13 @@ class DiscController extends Controller
         foreach ($disc->getEntityUsers() as $entityUser) {
             $users[] = $entityUser->getUser();
         }
+
+        $categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::DISC, array('locale' => $request->getLocale()));
         
         return array(
             'form' => $form->createView(),
             'entity' => $disc,
+            'categories' => $categories,
             'newEntry' => ($formRoute == 'disc_new'),
             'joinEntityType' => 'joinDisc'
         );

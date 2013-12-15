@@ -19,6 +19,7 @@ class DiscRepository extends BaseRepository
             'groupId'      => null,
             'pageId'       => null,
             'paginate'      => true,
+            'categoryId' => null,
             'locale'        => 'en',
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'protagonists'  => false,
@@ -60,6 +61,11 @@ class DiscRepository extends BaseRepository
         
         if ($options['groupId']) {
             $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+        
+        if ($options['categoryId']) {
+            $query->andWhere('d.entityCategory = :category_id')
+                ->setParameter(':category_id', $options['categoryId']);
         }
 
         $query->orderBy('p.updatedAt', 'desc');

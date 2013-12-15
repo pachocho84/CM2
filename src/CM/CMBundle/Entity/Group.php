@@ -19,7 +19,7 @@ class Group
     use ORMBehaviors\Sluggable\Sluggable;
     use \CM\CMBundle\Model\ImageTrait;
     use \CM\CMBundle\Model\CoverImageTrait;
-    
+
     const TYPE_DUO = 0;
     const TYPE_TRIO = 1;
     const TYPE_QUARTET = 2;

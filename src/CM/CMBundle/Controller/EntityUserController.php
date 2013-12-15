@@ -17,11 +17,13 @@ use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Event;
+use CM\CMBundle\Entity\Disc;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Sponsored;
 use CM\CMBundle\Form\EventType;
+use CM\CMBundle\Form\DiscType;
 use CM\CMBundle\Form\ImageCollectionType;
 
 /**
@@ -30,12 +32,12 @@ use CM\CMBundle\Form\ImageCollectionType;
 class EntityUserController extends Controller
 {
     /**
-     * @Route("/add", name="entityuser_add")
-     * @Route("/addGroup", name="entityuser_add_group")
-     * @Route("/addPage", name="entityuser_add_page")
+     * @Route("/add/{object}", name="entityuser_add")
+     * @Route("/addGroup/{object}", name="entityuser_add_group")
+     * @Route("/addPage/{object}", name="entityuser_add_page")
      * @Template
      */
-    public function addEntityUsersAction(Request $request)
+    public function addEntityUsersAction(Request $request, $object)
     {
         // if (!$request->isXmlHttpRequest() || !$this->get('cm.user_authentication')->isAuthenticated()) {
         //     throw new HttpException(401, 'Unauthorized access.');
@@ -69,17 +71,27 @@ class EntityUserController extends Controller
             // throw exception
         }
 
-        $event = new Event;
+        switch ($object) {
+            case 'Event':
+                $entity = new Event;
+                $formType = new EventType;
+                break;
+            case 'Disc':
+                $entity = new Disc;
+                $formType = new DiscType;
+                break;
+        }
+        
 
         $protagonist_new_id = $request->query->get('protagonist_new_id');
 
         // add dummies
         foreach (range(0, $protagonist_new_id - 1) as $i) {
-            $event->addUser($this->getUser());
+            $entity->addUser($this->getUser());
         }
 
         foreach ($users as $user) {    
-            $event->addUser(
+            $entity->addUser(
                 $user,
                 false, // admin
                 EntityUser::STATUS_PENDING,
@@ -87,7 +99,7 @@ class EntityUserController extends Controller
             );
         }
 
-        $form = $this->createForm(new EventType, $event, array(
+        $form = $this->createForm($formType, $entity, array(
             'cascade_validation' => true,
             'error_bubbling' => false,
             'em' => $em,
@@ -100,7 +112,7 @@ class EntityUserController extends Controller
         return array(
             'skip' => true,
             'newEntry' => true,
-            'entity' => $event,
+            'entity' => $entity,
             'entityUsers' => $form->createView()['entityUsers'],
             'target' => $target,
             'joinEntityType' => 'joinEvent', // TODO: caluculate it

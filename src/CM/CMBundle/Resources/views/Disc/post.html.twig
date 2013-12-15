@@ -6,7 +6,9 @@
 
     <div class="media-body">
     
-        <h4><a href="{{ path('event_show', {'id': post.entity.id, 'slug': post.entity.getSlug}) }}">{{ post.entity }}</a></h4>
+        <h4><a href="{{ path('disc_show', {'id': post.entity.id, 'slug': post.entity.getSlug}) }}">{{ post.entity }}</a></h4>
+        
+        <p class="text-muted">{#<?php //include_component('protagonist', 'protagonists', array('post' => $post)) ?>#}/p>
 
         {{ entity_short_text(post.entity)|raw }}
 

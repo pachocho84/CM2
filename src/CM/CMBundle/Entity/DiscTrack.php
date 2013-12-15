@@ -3,15 +3,19 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * DiscTrack
  *
  * @ORM\Entity(repositoryClass="CM\CMBundle\Entity\DiscTrackRepository")
  * @ORM\Table(name="disc_track")
+ * @ORM\HasLifecycleCallbacks
  */
 class DiscTrack
 {
+    use \CM\CMBundle\Model\AudioTrait;
+
     /**
      * @var integer
      *
@@ -89,6 +93,11 @@ class DiscTrack
     public function getId()
     {
         return $this->id;
+    }
+
+    protected function getRootDir()
+    {
+        return __DIR__.'/../Resources/public/';
     }
 
     /**

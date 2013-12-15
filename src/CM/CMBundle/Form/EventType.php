@@ -27,16 +27,7 @@ class EventType extends EntityType
                 'by_reference' => false,
                 'options' => array(
                 )
-            ))
-            ->add($builder->create('posts', new PostType, array('label' => 'Post'))->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'])));
-            // ->add('posts', 'collection', array(
-            //     'type' => new PostType(),
-            //     'by_reference' => false,
-            //     'allow_add' => true,
-            //     'allow_delete' => true,
-            //     'options' => array(
-            //     )
-            // ));
+            ));
     }
     
     /**

@@ -61,7 +61,7 @@ trait ImageTrait
      */
     public function getImg()
     {
-        return empty($this->img) ? "default.png" : $this->img;
+        return empty($this->img) ? 'default.png' : $this->img;
     }
 
     /**
@@ -107,8 +107,6 @@ trait ImageTrait
     {
         return $this->imgFile;
     }
-
-    protected abstract function getRootDir(); // return __DIR__ or similar
 
     protected static function getUploadDir()
     {

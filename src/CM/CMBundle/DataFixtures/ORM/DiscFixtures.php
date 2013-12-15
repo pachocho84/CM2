@@ -169,6 +169,9 @@ class DiscFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 
             }
 
+            $category = $manager->merge($this->getReference('disc_category-'.rand(1, 2)));
+            $category->addEntity($disc);
+
             $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
 
             $disc->addPost($post);

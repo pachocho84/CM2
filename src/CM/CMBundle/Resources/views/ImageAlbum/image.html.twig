@@ -3,7 +3,7 @@
 
 
     <div class="object">
-        <img src="{{ uploaded_images_full_dir~'/'~image.getImg }}" class="img-responsive"/>
+        <img src="{{ asset(uploaded_images_full_dir~'/'~image.getImg) }}" class="img-responsive"/>
         {#<?php echo image_tag('/uploads/images/770/'.$image, array('id' => 'image', 'style' => 'max-height: 740px;')) ?>
         <?php $images->count() > 1 and print link_to('‹', !isset($album) ? '@image_show?id=img_'.$prev : '@image_show?id=img_'.$prev.'&album_id='.$album->getId(), array('class' => 'left carousel-control ajax-link')) ?>
         <?php $images->count() > 1 and print link_to('›', !isset($album) ? '@image_show?id=img_'.$next : '@image_show?id=img_'.$next.'&album_id='.$album->getId(), array('class' => 'right carousel-control ajax-link')) ?>#}

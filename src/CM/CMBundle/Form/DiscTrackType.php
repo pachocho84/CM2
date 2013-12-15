@@ -21,7 +21,9 @@ class DiscTrackType extends AbstractType
             ->add('artists')
             ->add('duration', 'time', array(
                 'with_seconds' => true
-            ));
+            ))
+            ->add('audioFile', 'file', array('required' => false))
+            ->add('extract', 'checkbox', array('required' => false));
     }
     
     /**

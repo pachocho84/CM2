@@ -174,7 +174,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
     
             }
             
-            $category = $manager->merge($this->getReference('entity_category-'.rand(1, 3)));
+            $category = $manager->merge($this->getReference('event_category-'.rand(1, 3)));
             $category->addEntity($event);
 
             $post = $this->container->get('cm.post_center')->getNewPost($user, $user);

@@ -120,10 +120,10 @@ class Image
     {
       return $this->img;
     }
-    
+
     protected function getRootDir()
     {
-      return __DIR__.'/../Resources/public/';
+        return __DIR__.'/../Resources/public/';
     }
     
     /**

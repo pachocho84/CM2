@@ -60,6 +60,16 @@
                                 <dd>{{ track.artists }}</dd>
                                 <dt>Duration</dt>
                                 <dd>{{ track.duration|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}</dd>
+                                {% if track.audio is not null and track.audio is not empty %}
+                                    <dt>Audio</dt>
+                                    <dd>
+                                        <audio controls>
+                                            <source src="{{ asset(uploaded_audio_dir ~ '/' ~ track.audio) }}">
+                                            {{ 'Your browser does not support html5 audio playback'|trans }}
+                                        </audio>
+                                        {% if track.extract %}({{ 'extract'|trans }}){% endif %}
+                                    </dd>
+                                {% endif %}
                             </dl>
                         </li>
                     {% endfor %}
