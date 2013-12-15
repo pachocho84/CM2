@@ -49,11 +49,19 @@
         <?php endif ?>#}
 
 
-        <div class="box-top">
-            <ul class="nav nav-tabs nav-justified">
-                <li class="active"><a href="{{ path('user_images', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
-                <li><a href="{{ path('user_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
-                <li><a href="{{ path('user_entities_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
+        <div class="box-top box-top-big">
+            <div class="media">
+                <div class="pull-right">
+                    <a href="{{ path('imagealbum_new') }}" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-plus"></i> {{ 'Create a new album'|trans }}</a>
+                </div>
+                <div class="media-body">
+                    <h2><i class="glyphicon glyphicon-picture"></i> {{ 'Images'|trans }}</h2>
+                </div>
+            </div>
+            <ul class="nav">
+                <li class="active"><a href="{{ path('user_images', {'slug': user.slug}) }}">{{ 'Images'|trans }}</a></li>
+                <li><a href="{{ path('user_albums', {'slug': user.slug}) }}">{{ 'Albums'|trans }}</a></li>
+                <li><a href="{{ path('user_entities_albums', {'slug': user.slug}) }}">{{ 'Entities images'|trans }}</a></li>
             </ul>
         </div>
 

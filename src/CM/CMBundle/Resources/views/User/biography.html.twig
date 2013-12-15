@@ -1,6 +1,6 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
-{% block title %}{{ '%user%&#39;s biography' | trans({'%user%': user}) | raw }}{% endblock %}
+{% block title %}{{ '%user%&#39;s biography'|trans({'%user%': user})|raw }}{% endblock %}
 
 {% block body %}
 
@@ -19,19 +19,27 @@
 
     <div class="box">
         <div class="box-top">
-            <h3>{{ show_icon('Biography') | raw }} <span>{{ block('title') }}</span></h3>
+            <h2>{{ show_icon('Biography')|raw }} <span>{{ block('title') }}</span></h2>
         </div>
-        <div class="media objects">
-                {{ show_img_box(user.img | imagine_filter('350'), {'width': 200, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left img-thumbnail'}}) | raw }}
-                <div class="meda-body text-justify">
-                    {{ biography }}
+        <div class="objects">
+            <div class="media object">
+                <a href="{{ path('user_biography', {'slug': user.slug}) }}" class="pull-left img-thumbnail"><img src='{{ asset(uploaded_images_full_dir~'/'~user.img) }}' width=200 class="media-object" /></a>
+                <div class="meda-body">
+                    <h3 class="media-heading">
+                        {{ user }}
+                        <small>{{ user.userTags|join(', ')|trim }}</small>
+                    </h3>
+
+                    {{ show_img_box(user.img|imagine_filter('350'), {'width': 200, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+                    <div class="text-justify">{{ biography }}</div>                
+                
+                    {% if is_granted('ROLE_USER') and biography is not null and biography.post is not null %}
+                        {{ include('CMBundle::social.html.twig', {'post': biography.post}) }}
+                    {% endif %}
                 </div>
+            </div>
         </div>
     </div>
-
-    {% if is_granted('ROLE_USER') and biography is not null and biography.post is not null %}
-        {{ include('CMBundle::social.html.twig', {'post': biography.post}) }}
-    {% endif %}
 
 
 

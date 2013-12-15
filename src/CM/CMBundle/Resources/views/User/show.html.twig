@@ -10,33 +10,37 @@
     {{ include('CMBundle:User:top.html.twig', {'inPage': 'profile'}) }}
 
 
-    {#<ul class="breadcrumb">
-      <li><?php echo link_to('Home', '@homepage') ?></li>
-      <li><?php echo link_to(__('Users'), '@user_list') ?></li>
-      <li class="active"><?php echo $user ?></li>
-    </ul>#}
-
-
-
+    
     <div class="box">
         <div class="box-top">
-                    <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ show_icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
-            <h3>{{ show_icon('Biography')|raw }} <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ 'Biography'|trans }}</a> <small><a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ 'show complete biography'|trans }}</small></a></h3>
+            <h2><a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ show_icon('Biography')|raw }} {{ 'Biography'|trans }}</a> <small><a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ 'show complete biography'|trans }}</small></a></h2>
         </div>
-        <div class="media objects">
-            {{ show_img_box(user.img | imagine_filter('350'), {'width': 200, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left img-thumbnail'}}) | raw }}
-            <div class="meda-body">
-                <h4>
-                    {{ user }}
-                    <small>{{ user.userTags|join(', ')|trim }}</small>
-                </h4>
-                {% if biography is not null %}{{ entity_short_text(biography)|raw }}{% endif %}
+        
+        <div class="objects">
+            <div class="media object">
+                <a href="{{ path('user_biography', {'slug': user.slug}) }}" class="pull-left img-thumbnail"><img src='{{ asset(uploaded_images_full_dir~'/'~user.img) }}' width=200 class="media-object" /></a>
+                <div class="media-body">
+                    <h3 class="media-heading">
+                        {{ user }}
+                        <small>{{ user.userTags|join(', ')|trim }}</small>
+                    </h3>
+                    {% if biography is not null %}{{ entity_short_text(biography)|raw }}{% endif %}
+                </div>
             </div>
         </div>
     </div>
 
 
-    {{ include('CMBundle:Wall:posts.html.twig', {'slug': user.slug}) }}
+    
+    <div class="box">
+        <div class="box-top">
+            <h2><a href="{{ path('user_wall', {'slug': user.slug}) }}">{{ show_icon('Wall')|raw }} {{ 'Wall'|trans }}</a> <small><a href="{{ path('user_wall', {'slug': user.slug}) }}">{{ 'show all posts'|trans }}</small></a></h2>
+        </div>
+        
+        <ul class="media-list objects">
+            {{ include('CMBundle:Wall:posts.html.twig', {'slug': user.slug}) }}
+        </ul>
+    </div>
     
 
     {#<?php slot('sidebar_slot3') ?>  

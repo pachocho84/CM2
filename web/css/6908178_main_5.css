@@ -29,8 +29,11 @@
 a {
     color: #990000;
 }
+a:hover {
+    color: #333333;
+}
 .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
-    background-color: #990000;
+    background-color: #660000;
 }
 .nav-tabs > li > a,
 .dropdown-menu {
@@ -166,19 +169,16 @@ body {
     background: none;
     padding: 0px;
 }
-.row h2, 
-.row h3 span {
+.row h2 {
     font-family: "Georgia", Times new roman, serif;
-    font-weight: normal;
     font-variant: small-caps;
     text-shadow: 0 1px 0 #ffffff;
-}
-.row h2 {
     line-height: 32px;
     margin: 0 0 20px 0;
 }
-.row h2 img  {
-    vertical-align: 0px;
+.row h2 i {
+    font-size: 16px;
+    font-variant: normal;
 }
 .row h2 small,
 .row h3 small {

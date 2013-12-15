@@ -16,13 +16,13 @@
 
     <div class="box">
         <div class="box-top">
-            <ul class="nav nav-tabs nav-justified">
+        </div>
+        <div class="media-list objects">
+            <ul class="nav nav-tabs">
                 <li class="active"><a href="{{ path('user_images', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
                 <li><a href="{{ path('user_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
                 <li><a href="{{ path('user_entities_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
             </ul>
-        </div>
-        <div class="media-list objects">
             {{ include('CMBundle:ImageAlbum:image.html.twig') }}
         </div>
     </div>

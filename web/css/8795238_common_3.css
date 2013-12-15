@@ -95,7 +95,6 @@
 }
 .object h3
 {
-    font-size: 18px;
     margin-top: 0px;
 }
 .object h4
@@ -106,9 +105,10 @@
 }
 .object p
 {
-   font-size: 13px;
-   line-height: 1.38;
-   margin-bottom: 0px;
+/*    font-size: 13px;
+    line-height: 15px;
+    margin-bottom: 0px;*/
+/*    text-align: justify;*/
 }
 .objects .object dl
 {

@@ -1,5 +1,3 @@
-<div class="media-list bottom">
-
 {# <?php $sito = $sf_context->getSito() ?> #}
 
 {# <?php if (($sito->getCommentsEnabled() && $sito->getCommentsDisplay()) || ($sito->getLikesEnabled() && $sito->getLikesDisplay())): ?> #}
@@ -10,14 +8,14 @@
 
 
         {# <?php if ($sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == false): ?> #}
-            <div class="pull-right">
+            <span class="pull-right">
                 {# <?php if ($sito->getLikesEnabled() && $sito->getLikesDisplay()): ?> #}
                     {% include('CMBundle:Like:likeCount.html.twig') %}
                 {# <?php endif ?> #}
                 {# <?php if ($sito->getCommentsEnabled() && $sito->getCommentsDisplay()): ?> #}
                     {% include('CMBundle:Comment:commentCount.html.twig') %}
                 {# <?php endif ?> #}
-            </div>
+            </span>
         {# <?php endif ?> #}
 
 
@@ -38,4 +36,3 @@
     </div>
 
 {# <?php endif ?> #}
-</div>

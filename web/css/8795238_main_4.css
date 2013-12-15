@@ -1,7 +1,7 @@
 /* LAYOUT */
 #header
 {
-    background: url(../images/layout/header_bg.jpg) repeat-x;
+    background: url(../../bundles/cm/images/layout/header_bg.jpg) repeat-x;
     height:66px;
 }   
 #logo
@@ -9,7 +9,7 @@
     display:block; 
     width:450px;
     height:60px;
-    background:url(../images/layout/logo.png) no-repeat;
+    background:url(../../bundles/cm/images/layout/logo.png) no-repeat;
 } 
 #logo h1
 {
@@ -29,11 +29,8 @@
 a {
     color: #990000;
 }
-a:hover {
-    color: #333333;
-}
 .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
-    background-color: #660000;
+    background-color: #990000;
 }
 .nav-tabs > li > a,
 .dropdown-menu {
@@ -178,7 +175,6 @@ body {
 }
 .row h2 i {
     font-size: 16px;
-    font-variant: normal;
 }
 .row h2 small,
 .row h3 small {
@@ -195,7 +191,7 @@ a:hover {
 }
 /*
 img {
-  background: #f7f7f7 url('../images/loader-big.gif') no-repeat;
+  background: #f7f7f7 url('../../bundles/cm/images/loader-big.gif') no-repeat;
 }
 */
 

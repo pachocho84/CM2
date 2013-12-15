@@ -34,14 +34,14 @@ class EventRepository extends BaseRepository
         $options = self::getOptions($options);
 
         $parameters = array(
-            'now' => new \DateTime,
-            'locales' => $options['locales']
+            'now' => new \DateTime
         );
         
         $count = $this->getEntityManager()->createQueryBuilder()
             ->select('count(d.id)')
             ->from('CMBundle:EventDate','d')
-            ->setParameter(':now', new \DateTime); // FIXME: why?
+            ->join('d.event', 'e')
+            ->join('e.posts', 'p');
                     
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('d, e, t, i, p, l, c, u, lu, cu, pg, gr'.($options['protagonists'] ? ', eu, us' : ''))
@@ -65,36 +65,25 @@ class EventRepository extends BaseRepository
         }
         
         if ($options['user_id']) {
-            $count->join('d.event', 'e')
-                ->join('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
-                ->andWhere('p.user = :user_id')
-                ->setParameter(':user_id', $options['user_id']);
+            $count->andWhere('p.user = :user_id');
             $query->andWhere('p.user = :user_id');
             $parameters['user_id'] = $options['user_id'];
         }
         
         if ($options['page_id']) {
-            $count->join('d.event', 'e')
-                ->join('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
-                ->andWhere('p.page = :page_id')
-                ->setParameter(':page_id', $options['page_id']);
+            $count->andWhere('p.page = :page_id');
             $query->andWhere('p.page = :page_id');
             $parameters['page_id'] = $options['page_id'];
         }
         
         if ($options['group_id']) {
-            $count->join('d.event', 'e')
-                ->join('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
-                ->andWhere('p.group = :group_id')
-                ->setParameter(':group_id', $options['group_id']);
+            $count->andWhere('p.group = :group_id');
             $query->andWhere('p.group = :group_id');
             $parameters['group_id'] = $options['group_id'];
         }
         
         if ($options['category_id']) {
-            $count->join('d.event', 'e')
-                ->andWhere('e.entityCategory = :category_id')
-                ->setParameter(':category_id', $options['category_id']);
+            $count->andWhere('e.entityCategory = :category_id');
             $query->andWhere('e.entityCategory = :category_id');
             $parameters['category_id'] = $options['category_id'];
         }
@@ -109,6 +98,8 @@ class EventRepository extends BaseRepository
                 ->orderBy('d.start');    
         }
         
+        $count->setParameters($parameters);
+        $parameters['locales'] = $options['locales'];
         $query->setParameters($parameters);
         
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();

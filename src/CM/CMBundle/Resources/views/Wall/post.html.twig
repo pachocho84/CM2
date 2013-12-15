@@ -7,7 +7,7 @@
 
     <div class="media-body">
 
-        <p>{{ post.id }} {{ post_text(post, relatedObjects)|raw }}</p>
+        <p>{{ post_text(post, relatedObjects)|raw }}</p>
 
         {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
 
