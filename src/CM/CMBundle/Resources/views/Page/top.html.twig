@@ -10,7 +10,7 @@
 <div class="profile-header shadow">
     {% if page.coverImg != '' %}
         <div class="cover image_box">
-            {{ show_img_box(page.coverImg|imagine_filter('70'), {'width': 750, 'height': 285, 'offset': page.coverImgOffset, 'img_only': true})|raw }}
+            {{ show_img_box(page.coverImg|imagine_filter('750'), {'width': 750, 'height': 285, 'offset': page.coverImgOffset, 'img_only': true})|raw }}
             <div class="cover-shadow"></div>
             <h2>{{ page }}</h2>
         </div>
