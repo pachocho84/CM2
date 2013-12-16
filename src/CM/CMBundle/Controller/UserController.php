@@ -179,6 +179,7 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $biography->setTitle('b');
             $em->persist($biography);
             $em->flush();
 
@@ -473,6 +474,13 @@ class UserController extends Controller
 
         $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
 
+        $availableTags = $tags;
+        foreach ($this->getUser()->getUserUserTags() as $userTag) {
+            if (array_key_exists($userTag->getUserTag()->getId(), $tags)) {
+                unset($availableTags[$userTag->getUserTag()->getId()]);
+            }
+        }
+
         if ($request->isMethod('post')) {
 
             $userTags = explode(',', $request->get('userTagsVal'));
@@ -490,10 +498,13 @@ class UserController extends Controller
                 $em->persist($this->getUser());
                 $em->flush();
             }
+
+            return new RedirectResponse($this->generateUrl('user_tags_edit'), 301);
         }
         
         return array(
-            'tags' => $tags
+            'tags' => $tags,
+            'availableTags' => $availableTags
         );
     }
     

@@ -32,10 +32,10 @@
                 <div class="text-center">
                     <input type="submit" name="commit" value="{{ 'Save'|trans }}" class="btn btn-primary" />
                 </div>
-                
+
                 <legend>{{ 'Available tags'|trans }}</legend>
                 <div id="tags" class="row tag-list">
-                    {% for tag in tags if tag.id not in app.user.userTags %}
+                    {% for tag in availableTags %}
                         <div class="span2">
                             <label class="img-thumbnail round tag" title="{{ tag }}"><input type="hidden" name="tag_{{ tag.id }}" value="{{ tag.id }}"><i class="glyphicon glyphicon-tag"></i> {{ tag }}</label>
                         </div>

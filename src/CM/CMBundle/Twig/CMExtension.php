@@ -8,6 +8,9 @@ use CM\CMBundle\Service\Helper;
 use Symfony\Component\Security\Core\SecurityContext;
 use CM\CMBundle\Service\UserAuthentication;
 use CM\CMBundle\Entity\Entity;
+use CM\CMBundle\Entity\Biography;
+use CM\CMBundle\Entity\Event;
+use CM\CMBundle\Entity\Disc;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Request;
@@ -475,11 +478,29 @@ class CMExtension extends \Twig_Extension
                     '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                 ));
             case 'Like_'.Post::TYPE_CREATION:
-                $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                return $this->translator->trans('%user% likes %object%', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
-                ));
+                // return get_class($post->getEntity());
+                if ($post->getEntity() instanceof Biography) {
+                    // var_dump('expression');
+                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
+                    $objectLink = $this->router->generate($post->getPublisherRoute().'_biography', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
+                    return $this->translator->trans('%user% likes %publisher%\'s %biographyLinkStart%Biography%biographyLinkEnd%', array(
+                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>',
+                        '%biographyLinkStart%' => '<a href="'.$objectLink.'">', '%biographyLinkEnd%' => '</a>'
+                    ));
+                } elseif ($post->getEntity() instanceof Event) {
+                    $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
+                    return $this->translator->trans('%user% likes %object%', array(
+                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
+                    ));
+                } elseif ($post->getEntity() instanceof Disc) {
+                    $objectLink = $this->router->generate('disc_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
+                    return $this->translator->trans('%user% likes %object%', array(
+                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
+                    ));
+                }
             case 'disc_'.Post::TYPE_CREATION:
                 // return __('%user% has published %object% in %entity%.', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%entity%' => link_to(strtolower($post->getEntity()->getCategory()), $post->getEntity()->getLinkCategory()), '%object%' => link_to($post->getEntity(), $object_page)));
             case 'image_album_'.Post::TYPE_CREATION:

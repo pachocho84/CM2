@@ -26,6 +26,7 @@ class BiographyType extends BaseEntityType
         parent::setDefaultOptions($resolver);
         
         $resolver->setDefaults(array(
+            'title' => false,
             'data_class' => 'CM\CMBundle\Entity\Biography'
         ));
     }

@@ -30,6 +30,7 @@ class EntityTranslation
      *
      * @ORM\Column(name="title", type="string", length=150, nullable=true)
      * @Assert\NotBlank(groups="Event")
+     * @Assert\Blank(groups="Biography")
      * @Assert\Length(
      *      min = "2",
      *      max = "150",

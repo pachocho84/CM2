@@ -172,6 +172,7 @@ class PageController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $biography->setTitle('b');
             $em->persist($biography);
             $em->flush();
 
