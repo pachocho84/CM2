@@ -96,14 +96,18 @@ liip_imagine:
     cache_prefix: %images.dir%
     cache_clearer: false
     filter_sets:
+        50:
+            quality: 100
+            filters:
+                thumbnail: { size: [50, 50], mode: inset }
         350:
             quality: 100
             filters:
                 thumbnail: { size: [350, 350], mode: inset }
-        770:
+        750:
             quality: 100
             filters:
-                thumbnail: { size: [770, 770], mode: inset }
+                thumbnail: { size: [750, 750], mode: inset }
 
 sonata_block:
     default_contexts: [cms]

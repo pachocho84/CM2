@@ -1,0 +1,21 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block title %}{{ 'Pages'|trans }}{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-5">
+            <h2>{{ block('title') }}</h2>
+        </div>
+        {#{{ include('CMBundle:Page:menu.html.twig') }}#}
+    </div>
+
+    {{ include('CMBundle:Page:objects.html.twig') }}
+    
+    {#<?php slot('sidebar_slot3') ?>  
+        <?php include_component('fan', 'pageFans', array('page' => $page)) ?>
+    <?php end_slot() ?>#}
+  
+{% endblock %}
+

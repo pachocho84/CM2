@@ -16,7 +16,7 @@
         <div class="row">
             <li class="col-md-3">
                 <a href="{{ path('user_show', {'slug': group.creator.slug}) }}" title="{{ 'Founder'|trans }}">
-                    {{ show_img_box(group.creator.img|imagine_filter('350'), {'width': 32, 'height': 32, 'offset': group.creator.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+                    {{ show_img_box(group.creator.img|imagine_filter('50'), {'width': 32, 'height': 32, 'offset': group.creator.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
                     <div class="leftColumnListUser-content">                                                                          
                         <span class="leftColumnListUser-name">{{ group.creator.firstName }}</span>   
                         {#<span class="leftColumnListUser-role"><?php echo $member->getTagName() ?></span>#}
@@ -26,7 +26,7 @@
             {% for member in members %}
                 <li class="col-md-3">
                     <a href="{{ path('user_show', {'slug': member.user.slug}) }}" class="leftColumnListUser-img">
-                        {{ show_img_box(member.user.img|imagine_filter('350'), {'width': 32, 'height': 32, 'offset': member.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+                        {{ show_img_box(member.user.img|imagine_filter('50'), {'width': 32, 'height': 32, 'offset': member.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
                         <div class="leftColumnListUser-content">                                                                          
                             <span class="leftColumnListUser-name"><a href="{{ path('user_show', {'slug': member.user.slug}) }}" class="leftColumnListUser-img">{{ member.user.firstName }}</span>   
                             {#<span class="leftColumnListUser-role"><?php echo $member->getTagName() ?></span>#}

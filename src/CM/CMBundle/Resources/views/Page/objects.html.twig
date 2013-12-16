@@ -1,0 +1,19 @@
+{% for page in pages %}
+
+    <div class="media">
+
+        {% if page.images|length > 0 %}
+            {{ show_img_box(page.images[0]|imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #}
+        {% endif %}
+
+        <div class="media-body">
+        
+            <h4><a href="{{ path('page_show', {'slug': page.getSlug}) }}">{{ page }}</a></h4>
+
+            {{ page.description }}
+
+        </div><!-- END Media Body -->
+
+    </div><!-- END Object -->
+
+{% endfor %}

@@ -3636,7 +3636,7 @@ form .tab-content {
 }
 .glyphicon { 
     top: 0;
-    padding: 0 1px 0 0;  
+/*     padding: 0 1px 0 0;   */
 }
 .glyphicons { 
     padding: 0 2px 0 0; 
@@ -3644,12 +3644,12 @@ form .tab-content {
     line-height: 1;
     font-style: normal;
     font-weight: normal;
+    color: inherit;
 }
 .glyphicons:before { 
     position: relative;
     font-family: 'Glyphicons Regular';
     font-size: inherit; 
-    color: inherit;
     margin: 0;
 }
 
@@ -4290,9 +4290,11 @@ form .form-tab-content {
     overflow-y: scroll;
     padding: 0 3px;
 }
+/*
 .images li.image .image-overlay-content [class^="icon-"],[class*=" icon-"] {
     background-image: url("/CircuitoMusicaPlugin/lib/bootstrap/img/glyphicons-halflings-white.png");
 }
+*/
 .images li.object .dropdown-toggle {
     cursor: pointer;
 }

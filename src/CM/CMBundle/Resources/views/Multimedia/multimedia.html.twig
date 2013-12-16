@@ -23,7 +23,7 @@
 
         <div class="col-lg-7">
             <div class="media">
-                {{ show_img_box(multimedia.post.publisher.img|imagine_filter('350'), {'width': 32, 'height': 32, 'offset': multimedia.post.publisher.imgOffset, 'link': path(multimedia.post.publisherRoute ~ '_show', {'slug': multimedia.post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}}) | raw }}
+                {{ show_img_box(multimedia.post.publisher.img|imagine_filter('50'), {'width': 32, 'height': 32, 'offset': multimedia.post.publisher.imgOffset, 'link': path(multimedia.post.publisherRoute ~ '_show', {'slug': multimedia.post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}}) | raw }}
                 <div class="media-body">
                     <h4><a href="{{ path(multimedia.post.publisherRoute ~ '_show', {'slug': multimedia.post.publisher.slug}) }}">{{ multimedia.post.publisher }}</a></h4>
                     

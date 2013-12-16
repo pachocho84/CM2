@@ -1,6 +1,6 @@
 {% if not page.coverImg or page.coverImg == '' %}
     <div class="media">
-        {{ show_img_box(page.img|imagine_filter('350'), {'width': 35, 'height': 35, 'offset': page.imgOffset, 'default': 'page', 'box_attributes': {'class': 'pull-left'}})|raw }}
+        {{ show_img_box(page.img|imagine_filter('50'), {'width': 32, 'height': 32, 'offset': page.imgOffset, 'default': 'page', 'box_attributes': {'class': 'pull-left'}})|raw }}
         <div class="media-body">
             <h2>{{ page }}</h2>
         </div>
@@ -10,7 +10,7 @@
 <div class="profile-header shadow">
     {% if page.coverImg != '' %}
         <div class="cover image_box">
-            {{ show_img_box(page.coverImg|imagine_filter('770'), {'width': 750, 'height': 285, 'offset': page.coverImgOffset, 'img_only': true})|raw }}
+            {{ show_img_box(page.coverImg|imagine_filter('70'), {'width': 750, 'height': 285, 'offset': page.coverImgOffset, 'img_only': true})|raw }}
             <div class="cover-shadow"></div>
             <h2>{{ page }}</h2>
         </div>

@@ -221,7 +221,7 @@ class CMExtension extends \Twig_Extension
 
         // // No height
         if (!$height) {
-            $imgBox = '<div><spanmg src="/'.$folder.$img.' width="'.$width.'"';
+            $imgBox = '<div><img src="/'.$folder.$img.' width="'.$width.'"';
             foreach ($options['box_attributes'] as $key => $attr) {
                 $imgBox .= ' '.$key.'="'.$attr.'"';
             }
@@ -284,8 +284,8 @@ class CMExtension extends \Twig_Extension
             $img_style[] = 'top: -'.(($img_r_h - $height) / 10).'px';
         }
 
-        // Write <spanmg> tag
-        $img = '<spanmg src="'.$img.'" style="';
+        // Write <img> tag
+        $img = '<img src="'.$img.'" style="';
         foreach ($img_style as $attr) {
             $img .= $attr;
         }

@@ -5,7 +5,7 @@
        {# {{ delete_link(path('comment_delete', {'id': comment.id}), 'comment', {'data-placement': 'left', 'class': 'close', 'text': '&times;', 'icon': false}) }} #}
     {% endif %}
 
-    {{ show_img_box(comment.user.img|imagine_filter('350'), {'width': 32, 'height': 32, 'offset': comment.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+    {{ show_img_box(comment.user.img|imagine_filter('50'), {'width': 32, 'height': 32, 'offset': comment.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
 
     <div class="media-body">
         <a href="{{ path('user_show', {'slug': comment.user.slug}) }}" >{{ comment.user }}</a> {{ comment.comment }}

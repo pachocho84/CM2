@@ -24,6 +24,19 @@ use CM\CMBundle\Form\PageImageType;
 class PageController extends Controller
 {
     /**
+     * @Route("/{page}", name = "page_index", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function indexAction(Request $request, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $pages = $em->getRepository('CMBundle:Page')->getGroups();
+        $pagination = $this->get('knp_paginator')->paginate($pages, $page, 15);
+
+        return array('pages' => $pagination);
+    }
+    /**
      * @Route("/{slug}/wall/{pageNum}", name="page_wall", requirements={"pageNum" = "\d+"})
      * @Template
      */

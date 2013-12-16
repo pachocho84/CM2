@@ -24,6 +24,20 @@ use CM\CMBundle\Form\GroupImageType;
 class GroupController extends Controller
 {
     /**
+     * @Route("/{page}", name = "group_index", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function indexAction(Request $request, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $groups = $em->getRepository('CMBundle:Group')->getGroups();
+        $pagination = $this->get('knp_paginator')->paginate($groups, $page, 15);
+
+        return array('groups' => $pagination);
+    }
+
+    /**
      * @Route("/{slug}/wall/{page}", name="group_wall", requirements={"page" = "\d+"})
      * @Template
      */

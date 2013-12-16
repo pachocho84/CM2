@@ -16,9 +16,22 @@ class GroupRepository extends BaseRepository
     static protected function getOptions(array $options = array())
     {
         return array_merge(array(
+            'paginate' => true,
+            'limit'    => 25,
         ), $options);
     }
 
+    public function getGroups($options = array())
+    {
+        $options = self::getOptions($options);
+
+        $query = $this->createQueryBuilder('g')
+            ->select('g, gu')
+            ->leftJoin('g.groupUsers', 'gu');
+
+        return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+    
     public function getAdmins($groupId)
     {
         return $this->getEntityManager()->createQueryBuilder()

@@ -16,7 +16,20 @@ class PageRepository extends BaseRepository
     static protected function getOptions(array $options = array())
     {
         return array_merge(array(
+            'paginate' => true,
+            'limit'    => 25,
         ), $options);
+    }
+
+    public function getGroups($options = array())
+    {
+        $options = self::getOptions($options);
+
+        $query = $this->createQueryBuilder('p')
+            ->select('p, pu')
+            ->leftJoin('p.pageUsers', 'pu');
+
+        return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
     public function getAdmins($pageId)

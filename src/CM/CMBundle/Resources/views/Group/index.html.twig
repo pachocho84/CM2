@@ -1,0 +1,21 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block title %}{{ 'Groups'|trans }}{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-5">
+            <h2>{{ block('title') }}</h2>
+        </div>
+        {#{{ include('CMBundle:Group:menu.html.twig') }}#}
+    </div>
+
+    {{ include('CMBundle:Group:objects.html.twig') }}
+    
+    {#<?php slot('sidebar_slot3') ?>  
+        <?php include_component('fan', 'groupFans', array('group' => $group)) ?>
+    <?php end_slot() ?>#}
+  
+{% endblock %}
+

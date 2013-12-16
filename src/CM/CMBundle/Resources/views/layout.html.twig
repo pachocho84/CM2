@@ -39,6 +39,18 @@
 
                 <ul class="nav navbar-nav pull-left">
                     <li class="dropdown">
+                        <a href="{{ path('page_index') }}">{{ 'Pages'|trans }}</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('page_index') }}">{{ 'Pages'|trans }}</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="{{ path('group_index') }}">{{ 'Groups'|trans }}</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('group_index') }}">{{ 'Groups'|trans }}</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
                         <a href="{{ path('event_index') }}">{{ 'Events'|trans }}</a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ path('event_index') }}">{{ 'Events'|trans }}</a></li>
