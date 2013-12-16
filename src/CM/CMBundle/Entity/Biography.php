@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="BiographyRepository")
  * @ORM\Table(name="biography")
+ * @ORM\HasLifecycleCallbacks
  */
 class Biography extends Entity
 {
@@ -29,7 +30,6 @@ class Biography extends Entity
         $this->mergeNewTranslations();
         
         $this->setVisible(true);
-        // $this->setTitle('bio');
     }
 
     public function __toString()

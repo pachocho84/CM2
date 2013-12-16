@@ -33,7 +33,7 @@ class BaseEntityType extends AbstractType
                     'locales' => $options['locales'],
                     'required' => true,
                     'fields' => array(
-                        'title' => array(),
+                        'title' => $options['title'] ? array() : array('display' => false),
                         'subtitle' => array(
                             'required' => false,
                         ),
@@ -74,6 +74,7 @@ class BaseEntityType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'title' => true,
         	'em' => null,
             'roles' => array(),
             'user_tags' => array(),

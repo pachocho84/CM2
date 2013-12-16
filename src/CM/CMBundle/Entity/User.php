@@ -646,6 +646,11 @@ class User extends BaseUser
         $order = null
     )
     {
+        foreach ($this->userUserTags as $key => $userUserTag) {
+            if ($userUserTag->getUserTagId() == $userTag->getId()) {
+                return;
+            }
+        }
         $userUserTag = new UserUserTag;
         $userUserTag->setUser($this)
             ->setUserTag($userTag)

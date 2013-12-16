@@ -49,7 +49,11 @@ class EventRepository extends BaseRepository
             ->join('d.event', 'e')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
+<<<<<<< HEAD
             ->innerJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.'AND p.object = :object')
+=======
+            ->innerJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
+>>>>>>> eb00af1123dda710b56c67e8fa7260f435acbfb2
             ->leftJoin('p.likes', 'l')
             ->leftJoin('p.comments', 'c')
             ->leftJoin('p.user', 'u')

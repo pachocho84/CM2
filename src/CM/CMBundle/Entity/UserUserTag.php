@@ -29,10 +29,20 @@ class UserUserTag
     protected $id;
 
     /**
+     * @ORM\Column(name="user_id", type="integer")
+     */
+    private $userId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="userUserTags")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\Column(name="user_tag_id", type="integer")
+     */
+    private $userTagId;
     
     /**
      * @ORM\ManyToOne(targetEntity="UserTag", inversedBy="userTagUsers")
@@ -58,6 +68,16 @@ class UserUserTag
     }
 
     /**
+     * Get userId
+     *
+     * @return integer 
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
      * Set entity
      *
      * @param User $entity
@@ -66,6 +86,7 @@ class UserUserTag
     public function setUser(User $user = null)
     {
         $this->user = $user;
+        $this->userId = $user->getId();
     
         return $this;
     }
@@ -89,8 +110,19 @@ class UserUserTag
     public function setUserTag(UserTag $userTag = null)
     {
         $this->userTag = $userTag;
+        $this->userTagId = $userTag->getId();
     
         return $this;
+    }
+
+    /**
+     * Get userId
+     *
+     * @return integer 
+     */
+    public function getUserTagId()
+    {
+        return $this->userTagId;
     }
 
     /**
