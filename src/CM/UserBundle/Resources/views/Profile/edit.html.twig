@@ -12,13 +12,30 @@
 {% block body %}
 
     {% trans_default_domain 'FOSUserBundle' %}
-
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <div>
-            <input type="submit" value="{{ 'Save' | trans }}" />
+    
+    <div class="row">
+    
+        <div class="col-md-4">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="#"><span class="glyphicon glyphicon-cog"></span> {{ 'Basic information' | trans }}</a></li>
+                <li><a href="{{ path('user_image_edit') }}"><span class="glyphicon glyphicon-picture"></span> {{ 'Profile & Cover pictures' | trans }}</a></li>
+                <li><a href="{{ path('user_image_edit') }}"><span class="glyphicon glyphicon-book"></span> {{ 'Biography' | trans }}</a></li>
+                <li><a href="{{ path('user_tags_edit') }}"><span class="glyphicon glyphicon-tags"></span> {{ 'Tags' | trans }}</a></li>
+                <li><a href="{{ path('user_tags_edit') }}"><span class="glyphicons dog"></span> {{ 'Tags' | trans }}</a></li>
+            </ul>
         </div>
-    {{ form_end(form) }}
+        
+        <div class="col-md-8">
+        
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <div>
+                    <input type="submit" value="{{ 'Save' | trans }}" />
+                </div>
+            {{ form_end(form) }}
+            
+        </div>
+    </div>
 
 {% endblock %}
 

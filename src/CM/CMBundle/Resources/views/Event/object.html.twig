@@ -3,7 +3,7 @@
         
         {% if date.getEvent.getImages | length > 0 %}
             <a href="{{ path('event_show', { 'id': date.id, 'slug': date.getEvent.getSlug }) }}" class="pull-left img-thumbnail">
-                <img src='{{ asset(uploaded_images_full_dir~'/'~date.getEvent.getImages[0].img) }}' width=200 />
+                {{ show_img_box(date.getEvent.getImages[0].img|imagine_filter('770'), {'width': 200, 'height': 133})|raw }}
             </a>
         {% endif %}
 {#                         <?php show_img_box($post->getImages()->getFirst(), array('width' => 200, 'height' => 140, 'link' => $post->getRawValue()->getEntity()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left img-thumbnail'))) ?>     #}
@@ -26,6 +26,8 @@
 
             {% if date.event.post == null %}
                 NULL! {{ date.event.posts|length }}
+                
+                {{ dump(date.event.posts) }}
             {% else %}
                 {{ include('CMBundle::social.html.twig', {'post': date.event.post}) }}
             {% endif %}

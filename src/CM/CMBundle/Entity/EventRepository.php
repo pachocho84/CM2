@@ -49,7 +49,7 @@ class EventRepository extends BaseRepository
             ->join('d.event', 'e')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
-            ->innerJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
+            ->innerJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.'AND p.object = :object')
             ->leftJoin('p.likes', 'l')
             ->leftJoin('p.comments', 'c')
             ->leftJoin('p.user', 'u')
@@ -100,6 +100,7 @@ class EventRepository extends BaseRepository
         
         $count->setParameters($parameters);
         $parameters['locales'] = $options['locales'];
+        $parameters['object'] = get_class(new Event);
         $query->setParameters($parameters);
         
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
