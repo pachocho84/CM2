@@ -9,6 +9,7 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use CM\CMBundle\Entity\User;
+use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\EntityCategory;
 
 class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
@@ -17,6 +18,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
         array('firstname' => 'Ernesto',
             'lastname' => 'Casareto',
             'username' => 'pachocho',
+            'password' => 'pacho',
             'email' => 'ernesto@circuitomusica.it',
             'sex' => User::SEX_M,
             'city_birth' => 'Padua',
@@ -24,11 +26,22 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'birth_date' => array(1984, 6, 17),
             'birth_date_visible' => User::BIRTHDATE_VISIBLE,
             'image' => '1074169_10201332211257910_2077101884_o.jpg',
-            'user_tags' => array(1, 5)
+            'imgOffset' => 0,
+            'cover' => 'erteda50c9566f74859fb54a7f7912225deed5f1.jpg',
+            'user_tags' => array(1, 5),
+            'biography' => 'Ernesto Casareto, flautista, si è diplomato col massimo dei voti al Conservatorio “Giuseppe Verdi” di Milano.
+Si è poi perfezionato con Emilio Vapi prima all’Accademia G. Marziali di Seveso e poi all’Accademia Internazionale della Musica di Milano.
+Dopo aver conseguito la maturità presso il liceo musicale annesso al Conservatorio ha studiato Scienze e Tecnologie della Comunicazione Musicale presso l’Università degli Studi di Milano e si è poi laureato in Psicologia con indirizzo Comunicazione & Marketing presso l’Università Cattolica del Sacro Cuore di Milano.
+Sin dai primi anni ha partecipato con successo a numerosi concorsi, tra cui primo premio assoluto al concorso Rotary International e la borsa di studio al concorso "Severino Gazzelloni".
+È uno dei pochissimi flautisti italiani finalisti per l’orchestra EUYO.
+Alla grande passione per l’attività cameristica e didattica affianca la collaborazione con diverse orchestre che negli anni lo hanno portato ad esibirsi in alcune delle più prestigiose sale da concerto europee, americane e asiatiche.
+Suona un flauto Yamaha 18 carati all gold.
+È fondatore e Project Manager di Circuito Musica, il più moderno ed efficiente portale dedicato alla musica classica che affianca ad uno strumento di promozione per gli artisti un rivoluzionario polo di diffusione culturale.'
         ),
         array('firstname' => 'Fabrizio', 
             'lastname' => 'Castellarin',
             'username' => 'EnoahNetzach',
+            'password' => 'pacho',
             'email' => 'f.castellarin@gmail.it',
             'sex' => User::SEX_M,
             'city_birth' => 'Milan',
@@ -41,6 +54,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
         array('firstname' => 'Federica',
             'lastname' => 'Fontana',
             'username' => 'fede_pucci_pucci',
+            'password' => 'pacho',
             'email' => 'f.fontana@gmail.it',
             'sex' => User::SEX_F,
             'city_birth' => 'Taranto',
@@ -53,6 +67,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
         array('firstname' => 'Luca',
             'lastname' => 'Casareto',
             'username' => 'ghey',
+            'password' => 'pacho',
             'email' => 'lucasareto@gmail.it',
             'sex' => User::SEX_M,
             'city_birth' => 'Padua',
@@ -65,6 +80,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
         array('firstname' => 'Virginia Alexandra',
             'lastname' => 'Nolte',
             'username' => 'cinnamoon',
+            'password' => 'pacho',
             'email' => 'vir@circuitomusica.it',
             'sex' => User::SEX_F,
             'city_birth' => 'Milan',
@@ -77,6 +93,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
         array('firstname' => 'Mario',
             'lastname' => 'Marcarini',
             'username' => 'mariomarcarini',
+            'password' => 'pacho',
             'email' => 'mamarcarini@circuitomusica.it',
             'sex' => User::SEX_M,
             'city_birth' => 'Milan',
@@ -89,6 +106,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
         array('firstname' => 'Dora',
             'lastname' => 'Alberti',
             'username' => 'doralberti',
+            'password' => 'pacho',
             'email' => 'doralberti@circuitomusica.it',
             'sex' => User::SEX_F,
             'city_birth' => 'Milan',
@@ -101,6 +119,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
         array('firstname' => 'Francesca',
             'lastname' => 'Cremonini',
             'username' => 'fracremonini',
+            'password' => 'pacho',
             'email' => 'fracremonini@circuitomusica.it',
             'sex' => User::SEX_F,
             'city_birth' => 'Milan',
@@ -108,6 +127,19 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'birth_date' => array(1964, 11, 17),
             'birth_date_visible' => User::BIRTHDATE_NO_YEAR,
             'image' => 'b0702dfa74da4333342e764750476cfddd4c5b12.jpg',
+            'user_tags' => array()
+        ),
+        array('firstname' => 'Luca',
+            'lastname' => 'Di Giulio',
+            'username' => 'luca_digiulio',
+            'password' => 'luca',
+            'email' => 'lucadigiulio@circuitomusica.it',
+            'sex' => User::SEX_M,
+            'city_birth' => 'Milan',
+            'city_current' => 'Milan',
+            'birth_date' => array(1983, 1, 1),
+            'birth_date_visible' => User::BIRTHDATE_INVISIBLE,
+            'image' => 'f55b9c3842af704ce991a2c54c21fdf081906970.jpg',
             'user_tags' => array()
         ),
     );
@@ -129,7 +161,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 			$date = new \DateTime;
 			$user->setEmail($person['email'])
 		  	   ->setUsername($person['username'])
-		  	   ->setPlainPassword('pacho')
+		  	   ->setPlainPassword($person['password'])
 		  	   ->setEnabled(true)
 		  	   ->setFirstName($person['firstname'])
 		  	   ->setLastName($person['lastname'])
@@ -139,8 +171,21 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 		  	   ->setBirthDate($date->setDate($person['birth_date'][0], $person['birth_date'][1], $person['birth_date'][2]))
 		  	   ->setBirthDateVisible($person['birth_date_visible'])
 		  	   ->setImg($person['image']);
+            if (!is_null($person['imgOffset'])) {
+                $user->setImgOffset($person['imgOffset']);
+            }
             if (!is_null($person['cover'])) {
                 $user->setCoverImg($person['cover']);
+            }
+            if (!is_null($person['biography'])) {
+                $biography = new Biography;
+
+                $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+
+                $biography->addPost($post);
+
+                $biography->setTitle('b');
+                $manager->persist($biography);
             }
 
 			$manager->persist($user);
