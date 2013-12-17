@@ -76,6 +76,10 @@ class DiscController extends Controller
         
         $disc = $em->getRepository('CMBundle:Disc')->getDisc($id, array('locale' => $request->getLocale(), 'protagonists' => true));
         $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Disc:object.html.twig', array('disc' => $disc, 'tags' => $tags));
+        }
 
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $req = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('entityId' => $disc->getId()));
@@ -157,8 +161,6 @@ class DiscController extends Controller
         ))->add('save', 'submit');
         
         $form->handleRequest($request);
-
-        var_dump($request);
 
         if ($form->isValid()) {
             foreach ($disc->getDiscTracks() as $discDate) {

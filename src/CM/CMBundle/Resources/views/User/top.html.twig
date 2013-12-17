@@ -37,7 +37,7 @@
                     <a href="{{ path('user_multimedia', {'slug': user.slug}) }}">{{ show_icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
                 </li>
                 <li{% if inPage == 'disc' %} class="active"{% endif %}>
-                    <a href="{{ path('user_show', {'slug': user.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs [TODO]'|trans }}</a>
+                    <a href="{{ path('user_discs', {'slug': user.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs'|trans }}</a>
                 </li>
             </ul>
             <ul class="nav nav navbar-nav pull-right">

@@ -157,37 +157,48 @@ class Post
     
     public function getPublisher()
     {
-		if ($this->getPage()) {
-			return $this->getPage();
-		} elseif ($this->getGroup()) {
-			return $this->getGroup();
-		} else {
-			return $this->getUser();
-		}
+        if ($this->getPage()) {
+            return $this->getPage();
+        } elseif ($this->getGroup()) {
+            return $this->getGroup();
+        } else {
+            return $this->getUser();
+        }
+    }
+    
+    public function getPublisherId()
+    {
+        if ($this->getPage()) {
+            return $this->getPageId();
+        } elseif ($this->getGroup()) {
+            return $this->getGroupId();
+        } else {
+            return $this->getUserId();
+        }
     }
     
     public function getPublisherRoute()
     {
-		if ($this->getPage()) {
-			return 'page';
-		} elseif ($this->getGroup()) {
-			return 'group';
-		} else {
-			return 'user';
-		}
+        if ($this->getPage()) {
+            return 'page';
+        } elseif ($this->getGroup()) {
+            return 'group';
+        } else {
+            return 'user';
+        }
     }
 
-	public function getPublisherSex($type = 'he')
+    public function getPublisherSex($type = 'he')
     {
-		if (!is_null($this->getPageId()) || !is_null($this->getGroupId())) {
-			$sex = array('he' => 'it', 'his' => 'its', 'M' => '');
-		} elseif ($this->getUser()->getSex() == User::SEX_M) {
-			$sex = array('he' => 'he', 'his' => 'his', 'M' => 'M');
-		} else {
-			$sex = array('he' => 'she', 'his' => 'her', 'M' => 'F');
-		}
+        if (!is_null($this->getPageId()) || !is_null($this->getGroupId())) {
+            $sex = array('he' => 'it', 'his' => 'its', 'M' => '');
+        } elseif ($this->getUser()->getSex() == User::SEX_M) {
+            $sex = array('he' => 'he', 'his' => 'his', 'M' => 'M');
+        } else {
+            $sex = array('he' => 'she', 'his' => 'her', 'M' => 'F');
+        }
 
-		return $sex[$type];
+        return $sex[$type];
     }
 
     /**
@@ -232,7 +243,9 @@ class Post
     public function setCreator(User $creator = null)
     {
         $this->creator = $creator;
-        $this->creatorId = $creator->getId();
+        if (!is_null($creator)) {
+            $this->creatorId = $creator->getId();
+        }
     
         return $this;
     }
@@ -266,7 +279,9 @@ class Post
     public function setUser(User $user = null)
     {
         $this->user = $user;
-        $this->userId = $user->getId();
+        if (!is_null($user)) {
+            $this->userId = $user->getId();
+        }
     
         return $this;
     }
@@ -300,7 +315,9 @@ class Post
     public function setEntity(Entity $entity)
     {
         $this->entity = $entity;
-        $this->entityId = $entity->getId();
+        if (!is_null($entity)) {
+            $this->entityId = $entity->getId();
+        }
     
         return $this;
     }
@@ -358,10 +375,10 @@ class Post
      * @param array $objectIds
      * @return Post
      */
-    public function addObjectId($objectIds)
+    public function addObjectId($objectId)
     {
         $this->removeObjectId('changed');
-        $this->objectIdsArray = array_merge($this->objectIdsArray, array($objectIds));
+        $this->objectIdsArray = array_merge($this->objectIdsArray, (array)$objectId);
         $this->objectIds = 'changed';
     
         return $this;
@@ -404,7 +421,9 @@ class Post
     public function setGroup(Group $group = null)
     {
         $this->group = $group;
-        $this->groupId = $group->getId();
+        if (!is_null($group)) {
+            $this->groupId = $group->getId();
+        }
     
         return $this;
     }
@@ -438,7 +457,9 @@ class Post
     public function setPage(Page $page = null)
     {
         $this->page = $page;
-        $this->pageId = $page->getId();
+        if (!is_null($page)) {
+            $this->pageId = $page->getId();
+        }
     
         return $this;
     }

@@ -22,6 +22,10 @@ trait AudioTrait
     private $extract = false;
 
     /**
+     * @Assert\File(
+     *     maxSize = "100M",
+     *     mimeTypes = {"audio/aac", "audio/mp4", "audio/mpeg", "audio/ogg", "audio/wav", "audio/webm", "audio/x-ms-wma"}
+     * )
      */
     private $audioFile;
 

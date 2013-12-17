@@ -807,6 +807,7 @@ class User extends BaseUser
         if (!$this->posts->contains($post)) {
             $this->posts[] = $post;
             $post->setUser($this);
+            $post->setObject(get_class($this));
         }
     
         return $this;

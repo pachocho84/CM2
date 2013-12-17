@@ -29,7 +29,7 @@ class PostCenter
     public function getNewPost(
         $creator,
         $user,
-        $type = null,
+        $type = Post::TYPE_CREATION,
         $object = null,
         array $objectIds = array(),
         $entity = null,

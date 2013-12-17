@@ -41,7 +41,7 @@ abstract class Entity
      * @ORM\Column(name="visible", type="boolean", nullable=true)
      * @Assert\Type(type="bool")
      */
-    private $visible;
+    private $visible = true;
 
     /**
      * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")
@@ -201,13 +201,15 @@ abstract class Entity
      * @param Post $posts
      * @return Event
      */
-    public function addPost(Post $post)
+    public function addPost(Post $post, $setObject = true)
     {
         if (!$this->getPosts()->contains($post)) {
             $this->posts[] = $post;
-            $post->setEntity($this)
-                ->setObject(get_class($this))
-                ->setObjectIds(array($this->getId()));
+            $post->setEntity($this);
+            if ($setObject) {
+                $post->setObject(get_class($this))
+                    ->setObjectIds(array($this->getId()));
+            }
         }
     
         return $this;

@@ -152,7 +152,9 @@ class Comment
     public function setImage(Image $image = null)
     {
         $this->image = $image;
-        $this->imageId = $image->getId();
+        if (!is_null($image)) {
+            $this->imageId = $image->getId();
+        }
     
         return $this;
     }

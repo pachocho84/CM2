@@ -7,9 +7,10 @@
 
     <div class="media-body">
 
+        {{ post.object|class_name }}
         <p>{{ post_text(post, relatedObjects)|raw }}</p>
 
-        {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
+        {#{{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}#}
 
         <p class="text-muted">
             {{ show_icon((post.object|class_name)~'_'~(post.type))|raw }}
@@ -27,7 +28,11 @@
             </small>
         </p>
 
-        {% if (post.object|class_name) == 'Comment' or (post.object|class_name) == 'Like' or (post.object|class_name) == 'Biography' %}
+        {% if (post.object|class_name) == 'Like' and relatedObjects.imageId is not null %}
+            {{ include('CMBundle::social.html.twig', {'post': relatedObjects.image, 'isImage': true}) }}
+        {% elseif (post.object|class_name) == 'Like' and relatedObjects.postId is not null %}
+            {{ include('CMBundle::social.html.twig', {'post': relatedObjects.post}) }}
+        {% elseif (post.object|class_name) == 'Comment' or (post.object|class_name) == 'Biography' %}
             {{ include('CMBundle::social.html.twig', {'post': post.entity.post}) }}
         {% elseif (post.object|class_name) == 'Fan' %}
         {% else  %}

@@ -52,14 +52,10 @@
                             {{ track.number }}
                             <dl>
                                 <dd>{{ track }}</dd>
-                                <dt>Composer</dt>
-                                <dd>{{ track.composer }}</dd>
-                                <dt>Movement</dt>
-                                <dd>{{ track.movement }}</dd>
-                                <dt>Artists</dt>
-                                <dd>{{ track.artists }}</dd>
-                                <dt>Duration</dt>
-                                <dd>{{ track.duration|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}</dd>
+                                {% if track.composer is not null and track.composer is not empty %}<dt>Composer</dt><dd>{{ track.composer }}</dd>{% endif %}
+                                {% if track.movement is not null and track.movement is not empty %}<dt>Movement</dt><dd>{{ track.movement }}</dd>{% endif %}
+                                {% if track.artists is not null and track.artists is not empty %}<dt>Artists</dt><dd>{{ track.artists }}</dd>{% endif %}
+                                {% if track.duration is not null and track.duration is not empty %}<dt>Duration</dt><dd>{{ track.duration|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}</dd>{% endif %}
                                 {% if track.audio is not null and track.audio is not empty %}
                                     <dt>Audio</dt>
                                     <dd>

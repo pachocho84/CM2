@@ -17,7 +17,11 @@ class Helper
 
     public static function className($object)
     {
-        $name = new \ReflectionClass(is_string($object) ? $object : get_class($object));
+        try {
+            $name = new \ReflectionClass(is_string($object) ? $object : get_class($object));
+        } catch (\Exception $e) {
+            throw new \Exception($object);
+        }
         return $name->getShortName();
     }
 
@@ -47,6 +51,7 @@ class Helper
                 return $this->em->getRepository('CMBundle:Like')->findOneById($objectId);
             case 'Fan':
                 return $this->em->getRepository('CMBundle:Fan')->getFans($objectId);
+            case 'User':
             case 'Group':
                 return null;
             case 'image':
