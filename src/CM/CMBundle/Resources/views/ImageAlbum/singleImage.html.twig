@@ -21,11 +21,11 @@
     
     <div class="image-container">
         <a href="{{ path(link, {'slug': publisher.slug, 'id': image.id}) }}">
-            {{ show_img_box(image.getImg|imagine_filter('350'), {'width': 150, 'height': 150, 'box_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+            {{ show_img_box(image.getImg|imagine_filter('350'), {'width': 180, 'height': 180, 'box_attributes': {'class': 'pull-left'}})|raw }}
             <div class="image-overlay"></div>
         </a>
-        <p>{{ image.text }}</p>
         <div class="image-overlay-content">
+                <p>{{ image.text }}</p>
             {#<h4><?php echo link_to(__($image->getImageAlbum()), '@image_album_show?id='.$image->getEntityId()) ?></h4>
             <div class="image-overlay-content-bottom">
                 <?php if ($sf_context->getSito()->getLikesEnabled() && $sf_context->getSito()->getLikesDisplay()): ?>   
