@@ -3640,7 +3640,7 @@ form .tab-content {
 }
 .glyphicons { 
     padding: 0 2px 0 0; 
-    top: -1px;
+    top: -3px;
     line-height: 1;
     font-style: normal;
     font-weight: normal;
@@ -3651,6 +3651,7 @@ form .tab-content {
     font-family: 'Glyphicons Regular';
     font-size: inherit; 
     margin: 0;
+    color: inherit;
 }
 
 

@@ -92,11 +92,11 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %}
+<!--     {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %} -->
         {% javascripts
             '@CMBundle/Resources/public/js/images.js'
         %}
             <script src="{{ asset_url }}"></script>
         {% endjavascripts %}
-    {% endif %}
+<!--     {% endif %} -->
 {% endblock %}
