@@ -50,7 +50,11 @@ Suona un flauto Yamaha 18 carati all gold.
             'birth_date' => array(1990, 4, 19),
             'birth_date_visible' => User::BIRTHDATE_VISIBLE,
             'img' => '00b7b971d96ce05797e6757e5a0a4232.jpeg',
-            'user_tags' => array(4)
+            'imgOffset' => null,
+            'cover' => null,
+            'coverOffset' => null,
+            'user_tags' => array(4),
+            'biography' => null
         ),
         array('firstname' => 'Federica',
             'lastname' => 'Fontana',
@@ -63,7 +67,11 @@ Suona un flauto Yamaha 18 carati all gold.
             'birth_date' => array(1900, 4, 15),
             'birth_date_visible' => User::BIRTHDATE_NO_YEAR,
             'img' => '664508_4284090172825_1093880282_o.jpg',
-            'user_tags' => array(1)
+            'imgOffset' => null,
+            'cover' => null,
+            'coverOffset' => null,
+            'user_tags' => array(1),
+            'biography' => null
         ),
         array('firstname' => 'Luca',
             'lastname' => 'Casareto',
@@ -76,7 +84,11 @@ Suona un flauto Yamaha 18 carati all gold.
             'birth_date' => array(1990, 5, 15),
             'birth_date_visible' => User::BIRTHDATE_VISIBLE,
             'img' => '263757_2174482600735_3488733_n.jpg',
-            'user_tags' => array()
+            'imgOffset' => null,
+            'cover' => null,
+            'coverOffset' => null,
+            'user_tags' => array(),
+            'biography' => null
         ),
         array('firstname' => 'Virginia Alexandra',
             'lastname' => 'Nolte',
@@ -89,7 +101,11 @@ Suona un flauto Yamaha 18 carati all gold.
             'birth_date' => array(1994, 3, 29),
             'birth_date_visible' => User::BIRTHDATE_INVISIBLE,
             'img' => '1394182_652549711456783_1108378362_n.jpg',
-            'user_tags' => array()
+            'imgOffset' => null,
+            'cover' => null,
+            'coverOffset' => null,
+            'user_tags' => array(),
+            'biography' => null
         ),
         array('firstname' => 'Mario',
             'lastname' => 'Marcarini',
@@ -102,7 +118,11 @@ Suona un flauto Yamaha 18 carati all gold.
             'birth_date' => array(1971, 3, 21),
             'birth_date_visible' => User::BIRTHDATE_VISIBLE,
             'img' => '8d89c5d232b971a8fbad65abe5fa21b0de7e1048.jpg',
-            'user_tags' => array(9, 8, 10)
+            'imgOffset' => null,
+            'cover' => null,
+            'coverOffset' => null,
+            'user_tags' => array(9, 8, 10),
+            'biography' => null
         ),
         array('firstname' => 'Dora',
             'lastname' => 'Alberti',
@@ -115,7 +135,11 @@ Suona un flauto Yamaha 18 carati all gold.
             'birth_date' => array(1971, 3, 12),
             'birth_date_visible' => User::BIRTHDATE_VISIBLE,
             'img' => 'e9ad7f19c9c4909fb82ff647d5fb43527e4f1aad.jpg',
-            'user_tags' => array()
+            'imgOffset' => null,
+            'cover' => null,
+            'coverOffset' => null,
+            'user_tags' => array(),
+            'biography' => null
         ),
         array('firstname' => 'Francesca',
             'lastname' => 'Cremonini',
@@ -128,7 +152,11 @@ Suona un flauto Yamaha 18 carati all gold.
             'birth_date' => array(1964, 11, 17),
             'birth_date_visible' => User::BIRTHDATE_NO_YEAR,
             'img' => 'b0702dfa74da4333342e764750476cfddd4c5b12.jpg',
-            'user_tags' => array()
+            'imgOffset' => null,
+            'cover' => null,
+            'coverOffset' => null,
+            'user_tags' => array(),
+            'biography' => null
         ),
         array('firstname' => 'Luca',
             'lastname' => 'Di Giulio',
@@ -141,7 +169,11 @@ Suona un flauto Yamaha 18 carati all gold.
             'birth_date' => array(1983, 1, 1),
             'birth_date_visible' => User::BIRTHDATE_INVISIBLE,
             'img' => 'f55b9c3842af704ce991a2c54c21fdf081906970.jpg',
-            'user_tags' => array()
+            'imgOffset' => null,
+            'cover' => null,
+            'coverOffset' => null,
+            'user_tags' => array(),
+            'biography' => null
         ),
     );
 	

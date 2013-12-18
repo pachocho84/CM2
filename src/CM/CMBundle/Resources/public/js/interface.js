@@ -107,7 +107,6 @@ $(function() {
                 $(event.target).closest('.disc').addClass('active');
                 if ($(event.target).closest('.discs-row').next().is('.disc-detail-nodge')) { // There is alreaty a disc detail open in the current row
                     $(event.target).closest('.discs-row').nextAll('.disc-detail-container').replaceWith(data);
-                    $('.disc-detail-container').removeClass('hide');
                     $('.disc-detail-nodge').animate({ left: $(event.target).closest('.disc').position().left + ($(event.target).closest('.disc').outerWidth() / 2) + parseInt($(event.target).closest('.disc').css('margin-left'), 10) - 13 }, 300);
                 } else { // No disc detail open in the current row
                     $('.disc-detail-nodge').remove();
@@ -116,6 +115,7 @@ $(function() {
                     $('.disc-detail-container').slideDown(500);
                     $('.disc-detail-nodge').css('left', $(event.target).closest('.disc').position().left + ($(event.target).closest('.disc').outerWidth() / 2) + parseInt($(event.target).closest('.disc').css('margin-left'), 10) - 13);
                 }
+                $('.disc-detail-container').removeClass('hidden');
             });
         }
     });

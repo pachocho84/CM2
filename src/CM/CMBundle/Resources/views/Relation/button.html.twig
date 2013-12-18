@@ -7,10 +7,14 @@
                 <i class="glyphicons crown"></i> {{ 'Request a relation'|trans }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="{{ path('relation_add', {'slug': user.slug, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_STUDENT')}) }}" class="ajax-link">{{ 'student'|trans }}</a></li>
+                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_STUDENT')}) }}" class="ajax-link">{{ 'student'|trans }}</a></li>
+                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_TEACHER')}) }}" class="ajax-link">{{ 'teacher'|trans }}</a></li>
+                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_AGENT')}) }}" class="ajax-link">{{ 'agent'|trans }}</a></li>
+                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_CLIENT')}) }}" class="ajax-link">{{ 'client'|trans }}</a></li>
+                {#<li><a href="{{ path('relation_add', {'slug': user.slug, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_STUDENT')}) }}" class="ajax-link">{{ 'student'|trans }}</a></li>
                 <li><a href="{{ path('relation_add', {'slug': user.slug, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_TEACHER')}) }}" class="ajax-link">{{ 'teacher'|trans }}</a></li>
                 <li><a href="{{ path('relation_add', {'slug': user.slug, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_AGENT')}) }}" class="ajax-link">{{ 'agent'|trans }}</a></li>
-                <li><a href="{{ path('relation_add', {'slug': user.slug, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_CLIENT')}) }}" class="ajax-link">{{ 'client'|trans }}</a></li>
+                <li><a href="{{ path('relation_add', {'slug': user.slug, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_CLIENT')}) }}" class="ajax-link">{{ 'client'|trans }}</a></li>>#}
             </ul>
         </div>
 
@@ -21,7 +25,8 @@
                 <i class="glyphicons crown"></i> {{ ('%user% is your ' ~ inverse)|trans({'%user%': user.firstName}) }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="{{ path('relation_delete', {'id': relation.id, 'slug': user.slug}) }}" class="ajax-link">{{ 'Cancel relation'|trans }}</a></li>
+                <li><a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">{{ 'Cancel relation'|trans }}</a></li>
+                {#<li><a href="{{ path('relation_delete', {'id': relation.id, 'slug': user.slug}) }}" class="ajax-link">{{ 'Cancel relation'|trans }}</a></li>#}
             </ul>
         </div>
 
@@ -32,7 +37,8 @@
                 <i class="glyphicons crown"></i> {{ ('You said %user% is your ' ~ inverse)|trans({'%user%': user.firstName}) }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="{{ path('relation_delete', {'id': relation.id, 'slug': user.slug}) }}" class="ajax-link">{{ 'Cancel relation'|trans }}</a></li>
+                <li><a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">{{ 'Cancel relation'|trans }}</a></li>
+                {#<li><a href="{{ path('relation_delete', {'id': relation.id, 'slug': user.slug}) }}" class="ajax-link">{{ 'Cancel relation'|trans }}</a></li>#}
             </ul>
         </div>
 
@@ -43,8 +49,10 @@
                 <i class="glyphicons crown"></i> {{ ('%user% said you are *FIXME* ' ~ relation)|trans({'%user%': user.firstName}) }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="{{ path('relation_accept', {'id': relation.id, 'slug': user.slug}) }}" class="ajax-link">{{ 'Accept'|trans }}</a></li>
-                <li><a href="{{ path('relation_delete', {'id': relation.id, 'slug': user.slug}) }}" class="ajax-link">{{ 'Refuse'|trans }}</a></li>
+                <li><a href="{{ path('request_update', {'choice': 'accept', 'id': request.id}) }}" class="ajax-link">{{ 'Accept'|trans }}</a></li>
+                <li><a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">{{ 'Refuse'|trans }}</a></li>
+                {#<li><a href="{{ path('relation_accept', {'id': relation.id, 'slug': user.slug}) }}" class="ajax-link">{{ 'Accept'|trans }}</a></li>
+                <li><a href="{{ path('relation_delete', {'id': relation.id, 'slug': user.slug}) }}" class="ajax-link">{{ 'Refuse'|trans }}</a></li>#}
             </ul>
         </div>
 

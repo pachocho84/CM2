@@ -16,7 +16,6 @@
 
     {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'entity': disc}) }}
 
-
     <ul>
         {% for protagonist in disc.entityUsers if protagonist.status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_ACTIVE') %}
             <li>

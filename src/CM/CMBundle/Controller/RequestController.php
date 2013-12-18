@@ -21,6 +21,7 @@ use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\GroupUser;
 use CM\CMBundle\Entity\PageUser;
+use CM\CMBundle\Entity\Relation;
 use CM\CMBundle\Entity\Notification;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\BiographyType;
@@ -61,7 +62,7 @@ class RequestController extends Controller
      * @Route("/requestAdd/{object}/{objectId}/{userId}", name="request_add", requirements={"objectId"="\d+", "userId"="\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function addAction(Request $request, $object, $objectId, $userId)
+    public function addAction(Request $request, $object, $objectId, $userId = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -201,6 +202,27 @@ class RequestController extends Controller
 
                 $response = $this->renderView('CMBundle:PageUser:requestAdd.html.twig', array('page' => $request->getPage(), 'request' => $request));
                 break;
+            case 'Relation':        
+                $user = $em->getRepository('CMBundle:User')->findOneById($objectId);
+                
+                if (!$user) {
+                    throw new NotFoundHttpException($this->get('translator')->trans('User not found. 1', array(), 'http-errors'));
+                }
+
+                if (count($em->getRepository('CMBundle:Relation')->findBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId()))) > 0) {
+                    throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                }
+
+                $relation = new Relation;
+                $relation->setFromUser($user)
+                    ->setUser($this->getUser())
+                    ->setAccepted(false)
+                    ->setType(Relation::inverseType($request->get('type')));
+                $em->persist($relation);
+
+                $em->flush();
+
+                return $this->forward('CMBundle:Relation:button', array('user' => $user));
         }
 
         return new Response($response);
@@ -280,13 +302,26 @@ class RequestController extends Controller
             $em->persist($pageUser);
 
             $response = $this->renderView('CMBundle:PageUser:requestAdd.html.twig', array('page' => $request->getPage(), 'request' => $request));
-        } elseif (get_class($relation->getObject()) == 'Relation') {
-            $response = $this->forward('CMBundle:PageUser:requestAdd.html.twig', array('page' => $request->getPage(), 'request' => $request));
+        } elseif ($this->get('cm.helper')->className($request->getObject()) == 'Relation') {
+            $user = $request->getFromUser();
+
+            $relation = $em->getRepository('CMBundle:Relation')->findOneById($request->getObjectId());
+
+            if (!$relation) {
+                throw new NotFoundHttpException($this->get('translator')->trans('Relation not found.', array(), 'http-errors'));
+            }
+
+            $relation->setAccepted(true);
+            $em->persist($relation);
+
             if ($choice == 'accept') {
                 $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_ACCEPTED);
             } elseif ($choice == 'refuse') {
                 $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_REFUSED);
             }
+
+            $em->flush();
+            return $this->forward('CMBundle:Relation:button', array('user' => $user));
         }
 
         $em->persist($request);
@@ -346,6 +381,27 @@ class RequestController extends Controller
             
 
             $response = $this->renderView('CMBundle:PageUser:requestAdd.html.twig', array('page' => $request->getPage(), 'request' => null));
+        } elseif ($this->get('cm.helper')->className($request->getObject()) == 'Relation') {
+            $user = $request->getFromUser();
+
+            $relation = $em->getRepository('CMBundle:Relation')->findOneById($request->getObjectId());
+
+            if (!$relation) {
+                throw new NotFoundHttpException($this->get('translator')->trans('Relation not found.', array(), 'http-errors'));
+            }
+
+            $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getType(), $relation->getUserId(), $relation->getFromUserId());
+
+            $em->remove($relation);
+            $em->remove($inverse);
+            $em->remove($request);
+
+            $em->flush();
+
+            if ($user->getId() == $this->getUser()->getId()) {
+                $user = $request->getUser();
+            }
+            return $this->forward('CMBundle:Relation:button', array('user' => $user));
         }
 
         return new Response($response);
