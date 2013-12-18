@@ -30,7 +30,11 @@ class DiscRepository extends BaseRepository
     public function getDiscs(array $options = array())
     {
         $options = self::getOptions($options);
-                    
+                 
+        $count = $this->createQueryBuilder('d')
+            ->select('count(d.id)')
+            ->leftJoin('d.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION);
+
         $query = $this->createQueryBuilder('d')
             ->select('d, dt, t, i, p, l, c, u, lu, cu, pg, gr'.($options['protagonists'] ? ', eu, us' : ''))
             ->leftJoin('d.discTracks','dt')
@@ -52,25 +56,31 @@ class DiscRepository extends BaseRepository
         }
         
         if ($options['userId']) {
+            $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
         }
         
         if ($options['pageId']) {
+            $count->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
         
         if ($options['groupId']) {
+            $count->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
             $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
         
         if ($options['categoryId']) {
+            $count->andWhere('d.entityCategory = :category_id')
+                ->setParameter(':category_id', $options['categoryId']);
             $query->andWhere('d.entityCategory = :category_id')
                 ->setParameter(':category_id', $options['categoryId']);
         }
 
-        $query->orderBy('p.updatedAt', 'desc');
+        $count->orderBy('p.createdAt', 'desc');
+        $query->orderBy('p.createdAt', 'desc');
         
-        return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
     public function getDisc($id, array $options = array())

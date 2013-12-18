@@ -144,7 +144,7 @@ class DoctrineEventsListener
             $this->imgRemovedRoutine($object, $em);
         }
         if ($object instanceof Relation) {
-            $this->relationDeletedRoutine($object, $em);
+            $this->relationRemovedRoutine($object, $em);
         }
     }
 
@@ -647,7 +647,7 @@ class DoctrineEventsListener
         $this->flushNeeded = true;
     }
 
-    public function imgPersistedRoutine($publisher, EntityManager $em)
+    private function imgPersistedRoutine($publisher, EntityManager $em)
     {
         $user = null;
         if ($publisher instanceof User) {
@@ -843,7 +843,7 @@ class DoctrineEventsListener
             $inverse->getUser(),
             $inverse->getFromUser(),
             get_class($inverse),
-            $inverse
+            $relation->getId()
         );
     }
 
@@ -856,21 +856,28 @@ class DoctrineEventsListener
             get_class($relation),
             array($relation->getId())
         );
+
+        $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getType(), $relation->getUserId(), $relation->getFromUserId());
+
+        $post = $this->get('cm.post_center')->newPost(
+            $inverse->getFromUser(),
+            $inverse->getFromUser(),
+            Post::TYPE_CREATION,
+            get_class($inverse),
+            array($inverse->getId())
+        );
     }
 
     private function relationRemovedRoutine(Relation $relation, EntityManager $em)
     {
-        $em->getRepository('CMBundle:Relation')->remove(array(
-            'type' => $relation->getInverseType(),
-            'userFromId' => $relation->getUserId(),
-            'userId' => $relation->getFromUserId()
-        ));
-
-        $this->get('cm.post_center')->removePost(
-            $this->getUser(),
-            $this->getUser(),
-            get_class($biography),
-            array($biography->getId())
-        );
+        try {
+            $this->get('cm.post_center')->removePost(
+                $relation->getFromUser(),
+                $relation->getFromUser(),
+                get_class($relation),
+                array($relation->getId())
+            );
+        } catch (\Exception $e) {
+        }
     }
 }

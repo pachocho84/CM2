@@ -12,16 +12,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/a2lix/TranslationFormBundle.git",
-                "reference": "6388ad72a88c3c15e2eaee6c56ba046a60b47556"
+                "reference": "7f0f33af0863275791c96b18f7c1d78bf5a290c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/a2lix/TranslationFormBundle/zipball/6388ad72a88c3c15e2eaee6c56ba046a60b47556",
-                "reference": "6388ad72a88c3c15e2eaee6c56ba046a60b47556",
+                "url": "https://api.github.com/repos/a2lix/TranslationFormBundle/zipball/7f0f33af0863275791c96b18f7c1d78bf5a290c0",
+                "reference": "7f0f33af0863275791c96b18f7c1d78bf5a290c0",
                 "shasum": ""
             },
             "require": {
-                "symfony/symfony": "2.3.*"
+                "symfony/symfony": ">=2.3"
             },
             "suggest": {
                 "a2lix/i18n-doctrine-bundle": "For A2lix strategy",
@@ -65,7 +65,7 @@
                 "translatable",
                 "translation"
             ],
-            "time": "2013-11-07 19:20:01"
+            "time": "2013-12-17 18:40:49"
         },
         {
             "name": "doctrine/annotations",
@@ -1129,24 +1129,29 @@
         },
         {
             "name": "jms/aop-bundle",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "target-dir": "JMS/AopBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/JMSAopBundle.git",
-                "reference": "8ef7db0043188f58da18f931937008f95b308921"
+                "reference": "93f41ab85ed409430bc3bab2e0b7c7677f152aa8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSAopBundle/zipball/8ef7db0043188f58da18f931937008f95b308921",
-                "reference": "8ef7db0043188f58da18f931937008f95b308921",
+                "url": "https://api.github.com/repos/schmittjoh/JMSAopBundle/zipball/93f41ab85ed409430bc3bab2e0b7c7677f152aa8",
+                "reference": "93f41ab85ed409430bc3bab2e0b7c7677f152aa8",
                 "shasum": ""
             },
             "require": {
-                "jms/cg": "1.0.0",
+                "jms/cg": "1.*",
                 "symfony/framework-bundle": "2.*"
             },
             "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "JMS\\AopBundle": ""
@@ -1169,7 +1174,7 @@
                 "annotations",
                 "aop"
             ],
-            "time": "2012-01-02 20:50:26"
+            "time": "2013-07-29 09:34:26"
         },
         {
             "name": "jms/cg",
@@ -1719,12 +1724,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/KnpPaginatorBundle.git",
-                "reference": "769b83d01b3f76b011522599bd48e5e202d94ff4"
+                "reference": "5386aa8e79c8758f4b8ea3627623e54ba5c40845"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/KnpPaginatorBundle/zipball/769b83d01b3f76b011522599bd48e5e202d94ff4",
-                "reference": "769b83d01b3f76b011522599bd48e5e202d94ff4",
+                "url": "https://api.github.com/repos/KnpLabs/KnpPaginatorBundle/zipball/5386aa8e79c8758f4b8ea3627623e54ba5c40845",
+                "reference": "5386aa8e79c8758f4b8ea3627623e54ba5c40845",
                 "shasum": ""
             },
             "require": {
@@ -1769,7 +1774,7 @@
                 "pagination",
                 "paginator"
             ],
-            "time": "2013-09-23 09:04:09"
+            "time": "2013-12-17 17:55:56"
         },
         {
             "name": "kriswallsmith/assetic",
@@ -2240,12 +2245,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataAdminBundle.git",
-                "reference": "b307286022adacf1b86d9d6dd35624daad944d89"
+                "reference": "3ba0220a35a441da0a9fcab6bf2520d2e9d52a16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataAdminBundle/zipball/b307286022adacf1b86d9d6dd35624daad944d89",
-                "reference": "b307286022adacf1b86d9d6dd35624daad944d89",
+                "url": "https://api.github.com/repos/sonata-project/SonataAdminBundle/zipball/3ba0220a35a441da0a9fcab6bf2520d2e9d52a16",
+                "reference": "3ba0220a35a441da0a9fcab6bf2520d2e9d52a16",
                 "shasum": ""
             },
             "require": {
@@ -2311,7 +2316,7 @@
                 "bootstrap",
                 "sonata"
             ],
-            "time": "2013-12-16 14:29:52"
+            "time": "2013-12-17 13:45:32"
         },
         {
             "name": "sonata-project/block-bundle",
@@ -2384,12 +2389,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataCoreBundle.git",
-                "reference": "accd2c305d2636b3cb20e3a0eb12501911a5dac6"
+                "reference": "e8bddae6acedd376fea658345891da97efe860fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataCoreBundle/zipball/accd2c305d2636b3cb20e3a0eb12501911a5dac6",
-                "reference": "accd2c305d2636b3cb20e3a0eb12501911a5dac6",
+                "url": "https://api.github.com/repos/sonata-project/SonataCoreBundle/zipball/e8bddae6acedd376fea658345891da97efe860fd",
+                "reference": "e8bddae6acedd376fea658345891da97efe860fd",
                 "shasum": ""
             },
             "require": {
@@ -2433,7 +2438,7 @@
             "keywords": [
                 "sonata"
             ],
-            "time": "2013-12-16 10:13:27"
+            "time": "2013-12-17 13:45:05"
         },
         {
             "name": "sonata-project/doctrine-orm-admin-bundle",
@@ -2442,12 +2447,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataDoctrineORMAdminBundle.git",
-                "reference": "3b75411bb017dbabcf605f56a56b2870e145f7fd"
+                "reference": "db0a852ca5c0de79c74ef8c1df578adb8c34d41b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataDoctrineORMAdminBundle/zipball/3b75411bb017dbabcf605f56a56b2870e145f7fd",
-                "reference": "3b75411bb017dbabcf605f56a56b2870e145f7fd",
+                "url": "https://api.github.com/repos/sonata-project/SonataDoctrineORMAdminBundle/zipball/db0a852ca5c0de79c74ef8c1df578adb8c34d41b",
+                "reference": "db0a852ca5c0de79c74ef8c1df578adb8c34d41b",
                 "shasum": ""
             },
             "require": {
@@ -2491,7 +2496,7 @@
                 "generator",
                 "sonata"
             ],
-            "time": "2013-12-14 11:50:54"
+            "time": "2013-12-17 11:46:09"
         },
         {
             "name": "sonata-project/exporter",
@@ -3048,12 +3053,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "ec261a83a565cfa13d436feebd7a67360a920e9a"
+                "reference": "91fdd891000b1110c7585aab1156a3edea718567"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/ec261a83a565cfa13d436feebd7a67360a920e9a",
-                "reference": "ec261a83a565cfa13d436feebd7a67360a920e9a",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/91fdd891000b1110c7585aab1156a3edea718567",
+                "reference": "91fdd891000b1110c7585aab1156a3edea718567",
                 "shasum": ""
             },
             "type": "library",
@@ -3082,7 +3087,7 @@
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-12-16 06:10:05"
+            "time": "2013-12-18 06:49:55"
         },
         {
             "name": "twig/extensions",
