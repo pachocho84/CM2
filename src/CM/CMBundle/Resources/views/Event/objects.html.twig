@@ -7,7 +7,7 @@
         {% endif %}
         
         <div class="box-top">
-            <h2><i class="glyphicon glyphicon-calendar"></i> <span>{{ date.start | format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</span></h2>
+            <h2>{{ show_icon('Event')|raw }} <span>{{ date.start | format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</span></h2>
         </div>
         
         <ul class="media-list objects">

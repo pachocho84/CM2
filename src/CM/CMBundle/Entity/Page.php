@@ -292,6 +292,7 @@ class Page
         if (!$this->posts->contains($post)) {
             $this->posts[] = $post;
             $post->setPage($this);
+            $post->setObject(get_class($this));
         }
     
         return $this;

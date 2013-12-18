@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "347f04bb66a304d2b975a60c5d8d2fba",
+    "hash": "5cc1d29f9feda176b0f2766ad9a57385",
     "packages": [
         {
             "name": "a2lix/translation-form-bundle",
@@ -12,16 +12,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/a2lix/TranslationFormBundle.git",
-                "reference": "6388ad72a88c3c15e2eaee6c56ba046a60b47556"
+                "reference": "7f0f33af0863275791c96b18f7c1d78bf5a290c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/a2lix/TranslationFormBundle/zipball/6388ad72a88c3c15e2eaee6c56ba046a60b47556",
-                "reference": "6388ad72a88c3c15e2eaee6c56ba046a60b47556",
+                "url": "https://api.github.com/repos/a2lix/TranslationFormBundle/zipball/7f0f33af0863275791c96b18f7c1d78bf5a290c0",
+                "reference": "7f0f33af0863275791c96b18f7c1d78bf5a290c0",
                 "shasum": ""
             },
             "require": {
-                "symfony/symfony": "2.3.*"
+                "symfony/symfony": ">=2.3"
             },
             "suggest": {
                 "a2lix/i18n-doctrine-bundle": "For A2lix strategy",
@@ -65,7 +65,7 @@
                 "translatable",
                 "translation"
             ],
-            "time": "2013-11-07 19:20:01"
+            "time": "2013-12-17 18:40:49"
         },
         {
             "name": "doctrine/annotations",
@@ -1129,24 +1129,29 @@
         },
         {
             "name": "jms/aop-bundle",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "target-dir": "JMS/AopBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/JMSAopBundle.git",
-                "reference": "8ef7db0043188f58da18f931937008f95b308921"
+                "reference": "93f41ab85ed409430bc3bab2e0b7c7677f152aa8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSAopBundle/zipball/8ef7db0043188f58da18f931937008f95b308921",
-                "reference": "8ef7db0043188f58da18f931937008f95b308921",
+                "url": "https://api.github.com/repos/schmittjoh/JMSAopBundle/zipball/93f41ab85ed409430bc3bab2e0b7c7677f152aa8",
+                "reference": "93f41ab85ed409430bc3bab2e0b7c7677f152aa8",
                 "shasum": ""
             },
             "require": {
-                "jms/cg": "1.0.0",
+                "jms/cg": "1.*",
                 "symfony/framework-bundle": "2.*"
             },
             "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "JMS\\AopBundle": ""
@@ -1169,7 +1174,7 @@
                 "annotations",
                 "aop"
             ],
-            "time": "2012-01-02 20:50:26"
+            "time": "2013-07-29 09:34:26"
         },
         {
             "name": "jms/cg",
@@ -2379,17 +2384,17 @@
         },
         {
             "name": "sonata-project/core-bundle",
-            "version": "2.2.2",
+            "version": "dev-master",
             "target-dir": "Sonata/CoreBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataCoreBundle.git",
-                "reference": "accd2c305d2636b3cb20e3a0eb12501911a5dac6"
+                "reference": "e8bddae6acedd376fea658345891da97efe860fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataCoreBundle/zipball/accd2c305d2636b3cb20e3a0eb12501911a5dac6",
-                "reference": "accd2c305d2636b3cb20e3a0eb12501911a5dac6",
+                "url": "https://api.github.com/repos/sonata-project/SonataCoreBundle/zipball/e8bddae6acedd376fea658345891da97efe860fd",
+                "reference": "e8bddae6acedd376fea658345891da97efe860fd",
                 "shasum": ""
             },
             "require": {
@@ -2433,7 +2438,7 @@
             "keywords": [
                 "sonata"
             ],
-            "time": "2013-12-16 10:13:27"
+            "time": "2013-12-17 13:45:05"
         },
         {
             "name": "sonata-project/doctrine-orm-admin-bundle",
@@ -3048,12 +3053,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "94635eb9723444ad69b00d33c96e129c1996b013"
+                "reference": "91fdd891000b1110c7585aab1156a3edea718567"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/94635eb9723444ad69b00d33c96e129c1996b013",
-                "reference": "94635eb9723444ad69b00d33c96e129c1996b013",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/91fdd891000b1110c7585aab1156a3edea718567",
+                "reference": "91fdd891000b1110c7585aab1156a3edea718567",
                 "shasum": ""
             },
             "type": "library",
@@ -3082,7 +3087,7 @@
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-12-16 08:43:21"
+            "time": "2013-12-18 06:49:55"
         },
         {
             "name": "twig/extensions",
@@ -3201,6 +3206,7 @@
         "knplabs/knp-paginator-bundle": 20,
         "liip/imagine-bundle": 20,
         "jms/debugging-bundle": 20,
+        "sonata-project/core-bundle": 20,
         "sonata-project/admin-bundle": 20,
         "sonata-project/doctrine-orm-admin-bundle": 20
     },

@@ -247,10 +247,10 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/{slug}/image/{id}/{page}", name="user_image", requirements={"id" = "\d+", "page" = "\d+"})
+     * @Route("/{slug}/image/{id}", name="user_image", requirements={"id" = "\d+"})
      * @Template
      */
-    public function imageAction(Request $request, $slug, $id, $page = 1)
+    public function imageAction(Request $request, $slug, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -546,6 +546,45 @@ class UserController extends Controller
         }
         
         return array('categories' => $categories, 'user' => $user, 'dates' => $pagination, 'category' => $category, 'page' => $page);
+    }
+    
+    /**
+     * @Route("/{slug}/discs/{page}", name="user_discs", requirements={"page" = "\d+"})
+     * @Route("/{slug}/discs/archive/{page}", name="user_discs_archive", requirements={"page" = "\d+"}) 
+     * @Route("/{slug}/discs/category/{category_slug}/{page}", name="user_discs_category", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function discsAction(Request $request, $slug, $page = 1, $category_slug = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+        }
+            
+        if (!$request->isXmlHttpRequest()) {
+            $categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::EVENT, array('locale' => $request->getLocale()));
+        }
+        
+        if ($category_slug) {
+            $category = $em->getRepository('CMBundle:EntityCategory')->getCategory($category_slug, EntityCategory::EVENT, array('locale' => $request->getLocale()));
+        }
+            
+        $discs = $em->getRepository('CMBundle:Disc')->getDiscs(array(
+            'locale'        => $request->getLocale(),
+            'category_id'   => $category_slug ? $category->getId() : null,
+            'userId'       => $user->getId()       
+        ));
+        
+        $pagination = $this->get('knp_paginator')->paginate($discs, $page, 10);
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Disc:objects.html.twig', array('discs' => $pagination, 'page' => $page));
+        }
+        
+        return array('categories' => $categories, 'user' => $user, 'discs' => $pagination, 'category' => $category, 'page' => $page);
     }
 
     /**

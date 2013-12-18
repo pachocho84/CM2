@@ -96,7 +96,7 @@ $(function() {
     
     
     // Discs list
-    $('.disc').on('click', 'a', function(event) {
+    $(document).on('click', '.disc a', function(event) {
         event.preventDefault();
         if ($(event.target).closest('.disc').hasClass('active')) { // Disc detail close
             $('.disc-detail-container').slideUp('fast', function() { $('.disc-detail-nodge').remove(); $(this).remove(); });

@@ -35,6 +35,7 @@
         "imagine/imagine": "0.5.*",
         "liip/imagine-bundle": "dev-master",
         "jms/debugging-bundle": "dev-master",
+        "sonata-project/core-bundle": "~2.2@dev",
         "sonata-project/admin-bundle": "dev-master",
         "sonata-project/doctrine-orm-admin-bundle": "dev-master"
     },

@@ -28,6 +28,7 @@ class DoctrineEventsListener
     private $serviceContainer;
 
     private $flushNeeded = false;
+    private $wtf = '';
 
     public function __construct(ContainerInterface $serviceContainer)
     {
@@ -49,15 +50,6 @@ class DoctrineEventsListener
         $object = $args->getEntity();
         $em = $args->getEntityManager();
 
-        if ($object instanceof User) {
-            $this->userPersistedRoutine($object, $em);
-        }
-        if ($object instanceof Page) {
-            $this->pagePersistedRoutine($object, $em);
-        }
-        if ($object instanceof Group) {
-            $this->groupPersistedRoutine($object, $em);
-        }
         if ($object instanceof EntityUser) {
             $this->entityUserPersistedRoutine($object, $em);
         }
@@ -163,43 +155,13 @@ class DoctrineEventsListener
             || $this->get('cm.post_center')->flushNeeded()
             || $this->flushNeeded
         ) {
-            $args->getEntityManager()->flush();
-
             $this->get('cm.request_center')->flushed();
             $this->get('cm.notification_center')->flushed();
             $this->get('cm.post_center')->flushed();
             $this->flushNeeded = false;
+
+            $args->getEntityManager()->flush();
         }
-    }
-
-    private function userPersistedRoutine(user $user, EntityManager $em)
-    {
-        $post = $this->get('cm.post_center')->getNewPost($user, $user);
-        $post->setObject(get_class($user));
-
-        $user->addPost($post);
-
-        $this->flushNeeded = true;
-    }
-
-    private function pagePersistedRoutine(Page $page, EntityManager $em)
-    {
-        $post = $this->get('cm.post_center')->getNewPost($page->getCreator(), $page->getCreator());
-        $post->setObject(get_class($page));
-
-        $page->addPost($post);
-
-        $this->flushNeeded = true;
-    }
-
-    private function groupPersistedRoutine(Group $group, EntityManager $em)
-    {
-        $post = $this->get('cm.post_center')->getNewPost($group->getCreator(), $group->getCreator());
-        $post->setObject(get_class($group));
-
-        $group->addPost($post);
-     
-        $this->flushNeeded = true;
     }
 
     private function entityUserPersistedRoutine(EntityUser $entityUser, EntityManager $em)
@@ -642,22 +604,19 @@ class DoctrineEventsListener
             'paginate' => false,
             'limit' => 1
         ));
+
         if (count($post) >= 1) {
             $post = $post[0];
             $post->addObjectId($image->getId());
         } else {
-            $post = $this->get('cm.post_center')->newPost(
-                $user,
-                $image->getUser(),
-                Post::TYPE_UPDATE,
-                get_class($image),
-                array($image->getId()),
-                $entity,
-                $image->getPage(),
-                $image->getGroup()
-            );
+            $post = $this->get('cm.post_center')->getNewPost($user, $image->getUser());
+            $post->setPage($image->getPage())
+                ->setGroup($image->getGroup())
+                ->setObject(get_class($image))
+                ->addObjectId($image->getId());
+
+            $entity->addPost($post, false);
         }
-        $em->persist($post);
 
         $this->flushNeeded = true;
     }
@@ -676,16 +635,11 @@ class DoctrineEventsListener
             $em->persist($post);
         } else {
             $creationPost = $album->getPost();
-            $post = $this->get('cm.post_center')->newPost(
-                $user,
-                $creationPost->getUser(),
-                Post::TYPE_UPDATE,
-                get_class($album),
-                array($image->getId()),
-                $album,
-                $creationPost->getPage(),
-                $creationPost->getGroup()
-            );
+
+            $post = $this->get('cm.post_center')->getNewPost($user, $creationPost->getUser(), Post::TYPE_UPDATE);
+            $post->setPage($creationPost->getPage());
+            $post->setGroup($creationPost->getGroup());
+
             $album->addPost($post);
         }
         $em->persist($post);
@@ -693,7 +647,7 @@ class DoctrineEventsListener
         $this->flushNeeded = true;
     }
 
-    private function imgPersistedRoutine($publisher, EntityManager $em)
+    public function imgPersistedRoutine($publisher, EntityManager $em)
     {
         $user = null;
         if ($publisher instanceof User) {
@@ -710,9 +664,12 @@ class DoctrineEventsListener
             $user = is_null($this->get('security.context')->getToken()) ? $group->getCreator() : $this->getUser();
         }
 
+
         if ($publisher->getImg()) {
             $album = new ImageAlbum;
             $album->setType(ImageAlbum::TYPE_PROFILE);
+            
+            $em->persist($album);
 
             $image = new Image;
             $image->setImg($publisher->getImg())
@@ -723,24 +680,17 @@ class DoctrineEventsListener
                 ->setGroup($group);
             $album->addImage($image);
 
-            $em->persist($album);
-
-            $post = $this->get('cm.post_center')->newPost(
-                $user,
-                $user,
-                Post::TYPE_CREATION,
-                get_class($album),
-                array(),
-                $album,
-                $page,
-                $group
-            );
+            $post = $this->get('cm.post_center')->getNewPost($user, $user);
+            $post->setPage($page);
+            $post->setGroup($group);
 
             $album->addPost($post);
         }
         if ($publisher->getCoverImg()) {
             $album = new ImageAlbum;
             $album->setType(ImageAlbum::TYPE_COVER);
+
+            $em->persist($album);
 
             $image = new Image;
             $image->setImg($publisher->getCoverImg())
@@ -751,24 +701,17 @@ class DoctrineEventsListener
                 ->setGroup($group);
             $album->addImage($image);
 
-            $em->persist($album);
-
-            $post = $this->get('cm.post_center')->newPost(
-                $user,
-                $user,
-                Post::TYPE_CREATION,
-                get_class($album),
-                array(),
-                $album,
-                $page,
-                $group
-            );
+            $post = $this->get('cm.post_center')->getNewPost($user, $user);
+            $post->setPage($page);
+            $post->setGroup($group);
 
             $album->addPost($post);
         }
         if (property_exists($publisher, 'backgroundImg') && $publisher->getBackgroundImg()) {
             $album = new ImageAlbum;
             $album->setType(ImageAlbum::TYPE_BACKGROUND);
+
+            $em->persist($album);
 
             $image = new Image;
             $image->setImg($publisher->getBackgroundImg())
@@ -778,18 +721,9 @@ class DoctrineEventsListener
                 ->setGroup($group);
             $album->addImage($image);
 
-            $em->persist($album);
-
-            $post = $this->get('cm.post_center')->newPost(
-                $user,
-                $user,
-                Post::TYPE_CREATION,
-                get_class($album),
-                array(),
-                $album,
-                $page,
-                $group
-            );
+            $post = $this->get('cm.post_center')->getNewPost($user, $user);
+            $post->setPage($page);
+            $post->setGroup($group);
 
             $album->addPost($post);
         }

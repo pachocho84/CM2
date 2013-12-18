@@ -9,6 +9,7 @@
 /src/CM/CMBundle/DataFixtures/MongoDB/
 /src/CM/CMBundle/Document/
 /src/CM/CMBundle/Resources/public/uploads/*
+!/src/CM/CMBundle/Resources/public/uploads/audio/
 !/src/CM/CMBundle/Resources/public/uploads/images/
 /src/CM/CMBundle/Resources/public/uploads/images/*
 !/src/CM/CMBundle/Resources/public/uploads/images/full/

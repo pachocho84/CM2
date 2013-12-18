@@ -184,40 +184,20 @@ class CMExtension extends \Twig_Extension
         ), $options);
 
         $width  = intval($options['width']);
-        $height = intval($options['height']);
+        $height = is_null($options['height']) ? $width : intval($options['height']) ;
+        $ratio = $width / $height;
 
         // Get max dimension for filtered image
         $maxDim = preg_filter(['/\/(?:.(?!\/))+$/', '/^(.*\/)*/'], ['', ''], $img);
 
         // Get image dimensions
         $fileName = preg_replace('/^\/.*\//', '', $img);
-        $img_size = @getimagesize($this->options['images_dir'].'/'.$fileName);
-        if (!$img_size) {
+        $imageFileSize = @getimagesize($this->options['images_dir'].'/'.$fileName);
+        if (!$imageFileSize) {
             return '';
         }
-        $img_w = $img_size[0];
-        $img_h = $img_size[1];
-
-        // Default image
-        // if (!$img || !file_exists($options['folder'].'\/full/'.$img)) {
-        //     if ($options['default']) {
-        //         $img = 'default_'.$options['default'].'.jpg';
-        //     } else {
-        //         return '';
-        //     }
-        // }
-
-        // Folder && image size
-        // foreach ($this->options['sizes'] as $size) {
-        //     $folder   = $this->options['images_dir'].'/'.$size.'/';
-        //     $img_size = @getimagesize($folder.$img);
-        //     $img_w    = $img_size[0];
-        //     $img_h    = $img_size[1];
-        //     if ($width <= $thumbnail['width'] && $height <= $thumbnail['height'] && $img_w >= $width && $img_h >= $height) {
-        //         break;
-        //     }
-        // }
-
+        $imageFileWidth = $imageFileSize[0];
+        $imageFileHeight = $imageFileSize[1];
 
         // // No height
         if (!$height) {
@@ -236,57 +216,56 @@ class CMExtension extends \Twig_Extension
         }
 
         // Ratio
-        $img_ratio = $img_w / $img_h;
-        $box_ratio = $width / $height;
-        $ratio = $img_ratio - $box_ratio;
+        $imageRatio = $imageFileWidth / $imageFileHeight;
+        $boxRatio = $width / $height;
 
         // Image format
-        if ($img_ratio == 1) {
-            $img_r_w = $width;
-            $img_r_h = $height;
-        } elseif ($img_ratio > 1) {
-            $img_r_h = $height;
-            $img_r_w = $height * $img_ratio;
-        } elseif ($img_ratio < 1) {
-            $img_r_h = $width / $img_ratio;
-            $img_r_w = $width;
+        if ($imageRatio == $ratio) {
+            $imageResizedWidth = $width;
+            $imageResizedHeight = $height;
+        } elseif ($imageRatio > $ratio) {
+            $imageResizedHeight = $height;
+            $imageResizedWidth = $height * $imageRatio;
+        } elseif ($imageRatio < $ratio) {
+            $imageResizedHeight = $width / $imageRatio;
+            $imageResizedWidth = $width;
         }
 
         // Resized image size (checks if the resized height is still high enough, otherwise the resized is based on the height instead of the width)
-        // if ($img_h / ($img_w / $width) >= $height) {
-        //     $img_r_w = $width;
-        //     $img_r_h = intval($img_h / ($img_w / $width));
+        // if ($imageFileHeight / ($imageFileWidth / $width) >= $height) {
+        //     $imageResizedWidth = $width;
+        //     $imageResizedHeight = intval($imageFileHeight / ($imageFileWidth / $width));
         // } else {
-        //     $img_r_h = $height;
-        //     $img_r_w = intval($img_w / ($img_h / $height));
+        //     $imageResizedHeight = $height;
+        //     $imageResizedWidth = intval($imageFileWidth / ($imageFileHeight / $height));
         // }
 
         // Attributes
         $options['box_attributes']['style'] = array_key_exists('style', $options['box_attributes']) ? 'width: '.$width.'px;  height: '.$height.'px; '.$options['box_attributes']['style'] : 'width: '.$width.'px;  height: '.$height.'px;';
         $options['box_attributes']['class'] = array_key_exists('class', $options['box_attributes']) ? 'image_box '.$options['box_attributes']['class'] : 'image_box';
 
-        $img_style   = array();
-        $img_style[] = 'width: '.$img_r_w.'px;';
-        $img_style[] = 'height: '.$img_r_h.'px;';
+        $imgStyle   = array();
+        $imgStyle[] = 'width: '.$imageResizedWidth.'px;';
+        $imgStyle[] = 'height: '.$imageResizedHeight.'px;';
         if (array_key_exists('style', $options['img_attributes'])) {
-            $img_style[] = $options['img_attributes']['style'];
+            $imgStyle[] = $options['img_attributes']['style'];
             unset($options['img_attributes']['style']);
         }
 
         // Align
-        if ($img_ratio > 1 && isset($options['offset'])) {
-            $img_style[] = 'left: -'.$options['offset'].'%';
-        } elseif ($img_ratio > 1) {
-            $img_style[] = 'left: -'.(($img_r_w - $width) / 2).'px';
-        } elseif ($img_ratio < 1 && isset($options['offset'])) {
-            $img_style[] = 'top: -'.$options['offset'].'%';
-        } elseif ($img_ratio < 1) {
-            $img_style[] = 'top: -'.(($img_r_h - $height) / 10).'px';
+        if ($imageRatio > 1 && isset($options['offset'])) {
+            $imgStyle[] = 'left: -'.$options['offset'].'%';
+        } elseif ($imageRatio > 1) {
+            $imgStyle[] = 'left: -'.(($imageResizedWidth - $width) / 2).'px';
+        } elseif ($imageRatio < 1 && isset($options['offset'])) {
+            $imgStyle[] = 'top: -'.$options['offset'].'%';
+        } elseif ($imageRatio < 1) {
+            $imgStyle[] = 'top: -'.(($imageResizedHeight - $height) / 10).'px';
         }
 
         // Write <img> tag
         $img = '<img src="'.$img.'" style="';
-        foreach ($img_style as $attr) {
+        foreach ($imgStyle as $attr) {
             $img .= $attr;
         }
         $img .= '"';
@@ -297,7 +276,7 @@ class CMExtension extends \Twig_Extension
 
         if ($options['img_only']) {
             return $img;
-            // return image_tag('/'.$folder.$img, array_merge(array('style' => implode($img_style, ' ')), $options['img_attributes']));
+            // return image_tag('/'.$folder.$img, array_merge(array('style' => implode($imgStyle, ' ')), $options['img_attributes']));
         }
 
         // Write <div> tag
@@ -312,7 +291,7 @@ class CMExtension extends \Twig_Extension
         }
 
         // Write <a> tag
-        // $img_box = content_tag('div', image_tag('/'.$folder.$img, array_merge(array('style' => implode($img_style, ' ')), $options['img_attributes'])), $options['box_attributes']);
+        // $img_box = content_tag('div', image_tag('/'.$folder.$img, array_merge(array('style' => implode($imgStyle, ' ')), $options['img_attributes'])), $options['box_attributes']);
         $link = '<a href="'.$options['link'].'"';
         foreach ($options['link_attributes'] as $key => $attr) {
             $link .= ' '.$key.'="'.$attr.'"';
@@ -458,7 +437,7 @@ class CMExtension extends \Twig_Extension
             case 'Event_'.Post::TYPE_CREATION:
                 $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
                 $categoryLink  = $this->router->generate('event_category', array('category_slug' => $post->getEntity()->getEntityCategory()->getSlug()));
-                return $this->translator->trans('%user% has published the event %object% in %category%', array(
+                return $this->translator->trans('%user% published the event %object% in %category%.', array(
                     '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                     '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>',
                     '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getEntityCategory()->getPlural()).'</a>'
@@ -466,45 +445,91 @@ class CMExtension extends \Twig_Extension
             case 'Disc_'.Post::TYPE_CREATION:
                 $objectLink = $this->router->generate('disc_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
                 $categoryLink  = $this->router->generate('disc_category', array('category_slug' => $post->getEntity()->getEntityCategory()->getSlug()));
-                return $this->translator->trans('%user% has published the dics %object% in %category%', array(
+                return $this->translator->trans('%user% published the dics %object% in %category%.', array(
                     '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                     '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>',
                     '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getEntityCategory()->getPlural()).'</a>'
                 ));
             case 'Comment_'.Post::TYPE_CREATION:
-                $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                return $this->translator->trans('%user% commented on %object%', array(
+                $objectLink = $this->router->generate(strtolower($this->getClassName($post->getEntity())).'_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
+                return $this->translator->trans('%user% commented on %object%.', array(
                     '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                     '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                 ));
             case 'Like_'.Post::TYPE_CREATION:
-                // return get_class($post->getEntity());
-                if ($post->getEntity() instanceof Biography) {
-                    // var_dump('expression');
+                if (is_null($post->getEntity())) {
+                    return 'asd';
+                } elseif ($post->getEntity() instanceof Biography) {
                     $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
+                    if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser()->getId() == $post->getPublisherId()) {
+                        $publisher = $this->translator->trans($post->getPublisherSex('his'));
+                    } else {
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                    }
                     $objectLink = $this->router->generate($post->getPublisherRoute().'_biography', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
-                    return $this->translator->trans('%user% likes %publisher%\'s %biographyLinkStart%Biography%biographyLinkEnd%', array(
+                    return $this->translator->trans('%user% likes %publisher% %biographyLinkStart%Biography%biographyLinkEnd%.', array(
                         '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-                        '%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>',
+                        '%publisher%' => $publisher,
                         '%biographyLinkStart%' => '<a href="'.$objectLink.'">', '%biographyLinkEnd%' => '</a>'
                     ));
                 } elseif ($post->getEntity() instanceof Event) {
                     $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                    return $this->translator->trans('%user% likes %object%', array(
+                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
+                    if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
+                        $publisher = $this->translator->trans($post->getPublisherSex('his'));
+                    } else {
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                    }
+                    return $this->translator->trans('%user% likes %publisher% %object%.', array(
                         '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%publisher%' => $publisher,
                         '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                     ));
                 } elseif ($post->getEntity() instanceof Disc) {
                     $objectLink = $this->router->generate('disc_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                    return $this->translator->trans('%user% likes %object%', array(
+                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
+                    if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
+                        $publisher = $this->translator->trans($post->getPublisherSex('his'));
+                    } else {
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                    }
+                    return $this->translator->trans('%user% likes %publisher% %object%.', array(
                         '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%publisher%' => $publisher,
                         '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                     ));
+                } elseif ($post->getEntity() instanceof ImageAlbum) {
+                    $objectLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
+                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
+                    if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
+                        $publisher = $this->translator->trans($post->getPublisherSex('his'));
+                    } else {
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                    }
+                    return $this->translator->trans('%user% likes %publisher% %object%.', array(
+                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%publisher%' => $publisher,
+                        '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
+                    ));
+                } elseif (!is_null($relatedObjects->getImageId())) {
+                    $objectLink = $this->router->generate($post->getPublisherRoute().'_image', array('id' => $relatedObjects->getImageId(), 'slug' => $post->getPublisher()->getSlug()));
+                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
+                    if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
+                        $publisher = $this->translator->trans($post->getPublisherSex('his'));
+                    } else {
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                    }
+                    return $this->translator->trans('%user% likes %objectLinkStart%a photo%objectLinkEnd%.', array(
+                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%objectLinkStart%' => '<a href="'.$objectLink.'">', '%objectLinkEnd%' => '</a>'
+                    ));
                 }
-            case 'disc_'.Post::TYPE_CREATION:
-                // return __('%user% has published %object% in %entity%.', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%entity%' => link_to(strtolower($post->getEntity()->getCategory()), $post->getEntity()->getLinkCategory()), '%object%' => link_to($post->getEntity(), $object_page)));
-            case 'image_album_'.Post::TYPE_CREATION:
-                // return __('%user% has created the album %object%.', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%object%' => link_to(__($post->getEntity()), $post->getEntity()->getLinkShow('image_album'))));
+            case 'ImageAlbum_'.Post::TYPE_CREATION:
+                $objectLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
+                return $this->translator->trans('%user% created the album %object%.', array(
+                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
+                ));
             case 'image_album_image_add':
                 // return format_number_choice('[1]%user% added a new photo to the album %object%.|(1,+Inf]%user% added %count% new photos to the album %object%.', array(
                 //         '%user%'    => link_to($post->getUser(), $post->getUser()->getLinkShow()),
@@ -514,33 +539,38 @@ class CMExtension extends \Twig_Extension
             case 'Biography_'.Post::TYPE_CREATION:
             case 'Biography_'.Post::TYPE_UPDATE:
                 $objectLink = $this->router->generate('user_biography', array('slug' => $post->getUser()->getSlug()));
-                return $this->translator->trans('%user% has updated '.$post->getPublisherSex('his').' %biographyLinkStart%biography%biographyLinkEnd%', array(
+                return $this->translator->trans('%user% updated '.$post->getPublisherSex('his').' %biographyLinkStart%biography%biographyLinkEnd%.', array(
                     '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                     '%biographyLinkStart%' => '<a href="'.$objectLink.'">', '%biographyLinkEnd%' => '</a>'
                 ));
             case 'user_'.Post::TYPE_REGISTRATION:
                 // return __('%user% registered on Circuito Musica. - '.$post->getPublisherSex('M'), array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow())));
+            case 'User_'.Post::TYPE_CREATION:
+                return $this->translator->trans('%user% registered on Circuito Musica..', array(
+                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>'
+                ));
             case 'Group_'.Post::TYPE_CREATION:
                 $userLink = $this->router->generate('user_show', array('slug' => $post->getGroup()->getCreator()->getSlug()));
                 $objectLink = $this->router->generate('group_show', array('slug' => $post->getGroup()->getSlug()));
-                return $this->translator->trans('%user% has opened the group %group%', array(
+                return $this->translator->trans('%user% opened the group %group%.', array(
                     '%user%' => '<a href="'.$userLink.'">'.$post->getGroup()->getCreator().'</a>',
                     '%group%' => '<a href="'.$objectLink.'">'.$post->getGroup().'</a>'
                 ));
             case 'Page_'.Post::TYPE_CREATION:
                 $userLink = $this->router->generate('user_show', array('slug' => $post->getPage()->getCreator()->getSlug()));
                 $objectLink = $this->router->generate('page_show', array('slug' => $post->getPage()->getSlug()));
-                return $this->translator->trans('%user% has opened the page %page%', array(
+                return $this->translator->trans('%user% opened the page %page%.', array(
                     '%user%' => '<a href="'.$userLink.'">'.$post->getPage()->getCreator().'</a>',
                     '%page%' => '<a href="'.$objectLink.'">'.$post->getPage().'</a>'
                 ));
                 // return __('%user% has opened the page %page%', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%page%' => link_to($post->getRelatedObject()->getFirst(), $post->getRelatedObject()->getFirst()->getLinkShow())));
             case 'ImageAlbum_'.Post::TYPE_CREATION:
-                $albumLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
-                return $this->translator->trans('%user% has created '.$post->getPublisherSex('his').' album %album%', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-                    '%album%' => '<a href="'.$albumLink.'">'.$post->getEntity().'</a>'
-                ));
+                // $albumLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
+                // return $this->translator->trans('%user% has created '.$post->getPublisherSex('his').' album %album%', array(
+                //     '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                //     '%album%' => '<a href="'.$albumLink.'">'.$post->getEntity().'</a>'
+                // ));
+            case 'Image_'.Post::TYPE_CREATION:
             case 'Image_'.Post::TYPE_UPDATE:
                 switch ($this->getClassName($post->getEntity())) {
                     case 'Event':
@@ -555,13 +585,13 @@ class CMExtension extends \Twig_Extension
                         $entityLink = '';
                         break;
                 }
-                return $this->translator->trans('%user% has added images to '.$post->getPublisherSex('his').$entityString.' %entity%', array(
+                return $this->translator->trans('%user% added images to '.$post->getPublisherSex('his').$entityString.' %entity%.', array(
                     '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                     '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>'
                 ));
             case 'Multimedia_'.Post::TYPE_CREATION:
                 $multimediaLink = $this->router->generate($post->getPublisherRoute().'_multimedia_show', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
-                return $this->translator->trans('%user% added a new %albumLinkStart%'.$post->getEntity()->typeString().'%albumLinkEnd%', array(
+                return $this->translator->trans('%user% added a new %albumLinkStart%'.$post->getEntity()->typeString().'%albumLinkEnd%.', array(
                     '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                     '%albumLinkStart%' => '<a href="'.$multimediaLink.'">', '%albumLinkEnd%' => '</a>'
                 ));
@@ -651,7 +681,6 @@ class CMExtension extends \Twig_Extension
                     ));
                 }
             case 'Fan_'.Post::TYPE_FAN_GROUP:
-                return 'Fan of a group';
                 switch (count($post->getObjectIds())) {
                     default:
                     case 3:

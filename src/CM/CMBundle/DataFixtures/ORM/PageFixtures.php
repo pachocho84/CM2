@@ -70,6 +70,10 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             }
             
             $manager->persist($page);
+
+            $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+
+            $page->addPost($post);
                         
             $userTags = array();
             for ($j = 1; $j < rand(1, 3); $j++) {

@@ -143,6 +143,10 @@ class DiscFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                     ->setArtists($this->discs[$discNum]['discTracks'][$j]['artists'])
                     ->setDuration(new \DateTime($this->discs[$discNum]['discTracks'][$j]['duration']));
 
+                if (rand(0, 5) == 0) {
+                    $discTrack->setAudio('62c3410ef8cc13c3dc7aa40646f9e805.mpga');
+                }
+
                 $disc->addDiscTrack($discTrack);
             }
             

@@ -31,10 +31,20 @@ class Like
     private $post;
 
     /**
+     * @ORM\Column(name="image_id", type="integer", nullable=true)
+     **/
+    private $imageId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Image", inversedBy="likes")
      * @ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $image;
+
+    /**
+     * @ORM\Column(name="user_id", type="integer", nullable=true)
+     **/
+    private $userId;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="likes")
@@ -53,14 +63,27 @@ class Like
     }
 
     /**
+     * Get userId
+     *
+     * @return integer 
+     */
+    public function getPostId()
+    {
+        return $this->postId;
+    }
+
+    /**
      * Set post
      *
      * @param Post $post
      * @return Like
      */
-    public function setPost(Post $post = null)
+    public function setPost(Post $post)
     {
         $this->post = $post;
+        if (!is_null($post)) {
+            $this->postId = $post->getId();
+        }
     
         return $this;
     }
@@ -76,14 +99,27 @@ class Like
     }
 
     /**
+     * Get userId
+     *
+     * @return integer 
+     */
+    public function getImageId()
+    {
+        return $this->imageId;
+    }
+
+    /**
      * Set image
      *
      * @param Image $image
      * @return Like
      */
-    public function setImage(Image $image = null)
+    public function setImage(Image $image)
     {
         $this->image = $image;
+        if (!is_null($image)) {
+            $this->imageId = $image->getId();
+        }
     
         return $this;
     }
@@ -99,14 +135,27 @@ class Like
     }
 
     /**
+     * Get userId
+     *
+     * @return integer 
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
      * Set user
      *
      * @param User $user
      * @return Like
      */
-    public function setUser(User $user = null)
+    public function setUser(User $user)
     {
         $this->user = $user;
+        if (!is_null($user)) {
+            $this->userId = $user->getId();
+        }
     
         return $this;
     }
