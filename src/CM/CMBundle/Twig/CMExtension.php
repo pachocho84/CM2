@@ -420,7 +420,7 @@ class CMExtension extends \Twig_Extension
         if (strlen($text_stripped) > $max) {
             preg_match("#^.{1,".$max."}(\.|\:|\!|\?)#s", $text_stripped, $matches);
             if (array_key_exists(0, $matches)) {
-                $text = rtrim($matches[0], '.:');
+                $text = rtrim($matches[0], '.:').'.';
             } else {
                 $text = rtrim(Helper::truncate_text($text_stripped, $max, '', true), ',.;!?:').'...';
             }
