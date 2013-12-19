@@ -41,10 +41,9 @@
             {{ include('CMBundle:Wall:posts.html.twig', {'slug': user.slug}) }}
         </ul>
     </div>
-    
-
-    {#<?php slot('sidebar_slot3') ?>  
-        <?php include_component('fan', 'userFans', array('user' => $user)) ?>
-    <?php end_slot() ?>#}
   
+{% endblock %}
+
+{% block sidebar %}
+    {{ render(controller('CMBundle:Fan:userSidebar', {'user': user})) }}
 {% endblock %}

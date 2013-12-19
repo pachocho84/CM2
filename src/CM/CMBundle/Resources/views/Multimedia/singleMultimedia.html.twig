@@ -3,7 +3,8 @@
     <a href="{{ path(multimedia.post.publisherRoute ~ '_multimedia_show', {'id': multimedia.id, 'slug': multimedia.post.publisher.slug}) }}">{{ 'Show'|trans }}</a>
 
     {% if multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_YOUTUBE') %}
-        <iframe width="100%" height="450px" src="//www.youtube.com/embed/{{ multimedia.link }}" frameborder="0" allowfullscreen></iframe>
+        <img width="100%" height="450px" src="http://img.youtube.com/vi/{{ multimedia.link }}/0.jpg" youtube-video-link="{{ multimedia.link }}" />
+        {#<iframe width="100%" height="450px" src="//www.youtube.com/embed/{{ multimedia.link }}" frameborder="0" allowfullscreen></iframe>#}
     {% elseif multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_VIMEO') %}
         <iframe src="//player.vimeo.com/video/{{ multimedia.link }}?color=040505" width="100%" height="450px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
     {% elseif multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_SOUNDCLOUD') %}

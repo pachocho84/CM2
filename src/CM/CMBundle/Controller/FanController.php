@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation as JMS;
 use Symfony\Component\Process\Exception\RuntimeException;
 use CM\CMBundle\Entity\Post;
+use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\Fan;
 use CM\CMBundle\Form\CommentType;
 
@@ -35,6 +36,31 @@ class FanController extends Controller
         }
 
         $fans = $em->getRepository('CMBundle:Fan')->getUserFans($user->getId());
+
+        $imFanOf = null;
+        if ($this->get('security.context')->isGranted('ROLE_USER')) {
+            $imFanOf = $em->getRepository('CMBundle:Fan')->getFanOf($this->getUser()->getId());
+
+            $imFanOf = empty($imFanOf) ? false : in_array($this->getUser(), $imFanOf);
+        }
+        
+        // $this->getResponse()->setTitle($this->getContext()->getI18N()->__($this->user->getId() == $this->getUser()->getId() ? 'Your fans' : '%user%\'s fans', array('%user%' => $this->user)));
+        
+        return array(
+            'user' => $user,
+            'fans' => $fans,
+            'imFanOf' => $imFanOf
+        );
+    }
+
+    /**
+     * @Template
+     */
+    public function userSidebarAction(Request $request, User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $fans = $em->getRepository('CMBundle:Fan')->getUserFans($user->getId(), 16);
 
         $imFanOf = null;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
