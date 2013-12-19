@@ -15,12 +15,11 @@ class FanRepository extends BaseRepository
 {
     public function getUserFans($userId, $limit = null)
     {
-        return $this->getEntityManager()->createQueryBuilder()
+        $query = $this->getEntityManager()->createQueryBuilder()
             ->select('u')
             ->from('CMBundle:User', 'u')
             ->leftJoin('u.fanOf', 'f')
-            ->where('identity(f.user) = :user_id')->setParameter('user_id', $userId)
-            ->getQuery()->getResult(); // TODO: integrate with clients
+            ->where('identity(f.user) = :user_id')->setParameter('user_id', $userId); // TODO: integrate with clients
         // return UserQuery::create()->
         //  useFanRelatedByFromUserIdQuery()->
         //      filterByUserId($user_id)->
@@ -50,6 +49,10 @@ class FanRepository extends BaseRepository
         //  where('User.Enabled = ?', true)->
         //  where('sfGuardUser.IsActive = ?', true)->
         //  find();
+        if (!is_null($limit)) {
+            $query->setMaxResults($limit);
+        }
+        return $query->getQuery()->getResult();
     }
     
     public function countUserFans($userId)
