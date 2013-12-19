@@ -59,10 +59,10 @@ class RequestController extends Controller
     }
 
     /**
-     * @Route("/requestAdd/{object}/{objectId}/{userId}", name="request_add", requirements={"objectId"="\d+", "userId"="\d+"})
+     * @Route("/requestAdd/{object}/{objectId}/{userId}", name="request_add", requirements={"objectId"="\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function addAction(Request $request, $object, $objectId, $userId = null)
+    public function addAction(Request $request, $object, $objectId = null, $userId = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -203,10 +203,14 @@ class RequestController extends Controller
                 $response = $this->renderView('CMBundle:PageUser:requestAdd.html.twig', array('page' => $request->getPage(), 'request' => $request));
                 break;
             case 'Relation':        
-                $user = $em->getRepository('CMBundle:User')->findOneById($objectId);
+                $user = $em->getRepository('CMBundle:User')->findOneById($userId);
                 
                 if (!$user) {
-                    throw new NotFoundHttpException($this->get('translator')->trans('User not found. 1', array(), 'http-errors'));
+                    throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+                }
+
+                if ($user == $this->getUser()) {
+                    throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
                 }
 
                 if (count($em->getRepository('CMBundle:Relation')->findBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId()))) > 0) {

@@ -1,0 +1,10 @@
+<div class="protagonists_user collection-item media object{% if not inverses[relation.userId].accepted %} object-hidden{% endif %}" protagonist_new_id="0" user_id="{{ relation.userId }}">
+    {{ show_img_box(relation.user.img|imagine_filter('350'), {'width': 200, 'height': 120, 'offset': relation.user.imgOffset,  'link': path('user_show', {'slug': relation.user.slug}), 'default': 'user', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+    <div class="media-body">
+        <h4>
+            <a href="{{ path('user_show', {'slug': relation.user.slug}) }}">{{ inverses[relation.userId]|trans }}</a>
+            {#<small><?php echo rtrim(implode($user->getRawValue()->getUserTagRels()->toKeyValue('Id', 'UserTag'), ', '), ', ') ?></small>#}
+        </h4>
+        {#<?php $user->getPosts()->getFirst() and print $user->getRawValue()->getPosts()->getFirst()->getEntity()->getShortText() ?>#}
+    </div>
+</div>

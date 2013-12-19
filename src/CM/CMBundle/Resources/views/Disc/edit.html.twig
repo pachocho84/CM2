@@ -23,7 +23,7 @@
         {{ form_row(form.translations) }}
         {{ form_row(form.entityCategory) }}
 
-        <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('entityuser_add', {'object': 'Disc'}) }}">
+        <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('entityuser_add', {'object': 'Disc', 'user_id': 'USER_ID', 'protagonist_new_id': 'NEW_ID', 'entity_type': 'ENTITY_TYPE'}) }}">
             <div class="form-group col-lg-12"><label class="control-label col-lg-3 control-label required">{{ "Protagonists" | trans }}</label></div>
             <div class="col-lg-12 collection-items">
                 <div class="cm_cmbundle_disc_entityUsers_control_group">

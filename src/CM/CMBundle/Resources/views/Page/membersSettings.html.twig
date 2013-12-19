@@ -54,7 +54,7 @@
             </div>
 
 
-            <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('page_member_add', {'pageId': page.id}) }}">
+            <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('page_member_add', {'pageId': page.id, 'user_id': 'USER_ID'}) }}">
                 <div class="col-lg-12 collection-items">
                     <div id="protagonists_finder_container" class="form-group">
                         <label class="control-label col-lg-3">Add new member</label>

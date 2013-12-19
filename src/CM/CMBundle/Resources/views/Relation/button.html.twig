@@ -7,10 +7,10 @@
                 <i class="glyphicons crown"></i> {{ 'Request a relation'|trans }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_STUDENT')}) }}" class="ajax-link">{{ 'student'|trans }}</a></li>
-                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_TEACHER')}) }}" class="ajax-link">{{ 'teacher'|trans }}</a></li>
-                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_AGENT')}) }}" class="ajax-link">{{ 'agent'|trans }}</a></li>
-                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_CLIENT')}) }}" class="ajax-link">{{ 'client'|trans }}</a></li>
+                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_STUDENT')}) }}" class="ajax-link">{{ 'student'|trans }}</a></li>
+                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_TEACHER')}) }}" class="ajax-link">{{ 'teacher'|trans }}</a></li>
+                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_AGENT')}) }}" class="ajax-link">{{ 'agent'|trans }}</a></li>
+                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_CLIENT')}) }}" class="ajax-link">{{ 'client'|trans }}</a></li>
                 {#<li><a href="{{ path('relation_add', {'slug': user.slug, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_STUDENT')}) }}" class="ajax-link">{{ 'student'|trans }}</a></li>
                 <li><a href="{{ path('relation_add', {'slug': user.slug, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_TEACHER')}) }}" class="ajax-link">{{ 'teacher'|trans }}</a></li>
                 <li><a href="{{ path('relation_add', {'slug': user.slug, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_AGENT')}) }}" class="ajax-link">{{ 'agent'|trans }}</a></li>

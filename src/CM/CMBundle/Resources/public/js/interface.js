@@ -123,7 +123,7 @@ $(function() {
     
 
     // YouTube preview
-    $(document).on('click', 'img[video-link]', function(event) {
+    $(document).on('click', 'img[youtube-video-link]', function(event) {
         videoId = $(event.currentTarget).attr('video-link');
         $(event.currentTarget).replaceWith('<iframe width="100%" height="450px" src="//www.youtube.com/embed/' + videoId + '?autoplay=1" frameborder="0" allowfullscreen></iframe>');
     });

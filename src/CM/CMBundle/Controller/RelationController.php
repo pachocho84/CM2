@@ -80,9 +80,9 @@ class RelationController extends Controller
             $inverse = null;
         }
 
-        $request = $em->getRepository('CMBundle:Request')->findOneBy(array('fromUserId' => $user->getId(), 'userId' => $this->getUser()->getId()));
+        $request = $em->getRepository('CMBundle:Request')->findOneBy(array('fromUserId' => $user->getId(), 'userId' => $this->getUser()->getId(), 'object' => get_class($relation)));
         if (is_null($request)) {
-            $request = $em->getRepository('CMBundle:Request')->findOneBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId()));
+            $request = $em->getRepository('CMBundle:Request')->findOneBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId(), 'object' => get_class($relation)));
         }
 
         return array('user' => $user, 'relation' => $relation, 'inverse' => $inverse, 'request' => $request);
