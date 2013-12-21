@@ -215,6 +215,11 @@ class UserController extends Controller
         return array('user' => $user, 'biography' => $biography);
     }
 
+    protected function countAlbumsAndImages($userId)
+    {
+        return $this->getDoctrine()->getManager()->getRepository('CMBundle:ImageAlbum')->countAlbumsAndImages(array('userId' => $userId));
+    }
+
     /**
      * @Route("/{slug}/images/{page}", name="user_images", requirements={"page" = "\d+"})
      * @Template
@@ -236,13 +241,16 @@ class UserController extends Controller
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:ImageAlbum:imageList.html.twig', array(
                 'user' => $user,
-                'images' => $pagination
+                'images' => $pagination,
+                'link' => 'user_image',
+                'publisher' => $user
             ));
         }
 
         return array(
             'user' => $user,
-            'images' => $pagination
+            'images' => $pagination,
+            'count' => $this->countAlbumsAndImages($user->getId())
         );
     }
 
@@ -268,7 +276,8 @@ class UserController extends Controller
 
         return array(
             'user' => $user,
-            'image' => $image
+            'image' => $image,
+            'count' => $this->countAlbumsAndImages($user->getId())
         );
     }
 
@@ -295,13 +304,16 @@ class UserController extends Controller
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:ImageAlbum:albumList.html.twig', array(
                 'user' => $user,
-                'albums' => $pagination
+                'albums' => $pagination,
+                'link' => 'user_album',
+                'publisher' => $user
             ));
         }
 
         return array(
             'user' => $user,
-            'albums' => $pagination
+            'albums' => $pagination,
+            'count' => $this->countAlbumsAndImages($user->getId())
         );
     }
 
@@ -340,7 +352,8 @@ class UserController extends Controller
         return array(
             'user' => $user,
             'album' => $album,
-            'images' => $pagination
+            'images' => $pagination,
+            'count' => $this->countAlbumsAndImages($user->getId())
         );
     }
 
@@ -368,13 +381,16 @@ class UserController extends Controller
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:ImageAlbum:imageEntityList.html.twig', array(
                 'user' => $user,
-                'entities' => $pagination
+                'entities' => $pagination,
+                'link' => 'user_album',
+                'publisher' => $user
             ));
         }
 
         return array(
             'user' => $user,
-            'entities' => $pagination
+            'entities' => $pagination,
+            'count' => $this->countAlbumsAndImages($user->getId())
         );
     }
 

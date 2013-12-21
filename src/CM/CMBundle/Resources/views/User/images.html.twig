@@ -58,11 +58,7 @@
                     <h2>{{ show_icon('Image')|raw }} {{ 'Images'|trans }}</h2>
                 </div>
             </div>
-            <ul class="nav">
-                <li class="active"><a href="{{ path('user_images', {'slug': user.slug}) }}">{{ 'Images'|trans }}</a></li>
-                <li><a href="{{ path('user_albums', {'slug': user.slug}) }}">{{ 'Albums'|trans }}</a></li>
-                <li><a href="{{ path('user_entities_albums', {'slug': user.slug}) }}">{{ 'Entities images'|trans }}</a></li>
-            </ul>
+            {{ include('CMBundle:ImageAlbum:menu.html.twig', {'publisher': user, 'publisherRoute': 'user', 'inImagesPage': true}) }}
         </div>
 
         <ul class="list-unstyled objects images{% if album is defined %} images-sortable{% endif %} clearfix">

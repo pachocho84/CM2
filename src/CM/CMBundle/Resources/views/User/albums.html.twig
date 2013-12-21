@@ -25,11 +25,7 @@
                     <h2>{{ show_icon('Image')|raw }} {{ 'Albums'|trans }}</h2>
                 </div>
             </div>
-            <ul class="nav">
-                <li><a href="{{ path('user_images', {'slug': user.slug}) }}">{{ 'Images'|trans }}</a></li>
-                <li class="active"><a href="{{ path('user_albums', {'slug': user.slug}) }}">{{ 'Albums'|trans }}</a></li>
-                <li><a href="{{ path('user_entities_albums', {'slug': user.slug}) }}">{{ 'Entities images'|trans }}</a></li>
-            </ul>
+            {{ include('CMBundle:ImageAlbum:menu.html.twig', {'publisher': user, 'publisherRoute': 'user', 'inAlbumsPage': true}) }}
         </div>
 
         <div class="media-list objects">

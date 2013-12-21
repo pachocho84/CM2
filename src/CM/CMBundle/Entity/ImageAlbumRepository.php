@@ -25,6 +25,52 @@ class ImageAlbumRepository extends BaseRepository
         ), $options);
     }
 
+    public function countAlbumsAndImages($options = array())
+    {
+        $options = self::getOptions($options);
+
+        $albums = $this->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->leftJoin('a.posts', 'p')
+            ->where('p.object = :object')->setParameter('object', get_class(new ImageAlbum));
+        $entities = $this->getEntityManager()->createQueryBuilder()
+            ->select('count(e.id)')
+            ->from('CMBundle:Entity', 'e')
+            ->leftJoin('e.posts', 'p')
+            ->where('p.object != :object')->setParameter('object', get_class(new ImageAlbum))
+            ->andWhere('size(e.images) > 0');
+        $images = $this->getEntityManager()->createQueryBuilder()
+            ->select('count(i.id)')
+            ->from('CMBundle:Image', 'i');
+        if (!is_null($options['userId'])) {
+            $albums->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('p.pageId is NULL')
+                ->andWhere('p.groupId is NULL');
+            $entities->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('p.pageId is NULL')
+                ->andWhere('p.groupId is NULL');
+            $images->andWhere('i.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('i.pageId is NULL')
+                ->andWhere('i.groupId is NULL');
+        }
+        if (!is_null($options['pageId'])) {
+            $albums->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+            $entities->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+            $images->andWhere('i.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $albums->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+            $entities->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+            $images->andWhere('i.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+
+        return array(
+            'albums' => $albums->getQuery()->getSingleScalarResult(),
+            'entities' => $entities->getQuery()->getSingleScalarResult(),
+            'images' => $images->getQuery()->getSingleScalarResult()
+        );
+    }
+
     public function getImageAlbum($options = array())
     {
         $options = self::getOptions($options);

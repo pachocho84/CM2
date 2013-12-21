@@ -31,13 +31,16 @@
                         <?php $album->getImageAlbum()->getType() == 'album' and print delete_link('@image_album_delete?id='.$album->getEntityId(), 'album', array('class' => 'btn btn-default btn-sm', 'data-placement' => 'left')) ?>
                     {% endif %}
                 </div>
+            
                 <div class="media-body">
                     <h2>{{ show_icon('Image')|raw }} <?php echo __($album->getEntity()) ?></h2>
                 </div>
+
             </div>
             {#<?php $album->getEntity()->getText('en') and print simple_format_text($album->getRawValue()->getEntity()->getText('en')) ?>
             
             <?php include_partial('menu', array('user' => $user, 'nb_images' => $imagesCount, 'nb_albums' => $albumsCount, 'section' => 'album')) ?>#}
+            {{ include('CMBundle:ImageAlbum:menu.html.twig', {'publisher': user, 'publisherRoute': 'user', 'inAlbumsPage': true}) }}
         </div>
 
 
@@ -50,13 +53,7 @@
         {% endif %}
 
 
-        <div class="box-top">
-            <ul class="nav nav-tabs nav-justified">
-                <li><a href="{{ path('user_images', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
-                <li class="active"><a href="{{ path('user_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
-                <li><a href="{{ path('user_entities_albums', {'slug': user.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
-            </ul>
-        </div>
+        
 
         <ul class="list-unstyled objects images{% if album is defined and can_manage(album) and images|length > 1 %} images-sortable{% endif %} clearfix">
             {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %}
