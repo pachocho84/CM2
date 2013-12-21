@@ -28,9 +28,9 @@
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
-                <span class="glyphicon glyphicon-bar"></span>
-                <span class="glyphicon glyphicon-bar"></span>
-                <span class="glyphicon glyphicon-bar"></span>
+                {{ show_icon('Bar')|raw }}
+                {{ show_icon('Bar')|raw }}
+                {{ show_icon('Bar')|raw }}
             </button>
         </div>
 
@@ -76,9 +76,6 @@
                     {% if is_granted('ROLE_USER') %}
                         {{ render(controller('CMBundle:User:menu', {'path': app.request.pathInfo} )) }}
                         <li>
-                            <a href="{{ path('user_show', {"slug": app.getUser.slug}) }}">{{ app.getUser }}</a>
-                        </li>
-                        <li>
                             <a href="{{ path('fos_user_security_logout') }}">Logout</a>
                         </li>
                     {% else %}
@@ -98,17 +95,28 @@
 
 {% block container %}
     <div class="row">
+        {% set inAccountPage = inAccountPage|default(false) %}
+        {# LEFT COLUMN #}
+        {% if inAccountPage %}
+            <div class="sidebar col-md-4">
+                {% block accountSidebar %}
+                {% endblock %}
+            </div>
+        {% endif %}
+
         <div class="col-md-8">
             {# FLASH #}
             {% block body %}{% endblock %}
         </div>
 
         {# RIGHT COLUMN #}
-        <div class="sidebar col-md-4">
-            <img src="{{ asset('/bundles/cm/images/layout/banner.jpg') }}" alt="Symfony!" />
-            {% block sidebar %}
-            {% endblock %}
-        </div>
+        {% if not inAccountPage %}
+            <div class="sidebar col-md-4">
+                <img src="{{ asset('/bundles/cm/images/layout/banner.jpg') }}" alt="Symfony!" />
+                {% block sidebar %}
+                {% endblock %}
+            </div>
+        {% endif %}
 
     </div> <!-- END ROW -->
 {% endblock %}

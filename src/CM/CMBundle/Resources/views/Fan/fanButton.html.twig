@@ -1,14 +1,14 @@
 {% if userId != app.user.id %}
     <div class="btn-group btn-group-sm ajax-link-target">
         {% if not imFan %}
-            <a href="{{ path('fan_become', {'fanId': userId, 'object': object}) }}" class="btn btn-default fan-become ajax-link ajax-link-target"><i class="glyphicon glyphicon-flag"></i> {{ 'Become fan'|trans }}</a>
+            <a href="{{ path('fan_become', {'fanId': userId, 'object': object}) }}" class="btn btn-default fan-become ajax-link ajax-link-target">{{ show_icon('Fan')|raw }} {{ 'Become fan'|trans }}</a>
         {% else %}
         
           <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="glyphicon glyphicon-flag"></i> {{ 'You are fan'|trans }} <span class="caret"></span>
+                {{ show_icon('Fan')|raw }} {{ 'You are fan'|trans }} <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li><a href="{{ path('fan_unbecome', {'fanId': userId, 'object': object}) }}" class="fan-become ajax-link"><i class="glyphicon glyphicon-flag"></i> {{ 'Unbecome fan'|trans }}</a></li>
+            <li><a href="{{ path('fan_unbecome', {'fanId': userId, 'object': object}) }}" class="fan-become ajax-link">{{ show_icon('Fan')|raw }} {{ 'Unbecome fan'|trans }}</a></li>
           </ul>
         {% endif %}
     </div>

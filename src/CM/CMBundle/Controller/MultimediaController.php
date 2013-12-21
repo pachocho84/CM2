@@ -25,7 +25,7 @@ use CM\CMBundle\Form\MultimediaType;
 class MultimediaController extends Controller
 {
     /**
-     * @Route("/new/{object}/{objectId}", name="imagealbum_new", requirements={"objectId" = "\d+"})
+     * @Route("/new/{object}/{objectId}", name="multimedia_new", requirements={"objectId" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */

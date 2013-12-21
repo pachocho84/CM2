@@ -26,8 +26,6 @@ function uploadCollection($target, trigger, text) {
         // prevent the link from creating a "#" on the URL
         e.preventDefault();
 
-        console.log($target.data('prototype'));
-
         // get the new index
         var index = $target.data('index');
 
@@ -43,6 +41,8 @@ function uploadCollection($target, trigger, text) {
         $target.find('.well:last').after($newForm);
 
         addFormDeleteLink($newForm, text);
+
+        $(e.currentTarget).trigger("collection-added");
     });
 }
 

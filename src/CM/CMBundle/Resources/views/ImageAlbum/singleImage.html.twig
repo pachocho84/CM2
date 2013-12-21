@@ -3,7 +3,7 @@
     {% if can_manage(image) %}
         <div class="btn-group pull-right invisible" data-toggle>
             <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="glyphicon glyphicon-chevron-down"></i>
+                {{ show_icon('Down')|raw }}
             </a>
             <ul class="dropdown-menu">
                 {% if album is defined and (album|class_name != 'ImageAlbum' or album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_ALBUM')) %}

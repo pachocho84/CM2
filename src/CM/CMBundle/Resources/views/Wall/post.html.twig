@@ -28,11 +28,11 @@
             </small>
         </p>
 
-        {% if (post.object|class_name) == 'Like' and relatedObjects.imageId is not null %}
+        {% if (post.object|class_name == 'Like' or post.object|class_name == 'Comment') and relatedObjects.imageId is not null %}
             {{ include('CMBundle::social.html.twig', {'post': relatedObjects.image, 'isImage': true}) }}
-        {% elseif (post.object|class_name) == 'Like' and relatedObjects.postId is not null %}
+        {% elseif (post.object|class_name == 'Like' or post.object|class_name == 'Comment') and relatedObjects.postId is not null %}
             {{ include('CMBundle::social.html.twig', {'post': relatedObjects.post}) }}
-        {% elseif (post.object|class_name) == 'Comment' or (post.object|class_name) == 'Biography' %}
+        {% elseif post.object|class_name == 'Biography' %}
             {{ include('CMBundle::social.html.twig', {'post': post.entity.post}) }}
         {% elseif (post.object|class_name) == 'Fan' %}
         {% else  %}

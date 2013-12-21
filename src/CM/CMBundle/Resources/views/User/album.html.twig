@@ -22,17 +22,17 @@
                 <div class="pull-right">
                     {% if album is defined and can_manage(album) %}
                         <span class="btn btn-default btn-sm fileinput-button" data-redirect="<?php echo url_for('@image_album_edit?id='.$album->getEntityId()) ?>">
-                            <i class="glyphicon glyphicon-plus"></i> {{ 'Add photos'|trans }}
+                            {{ show_icon('Plus')|raw }} {{ 'Add photos'|trans }}
                             <form action="{{ path('imagealbum_add_image', {'id': album.id}) }}" method="post" enctype="multipart/form-data">
                                 <input id="images" type="file" name="images" multiple />
                             </form>
                         </span>
-                        {% if album is defined and album|class_name == 'ImageAlbu' %}<a href="{{ path('imagealbum_edit', {'id': album.id, 'slug': user.slug, 'publisher': user|class_name}) }}" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-pencil"></i> {{ 'Edit'|trans }}</a> '<i class="glyphicon glyphicon-pencil"></i></a>{% endif %}
+                        {% if album is defined and album|class_name == 'ImageAlbu' %}<a href="{{ path('imagealbum_edit', {'id': album.id, 'slug': user.slug, 'publisher': user|class_name}) }}" class="btn btn-default btn-sm">{{ show_icon('Edit')|raw }} {{ 'Edit'|trans }}</a> '{{ show_icon('Edit')|raw }}</a>{% endif %}
                         <?php $album->getImageAlbum()->getType() == 'album' and print delete_link('@image_album_delete?id='.$album->getEntityId(), 'album', array('class' => 'btn btn-default btn-sm', 'data-placement' => 'left')) ?>
                     {% endif %}
                 </div>
                 <div class="media-body">
-                    <h2><?php echo image_tag('glyphicons/picture') ?> <?php echo __($album->getEntity()) ?></h2>
+                    <h2>{{ show_icon('Image')|raw }} <?php echo __($album->getEntity()) ?></h2>
                 </div>
             </div>
             {#<?php $album->getEntity()->getText('en') and print simple_format_text($album->getRawValue()->getEntity()->getText('en')) ?>

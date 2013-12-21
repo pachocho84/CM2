@@ -4,7 +4,7 @@
         
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="glyphicons crown"></i> {{ 'Request a relation'|trans }} <span class="caret"></span>
+                {{ show_icon('Crown')|raw }} {{ 'Request a relation'|trans }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_STUDENT')}) }}" class="ajax-link">{{ 'student'|trans }}</a></li>
@@ -22,7 +22,7 @@
 
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="glyphicons crown"></i> {{ ('%user% is your ' ~ inverse)|trans({'%user%': user.firstName}) }} <span class="caret"></span>
+                {{ show_icon('Crown')|raw }} {{ ('%user% is your ' ~ inverse)|trans({'%user%': user.firstName}) }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li><a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">{{ 'Cancel relation'|trans }}</a></li>
@@ -34,7 +34,7 @@
 
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="glyphicons crown"></i> {{ ('You said %user% is your ' ~ inverse)|trans({'%user%': user.firstName}) }} <span class="caret"></span>
+                {{ show_icon('Crown')|raw }} {{ ('You said %user% is your ' ~ inverse)|trans({'%user%': user.firstName}) }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li><a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">{{ 'Cancel relation'|trans }}</a></li>
@@ -46,7 +46,7 @@
 
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="glyphicons crown"></i> {{ ('%user% said you are *FIXME* ' ~ relation)|trans({'%user%': user.firstName}) }} <span class="caret"></span>
+                {{ show_icon('Crown')|raw }} {{ ('%user% said you are *FIXME* ' ~ relation)|trans({'%user%': user.firstName}) }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li><a href="{{ path('request_update', {'choice': 'accept', 'id': request.id}) }}" class="ajax-link">{{ 'Accept'|trans }}</a></li>
