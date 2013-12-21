@@ -2,8 +2,6 @@
 
 {% block body %}
 
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': group.id, 'object': group|class_name})) }}{% endif %}
-
     {{ include('CMBundle:Group:top.html.twig', {'inPage': 'multimedia'}) }}
 
 

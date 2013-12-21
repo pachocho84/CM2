@@ -2,8 +2,6 @@
 
 {% block body %}
 
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': page.id, 'object': page|class_name})) }}{% endif %}
-
     {{ include('CMBundle:Page:top.html.twig', {'inPage': 'image'}) }}
 
 
@@ -13,22 +11,7 @@
       <li class="active"><?php echo $page ?></li>
     </ul>#}
 
-
-    <div class="box">
-        <div class="box-top">
-            <ul class="nav nav-tabs nav-justified">
-                <li><a href="{{ path('page_images', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
-                <li class="active"><a href="{{ path('page_albums', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
-                <li><a href="{{ path('page_entities_albums', {'slug': page.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
-            </ul>
-        </div>
-
-        <a href="{{ path('imagealbum_new', {'object': page|class_name, 'objectId': page.id}) }}">{{ 'Create a new album'|trans }}</a>
-        
-        <div class="media-list objects">
-            {{ include('CMBundle:ImageAlbum:albumList.html.twig', {'link': 'page_album', 'publisher': page}) }}
-        </div>
-    </div>
+    {{ include('CMBundle:ImageAlbum:albums.html.twig', {'publisher': page, 'publisherType': 'page'}) }}
     
 
     {#<?php slot('sidebar_slot3') ?>  

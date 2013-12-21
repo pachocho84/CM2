@@ -3,7 +3,6 @@
 {% block body %}
 
     {% if is_granted('ROLE_USER') %}
-        {{ render(controller('CMBundle:Fan:fanButton', {'userId': group.id, 'object': group|class_name})) }}
         {{ include('CMBundle:GroupUser:requestAdd.html.twig') }}
     {% endif %}
 

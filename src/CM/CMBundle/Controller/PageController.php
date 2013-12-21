@@ -221,168 +221,168 @@ class PageController extends Controller
         return array('page' => $page, 'biography' => $biography);
     }
 
-    /**
-     * @Route("/{slug}/images/{pageNum}", name="page_images", requirements={"pageNum" = "\d+"})
-     * @Template
-     */
-    public function imagesAction(Request $request, $slug, $pageNum = 1)
-    {
-        $em = $this->getDoctrine()->getManager();
+    // /**
+    //  * @Route("/{slug}/images/{pageNum}", name="page_images", requirements={"pageNum" = "\d+"})
+    //  * @Template
+    //  */
+    // public function imagesAction(Request $request, $slug, $pageNum = 1)
+    // {
+    //     $em = $this->getDoctrine()->getManager();
 
-        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+    //     $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
         
-        if (!$page) {
-            throw new NotFoundHttpException($this->get('translator')->trans('Page not found.', array(), 'http-errors'));
-        }
+    //     if (!$page) {
+    //         throw new NotFoundHttpException($this->get('translator')->trans('Page not found.', array(), 'http-errors'));
+    //     }
 
-        $images = $em->getRepository('CMBundle:Image')->getImages(array('pageId' => $page->getId()));
+    //     $images = $em->getRepository('CMBundle:Image')->getImages(array('pageId' => $page->getId()));
         
-        $pagination = $this->get('knp_paginator')->paginate($images, $pageNum, 32);
+    //     $pagination = $this->get('knp_paginator')->paginate($images, $pageNum, 32);
 
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:ImageAlbum:imageList.html.twig', array(
-                'page' => $page,
-                'images' => $pagination
-            ));
-        }
+    //     if ($request->isXmlHttpRequest()) {
+    //         return $this->render('CMBundle:ImageAlbum:imageList.html.twig', array(
+    //             'page' => $page,
+    //             'images' => $pagination
+    //         ));
+    //     }
 
-        return array(
-            'page' => $page,
-            'images' => $pagination
-        );
-    }
+    //     return array(
+    //         'page' => $page,
+    //         'images' => $pagination
+    //     );
+    // }
 
-    /**
-     * @Route("/{slug}/image/{id}/{pageNum}", name="page_image", requirements={"id" = "\d+", "pageNum" = "\d+"})
-     * @Template
-     */
-    public function imageAction(Request $request, $slug, $id, $pageNum = 1)
-    {
-        $em = $this->getDoctrine()->getManager();
+    // /**
+    //  * @Route("/{slug}/image/{id}/{pageNum}", name="page_image", requirements={"id" = "\d+", "pageNum" = "\d+"})
+    //  * @Template
+    //  */
+    // public function imageAction(Request $request, $slug, $id, $pageNum = 1)
+    // {
+    //     $em = $this->getDoctrine()->getManager();
 
-        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+    //     $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
         
-        if (!$page) {
-            throw new NotFoundHttpException($this->get('translator')->trans('Page not found.', array(), 'http-errors'));
-        }
+    //     if (!$page) {
+    //         throw new NotFoundHttpException($this->get('translator')->trans('Page not found.', array(), 'http-errors'));
+    //     }
 
-        try {
-            $image = $em->getRepository('CMBundle:Image')->getImage($id, array('pageId' => $page->getId()));
-        } catch (\Exception $e) {
-            throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));
-        }
+    //     try {
+    //         $image = $em->getRepository('CMBundle:Image')->getImage($id, array('pageId' => $page->getId()));
+    //     } catch (\Exception $e) {
+    //         throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));
+    //     }
 
-        return array(
-            'page' => $page,
-            'image' => $image
-        );
-    }
+    //     return array(
+    //         'page' => $page,
+    //         'image' => $image
+    //     );
+    // }
 
-    /**
-     * @Route("/{slug}/albums/{pageNum}", name="page_albums", requirements={"pageNum" = "\d+"})
-     * @Template
-     */
-    public function albumsAction(Request $request, $slug, $pageNum = 1)
-    {
-        $em = $this->getDoctrine()->getManager();
+    // /**
+    //  * @Route("/{slug}/albums/{pageNum}", name="page_albums", requirements={"pageNum" = "\d+"})
+    //  * @Template
+    //  */
+    // public function albumsAction(Request $request, $slug, $pageNum = 1)
+    // {
+    //     $em = $this->getDoctrine()->getManager();
 
-        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+    //     $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
         
-        if (!$page) {
-            throw new NotFoundHttpException($this->get('translator')->trans('Page not found.', array(), 'http-errors'));
-        }
+    //     if (!$page) {
+    //         throw new NotFoundHttpException($this->get('translator')->trans('Page not found.', array(), 'http-errors'));
+    //     }
 
-        $albums = $em->getRepository('CMBundle:ImageAlbum')->getAlbums(array(
-            'pageId' => $page->getId(),
-        ));
+    //     $albums = $em->getRepository('CMBundle:ImageAlbum')->getAlbums(array(
+    //         'pageId' => $page->getId(),
+    //     ));
         
-        $pagination = $this->get('knp_paginator')->paginate($albums, $pageNum, 32);
+    //     $pagination = $this->get('knp_paginator')->paginate($albums, $pageNum, 32);
 
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:ImageAlbum:albumList.html.twig', array(
-                'page' => $page,
-                'albums' => $pagination
-            ));
-        }
+    //     if ($request->isXmlHttpRequest()) {
+    //         return $this->render('CMBundle:ImageAlbum:albumList.html.twig', array(
+    //             'page' => $page,
+    //             'albums' => $pagination
+    //         ));
+    //     }
 
-        return array(
-            'page' => $page,
-            'albums' => $pagination
-        );
-    }
+    //     return array(
+    //         'page' => $page,
+    //         'albums' => $pagination
+    //     );
+    // }
 
-    /**
-     * @Route("/{slug}/album/{id}/{pageNum}", name="page_album", requirements={"id" = "\d+", "pageNum" = "\d+"})
-     * @Template
-     */
-    public function albumAction(Request $request, $slug, $id, $pageNum = 1)
-    {
-        $em = $this->getDoctrine()->getManager();
+    // /**
+    //  * @Route("/{slug}/album/{id}/{pageNum}", name="page_album", requirements={"id" = "\d+", "pageNum" = "\d+"})
+    //  * @Template
+    //  */
+    // public function albumAction(Request $request, $slug, $id, $pageNum = 1)
+    // {
+    //     $em = $this->getDoctrine()->getManager();
 
-        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+    //     $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
         
-        if (!$page) {
-            throw new NotFoundHttpException($this->get('translator')->trans('Page not found.', array(), 'http-errors'));
-        }
+    //     if (!$page) {
+    //         throw new NotFoundHttpException($this->get('translator')->trans('Page not found.', array(), 'http-errors'));
+    //     }
 
-        try {
-            $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id, array('pageId' => $page->getId()));
-        } catch (\Exception $e) {
-            throw new NotFoundHttpException($this->get('translator')->trans('Album not found.', array(), 'http-errors'));
-        }
+    //     try {
+    //         $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id, array('pageId' => $page->getId()));
+    //     } catch (\Exception $e) {
+    //         throw new NotFoundHttpException($this->get('translator')->trans('Album not found.', array(), 'http-errors'));
+    //     }
 
-        $images = $em->getRepository('CMBundle:Image')->getImages(array('albumId' => $id));
+    //     $images = $em->getRepository('CMBundle:Image')->getImages(array('albumId' => $id));
         
-        $pagination = $this->get('knp_paginator')->paginate($images, $pageNum, 32);
+    //     $pagination = $this->get('knp_paginator')->paginate($images, $pageNum, 32);
 
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:ImageAlbum:imageList.html.twig', array(
-                'page' => $page,
-                'album' => $album,
-                'images' => $pagination
-            ));
-        }
+    //     if ($request->isXmlHttpRequest()) {
+    //         return $this->render('CMBundle:ImageAlbum:imageList.html.twig', array(
+    //             'page' => $page,
+    //             'album' => $album,
+    //             'images' => $pagination
+    //         ));
+    //     }
 
-        return array(
-            'page' => $page,
-            'album' => $album,
-            'images' => $pagination
-        );
-    }
+    //     return array(
+    //         'page' => $page,
+    //         'album' => $album,
+    //         'images' => $pagination
+    //     );
+    // }
 
-    /**
-     * @Route("/{slug}/images/entities/{pageNum}", name="page_entities_albums", requirements={"pageNum" = "\d+"})
-     * @Template
-     */
-    public function imagesEntitiesAction(Request $request, $slug, $pageNum = 1)
-    {
-        $em = $this->getDoctrine()->getManager();
+    // /**
+    //  * @Route("/{slug}/images/entities/{pageNum}", name="page_entities_albums", requirements={"pageNum" = "\d+"})
+    //  * @Template
+    //  */
+    // public function imagesEntitiesAction(Request $request, $slug, $pageNum = 1)
+    // {
+    //     $em = $this->getDoctrine()->getManager();
 
-        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+    //     $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
 
-        if (!$page) {
-            throw new NotFoundHttpException('Page not found.');
-        }
+    //     if (!$page) {
+    //         throw new NotFoundHttpException('Page not found.');
+    //     }
 
-        $entities = $em->getRepository('CMBundle:Image')->getEntityImages(array(
-            'pageId' => $page->getId(),
-            'paginate' => false
-        ));
+    //     $entities = $em->getRepository('CMBundle:Image')->getEntityImages(array(
+    //         'pageId' => $page->getId(),
+    //         'paginate' => false
+    //     ));
         
-        $pagination = $this->get('knp_paginator')->paginate($entities, $pageNum, 32);
+    //     $pagination = $this->get('knp_paginator')->paginate($entities, $pageNum, 32);
 
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:ImageAlbum:imageEntityList.html.twig', array(
-                'page' => $page,
-                'entities' => $pagination
-            ));
-        }
+    //     if ($request->isXmlHttpRequest()) {
+    //         return $this->render('CMBundle:ImageAlbum:imageEntityList.html.twig', array(
+    //             'page' => $page,
+    //             'entities' => $pagination
+    //         ));
+    //     }
 
-        return array(
-            'page' => $page,
-            'entities' => $pagination
-        );
-    }
+    //     return array(
+    //         'page' => $page,
+    //         'entities' => $pagination
+    //     );
+    // }
 
     /**
      * @Route("/account/image", name="page_image_edit")

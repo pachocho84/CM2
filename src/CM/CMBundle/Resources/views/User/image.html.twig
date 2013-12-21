@@ -14,15 +14,7 @@
     </ul>#}
 
 
-    <div class="box">
-        <div class="box-top">
-            {{ include('CMBundle:ImageAlbum:menu.html.twig', {'publisher': user, 'publisherRoute': 'user', 'inImagesPage': true}) }}
-        </div>
-        
-        <div class="media-list objects">
-            {{ include('CMBundle:ImageAlbum:image.html.twig') }}
-        </div>
-    </div>
+    {{ include('CMBundle:ImageAlbum:image.html.twig', {'publisher': user, 'publisherType': 'user'}) }}
     
 
     {#<?php slot('sidebar_slot3') ?>  

@@ -14,25 +14,7 @@
     </ul>#}
 
 
-    <div class="box">
-
-        <div class="box-top box-top-big">
-            <div class="media">
-                <div class="pull-right">
-                    <a href="{{ path('imagealbum_new') }}" class="btn btn-default btn-sm">{{ show_icon('Plus')|raw }} {{ 'Create a new album'|trans }}</a>
-                </div>
-                <div class="media-body">
-                    <h2>{{ show_icon('Image')|raw }} {{ 'Albums'|trans }}</h2>
-                </div>
-            </div>
-            {{ include('CMBundle:ImageAlbum:menu.html.twig', {'publisher': user, 'publisherRoute': 'user', 'inAlbumsPage': true}) }}
-        </div>
-
-        <div class="media-list objects">
-            {{ include('CMBundle:ImageAlbum:albumList.html.twig', {'link': 'user_album', 'publisher': user}) }}
-        </div>
-        
-    </div>
+    {{ include('CMBundle:ImageAlbum:albums.html.twig', {'publisher': user, 'publisherType': 'user'}) }}
     
 
     {#<?php slot('sidebar_slot3') ?>  

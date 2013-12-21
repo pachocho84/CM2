@@ -2,9 +2,7 @@
 
 {% block body %}
 
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': group.id, 'object': group|class_name})) }}{% endif %}
-
-    {{ include('CMBundle:Group:top.html.twig', {'inGroup': 'image'}) }}
+    {{ include('CMBundle:Group:top.html.twig', {'inPage': 'image'}) }}
 
 
     {#<ul class="breadcrumb">
@@ -13,68 +11,7 @@
       <li class="active"><?php echo $group ?></li>
     </ul>#}
 
-
-    <div class="box">
-
-
-        <div class="box-top box-top-big clearfix">
-            <div class="media">
-                <div class="pull-right">
-                    {% if album is defined and can_manage(album) %}
-                        <span class="btn btn-default btn-sm fileinput-button" data-redirect="<?php echo url_for('@image_album_edit?id='.$album->getEntityId()) ?>">
-                            {{ show_icon('Plus')|raw }} {{ 'Add photos'|trans }}
-                            <form action="{{ path('imagealbum_add_image', {'id': album.id}) }}" method="post" enctype="multipart/form-data">
-                                <input id="images" type="file" name="images" multiple />
-                            </form>
-                        </span>
-                        {% if album is defined and album|class_name == 'ImageAlbum' %}<a href="{{ path('imagealbum_edit', {'id': album.id, 'slug': group.slug, 'publisher': group|class_name}) }}" class="btn btn-default btn-sm">{{ show_icon('Edit')|raw }} {{ 'Edit'|trans }}</a> '{{ show_icon('Edit')|raw }}</a>{% endif %}
-                        <?php $album->getImageAlbum()->getType() == 'album' and print delete_link('@image_album_delete?id='.$album->getEntityId(), 'album', array('class' => 'btn btn-default btn-sm', 'data-placement' => 'left')) ?>
-                    {% endif %}
-                </div>
-                <div class="media-body">
-                    <h2>{{ show_icon('Image')|raw }} <?php echo __($album->getEntity()) ?></h2>
-                </div>
-            </div>
-            {#<?php $album->getEntity()->getText('en') and print simple_format_text($album->getRawValue()->getEntity()->getText('en')) ?>
-            
-            <?php include_partial('menu', array('group' => $group, 'nb_images' => $imagesCount, 'nb_albums' => $albumsCount, 'section' => 'album')) ?>#}
-        </div>
-
-
-        {% if album is defined and can_manage(album) %}
-            <div class="objects hidden">
-                <div class="progress progress-striped active" style="margin-bottom: 0;">
-                    <div class="bar bar-success" style="width: 0%;"></div>
-                </div>
-            </div>
-        {% endif %}
-
-
-        <div class="box-top">
-            <ul class="nav nav-tabs nav-justified">
-                <li><a href="{{ path('group_images', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
-                <li class="active"><a href="{{ path('group_albums', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
-                <li><a href="{{ path('group_entities_albums', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
-            </ul>
-        </div>
-
-        <ul class="list-unstyled objects images{% if album is defined and can_manage(album) and images|length > 1 %} images-sortable{% endif %} clearfix">
-            {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %}
-                <form action="{{ path('imagealbum_sort', {'id': album.id, 'slug': group.slug, 'publisher': group|class_name}) }}" method="post">
-                    <div class="alert alert-info">
-                        {{ 'Drag and drop the images to sort them, then press save.'|trans }}
-                        <input type="submit" class="btn btn-primaty" value="{{ 'Save'|trans }}" />
-                    </div>
-            {% endif %}
-            
-            {{ include('CMBundle:ImageAlbum:imageList.html.twig', {'link': 'group_image', 'publisher': group}) }}
-
-            {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %}
-                </form>
-            {% endif %}
-        </ul>
-
-    </div>
+    {{ include('CMBundle:ImageAlbum:album.html.twig', {'publisher': group, 'publisherType': 'group'}) }}
     
 
     {#<?php slot('sidebar_slot3') ?>  

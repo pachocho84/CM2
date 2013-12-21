@@ -14,64 +14,7 @@
     </ul>#}
 
 
-    <div class="box">
-
-
-        <div class="box-top box-top-big clearfix">
-            <div class="media">
-                <div class="pull-right">
-                    {% if album is defined and can_manage(album) %}
-                        <span class="btn btn-default btn-sm fileinput-button" data-redirect="<?php echo url_for('@image_album_edit?id='.$album->getEntityId()) ?>">
-                            {{ show_icon('Plus')|raw }} {{ 'Add photos'|trans }}
-                            <form action="{{ path('imagealbum_add_image', {'id': album.id}) }}" method="post" enctype="multipart/form-data">
-                                <input id="images" type="file" name="images" multiple />
-                            </form>
-                        </span>
-                        {% if album is defined and album|class_name == 'ImageAlbu' %}<a href="{{ path('imagealbum_edit', {'id': album.id, 'slug': user.slug, 'publisher': user|class_name}) }}" class="btn btn-default btn-sm">{{ show_icon('Edit')|raw }} {{ 'Edit'|trans }}</a> '{{ show_icon('Edit')|raw }}</a>{% endif %}
-                        <?php $album->getImageAlbum()->getType() == 'album' and print delete_link('@image_album_delete?id='.$album->getEntityId(), 'album', array('class' => 'btn btn-default btn-sm', 'data-placement' => 'left')) ?>
-                    {% endif %}
-                </div>
-            
-                <div class="media-body">
-                    <h2>{{ show_icon('Image')|raw }} <?php echo __($album->getEntity()) ?></h2>
-                </div>
-
-            </div>
-            {#<?php $album->getEntity()->getText('en') and print simple_format_text($album->getRawValue()->getEntity()->getText('en')) ?>
-            
-            <?php include_partial('menu', array('user' => $user, 'nb_images' => $imagesCount, 'nb_albums' => $albumsCount, 'section' => 'album')) ?>#}
-            {{ include('CMBundle:ImageAlbum:menu.html.twig', {'publisher': user, 'publisherRoute': 'user', 'inAlbumsPage': true}) }}
-        </div>
-
-
-        {% if album is defined and can_manage(album) %}
-            <div class="objects hidden">
-                <div class="progress progress-striped active" style="margin-bottom: 0;">
-                    <div class="bar bar-success" style="width: 0%;"></div>
-                </div>
-            </div>
-        {% endif %}
-
-
-        
-
-        <ul class="list-unstyled objects images{% if album is defined and can_manage(album) and images|length > 1 %} images-sortable{% endif %} clearfix">
-            {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %}
-                <form action="{{ path('imagealbum_sort', {'id': album.id, 'slug': user.slug, 'publisher': user|class_name}) }}" method="post">
-                    <div class="alert alert-info">
-                        {{ 'Drag and drop the images to sort them, then press save.'|trans }}
-                        <input type="submit" class="btn btn-primaty" value="{{ 'Save'|trans }}" />
-                    </div>
-            {% endif %}
-            
-            {{ include('CMBundle:ImageAlbum:imageList.html.twig', {'link': 'user_image', 'publisher': user}) }}
-
-            {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %}
-                </form>
-            {% endif %}
-        </ul>
-
-    </div>
+    {{ include('CMBundle:ImageAlbum:album.html.twig', {'publisher': user, 'publisherType': 'user'}) }}
     
 
     {#<?php slot('sidebar_slot3') ?>  

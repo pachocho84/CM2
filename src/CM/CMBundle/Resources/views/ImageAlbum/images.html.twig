@@ -1,0 +1,64 @@
+<div class="box">
+
+    {#<div class="box-top box-top-big clearfix">
+        <div class="media">
+            <div class="pull-right">
+                <?php if ($sf_user->canManage($album)): ?>
+                    <span class="btn btn-default btn-sm fileinput-button" data-redirect="<?php echo url_for('@image_album_edit?id='.$album->getEntityId()) ?>">
+                        <i class="glyphicon glyphicon-plus"></i> <?php echo __('Add photos') ?>
+                        <form action="<?php echo url_for('image/imagesAdd?album_id='.$album->getEntityId()) ?>" method="post" enctype="multipart/form-data">
+                            <input id="images" type="file" name="images" multiple />
+                        </form>
+                    </span>
+                    <?php echo link_to('<i class="glyphicon glyphicon-pencil"></i> '.__('Edit'), '@image_album_edit?id='.$album->getEntityId(), array('class' => 'btn btn-default btn-sm')) ?>
+                    <?php $album->getImageAlbum()->getType() == 'album' and print delete_link('@image_album_delete?id='.$album->getEntityId(), 'album', array('class' => 'btn btn-default btn-sm', 'data-placement' => 'left')) ?>
+                <?php endif ?>
+            </div>
+            <div class="media-body">
+                <h2><?php echo image_tag('glyphicons/picture') ?> <?php echo __($album->getEntity()) ?></h2>
+            </div>
+        </div>
+        <?php $album->getEntity()->getText('en') and print simple_format_text($album->getRawValue()->getEntity()->getText('en')) ?>
+        
+        <?php include_partial('menu', array('user' => $user, 'nb_images' => $imagesCount, 'nb_albums' => $albumsCount, 'section' => 'album')) ?>
+    </div>#}
+
+
+    {#<?php if ($user->getId() == $sf_user->getId()): ?>
+        <div class="objects hide">
+            <div class="progress progress-striped active" style="margin-bottom: 0;">
+                <div class="bar bar-success" style="width: 0%;"></div>
+        </div>
+        </div>
+    <?php endif ?>#}
+
+
+    <div class="box-top box-top-big">
+        <div class="media">
+            <div class="pull-right">
+                <a href="{{ path('imagealbum_new') }}" class="btn btn-default btn-sm">{{ show_icon('Plus')|raw }} {{ 'Create a new album'|trans }}</a>
+            </div>
+            <div class="media-body">
+                <h2>{{ show_icon('Image')|raw }} {{ 'Images'|trans }}</h2>
+            </div>
+        </div>
+        {{ include('CMBundle:ImageAlbum:menu.html.twig', {'inImagesPage': true}) }}
+    </div>
+
+    <ul class="list-unstyled objects images{% if album is defined %} images-sortable{% endif %} clearfix">
+        {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %}
+            <form action="{{ path('imagealbum_sort', {'id': album.id, 'slug': publisher.slug, 'publisher': publisher|class_name}) }}" method="post">
+                <div class="alert alert-info">
+                    {{ 'Drag and drop the images to sort them, then press save.'|trans }}
+                    <input type="submit" class="btn btn-primaty" value="{{ 'Save'|trans }}" />
+                </div>
+        {% endif %}
+        
+        {{ include('CMBundle:ImageAlbum:imageList.html.twig', {'link': publisherType ~ '_image'}) }}
+
+        {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %}
+            </form>
+        {% endif %}
+    </ul>
+
+</div>

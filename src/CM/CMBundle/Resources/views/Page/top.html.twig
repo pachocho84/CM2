@@ -1,3 +1,7 @@
+{% if is_granted('ROLE_USER') %}
+    {{ render(controller('CMBundle:Fan:fanButton', {'userId': page.id, 'object': page|class_name})) }}
+{% endif %}
+
 {% if not page.coverImg or page.coverImg == '' %}
     <div class="media">
         {{ show_img_box(page.img|imagine_filter('50'), {'width': 32, 'height': 32, 'offset': page.imgOffset, 'default': 'page', 'box_attributes': {'class': 'pull-left'}})|raw }}

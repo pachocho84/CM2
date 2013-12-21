@@ -2,8 +2,6 @@
 
 {% block body %}
 
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': group.id, 'object': group|class_name})) }}{% endif %}
-
     {{ include('CMBundle:Group:top.html.twig', {'inPage': 'image'}) }}
 
 
@@ -14,18 +12,7 @@
     </ul>#}
 
 
-    <div class="box">
-        <div class="box-top">
-            <ul class="nav nav-tabs nav-justified">
-                <li><a href="{{ path('group_images', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
-                <li><a href="{{ path('group_albums', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
-                <li class="active"><a href="{{ path('group_entities_albums', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
-            </ul>
-        </div>
-        <div class="objects">
-            {{ include('CMBundle:ImageAlbum:imageEntityList.html.twig', {'link': 'group_album', 'publisher': group}) }}
-        </div>
-    </div>
+    {{ include('CMBundle:ImageAlbum:imagesEntities.html.twig', {'publisher': group, 'publisherType': 'group'}) }}
     
 
     {#<?php slot('sidebar_slot3') ?>  
