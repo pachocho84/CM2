@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Process\Exception\RuntimeException;
 use JMS\SecurityExtraBundle\Annotation as JMS;
 use CM\CMBundle\Entity\Image;
+use CM\CMBundle\Entity\ImageAlbum;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**

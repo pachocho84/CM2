@@ -41,7 +41,7 @@
                     <a href="{{ path('group_multimedia', {'slug': group.slug}) }}">{{ show_icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
                 </li>
                 <li{% if inPage == 'disc' %} class="active"{% endif %}>
-                    <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs [TODO]'|trans }}</a>
+                    <a href="{{ path('group_discs', {'slug': group.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs'|trans }}</a>
                 </li>
                 {#<li{% if $inPage == 'fan' %} class="active"{% endif %}><?php echo link_to(show_icon('fan').' '.__('Fans'), '@fan_group?group='.$group->getUsername()) ?></li>#}
             </ul>

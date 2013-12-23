@@ -441,7 +441,7 @@ class UserController extends Controller
             
         $discs = $em->getRepository('CMBundle:Disc')->getDiscs(array(
             'locale'        => $request->getLocale(),
-            'category_id'   => $category_slug ? $category->getId() : null,
+            'categoryId'   => $category_slug ? $category->getId() : null,
             'userId'       => $user->getId()       
         ));
         
@@ -452,6 +452,34 @@ class UserController extends Controller
         }
         
         return array('categories' => $categories, 'user' => $user, 'discs' => $pagination, 'category' => $category, 'page' => $page);
+    }
+    
+    /**
+     * @Route("/{slug}/articles/{page}", name="user_articles", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function articlesAction(Request $request, $slug, $page = 1, $category_slug = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+        }
+            
+        $articles = $em->getRepository('CMBundle:Article')->getArticles(array(
+            'locale'        => $request->getLocale(),
+            'userId'       => $user->getId()       
+        ));
+        
+        $pagination = $this->get('knp_paginator')->paginate($articles, $page, 10);
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Article:objects.html.twig', array('dates' => $pagination, 'page' => $page));
+        }
+        
+        return array('user' => $user, 'articles' => $pagination);
     }
 
     /**

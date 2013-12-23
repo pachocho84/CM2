@@ -79,7 +79,9 @@ class ImageAlbumRepository extends BaseRepository
             ->select('a')
             ->leftJoin('a.posts', 'p');
         if (!is_null($options['userId'])) {
-            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
+            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('p.pageId is NULL')
+                ->andWhere('p.groupId is NULL');
         }
         if (!is_null($options['pageId'])) {
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);

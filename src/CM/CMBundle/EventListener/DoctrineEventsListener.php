@@ -642,7 +642,8 @@ class DoctrineEventsListener
 
             $album->addPost($post);
         }
-        $em->persist($post);
+
+        $em->persist($album);
 
         $this->flushNeeded = true;
     }

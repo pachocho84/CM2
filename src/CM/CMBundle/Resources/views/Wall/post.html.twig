@@ -7,10 +7,9 @@
 
     <div class="media-body">
 
-        {{ post.object|class_name }}
         <p>{{ post_text(post, relatedObjects)|raw }}</p>
 
-        {#{{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}#}
+        {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
 
         <p class="text-muted">
             {{ show_icon((post.object|class_name)~'_'~(post.type))|raw }}

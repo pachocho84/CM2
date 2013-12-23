@@ -1,0 +1,55 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+        '@CMBundle/Resources/public/css/typeahead.js-bootstrap.css'
+    %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-5">
+            <h2>{{ block('title') }}</h2>
+        </div>
+        {{ include('CMBundle:Multimedia:menu.html.twig') }}
+    </div>
+    
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        
+        {{ form_row(form.translations) }}
+        {{ form_row(form.link) }}
+
+        <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('entityuser_add', {'object': 'Disc', 'user_id': 'USER_ID', 'protagonist_new_id': 'NEW_ID', 'entity_type': 'ENTITY_TYPE'}) }}">
+            <div class="form-group col-lg-12"><label class="control-label col-lg-3 control-label required">{{ "Protagonists" | trans }}</label></div>
+            <div class="col-lg-12 collection-items">
+                <div class="cm_cmbundle_multimedia_entityUsers_control_group">
+                    <div id="protagonists_finder_container" class="form-group">
+                        <label class="control-label col-lg-3">Add new protagonist</label>
+                        <div class="col-lg-9"><input type="text" id="protagonists_finder" class="form-control" /></div>
+                    </div>
+                    {{ include('CMBundle:EntityUser:addEntityUsers.html.twig', {'entityUsers': form.entityUsers}) }}
+                </div>
+            </div>
+        </div>
+
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+        <script type="text/javascript">
+            var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
+        </script>
+        {% javascripts
+            '@CMBundle/Resources/public/js/hogan-2.0.0.min.js'
+            '@CMBundle/Resources/public/js/typeahead.min.js'
+            '@CMBundle/Resources/public/js/uploadCollection.js'
+            '@CMBundle/Resources/public/js/form.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+{% endblock %}

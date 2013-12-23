@@ -1,0 +1,16 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block title %}{{ 'Articles'|trans }}{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-5">
+            <h2>{{ block('title') }}</h2>
+        </div>
+        {{ include('CMBundle:Article:menu.html.twig') }}
+    </div>
+
+    {{ include('CMBundle:Article:objects.html.twig') }}
+
+{% endblock %}

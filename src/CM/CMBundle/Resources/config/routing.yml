@@ -34,18 +34,6 @@ cm_cmbundle_disc:
     resource: "CM\\CMBundle\\Controller\\DiscController"
     type:     annotation
 
-cm_cmbundle_page:
-    resource: "CM\\CMBundle\\Controller\\PageController"
-    type:     annotation
-
-cm_cmbundle_group:
-    resource: "CM\\CMBundle\\Controller\\GroupController"
-    type:     annotation
-
-cm_cmbundle_entityuser:
-    resource: "CM\\CMBundle\\Controller\\EntityUserController"
-    type:     annotation
-
 cm_cmbundle_imagealbum:
     resource: "CM\\CMBundle\\Controller\\ImageAlbumController"
     type:     annotation
@@ -56,6 +44,22 @@ cm_cmbundle_image:
 
 cm_cmbundle_multimedia:
     resource: "CM\\CMBundle\\Controller\\MultimediaController"
+    type:     annotation
+
+cm_cmbundle_article:
+    resource: "CM\\CMBundle\\Controller\\ArticleController"
+    type:     annotation
+
+cm_cmbundle_entityuser:
+    resource: "CM\\CMBundle\\Controller\\EntityUserController"
+    type:     annotation
+
+cm_cmbundle_page:
+    resource: "CM\\CMBundle\\Controller\\PageController"
+    type:     annotation
+
+cm_cmbundle_group:
+    resource: "CM\\CMBundle\\Controller\\GroupController"
     type:     annotation
 
 fos_user_security:

@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Process\Exception\RuntimeException;
 use JMS\SecurityExtraBundle\Annotation as JMS;
 use CM\CMBundle\Entity\Multimedia;
+use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Form\MultimediaType;
 
@@ -25,49 +26,55 @@ use CM\CMBundle\Form\MultimediaType;
 class MultimediaController extends Controller
 {
     /**
-     * @Route("/new/{object}/{objectId}", name="multimedia_new", requirements={"objectId" = "\d+"})
+     * @Route("/{page}", name="multimedia_index", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function indexAction(Request $request, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimediaList();
+        $pagination = $this->get('knp_paginator')->paginate($multimedia, $page, 10);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Multimedia:objects.html.twig', array(
+                'group' => $group,
+                'multimediaList' => $pagination
+            ));
+        }
+
+        return array(
+            'multimediaList' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/new", name="multimedia_new")
+     * @Route("/{id}/{slug}/edit", name="multimedia_edit", requirements={"id" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function newAction(Request $request, $object = null, $objectId = null, $id = null, $slug = null)
+    public function editAction(Request $request, $id = null, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
-
-        $user = $this->getUser();
-        $page = null;
-        $group = null;
-        if (!is_null($objectId)) {
-            switch ($object) {
-                case 'Page':
-                    $page = $em->getRepository('CMBundle:Page')->findOneById($objectId);
-                    if (!$this->get('cm.user_authentication')->isAdminOf($page)) {
-                        throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-                    }
-                    break;
-                case 'Group':
-                    $group = $em->getRepository('CMBundle:Group')->findOneById($objectId);
-                    if (!$this->get('cm.user_authentication')->isAdminOf($group)) {
-                        throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-                    }
-                    break;
-            }
-            if (is_null($page) && is_null($group)) {
-                throw new NotFoundHttpException($this->get('translator')->trans('Object not found.', array(), 'http-errors'));
-            }
-        }
         
         if (is_null($id)) {
             $multimedia = new Multimedia;
 
+            $multimedia->addUser(
+                $this->getUser(),
+                true, // admin
+                EntityUser::STATUS_ACTIVE,
+                true // notifications
+            );
+
             $post = $this->get('cm.post_center')->newPost(
-                $user,
-                $user,
+                $this->getUser(),
+                $this->getUser(),
                 Post::TYPE_CREATION,
                 get_class($multimedia),
                 array(),
-                $multimedia,
-                $page,
-                $group
+                $multimedia
             );
 
             $multimedia->addPost($post);
@@ -77,12 +84,17 @@ class MultimediaController extends Controller
                 throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }
         }
+
+        $oldEntityUsers = array();
+        foreach ($multimedia->getEntityUsers() as $oldEntityUser) {
+            $oldEntityUsers[] = $oldEntityUser;
+        }
  
         $form = $this->createForm(new MultimediaType, $multimedia, array(
             'cascade_validation' => true,
             'error_bubbling' => false,
             'em' => $em,
-            'roles' => $user->getRoles()
+            'roles' => $this->getUser()->getRoles()
         ))->add('save', 'submit');
         
         $form->handleRequest($request);
@@ -111,11 +123,30 @@ class MultimediaController extends Controller
             $multimedia->setTitle($info->title)
                 ->setText($info->description);
 
+            foreach ($multimedia->getEntityUsers() as $entityUser) {
+                foreach ($oldEntityUsers as $key => $toDel) {
+                    if ($toDel->getId() === $entityUser->getId()) {
+                        unset($oldEntityUsers[$key]);
+                    }
+                }
+            }
+
+            // remove the relationship between the tag and the Task
+            foreach ($oldEntityUsers as $entityUser) {
+                // remove the Task from the Tag
+                $multimedia->removeEntityUser($entityUser);
+
+                $entityUser->setEntity(null);
+                $entityUser->setUser(null);
+    
+                $em->remove($entityUser);
+            }
+
             $em->persist($multimedia);
 
             $em->flush();
 
-            return new RedirectResponse($this->generateUrl($multimedia->getPost()->getPublisherRoute().'_multimedia_show', array('id' => $multimedia->getId(), 'slug' => $multimedia->getPost()->getPublisher()->getSlug())));
+            return new RedirectResponse($this->generateUrl('multimedia_show', array('id' => $multimedia->getId(), 'slug' => $multimedia->getSlug())));
         }
 
         $users = array();
@@ -126,30 +157,8 @@ class MultimediaController extends Controller
         return array(
             'form' => $form->createView(),
             'entity' => $multimedia,
+            'newEntry' => ($formRoute == 'multimedia_new'),
             'joinEntityType' => 'joinalbum'
-        );
-    }
-
-    /**
-     * @Route("/{page}", name="multimedia_list")
-     * @Template
-     */
-    public function listAction(Request $request, $page = 1)
-    {
-        $em = $this->getDoctrine()->getManager();
-        
-        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimediaList();
-        $pagination = $this->get('knp_paginator')->paginate($multimedia, $page, 10);
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Multimedia:multimediaList.html.twig', array(
-                'group' => $group,
-                'multimediaList' => $pagination
-            ));
-        }
-
-        return array(
-            'multimediaList' => $pagination
         );
     }
 }

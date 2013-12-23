@@ -1,0 +1,41 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+
+    <div class="box-top">
+        <h3>{{ show_icon('Article')|raw }} <span>{{ article }}</span></h3>
+    </div>
+
+    {% if can_manage(article) %}
+        <div class="media">
+            <div class="btn pull-left alert-info"><a href="{{ path('article_edit', {'id': article.id, 'slug': article.getSlug}) }}">{{ "Edit"|trans }}</a></div>
+            <div class="btn pull-right alert-danger"><a href="{{ path('article_delete', {'id': article.id}) }}">{{ "Delete"|trans }}</a></div>
+        </div>
+    {% endif %}
+
+
+    {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'entity': article}) }}
+
+    <ul>
+        {% for protagonist in article.entityUsers if protagonist.status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_ACTIVE') %}
+            <li>
+                {{ protagonist.id }} : {{ protagonist.user }}
+                {% for userTag in protagonist.userTags %}
+                    <ul>
+                        <li>{{ tags[userTag] }}</li>
+                    </ul>
+                {% endfor %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="media">
+        {% if article.getImages|length > 0 %}
+            <img src='{{ asset(uploaded_images_full_dir ~ '/' ~ article.images[0].img) }}' width="200px" />
+        {% endif %}
+
+        {}
+    </div>
+
+    {{ include('CMBundle::social.html.twig', {'post': article.post}) }}
+{% endblock %}

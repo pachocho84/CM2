@@ -15,7 +15,7 @@ use CM\CMBundle\Entity\EntityCategory;
 class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
     private $people = array(
-        array('firstname' => 'Ernesto',
+        array('firstname' => 'Er Nesto',
             'lastname' => 'Casareto',
             'username' => 'pachocho',
             'password' => 'pacho',

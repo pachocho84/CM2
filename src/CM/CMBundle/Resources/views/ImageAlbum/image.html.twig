@@ -40,16 +40,15 @@
                         <li><a href="/uploads/images/full/<?php echo $image->getImg() ?>" target="_blank"><i class="glyphicon glyphicon-fullscreen"></i> <?php echo __('High resolution') ?></a></li>#}
                         
                         {% if can_manage(image) %}
-                            <li class="divider"></li>
+                            {#<li class="divider"></li>
                             <li><?php echo link_to('<i class="glyphicon glyphicon-pencil"></i> '.__('Edit'), '@image_album_edit?id='.$image->getEntityId()) ?></li>
                             <li><?php delete_link('@image_delete?id='.$image->getId(), 'image') ?></li>
-                            <li class="divider"></li>
+                            <li class="divider"></li>#}
                             <li><a class="ajax-link" href="{{ path('image_make_profile', {'id': image.id}) }}">{{ 'Make profile picture'|trans }}</a></li>
                             <li><a class="ajax-link" href="{{ path('image_make_cover', {'id': image.id}) }}">{{ 'Make cover picture'|trans }}</a></li>
-                            <li><?php echo link_to('<i class="glyphicon-macbook"></i> '.__('Make cover picture'), 'image/makeCoverPicture?id='.$image->getId()) ?></li>
                             <li class="divider"></li>
-                            <li><?php echo link_to('<i class="glyphicon-unshare"></i> '.__('Rotate left'), 'image/rotate?direction=anticlockwise&id='.$image->getId()) ?></li>
-                            <li><?php echo link_to('<i class="glyphicon glyphicon-share-alt"></i> '.__('Rotate right'), 'image/rotate?direction=clockwise&id='.$image->getId()) ?></li>
+                            {#<li><?php echo link_to('<i class="glyphicon-unshare"></i> '.__('Rotate left'), 'image/rotate?direction=anticlockwise&id='.$image->getId()) ?></li>
+                            <li><?php echo link_to('<i class="glyphicon glyphicon-share-alt"></i> '.__('Rotate right'), 'image/rotate?direction=clockwise&id='.$image->getId()) ?></li>#}
 
                         {% endif %}
                     </ul>

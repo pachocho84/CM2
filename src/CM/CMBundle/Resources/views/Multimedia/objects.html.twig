@@ -1,5 +1,7 @@
 {% for multimedia in multimediaList %}
-    {{ include('CMBundle:Multimedia:singleMultimedia.html.twig') }}
+    <ul class="media-list objects">
+        {{ include('CMBundle:Multimedia:object.html.twig') }}
+    </ul>
 {% endfor %}
 
 {% if multimediaList.paginationData is defined and multimediaList.paginationData.current < multimediaList.paginationData.last %}

@@ -3,7 +3,6 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -15,8 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Disc extends Entity
 {
-    use ORMBehaviors\Timestampable\Timestampable;
-
     /**
      * @var integer
      *

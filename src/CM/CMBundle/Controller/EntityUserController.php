@@ -18,12 +18,16 @@ use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\Disc;
+use CM\CMBundle\Entity\Multimedia;
+use CM\CMBundle\Entity\Article;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Sponsored;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\DiscType;
+use CM\CMBundle\Form\MultimediaType;
+use CM\CMBundle\Form\ArticleType;
 use CM\CMBundle\Form\ImageCollectionType;
 
 /**
@@ -79,6 +83,14 @@ class EntityUserController extends Controller
             case 'Disc':
                 $entity = new Disc;
                 $formType = new DiscType;
+                break;
+            case 'Multimedia':
+                $entity = new Multimedia;
+                $formType = new MultimediaType;
+                break;
+            case 'Article':
+                $entity = new Article;
+                $formType = new ArticleType;
                 break;
         }
         

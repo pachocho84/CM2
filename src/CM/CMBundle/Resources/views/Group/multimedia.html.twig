@@ -16,9 +16,7 @@
 
         {% if is_admin(group) %}<a href="{{ path('imagealbum_new', {'object': group|class_name, 'objectId': group.id}) }}">{{ 'Add a new multimidia'|trans }}</a>{% endif %}
 
-        <ul class="media-list objects">
-            {{ include('CMBundle:Multimedia:multimediaList.html.twig', {'link': 'group_multimedia_show', 'publisher': group}) }}
-        </ul>
+        {{ include('CMBundle:Multimedia:objects.html.twig', {'link': 'group_multimedia_show', 'publisher': group}) }}
     </div>
     
 

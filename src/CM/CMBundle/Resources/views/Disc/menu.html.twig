@@ -2,9 +2,9 @@
     <div class="btn-group btn-group-sm">
         <a href="{{ path('disc_index') }}" class="{{ app.request.attributes.get('_route') == 'disc_index' ? 'btn btn-default active' : 'btn btn-default'}}">{{ show_icon('List')|raw }} {{ 'List'|trans }}</a>
         <div class="btn-group btn-group-sm">
-            <a href="{{ path('event_index') }}" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{ show_icon('Tag')|raw }} {{ 'Categories'|trans }} <b class="caret"></b></a>
+            <a href="{{ path('disc_index') }}" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{ show_icon('Tag')|raw }} {{ 'Categories'|trans }} <b class="caret"></b></a>
             <ul class="dropdown-menu pull-right text-left" role="menu" aria-labelledby="dropdownMenu">
-                <li><a href="{{ path('event_index') }}">{{ 'Discs'|trans }}</a></li>
+                <li><a href="{{ path('disc_index') }}">{{ 'Discs'|trans }}</a></li>
                 <li class="divider"></li>
                 {% for category in categories %}
                     <li><a href="{{ path('disc_category', { 'categorySlug': category.getSlug }) }}">{{ category.getPlural|capitalize }}</a></li>

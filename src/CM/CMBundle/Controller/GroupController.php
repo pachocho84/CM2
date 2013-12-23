@@ -346,6 +346,73 @@ class GroupController extends Controller
         
         return array('categories' => $categories, 'group' => $group, 'dates' => $pagination, 'category' => $category, 'page' => $page);
     }
+    
+    /**
+     * @Route("/{slug}/discs/{page}", name="group_discs", requirements={"page" = "\d+"})
+     * @Route("/{slug}/discs/archive/{page}", name="group_discs_archive", requirements={"page" = "\d+"}) 
+     * @Route("/{slug}/discs/category/{category_slug}/{page}", name="group_discs_category", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function discsAction(Request $request, $slug, $page = 1, $category_slug = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        
+        if (!$group) {
+            throw new NotFoundHttpException('Group not found.');
+        }
+            
+        if (!$request->isXmlHttpRequest()) {
+            $categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::EVENT, array('locale' => $request->getLocale()));
+        }
+        
+        if ($category_slug) {
+            $category = $em->getRepository('CMBundle:EntityCategory')->getCategory($category_slug, EntityCategory::EVENT, array('locale' => $request->getLocale()));
+        }
+            
+        $discs = $em->getRepository('CMBundle:Disc')->getDiscs(array(
+            'locale'        => $request->getLocale(),
+            'categoryId'   => $category_slug ? $category->getId() : null,
+            'groupId'       => $group->getId()       
+        ));
+        
+        $pagination = $this->get('knp_paginator')->paginate($discs, $page, 10);
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Disc:objects.html.twig', array('discs' => $pagination));
+        }
+        
+        return array('categories' => $categories, 'group' => $group, 'discs' => $pagination, 'category' => $category);
+    }
+    
+    /**
+     * @Route("/{slug}/articles/{page}", name="group_articles", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function articlesAction(Request $request, $slug, $page = 1, $category_slug = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        
+        if (!$group) {
+            throw new NotFoundHttpException('Group not found.');
+        }
+            
+        $articles = $em->getRepository('CMBundle:Article')->getArticles(array(
+            'locale'        => $request->getLocale(),
+            'groupId'       => $group->getId()       
+        ));
+        
+        $pagination = $this->get('knp_paginator')->paginate($articles, $page, 10);
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Article:objects.html.twig', array('dates' => $pagination, 'page' => $page));
+        }
+        
+        return array('group' => $group, 'articles' => $pagination);
+    }
 
     /**
      * @Route("/{slug}/account/members/{page}", name="group_members_settings", requirements={"page" = "\d+"})
