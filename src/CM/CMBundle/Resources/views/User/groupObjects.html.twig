@@ -1,0 +1,34 @@
+{% for group in groups %}
+    <div class="media">
+
+        {% if group.images|length > 0 %}
+            {{ show_img_box(group.images[0]|imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #}
+        {% endif %}
+
+        <div class="media-body">
+        
+            <h4 class="media-heading"><a href="{{ path('group_show', {'slug': group.getSlug}) }}">{{ group }}</a></h4>
+
+            {% if group.groupUsers[app.user.id].status != constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_ACTIVE') %}
+                {{ group.groupUsers[app.user.id].status }}
+            {% endif %}
+
+            {{ include('CMBundle:GroupUser:joinType.html.twig', {'object': 'Event'}) }}
+            {{ include('CMBundle:GroupUser:joinType.html.twig', {'object': 'Disc'}) }}
+
+            {% if group.creatorId == app.user.id %}
+                {{ 'Creator'|trans }}
+            {% endif %}
+            {% if is_admin(group) %}
+                {{ 'Admin'|trans }}
+                <ul>
+                    <li><a href="{{ path('group_edit', {'slug': group.slug})}}">{{ 'Edit'|trans }}</a></li>
+                    <li><a href="{{ path('group_members_settings', {'slug': group.slug}) }}">{{ 'Manage members'|trans }}</a></li>
+                    <li><a href="{{ path('group_delete', {'slug': group.slug})}}">{{ 'Delete group'|trans }}</a></li>
+                </ul>
+            {% endif %}
+
+        </div><!-- END Media Body -->
+
+    </div><!-- END Object -->
+{% endfor %}

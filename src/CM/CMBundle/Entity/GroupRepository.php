@@ -16,6 +16,8 @@ class GroupRepository extends BaseRepository
     static protected function getOptions(array $options = array())
     {
         return array_merge(array(
+            'userId' => null,
+            'groupId' => null,
             'paginate' => true,
             'limit'    => 25,
         ), $options);
@@ -26,8 +28,19 @@ class GroupRepository extends BaseRepository
         $options = self::getOptions($options);
 
         $query = $this->createQueryBuilder('g')
-            ->select('g, gu')
-            ->leftJoin('g.groupUsers', 'gu');
+            ->select('g, gu, i')
+            ->innerJoin('g.groupUsers', 'gu', '', '', 'gu.userId')
+            ->leftJoin('g.images', 'i');
+
+        if ($options['userId']) {
+            $query->andWhere('gu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('gu.status in (:status)')
+                ->setParameter('status', array(GroupUser::STATUS_PENDING, GroupUser::STATUS_ACTIVE, GroupUser::STATUS_REQUESTED));
+        }
+
+        if ($options['groupId']) {
+            $query->andWhere('gu.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
 
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
@@ -89,5 +102,13 @@ class GroupRepository extends BaseRepository
             $query->andWhere('u.id NOT IN (:excludes)')->setParameter('excludes', $excludes);
         }
         return array_map(function ($user) { return $user['id']; }, $query->getQuery()->getResult());
+    }
+
+    public function remove($id)
+    {
+        return $this->createQueryBuilder('g')
+            ->delete('CMBundle:Group', 'g')
+            ->where('g.id = :id')->setParameter('id', $id)
+            ->getQuery()->execute();
     }
 }

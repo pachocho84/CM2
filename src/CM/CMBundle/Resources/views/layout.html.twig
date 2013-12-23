@@ -98,13 +98,13 @@
         {% set inAccountPage = inAccountPage|default(false) %}
         {# LEFT COLUMN #}
         {% if inAccountPage %}
-            <div class="col-md-4">
+            <div class="col-md-3">
                 {% block accountSidebar %}
                 {% endblock %}
             </div>
         {% endif %}
 
-        <div class="col-md-8">
+        <div class="col-md-{% if inAccountPage %}9{% else %}8{% endif %}">
             {# FLASH #}
             {% block body %}{% endblock %}
         </div>

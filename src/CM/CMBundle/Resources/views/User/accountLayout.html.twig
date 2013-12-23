@@ -17,10 +17,10 @@
             <a href="{{ path('user_tags_edit') }}"><span class="glyphicon glyphicon-tags"></span> {{ 'Tags' | trans }}</a>
         </li>
         <li{% if inGroupsPage is defined and inGroupsPage %} class="active"{% endif %}>
-            <a href="{{ path('user_image_edit') }}"><span class="glyphicons group"></span> {{ 'Groups' | trans }}</a>
+            <a href="{{ path('user_groups') }}"><span class="glyphicons group"></span> {{ 'Groups' | trans }}</a>
         </li>
         <li{% if inPagesPage is defined and inPagesPage %} class="active"{% endif %}>
-            <a href="{{ path('user_image_edit') }}"><span class="glyphicons bank"></span> {{ 'Pages' | trans }}</a>
+            <a href="{{ path('user_pages') }}"><span class="glyphicons bank"></span> {{ 'Pages' | trans }}</a>
         </li>
         <li{% if inImagesPage is defined and inImagesPage %} class="active"{% endif %}>
             <a href="{{ path('user_image_edit') }}"><span class="glyphicons book_open"></span> {{ 'Pages' | trans }}</a>

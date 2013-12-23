@@ -16,20 +16,33 @@ class PageRepository extends BaseRepository
     static protected function getOptions(array $options = array())
     {
         return array_merge(array(
+            'userId' => null,
+            'pageId' => null,
             'paginate' => true,
             'limit'    => 25,
         ), $options);
     }
 
-    public function getGroups($options = array())
+    public function getPages($options = array())
     {
         $options = self::getOptions($options);
 
         $query = $this->createQueryBuilder('p')
-            ->select('p, pu')
-            ->leftJoin('p.pageUsers', 'pu');
+            ->select('p, pu, i')
+            ->innerJoin('p.pageUsers', 'pu', '', '', 'pu.userId')
+            ->leftJoin('p.images', 'i');
 
-        return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+        if ($options['userId']) {
+            $query->andWhere('pu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('pu.status in (:status)')
+                ->setParameter('status', array(PageUser::STATUS_PENDING, PageUser::STATUS_ACTIVE, PageUser::STATUS_REQUESTED));
+        }
+
+        if ($options['pageId']) {
+            $query->andWhere('pu.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+        }
+
+        return $options['papinate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
     public function getAdmins($pageId)
@@ -89,5 +102,13 @@ class PageRepository extends BaseRepository
             $query->andWhere('u.id NOT IN (:excludes)')->setParameter('excludes', $excludes);
         }
         return array_map(function ($user) { return $user['id']; }, $query->getQuery()->getResult());
+    }
+
+    public function remove($id)
+    {
+        return $this->createQueryBuilder('p')
+            ->delete('CMBundle:Pape', 'p')
+            ->where('p.id = :id')->setParameter('id', $id)
+            ->petQuery()->execute();
     }
 }

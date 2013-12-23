@@ -1,0 +1,15 @@
+<form action="{{ path('page_change_join', {'pageId': page.id, 'userId': app.user.id, 'object': object}) }}" method="post" class="ajax-form-target">
+    {{ ('Join ' ~ object|lower)|trans }}:
+    <select name="join{{ object }}">
+        <option value="{{ constant('CM\\CMBundle\\Entity\\PageUser::JOIN_YES') }}"{% if attribute(page.pageUsers[app.user.id], 'join' ~ object) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_YES') %} selected{% endif %}>
+            {{ 'yes'|trans }}
+        </option>
+        <option value="{{ constant('CM\\CMBundle\\Entity\\PageUser::JOIN_NO') }}"{% if attribute(page.pageUsers[app.user.id], 'join' ~ object) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_NO') %} selected{% endif %}>
+            {{ 'no'|trans }}
+        </option>
+        <option value="{{ constant('CM\\CMBundle\\Entity\\PageUser::JOIN_REQUEST') }}"{% if attribute(page.pageUsers[app.user.id], 'join' ~ object) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_REQUEST') %} selected{% endif %}>
+            {{ 'request'|trans }}
+        </option>
+    </select>
+    <input type="submit" value="{{ 'change'|trans }}" class="btn btn-mini ajax-form" data-loading-text="Loading">
+</form>

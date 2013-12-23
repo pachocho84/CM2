@@ -108,19 +108,19 @@ trait ImageTrait
         return $this->imgFile;
     }
 
-    protected static function getUploadDir()
+    public static function getUploadDir()
     {
         // if you change this, change it also in the config.yml file!
         return 'uploads/images/';
     }
 
-    protected static function getImageDir()
+    public static function getImageDir()
     {
         // if you change this, change it also in the config.yml file!
         return self::getUploadDir().'full/';
     }
 
-    protected function getUploadRootDir()
+    public function getUploadRootDir()
     {
         // the absolute directory path where uploaded images should be saved
         return $this->getRootDir().$this->getImageDir();
