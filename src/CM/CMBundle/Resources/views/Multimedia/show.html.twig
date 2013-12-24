@@ -1,0 +1,90 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+
+    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id})) }}{% endif %}  
+
+    {{ include('CMBundle:User:top.html.twig', {'inPage': 'multimedia'}) }}
+
+
+    {#<ul class="breadcrumb">
+      <li><?php echo link_to('Home', '@homeuser') ?></li>
+      <li><?php echo link_to(__('Users'), '@user_list') ?></li>
+      <li class="active"><?php echo $user ?></li>
+    </ul>#}
+
+
+    <div class="box">
+
+        <div class="objects text-center ajax-link-target">
+
+
+
+            <div class="object">
+                {% if multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_YOUTUBE') %}
+                    <img width="100%" height="450px" src="http://img.youtube.com/vi/{{ multimedia.link }}/0.jpg" youtube-video-link="{{ multimedia.link }}" />
+                    {#<iframe width="100%" height="450px" src="//www.youtube.com/embed/{{ multimedia.link }}" frameborder="0" allowfullscreen></iframe>#}
+                {% elseif multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_VIMEO') %}
+                    <iframe src="//player.vimeo.com/video/{{ multimedia.link }}?color=040505" width="100%" height="450px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                {% elseif multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_SOUNDCLOUD') %}
+                    <iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{{ multimedia.link }}&amp;color=000000&amp;auto_play=false&amp;show_artwork=true"></iframe>
+                {% endif %}
+            </div>
+
+
+            <div class="object">
+                <h3>{{ multimedia.getTitle }}</h3>
+                <p>{{ multimedia.getText|simple_format_text|raw }}</p>
+            </div>
+
+            
+            <div class="row-fluid object text-left">
+
+                <div class="col-lg-7">
+                    <div class="media">
+                        {{ show_img_box(multimedia.post.publisher.img|imagine_filter('50'), {'width': 32, 'height': 32, 'offset': multimedia.post.publisher.imgOffset, 'link': path(multimedia.post.publisherRoute ~ '_show', {'slug': multimedia.post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}}) | raw }}
+                        <div class="media-body">
+                            <h4><a href="{{ path(multimedia.post.publisherRoute ~ '_show', {'slug': multimedia.post.publisher.slug}) }}">{{ multimedia.post.publisher }}</a></h4>
+                            
+                            {{ include('CMBundle::social.html.twig', {'post': multimedia.post}) }} 
+                        
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-5">
+                    <ul class="nav nav-list">
+                        {#<li><?php echo link_to('<i class="glyphicon glyphicon-picture"></i> '.__('Album').': '.__($multimedia->getEntity()), $multimedia->getRawValue()->getEntity()->getLinkShow('image_album')) ?></li>
+                        <li><a href="/uploads/images/full/<?php echo $multimedia->getImg() ?>" target="_blank"><i class="glyphicon glyphicon-fullscreen"></i> <?php echo __('High resolution') ?></a></li>
+                        
+                        <?php if ($sf_user->canManage($multimedia)): ?>
+                            <li class="divider"></li>
+                            <li><?php echo link_to('<i class="glyphicon glyphicon-pencil"></i> '.__('Edit'), '@image_album_edit?id='.$multimedia->getEntityId()) ?></li>
+                            <li><?php delete_link('@image_delete?id='.$multimedia->getId(), 'multimedia') ?></li>
+                        <li class="divider"></li>
+                        <li><?php echo link_to('<i class="glyphicon-albums"></i> '.__('Make album cover'), 'multimedia/makeCover?id='.$multimedia->getId()) ?></li>
+                        <li><?php echo link_to('<i class="glyphicon glyphicon-user"></i> '.__('Make profile picture'), 'multimedia/makeProfilePicture?id='.$multimedia->getId()) ?></li>
+                        <li><?php echo link_to('<i class="glyphicon-macbook"></i> '.__('Make cover picture'), 'multimedia/makeCoverPicture?id='.$multimedia->getId()) ?></li>
+                        <li class="divider"></li>
+                        <li><?php echo link_to('<i class="glyphicon-unshare"></i> '.__('Rotate left'), 'multimedia/rotate?direction=anticlockwise&id='.$multimedia->getId()) ?></li>
+                        <li><?php echo link_to('<i class="glyphicon glyphicon-share-alt"></i> '.__('Rotate right'), 'multimedia/rotate?direction=clockwise&id='.$multimedia->getId()) ?></li>
+
+                        <?php endif ?>#}
+                    </ul>
+                </div>
+
+            </div>
+
+
+
+        </div>
+        
+    </div>
+    
+
+    {#<?php slot('sidebar_slot3') ?>  
+        <?php include_component('fan', 'userFans', array('user' => $user)) ?>
+    <?php end_slot() ?>#}
+
+{% endblock %}

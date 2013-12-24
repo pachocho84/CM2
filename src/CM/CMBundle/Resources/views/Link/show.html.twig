@@ -1,0 +1,83 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+
+    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id})) }}{% endif %}  
+
+    {{ include('CMBundle:User:top.html.twig', {'inPage': 'link'}) }}
+
+
+    {#<ul class="breadcrumb">
+      <li><?php echo link_to('Home', '@homeuser') ?></li>
+      <li><?php echo link_to(__('Users'), '@user_list') ?></li>
+      <li class="active"><?php echo $user ?></li>
+    </ul>#}
+
+
+    <div class="box">
+
+        <div class="objects text-center ajax-link-target">
+
+
+
+            <div class="object">
+                {{ link.url }}
+            </div>
+
+
+            <div class="object">
+                <h3>{{ link.getTitle }}</h3>
+                <p>{{ link.getText|simple_format_text|raw }}</p>
+            </div>
+
+            
+            <div class="row-fluid object text-left">
+
+                <div class="col-lg-7">
+                    <div class="media">
+                        {{ show_img_box(link.post.publisher.img|imagine_filter('50'), {'width': 32, 'height': 32, 'offset': link.post.publisher.imgOffset, 'link': path(link.post.publisherRoute ~ '_show', {'slug': link.post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}}) | raw }}
+                        <div class="media-body">
+                            <h4><a href="{{ path(link.post.publisherRoute ~ '_show', {'slug': link.post.publisher.slug}) }}">{{ link.post.publisher }}</a></h4>
+                            
+                            {{ include('CMBundle::social.html.twig', {'post': link.post}) }} 
+                        
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-5">
+                    <ul class="nav nav-list">
+                        {#<li><?php echo link_to('<i class="glyphicon glyphicon-picture"></i> '.__('Album').': '.__($link->getEntity()), $link->getRawValue()->getEntity()->getLinkShow('image_album')) ?></li>
+                        <li><a href="/uploads/images/full/<?php echo $link->getImg() ?>" target="_blank"><i class="glyphicon glyphicon-fullscreen"></i> <?php echo __('High resolution') ?></a></li>
+                        
+                        <?php if ($sf_user->canManage($link)): ?>
+                            <li class="divider"></li>
+                            <li><?php echo link_to('<i class="glyphicon glyphicon-pencil"></i> '.__('Edit'), '@image_album_edit?id='.$link->getEntityId()) ?></li>
+                            <li><?php delete_link('@image_delete?id='.$link->getId(), 'link') ?></li>
+                        <li class="divider"></li>
+                        <li><?php echo link_to('<i class="glyphicon-albums"></i> '.__('Make album cover'), 'link/makeCover?id='.$link->getId()) ?></li>
+                        <li><?php echo link_to('<i class="glyphicon glyphicon-user"></i> '.__('Make profile picture'), 'link/makeProfilePicture?id='.$link->getId()) ?></li>
+                        <li><?php echo link_to('<i class="glyphicon-macbook"></i> '.__('Make cover picture'), 'link/makeCoverPicture?id='.$link->getId()) ?></li>
+                        <li class="divider"></li>
+                        <li><?php echo link_to('<i class="glyphicon-unshare"></i> '.__('Rotate left'), 'link/rotate?direction=anticlockwise&id='.$link->getId()) ?></li>
+                        <li><?php echo link_to('<i class="glyphicon glyphicon-share-alt"></i> '.__('Rotate right'), 'link/rotate?direction=clockwise&id='.$link->getId()) ?></li>
+
+                        <?php endif ?>#}
+                    </ul>
+                </div>
+
+            </div>
+
+
+
+        </div>
+        
+    </div>
+    
+
+    {#<?php slot('sidebar_slot3') ?>  
+        <?php include_component('fan', 'userFans', array('user' => $user)) ?>
+    <?php end_slot() ?>#}
+
+{% endblock %}

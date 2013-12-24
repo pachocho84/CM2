@@ -16,12 +16,14 @@
 
     <div class="box">
 
-        {{ include('CMBundle:Multimedia:multimedia.html.twig') }}
+        {% if is_granted('ROLE_CLIENT') and app.user.id == user.id %}<a href="{{ path('imagealbum_new') }}">{{ 'Add a new multimidia'|trans }}</a>{% endif %}
+
+        {{ include('CMBundle:Multimedia:objects.html.twig') }}
     </div>
     
 
     {#<?php slot('sidebar_slot3') ?>  
         <?php include_component('fan', 'userFans', array('user' => $user)) ?>
     <?php end_slot() ?>#}
-
+  
 {% endblock %}

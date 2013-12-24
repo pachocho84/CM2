@@ -254,7 +254,7 @@ class PageController extends Controller
      * @Route("/{slug}/multimedia/{pageNum}", name="page_multimedia")
      * @Template
      */
-    public function multimediaAction(Request $request, $slug, $pageNum = 1)
+    public function multimediasAction(Request $request, $slug, $pageNum = 1)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -264,27 +264,27 @@ class PageController extends Controller
             throw new NotFoundHttpException('Page not found.');
         }
         
-        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimediaList(array('pageId' => $page->getId()));
-        $pagination = $this->get('knp_paginator')->paginate($multimedia, $pageNum, 10);
+        $multimedias = $em->getRepository('CMBundle:Multimedia')->getMultimedias(array('pageId' => $page->getId()));
+        $pagination = $this->get('knp_paginator')->paginate($multimedias, $pageNum, 10);
 
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:Multimedia:multimediaList.html.twig', array(
                 'page' => $page,
-                'multimediaList' => $pagination
+                'multimedias' => $pagination
             ));
         }
 
         return array(
             'page' => $page,
-            'multimediaList' => $pagination
+            'multimedias' => $pagination
         );
     }
 
     /**
-     * @Route("/{slug}/multimedia/{id}/show", name="page_multimedia_show", requirements={"pageNum" = "\d+"})
+     * @Route("/{slug}/links/{pageNum}", name="page_link")
      * @Template
      */
-    public function multimediaShowAction($slug, $id)
+    public function linksAction(Request $request, $slug, $pageNum = 1)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -294,15 +294,19 @@ class PageController extends Controller
             throw new NotFoundHttpException('Page not found.');
         }
         
-        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimedia($id, array('pageId' => $page->getId()));
+        $links = $em->getRepository('CMBundle:Link')->getLinks(array('pageId' => $page->getId()));
+        $pagination = $this->get('knp_paginator')->paginate($links, $pageNum, 10);
 
-        if (!$multimedia) {
-            throw new NotFoundHttpException('Multimedia not found.');
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Link:linkList.html.twig', array(
+                'page' => $page,
+                'links' => $pagination
+            ));
         }
 
         return array(
             'page' => $page,
-            'multimedia' => $multimedia
+            'links' => $pagination
         );
     }
     

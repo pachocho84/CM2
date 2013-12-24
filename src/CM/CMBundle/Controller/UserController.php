@@ -248,7 +248,7 @@ class UserController extends Controller
      * @Route("/{slug}/multimedia/{page}", name="user_multimedia")
      * @Template
      */
-    public function multimediaAction(Request $request, $slug, $page = 1)
+    public function multimediasAction(Request $request, $slug, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -258,27 +258,27 @@ class UserController extends Controller
             throw new NotFoundHttpException('User not found.');
         }
         
-        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimediaList(array('userId' => $user->getId()));
-        $pagination = $this->get('knp_paginator')->paginate($multimedia, $page, 10);
+        $multimedias = $em->getRepository('CMBundle:Multimedia')->getMultimedias(array('userId' => $user->getId()));
+        $pagination = $this->get('knp_paginator')->paginate($multimedias, $page, 10);
 
         if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Multimedia:multimediaList.html.twig', array(
+            return $this->render('CMBundle:Multimedia:multimedias.html.twig', array(
                 'user' => $user,
-                'multimediaList' => $pagination
+                'multimedias' => $pagination
             ));
         }
 
         return array(
             'user' => $user,
-            'multimediaList' => $pagination
+            'multimedias' => $pagination
         );
     }
 
     /**
-     * @Route("/{slug}/multimedia/{id}/show", name="user_multimedia_show", requirements={"page" = "\d+"})
+     * @Route("/{slug}/link/{page}", name="user_link")
      * @Template
      */
-    public function multimediaShowAction($slug, $id)
+    public function linksAction(Request $request, $slug, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -288,15 +288,19 @@ class UserController extends Controller
             throw new NotFoundHttpException('User not found.');
         }
         
-        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimedia($id, array('userId' => $user->getId()));
+        $links = $em->getRepository('CMBundle:Link')->getLinks(array('userId' => $user->getId()));
+        $pagination = $this->get('knp_paginator')->paginate($links, $page, 10);
 
-        if (!$multimedia) {
-            throw new NotFoundHttpException('Multimedia not found.');
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Link:links.html.twig', array(
+                'user' => $user,
+                'links' => $pagination
+            ));
         }
 
         return array(
             'user' => $user,
-            'multimedia' => $multimedia
+            'links' => $pagination
         );
     }
 

@@ -10,7 +10,7 @@ use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Form\DataTransformer\ArrayCollectionToEntityTransformer;
 
-class MultimediaType extends AbstractType
+class LinkType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -18,7 +18,7 @@ class MultimediaType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('link');
+        $builder->add('url');
     }
     
     /**
@@ -27,8 +27,8 @@ class MultimediaType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'CM\CMBundle\Entity\Multimedia',
-            'groups' => array('Multimedia', 'Default'),
+            'data_class' => 'CM\CMBundle\Entity\Link',
+            'groups' => array('Link', 'Default'),
         	'em' => null,
             'roles' => array(),
         ));
@@ -39,6 +39,6 @@ class MultimediaType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_multimedia';
+        return 'cm_cmbundle_link';
     }
 }

@@ -135,40 +135,6 @@ class RequestController extends Controller
 
                 $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('entity' => $request->getEntity(), 'request' => $request));
                 break;
-            case 'Multimedia':
-                if (count($em->getRepository('CMBundle:EntityUser')->findBy(array('entityId' => $objectId, 'userId' => $userId))) > 0) {
-                     throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-                }
-
-                $multimedia = $em->getRepository('CMBundle:Multimedia')->findOneById($objectId);
-                if ($userId != $this->getUser()->getId()) {
-                    if (!$this->get('cm.user_authentication')->canManage($multimedia)) {
-                        throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-                    }
-
-                    $user = $em->getRepository('CMBundle:User')->findOneById($userId);
-                    if (!$user) {
-                        throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
-                    }
-                    $status = EntityUser::STATUS_PENDING;
-                } else {
-                    $user = $this->getUser();
-                    $status = EntityUser::STATUS_REQUESTED;
-                }
-
-                $multimedia->addUser(
-                    $user,
-                    false, // admin
-                    $status
-                );
-                $em->persist($multimedia);
-
-                $em->flush();
-
-                $request = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($user->getId(), 'any', array('entityId' => $multimedia->getId()));
-
-                $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('entity' => $request->getEntity(), 'request' => $request));
-                break;
             case 'Article':
                 if (count($em->getRepository('CMBundle:EntityUser')->findBy(array('entityId' => $objectId, 'userId' => $userId))) > 0) {
                      throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));

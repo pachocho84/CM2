@@ -42,7 +42,7 @@ class Like
     private $image;
 
     /**
-     * @ORM\Column(name="user_id", type="integer", nullable=true)
+     * @ORM\Column(name="user_id", type="integer", nullable=false)
      **/
     private $userId;
 

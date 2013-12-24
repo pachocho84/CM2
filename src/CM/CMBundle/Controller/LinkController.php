@@ -15,42 +15,42 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Process\Exception\RuntimeException;
 use JMS\SecurityExtraBundle\Annotation as JMS;
-use CM\CMBundle\Entity\Multimedia;
+use CM\CMBundle\Entity\Link;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\Post;
-use CM\CMBundle\Form\MultimediaType;
+use CM\CMBundle\Form\LinkType;
 
 /**
- * @Route("/multimedia")
+ * @Route("/links")
  */
-class MultimediaController extends Controller
+class LinkController extends Controller
 {
     /**
-     * @Route("/{page}", name="multimedia_index", requirements={"page" = "\d+"})
+     * @Route("/{page}", name="link_index", requirements={"page" = "\d+"})
      * @Template
      */
     public function indexAction(Request $request, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
         
-        $multimedias = $em->getRepository('CMBundle:Multimedia')->getMultimedias();
-        $pagination = $this->get('knp_paginator')->paginate($multimedias, $page, 10);
+        $links = $em->getRepository('CMBundle:Link')->getLinks();
+        $pagination = $this->get('knp_paginator')->paginate($links, $page, 10);
 
         if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Multimedia:objects.html.twig', array(
+            return $this->render('CMBundle:Link:objects.html.twig', array(
                 'group' => $group,
-                'multimedias' => $pagination
+                'links' => $pagination
             ));
         }
 
         return array(
-            'multimedias' => $pagination
+            'links' => $pagination
         );
     }
 
     /**
-     * @Route("/new/{object}/{objectId}", name="multimedia_new", requirements={"objectId" = "\d+"})
-     * @Route("/{id}/{slug}/edit", name="multimedia_edit", requirements={"id" = "\d+"})
+     * @Route("/new/{object}/{objectId}", name="link_new", requirements={"objectId" = "\d+"})
+     * @Route("/{id}/{slug}/edit", name="link_edit", requirements={"id" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
@@ -82,28 +82,28 @@ class MultimediaController extends Controller
         }
         
         if (is_null($id)) {
-            $multimedia = new Multimedia;
+            $link = new Link;
 
             $post = $this->get('cm.post_center')->newPost(
                 $user,
                 $user,
                 Post::TYPE_CREATION,
-                get_class($multimedia),
+                get_class($link),
                 array(),
-                $multimedia,
+                $link,
                 $page,
                 $group
             );
 
-            $multimedia->addPost($post);
+            $link->addPost($post);
         } else {
-            $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimedia($id, array('locale' => $request->getLocale()));
-            if (!$this->get('cm.user_authentication')->canManage($multimedia)) {
+            $link = $em->getRepository('CMBundle:Link')->getLink($id, array('locale' => $request->getLocale()));
+            if (!$this->get('cm.user_authentication')->canManage($link)) {
                 throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }
         }
  
-        $form = $this->createForm(new MultimediaType, $multimedia, array(
+        $form = $this->createForm(new LinkType, $link, array(
             'cascade_validation' => true,
             'error_bubbling' => false,
             'em' => $em,
@@ -114,49 +114,49 @@ class MultimediaController extends Controller
 
         if ($form->isValid()) {
 
-            switch (substr(preg_split('/(www|m)\./', parse_url($multimedia->getLink(), PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
+            switch (substr(preg_split('/(www|m)\./', parse_url($link->getLink(), PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
                 case 'yout':
-                    $info = json_decode(file_get_contents($request->getScheme().'://www.youtube.com/oembed?format=json&url='.urlencode($multimedia->getLink())));
-                    $multimedia->setType(Multimedia::TYPE_YOUTUBE)
+                    $info = json_decode(file_get_contents($request->getScheme().'://www.youtube.com/oembed?format=json&url='.urlencode($link->getLink())));
+                    $link->setType(Link::TYPE_YOUTUBE)
                         ->setLink(preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info->html));
-                    $info = json_decode(file_get_contents($request->getScheme().'://gdata.youtube.com/feeds/api/videos/'.$multimedia->getLink().'?v=2&alt=jsonc'))->data;
+                    $info = json_decode(file_get_contents($request->getScheme().'://gdata.youtube.com/feeds/api/videos/'.$link->getLink().'?v=2&alt=jsonc'))->data;
                     break;
                 case 'vime':
-                    $info = json_decode(file_get_contents($request->getScheme().'://vimeo.com/api/oembed.json?url='.urlencode($multimedia->getLink())));
-                    $multimedia->setType(Multimedia::TYPE_VIMEO)
+                    $info = json_decode(file_get_contents($request->getScheme().'://vimeo.com/api/oembed.json?url='.urlencode($link->getLink())));
+                    $link->setType(Link::TYPE_VIMEO)
                         ->setLink($info->video_id);
                     break;
                 case 'soun':
-                    $info = json_decode(file_get_contents($request->getScheme().'://soundcloud.com/oembed.json?url='.urlencode($multimedia->getLink())));
-                    $multimedia->setType(Multimedia::TYPE_SOUNDCLOUD)
+                    $info = json_decode(file_get_contents($request->getScheme().'://soundcloud.com/oembed.json?url='.urlencode($link->getLink())));
+                    $link->setType(Link::TYPE_SOUNDCLOUD)
                         ->setLink(preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info->html));
                     break;
             }
 
-            $multimedia->setTitle($info->title)
+            $link->setTitle($info->title)
                 ->setText($info->description);
 
-            $em->persist($multimedia);
+            $em->persist($link);
 
             $em->flush();
 
-            return new RedirectResponse($this->generateUrl($multimedia->getPost()->getPublisherRoute().'_multimedia_show', array('id' => $multimedia->getId(), 'slug' => $multimedia->getPost()->getPublisher()->getSlug())));
+            return new RedirectResponse($this->generateUrl($link->getPost()->getPublisherRoute().'_link_show', array('id' => $link->getId(), 'slug' => $link->getPost()->getPublisher()->getSlug())));
         }
 
         $users = array();
-        foreach ($multimedia->getEntityUsers() as $entityUser) {
+        foreach ($link->getEntityUsers() as $entityUser) {
             $users[] = $entityUser->getUser();
         }
         
         return array(
             'form' => $form->createView(),
-            'entity' => $multimedia,
+            'entity' => $link,
             'joinEntityType' => 'joinalbum'
         );
     }
     
     /**
-     * @Route("/{id}/{slug}", name="multimedia_show", requirements={"id" = "\d+"})
+     * @Route("/{id}/{slug}", name="link_show", requirements={"id" = "\d+"})
      * @Template
      */
     public function showAction(Request $request, $id, $slug)
@@ -164,17 +164,17 @@ class MultimediaController extends Controller
         $em = $this->getDoctrine()->getManager();
             
         // if ($request->isXmlHttpRequest()) {
-        //     $date = $em->getRepository('CMBundle:Multimedia')->getDate($id, array('locale' => $request->getLocale()));
-        //     return $this->render('CMBundle:Multimedia:object.html.twig', array('date' => $date));
+        //     $date = $em->getRepository('CMBundle:Link')->getDate($id, array('locale' => $request->getLocale()));
+        //     return $this->render('CMBundle:Link:object.html.twig', array('date' => $date));
         // }
         
-        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimedia($id, array('locale' => $request->getLocale()));
+        $link = $em->getRepository('CMBundle:Link')->getLink($id, array('locale' => $request->getLocale()));
         $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
         
         if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Multimedia:object.html.twig', array('multimedia' => $multimedia));
+            return $this->render('CMBundle:Link:object.html.twig', array('link' => $link));
         }
         
-        return array('multimedia' => $multimedia);
+        return array('link' => $link);
     }
 }

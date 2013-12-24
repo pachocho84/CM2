@@ -1,1 +1,17 @@
-asd
+<div class="media">
+
+    {% if post.entity.images|length > 0 %}
+        {{ show_img_box(post.entity.images[0].img|imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #}
+    {% endif %}
+
+    <div class="media-body">
+    
+        <h4><a href="{{ path('article_show', {'id': post.entity.id, 'slug': post.entity.getSlug}) }}">{{ post.entity }}</a></h4>
+        
+        <p class="text-muted">{#<?php //include_component('protagonist', 'protagonists', array('post' => $post)) ?>#}/p>
+
+        {{ entity_short_text(post.entity)|raw }}
+
+    </div><!-- END Media Body -->
+
+</div><!-- END Object -->

@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Article
  *
- * @ORM\Table()
  * @ORM\Entity(repositoryClass="CM\CMBundle\Entity\ArticleRepository")
+ * @ORM\Table(name="article")
  */
 class Article extends Entity
 {

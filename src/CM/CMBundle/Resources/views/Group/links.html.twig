@@ -2,7 +2,7 @@
 
 {% block body %}
 
-    {{ include('CMBundle:Group:top.html.twig', {'inPage': 'multimedia'}) }}
+    {{ include('CMBundle:Group:top.html.twig', {'inPage': 'link'}) }}
 
 
     {#<ul class="breadcrumb">
@@ -14,9 +14,9 @@
 
     <div class="box">
 
-        {% if is_admin(group) %}<a href="{{ path('imagealbum_new', {'object': group|class_name, 'objectId': group.id}) }}">{{ 'Add a new multimidia'|trans }}</a>{% endif %}
+        {% if is_admin(group) %}<a href="{{ path('link_new', {'object': group|class_name, 'objectId': group.id}) }}">{{ 'Add a new link'|trans }}</a>{% endif %}
 
-        {{ include('CMBundle:Multimedia:objects.html.twig', {'link': 'group_multimedia_show', 'publisher': group}) }}
+        {{ include('CMBundle:Link:objects.html.twig') }}
     </div>
     
 

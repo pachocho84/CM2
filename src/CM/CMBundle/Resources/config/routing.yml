@@ -50,6 +50,10 @@ cm_cmbundle_article:
     resource: "CM\\CMBundle\\Controller\\ArticleController"
     type:     annotation
 
+cm_cmbundle_link:
+    resource: "CM\\CMBundle\\Controller\\LinkController"
+    type:     annotation
+
 cm_cmbundle_entityuser:
     resource: "CM\\CMBundle\\Controller\\EntityUserController"
     type:     annotation

@@ -522,7 +522,7 @@ class CMExtension extends \Twig_Extension
                         '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                     ));
                 } elseif ($post->getEntity() instanceof Multimedia) {
-                    $objectLink = $this->router->generate($post->getPublisherRoute().'_multimedia_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
+                    $objectLink = $this->router->generate('multimedia_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
                     $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
                     if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
                         $publisher = $this->translator->trans($post->getPublisherSex('his'));
@@ -599,7 +599,7 @@ class CMExtension extends \Twig_Extension
                     '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>'
                 ));
             case 'Multimedia_'.Post::TYPE_CREATION:
-                $multimediaLink = $this->router->generate($post->getPublisherRoute().'_multimedia_show', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
+                $multimediaLink = $this->router->generate('multimedia_show', array('id' => $post->getEntityId(), 'slug' => $post->getEntity()->getSlug()));
                 return $this->translator->trans('%user% added a new %albumLinkStart%'.$post->getEntity()->typeString().'%albumLinkEnd%.', array(
                     '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                     '%albumLinkStart%' => '<a href="'.$multimediaLink.'">', '%albumLinkEnd%' => '</a>'
