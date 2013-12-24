@@ -5,6 +5,7 @@ namespace CM\CMBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -31,7 +32,7 @@ class PageController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $pages = $em->getRepository('CMBundle:Page')->getGroups();
+        $pages = $em->getRepository('CMBundle:Page')->getPages();
         $pagination = $this->get('knp_paginator')->paginate($pages, $page, 15);
 
         return array('pages' => $pagination);

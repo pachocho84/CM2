@@ -115,9 +115,6 @@ a:hover {
   right: 13px;
   left: auto;
 }
-.form-horizontal span+.help-block {
-    margin-top: 10px;
-}
 .well {
     margin-bottom: 0;
     -webkit-border-radius: 2px;
@@ -414,7 +411,12 @@ form ul li.object:first-child
 form.form-compact .form-control
 {
     margin-bottom: 0px;
-}  
+} 
+form.form-horizontal textarea {
+    height: 150px;
+    min-height: 150px;
+    max-width: 100%;
+}
 
 
 

@@ -30,7 +30,7 @@
         {% elseif not newEntry %}
             {% if entityUser.status == 0 %} {# pending #}
                 {% set requestText = ('%user% has not accepted the request yet.'|trans({'%user%': user})) %}
-                {% set alertClass = '' %}
+                {% set alertClass = 'alert-warning' %}
             {% elseif entityUser.status == 1 and user.id == app.security.token.user.id %} {# active #}
                 {% set requestText = ('This element appears on your profile.'|trans) %}
                 {% set alertClass = 'alert-success' %}

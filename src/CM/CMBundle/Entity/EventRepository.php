@@ -20,7 +20,8 @@ class EventRepository extends BaseRepository
             'group_id'      => null,
             'page_id'       => null,
             'archive'       => null, 
-            'category_id'   => null, 
+            'category_id'   => null,
+            'currentUserId' => null,
             'paginate'      => true,
             'locale'        => 'en',
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
@@ -44,12 +45,14 @@ class EventRepository extends BaseRepository
             ->join('e.posts', 'p');
                     
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('d, e, t, i, p, l, c, u, lu, cu, pg, gr'.($options['protagonists'] ? ', eu, us' : ''))
+            ->select('d, e, t, i, p, l, c, u, lu, cu, pg, gr')
             ->from('CMBundle:EventDate','d')
             ->join('d.event', 'e')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
             ->innerJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
+            ->leftJoin('e.entityUsers', 'eu', '', '', 'eu.userId')
+            ->leftJoin('eu.user', 'us')
             ->leftJoin('p.likes', 'l')
             ->leftJoin('p.comments', 'c')
             ->leftJoin('p.user', 'u')
@@ -60,8 +63,7 @@ class EventRepository extends BaseRepository
             ->where('t.locale in (:locales)');
             
         if ($options['protagonists']) {
-            $query->leftJoin('e.entityUsers', 'eu', 'eu.userId')
-                ->leftJoin('eu.user', 'us');
+            $query->addSelect('eu, us');
         }
         
         if ($options['user_id']) {
@@ -189,7 +191,7 @@ class EventRepository extends BaseRepository
         
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('s, e, d, t, i')
-            ->from('CMBundle:Sponsored','s')
+            ->from('CMBundle:Sponsored', 's')
             ->join('s.event', 'e')
             ->leftJoin('e.eventDates', 'd')
             ->leftJoin('e.translations', 't')
