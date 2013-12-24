@@ -14,13 +14,12 @@ $(function() {
             }
         },
     });
-    $(document).on('typeahead:autocompleted typeahead:selected', function (event, datum) {
-        typeahead = $(event.currentTarget).find('.protagonist_typeahead');
+    $(document).on('typeahead:autocompleted typeahead:selected', '.protagonist_typeahead', function (event, datum) {
         protagonist_new_id += 1;
-        if (typeahead.is('[typeahead-callback]')) {
-            target = typeahead.attr('typeahead-callback');
+        if ($(event.currentTarget).is('[typeahead-callback]')) {
+            target = $(event.currentTarget).attr('typeahead-callback');
         } else {
-            target = typeahead.find('li[typeahead-callback]').attr('typeahead-callback');
+            target = $(event.currentTarget).find('li[typeahead-callback]').attr('typeahead-callback');
         }
         target = target.replace(/USER_ID/, datum.id).replace(/NEW_ID/, protagonist_new_id).replace(/ENTITY_TYPE/, $('#protagonists').attr('object'));
         $.get(target, function (data) {
@@ -212,22 +211,122 @@ $(function() {
     
     /* AUTOCOMPLETE */
 
-    // City autocomplete
+    // Places autocomplete
+    function initialize(index) {
+        canvas = $('[gmap-canvas]').get(index);
+        input = $(canvas).parent().parent().find('[places-autocomplete]').get(0);
 
-    $('[autocomplete-city]').typeahead({
-        name: 'cities',
-        minLength: 3,
-        template: '<div>{{ value }}</div>',
+        var mapOptions = {
+            center: new google.maps.LatLng(45.4654542, 9.186515999999999),
+            zoom: 7
+        };
+        var map = new google.maps.Map(canvas,
+            mapOptions);
+
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.bindTo('bounds', map);
+
+        var infowindow = new google.maps.InfoWindow();
+        var marker = new google.maps.Marker({
+            map: map
+        });
+
+        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+            infowindow.close();
+            marker.setVisible(false);
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                return;
+            }
+
+            // If the place has a geometry, then present it on a map.
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);  // Why 17? Because it looks good.
+            }
+            marker.setIcon(/** @type {google.maps.Icon} */({
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(35, 35)
+            }));
+            marker.setPosition(place.geometry.location);
+            marker.setVisible(true);
+
+            var address = '';
+            if (place.address_components) {
+                address = [
+                    (place.address_components[0] && place.address_components[0].short_name || ''),
+                    (place.address_components[1] && place.address_components[1].short_name || ''),
+                    (place.address_components[2] && place.address_components[2].short_name || '')
+                ].join(' ');
+            }
+
+            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+            infowindow.open(map, marker);
+        });
+    }
+    
+    $('[gmap-canvas]').each(function(i) {
+        google.maps.event.addDomListener(window, 'load', initialize(i));
+    });
+    $(document).on('collection-added', function(event) {
+        google.maps.event.addDomListener(window, 'load', initialize(-1));
+    });
+
+    $(document).on('keydown', '[gmap-canvas]', function(event) {
+        if (event.which == 13) {
+            event.preventDefault();
+        }
+    });
+
+    // Address autocomplete
+    $('[address-autocomplete]').typeahead({
+        name: 'address',
+        // minLength: 3,
+        valueKey: 'val',
+        template: '<div>{{ val }}</div>',
         engine: Hogan,
         remote: {
-            url: 'http://ws.geonames.org/searchJSON?featureClass=P&style=full&username=circuitomusica&maxRows=8&lang=en&name_startsWith=%QUERY&type=json',
+            url: 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&culture=' + culture + '&address=%QUERY',
+            replace: function (url, uriEncodedQuery) {
+                return url.replace('%QUERY', uriEncodedQuery);
+            },
             filter: function(data) {
-                return $.map(data.geonames, function(city) {
-                    return city.name + (city.adminName1 ? ", " + city.adminName1 : "") + ", " + city.countryName;
-                });
+                if (data.status == 'OK') {
+                    return $.map(data.results, function(address) {
+                        value = new Object();
+                        value.val = address.formatted_address;
+                        value.coords = address.geometry.location.lat + ',' + address.geometry.location.lng;
+                        return value;
+                    });
+                }
             }
         }
     });
+    $(document).on('typeahead:autocompleted typeahead:selected', '.event_date', function (event, datum) {
+        $(event.currentTarget).find('[address-coordinates]').val(datum.coords);
+    });
+
+    // // City autocomplete
+    // $('[autocomplete-city]').typeahead({
+    //     name: 'cities',
+    //     minLength: 3,
+    //     template: '<div>{{ value.dir }}</div>',
+    //     engine: Hogan,
+    //     remote: {
+    //         url: 'http://ws.geonames.org/searchJSON?featureClass=P&style=full&username=circuitomusica&maxRows=8&lang=en&name_startsWith=%QUERY&type=json',
+    //         filter: function(data) {
+    //             data = $.map(data.geonames, function(city) {
+    //                 return valcity.name + (city.adminName1 ? ", " + city.adminName1 : "") + ", " + city.countryName;
+    //             });
+    //             return data;
+    //         }
+    //     }
+    // });
 
     // $('form').on('click', '[autocomplete-city]', function() {
     //     console.log(666);
@@ -324,29 +423,6 @@ $(function() {
     //     });
     // }
      
-//     // Address autocomplete
-    $('[address-autocomplete]').typeahead({
-        name: 'address',
-        // minLength: 3,
-        template: '<div>{{ value }}</div>',
-        engine: Hogan,
-        remote: {
-            url: 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&culture=' + culture + '&address=%QUERY',
-            replace: function (url, uriEncodedQuery) {
-                return url.replace('%QUERY', uriEncodedQuery);
-            },
-            filter: function(data) {
-                if (data.status == 'OK') {
-                    return $.map(data.results, function(address) {
-                        return address.formatted_address;
-                    });
-                }
-            }
-        }
-    });
-    $('[address-autocomplete]').on('typeahead:autocompleted typeahead:selected', function (event, datum) {
-        
-    });
 //     $('form ul').on('focus', 'input[address-autocomplete]', function() {
 //         input = this;
 //         found = false;

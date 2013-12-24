@@ -1,0 +1,11 @@
+<ul class="nav">
+    <li{% if inImagesPage is defined and inImagesPage %} class="active"{% endif %}>
+        <a href="{{ path(publisherType ~ '_images', {'slug': publisher.slug}) }}">{{ 'Images'|trans }} ({{ count.images }})</a>
+    </li>
+    <li{% if inAlbumsPage is defined and inAlbumsPage %} class="active"{% endif %}>
+        <a href="{{ path(publisherType ~ '_albums', {'slug': publisher.slug}) }}">{{ 'Albums'|trans }} ({{ count.albums }})</a>
+    </li>
+    <li{% if inEntitiesPage is defined and inEntitiesPage %} class="active"{% endif %}>
+        <a href="{{ path(publisherType ~ '_entities_albums', {'slug': publisher.slug}) }}">{{ 'Entities images'|trans }} ({{ count.entities }})</a>
+    </li>
+</ul>

@@ -2,6 +2,9 @@
 
 {% block body %}
 
+    {{ include('CMBundle:Page:top.html.twig', {'inPage': 'link'}) }}
+
+
     {#<ul class="breadcrumb">
       <li><?php echo link_to('Home', '@homepage') ?></li>
       <li><?php echo link_to(__('Users'), '@page_list') ?></li>
@@ -11,9 +14,9 @@
 
     <div class="box">
 
-        <ul class="media-list objects">
-            {{ include('CMBundle:Multimedia:multimediaList.html.twig') }}
-        </ul>
+        {% if is_admin(page) %}<a href="{{ path('link_new', {'object': page|class_name, 'objectId': page.id}) }}">{{ 'Add a new link'|trans }}</a>{% endif %}
+
+        {{ include('CMBundle:Link:objects.html.twig') }}
     </div>
     
 

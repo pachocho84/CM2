@@ -195,7 +195,7 @@ class EventController extends Controller
     }
     
     /**
-     * @Route("/new", name="event_new") 
+     * @Route("/new", name="event_new")
      * @Route("/{id}/{slug}/edit", name="event_edit", requirements={"id" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template

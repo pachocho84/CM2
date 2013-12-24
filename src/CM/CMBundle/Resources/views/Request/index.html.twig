@@ -2,7 +2,7 @@
 
 {% block body %}
     <h2>
-        {#<?php echo image_tag('/images/glyphicons/globe') ?>
+        {{ show_icon('Globe')|raw }}
         <?php echo $sf_response->getTitle() ?>#}
     </h2>                                                                    
     
@@ -16,8 +16,8 @@
     <div class="objects-container">
         
         <ul class="nav nav-tabs">
-          <li class="active"><a href="#incomingRequests" data-toggle="tab"><i class="glyphicon glyphicon-bell"></i> {{ 'Incoming requests' | trans }}</a></li>
-          <li><a href="#outgoingRequests" data-toggle="tab"><i class="glyphicon glyphicon-share-alt"></i> {{ 'Outgoing requests' | trans }}</a></li>
+          <li class="active"><a href="#incomingRequests" data-toggle="tab">{{ show_icon('Request_in')|raw }} {{ 'Incoming requests' | trans }}</a></li>
+          <li><a href="#outgoingRequests" data-toggle="tab">{{ show_icon('Request_out')|raw }} {{ 'Outgoing requests' | trans }}</a></li>
         </ul>
 
         <div class="tab-content objects">

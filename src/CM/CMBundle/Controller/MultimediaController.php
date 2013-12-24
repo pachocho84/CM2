@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Process\Exception\RuntimeException;
 use JMS\SecurityExtraBundle\Annotation as JMS;
 use CM\CMBundle\Entity\Multimedia;
+use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Form\MultimediaType;
 
@@ -25,11 +26,35 @@ use CM\CMBundle\Form\MultimediaType;
 class MultimediaController extends Controller
 {
     /**
-     * @Route("/new/{object}/{objectId}", name="imagealbum_new", requirements={"objectId" = "\d+"})
+     * @Route("/{page}", name="multimedia_index", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function indexAction(Request $request, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $multimedias = $em->getRepository('CMBundle:Multimedia')->getMultimedias();
+        $pagination = $this->get('knp_paginator')->paginate($multimedias, $page, 10);
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Multimedia:objects.html.twig', array(
+                'group' => $group,
+                'multimedias' => $pagination
+            ));
+        }
+
+        return array(
+            'multimedias' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/new/{object}/{objectId}", name="multimedia_new", requirements={"objectId" = "\d+"})
+     * @Route("/{id}/{slug}/edit", name="multimedia_edit", requirements={"id" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function newAction(Request $request, $object = null, $objectId = null, $id = null, $slug = null)
+    public function editAction(Request $request, $object = null, $objectId = null, $id = null, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -129,27 +154,27 @@ class MultimediaController extends Controller
             'joinEntityType' => 'joinalbum'
         );
     }
-
+    
     /**
-     * @Route("/{page}", name="multimedia_list")
+     * @Route("/{id}/{slug}", name="multimedia_show", requirements={"id" = "\d+"})
      * @Template
      */
-    public function listAction(Request $request, $page = 1)
+    public function showAction(Request $request, $id, $slug)
     {
         $em = $this->getDoctrine()->getManager();
+            
+        // if ($request->isXmlHttpRequest()) {
+        //     $date = $em->getRepository('CMBundle:Multimedia')->getDate($id, array('locale' => $request->getLocale()));
+        //     return $this->render('CMBundle:Multimedia:object.html.twig', array('date' => $date));
+        // }
         
-        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimediaList();
-        $pagination = $this->get('knp_paginator')->paginate($multimedia, $page, 10);
-
+        $multimedia = $em->getRepository('CMBundle:Multimedia')->getMultimedia($id, array('locale' => $request->getLocale()));
+        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+        
         if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Multimedia:multimediaList.html.twig', array(
-                'group' => $group,
-                'multimediaList' => $pagination
-            ));
+            return $this->render('CMBundle:Multimedia:object.html.twig', array('multimedia' => $multimedia));
         }
-
-        return array(
-            'multimediaList' => $pagination
-        );
+        
+        return array('multimedia' => $multimedia);
     }
 }

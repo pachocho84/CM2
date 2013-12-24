@@ -1,0 +1,8 @@
+<li class="object" data-type="link" data-id="{{ link.id }}">
+
+    <a href="{{ path('link_show', {'id': link.id, 'slug': link.getSlug}) }}">{{ 'Show'|trans }}</a>
+
+    {{ link.url }}
+
+
+</li>

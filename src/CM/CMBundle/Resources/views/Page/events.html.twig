@@ -4,9 +4,6 @@
     {{ include('CMBundle:Page:top.html.twig', {'inPage': 'event'}) }}
 
     <div class='box'>
-<pre>{% for key, param in dates.getPaginationData %}
-    {{ key }}: {{ param }}<br/>
-{% endfor %}</pre>
         {{ include('CMBundle:Event:objects.html.twig', {'page': pageNum}) }}
     </div>
 {% endblock %}

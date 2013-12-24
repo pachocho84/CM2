@@ -11,12 +11,13 @@ use CM\CMBundle\Entity\Entity;
 use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\Disc;
+use CM\CMBundle\Entity\ImageAlbum;
+use CM\CMBundle\Entity\Multimedia;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Request;
 use CM\CMBundle\Entity\Notification;
 use CM\CMBundle\Entity\Post;
-use CM\CMBundle\Entity\ImageAlbum;
 
 class CMExtension extends \Twig_Extension
 {
@@ -321,9 +322,19 @@ class CMExtension extends \Twig_Extension
                 $entityLink = $this->router->generate('disc_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
                 return $this->translator->trans('%user% would like to add you as protagonist to the disc %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
                 // return __('%user% would like to add you as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+            } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Multimedia' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
+                $entityLink = $this->router->generate('multimedia_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
+                return $this->translator->trans('%user% would like to be added as protagonist to your multimedia %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+            } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Multimedia') {
+                $entityLink = $this->router->generate('multimedia_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
+                return $this->translator->trans('%user% would like to add you as protagonist to the multimedia %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Article' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
-                // return __('%user% would like to be added as protagonist to your article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getE.'</a>'ntity(), $this->getEntity()->getLinkShow())));
+                $entityLink = $this->router->generate('article_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
+                return $this->translator->trans('%user% would like to be added as protagonist to your article %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                // return __('%user% would like to be added as protagonist to your article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Article') {
+                $entityLink = $this->router->generate('article_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
+                return $this->translator->trans('%user% would like to add you as protagonist to the article %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
                 // return __('%user% would like to add you as protagonist to the article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
             } elseif (!is_null($request->getGroup()) && $this->userAuthentication->isAdminOf($request->getGroup())) {
                 $group = $request->getGroup();
@@ -451,12 +462,11 @@ class CMExtension extends \Twig_Extension
                     '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getEntityCategory()->getPlural()).'</a>'
                 ));
             case 'Comment_'.Post::TYPE_CREATION:
-                $objectLink = $this->router->generate(strtolower($this->getClassName($post->getEntity())).'_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                return $this->translator->trans('%user% commented on %object%.', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
-                ));
+                $likeOrComment = 'commented on';
             case 'Like_'.Post::TYPE_CREATION:
+                if ($this->getClassName($post->getObject()).'_'.$post->getType() == 'Like_'.Post::TYPE_CREATION) {
+                    $likeOrComment = 'likes';
+                }
                 if (is_null($post->getEntity())) {
                     return 'asd';
                 } elseif ($post->getEntity() instanceof Biography) {
@@ -467,7 +477,7 @@ class CMExtension extends \Twig_Extension
                         $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
                     $objectLink = $this->router->generate($post->getPublisherRoute().'_biography', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
-                    return $this->translator->trans('%user% likes %publisher% %biographyLinkStart%Biography%biographyLinkEnd%.', array(
+                    return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %biographyLinkStart%Biography%biographyLinkEnd%.', array(
                         '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                         '%publisher%' => $publisher,
                         '%biographyLinkStart%' => '<a href="'.$objectLink.'">', '%biographyLinkEnd%' => '</a>'
@@ -480,7 +490,7 @@ class CMExtension extends \Twig_Extension
                     } else {
                         $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
-                    return $this->translator->trans('%user% likes %publisher% %object%.', array(
+                    return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
                         '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                         '%publisher%' => $publisher,
                         '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
@@ -493,7 +503,7 @@ class CMExtension extends \Twig_Extension
                     } else {
                         $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
-                    return $this->translator->trans('%user% likes %publisher% %object%.', array(
+                    return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
                         '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                         '%publisher%' => $publisher,
                         '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
@@ -506,7 +516,33 @@ class CMExtension extends \Twig_Extension
                     } else {
                         $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
-                    return $this->translator->trans('%user% likes %publisher% %object%.', array(
+                    return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
+                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%publisher%' => $publisher,
+                        '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
+                    ));
+                } elseif ($post->getEntity() instanceof Multimedia) {
+                    $objectLink = $this->router->generate('multimedia_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
+                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
+                    if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
+                        $publisher = $this->translator->trans($post->getPublisherSex('his'));
+                    } else {
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                    }
+                    return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
+                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%publisher%' => $publisher,
+                        '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
+                    ));
+                } elseif ($post->getEntity() instanceof Article) {
+                    $objectLink = $this->router->generate('article_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
+                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
+                    if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
+                        $publisher = $this->translator->trans($post->getPublisherSex('his'));
+                    } else {
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                    }
+                    return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
                         '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                         '%publisher%' => $publisher,
                         '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
@@ -519,17 +555,12 @@ class CMExtension extends \Twig_Extension
                     } else {
                         $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
-                    return $this->translator->trans('%user% likes %objectLinkStart%a photo%objectLinkEnd%.', array(
+                    return $this->translator->trans('%user% '.$likeOrComment.' %objectLinkStart%a photo%objectLinkEnd%.', array(
                         '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                         '%objectLinkStart%' => '<a href="'.$objectLink.'">', '%objectLinkEnd%' => '</a>'
                     ));
                 }
-            case 'ImageAlbum_'.Post::TYPE_CREATION:
-                $objectLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
-                return $this->translator->trans('%user% created the album %object%.', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
-                ));
+                break;
             case 'image_album_image_add':
                 // return format_number_choice('[1]%user% added a new photo to the album %object%.|(1,+Inf]%user% added %count% new photos to the album %object%.', array(
                 //         '%user%'    => link_to($post->getUser(), $post->getUser()->getLinkShow()),
@@ -542,6 +573,42 @@ class CMExtension extends \Twig_Extension
                 return $this->translator->trans('%user% updated '.$post->getPublisherSex('his').' %biographyLinkStart%biography%biographyLinkEnd%.', array(
                     '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
                     '%biographyLinkStart%' => '<a href="'.$objectLink.'">', '%biographyLinkEnd%' => '</a>'
+                ));case 'ImageAlbum_'.Post::TYPE_CREATION:
+                $objectLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
+                return $this->translator->trans('%user% created the album %object%.', array(
+                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
+                ));
+            case 'Image_'.Post::TYPE_CREATION:
+            case 'Image_'.Post::TYPE_UPDATE:
+                switch ($this->getClassName($post->getEntity())) {
+                    case 'Event':
+                        $entityLink = $this->router->generate('event_show', array('id' => $post->getEntityId(), 'slug' => $post->getEntity()->getSlug()));
+                        $entityString = ' event';
+                        break;
+                    case 'ImageAlbum':
+                        $entityLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
+                        $albumString = $post->getEntity()->getType() == ImageAlbum::TYPE_ALBUM ? ' album' : '';
+                        break;
+                    default:
+                        $entityLink = '';
+                        break;
+                }
+                return $this->translator->trans('%user% added images to '.$post->getPublisherSex('his').$entityString.' %entity%.', array(
+                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>'
+                ));
+            case 'Multimedia_'.Post::TYPE_CREATION:
+                $multimediaLink = $this->router->generate('multimedia_show', array('id' => $post->getEntityId(), 'slug' => $post->getEntity()->getSlug()));
+                return $this->translator->trans('%user% added a new %albumLinkStart%'.$post->getEntity()->typeString().'%albumLinkEnd%.', array(
+                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%albumLinkStart%' => '<a href="'.$multimediaLink.'">', '%albumLinkEnd%' => '</a>'
+                ));
+            case 'Article_'.Post::TYPE_CREATION:
+                $objectLink = $this->router->generate('article_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
+                return $this->translator->trans('%user% published the article %object%.', array(
+                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                 ));
             case 'user_'.Post::TYPE_REGISTRATION:
                 // return __('%user% registered on Circuito Musica. - '.$post->getPublisherSex('M'), array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow())));
@@ -564,37 +631,7 @@ class CMExtension extends \Twig_Extension
                     '%page%' => '<a href="'.$objectLink.'">'.$post->getPage().'</a>'
                 ));
                 // return __('%user% has opened the page %page%', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%page%' => link_to($post->getRelatedObject()->getFirst(), $post->getRelatedObject()->getFirst()->getLinkShow())));
-            case 'ImageAlbum_'.Post::TYPE_CREATION:
-                // $albumLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
-                // return $this->translator->trans('%user% has created '.$post->getPublisherSex('his').' album %album%', array(
-                //     '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-                //     '%album%' => '<a href="'.$albumLink.'">'.$post->getEntity().'</a>'
-                // ));
-            case 'Image_'.Post::TYPE_CREATION:
-            case 'Image_'.Post::TYPE_UPDATE:
-                switch ($this->getClassName($post->getEntity())) {
-                    case 'Event':
-                        $entityLink = $this->router->generate('event_show', array('id' => $post->getEntityId(), 'slug' => $post->getEntity()->getSlug()));
-                        $entityString = ' event';
-                        break;
-                    case 'ImageAlbum':
-                        $entityLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
-                        $albumString = $post->getEntity()->getType() == ImageAlbum::TYPE_ALBUM ? ' album' : '';
-                        break;
-                    default:
-                        $entityLink = '';
-                        break;
-                }
-                return $this->translator->trans('%user% added images to '.$post->getPublisherSex('his').$entityString.' %entity%.', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-                    '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>'
-                ));
-            case 'Multimedia_'.Post::TYPE_CREATION:
-                $multimediaLink = $this->router->generate($post->getPublisherRoute().'_multimedia_show', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
-                return $this->translator->trans('%user% added a new %albumLinkStart%'.$post->getEntity()->typeString().'%albumLinkEnd%.', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-                    '%albumLinkStart%' => '<a href="'.$multimediaLink.'">', '%albumLinkEnd%' => '</a>'
-                ));
+            
             case 'user_img_update':
                 // return __('%user% has updated '.$post->getPublisherSex('his').' profile picture.', array('%user%'   => link_to($post->getUser(), $post->getUser()->getLinkShow())));
             case 'user_cover_img_update':
@@ -734,10 +771,17 @@ class CMExtension extends \Twig_Extension
     function getShowIcon($object)
     {
         switch ($object) {
+            case 'Up':
+                 return '<span class="glyphicon glyphicon-chevron-up"></span>';
+            case 'Down':
+                 return '<span class="glyphicon glyphicon-chevron-down"></span>';
             case 'Back':
                  return '<span class="glyphicon glyphicon-chevron-left"></span>';
+            case 'Remove':
+                 return '<span class="glyphicon glyphicon-remove"></span>';
                 break;
             case 'Event':
+            case 'Calendar':
             case 'Event_'.Post::TYPE_CREATION:
                  return '<span class="glyphicon glyphicon-calendar"></span>';
             case 'Disc':
@@ -750,6 +794,7 @@ class CMExtension extends \Twig_Extension
             case 'Link_'.Post::TYPE_CREATION:
                   return '<span class="glyphicon glyphicon-bookmark"></span>';
             case 'Image':
+            case 'Image_'.Post::TYPE_CREATION:
                  return '<span class="glyphicon glyphicon-picture"></span>';
             case 'Multimedia':
                  return '<span class="glyphicon glyphicon-film"></span>';
@@ -760,9 +805,9 @@ class CMExtension extends \Twig_Extension
             case 'Group_'.Post::TYPE_CREATION:
                  return '<span class="glyphicons group"></span>';
             case 'Fan':
-            case 'User_'.Post::TYPE_FAN_USER:
-            case 'Group_'.Post::TYPE_FAN_GROUP:
-            case 'Page_'.Post::TYPE_FAN_PAGE:
+            case 'Fan_'.Post::TYPE_FAN_USER:
+            case 'Fan_'.Post::TYPE_FAN_GROUP:
+            case 'Fan_'.Post::TYPE_FAN_PAGE:
                  return '<span class="glyphicon glyphicon-flag"></span>';
             case 'User':
                  return '<span class="glyphicon glyphicon-user"></span>';
@@ -772,8 +817,10 @@ class CMExtension extends \Twig_Extension
             case 'Biography_'.Post::TYPE_UPDATE:
                  return '<span class="glyphicon glyphicon-book"></span>';
             case 'Like':
+            case 'Like_'.Post::TYPE_CREATION:
                  return '<span class="glyphicon glyphicon-thumbs-up"></span>';
             case 'Comment':
+            case 'Comment_'.Post::TYPE_CREATION:
                  return '<span class="glyphicon glyphicon-comment"></span>';
             case 'Wall':
             case 'Post':
@@ -790,8 +837,38 @@ class CMExtension extends \Twig_Extension
             case 'Education':
             case 'Education_'.Post::TYPE_UPDATE:
                  return '<span class="glyphicon glyphicon-book-open"></span>';
+            case 'List':
+                 return '<span class="glyphicon glyphicon-list"></span>';
+            case 'Plus':
+                 return '<span class="glyphicon glyphicon-plus"></span>';
+            case 'Minus':
+                 return '<span class="glyphicon glyphicon-minus"></span>';
+            case 'Crown':
+                 return '<span class="glyphicons crown"></span>';
+            case 'Ok':
+                 return '<span class="glyphicon glyphicon-ok"></span>';
+            case 'List':
+                 return '<span class="glyphicon glyphicon-list"></span>';
+            case 'Archive':
+                 return '<span class="glyphicon glyphicon-folder-close"></span>';
+            case 'Time':
+                 return '<span class="glyphicon glyphicon-time"></span>';
+            case 'Map':
+                 return '<span class="glyphicon glyphicon-map-marker"></span>';
+            case 'Edit':
+                 return '<span class="glyphicon glyphicon-pencil"></span>';
+            case 'Alert':
+                 return '<span class="glyphicon glyphicon-exclamation-sign"></span>';
+            case 'Globe':
+            case 'Notification':
+                 return '<span class="glyphicon glyphicon-globe"></span>';
+            case 'Request':
+            case 'Request_in':
+                 return '<span class="glyphicon glyphicon-bell"></span>';
+            case 'Request_out':
+                 return '<span class="glyphicon glyphicon-share-alt"></span>';
             default:
-                 return '';
+                 return '<span style="color:red;">missing glyphicon for '.$object.'</span>';
         }
     }
 

@@ -17,9 +17,8 @@ class MultimediaType extends AbstractType
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {    
-        $builder->add('link')
-        	->add($builder->create('posts', new PostType, array('label' => 'Post'))->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'])));
+    {
+        $builder->add('link');
     }
     
     /**
@@ -27,8 +26,6 @@ class MultimediaType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        parent::setDefaultOptions($resolver);
-        
         $resolver->setDefaults(array(
             'data_class' => 'CM\CMBundle\Entity\Multimedia',
             'groups' => array('Multimedia', 'Default'),

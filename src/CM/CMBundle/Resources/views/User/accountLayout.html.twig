@@ -1,0 +1,35 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% set inAccountPage = true %}
+
+{% block accountSidebar %}
+    <ul class="nav nav-pills nav-stacked">
+        <li{% if inProfilePage is defined and inProfilePage %} class="active"{% endif %}>
+            <a href="{{ path('fos_user_profile') }}"><span class="glyphicons cogwheels"></span> {{ 'Basic information' | trans }}</a>
+        </li>
+        <li{% if inPicturesPage is defined and inPicturesPage %} class="active"{% endif %}>
+            <a href="{{ path('user_image_edit') }}"></span> <span class="glyphicons camera"></span> {{ 'Profile & Cover pictures' | trans }}</a>
+        </li>
+        <li{% if inBiographyPage is defined and inBiographyPage %} class="active"{% endif %}>
+            <a href="{{ path('user_biography_edit') }}"><span class="glyphicon glyphicon-book"></span> {{ 'Biography' | trans }}</a>
+        </li>
+        <li{% if inTagsPage is defined and inTagsPage %} class="active"{% endif %}>
+            <a href="{{ path('user_tags_edit') }}"><span class="glyphicon glyphicon-tags"></span> {{ 'Tags' | trans }}</a>
+        </li>
+        <li{% if inGroupsPage is defined and inGroupsPage %} class="active"{% endif %}>
+            <a href="{{ path('user_groups') }}"><span class="glyphicons group"></span> {{ 'Groups' | trans }}</a>
+        </li>
+        <li{% if inPagesPage is defined and inPagesPage %} class="active"{% endif %}>
+            <a href="{{ path('user_pages') }}"><span class="glyphicons bank"></span> {{ 'Pages' | trans }}</a>
+        </li>
+        <li{% if inImagesPage is defined and inImagesPage %} class="active"{% endif %}>
+            <a href="{{ path('user_image_edit') }}"><span class="glyphicons book_open"></span> {{ 'Pages' | trans }}</a>
+        </li>
+        <li{% if inImagesPage is defined and inImagesPage %} class="active"{% endif %}>
+            <a href="{{ path('user_image_edit') }}"><span class="glyphicons more_items"></span> {{ 'Pages' | trans }}</a>
+        </li>
+        <li{% if inRelationsPage is defined and inRelationsPage %} class="active"{% endif %}>
+            <a href="{{ path('user_tags_edit') }}"><span class="glyphicons git_branch"></span> {{ 'Relations' | trans }}</a>
+        </li>
+    </ul>
+{% endblock %}

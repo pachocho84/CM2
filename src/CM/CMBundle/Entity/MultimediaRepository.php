@@ -23,7 +23,7 @@ class MultimediaRepository extends BaseRepository
         ), $options);
     }
 
-    public function getMultimediaList($options = array())
+    public function getMultimedias($options = array())
     {
         $options = self::getOptions($options);
 

@@ -20,12 +20,12 @@
             {#<?php if ($group->getUserId() != $member->getUserId()): ?>#}
 
                 {% if member.admin %}
-                    <a href="{{ path('group_remove_admin', {'id': member.id}) }}" class="btn btn-default ajax-link"><i class="glyphicon glyphicon-chevron-down" ></i> {{ 'Remove as admin'|trans }}</a>
+                    <a href="{{ path('group_remove_admin', {'id': member.id}) }}" class="btn btn-default ajax-link">{{ show_icon('Down')|raw }} {{ 'Remove as admin'|trans }}</a>
                 {% else %}
-                    <a href="{{ path('group_promote_admin', {'id': member.id}) }}" class="btn btn-default ajax-link"><i class="glyphicon glyphicon-chevron-up" ></i> {{ 'Promote to admin'|trans }}</a>
+                    <a href="{{ path('group_promote_admin', {'id': member.id}) }}" class="btn btn-default ajax-link">{{ show_icon('Up')|raw }} {{ 'Promote to admin'|trans }}</a>
                 {% endif %}
 
-                <a href="{{ path('group_remove_user', {'id': member.id})}}" class="btn btn-default ajax-link"><i class="glyphicon glyphicon-minus" ></i> {{ 'Remove member'|trans }}</a>
+                <a href="{{ path('group_remove_user', {'id': member.id})}}" class="btn btn-default ajax-link">{{ show_icon('Minus')|raw }} {{ 'Remove member'|trans }}</a>
 
             {% endif %}
 

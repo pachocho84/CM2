@@ -1,0 +1,16 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block title %}{{ 'Link'|trans }}{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-lg-5">
+            <h2>{{ block('title') }}</h2>
+        </div>
+        {{ include('CMBundle:Link:menu.html.twig') }}
+    </div>
+
+    {{ include('CMBundle:Link:objects.html.twig') }}
+
+{% endblock %}

@@ -45,7 +45,7 @@
                     </h3>
                     <h4>
                         <?php foreach ($oggetto->getUtentiTags() as $tag): ?>
-                            <i class="glyphicon glyphicon-tag"></i> <?php echo $tag ?>
+                            {{ show_icon('Tag')|raw }} <?php echo $tag ?>
                         <?php endforeach ?>
                     </h4>
                     <?php $oggetto->getRawValue()->getBiografies()->getFirst() and print show_extract($oggetto->getRawValue()->getBiografies()->getFirst()->getEstratto(), $oggetto->getRawValue()->getBiografies()->getFirst()->getBiografia(), false, 500) ?>

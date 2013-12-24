@@ -1,0 +1,10 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+
+    {{ include('CMBundle:Group:top.html.twig', {'inPage': 'disc'}) }}
+
+    <div class='box'>
+        {{ include('CMBundle:Disc:objects.html.twig') }}
+    </div>
+{% endblock %}

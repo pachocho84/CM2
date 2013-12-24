@@ -4,9 +4,16 @@ $(function() {
         event.preventDefault();
         event.stopPropagation();
 
-        $(this).closest('*[rel="tooltip"]').tooltip('destroy');
+        if ($(event.currentTarget).is('a')) {
+            url = event.currentTarget.href;
+        }.85 
+        if ($(event.currentTarget).is('input:submit') || $(event.currentTarget).is('button')) {
+            $(this).closest('*[rel="tooltip"]').tooltip('destroy');
+            url = $(event.currentTarget).closest('form').attr('action');
+        }
+
         if ($(this).attr('data-loading-text')) {
-            $(this).closest('.btn').html('<img src="/images/loader.gif" /> ' + $(this).attr('data-loading-text'));
+            $(this).html('<img src="/images/loader.gif" /> ' + $(this).attr('data-loading-text'));
         }
         $.get(event.currentTarget.href, function(data, status, xhr) {
             if (xhr.getResponseHeader('Content-Type') == 'application/json') {
@@ -18,6 +25,28 @@ $(function() {
                 });
             } else {
                 $(event.target).closest('.ajax-link-target').replaceWith(data);
+            }
+        });
+    });
+    $(document).on('click', '.ajax-form', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        $(this).closest('*[rel="tooltip"]').tooltip('destroy');
+
+        if ($(this).attr('data-loading-text')) {
+            $(this).html('<img src="/images/loader.gif" /> ' + $(this).attr('data-loading-text'));
+        }
+        $.post($(event.currentTarget).closest('form').attr('action'), $(event.currentTarget).closest('form').serialize(), function(data, status, xhr) {
+            if (xhr.getResponseHeader('Content-Type') == 'application/json') {
+                $(event.target).closest('.ajax-form-target').replaceWith(data.main);
+                $.each(data, function(i, e) {
+                    if (i != 'main') {
+                        $('.' + i).replaceWith(e);
+                    }
+                });
+            } else {
+                $(event.target).closest('.ajax-form-target').replaceWith(data);
             }
         });
     });

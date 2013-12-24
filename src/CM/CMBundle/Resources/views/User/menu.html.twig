@@ -1,7 +1,7 @@
-<li class="dropdown menu-tab{% if inRequestPage %}active{% endif %}">
+<li class="dropdown menu-tab{% if inRequestPage %} active{% endif %}">
     
     <a href="{{ path('request_index') }}" id="menu-requests" class="dropdown-toggle" data-toggle="dropdown">
-        <span class="glyphicon glyphicon-bell"></span>
+        {{ show_icon('Request')|raw }}
         <span class="countNew" id="requestsCounter">{% if newRequests > 0 %}{{ newRequests }}{% endif %}</span>
     </a>
     
@@ -22,10 +22,10 @@
     
 </li>
 
-<li class="dropdown menu-tab{% if inNotificationPage %}active{% endif %}">
+<li class="dropdown menu-tab{% if inNotificationPage %} active{% endif %}">
 	
 	<a href="{{ path('user_notifications') }}" id="menu-notifications" class="dropdown-toggle" data-toggle="dropdown">
-        <span class="glyphicon glyphicon-globe"></span>
+        {{ show_icon('Notification')|raw }}</span>
 		<span class="countNew" id="notificationsCounter">{% if newNotifications > 0 %}{{ newNotifications }}{% endif %}</span>
 	</a>
 	
@@ -44,4 +44,19 @@
 	
 	</div>
 	
+</li>
+
+
+<li class="dropdown menu-tab{% if inNotificationPage %} active{% endif %}">
+
+    <a href="{{ path('user_show', {"slug": app.getUser.slug}) }}"  id="menu-notifications" class="dropdown-toggle" data-toggle="dropdown">
+        {{ app.getUser }}
+    </a>
+
+    <ul class="dropdown-menu pull-right">
+        <li><a href="{{ path('user_show', {"slug": app.getUser.slug}) }}">{{ 'Profile'|trans }}</a></li>
+        <li><a href="{{ path('user_biography_edit') }}">{{ 'Biography'|trans }}</a></li>
+        <li><a href="{{ path('user_image_edit') }}">{{ 'Images'|trans }}</a></li>
+        <li><a href="{{ path('user_tags_edit') }}">{{ 'Tags'|trans }}</a></li>
+    </ul>
 </li>

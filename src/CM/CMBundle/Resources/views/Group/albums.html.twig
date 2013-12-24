@@ -2,8 +2,6 @@
 
 {% block body %}
 
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'groupId': group.id})) }}{% endif %}  
-
     {{ include('CMBundle:Group:top.html.twig', {'inPage': 'image'}) }}
 
 
@@ -14,22 +12,7 @@
     </ul>#}
 
 
-    <div class="box">
-        <div class="box-top">
-            <ul class="nav nav-tabs nav-justified">
-                <li><a href="{{ path('group_images', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Images'|trans }}</h3></a></li>
-                <li class="active"><a href="{{ path('group_albums', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Albums'|trans }}</h3></a></li>
-                <li><a href="{{ path('group_entities_albums', {'slug': group.slug}) }}"><h3>{{ show_icon('Image')|raw }}{{ 'Entities images'|trans }}</h3></a></li>
-            </ul>
-        </div>
-
-        <a href="{{ path('imagealbum_new', {'object': group|class_name, 'objectId': group.id}) }}">{{ 'Create a new album'|trans }}</a>
-
-        <div class="media-list objects">
-            {{ include('CMBundle:ImageAlbum:albumList.html.twig', {'link': 'user_album', 'publisher': group}) }}
-        </div>
-    </div>
-    
+    {{ include('CMBundle:ImageAlbum:albums.html.twig', {'publisher': group, 'publisherType': 'group'}) }}
 
     {#<?php slot('sidebar_slot3') ?>  
         <?php include_component('fan', 'groupFans', array('group' => $group)) ?>

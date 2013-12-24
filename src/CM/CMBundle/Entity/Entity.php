@@ -18,7 +18,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  *     "disc"="Disc",
  *     "biography"="Biography",
  *     "image_album"="ImageAlbum",
- *     "multimedia"="Multimedia"
+ *     "multimedia"="Multimedia",
+ *     "article"="Article",
+ *     "link"="Link"
  * })
  * @ORM\HasLifecycleCallbacks
  */

@@ -5,22 +5,21 @@
     {% set type = type|default('text') %}
     {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
     {% if type == 'date' or type == 'time' %}
+        <div class="col-lg-9">
     {% elseif type == 'hidden' %}
         <div>
     {% elseif type == 'file' %}
         {% set required = false %}
-        <div class="clearfix" btn-file-container><div class="col-lg-2"><span class="input-group-btn"><span class="btn btn-default btn-file">Browse
+        <div class="clearfix" btn-file-container>
+            <div class="col-lg-9 input-group"><span class="btn btn-default btn-file input-group-addon">Browse
     {% else %}
         <div class="col-lg-9">
     {% endif %}
         <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     {% if type == 'file' %}
-        </span></span></div><div class="col-lg-7"><input type="text" class="form-control col-lg-4" readonly /></div>
+        </span><input type="text" class="form-control col-lg-4" readonly /></div>
     {% endif %}
-    {% if type == 'date' or type == 'time' %}
-    {% else %}
-        </div>
-    {% endif %}
+    </div>
 {% endspaceless %}
 {% endblock form_widget_simple %}
 
@@ -214,6 +213,9 @@
 {% endspaceless %}
 {% endblock %}
 
+{% block _cm_cmbundle_biography_translations_title_row %}
+{% endblock %}
+
 {% block cm_cmbundle_eventdate_row %}
 {% spaceless %}
     <div class="well well-sm">
@@ -224,20 +226,29 @@
 {% endspaceless %}
 {% endblock %}
 
-{% block _cm_cmbundle_biography_translations_title_row %}
-{% endblock %}
-
 {% block _cm_cmbundle_event_eventDates_row %}
 {% spaceless %}
     {% if prototype is defined %}
         {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
     {% endif %}
-    <div class="panel panel-default" asd>
+    <div class="panel panel-default">
         <div class="panel-heading"><h3 class="panel-title">{{ 'Event Dates' | trans }}</h3></div>
         <div class="panel-body" {{ block('widget_container_attributes') }}>
             {{ block('form_rows') }}
-            <a href="#" class="btn btn-default add_date_link"><i class="glyphicon glyphicon-plus"></i> Add a date</a>
+            <a href="#" class="btn btn-default add_date_link">{{ show_icon('Plus')|raw }} Add a date</a>
         </div>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_event_eventDates_entry_location_row %}
+{% spaceless %}
+    <div class="form-group">
+        {{ form_label(form) }}
+        {{ form_widget(form, {'attr': {'placeholder': 'search'|trans}}) }}
+        {{ form_errors(form) }}
+    
+        <div class="col-lg-12"><div gmap-canvas></div></div>
     </div>
 {% endspaceless %}
 {% endblock %}
@@ -261,7 +272,7 @@
         <div class="panel-heading"><h3 class="panel-title">{{ 'Disc Tracks' | trans }}</h3></div>
         <div class="panel-body" {{ block('widget_container_attributes') }}>
             {{ block('form_rows') }}
-            <a href="#" class="btn btn-default add_track_link"><i class="glyphicon glyphicon-plus"></i> Add a track</a>
+            <a href="#" class="btn btn-default add_track_link">{{ show_icon('Plus')|raw }} Add a track</a>
         </div>
     </div>
 {% endspaceless %}

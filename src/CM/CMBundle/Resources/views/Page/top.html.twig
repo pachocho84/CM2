@@ -1,3 +1,7 @@
+{% if is_granted('ROLE_USER') %}
+    {{ render(controller('CMBundle:Fan:fanButton', {'userId': page.id, 'object': page|class_name})) }}
+{% endif %}
+
 {% if not page.coverImg or page.coverImg == '' %}
     <div class="media">
         {{ show_img_box(page.img|imagine_filter('50'), {'width': 32, 'height': 32, 'offset': page.imgOffset, 'default': 'page', 'box_attributes': {'class': 'pull-left'}})|raw }}
@@ -37,7 +41,7 @@
                     <a href="{{ path('page_multimedia', {'slug': page.slug}) }}">{{ show_icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
                 </li>
                 <li{% if inPage == 'disc' %} class="active"{% endif %}>
-                    <a href="{{ path('page_show', {'slug': page.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs [TODO]'|trans }}</a>
+                    <a href="{{ path('page_discs', {'slug': page.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs'|trans }}</a>
                 </li>
                 {#<li{% if $inPage == 'fan' %} class="active"{% endif %}><?php echo link_to(show_icon('fan').' '.__('Fans'), '@fan_page?page='.$page->getUsername()) ?></li>#}
             </ul>

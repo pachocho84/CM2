@@ -28,9 +28,9 @@
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
-                <span class="glyphicon glyphicon-bar"></span>
-                <span class="glyphicon glyphicon-bar"></span>
-                <span class="glyphicon glyphicon-bar"></span>
+                {{ show_icon('Bar')|raw }}
+                {{ show_icon('Bar')|raw }}
+                {{ show_icon('Bar')|raw }}
             </button>
         </div>
 
@@ -51,15 +51,12 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="{{ path('event_index') }}">{{ 'Events'|trans }}</a>
+                        <a href="{{ path('event_index') }}">{{ 'Entities'|trans }}</a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ path('event_index') }}">{{ 'Events'|trans }}</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="{{ path('disc_index') }}">{{ 'Discs'|trans }}</a>
-                        <ul class="dropdown-menu">
                             <li><a href="{{ path('disc_index') }}">{{ 'Discs'|trans }}</a></li>
+                            <li><a href="{{ path('article_index') }}">{{ 'Articles'|trans }}</a></li>
+                            <li><a href="{{ path('multimedia_index') }}">{{ 'Miultimedia'|trans }}</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -75,9 +72,6 @@
                 <ul class="nav navbar-nav pull-right">
                     {% if is_granted('ROLE_USER') %}
                         {{ render(controller('CMBundle:User:menu', {'path': app.request.pathInfo} )) }}
-                        <li>
-                            <a href="{{ path('user_show', {"slug": app.getUser.slug}) }}">{{ app.getUser }}</a>
-                        </li>
                         <li>
                             <a href="{{ path('fos_user_security_logout') }}">Logout</a>
                         </li>
@@ -98,17 +92,28 @@
 
 {% block container %}
     <div class="row">
-        <div class="col-md-8">
+        {% set inAccountPage = inAccountPage|default(false) %}
+        {# LEFT COLUMN #}
+        {% if inAccountPage %}
+            <div class="col-md-3">
+                {% block accountSidebar %}
+                {% endblock %}
+            </div>
+        {% endif %}
+
+        <div class="col-md-{% if inAccountPage %}9{% else %}8{% endif %}">
             {# FLASH #}
             {% block body %}{% endblock %}
         </div>
 
         {# RIGHT COLUMN #}
-        <div class="sidebar col-md-4">
-            <img src="{{ asset('/bundles/cm/images/layout/banner.jpg') }}" alt="Symfony!" />
-            {% block sidebar %}
-            {% endblock %}
-        </div>
+        {% if not inAccountPage %}
+            <div class="sidebar col-md-4">
+                <img src="{{ asset('/bundles/cm/images/layout/banner.jpg') }}" alt="Symfony!" />
+                {% block sidebar %}
+                {% endblock %}
+            </div>
+        {% endif %}
 
     </div> <!-- END ROW -->
 {% endblock %}

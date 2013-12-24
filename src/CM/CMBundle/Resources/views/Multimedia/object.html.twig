@@ -1,6 +1,6 @@
 <li class="object" data-type="multimedia" data-id="{{ multimedia.id }}">
 
-    <a href="{{ path(multimedia.post.publisherRoute ~ '_multimedia_show', {'id': multimedia.id, 'slug': multimedia.post.publisher.slug}) }}">{{ 'Show'|trans }}</a>
+    <a href="{{ path('multimedia_show', {'id': multimedia.id, 'slug': multimedia.getSlug}) }}">{{ 'Show'|trans }}</a>
 
     {% if multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_YOUTUBE') %}
         <img width="100%" height="450px" src="http://img.youtube.com/vi/{{ multimedia.link }}/0.jpg" youtube-video-link="{{ multimedia.link }}" />
@@ -13,4 +13,3 @@
 
 
 </li>
-

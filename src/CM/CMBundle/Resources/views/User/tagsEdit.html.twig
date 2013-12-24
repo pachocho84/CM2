@@ -1,4 +1,5 @@
-{% extends 'CMBundle::layout.html.twig' %}
+{% extends 'CMBundle:User:accountLayout.html.twig' %}
+{% set inTagsPage = true %}
 
 {% block title %}{{ 'Define yourself'|trans }}{% endblock %}
 
@@ -24,7 +25,7 @@
                 <div id="userTags" class="row tag-list">
                     {% for userTag in app.user.userTagsIds %}
                         <div class="span2">
-                            <label class="img-thumbnail round tag" title=" {{ tags[userTag] }}"><input type="hidden" name="tag_{{ userTag }}" value="{{ userTag }}"><i class="glyphicon glyphicon-tag"></i> {{ tags[userTag] }}</label>
+                            <label class="img-thumbnail round tag" title=" {{ tags[userTag] }}"><input type="hidden" name="tag_{{ userTag }}" value="{{ userTag }}">{{ show_icon('Tag')|raw }} {{ tags[userTag] }}</label>
                         </div>
                     {% endfor %}
                 </div>
@@ -37,7 +38,7 @@
                 <div id="tags" class="row tag-list">
                     {% for tag in availableTags %}
                         <div class="span2">
-                            <label class="img-thumbnail round tag" title="{{ tag }}"><input type="hidden" name="tag_{{ tag.id }}" value="{{ tag.id }}"><i class="glyphicon glyphicon-tag"></i> {{ tag }}</label>
+                            <label class="img-thumbnail round tag" title="{{ tag }}"><input type="hidden" name="tag_{{ tag.id }}" value="{{ tag.id }}">{{ show_icon('Tag')|raw }} {{ tag }}</label>
                         </div>
                     {% endfor %}
                 </div>

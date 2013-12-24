@@ -30,13 +30,13 @@ class EventDateType extends AbstractType
                 'model_timezone'    => 'GMT',
                 'view_timezone'     => 'Europe/Rome',
             ))
-            ->add('location', 'text', array(
-                'attr' => array('places-autocomplete' => '')
-            ))
             ->add('address', 'text', array(
                 'attr' => array('address-autocomplete' => '')
             ))
-            ->add('coordinates', 'hidden');
+            ->add('location', 'text', array(
+                'attr' => array('places-autocomplete' => '')
+            ))
+            ->add('coordinates', 'hidden', array('attr' => array('address-coordinates' => '')));
     }
     
     /**
@@ -48,6 +48,7 @@ class EventDateType extends AbstractType
             'data_class' => 'CM\CMBundle\Entity\EventDate',
             'widget_control_group' => false,
             'widget_controls' => false,
+            'attr' => array('class' => 'event_date')
         ));
     }
 

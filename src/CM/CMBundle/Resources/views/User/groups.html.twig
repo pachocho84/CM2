@@ -1,0 +1,12 @@
+{% extends 'CMBundle:User:accountLayout.html.twig' %}
+{% set inGroupsPage = true %}
+
+{% block title %}{{ 'Groups'|trans }}{% endblock %}
+
+{% block body %}
+
+    <h3>{{ show_icon('Group') | raw }} <span>{{ block('title') }}</span></h3>    
+
+    {{ include('CMBundle:User:groupObjects.html.twig') }}
+  
+{% endblock %}

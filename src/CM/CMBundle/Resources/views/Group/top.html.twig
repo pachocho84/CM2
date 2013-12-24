@@ -1,3 +1,7 @@
+{% if is_granted('ROLE_USER') %}
+    {{ render(controller('CMBundle:Fan:fanButton', {'userId': group.id, 'object': group|class_name})) }}
+{% endif %}
+
 {% if not group.coverImg or group.coverImg == '' %}
     <div class="media">
         {{ show_img_box(group.img|imagine_filter('50'), {'width': 35, 'height': 35, 'offset': group.imgOffset, 'default': 'group', 'box_attributes': {'class': 'pull-left'}})|raw }}
@@ -37,7 +41,7 @@
                     <a href="{{ path('group_multimedia', {'slug': group.slug}) }}">{{ show_icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
                 </li>
                 <li{% if inPage == 'disc' %} class="active"{% endif %}>
-                    <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs [TODO]'|trans }}</a>
+                    <a href="{{ path('group_discs', {'slug': group.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs'|trans }}</a>
                 </li>
                 {#<li{% if $inPage == 'fan' %} class="active"{% endif %}><?php echo link_to(show_icon('fan').' '.__('Fans'), '@fan_group?group='.$group->getUsername()) ?></li>#}
             </ul>

@@ -2,8 +2,6 @@
 
 {% block body %}
 
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': group.id, 'object': group|class_name})) }}{% endif %}
-
     {{ include('CMBundle:Group:top.html.twig', {'inPage': 'multimedia'}) }}
 
 
@@ -16,11 +14,9 @@
 
     <div class="box">
 
-        {% if is_admin(group) %}<a href="{{ path('imagealbum_new', {'object': group|class_name, 'objectId': group.id}) }}">{{ 'Add a new multimidia'|trans }}</a>{% endif %}
+        {% if is_admin(group) %}<a href="{{ path('multimedia_new', {'object': group|class_name, 'objectId': group.id}) }}">{{ 'Add a new multimidia'|trans }}</a>{% endif %}
 
-        <ul class="media-list objects">
-            {{ include('CMBundle:Multimedia:multimediaList.html.twig', {'link': 'group_multimedia_show', 'publisher': group}) }}
-        </ul>
+        {{ include('CMBundle:Multimedia:objects.html.twig') }}
     </div>
     
 

@@ -3,18 +3,18 @@
     {% if request is null or (request is not null and request.entity.entityUsers[app.user.id] is not defined) %}
         
         <div class="btn-group btn-group-sm">
-            <a href="{{ path('request_add', {'object': entity|class_name , 'objectId': entity.id, 'userId': app.user.id}) }}" class="btn btn-default ajax-link ajax-link-target" data-loading-text="{{ 'Loading'|trans }}" data-toggle="tooltip" data-container="body" title="{{ 'Send a request to join and to show this element on your profile'|trans }}" data-placement="top"><i class="glyphicons crown"></i> {{ 'Request protagonist'|trans }}</a>
+            <a href="{{ path('request_add', {'object': entity|class_name , 'objectId': entity.id, 'userId': app.user.id}) }}" class="btn btn-default ajax-link ajax-link-target" data-loading-text="{{ 'Loading'|trans }}" data-toggle="tooltip" data-container="body" title="{{ 'Send a request to join and to show this element on your profile'|trans }}" data-placement="top">{{ show_icon('Crown')|raw }} {{ 'Request protagonist'|trans }}</a>
         </div>
 
     {% elseif request.entity.entityUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_PENDING') %}
         
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="glyphicons crown"></i> {{ 'You have been added as protagonsit'|trans }} <span class="caret"></span>
+                {{ show_icon('Crown')|raw }} {{ 'You have been added as protagonsit'|trans }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="{{ path('request_update', {'choice': 'accept', 'id': request.id}) }}" class="ajax-link"><i class="glyphicon glyphicon-ok"></i> {{ 'Accept'|trans }}</a></li>
-                <li><a href="{{ path('request_update', {'choice': 'refuse', 'id': request.id}) }}" class="ajax-link"><i class="glyphicon glyphicon-remove"></i> {{ 'Refuse'|trans }}</a></li>
+                <li><a href="{{ path('request_update', {'choice': 'accept', 'id': request.id}) }}" class="ajax-link">{{ show_icon('Ok')|raw }} {{ 'Accept'|trans }}</a></li>
+                <li><a href="{{ path('request_update', {'choice': 'refuse', 'id': request.id}) }}" class="ajax-link">{{ show_icon('Remove')|raw }} {{ 'Refuse'|trans }}</a></li>
             </ul>
         </div>
 
@@ -22,7 +22,7 @@
 
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="glyphicons crown"></i> {{ 'You are a protagonist'|trans }} <span class="caret"></span>
+                {{ show_icon('Crown')|raw }} {{ 'You are a protagonist'|trans }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li><a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">{{ 'Cancel participation'|trans }}</a></li>
@@ -33,7 +33,7 @@
 
         <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="glyphicons crown"></i> {{ 'Request sent'|trans }} <span class="caret"></span>
+                {{ show_icon('Crown')|raw }} {{ 'Request sent'|trans }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li><a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">{{ 'Cancel request'|trans }}</a></li>
@@ -42,11 +42,11 @@
 
     {% elseif request.entity.entityUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_REFUSED_ADMIN') %}
         
-        <span class="btn btn-default disabled"><i class="glyphicons crown"></i> {{ 'Your request has been refused'|trans }}</span>
+        <span class="btn btn-default disabled">{{ show_icon('Crown')|raw }} {{ 'Your request has been refused'|trans }}</span>
 
     {% elseif request.entity.entityUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_REFUSED_ENTITY_USER') %}
         
-        <span class="btn btn-default disabled"><i class="glyphicons crown"></i> {{ 'You refused the protagonist request'|trans }}</span>
+        <span class="btn btn-default disabled">{{ show_icon('Crown')|raw }} {{ 'You refused the protagonist request'|trans }}</span>
         
     {% endif %}
 {% endif %}

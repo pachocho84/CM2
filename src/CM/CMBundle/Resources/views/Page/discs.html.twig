@@ -1,0 +1,9 @@
+{% extends 'CMBundle:Page:layout.html.twig' %}
+
+{% block body %}
+    {{ include('CMBundle:Page:top.html.twig', {'inPage': 'event'}) }}
+
+    <div class='box'>
+        {{ include('CMBundle:Disc:objects.html.twig', {'page': pageNum}) }}
+    </div>
+{% endblock %}
