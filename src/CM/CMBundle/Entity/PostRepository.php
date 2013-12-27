@@ -66,13 +66,7 @@ class PostRepository extends BaseRepository
             $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         } elseif (!is_null($options['userId'])) {
             $query->andWhere('p.userId = :user_id')
-                ->andWhere($query->expr()->orX(
-                    $query->expr()->orX(
-                        $query->expr()->eq('p.userId', ':user_id'),
-                        $query->expr()->eq('p.creatorId', ':user_id')
-                    ),
-                    $query->expr()->eq('e.visible', '1')
-                ))->setParameter('user_id', $options['userId']);
+                ->setParameter('user_id', $options['userId']);
         }
         $query->orderBy('p.updatedAt', 'desc')
             ->addOrderBy('p.id', 'desc');

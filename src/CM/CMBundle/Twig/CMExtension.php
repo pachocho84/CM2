@@ -797,6 +797,7 @@ class CMExtension extends \Twig_Extension
             case 'Image_'.Post::TYPE_CREATION:
                  return '<span class="glyphicon glyphicon-picture"></span>';
             case 'Multimedia':
+            case 'Multimedia_'.Post::TYPE_CREATION:
                  return '<span class="glyphicon glyphicon-film"></span>';
             case 'Page':
             case 'Page_'.Post::TYPE_CREATION:

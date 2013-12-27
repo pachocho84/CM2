@@ -27,7 +27,6 @@
             </small>
         </p>
 
-        {{ post.object|class_name }}
         {% if (post.object|class_name == 'Like' or post.object|class_name == 'Comment') and relatedObjects.imageId is not null %}
             {{ include('CMBundle::social.html.twig', {'post': relatedObjects.image, 'isImage': true}) }}
         {% elseif (post.object|class_name == 'Like' or post.object|class_name == 'Comment') %}

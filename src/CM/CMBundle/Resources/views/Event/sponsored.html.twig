@@ -1,4 +1,4 @@
-{% if sponsored_events %}
+{% if sponsoredEvents %}
     <div class="box">
     	
     	<div class="box-top">
@@ -9,11 +9,11 @@
     	
     		<div class="objects events-sponsored"><div class="row">
     
-                {% for sponsored in sponsored_events %}
+                {% for sponsored in sponsoredEvents %}
     			    
     				<div class="col-md-4">
     				    
-    				    {{ show_img_box(sponsored.event.images[0]|imagine_filter('350'), {'width': 220, 'height': 150})|raw }}
+    				    {% if sponsored.event.images|length > 0 %}{{ show_img_box(sponsored.event.images[0]|imagine_filter('350'), {'width': 220, 'height': 150})|raw }}{% endif %}
     				    
 {#     							{% show_img_box($post->getImages()->getFirst(), array('width' => 234, 'height' => 117, 'link' => $post->getRawValue()->getEntity()->getLinkShow())) %}	 #}
     					

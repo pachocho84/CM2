@@ -27,12 +27,18 @@ class PageRepository extends BaseRepository
     {
         $options = self::getOptions($options);
 
+        $count = $this->createQueryBuilder('p')
+            ->select('count(p.id)')
+            ->innerJoin('p.pageUsers', 'pu', '', '', 'pu.userId');
         $query = $this->createQueryBuilder('p')
             ->select('p, pu, i')
             ->innerJoin('p.pageUsers', 'pu', '', '', 'pu.userId')
             ->leftJoin('p.images', 'i');
 
         if ($options['userId']) {
+            $count->andWhere('pu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('pu.status in (:status)')
+                ->setParameter('status', array(PageUser::STATUS_PENDING, PageUser::STATUS_ACTIVE, PageUser::STATUS_REQUESTED));
             $query->andWhere('pu.userId = :user_id')->setParameter('user_id', $options['userId'])
                 ->andWhere('pu.status in (:status)')
                 ->setParameter('status', array(PageUser::STATUS_PENDING, PageUser::STATUS_ACTIVE, PageUser::STATUS_REQUESTED));
@@ -42,7 +48,7 @@ class PageRepository extends BaseRepository
             $query->andWhere('pu.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
 
-        return $options['papinate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
     public function getAdmins($pageId)

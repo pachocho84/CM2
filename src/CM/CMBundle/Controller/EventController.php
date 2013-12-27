@@ -246,17 +246,8 @@ class EventController extends Controller
         }
         
         // TODO: retrieve locales from user
-
-        if ($request->get('_route') == 'event_edit') {
-            $formRoute = 'event_edit';
-            $formRouteArgs = array('id' => $event->getId(), 'slug' => $event->getSlug());
-        } else {
-            $formRoute = 'event_new';
-            $formRouteArgs = array();
-        }
  
         $form = $this->createForm(new EventType, $event, array(
-/*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
             'cascade_validation' => true,
             'error_bubbling' => false,
             'em' => $em,
@@ -328,7 +319,7 @@ class EventController extends Controller
         return array(
             'form' => $form->createView(),
             'entity' => $event,
-            'newEntry' => ($formRoute == 'event_new'),
+            'newEntry' => ($request->get('_route') == 'event_new'),
             'joinEntityType' => 'joinEvent'
         );
     }
@@ -361,10 +352,12 @@ class EventController extends Controller
         
         $sponsored = $this->getDoctrine()->getManager()->getRepository('CMBundle:Event')->getSponsored(array('limit' => $limit, 'locale' => $request->getLocale()));
         
-        $pagination  = $this->get('knp_paginator')->paginate($sponsored, 1, $limit);
+        $pagination = $this->get('knp_paginator')->paginate($sponsored, 1, $limit);
         
-        $this->getDoctrine()->getManager()->createQuery("UPDATE CMBundle:Sponsored s SET s.views = s.views + 1 WHERE s.id IN (2, 20)")->getResult();
+        $ids = array_map(function($i) { return $i->getId(); }, $pagination->getItems());
+                
+        $this->getDoctrine()->getManager()->createQuery("UPDATE CMBundle:Sponsored s SET s.views = s.views + 1 WHERE s.id IN (:ids)")->setParameter('ids', $ids)->execute();
         
-        return array('sponsored_events' => $pagination);
+        return array('sponsoredEvents' => $pagination);
     }
 }

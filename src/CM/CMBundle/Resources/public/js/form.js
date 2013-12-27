@@ -214,11 +214,11 @@ $(function() {
     // Places autocomplete
     function initialize(index) {
         canvas = $('[gmap-canvas]').get(index);
-        input = $(canvas).parent().parent().find('[places-autocomplete]').get(0);
+        input = $(canvas).parent().parent().parent().find('[places-autocomplete]').get(0);
 
         var mapOptions = {
             center: new google.maps.LatLng(45.4654542, 9.186515999999999),
-            zoom: 7
+            zoom: 14
         };
         var map = new google.maps.Map(canvas,
             mapOptions);
@@ -266,6 +266,8 @@ $(function() {
             }
 
             infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+            $(canvas).parent().parent().parent().find('[address-autocomplete]').val(address);
+            $(canvas).parent().parent().parent().find('[places-autocomplete]').val(place.name);
             infowindow.open(map, marker);
         });
     }
