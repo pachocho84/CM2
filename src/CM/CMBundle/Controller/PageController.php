@@ -31,7 +31,7 @@ class PageController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $pages = $em->getRepository('CMBundle:Page')->getGroups();
+        $pages = $em->getRepository('CMBundle:Page')->getPages();
         $pagination = $this->get('knp_paginator')->paginate($pages, $page, 15);
 
         return array('pages' => $pagination);
