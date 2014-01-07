@@ -1,6 +1,12 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
-{% block title %}{{ 'Articles'|trans }}{% endblock %}
+{% block title %}
+    {% if app.request.get('_route') == 'article_index' %}
+        {{ 'Articles'|trans }}
+    {% elseif app.request.get('_route') == 'article_category' %}
+        {{ category.getPlural|capitalize }}
+    {% endif %}
+{% endblock %}
 
 {% block body %}
 

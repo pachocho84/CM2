@@ -32,23 +32,33 @@ class ArticleController extends Controller
 {
     /**
      * @Route("/{page}", name = "article_index", requirements={"page" = "\d+"})
+     * @Route("/category/{categorySlug}/{page}", name="article_category", requirements={"page" = "\d+"})
      * @Template
      */
     public function indexAction(Request $request, $page = 1, $categorySlug = null)
     {
         $em = $this->getDoctrine()->getManager();
             
+        if (!$request->isXmlHttpRequest()) {
+            $categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::ARTICLE, array('locale' => $request->getLocale()));
+        }
+        
+        if ($categorySlug) {
+            $category = $em->getRepository('CMBundle:EntityCategory')->getCategory($categorySlug, EntityCategory::ARTICLE, array('locale' => $request->getLocale()));
+        }
+            
         $articles = $em->getRepository('CMBundle:Article')->getArticles(array(
-            'locale' => $request->getLocale()
+            'locale' => $request->getLocale(),
+            'categoryId'   => $categorySlug ? $category->getId() : null
         ));
         
         $pagination = $this->get('knp_paginator')->paginate($articles, $page, 10);
         
         if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Article:objects.html.twig', array('dates' => $pagination, 'page' => $page));
+            return $this->render('CMBundle:Article:objects.html.twig', array('articles' => $pagination));
         }
         
-        return array('articles' => $pagination);
+        return array('categories' => $categories, 'articles' => $pagination, 'category' => $category);
     }
 
     /**

@@ -6,7 +6,7 @@
     {% elseif app.request.get('_route') == 'event_archive' %}
         {{ "Events Archive"|trans }}
     {% elseif app.request.get('_route') == 'event_category' %}
-{#         {{ category.getPlural | capitalize }} #}
+        {{ category.getPlural|capitalize }}
     {% endif %}
 {% endblock %}
 
