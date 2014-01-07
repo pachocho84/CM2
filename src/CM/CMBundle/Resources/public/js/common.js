@@ -63,7 +63,6 @@ $(function() {
             }).done(function(data) {
                 content = data;
             });
-                console.log(content);
             return content;
         }
     });

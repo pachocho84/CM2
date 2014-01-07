@@ -17,8 +17,6 @@ use FOS\MessageBundle\Model\ParticipantInterface;
  */
 class Message extends BaseMessage implements MessageInterface
 {
-    use ORMBehaviors\Timestampable\Timestampable;
-
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id

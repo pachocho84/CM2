@@ -9,6 +9,7 @@ use FOS\MessageBundle\Entity\Thread as BaseThread;
 /**
  * @ORM\Entity(repositoryClass="MessageThreadRepository")
  * @ORM\Table(name="message_thread")
+ * @ORM\HasLifecycleCallbacks
  */
 class MessageThread extends BaseThread
 {
@@ -41,6 +42,13 @@ class MessageThread extends BaseThread
      * @var ThreadMetadata[]|\Doctrine\Common\Collections\Collection
      */
     protected $metadata;
+
+    /**
+     * @var \DateTime $updatedAt
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $updatedAt;
 
     /**
      * Get creatorId
@@ -86,5 +94,36 @@ class MessageThread extends BaseThread
     public function getMetadata()
     {
         return $this->metadata;
+    }
+
+    /**
+     * Returns updatedAt value.
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     * @return $this
+     */
+    public function setUpdatedAt(\DateTime $updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Updates createdAt and updatedAt timestamps.
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updateTimestamps()
+    {
+        $this->updatedAt = new \DateTime('now');
     }
 }
