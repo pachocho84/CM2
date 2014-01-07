@@ -46,7 +46,6 @@ class Multimedia extends Entity
         
         $this->translate('en');
         $this->mergeNewTranslations();
-        $this->setVisible(true);
     }
 
     public function typeString()

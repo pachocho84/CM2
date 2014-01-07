@@ -7,7 +7,7 @@
         {% endif %}
         
         <div class="box-top">
-            <h2>{{ show_icon('Event')|raw }} <span>{{ date.start | format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</span></h2>
+            <h2>{{ show_icon('Event') }} <span>{{ date.start | format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</span></h2>
         </div>
         
         <ul class="media-list objects">
@@ -20,6 +20,6 @@
 
 {% if dates.paginationData.current < dates.paginationData.last %}
     <div class="well well-small load_more">
-        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': dates.getPaginationData.next })) }}">{{ 'Load more' | trans }}</a>
+        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': dates.getPaginationData.next })) }}">{{ 'Load more'|trans }}</a>
     </div>
 {% endif %}

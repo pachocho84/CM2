@@ -1,0 +1,69 @@
+{#header
+{
+    background: url(../images/layout/header_bg.jpg) repeat-x;
+    height:66px;
+}   
+#logo
+{
+    display:block; 
+    width:450px;
+    height:60px;
+    background:url(../images/layout/logo.png) no-repeat;
+#}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />            
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+        <title>{% block title %}{{ '%publisher%&#39;s biography'|trans({'%publisher%': publisher})|raw }}{% endblock %}</title>
+
+        <link rel="stylesheet" href="file://{{ web_abs_dir }}/css/jquery-ui.min.css" />
+        <link rel="stylesheet" href="file://{{ web_abs_dir }}/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="file://{{ web_abs_dir }}/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="file://{{ web_abs_dir }}/lib/glyphicons/css/glyphicons.css" />
+        <link rel="stylesheet" href="file://{{ web_abs_dir }}/bundles/cm/css/common.css" />
+        <link rel="stylesheet" href="file://{{ web_abs_dir }}/bundles/cm/css/main.css" />
+        
+        <link rel="icon" type="image/x-icon" href="{% block icon %}{% endblock %}" />
+    </head>
+    
+    <body>
+      
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-top">
+                            <h2>{{ show_icon('Biography')|raw }} <span>{{ block('title') }}</span></h2>
+
+                        </div>
+                        <div class="objects">
+                            <div class="media object">
+                                <div class="pull-left img-thumbnail"><img src='{{ 'file://' ~ web_abs_dir ~ '/bundles/cm/uploads/images/full/' ~ publisher.img }}' width=200 class="media-object" /></div>
+                                <div class="meda-body">
+                                    <h3 class="media-heading">
+                                        {{ publisher }}
+                                        {% if publisher|class_name == 'publisher' %}<small>{{ publisher.publisherTags|join(', ')|trim }}</small>{% endif %}
+                                    </h3>
+
+                                    <div class="text-justify">{{ biography }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- END ROW -->
+
+        </div> 
+
+        <div class="container"> 
+            <div id="footer">
+                Circuito Musica &copy; 2006-{{ "now"|date("Y") }}
+            </div>
+        </div>
+
+    </body>
+</html>

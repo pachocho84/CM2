@@ -1,4 +1,26 @@
-<li class="dropdown menu-tab{% if inRequestPage %} active{% endif %}">
+<li class="dropdown menu-tab{% if inMessagePage %} active{% endif %}">
+    
+    <a href="{{ path('message_index') }}" id="menu-messages" class="dropdown-toggle" data-toggle="dropdown">
+        {{ show_icon('Message')|raw }}
+        <span class="countNew" id="requestsCounter">{% if fos_message_nb_unread() > 0 %}{{ fos_message_nb_unread() }}{% endif %}</span>
+    </a>
+    
+    <div class="dropdown-menu pull-right">
+
+        <div class="dropdown-menu-header">
+            <h3>{{ 'Messages' | trans }}</h3>
+        </div>
+    
+        <div class="dropdown-menu-body" load_more_container>
+            <ul class="media-list"></ul>
+            <div class="dropdown-menu-loader"><img src="/images/loader.gif" /></div>
+        </div>
+    
+        <div class="dropdown-menu-footer"><a href="{{ path('message_index') }}">{{ 'View all messages' | trans }}</a></div>
+    
+    </div>
+    
+</li><li class="dropdown menu-tab{% if inRequestPage %} active{% endif %}">
     
     <a href="{{ path('request_index') }}" id="menu-requests" class="dropdown-toggle" data-toggle="dropdown">
         {{ show_icon('Request')|raw }}

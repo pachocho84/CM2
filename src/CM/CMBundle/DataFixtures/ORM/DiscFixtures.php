@@ -123,8 +123,7 @@ class DiscFixtures extends AbstractFixture implements OrderedFixtureInterface, C
         for ($i = 1; $i < 201; $i++) {
             $discNum = rand(0, count($this->discs) - 1);
             $disc = new Disc;
-            $disc->setVisible(true)
-                ->setAuthors($this->discs[$discNum]['authors'])
+            $disc->setAuthors($this->discs[$discNum]['authors'])
                 ->setInterpreters($this->discs[$discNum]['interpreters'])
                 ->setLabel($this->discs[$discNum]['label'])
                 ->setYear(new \DateTime($this->discs[$discNum]['year']));

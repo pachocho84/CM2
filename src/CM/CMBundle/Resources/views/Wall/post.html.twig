@@ -2,7 +2,7 @@
     {% set relatedObjects = related_object(post.object, post.objectIds) %}
 {% endif %}
 
-<li class="media object post{% if post.entity is not null and not post.entity.visible %} object-hidden{% endif %}"{% if loop is defined and loop.index == 1 %}update_more="{{ path(app.request.attributes.get('_route')|replace({'_update': ''})~'_update', app.request.attributes.get('_route_params')|merge({ 'lastUpdated': post.updatedAt.timestamp })) }}"{% endif %}>
+<li class="media object post"{% if loop is defined and loop.index == 1 %}update_more="{{ path(app.request.attributes.get('_route')|replace({'_update': ''})~'_update', app.request.attributes.get('_route_params')|merge({ 'lastUpdated': post.updatedAt.timestamp })) }}"{% endif %}>
     {{ show_img_box(post.publisher.img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': post.publisher.imgOffset,  'link': path('user_show', {'slug': post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}, 'default': 'user'})|raw }}
 
     <div class="media-body">

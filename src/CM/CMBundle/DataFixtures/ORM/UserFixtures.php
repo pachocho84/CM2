@@ -204,18 +204,19 @@ Suona un flauto Yamaha 18 carati all gold.
 		  	   ->setBirthDate($date->setDate($person['birth_date'][0], $person['birth_date'][1], $person['birth_date'][2]))
 		  	   ->setBirthDateVisible($person['birth_date_visible'])
 		  	   ->setImg($person['img']);
-            if (!is_null($person['imgOffset'])) {
+            if (array_key_exists('imgOffset', $person)) {
                 $user->setImgOffset($person['imgOffset']);
             }
-            if (!is_null($person['cover'])) {
+            if (array_key_exists('cover', $person)) {
                 $user->setCoverImg($person['cover']);
             }
 
+            
             $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
 
             $user->addPost($post);
 
-            if (!is_null($person['biography'])) {
+            if (array_key_exists('biography', $person)) {
                 $biography = new Biography;
                 $biography->setTitle('b')
                     ->setText($person['biography']);

@@ -2,6 +2,10 @@ cm_cmbundle_locale:
     resource: "CM\\CMBundle\\Controller\\LocaleController"
     type:     annotation
 
+cm_cmbundle_file_server:
+    resource: "CM\\CMBundle\\Controller\\FileServerController"
+    type:     annotation
+
 cm_cmbundle_wall:
     resource: "CM\\CMBundle\\Controller\\WallController"
     type:     annotation
@@ -24,6 +28,14 @@ cm_cmbundle_comment:
 
 cm_cmbundle_request:
     resource: "CM\\CMBundle\\Controller\\RequestController"
+    type:     annotation
+
+fos_message:
+    resource: "@FOSMessageBundle/Resources/config/routing.xml"
+    prefix: /fos/messages
+
+cm_cmbundle_message:
+    resource: "CM\\CMBundle\\Controller\\MessageController"
     type:     annotation
 
 cm_cmbundle_event:

@@ -1,0 +1,51 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+        '@CMBundle/Resources/public/css/typeahead.js-bootstrap.css'
+    %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+        {{ form_errors(form.recipients) }}
+        <div class="form-group protagonist_typeahead" typeahead-callback="$addRecipient()">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-3 control-label required">{{ "Recipients"|trans }}</label>
+                    <div class="col-lg-9">
+                        <div id="recipients" disabled class="form-control" prototype="{{ '<span class="recipient protagonists_user" user_id="__id__" recipient="__username__">__fullname__ <button type="button" class="close" aria-hidden="true">&times;</button></span>'|e }}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 collection-items">
+                <div class="cm_cmbundle_message_recipients_control_group">
+                    <div id="protagonists_finder_container" class="form-group">
+                        <label class="control-label col-lg-3">Add new recipient</label>
+                        <div class="col-lg-9"><input type="text" id="protagonists_finder" class="form-control" /></div>
+                    </div>
+                    {{ form_widget(form.recipients, {'type': 'hidden'}) }}
+                </div>
+            </div>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+        <script type="text/javascript">
+            var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
+        </script>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false&language={{ app.request.locale }}"></script>
+        {% javascripts
+            '@CMBundle/Resources/public/js/hogan-2.0.0.min.js'
+            '@CMBundle/Resources/public/js/typeahead.min.js'
+            '@CMBundle/Resources/public/js/uploadCollection.js'
+            '@CMBundle/Resources/public/js/form.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+{% endblock %}

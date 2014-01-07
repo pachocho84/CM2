@@ -18,7 +18,9 @@ class ArticleType extends EntityType
         parent::buildForm($builder, $options);
     
         $builder->add('source')
-            ->add('date');
+            ->add('date', 'date', array(
+                'widget' => 'single_text',
+            ));
     }
     
     /**

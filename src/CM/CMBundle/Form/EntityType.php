@@ -53,9 +53,6 @@ class EntityType extends BaseEntityType
                     'locales' => $options['locales'],
                 )
             ));
-        if (in_array('ROLE_CLIENT', $options['roles'])) {
-            $builder->add('visible');
-        }
         $builder->add('images', 'collection', array(
                 'type' => new ImageType,
                 'by_reference' => false,

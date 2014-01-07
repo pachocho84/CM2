@@ -412,7 +412,7 @@ form.form-compact .form-control
 {
     margin-bottom: 0px;
 } 
-form.form-horizontal textarea {
+form.form-horizontal textarea:not([comment_new]) {
     height: 150px;
     min-height: 150px;
     max-width: 100%;

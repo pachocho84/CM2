@@ -47,6 +47,27 @@ function infiniteUpdate() {
 $(function() {
     UserActive.begin();
 
+    /* USER POPOVER */
+    $(document).popover({
+        selector: '[user-popover]',
+        trigger: 'hover',
+        placement: 'auto top',
+        delay: {show: 1000, hide: 100},
+        container: 'body',
+        html: true,
+        content: function() {
+            var content;
+            $.ajax({
+                url: $(this).attr('data-href'),
+                async: false
+            }).done(function(data) {
+                content = data;
+            });
+                console.log(content);
+            return content;
+        }
+    });
+
     /* INFINITE SCROLL */
     $('body').ready(function() {
         $('.load_more').each(function() {
@@ -92,6 +113,20 @@ $(function() {
     });
     $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
         $(event.target).closest('[btn-file-container]').find('input[readonly]').val(label);
+    });
+    // preview
+    $(document).on('change', 'input[type=file][image]', function(event) {
+        var file = event.currentTarget.files[0];
+        var reader = new FileReader();
+        // var img = document.createElement('img');
+        var img = $('<img class="col-lg-offset-3 col-lg-9 thumbnail" />');
+        $(event.currentTarget).closest('.form-group').append(img);
+        
+        var reader = new FileReader();
+        reader.onloadend = function() {
+             img.attr('src', reader.result);
+        }
+        reader.readAsDataURL(file);
     });
 
     /* DELETE CONFIRMATION */

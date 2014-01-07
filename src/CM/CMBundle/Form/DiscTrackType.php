@@ -20,7 +20,7 @@ class DiscTrackType extends AbstractType
             ->add('movement')
             ->add('artists')
             ->add('duration', 'time', array(
-                'with_seconds' => true
+                'with_seconds' => true,
             ))
             ->add('audioFile', 'file', array('required' => false))
             ->add('extract', 'checkbox', array('required' => false));

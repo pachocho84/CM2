@@ -4,15 +4,15 @@
         <a href="{{ path('event_calendar') }}" class="{{ app.request.attributes.get('_route') == 'event_calendar' ? 'btn btn-default active' : 'btn btn-default'}}">{{ show_icon('Calendar')|raw }} {{ 'Calendar' | trans }}</a>
         <a href="{{ path('event_archive') }}" class="{{ app.request.attributes.get('_route') == 'event_archive' ? 'btn btn-default active' : 'btn btn-default'}}">{{ show_icon('Archive')|raw }} {{ 'Archive' | trans }}</a>
         <div class="btn-group btn-group-sm">
-            <a href="{{ path('event_index') }}" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{ show_icon('Tag')|raw }} {{ 'Categories' | trans }} <b class="caret"></b></a>
+            <a href="{{ path('event_index') }}" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{ show_icon('Tag')|raw }} {{ 'Categories'|trans }} <b class="caret"></b></a>
             <ul class="dropdown-menu pull-right text-left" role="menu" aria-labelledby="dropdownMenu">
-                <li><a href="{{ path('event_index') }}">{{ 'Events' | trans }}</a></li>
+                <li><a href="{{ path('event_index') }}">{{ 'Events'|trans }}</a></li>
                 <li class="divider"></li>
                 {% for category in categories %}
-                    <li><a href="{{ path('event_category', { 'category_slug': category.getSlug }) }}">{{ category.getPlural | capitalize }}</a></li>
+                    <li><a href="{{ path('event_category', { 'categorySlug': category.getSlug }) }}">{{ category.getPlural|capitalize }}</a></li>
                 {% endfor %}
             </ul>
         </div>
-        <a href="{{ path('event_new') }}" class="{{ app.request.attributes.get('_route') == 'event_new' ? 'btn btn-default active' : 'btn btn-default'}}">{{ show_icon('Plus')|raw }} {{ 'Create' | trans }}</a>
+        <a href="{{ path('event_new') }}" class="{{ app.request.attributes.get('_route') == 'event_new' ? 'btn btn-default active' : 'btn btn-default'}}">{{ show_icon('Plus')|raw }} {{ 'Create'|trans }}</a>
     </div>
 </div>

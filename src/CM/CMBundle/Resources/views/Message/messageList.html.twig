@@ -1,0 +1,35 @@
+{% for thread in threads %}
+    <li class="media object">
+        <div class="media-body ajax-link-target">
+            <p>
+                <b>{{ thread.subject }}</b> 
+                {{ thread.metadata|length }}
+                {#{% if thread.metadata|length == 1 %}
+                    {{ 'with %name%'|trans({'%name%', thread.metadata[0].partecipant}) }}
+                {% elseif thread.metadata|length == 2 %}
+                    {{ 'You and %name% like this.' | trans({'%name%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>'}) | raw }}
+                {% elseif thread.metadata|length == 3 %}
+                    {{ 'You, %name1% and %name2% like this.' | trans({'%name1%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>', '%name2%': '<a href="'~path('user_show', {'slug': likesWithoutUser[1].user.slug})~'">'~likesWithoutUser[1].user~'</a>'}) | raw }}
+                {% else %}
+                    {{ 'You, %name% and %link%%count% others %endlink% like this.' | trans({'%name%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>', '%count%': whoLikesIt - 2, '%link%': '<a href="'~path('who_likes_it', {'type': post | class_name | lower, 'id': post.id})~'" class="modal-trigger">', '%endlink%': '</a>'}) | raw }}
+                {% endif %}#}
+            </p>
+            
+            <div class="media-body">
+                {{ show_img_box(thread.creator.img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': thread.creator.imgOffset,  'link': path('user_show', {'slug': thread.creator.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+                {{ thread.lastMessage.body|length > 50 ? thread.lastMessage.body|slice(0, 47) ~ '...' : thread.lastMessage.body }}
+                <p class="text-muted"><small>{{ thread.lastMessage.createdAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</small></p>
+            </div>
+        </div>
+    </li>
+{% else %}
+    {{ 'There are no messages.'|trans }}
+{% endfor %}
+
+{#{% if threads.paginationData.current < threads.paginationData.last %}
+    <div class="well well-small load_more">
+        <a href="{{ path('thread_index', { 'page': threads.getPaginationData.next }) }}">{{ 'Load more'|trans }}</a>
+    </div>
+{% else %}
+    <div class="well well-small"><span>{{ 'There are no more threads.'|trans }}</span></div>
+{% endif %}#}

@@ -53,15 +53,12 @@ class BaseEntityType extends AbstractType
                     )
                 ));
         } else {
-            $builder->add($builder->create('translations', new EntityTranslationType, array('label' => 'Body',
-                    'error_bubbling' => false,))->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 'en')));
+            $builder->add($builder->create('translations', new EntityTranslationType, array('error_bubbling' => false,))
+                ->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 'en')));
 
             // $builder->add('translations', 'collection', array(
             //         'type' => new EntityTranslationType
             //     ));
-        }
-        if (in_array('ROLE_CLIENT', $options['roles'])) {
-            $builder->add('visible');
         }
         if (in_array('ROLE_ADMIN', $options['roles'])) {
             $builder->add($builder->create('posts', new PostType, array('label' => 'Post'))->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'])));

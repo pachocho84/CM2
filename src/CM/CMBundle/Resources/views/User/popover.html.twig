@@ -1,0 +1,7 @@
+<div>
+    <div class="pull-left"><img src='{{ user.img|imagine_filter('50') }}' width=50 class="media-object" /></div>
+    <div>
+        <h3><small>{{ user.userTags|join(', ')|trim }}</small></h3>
+        {% if biography is not null %}{{ entity_short_text(biography, 150)|raw }}{% endif %}
+    </div>
+</div>

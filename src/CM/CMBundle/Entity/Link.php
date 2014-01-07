@@ -8,8 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Link
  *
+ * @ORM\Entity(repositoryClass="LinkRepository")
  * @ORM\Table(name="link")
- * @ORM\Entity(repositoryClass="CM\CMBundle\Entity\LinkRepository")
  */
 class Link extends Entity
 {
@@ -36,7 +36,6 @@ class Link extends Entity
         
         $this->translate('en');
         $this->mergeNewTranslations();
-        $this->setVisible(true);
     }
 
     /**

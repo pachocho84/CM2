@@ -1,7 +1,17 @@
-<li class="object" data-type="article" data-id="{{ article.id }}">
+<li class="object"{# data-type="article" data-id="{{ article.id }}"#}>
 
-    <a href="{{ path('article_show', {'id': article.id, 'slug': article.slug}) }}">{{ 'Show'|trans }}</a>
+    <div class="media">
+        {% if article.getImages|length > 0 %}
+            <a href="{{ path('article_show', {'id': article.id, 'slug': article.getSlug }) }}" class="pull-left img-thumbnail article-cover">
+                <img src='{{ asset(uploaded_images_full_dir ~ '/' ~ article.images[0].img) }}' width="200px" />
+            </a>
+        {% endif %}
 
-    
+        <div class="media-body">
+            {{ entity_short_text(article) }}
+
+            {{ include('CMBundle::social.html.twig', {'post': article.post}) }}
+        </div>
+    </div>
 
 </li>

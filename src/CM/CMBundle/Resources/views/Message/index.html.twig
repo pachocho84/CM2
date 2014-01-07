@@ -1,0 +1,29 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block title %}{{ 'Messages'|trans }}{% endblock %}
+
+{% block body %}
+    <h2>
+        {{ show_icon('Message')|raw }}
+        {{ block('title') }}
+    </h2>                                                                    
+     
+    <ul class="breadcrumb">
+      {#<li><?php echo link_to('Home', '@homepage') ?></li>
+      <li class="active"><?php echo __($sf_response->getTitle()) ?></li>#}
+    </ul>
+
+    <div class="objects-container">
+
+        <div class="objects">
+
+            <div class="objects">
+                <ul class="media-list">
+                    {{ include('CMBundle:Message:messageList.html.twig') }}
+                </ul>
+            </div>
+
+        </div>
+        
+    </div>
+{% endblock %}

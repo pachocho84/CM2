@@ -5,6 +5,7 @@ namespace CM\CMBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
+use FOS\MessageBundle\Model\ParticipantInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @ORM\Table(name="user")
  * @ORM\HasLifecycleCallbacks
  */
-class User extends BaseUser
+class User extends BaseUser implements ParticipantInterface
 {
     use \CM\CMBundle\Model\ImageTrait;
     use \CM\CMBundle\Model\CoverImageTrait;

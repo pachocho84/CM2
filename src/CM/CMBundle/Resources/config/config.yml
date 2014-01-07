@@ -2,12 +2,14 @@ imports:
     - { resource: security.yml }
 
 parameters:
+    web.abs_dir: %kernel.root_dir%/../web
     cm_property_accessor.class: CM\CMBundle\PropertyAccess\CMPropertyAccessor
     bundle.dir: /bundles/cm
     upload.dir: %bundle.dir%/uploads
     images.dir: %upload.dir%/images
     images_full.dir: %images.dir%/full # if you change this, change it also in the Entity/Image.php file!
     audio.dir: %upload.dir%/audio
+    temp.dir: %kernel.root_dir%/../src/CM/CMBundle/Resources/public/temp
     session.attribute_bag.class: Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag
 
 assetic:
@@ -52,6 +54,7 @@ assetic:
 
 twig:
     globals:
+        web_abs_dir: %web.abs_dir%
         uploaded_images_full_dir: %images_full.dir%
         uploaded_audio_dir: %audio.dir%
     form:
@@ -70,6 +73,16 @@ fos_user:
     profile:
         form:
             type: cm_cmbundle_user_profile
+
+fos_message:
+    db_driver: orm
+    thread_class: CM\CMBundle\Entity\MessageThread
+    message_class: CM\CMBundle\Entity\Message
+    new_thread_form:
+      type:    fos_message.new_thread_multiple_form.type
+      handler: fos_message.new_thread_multiple_form.handler
+      model:   FOS\MessageBundle\FormModel\NewThreadMultipleMessage
+      name:    message
 
 # Translatable form
 a2lix_translation_form:
@@ -108,6 +121,8 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [750, 750], mode: inset }
+        full:
+            quality: 100
 
 sonata_block:
     default_contexts: [cms]
@@ -115,6 +130,14 @@ sonata_block:
         # Enable the SonataAdminBundle block
         sonata.admin.block.admin_list:
             contexts:   [admin]
+
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     /usr/bin/wkhtmltopdf
+        options:    []
+    image:
+        enabled:    false
 
 services:
     property_accessor:
@@ -127,12 +150,13 @@ services:
 
     cm.twig.cm_extension:
         class: CM\CMBundle\Twig\CMExtension
-        arguments: 
+        arguments:
             translator: @translator
             router: @router
             helper: @cm.helper
             securityContext: @security.context
             userAuthentication: @cm.user_authentication
+            imagineFilter: @liip_imagine.cache.manager
             options: 
                 images_dir: %kernel.root_dir%/../web%images_full.dir%
                 sizes: %liip_imagine.filter_sets% 

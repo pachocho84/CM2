@@ -62,10 +62,10 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                 ->setWebsite($p['website'])
                 ->setImg($p['img'])
                 ->setVip($p['vip']);
-            if (!is_null($p['cover'])) {
+            if (array_key_exists('cover', $p)) {
                 $page->setCoverImg($p['cover']);
             }
-            if (!is_null($p['background'])) {
+            if (array_key_exists('background', $p)) {
                 $page->setBackgroundImg($p['background']);
             }
             

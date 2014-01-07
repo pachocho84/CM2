@@ -49,7 +49,7 @@ class UserRepository extends BaseRepository
     public function getFromAutocomplete($fullname, $exclude = array())
     {
         $qb = $this->createQueryBuilder('u');
-        return $qb->select('partial u.{id, username, firstName, lastName, img, imgOffset}')
+        return $qb->select('partial u.{id, username, usernameCanonical, firstName, lastName, img, imgOffset}')
             ->andWhere('u.id NOT IN (:exclude)')->setParameter('exclude', $exclude)
             // ->where('u.IsActive = ?', true)
             ->andWhere('u.enabled = '.true)

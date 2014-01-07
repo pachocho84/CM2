@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use CM\CMBundle\Service\Helper;
 use Symfony\Component\Security\Core\SecurityContext;
 use CM\CMBundle\Service\UserAuthentication;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use CM\CMBundle\Entity\Entity;
 use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\Event;
@@ -31,6 +32,8 @@ class CMExtension extends \Twig_Extension
 
     private $userAuthentication;
 
+    private $imagineFilter;
+
     private $options;
 
     public function __construct(
@@ -39,6 +42,7 @@ class CMExtension extends \Twig_Extension
         Helper $helper,
         SecurityContext $securityContext,
         UserAuthentication $userAuthentication,
+        CacheManager $imagineFilter,
         $options = array()
     )
     {
@@ -47,6 +51,7 @@ class CMExtension extends \Twig_Extension
         $this->helper = $helper;
         $this->securityContext = $securityContext;
         $this->userAuthentication = $userAuthentication;
+        $this->imagineFilter = $imagineFilter;
         $this->options = array_merge(array(
             'images_abs_dir' => '/',
             'sizes' => array()
@@ -69,13 +74,14 @@ class CMExtension extends \Twig_Extension
             'can_manage' => new \Twig_Function_Method($this, 'getCanManage'),
             'is_admin' => new \Twig_Function_Method($this, 'getIsAdmin'),
             'related_object' => new \Twig_Function_Method($this, 'getRelatedObject'),
-            'delete_link' => new \Twig_Function_Method($this, 'getDeleteLink'),
-            'show_img_box' => new \Twig_Function_Method($this, 'getShowImgBox'),
-            'request_tag' => new \Twig_Function_Method($this, 'getRequestTag'),
-            'notification_tag' => new \Twig_Function_Method($this, 'getNotificationTag'),
-            'entity_short_text' => new \Twig_Function_Method($this, 'getEntityShortText'),
-            'post_text' => new \Twig_Function_Method($this, 'getPostText'),
-            'show_icon' => new \Twig_Function_Method($this, 'getShowIcon'),
+            'delete_link' => new \Twig_Function_Method($this, 'getDeleteLink', array('is_safe' => array('html'))),
+            'user_box' => new \Twig_Function_Method($this, 'getUserBox', array('is_safe' => array('html'))),
+            'show_img_box' => new \Twig_Function_Method($this, 'getShowImgBox', array('is_safe' => array('html'))),
+            'request_tag' => new \Twig_Function_Method($this, 'getRequestTag', array('is_safe' => array('html'))),
+            'notification_tag' => new \Twig_Function_Method($this, 'getNotificationTag', array('is_safe' => array('html'))),
+            'entity_short_text' => new \Twig_Function_Method($this, 'getEntityShortText', array('is_safe' => array('html'))),
+            'post_text' => new \Twig_Function_Method($this, 'getPostText', array('is_safe' => array('html'))),
+            'show_icon' => new \Twig_Function_Method($this, 'getShowIcon', array('is_safe' => array('html'))),
         );
     }
 
@@ -168,6 +174,20 @@ class CMExtension extends \Twig_Extension
         return '<a href="'.$link.'" >'.$text.'</a>';
 
         // echo link_to($text, $link, $options);
+    }
+
+    public function getUserBox($publisher, $options = array())
+    {
+        $options = array_merge(array(
+        ), $options);
+
+        // var_dump($this->twig->getFilter('e')());die;
+
+        // $img = $this->imagineFilter->getBrowserPath($publisher->getImg(), 50, false);
+        // $imgBox = $this->getShowImgBox($img, array('width' => 35, 'height' => 35, 'offset' => $publisher->getImgOffset(), 'box_attributes' => array('class' => 'pull-left')));
+
+        return 'user-popover data-title="'.$publisher.'" data-href="'.$this->router->generate('user_popover', array('slug' => $publisher->getSlug())).'"';
+        // $this->getShowImgBox($img, array('width' => 35, 'height' => 35, 'offset' => $publisher->getImgOffset(), 'box_attributes' => array('class' => 'pull-left')))
     }
 
     public function getShowImgBox($img, $options = array())
@@ -772,104 +792,106 @@ class CMExtension extends \Twig_Extension
     {
         switch ($object) {
             case 'Up':
-                 return '<span class="glyphicon glyphicon-chevron-up"></span>';
+                return '<span class="glyphicon glyphicon-chevron-up"></span>';
             case 'Down':
-                 return '<span class="glyphicon glyphicon-chevron-down"></span>';
+                return '<span class="glyphicon glyphicon-chevron-down"></span>';
             case 'Back':
-                 return '<span class="glyphicon glyphicon-chevron-left"></span>';
+                return '<span class="glyphicon glyphicon-chevron-left"></span>';
             case 'Remove':
-                 return '<span class="glyphicon glyphicon-remove"></span>';
+                return '<span class="glyphicon glyphicon-remove"></span>';
                 break;
             case 'Event':
             case 'Calendar':
             case 'Event_'.Post::TYPE_CREATION:
-                 return '<span class="glyphicon glyphicon-calendar"></span>';
+                return '<span class="glyphicon glyphicon-calendar"></span>';
             case 'Disc':
             case 'Disc_'.Post::TYPE_CREATION:
-               return '<span class="glyphicon glyphicon-headphones"></span>';
+                return '<span class="glyphicon glyphicon-headphones"></span>';
             case 'Article':
             case 'Article_'.Post::TYPE_CREATION:
-                  return '<span class="glyphicon glyphicon-print"></span>';
+                return '<span class="glyphicon glyphicon-print"></span>';
             case 'Link':
             case 'Link_'.Post::TYPE_CREATION:
-                  return '<span class="glyphicon glyphicon-bookmark"></span>';
+                return '<span class="glyphicon glyphicon-bookmark"></span>';
             case 'Image':
             case 'Image_'.Post::TYPE_CREATION:
-                 return '<span class="glyphicon glyphicon-picture"></span>';
+                return '<span class="glyphicon glyphicon-picture"></span>';
             case 'Multimedia':
             case 'Multimedia_'.Post::TYPE_CREATION:
-                 return '<span class="glyphicon glyphicon-film"></span>';
+                return '<span class="glyphicon glyphicon-film"></span>';
             case 'Page':
             case 'Page_'.Post::TYPE_CREATION:
-                 return '<span class="glyphicon glyphicon-bank"></span>';
+                return '<span class="glyphicon glyphicon-bank"></span>';
             case 'Group':
             case 'Group_'.Post::TYPE_CREATION:
-                 return '<span class="glyphicons group"></span>';
+                return '<span class="glyphicons group"></span>';
             case 'Fan':
             case 'Fan_'.Post::TYPE_FAN_USER:
             case 'Fan_'.Post::TYPE_FAN_GROUP:
             case 'Fan_'.Post::TYPE_FAN_PAGE:
-                 return '<span class="glyphicon glyphicon-flag"></span>';
+                return '<span class="glyphicon glyphicon-flag"></span>';
             case 'User':
-                 return '<span class="glyphicon glyphicon-user"></span>';
+                return '<span class="glyphicon glyphicon-user"></span>';
             case 'User_'.Post::TYPE_REGISTRATION:
-                 return '<span class="glyphicon-user-add"></span>';
+                return '<span class="glyphicon-user-add"></span>';
             case 'Biography':
             case 'Biography_'.Post::TYPE_UPDATE:
-                 return '<span class="glyphicon glyphicon-book"></span>';
+                return '<span class="glyphicon glyphicon-book"></span>';
             case 'Like':
             case 'Like_'.Post::TYPE_CREATION:
-                 return '<span class="glyphicon glyphicon-thumbs-up"></span>';
+                return '<span class="glyphicon glyphicon-thumbs-up"></span>';
             case 'Comment':
             case 'Comment_'.Post::TYPE_CREATION:
-                 return '<span class="glyphicon glyphicon-comment"></span>';
+                return '<span class="glyphicon glyphicon-comment"></span>';
             case 'Wall':
             case 'Post':
-                 return '<span class="glyphicon glyphicon-th-list"></span>';
+                return '<span class="glyphicon glyphicon-th-list"></span>';
             case 'Tag':
-                 return '<span class="glyphicon glyphicon-tag"></span>';
+                return '<span class="glyphicon glyphicon-tag"></span>';
             case 'Tags':
-                 return '<span class="glyphicon glyphicon-tags"></span>';
+                return '<span class="glyphicon glyphicon-tags"></span>';
             case 'Work_'.Post::TYPE_EDUCATION:
             case 'Work':
             case 'Job':
             case 'Job_'.Post::TYPE_UPDATE:
-                 return '<span class="glyphicon glyphicon-briefcase"></span>';
+                return '<span class="glyphicon glyphicon-briefcase"></span>';
             case 'Education':
             case 'Education_'.Post::TYPE_UPDATE:
-                 return '<span class="glyphicon glyphicon-book-open"></span>';
+                return '<span class="glyphicon glyphicon-book-open"></span>';
             case 'List':
-                 return '<span class="glyphicon glyphicon-list"></span>';
+                return '<span class="glyphicon glyphicon-list"></span>';
             case 'Plus':
-                 return '<span class="glyphicon glyphicon-plus"></span>';
+                return '<span class="glyphicon glyphicon-plus"></span>';
             case 'Minus':
-                 return '<span class="glyphicon glyphicon-minus"></span>';
+                return '<span class="glyphicon glyphicon-minus"></span>';
             case 'Crown':
-                 return '<span class="glyphicons crown"></span>';
+                return '<span class="glyphicons crown"></span>';
             case 'Ok':
-                 return '<span class="glyphicon glyphicon-ok"></span>';
+                return '<span class="glyphicon glyphicon-ok"></span>';
             case 'List':
-                 return '<span class="glyphicon glyphicon-list"></span>';
+                return '<span class="glyphicon glyphicon-list"></span>';
             case 'Archive':
-                 return '<span class="glyphicon glyphicon-folder-close"></span>';
+                return '<span class="glyphicon glyphicon-folder-close"></span>';
             case 'Time':
-                 return '<span class="glyphicon glyphicon-time"></span>';
+                return '<span class="glyphicon glyphicon-time"></span>';
             case 'Map':
-                 return '<span class="glyphicon glyphicon-map-marker"></span>';
+                return '<span class="glyphicon glyphicon-map-marker"></span>';
             case 'Edit':
-                 return '<span class="glyphicon glyphicon-pencil"></span>';
+                return '<span class="glyphicon glyphicon-pencil"></span>';
             case 'Alert':
-                 return '<span class="glyphicon glyphicon-exclamation-sign"></span>';
+                return '<span class="glyphicon glyphicon-exclamation-sign"></span>';
             case 'Globe':
+            case 'Message':
+                return '<span class="glyphicon glyphicon-envelope"></span>';
             case 'Notification':
-                 return '<span class="glyphicon glyphicon-globe"></span>';
+                return '<span class="glyphicon glyphicon-globe"></span>';
             case 'Request':
             case 'Request_in':
-                 return '<span class="glyphicon glyphicon-bell"></span>';
+                return '<span class="glyphicon glyphicon-bell"></span>';
             case 'Request_out':
-                 return '<span class="glyphicon glyphicon-share-alt"></span>';
+                return '<span class="glyphicon glyphicon-share-alt"></span>';
             default:
-                 return '<span style="color:red;">missing glyphicon for '.$object.'</span>';
+                return '<span style="color:red;">missing glyphicon for '.$object.'</span>';
         }
     }
 

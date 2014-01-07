@@ -1,3 +1,12 @@
+function addRecipient(c, d, a)
+{
+    recipients = $(c).find('#recipients');
+    messageRecipients = $(c).find('#message_recipients');
+    r = recipients.attr('prototype').replace("__id__", d['id']).replace("__username__", d['username']).replace("__fullname__", d['fullname']);
+    recipients.html(recipients.html() + r);
+    messageRecipients.val(messageRecipients.val() + (messageRecipients.val() ? ',' : '') + d['username']);
+}
+
 $(function() {
     /* PROTAGONIST */
     var protagonist_new_id = parseInt(1 + $('.protagonists_user:last').attr('protagonist_new_id')) + 5;
@@ -11,21 +20,29 @@ $(function() {
             url: typeaheadHintRoute + '?query=%QUERY',
             replace: function (url, uriEncodedQuery) {
                 return url.replace('%QUERY', uriEncodedQuery) + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',');
-            }
+            },
+            cache: false
         },
     });
     $(document).on('typeahead:autocompleted typeahead:selected', '.protagonist_typeahead', function (event, datum) {
         protagonist_new_id += 1;
         if ($(event.currentTarget).is('[typeahead-callback]')) {
-            target = $(event.currentTarget).attr('typeahead-callback');
+            callback = $(event.currentTarget).attr('typeahead-callback');
         } else {
-            target = $(event.currentTarget).find('li[typeahead-callback]').attr('typeahead-callback');
+            callback = $(event.currentTarget).find('li[typeahead-callback]').attr('typeahead-callback');
         }
-        target = target.replace(/USER_ID/, datum.id).replace(/NEW_ID/, protagonist_new_id).replace(/ENTITY_TYPE/, $('#protagonists').attr('object'));
-        $.get(target, function (data) {
-            $('.protagonists_user:last').after(data);
-            $('#protagonists_finder').val('');
-        });
+        if (callback.substring(0, 1) == '$') {
+            callback = callback.substring(1);
+            func = callback.split('(')[0];
+            args = callback.split('(').slice(1).join('(').slice(0, -1);
+            window[func](event.currentTarget, datum, args);
+        } else {
+            target = callback.replace(/USER_ID/, datum.id).replace(/NEW_ID/, protagonist_new_id).replace(/ENTITY_TYPE/, $('#protagonists').attr('object'));
+            $.get(target, function (data) {
+                $('.protagonists_user:last').after(data);
+            });
+        }
+        $('#protagonists_finder').typeahead('setQuery', '');
     });
 
     $(document).on('click', '.protagonists_remove', function (event) {
@@ -68,6 +85,17 @@ $(function() {
         });
         $(event.currentTarget).attr('active', 'active');
         $(event.currentTarget).parent().siblings('button').html($(event.currentTarget).attr('name') + ' <span class="caret"></span>');
+    });
+    // recipient
+    $(document).on('click', '.recipient .close', function(event) {
+        val = $(event.currentTarget).closest('.protagonist_typeahead').find('#message_recipients').val().split(',');
+        i = val.indexOf($(event.currentTarget).parent().attr('recipient'));
+        if (i >= 0) {
+            val.splice(i, 1);
+        }
+        $(event.currentTarget).closest('.protagonist_typeahead').find('#message_recipients').val(val.join(','));
+        console.log($(event.currentTarget).closest('.protagonist_typeahead').find('#message_recipients').val());
+        $(event.currentTarget).parent().remove();
     });
 
 //  $('.protagonists_user:last').attr('protagonist_new_id') != undefined ? protagonist_new_id = $('.protagonists_user:last').attr('protagonist_new_id') : protagonist_new_id = 1;

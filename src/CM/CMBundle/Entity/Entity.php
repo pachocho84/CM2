@@ -36,14 +36,6 @@ abstract class Entity
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="visible", type="boolean", nullable=true)
-     * @Assert\Type(type="bool")
-     */
-    private $visible = true;
 
     /**
      * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")
@@ -103,29 +95,6 @@ abstract class Entity
     public function getId()
     {
         return $this->id;
-    }
-    
-    /**
-     * Set visible
-     *
-     * @param boolean $visible
-     * @return Entity
-     */
-    public function setVisible($visible)
-    {
-        $this->visible = $visible;
-    
-        return $this;
-    }
-
-    /**
-     * Get visible
-     *
-     * @return boolean 
-     */
-    public function getVisible()
-    {
-        return $this->visible;
     }
     
     /**

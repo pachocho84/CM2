@@ -100,7 +100,6 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
         for ($i = 1; $i < 201; $i++) {
             $eventNum = rand(0, count($this->events) - 1);
             $event = new Event;
-            $event->setVisible(rand(0, 1));
             $event->setTitle($this->events[$eventNum]['title'].' (en)')
                 ->setExtract($this->events[$eventNum]['extract'])
                 ->setText($this->events[$eventNum]['text']);

@@ -50,6 +50,7 @@ class UserController extends Controller
             // $results[] = $user;
 
             $view['id'] = $user['id'];
+            $view['username'] = $user['usernameCanonical'];
             $view['fullname'] = $user['firstName'].' '.$user['lastName'];
             $view['view'] = $this->renderView('CMBundle:User:typeaheadHint.html.twig', array('user' => $user));
             $results[] = $view;
@@ -66,12 +67,14 @@ class UserController extends Controller
         $newRequests = $this->get('cm.request_center')->getNewRequestsNumber($this->getUser()->getId());
         $newNotifications = $this->get('cm.notification_center')->getNewNotificationsNumber($this->getUser()->getId());
 
+        $inMessage = substr($request->get('realRoute'), 1, 7) == 'message';
         $inRequest = substr($request->get('realRoute'), 1, 7) == 'request';
         $inNotification = substr($request->get('realRoute'), 1, 12) == 'notification';
 
         return array(
             'newRequests' => $newRequests,
             'newNotifications' => $newNotifications,
+            'inMessagePage' => $inMessage,
             'inRequestPage' => $inRequest,
             'inNotificationPage' => $inNotification
         );
@@ -484,6 +487,34 @@ class UserController extends Controller
         }
         
         return array('user' => $user, 'articles' => $pagination);
+    }
+
+    /**
+     * @Route("/popover/{slug}", name="user_popover")
+     * @Template
+     */
+    public function popoverAction(Request $request, $slug)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            throw new NotFoundHttpException($this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+        }
+
+        $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
+        if (count($biography) == 0) {
+            $biography = null;
+        } else {
+            $biography = $biography[0];
+        }
+
+        return array('user' => $user, 'biography' => $biography);
     }
 
     /**

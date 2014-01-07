@@ -36,8 +36,6 @@ class ImageAlbum extends Entity
     public function __construct()
     {
         parent::__construct();
-
-        $this->setVisible(true);
     }
 
     /**

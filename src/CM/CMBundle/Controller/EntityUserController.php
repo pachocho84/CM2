@@ -150,20 +150,4 @@ class EntityUserController extends Controller
 
         return new JsonResponse($user_ids);
     }
-
-    /**
-     * @Route("/requestAdd/{entityId}", name="entityuser_request_add", requirements={"entityId": "\d+"})
-     */
-    public function requestAddAction($entityId)
-    {
-
-    }
-
-    /**
-     * @Route("/delete/{entityId}", name="entityuser_delete", requirements={"entityId": "\d+"})
-     */
-    public function requestDeleteAction($entityId)
-    {
-
-    }
 }
