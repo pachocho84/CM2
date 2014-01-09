@@ -39,6 +39,12 @@ class EntityType extends BaseEntityType
                     $entityCategory = constant('CM\CMBundle\Entity\EntityCategory::'.$entityChild);
                     return $er->filterEntityCategoriesByEntityType($entityCategory, $options);
                 }
+            ))->add('images', 'collection', array(
+                'type' => new ImageType,
+                'by_reference' => false,
+                'options' => array(
+                    'error_bubbling' => false,
+                )
             ))
             ->add('entityUsers', 'collection', array(
                 'type' => new EntityUserType,
@@ -51,13 +57,6 @@ class EntityType extends BaseEntityType
                     'tags' => $options['user_tags'],
                     'locale' => $options['locale'],
                     'locales' => $options['locales'],
-                )
-            ));
-        $builder->add('images', 'collection', array(
-                'type' => new ImageType,
-                'by_reference' => false,
-                'options' => array(
-                    'error_bubbling' => false,
                 )
             ));
     }
