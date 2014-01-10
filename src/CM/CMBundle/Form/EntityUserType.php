@@ -29,7 +29,10 @@ class EntityUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add($builder->create('user', 'hidden')->addModelTransformer(new UserToIntTransformer($options['em'])))
-            ->add('admin', 'checkbox', array('required' => false));
+            ->add('admin', 'checkbox', array(
+                'required' => false,
+                'label' => 'Make admin'
+            ));
         if (in_array('ROLE_ADMIN', $options['roles'])) {
             $builder->add('status', 'choice', array(
                     'choices' => array(
@@ -47,6 +50,7 @@ class EntityUserType extends AbstractType
                 'choices' => $options['tags'],
                 'multiple' => true,
                 'by_reference' => false,
+                'label' => 'Role'
             ));
         if ($options['is_admin']) {
             $builder->add('notification');

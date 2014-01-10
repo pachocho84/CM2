@@ -11,7 +11,7 @@
     {% elseif type == 'file' %}
         {% set required = false %}
         <div class="clearfix" btn-file-container>
-            <div class="col-lg-9 input-group"><span class="btn btn-default btn-file input-group-addon">Browse
+            <div class="col-lg-9 input-group"><span class="btn btn-default btn-file input-group-addon">{{ 'Browse'|trans({}, translation_domain) }}
     {% else %}
         <div class="col-lg-9">
     {% endif %}
@@ -282,7 +282,7 @@
 {% spaceless %}
     <div class="form-group">
         {{ form_label(form) }}
-        {{ form_widget(form, {'attr': {'placeholder': 'search'|trans}}) }}
+        {{ form_widget(form, {'attr': {'placeholder': 'Search'|trans}}) }}
         {{ form_errors(form) }}
     </div>
 {% endspaceless %}
@@ -292,7 +292,7 @@
 {% spaceless %}
     <div class="form-group">
         {{ form_label(form) }}
-        {{ form_widget(form, {'attr': {'placeholder': 'search'|trans}}) }}
+        {{ form_widget(form, {'attr': {'placeholder': 'Search'|trans}}) }}
         {{ form_errors(form) }}
     </div>
     

@@ -5,14 +5,42 @@ Extract: Estratto
 Text: Descrizione
 Entity category: Categoria dell'evento
 Visible: Visibile
-Event dates: Date dell'evento
+Event Dates: Date dell'evento
 Start: Inizio
 End: Fine
 Location: Luogo
 Address: Indirizzo
+List: Lista
+Create: Crea
+Category: Categoria
+Categories: Categorie
+Admin: Amministratore
+Search: Cerca
+Browse: Sfoglia
+Make admin: Rendi amministratore
+click to expand: clicca per espandere
 Save: Salva
 
-# DATES
+# USER
+
+# GROUP
+Group: Gruppo
+Groups: Gruppi
+
+# PAGE
+Page: Pagina
+Pages: Pagine
+
+# PROTAGONIST
+Protagonists: Protagonisti
+Add protagonists: Aggiungi protagonisti
+Role: Ruolo
+%user% will not recive a request and this element will not be visible to his profile due to his group settings.: %user% non riceverà una richiesta e questo elemento non sarà visibile sul suo profilo per via delle sue impostazioni sul gruppo.
+This element will be automatically added to %user%'s profile due to his group settings.: Questo elemento verrà automaticamente aggiunto al profilo di %user% per via delle sue impostazioni sul gruppo.
+%user% will recive a request to add this element to his profile.: %user% riceverà una richiesta per aggiungere questo elemento al suo profilo.
+This element will appear on your profile.: Questo elemento comparirà sul tuo profilo.
+
+# DATE
 sunday: domenica
 monday: lunedì
 tuesday: martedì
@@ -21,20 +49,23 @@ thursday: giovedì
 friday: venerdì
 saturday: sabato
 
-# EVENTS
+# EVENT
 Events: Eventi
 Calendar: Calendario
 Archive: Archivio
 Events Archive: Archivio Eventi
 Sponsored Events: Eventi Sponsorizzati
-List: Lista
-Categories: Categorie
-Create: Crea
+Add event: Aggiungi evento
+Add date: Aggiungi data
+Delete date: Rimuovi data
 
-# DISCS
+# DISC
 Discs: Dischi
+Add track: Aggiungi traccia
+Delete track: Rimuovi traccia
 
-# IMAGES
+# IMAGE
+Image: Immagine
 Images: Immagini
 
 # MULTIMEDIA
