@@ -60,6 +60,11 @@ class EntityCategory
         return $this->proxyCurrentLocaleTranslation('__toString');
     }
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     /**
      * Get id
      *

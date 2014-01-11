@@ -57,6 +57,11 @@ class UserUserTag
      */
     private $order;
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     /**
      * Get id
      *

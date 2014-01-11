@@ -63,6 +63,10 @@ class Sponsored
      */
     private $views;
 
+    public static function className()
+    {
+        return get_class();
+    }
 
     /**
      * Get id

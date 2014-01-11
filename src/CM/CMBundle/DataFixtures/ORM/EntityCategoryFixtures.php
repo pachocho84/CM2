@@ -95,20 +95,6 @@ class EntityCategoryFixtures extends AbstractFixture implements OrderedFixtureIn
         $category6->mergeNewTranslations();
         $this->addReference('article_category-1', $category6);
 
-        $category7 = new EntityCategory;
-        $category7->setEntityType(EntityCategory::ARTICLE)
-            ->setName('article')
-            ->setPlural('articles');
-        $category7->translate('fr')
-            ->setName('article')
-            ->setPlural('articles');
-        $category7->translate('it')
-            ->setName('articolo')
-            ->setPlural('articoli');
-        $manager->persist($category7);
-        $category7->mergeNewTranslations();
-        $this->addReference('article_category-2', $category7);
-
         $category8 = new EntityCategory;
         $category8->setEntityType(EntityCategory::ARTICLE)
             ->setName('review')
@@ -121,7 +107,7 @@ class EntityCategoryFixtures extends AbstractFixture implements OrderedFixtureIn
             ->setPlural('recensioni');
         $manager->persist($category8);
         $category8->mergeNewTranslations();
-        $this->addReference('article_category-3', $category8);
+        $this->addReference('article_category-2', $category8);
 
         $category9 = new EntityCategory;
         $category9->setEntityType(EntityCategory::ARTICLE)
@@ -135,7 +121,7 @@ class EntityCategoryFixtures extends AbstractFixture implements OrderedFixtureIn
             ->setPlural('libri');
         $manager->persist($category9);
         $category9->mergeNewTranslations();
-        $this->addReference('article_category-4', $category9);
+        $this->addReference('article_category-3', $category9);
 
         $category10 = new EntityCategory;
         $category10->setEntityType(EntityCategory::ARTICLE)
@@ -149,7 +135,7 @@ class EntityCategoryFixtures extends AbstractFixture implements OrderedFixtureIn
             ->setPlural('spartiti');
         $manager->persist($category10);
         $category10->mergeNewTranslations();
-        $this->addReference('article_category-5', $category10);
+        $this->addReference('article_category-4', $category10);
 
         $category11 = new EntityCategory;
         $category11->setEntityType(EntityCategory::ARTICLE)
@@ -163,7 +149,7 @@ class EntityCategoryFixtures extends AbstractFixture implements OrderedFixtureIn
             ->setPlural('comunicati stampa');
         $manager->persist($category11);
         $category11->mergeNewTranslations();
-        $this->addReference('article_category-6', $category11);
+        $this->addReference('article_category-5', $category11);
 
         $category12 = new EntityCategory;
         $category12->setEntityType(EntityCategory::ARTICLE)
@@ -177,7 +163,7 @@ class EntityCategoryFixtures extends AbstractFixture implements OrderedFixtureIn
             ->setPlural('interviste');
         $manager->persist($category12);
         $category12->mergeNewTranslations();
-        $this->addReference('article_category-7', $category12);
+        $this->addReference('article_category-6', $category12);
 
         $manager->flush();
         

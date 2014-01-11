@@ -48,6 +48,11 @@ class Multimedia extends Entity
         $this->mergeNewTranslations();
     }
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     public function typeString()
     {
         switch ($this->type) {

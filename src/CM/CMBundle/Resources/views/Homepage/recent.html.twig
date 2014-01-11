@@ -1,0 +1,25 @@
+<div id="recent_articles_box" class="box">
+    <h2>{{ 'Recently published'|trans }}</h2>   
+    
+    <p class="destra"><a href="{{ path('homepage_archive') }}">{{ 'View complete archive'|trans }}</a>
+    
+    <div id="recent_articles_box-container">
+    
+        {% for article in articles %}
+
+            <div class="recent_articles_box-article">  
+
+                {% if article.images|length > 0 %}
+                    <div class="recent_article_box-photo">{{ show_img_box(article.images[0].img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': article.images[0].imgOffset, 'link': path('homepage_show', {'id': article.id})}) }}</div>
+                {% endif %}
+                <h5>{{ article.createdAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }} &middot; <a href="{{ path('user_show', {'slug': article.post.user.slug}) }}">{{ article.post.user }}</a></h5>
+
+                <h3><a href="{{ path('homepage_show', {'id': article.id}) }}">{{ article.getTitle }}</a></h3> 
+            
+            </div>             
+        
+        {% endfor %}
+        
+    </div>                                                                                    
+    
+</div>

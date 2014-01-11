@@ -103,7 +103,7 @@ class ArticleFixtures extends AbstractFixture implements OrderedFixtureInterface
 
             }
 
-            $category = $manager->merge($this->getReference('article_category-'.rand(1, 7)));
+            $category = $manager->merge($this->getReference('article_category-'.rand(1, 6)));
             $category->addEntity($article);
 
             $post = $this->container->get('cm.post_center')->getNewPost($user, $user);

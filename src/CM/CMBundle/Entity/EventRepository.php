@@ -102,7 +102,7 @@ class EventRepository extends BaseRepository
         
         $count->setParameters($parameters);
         $parameters['locales'] = $options['locales'];
-        $parameters['object'] = get_class(new Event);
+        $parameters['object'] = Event::className();
         $query->setParameters($parameters);
         
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
@@ -209,4 +209,33 @@ class EventRepository extends BaseRepository
             
             return $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult());
     }
+
+    public function getLastByVip($limit, $options = array())
+    {
+        $options = self::getOptions($options);
+        
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('d, e, t, i, p, l, c, u, lu, cu, pg, gr')
+            ->from('CMBundle:EventDate','d')
+            ->join('d.event', 'e')
+            ->leftJoin('e.translations', 't')
+            ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
+            ->innerJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
+            ->setParameter('object', Event::className())
+            ->leftJoin('e.entityUsers', 'eu', '', '', 'eu.userId')
+            ->leftJoin('eu.user', 'us')
+            ->leftJoin('p.likes', 'l')
+            ->leftJoin('p.comments', 'c')
+            ->leftJoin('p.user', 'u')
+            ->leftJoin('l.user', 'lu')
+            ->leftJoin('c.user', 'cu')
+            ->leftJoin('p.page', 'pg')
+            ->leftJoin('p.group', 'gr')
+            ->where('t.locale in (:locales)')->setParameter('locales', $options['locales'])
+            ->andWhere('u.vip = '.true)
+            ->andWhere('d.start >= :now')->setParameter('now', new \DateTime)
+            ->orderBy('d.start')
+            ->setMaxResults($limit)
+            ->getQuery()->getResult();
+    } 
 }

@@ -105,6 +105,11 @@ class Request
      */
     private $objectId;
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     /**
      * Get id
      *

@@ -100,6 +100,11 @@ class EntityTranslation
         $this->locale = 'en';
     }
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     /**
      * Get title
      *

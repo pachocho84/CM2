@@ -86,6 +86,11 @@ abstract class Entity
     {
         return $this->proxyCurrentLocaleTranslation($method, $arguments);
     }
+
+    public static function className()
+    {
+        return get_class();
+    }
     
     /**
      * Get id

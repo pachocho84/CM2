@@ -35,7 +35,8 @@ class Helper
             case 'Group':
                 return 'CM\CMBundle\Entity\Group';
             default:
-                throw new \Exception('add class name '.$shortName);
+                return $shortName::className();
+                // throw new \Exception('add class name '.$shortName);
         }
     }
 

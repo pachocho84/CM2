@@ -88,4 +88,28 @@ class MultimediaRepository extends BaseRepository
         }
         return $multimedia;
     }
+
+    public function getLastByVip($limit)
+    {
+        return $this->createQueryBuilder('m')
+            ->select('m, p, pu, c, cu, l, lu')
+            ->leftJoin('m.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
+            ->leftJoin('p.user', 'pu')
+            ->leftJoin('p.comments', 'c')
+            ->leftJoin('c.user', 'cu')
+            ->leftJoin('p.likes', 'l')
+            ->leftJoin('l.user', 'lu')
+            ->where('pu.vip = '.true)
+            ->andWhere('m.type = :type')->setParameter('type', Multimedia::TYPE_YOUTUBE)
+            ->setMaxResults($limit)
+            ->getQuery()->getResult();
+        // return MultimediaQuery::create()-> 
+        //     init()->                      
+        //     where('sfGuardUser.IsActive = ?', 1)->                                        
+        //         where('User.Vip = ?', true)->
+        //         where('Multimedia.Tipo = ?', 'Video Youtube')->                                
+        //     orderByCreatedAt('desc')->    
+        //         limit($limit)->
+        //         find();
+    }  
 }

@@ -35,6 +35,11 @@ class Biography extends Entity
         return is_null($this->getText()) ? '' : $this->getText();
     }
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     /**
      * Get id
      *

@@ -315,6 +315,11 @@ class User extends BaseUser implements ParticipantInterface
         return $this->getFirstName()." ".$this->getLastName();
     }
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     protected function getRootDir()
     {
         return __DIR__.'/../Resources/public/';

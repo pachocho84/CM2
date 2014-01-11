@@ -70,6 +70,11 @@ class Disc extends Entity
         $this->discTracks = new ArrayCollection();
     }
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     /**
      * Get id
      *

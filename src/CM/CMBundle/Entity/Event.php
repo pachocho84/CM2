@@ -52,6 +52,11 @@ class Event extends Entity
         
         $this->eventDates = new ArrayCollection();
     }
+
+    public static function className()
+    {
+        return get_class();
+    }
     
     /**
      * Set id

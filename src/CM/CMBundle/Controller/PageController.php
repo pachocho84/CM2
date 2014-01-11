@@ -398,10 +398,10 @@ class PageController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $page = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
         
         if (!$page) {
-            throw new NotFoundHttpException('Group not found.');
+            throw new NotFoundHttpException('Page not found.');
         }
             
         $articles = $em->getRepository('CMBundle:Article')->getArticles(array(
@@ -415,7 +415,7 @@ class PageController extends Controller
             return $this->render('CMBundle:Article:objects.html.twig', array('dates' => $pagination, 'pageNum' => $pageNum));
         }
         
-        return array('page' => $page, 'articles' => $pagination);
+        return array('page' => $page, 'articles' => $pagination, 'pageNum' => $pageNum);
     }
 
     /**

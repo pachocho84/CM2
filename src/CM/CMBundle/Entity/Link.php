@@ -38,6 +38,11 @@ class Link extends Entity
         $this->mergeNewTranslations();
     }
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     /**
      * Get id
      *

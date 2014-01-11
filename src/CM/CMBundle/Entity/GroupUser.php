@@ -112,9 +112,10 @@ class GroupUser
      * @ORM\Column(name="notification", type="boolean")
      */
     private $notification = true;
-    
-    public function __construct()
+
+    public static function className()
     {
+        return get_class();
     }
 
     /**

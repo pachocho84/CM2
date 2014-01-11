@@ -59,6 +59,11 @@ class Message extends BaseMessage implements MessageInterface
         return $this->body;
     }
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     public function getThreadId()
     {
         return $this->threadId;

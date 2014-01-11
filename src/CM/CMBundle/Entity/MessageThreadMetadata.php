@@ -44,6 +44,11 @@ class MessageThreadMetadata extends BaseThreadMetadata
      */
     protected $participant;
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     public function getThreadId()
     {
         return $this->threadId;

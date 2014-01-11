@@ -117,6 +117,11 @@ class Group
     	return $this->getName();
 	}
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     protected function getRootDir()
     {
         return __DIR__.'/../Resources/public/';

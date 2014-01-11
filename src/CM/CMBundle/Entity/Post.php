@@ -145,6 +145,11 @@ class Post
         return "Post";
     }
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     /**
      * Get id
      *

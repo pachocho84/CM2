@@ -1,18 +1,18 @@
- {% if relatedObjects is not defined %}
+{% if relatedObjects is not defined %}
     {% set relatedObjects = related_object(post.object, post.objectIds) %}
 {% endif %}
 
 <li class="media object post"{% if loop is defined and loop.index == 1 %}update_more="{{ path(app.request.attributes.get('_route')|replace({'_update': ''})~'_update', app.request.attributes.get('_route_params')|merge({ 'lastUpdated': post.updatedAt.timestamp })) }}"{% endif %}>
-    {{ show_img_box(post.publisher.img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': post.publisher.imgOffset,  'link': path('user_show', {'slug': post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}, 'default': 'user'})|raw }}
+    {{ show_img_box(post.publisher.img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': post.publisher.imgOffset,  'link': path(post.publisherRoute ~ '_show', {'slug': post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}, 'default': 'user'}) }}
 
     <div class="media-body">
 
-        <p>{{ post_text(post, relatedObjects)|raw }}</p>
+        <p>{{ post_text(post, relatedObjects) }}</p>
 
         {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
 
         <p class="text-muted">
-            {{ show_icon((post.object|class_name)~'_'~(post.type))|raw }}
+            {{ show_icon((post.object|class_name)~'_'~(post.type)) }}
             <small>
                 {{ post.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
                 {% if post.entity is not null and post.entity.entityUsers|length > 0 %}

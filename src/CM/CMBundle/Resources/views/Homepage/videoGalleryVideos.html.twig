@@ -1,0 +1,15 @@
+<div id="video_gallery-videos">
+    {% for video in videos %}
+    
+        {% if loop.index % 4 == 0 %}
+            </div><div class="video_gallery-videos"> 
+        {% endif %}
+        
+        <a href="{{ path('homepage_video', {'id': video.id}) }}" class="video_gallery-video" rel="wijlightbox">
+            <img width="200px" height="100%" src="http://img.youtube.com/vi/{{ video.link }}/0.jpg" youtube-video-link="{{ video.link }}" />
+            <h3>{{ video.getTitle }}</h3>  
+            <h4>{{ 'by %user%'|trans({'%user%': '<a href="' ~ path('user_show', {'slug': video.post.user.slug}) ~ '">' ~ video.post.user ~ '</a>'})|raw}}</h4>  
+        </a>
+        
+    {% endfor %}                                                                                  
+</div>

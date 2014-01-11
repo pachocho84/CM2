@@ -19,7 +19,7 @@
 
 {% block header %}
     <div class="container">
-        <a href="{#{{ path('homepage') }}#}" id="logo"><h1>Circuito Musica</h1></a>
+        <a href="{{ path('homepage_index') }}" id="logo"><h1>Circuito Musica</h1></a>
     </div>
 {% endblock %}
 
@@ -92,9 +92,10 @@
 
 {% block container %}
     <div class="row">
+        {% set noColumns = noColumns|default(false) %}
         {% set inAccountPage = inAccountPage|default(false) %}
         {# LEFT COLUMN #}
-        {% if inAccountPage %}
+        {% if not noColumns and inAccountPage %}
             <div class="col-md-3">
                 {% block accountSidebar %}
                 {% endblock %}
@@ -107,7 +108,7 @@
         </div>
 
         {# RIGHT COLUMN #}
-        {% if not inAccountPage %}
+        {% if not noColumns and not inAccountPage %}
             <div class="sidebar col-md-4">
                 <img src="{{ asset('/bundles/cm/images/layout/banner.jpg') }}" alt="Symfony!" />
                 {% block sidebar %}

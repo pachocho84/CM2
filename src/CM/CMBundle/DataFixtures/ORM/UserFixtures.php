@@ -20,6 +20,8 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'username' => 'pachocho',
             'password' => 'pacho',
             'email' => 'ernesto@circuitomusica.it',
+            'vip' => true,
+            'writer' => true,
             'sex' => User::SEX_M,
             'city_birth' => 'Padua',
             'city_current' => 'Milan',
@@ -78,6 +80,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'username' => 'ghey',
             'password' => 'pacho',
             'email' => 'lucasareto@gmail.it',
+            'vip' => true,
             'sex' => User::SEX_M,
             'city_birth' => 'Padua',
             'city_current' => 'Milan',
@@ -204,6 +207,12 @@ Suona un flauto Yamaha 18 carati all gold.
 		  	   ->setBirthDate($date->setDate($person['birth_date'][0], $person['birth_date'][1], $person['birth_date'][2]))
 		  	   ->setBirthDateVisible($person['birth_date_visible'])
 		  	   ->setImg($person['img']);
+            if (array_key_exists('vip', $person)) {
+                $user->setVip($person['vip']);
+            }
+            if (array_key_exists('writer', $person)) {
+                $user->addRole('ROLE_WRITER');
+            }
             if (array_key_exists('imgOffset', $person)) {
                 $user->setImgOffset($person['imgOffset']);
             }

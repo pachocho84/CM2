@@ -1,0 +1,82 @@
+{% set object = column.archive.article %}
+
+{% if row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_ROW_1') %}
+    {% set imgWidth = 660 %}
+    {% set imgHeight = 220 %}
+    {% set imgFilter = 'full' %}
+    {% set textMax = 800 %}
+{% elseif row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_ROW_2') %}
+    {% set imgWidth = 320 %}
+    {% set imgHeight = 160 %}
+    {% set imgFilter = '350' %}
+    {% set textMax = 350 %}
+{% elseif row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_ROW_3') %}
+    {% set imgWidth = 200 %}
+    {% set imgHeight = 100 %}
+    {% set imgFilter = '350' %}
+    {% set textMax = 300 %}
+{% elseif row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_ROW_4') %}
+    {% set imgWidth = 150 %}
+    {% set imgHeight = 75 %}
+    {% set imgFilter = '350' %}
+    {% set textMax = 300 %}
+{% endif %}
+
+{#<?php
+    
+    $oggetto = $column->getHomepageArchive()->getStampa();             
+    
+    switch ($row->getType())
+    {
+        case 'row1': 
+            $img_w      = 660;
+            $img_h      = 220;  
+            $folder     = 'uploads/immagini/'; 
+            $text_max   = 800;
+            break;
+        case 'row2': 
+            $img_w      = 320;
+            $img_h      = 160; 
+            $folder     = 'uploads/immagini/';  
+            $text_max = 350;
+            break;
+        case 'row3':  
+            $img_w      = 200;
+            $img_h      = 100;
+            $folder     = 'uploads/stampa/200/';  
+            $text_max = 300;
+            break;
+        case 'row4':  
+            $img_w      = 150;
+            $img_h      = 75;  
+            $folder     = 'uploads/immagini/180/';
+            $text_max = 300;
+            break;
+    }     
+    
+    $img_size = @getimagesize('uploads/immagini/'.$oggetto->getImg());  
+?>#}
+
+<div id="box_{{ row.id }}_{{ column.id }}" class="column">
+    
+    {% if row.type != constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_ROW_1') and object.img is not null %}
+
+        {{ show_img_box(object.img|imagine_filter(imgFilter), {'width': imgWidth, 'height': imgHeight, 'offset': object.imgOffset, 'link': path('homepage_show', {'id': object.id}), 'link_attributes': {'class': 'pull-left'}}) }}
+
+    {% endif %} 
+    
+    <h4>
+        {{ 'Published by %user% in %category% il %date%'|trans({'%user%': '<a href="' ~ path('user_show', {'slug': object.post.user.slug}) ~ '">' ~ object.post.user ~ '</a>', '%category%': '<a href="' ~ path('homepage_category', {'slug': column.archive.category.getSlug}) ~ '">' ~ column.archive.category ~ '</a>', '%date%': object.createdAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG'))})|raw }} &middot; {# comments #}
+        {#Pubblicato da <?php echo link_to($oggetto->getUser(), $oggetto->getUser()->getRawValue()->getLinkShow()) ?>
+        in <?php echo link_to($column->getHomepageArchive()->getHomepageCategory()->getName(), '@homepage_categoria?categoria='.$column->getHomepageArchive()->getHomepageCategory()->getSlug()) ?>
+        il <?php echo format_datetime($oggetto->getCreatedAt(), 'D') ?> &middot; 
+        <a href="<?php echo url_for('@homepage_show?id='.$oggetto->getId()) ?>#commenti"><?php echo format_number_choice('[0]0 commenti|[1]1 commento|(1,+Inf]%nb% commenti', array('%nb%' => $column->getNbComments()), $column->getNbComments()) ?></a>#}
+    </h4>
+    
+    <h2><a href="{{ path('homepage_show', {'id': object.id}) }}">{{ object.getTitle }}</a></h2>
+    
+    <h3>{{ entity_short_text(object) }}</h3>            
+                                                               
+    {#<?php echo show_extract($oggetto->getRawValue()->getNotizia(), $oggetto->getRawValue()->getEstratto(), false, $text_max) ?>#}
+
+</div>

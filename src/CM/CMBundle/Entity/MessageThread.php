@@ -50,6 +50,11 @@ class MessageThread extends BaseThread
      */
     protected $updatedAt;
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     /**
      * Get creatorId
      *

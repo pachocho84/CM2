@@ -1,0 +1,66 @@
+{% extends 'CMBundle:Homepage:layout.html.twig' %}
+ 
+{% block title %}{{ category.getName}} - {{ 'The classical music portal'|trans }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+        '@CMBundle/Resources/public/css/homepage.css'
+    %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    {{ render(controller('CMBundle:Homepage:tabs', {'categoryPage': category})) }}
+
+    <div id="columnMaskHomepage">           
+        <div id="columnMaskCenter">   
+            <div id="columnCenter">   
+
+
+                <h1>
+                    {% if app.request.get('_route') == 'homepage_category' %}
+                        {{ category }}
+                    {% else %}
+                        {{ 'Article Archive'|trans }}
+                    {% endif %}
+                </h1>   
+                
+                
+                
+                <p class="centrato"> 
+                    {% if app.request.get('_route') == 'homepage_category' %}
+                        {{ 'There are %count% articles in this category.'|trans({'%count%': objects|length}) }}
+                    {% endif %}
+                </p>
+                
+                 
+
+            <div id="articles">
+           
+                {{ include('CMBundle:Homepage:objects.html.twig') }}
+        
+            </div>
+                                      
+            </div>  
+        
+        
+            
+          <?php echo include_partial('columnRight') ?>     
+        
+        
+        
+        </div>   
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+        '@CMBundle/Resources/public/js/homepage.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

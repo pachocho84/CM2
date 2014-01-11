@@ -35,31 +35,33 @@ class MultimediaFixtures extends AbstractFixture implements OrderedFixtureInterf
 
     public function load(ObjectManager $manager)
     {
-        for ($i = 1; $i < 9; $i++) {
-            $user = $manager->merge($this->getReference('user-'.$i));
+        foreach($this->urls as $url) {
 
-            foreach($this->urls as $url) {
+            switch (substr(preg_split('/(www|m)\./', parse_url($url, PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
+                case 'yout':
+                    $info = json_decode(file_get_contents('http://www.youtube.com/oembed?format=json&url='.urlencode($url)));
+                    $type = Multimedia::TYPE_YOUTUBE;
+                    $link = preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info->html);
+                    $info = json_decode(file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$link.'?v=2&alt=jsonc'))->data;
+                    break;
+                case 'vime':
+                    $info = json_decode(file_get_contents('http://vimeo.com/api/oembed.json?url='.urlencode($url)));
+                    $type = Multimedia::TYPE_VIMEO;
+                    $link = $info->video_id;
+                    break;
+                case 'soun':
+                    $info = json_decode(file_get_contents('http://soundcloud.com/oembed.json?url='.urlencode($url)));
+                    $type = Multimedia::TYPE_SOUNDCLOUD;
+                    $link = preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info->html);
+                    break;
+            }
+
+            for ($i = 1; $i < 9; $i++) {
+                $user = $manager->merge($this->getReference('user-'.$i));
+
                 $multimedia = new Multimedia;
-
-                switch (substr(preg_split('/(www|m)\./', parse_url($url, PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
-                    case 'yout':
-                        $info = json_decode(file_get_contents('http://www.youtube.com/oembed?format=json&url='.urlencode($url)));
-                        $multimedia->setType(Multimedia::TYPE_YOUTUBE)
-                            ->setLink(preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info->html));
-                        $info = json_decode(file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$multimedia->getLink().'?v=2&alt=jsonc'))->data;
-                        break;
-                    case 'vime':
-                        $info = json_decode(file_get_contents('http://vimeo.com/api/oembed.json?url='.urlencode($url)));
-                        $multimedia->setType(Multimedia::TYPE_VIMEO)
-                            ->setLink($info->video_id);
-                        break;
-                    case 'soun':
-                        $info = json_decode(file_get_contents('http://soundcloud.com/oembed.json?url='.urlencode($url)));
-                        $multimedia->setType(Multimedia::TYPE_SOUNDCLOUD)
-                            ->setLink(preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info->html));
-                        break;
-                }
-
+                $multimedia->setType($type);
+                $multimedia->setLink($link);
                 $multimedia->setTitle($info->title)
                     ->setText($info->description);
 

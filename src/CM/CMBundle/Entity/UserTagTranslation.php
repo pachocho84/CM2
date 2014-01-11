@@ -27,6 +27,11 @@ class UserTagTranslation
      */
     private $name;
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     /**
      * Set name
      *

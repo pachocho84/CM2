@@ -6,6 +6,7 @@ parameters:
     cm_property_accessor.class: CM\CMBundle\PropertyAccess\CMPropertyAccessor
     bundle.dir: /bundles/cm
     upload.dir: %bundle.dir%/uploads
+    banners.dir: %upload.dir%/banners
     images.dir: %upload.dir%/images
     images_full.dir: %images.dir%/full # if you change this, change it also in the Entity/Image.php file!
     audio.dir: %upload.dir%/audio
@@ -55,6 +56,7 @@ assetic:
 twig:
     globals:
         web_abs_dir: %web.abs_dir%
+        banners_dir: %banners.dir%
         uploaded_images_full_dir: %images_full.dir%
         uploaded_audio_dir: %audio.dir%
     form:

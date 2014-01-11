@@ -85,6 +85,11 @@ class DiscTrack
         return $this->title;
     }
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     /**
      * Get id
      *

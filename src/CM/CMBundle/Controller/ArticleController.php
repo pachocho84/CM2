@@ -58,7 +58,11 @@ class ArticleController extends Controller
             return $this->render('CMBundle:Article:objects.html.twig', array('articles' => $pagination));
         }
         
-        return array('categories' => $categories, 'articles' => $pagination, 'category' => $category);
+        return array(
+            'categories' => $categories,
+            'articles' => $pagination,
+            'category' => $category
+        );
     }
 
     /**
@@ -98,12 +102,22 @@ class ArticleController extends Controller
 
             return new RedirectResponse($this->generateUrl('article_show', array('id' => $article->getId(), 'slug' => $article->getSlug())));
         }
+            
+        if (!$request->isXmlHttpRequest()) {
+            $categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::ARTICLE, array('locale' => $request->getLocale()));
+        }
 
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $req = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('entityId' => $article->getId()));
         }
         
-        return array('article' => $article, 'request' => $req, 'tags' => $tags, 'form' => $form->createView());
+        return array(
+            'categories' => $categories,
+            'article' => $article,
+            'request' => $req,
+            'tags' => $tags,
+            'form' => $form->createView()
+        );
     }
     
     /**
@@ -193,6 +207,8 @@ class ArticleController extends Controller
                 $em->remove($entityUser);
             }
 
+            $article->getHomepageArchive()->setUser($this->getUser());
+
             $em->persist($article);
 
             $em->flush();
@@ -209,8 +225,13 @@ class ArticleController extends Controller
         foreach ($article->getEntityUsers() as $entityUser) {
             $users[] = $entityUser->getUser();
         }
+            
+        if (!$request->isXmlHttpRequest()) {
+            $categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::ARTICLE, array('locale' => $request->getLocale()));
+        }
         
         return array(
+            'categories' => $categories,
             'form' => $form->createView(),
             'entity' => $article,
             'newEntry' => ($formRoute == 'article_new'),

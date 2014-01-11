@@ -22,7 +22,8 @@ class PostRepository extends BaseRepository
             'pageId' => null,
             'groupId' => null,
             'paginate' => true,
-            'limit' => null
+            'limit' => null,
+            'objects' => array()
         ), $options);
     }
 
@@ -40,7 +41,7 @@ class PostRepository extends BaseRepository
         $options = self::getOptions($options);
 
         $query = $this->createQueryBuilder('p')
-            ->select('p, e, t, c, i, eu, ep, epl, epc, eplu, epcu');
+            ->select('distinct p, e, t, c, i, eu, ep, epl, epc, eplu, epcu');
         $query->leftJoin('p.entity', 'e')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.entityCategory', 'c')
@@ -56,6 +57,8 @@ class PostRepository extends BaseRepository
         }
         if (!is_null($options['object'])) {
             $query->andWhere('p.object = :object')->setParameter('object', $options['object']);
+        } elseif (count($options['objects'])) {
+            $query->andWhere('p.object in (:objects)')->setParameter('objects', $options['objects']);
         }
         if (!is_null($options['after'])) {
             $query->andWhere('p.updatedAt > :after')->setParameter('after', $options['after']);
@@ -70,7 +73,7 @@ class PostRepository extends BaseRepository
         }
         $query->orderBy('p.updatedAt', 'desc')
             ->addOrderBy('p.id', 'desc');
-        if (is_null($options['paginate']) && !is_null($options['limit'])) {
+        if (!$options['paginate'] && !is_null($options['limit'])) {
             $query->setMaxResults($options['limit']);
         }
 

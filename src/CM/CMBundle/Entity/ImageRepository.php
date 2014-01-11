@@ -163,4 +163,29 @@ class ImageRepository extends BaseRepository
             ->where('i.id = :id')->setParameter('id', $id)
             ->getQuery()->getSingleResult();
     }
+
+    public function getLastByVip($limit)
+    {
+        return $this->createQueryBuilder('i')
+            ->select('i, e, t, p, l, lu, c, cu')
+            ->leftJoin('i.entity', 'e')
+            ->leftJoin('e.translations', 't')
+            ->leftJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
+            ->leftJoin('p.user', 'pu')
+            ->leftJoin('i.likes', 'l')
+            ->leftJoin('l.user', 'lu')
+            ->leftJoin('i.comments', 'c')
+            ->leftJoin('c.user', 'cu')
+            ->where('pu.vip = '.true)
+            ->setMaxResults($limit)
+            ->getQuery()->getResult();
+        // return MultimediaQuery::create()-> 
+        //     init()->                      
+        //     where('sfGuardUser.IsActive = ?', 1)->                                        
+        //         where('User.Vip = ?', true)->
+        //         where('Multimedia.Tipo = ?', 'Video Youtube')->                                
+        //     orderByCreatedAt('desc')->    
+        //         limit($limit)->
+        //         find();
+    }  
 }

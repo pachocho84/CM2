@@ -62,6 +62,11 @@ class ImageAlbum extends Entity
         }
     }
 
+    public static function className()
+    {
+        return get_class();
+    }
+
     /**
      * Get id
      *

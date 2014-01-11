@@ -90,8 +90,9 @@ class EntityUser
      */
     private $notification = true;
 
-    public function __construct()
+    public static function className()
     {
+        return get_class();
     }
 
     /**
