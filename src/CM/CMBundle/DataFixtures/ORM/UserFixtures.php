@@ -167,6 +167,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'password' => 'luca',
             'email' => 'lucadigiulio@circuitomusica.it',
             'sex' => User::SEX_M,
+            'writer' => true,
             'city_birth' => 'Milan',
             'city_current' => 'Milan',
             'birth_date' => array(1983, 1, 1),
@@ -177,6 +178,34 @@ Suona un flauto Yamaha 18 carati all gold.
             'coverOffset' => null,
             'user_tags' => array(),
             'biography' => null
+        ),
+        array('firstname' => 'Fabio',
+            'lastname' => 'Rizzi',
+            'username' => 'fabio_rizzi',
+            'password' => 'fabio',
+            'email' => 'fabiorizzi@circuitomusica.it',
+            'sex' => User::SEX_M,
+            'writer' => true,
+            'city_birth' => 'Milan',
+            'city_current' => 'Milan',
+            'birth_date' => array(1975, 11, 19),
+            'birth_date_visible' => User::BIRTHDATE_INVISIBLE,
+            'img' => 'f55b9c3842af704ce991a2c54c21fdf081906970.jpg',
+            'imgOffset' => null,
+            'cover' => null,
+            'coverOffset' => null,
+            'user_tags' => array(),
+            'biography' => 'Nato nel 1975, si è diplomato al Conservatorio “Giuseppe Verdi” di Milano vincendo il “Premio speciale del Direttore”. Ha conseguito i Diplomi Accademici di II° Livello ad Indirizzo Solistico ed in Musica da Camera presso il Conservatorio di Piacenza, entrambi “Summa cum Laude”.
+Perfezionatosi all’Accademia del Teatro alla Scala e in Germania con Thomas Indermühle e Heinz Holliger, è stato Primo Oboe della Ferruccio Busoni Academische Orchester di Freiburg dal 1997 al 1999 e dal 1999 al 2001 ha suonato come Corno Inglese nella European Union Youth Orchestra, sotto la direzione di Vladimir Ashkenazy e Bernard Haitink.
+Ha vinto una borsa di studio per frequentare il Master of Music al New England Conservatory di Boston (USA), dove è stato scelto dal M.° Seiji Ozawa tra i migliori allievi per suonare con la Boston Symphony Orchestra.
+Dal 2002 al 2007 ha suonato nell’Orchestra Sinfonica di Milano “Giuseppe Verdi”, diretta dal M.° Riccardo Chailly.
+Dal 2008 collabora come Corno Inglese Solista con l’orchestra del Teatro dell’Opera di Roma, diretta dal M.° Riccardo Muti. Dopo la prima dell’Attila di Verdi diretta da Muti, Il Messaggero ha commentato: “…la bravura dell’orchestra trova la sua sintesi nei soli del corno inglese Fabio Rizzi.”
+È stato per diversi anni Primo Oboe nell’orchestra del Tiroler Festspiele Erl, festival lirico austriaco diretto da Gustav Kuhn, con cui ha eseguito tutte le opere di Wagner e Richard Strauss, oltre a quasi tutte le Sinfonie di Mahler, Bruckner, Brahms, Tschaikowskji e Beethoven.
+Dal 2003 è membro dell’Orchestra UNIMI di Milano, una delle compagini sinfoniche giovanili più apprezzate in Europa, con cui si è esibito alla Tonhalle di Zurigo e al Gewandhaus di Lipsia.
+Ha suonato con i più grandi Maestri del nostro tempo: Seiji Ozawa, James Levine, Lorin Maazel, Riccardo Muti, Claudio Abbado, Riccardo Chailly, Bernard Haitink, Charles Dutoit, Vladimir Ashkenazy, Georges Prêtre, James Conlon, Fabio Luisi, Daniele Gatti, Gustavo Dudamel, Christian Thielemann, Rafael Frübeck de Burgos, Daniel Oren e Vladimir Jurowski,
+Finalista idoneo in numerosi concorsi internazionali, ha collaborato con prestigiose orchestre quali Boston Symphony Orchestra, Münchner Philharmoniker, Dresdner Philharmonie, Aalto Musiktheater Essen, Teatro alla Scala, Teatro Petruzzelli di Bari, I Pomeriggi Musicali, Orchestra Filarmonica Italiana, Orchestra da Camera di Mantova, Orchestra Nova Et Vetera, I Solisti Pavesi.
+Esibitosi come solista in Italia e all’estero, è stato più volte invitato negli USA alle Conference della International Double Reed Society, come testimonial dell’atelier Lorée De Gourdon.
+È socio fondatore di Circuito Musica.'
         ),
     );
 	
