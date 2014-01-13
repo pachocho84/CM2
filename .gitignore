@@ -6,6 +6,7 @@
 /app/Resources/node_modules/
 /bin/
 /build/
+/office
 /src/CM/CMBundle/DataFixtures/MongoDB/
 /src/CM/CMBundle/Document/
 /src/CM/CMBundle/Resources/public/uploads/*
