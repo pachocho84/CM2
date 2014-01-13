@@ -1,5 +1,5 @@
 function addFormDeleteLink($target, text) {
-    var $removeFormA = $('<a class="btn btn-default" href="#"><i class="glyphicon glyphicon-minus"></i> ' + text + '</a>');
+    var $removeFormA = $('<div class="panel-footer"><a class="btn btn-default" href="#"><i class="glyphicon glyphicon-minus"></i> ' + text + '</a></div>');
     $target.append($removeFormA);
 
     $removeFormA.on('click', function(e) {
@@ -14,7 +14,7 @@ function addFormDeleteLink($target, text) {
 function uploadCollection($target, trigger, text) {
     // add the "add a tag" anchor and li to the tags ul
     $target.append($('<div></div>'));
-    $target.children('div.well').slice(1).each(function() {
+    $target.children('div.panel-body').slice(1).each(function() {
         addFormDeleteLink($(this), text);
     });
 
@@ -38,7 +38,7 @@ function uploadCollection($target, trigger, text) {
 
         // Display the form in the page in an li, before the "Add a tag" link li
         var $newForm = $(newForm);
-        $target.find('.well:last').after($newForm);
+        $target.find('.panel:last').after($newForm);
 
         addFormDeleteLink($newForm, text);
 
@@ -47,8 +47,8 @@ function uploadCollection($target, trigger, text) {
 }
 
 jQuery(document).ready(function() {
-    uploadCollection($('#cm_cmbundle_event_eventDates'), '.add_date_link', 'delete this date');
-    uploadCollection($('#cm_cmbundle_disc_discTracks'), '.add_track_link', 'delete this track');
+    uploadCollection($('#cm_cmbundle_event_eventDates'), '.add_date_link', 'Delete date');
+    uploadCollection($('#cm_cmbundle_disc_discTracks'), '.add_track_link', 'Delete track');
 });
 
 

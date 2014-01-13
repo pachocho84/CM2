@@ -11,7 +11,7 @@
     {% elseif type == 'file' %}
         {% set required = false %}
         <div class="clearfix" btn-file-container>
-            <div class="col-lg-9 input-group"><span class="btn btn-default btn-file input-group-addon">Browse
+            <div class="col-lg-9 input-group"><span class="btn btn-default btn-file input-group-addon">{{ 'Browse'|trans({}, translation_domain) }}
     {% else %}
         <div class="col-lg-9">
     {% endif %}
@@ -243,10 +243,12 @@
 
 {% block cm_cmbundle_eventdate_row %}
 {% spaceless %}
-    <div class="well well-sm">
+    <div class="panel panel-default">
+        <div class="panel-body">
         {{ form_label(form) }}
         {{ form_widget(form) }}
         {{ form_errors(form) }}
+    </div>
     </div>
 {% endspaceless %}
 {% endblock %}
@@ -256,11 +258,21 @@
     {% if prototype is defined %}
         {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
     {% endif %}
-    <div class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">{{ 'Event Dates'|trans }}</h3></div>
-        <div class="panel-body" {{ block('widget_container_attributes') }}>
-            {{ block('form_rows') }}
-            <a href="#" class="btn btn-default add_date_link">{{ show_icon('Plus')|raw }} Add a date</a>
+    <div class="panel-group" id="accordion-eventDates">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion-eventDates" href="#collapse-eventDates">
+                        {# <span class="glyphicons glyphicon-collapse-top"></span> #} {{ 'Event Dates'|trans }}
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse-eventDates" class="panel-collapse collapse">
+                <div class="panel-body" {{ block('widget_container_attributes') }}>
+                    {{ block('form_rows') }}
+                    <a href="#" class="btn btn-default add_date_link">{{ show_icon('Plus')|raw }} Add a date</a>
+                </div>
+            </div>
         </div>
     </div>
 {% endspaceless %}
@@ -270,7 +282,17 @@
 {% spaceless %}
     <div class="form-group">
         {{ form_label(form) }}
-        {{ form_widget(form, {'attr': {'placeholder': 'search'|trans}}) }}
+        {{ form_widget(form, {'attr': {'placeholder': 'Search'|trans}}) }}
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_event_eventDates_entry_address_row %}
+{% spaceless %}
+    <div class="form-group">
+        {{ form_label(form) }}
+        {{ form_widget(form, {'attr': {'placeholder': 'Search'|trans}}) }}
         {{ form_errors(form) }}
     </div>
     
@@ -365,3 +387,11 @@
     {% endif %}
 {% endspaceless %}
 {% endblock form_errors %}
+
+{% block button_attributes %}
+{% spaceless %}
+    id="{{ id }}" name="{{ full_name }}"{% if disabled %} disabled="disabled"{% endif %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' btn btn-default')|trim}) %}
+    {% for attrname, attrvalue in attr %}{{ attrname }}="{{ attrvalue }}" {% endfor %}
+{% endspaceless %}
+{% endblock button_attributes %}
