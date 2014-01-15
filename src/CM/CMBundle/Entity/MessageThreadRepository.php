@@ -30,28 +30,62 @@ class MessageThreadRepository extends BaseRepository
         $count = $this->getEntityManager()->createQueryBuilder()
             ->select('count(m.id)')
             ->from('CMBundle:Message', 'm')
-            ->innerJoin('m.metadata', 'mm')
-            ->leftJoin('m.sender', 'ms')
-            ->leftJoin('mm.participant', 'mp')
-            ->join('m.thread', 't')
-            ->innerJoin('t.metadata', 'tm')
+            ->innerJoin('m.metadata', 'mm', 'with', 'mm.participantId = :user_id')
+            ->innerJoin('m.thread', 't')
+            ->leftJoin('t.metadata', 'tm')
             ->leftJoin('tm.participant', 'tp')
             ->where('tm.participantId = :user_id')
             ->andWhere('mm.participantId = :user_id')
             ->setParameter('user_id', $options['userId']);
 
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('distinct(m), mm, ms, mp, t, tm, tp')
+            ->select('m, mm, ms, mp, t, tm, tm1, tp')
             ->from('CMBundle:Message', 'm')
             ->innerJoin('m.metadata', 'mm')
             ->leftJoin('m.sender', 'ms')
-            ->leftJoin('mm.participant', 'mp')
+            ->leftJoin('mm.participant', 'mp', 'with', 'mm.participantId = :user_id')
             ->join('m.thread', 't')
-            ->innerJoin('t.metadata', 'tm')
+            ->innerJoin('t.metadata', 'tm', 'with', 'tm.participantId = :user_id')
+            ->innerJoin('t.metadata', 'tm1')
+            ->leftJoin('tm1.participant', 'tp')
+            ->orderBy('m.createdAt', 'desc')
+            ->groupBy('t.id')
+            ->setParameter('user_id', $options['userId']);
+
+        $query->orderBy('t.createdAt', 'desc');
+
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->getQuery()->getResult();
+    }
+
+    public function getThread($threadId, $options = array())
+    {
+        $options = self::getOptions($options);
+
+        $count = $this->getEntityManager()->createQueryBuilder()
+            ->select('count(m.id)')
+            ->from('CMBundle:Message', 'm')
+            ->innerJoin('m.metadata', 'mm', 'with', 'mm.participantId = :user_id')
+            ->innerJoin('m.thread', 't', 'with', 't.id = :thread_id')
+            ->leftJoin('t.metadata', 'tm')
             ->leftJoin('tm.participant', 'tp')
             ->where('tm.participantId = :user_id')
             ->andWhere('mm.participantId = :user_id')
-            ->setParameter('user_id', $options['userId']);
+            ->setParameter('user_id', $options['userId'])
+            ->setParameter('thread_id', $threadId);
+
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('m, mm, ms, mp, t, tm1, tp')
+            ->from('CMBundle:Message', 'm')
+            ->innerJoin('m.metadata', 'mm')
+            ->leftJoin('m.sender', 'ms')
+            ->leftJoin('mm.participant', 'mp', 'with', 'mm.participantId = :user_id')
+            ->join('m.thread', 't', 'with', 't.id = :thread_id')
+            ->innerJoin('t.metadata', 'tm', 'with', 'tm.participantId = :user_id')
+            ->innerJoin('t.metadata', 'tm1')
+            ->leftJoin('tm1.participant', 'tp')
+            ->orderBy('m.createdAt', 'desc')
+            ->setParameter('user_id', $options['userId'])
+            ->setParameter('thread_id', $threadId);
 
         $query->orderBy('t.createdAt', 'desc');
 

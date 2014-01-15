@@ -73,11 +73,11 @@
                     {% if is_granted('ROLE_USER') %}
                         {{ render(controller('CMBundle:User:menu', {'path': app.request.pathInfo} )) }}
                         <li>
-                            <a href="{{ path('fos_user_security_logout') }}">Logout</a>
+                            <a href="{{ path('fos_user_security_logout') }}">{{ 'Logout'|trans }}</a>
                         </li>
                     {% else %}
                         <li class="dropdown menu-tab">
-                            <a href="{{ path('fos_user_security_login') }}" class="dropdown-toggle" data-toggle="dropdown">Login</a>
+                            <a href="{{ path('fos_user_security_login') }}" class="dropdown-toggle" data-toggle="dropdown">{{ 'Login'|trans }}</a>
                             <ul class="dropdown-menu">
                                 {{ render(controller('FOSUserBundle:Security:login')) }}
                             </ul>
@@ -145,7 +145,9 @@
     %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    {% if is_granted('ROLE_CLIENT') or app.request.get('_route') in ['page_biography_edit'] %}
+    {% if is_granted('ROLE_CLIENT') or
+        (is_granted('ROLE_WRITER') and app.request.get('_route') in ['article_edit', 'article_new']) or
+        app.request.get('_route') in ['page_biography_edit'] %}
         {% javascripts
             'lib/tinymce/tinymce.min.js'
             'lib/tinymce/jquery.tinymce.min.js'

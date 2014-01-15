@@ -1,0 +1,13 @@
+<div class="row" id="message_{{ message.id }}">
+    {% if message.senderId == app.user.id %}
+        <div class="col-lg-3 col-lg-offset-9" style="text-align: right;">{{ 'you'|trans }}</div>
+        <div class="col-lg-9 col-lg-offset-3 well" style="text-align: right;">
+            {{ message.body }}
+        </div>
+    {% else %}
+        <div class="col-lg-3">{{ message.sender }}</div><div class="col-lg-9"></div>
+        <div class="col-lg-9 well">
+            {{ message.body }}
+        </div><div class="col-lg-3"></div>
+    {% endif %}
+</div>

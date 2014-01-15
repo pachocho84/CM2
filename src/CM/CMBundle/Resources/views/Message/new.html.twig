@@ -17,17 +17,21 @@
                 <div class="form-group">
                     <label class="control-label col-lg-3 control-label required">{{ "Recipients"|trans }}</label>
                     <div class="col-lg-9">
-                        <div id="recipients" disabled class="form-control" prototype="{{ '<span class="recipient protagonists_user" user_id="__id__" recipient="__username__">__fullname__ <button type="button" class="close" aria-hidden="true">&times;</button></span>'|e }}"></div>
+                        <div id="recipients" disabled class="form-control" prototype="{{ '<span class="recipient protagonists_user" user_id="__id__" recipient="__username__">__fullname__ <button type="button" class="close" aria-hidden="true">&times;</button></span>'|e }}">
+                            {% if user is not null %}
+                                <span class="recipient protagonists_user" user_id="{{ user.id }}" recipient="{{ user.slug }}">{{ user }} <button type="button" class="close" aria-hidden="true">&times;</button></span>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-12 collection-items">
                 <div class="cm_cmbundle_message_recipients_control_group">
                     <div id="protagonists_finder_container" class="form-group">
-                        <label class="control-label col-lg-3">Add new recipient</label>
+                        <label class="control-label col-lg-3">{{ 'Add new recipient'|trans }}</label>
                         <div class="col-lg-9"><input type="text" id="protagonists_finder" class="form-control" /></div>
                     </div>
-                    {{ form_widget(form.recipients, {'type': 'hidden'}) }}
+                    {{ form_widget(form.recipients, {type: 'hidden', value: user.slug|default('')}) }}
                 </div>
             </div>
         </div>

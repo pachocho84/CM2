@@ -70,6 +70,10 @@ cm_cmbundle_entityuser:
     resource: "CM\\CMBundle\\Controller\\EntityUserController"
     type:     annotation
 
+cm_cmbundle_biography:
+    resource: "CM\\CMBundle\\Controller\\BiographyController"
+    type:     annotation
+
 cm_cmbundle_page:
     resource: "CM\\CMBundle\\Controller\\PageController"
     type:     annotation

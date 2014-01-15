@@ -53,7 +53,7 @@ class BaseEntityType extends AbstractType
                     )
                 ));
         } else {
-            $builder->add($builder->create('translations', new EntityTranslationType, array('error_bubbling' => false,))
+            $builder->add($builder->create('translations', new EntityTranslationType, array('error_bubbling' => false, 'articleWriter' => $options['articleWriter']))
                 ->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 'en')));
 
             // $builder->add('translations', 'collection', array(
@@ -77,6 +77,7 @@ class BaseEntityType extends AbstractType
             'user_tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),
+            'articleWriter' => false,
             'add_category' => true,
             'add_users' => true,
             'data_class' => 'CM\CMBundle\Entity\Entity'

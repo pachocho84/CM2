@@ -159,6 +159,27 @@
 {% endspaceless %}
 {% endblock choice_widget_expanded %}
 
+{% block _cm_cmbundle_disc_year_widget %}
+{% spaceless %}
+    {% if widget == 'single_text' %}
+        {{ block('form_widget_simple') }}
+    {% else %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ date_pattern|replace({
+                '{{ year }}':  form_widget(form.year),
+                '{{ month }}': form_widget(form.month, { 'attr' : { 'class': 'hidden' }}), 
+                '{{ day }}':  form_widget(form.day, { 'attr' : { 'class': 'hidden' }}),
+            })|raw }}
+            {#{{ date_pattern|replace({
+                '{{ year }}':  form_widget(form.year),
+                '{{ month }}': form_widget(form.month),
+                '{{ day }}':   form_widget(form.day),
+            })|raw }}#}
+        </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock  %}
+
 {# Labels #}
 
 {% block form_label %}
@@ -270,7 +291,7 @@
             <div id="collapse-eventDates" class="panel-collapse collapse">
                 <div class="panel-body" {{ block('widget_container_attributes') }}>
                     {{ block('form_rows') }}
-                    <a href="#" class="btn btn-default add_date_link">{{ show_icon('Plus')|raw }} Add a date</a>
+                    <a href="#" class="btn btn-default add_date_link" delete_date-text="{{ 'Delete this date'|trans }}">{{ show_icon('Plus')|raw }} {{ 'Add a date'|trans }}</a>
                 </div>
             </div>
         </div>
@@ -321,7 +342,7 @@
         <div class="panel-heading"><h3 class="panel-title">{{ 'Disc Tracks'|trans }}</h3></div>
         <div class="panel-body" {{ block('widget_container_attributes') }}>
             {{ block('form_rows') }}
-            <a href="#" class="btn btn-default add_track_link">{{ show_icon('Plus')|raw }} Add a track</a>
+            <a href="#" class="btn btn-default add_track_link" delete_track-text="{{ 'Delete this track'|trans }}">{{ show_icon('Plus')|raw }} {{ 'Add a track'|trans }}</a>
         </div>
     </div>
 {% endspaceless %}
@@ -334,27 +355,6 @@
         {{ form_widget(form) }}
         {{ form_errors(form) }}
     </div>
-{% endspaceless %}
-{% endblock  %}
-
-{% block _cm_cmbundle_disc_year_widget %}
-{% spaceless %}
-    {% if widget == 'single_text' %}
-        {{ block('form_widget_simple') }}
-    {% else %}
-        <div {{ block('widget_container_attributes') }}>
-            {{ date_pattern|replace({
-                '{{ year }}':  form_widget(form.year),
-                '{{ month }}': form_widget(form.month, { 'attr' : { 'class': 'hidden' }}), 
-                '{{ day }}':  form_widget(form.day, { 'attr' : { 'class': 'hidden' }}),
-            })|raw }}
-            {#{{ date_pattern|replace({
-                '{{ year }}':  form_widget(form.year),
-                '{{ month }}': form_widget(form.month),
-                '{{ day }}':   form_widget(form.day),
-            })|raw }}#}
-        </div>
-    {% endif %}
 {% endspaceless %}
 {% endblock  %}
 

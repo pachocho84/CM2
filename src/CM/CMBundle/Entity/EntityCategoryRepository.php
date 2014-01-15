@@ -28,7 +28,8 @@ class EntityCategoryRepository extends BaseRepository
     {
         $options = self::getOptions($options);
         
-        return $this->createQueryBuilder('ec')->select('ec, ect')
+        return $this->createQueryBuilder('ec')
+            ->select('ec, ect')
             ->leftJoin('ec.translations', 'ect')
             ->where('ec.entityType = :entity_type')->setParameter('entity_type', $entity_type)
             ->andWhere('ect.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale'])

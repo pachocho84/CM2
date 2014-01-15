@@ -16,6 +16,7 @@ class ArticleType extends EntityType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $options['articleWriter'] = in_array('ROLE_WRITER', $options['roles']);
         parent::buildForm($builder, $options);
     
         if (in_array('ROLE_WRITER', $options['roles'])) {

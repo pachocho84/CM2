@@ -47,8 +47,8 @@ function uploadCollection($target, trigger, text) {
 }
 
 jQuery(document).ready(function() {
-    uploadCollection($('#cm_cmbundle_event_eventDates'), '.add_date_link', 'Delete date');
-    uploadCollection($('#cm_cmbundle_disc_discTracks'), '.add_track_link', 'Delete track');
+    uploadCollection($('#cm_cmbundle_event_eventDates'), '.add_date_link', $('.add_date_link').attr('delete_date-text'));
+    uploadCollection($('#cm_cmbundle_disc_discTracks'), '.add_track_link', $('.add_track_link').attr('delete_track-text'));
 });
 
 
