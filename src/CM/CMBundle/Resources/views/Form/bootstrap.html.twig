@@ -128,6 +128,7 @@
         {% if type == 'time' %}<div class="input-group"><span class="input-group-addon">{{ prefix }}</span>{% endif %}
         <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
             {% if empty_value is not none %}
+                {% if empty_value is not null %}{% set empty_value = empty_value[:1]|upper ~ empty_value[1:] %}{% endif %}
                 <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
             {% endif %}
             {% if preferred_choices|length > 0 %}
@@ -144,6 +145,22 @@
     </div>
 {% endspaceless %}
 {% endblock choice_widget_collapsed %}
+
+{% block choice_widget_options %}
+{% spaceless %}
+    {% for group_label, choice in options %}
+        {% if choice is iterable %}
+            <optgroup label="{{ group_label|trans({}, translation_domain) }}">
+                {% set options = choice %}
+                {{ block('choice_widget_options') }}
+            </optgroup>
+        {% else %}
+            {% if choice.label is not null %}{% set empty_value = choice.label[:1]|upper ~ choice.label[1:] %}{% endif %}
+            <option value="{{ choice.value }}"{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+        {% endif %}
+    {% endfor %}
+{% endspaceless %}
+{% endblock choice_widget_options %}
 
 {% block choice_widget_expanded %}
 {% spaceless %}
