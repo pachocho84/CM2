@@ -35,7 +35,7 @@ class EntityType extends BaseEntityType
                 'class' => 'CMBundle:EntityCategory',
                 'query_builder' => function(EntityCategoryRepository $er) use ($options) {
                     // get Entity child class name, to retrieve the EntityCategoty type associated
-                    $entityChild = strtoupper(preg_replace('/^[\w\d_\\\]*\\\/', '', rtrim(get_class($this), 'Type')));
+                    $entityChild = strtoupper(preg_replace('/^[\w\d_\\\]*\\\/', '', preg_replace('/Type$/', '', get_class($this))));
                     $entityCategory = constant('CM\CMBundle\Entity\EntityCategory::'.$entityChild);
                     return $er->filterEntityCategoriesByEntityType($entityCategory, $options);
                 }
@@ -45,8 +45,7 @@ class EntityType extends BaseEntityType
                 'options' => array(
                     'error_bubbling' => false,
                 )
-            ))
-            ->add('entityUsers', 'collection', array(
+            ))->add('entityUsers', 'collection', array(
                 'type' => new EntityUserType,
                 'allow_add' => true,
                 'allow_delete' => true,

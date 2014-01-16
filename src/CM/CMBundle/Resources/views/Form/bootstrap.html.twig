@@ -223,6 +223,15 @@
 {% endspaceless %}
 {% endblock form_label %}
 
+{% block _cm_cmbundle_article_translations_label %}
+{% endblock %}
+
+{% block _cm_cmbundle_event_translations_label %}
+{% endblock %}
+
+{% block _cm_cmbundle_disc_translations_label %}
+{% endblock %}
+
 {# Rows #}
 
 {% block form_row %}
@@ -267,26 +276,81 @@
 {% endspaceless %}
 {% endblock %}
 
-{% block _cm_cmbundle_article_translations_label %}
-{% endblock %}
-
-{% block _cm_cmbundle_event_translations_label %}
-{% endblock %}
-
-{% block _cm_cmbundle_disc_translations_label %}
+{% block checkbox_row %}
+{% spaceless %}
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+      <div class="checkbox">
+        <label>
+            {{ form_widget(form) }} {{ form.vars.label|default(form.vars.name|humanize)|trans({}, translation_domain) }}
+        </label>
+        {{ form_errors(form) }}
+      </div>
+    </div>
+  </div>
+{% endspaceless %}
 {% endblock %}
 
 {% block _cm_cmbundle_biography_translations_title_row %}
+{% endblock %}
+
+{% block cm_cmbundle_entityuser_collection_row %}
+{% spaceless %}
+    <div class="panel-group" id="accordion-protagonists">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion-protagonists" href="#collapse-protagonists">
+                        {{ 'Protagonists'|trans }} <small>{{ 'click to expand'|trans }}</small>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse-protagonists" class="panel-collapse collapse">
+                <div class="panel-body" {{ block('widget_container_attributes') }}>            
+                    <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('entityuser_add', {'object': form.parent.vars.data.className|class_name, 'user_id': 'USER_ID', 'protagonist_new_id': 'NEW_ID', 'entity_type': 'ENTITY_TYPE'}) }}">
+                        <div class="col-lg-12 collection-items">
+                            <div class="{{ form.vars.id }}_control_group">
+                                <div id="protagonists_finder_container" class="form-group">
+                                    <label class="control-label col-lg-3">{{ 'Add protagonists'|trans }}</label>
+                                    <div class="col-lg-9"><input type="text" id="protagonists_finder" class="form-control" /></div>
+                                </div>
+                                {{ include('CMBundle:EntityUser:addEntityUsers.html.twig', {'entityUsers': form, 'entity': form.parent.vars.data, 'newEntry': form.parent.vars.data == null}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_event_entityUsers_row %}
+{% spaceless %}
+    {{ block('cm_cmbundle_entityuser_collection_row') }}
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_disc_entityUsers_row %}
+{% spaceless %}
+    {{ block('cm_cmbundle_entityuser_collection_row') }}
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_article_entityUsers_row %}
+{% spaceless %}
+    {{ block('cm_cmbundle_entityuser_collection_row') }}
+{% endspaceless %}
 {% endblock %}
 
 {% block cm_cmbundle_eventdate_row %}
 {% spaceless %}
     <div class="panel panel-default">
         <div class="panel-body">
-        {{ form_label(form) }}
-        {{ form_widget(form) }}
-        {{ form_errors(form) }}
-    </div>
+            {{ form_label(form) }}
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+        </div>
     </div>
 {% endspaceless %}
 {% endblock %}
@@ -323,6 +387,10 @@
         {{ form_widget(form, {'attr': {'placeholder': 'Search'|trans}}) }}
         {{ form_errors(form) }}
     </div>
+    
+    <div class="form-group">
+        <div class="col-lg-12"><div gmap-canvas></div></div>
+    </div>
 {% endspaceless %}
 {% endblock %}
 
@@ -332,10 +400,6 @@
         {{ form_label(form) }}
         {{ form_widget(form, {'attr': {'placeholder': 'Search'|trans}}) }}
         {{ form_errors(form) }}
-    </div>
-    
-    <div class="form-group">
-        <div class="col-lg-12"><div gmap-canvas></div></div>
     </div>
 {% endspaceless %}
 {% endblock %}

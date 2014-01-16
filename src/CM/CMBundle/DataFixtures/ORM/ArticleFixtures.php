@@ -109,6 +109,39 @@ class ArticleFixtures extends AbstractFixture implements OrderedFixtureInterface
             $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
 
             $article->addPost($post);
+            
+            $userTags = array();
+            for ($j = 1; $j < rand(1, 3); $j++) {
+                $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)));
+            }
+            
+            $article->addUser(
+                $user,
+                true, // admin
+                EntityUser::STATUS_ACTIVE,
+                true, // notification
+                $userTags
+            );
+
+            $numbers = range(1, 8);
+            unset($numbers[$userNum - 1]);
+            shuffle($numbers);
+            for ($j = 0; $j < rand(0, 6); $j++) {
+                $otherUser = $manager->merge($this->getReference('user-'.$numbers[$j]));
+                
+                $userTags = array();
+                for ($k = 1; $k < rand(1, 3); $k++) {
+                    $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)));
+                }
+
+                $article->addUser(
+                    $otherUser,
+                    !rand(0, 3), // admin
+                    EntityUser::STATUS_PENDING,
+                    true, // notification
+                    $userTags
+                );
+            }
 
             $manager->persist($article);
             

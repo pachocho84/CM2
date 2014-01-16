@@ -103,6 +103,9 @@ class DoctrineEventsListener
         if ($object instanceof Relation && $object->getAccepted()) {
             $this->relationUpdatedRoutine($object, $em);
         }
+        if ($object instanceof User) {
+            $this->get('cm.user_authentication')->updateProfile();
+        }
     }
 
     public function preRemove(LifecycleEventArgs $args)

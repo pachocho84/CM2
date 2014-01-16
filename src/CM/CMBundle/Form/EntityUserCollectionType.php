@@ -27,14 +27,15 @@ class EntityUserCollectionType extends AbstractType
     {
         $builder->add('entityUsers', 'collection', array(
                 'type' => new EntityUserType,
-                'attr' => array('class' => 'protagonist_typeahead'),
-                'by_reference' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
+                'by_reference' => false,
                 'options' => array(
+                    'em' => $options['em'],
+                    'roles' => $options['roles'],
                     'tags' => $options['user_tags'],
                     'locale' => $options['locale'],
-                    'locales' => $options['locales']
+                    'locales' => $options['locales'],
                 )
             ));
     }
@@ -45,10 +46,20 @@ class EntityUserCollectionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'roles' => array(),
             'tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),
             'data_class' => null
+        ));
+
+        $resolver->setRequired(array(
+            'em',
+            'roles'
+        ));
+
+        $resolver->setAllowedTypes(array(
+            'em' => 'Doctrine\Common\Persistence\ObjectManager',
         ));
     }
 
@@ -57,6 +68,6 @@ class EntityUserCollectionType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_entity_user_collection';
+        return 'cm_cmbundle_entityuser_collection';
     }
 }
