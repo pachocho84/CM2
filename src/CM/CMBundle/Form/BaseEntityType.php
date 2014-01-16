@@ -78,7 +78,7 @@ class BaseEntityType extends AbstractType
             'roles' => array(),
             'user_tags' => array(),
             'locale' => 'en',
-            'locales' => array('en'),
+            'locales' => array('en', 'it'),
             'articleWriter' => false,
             'add_category' => true,
             'add_users' => true,

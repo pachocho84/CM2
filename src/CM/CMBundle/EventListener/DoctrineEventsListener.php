@@ -597,6 +597,10 @@ class DoctrineEventsListener
         $page = $image->getPage();
         $group = $image->getGroup();
 
+        if (!is_null($entity) && is_null($entity->getId())) {
+            return;
+        }
+
         $post = $em->getRepository('CMBundle:Post')->getLastPosts(array(
             'entityId' => $entity->getId(),
             'object' => get_class($image),

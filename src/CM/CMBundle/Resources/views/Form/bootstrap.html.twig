@@ -1,3 +1,5 @@
+{% use 'A2lixTranslationFormBundle::default.html.twig' %}
+
 {# Widgets #}
 
 {% block form_widget_simple %}
@@ -288,6 +290,27 @@
       </div>
     </div>
   </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block a2lix_translations_row %}
+{% spaceless %}
+    <div class="panel-group" id="accordion-protagonists">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion-protagonists" href="#collapse-basic-informations">
+                        {{ 'Basic informations'|trans }} <small>{{ 'click to expand'|trans }}</small>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse-basic-informations" class="panel-collapse collapse">
+                <div class="panel-body" {{ block('widget_container_attributes') }}> 
+                    {{ form_widget(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endspaceless %}
 {% endblock %}
 

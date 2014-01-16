@@ -154,32 +154,6 @@
         %}
             <script src="{{ asset_url }}"></script>
         {% endjavascripts %}
-        <script>
-            /* TINY MCE */
-
-            tinymce.baseURL = '/lib/tinymce';
-            // tinymce.baseURI = 'uri/';
-            // tinymce.documentBaseURL = 'lib/tinymce/';
-            tinymce.suffix = '.min';
-            tinymce.init({
-                selector: 'textarea.tinymce',
-                language: culture,
-                plugins: [
-                    "contextmenu paste"
-                ],
-                menubar: false,
-                toolbar: "undo redo | bold italic",
-                statusbar: false
-            });
-            tinymce.init({
-                selector: 'textarea.tinymce-advanced',
-                language: culture,
-                plugins: [
-                    "contextmenu paste"
-                ],
-                menubar: false,
-            });
-        </script>
     {% endif %}
     
 {% endblock %}

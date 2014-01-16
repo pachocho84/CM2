@@ -97,143 +97,6 @@ $(function() {
         console.log($(event.currentTarget).closest('.protagonist_typeahead').find('#message_recipients').val());
         $(event.currentTarget).parent().remove();
     });
-
-//  $('.protagonists_user:last').attr('protagonist_new_id') != undefined ? protagonist_new_id = $('.protagonists_user:last').attr('protagonist_new_id') : protagonist_new_id = 1;
-
-    // // Add
-    // $('#protagonists_finder').typeahead({
-    //     minLength: 2,
-    //     source: function (query, process) {
-    //         return $.get(script + '/utenti/autocomplete_users', { query: query, exclusion: $('.protagonists_user, .protagonists_group_user').map(function() { return $(this).attr('user_id'); }).get().join(',') }, function (data) {
-    //             users = data;
-    //             return process(
-    //                 $.map(data, function(user) {
-    //                     item = new String(user.FirstName + ' ' + user.LastName);
-    //                     item.data = user;
-    //                     return item;
-    //                 })
-    //             );
-    //         });
-    //     },
-    //     highlighter: function(item) {
-    //         return '<img src="' + item.data.Img + '" class="pull-left" /> ' + item;
-    //     },
-    //     item: '<li class="media"><a href="' + script + '"></a></li>',
-    //     items: 8,
-    //     updater: function(item) {
-    //         $.get(script + '/protagonist/add', { user_id: users[item].Id, protagonist_new_id: parseInt(protagonist_new_id) + 1, entity_type: $('#protagonists').attr('object') }, function(data) {
-    //             $('#protagonists_users').append(data);
-    //             protagonist_new_id ++;
-    //         });
-    //         return '';
-    //     }
-    // });
-
-//  // Group
-//  $('body').on('change', 'select[name*="group_id"]', function(event) {
-//      // Mark all protagonists from previous selected group for delete
-//      $('.protagonists_user[group_id]').each(function (index, element) {
-//          $('input[name$="[Protagonist][' + $(element).attr('protagonist_key') + '][delete]"]').attr('value', 1);
-//      });
-//      if ($(event.target).val() != '') {
-//          // Remove all protagonists from previous selected group
-//          $('.protagonists_user[group_id]').remove();
-//          // Fetch all protagonists from current selected group
-//          $.getJSON(script + '/protagonist/addGroup', { group_id: $(event.target).val(), protagonist_new_id: parseInt(protagonist_new_id) + 1, entity_type: $('#protagonists').attr('object'), exclusion: $('.protagonists_user, .protagonists_group_user').map(function() { return $(this).attr('user_id'); }).get().join(',') }, function(data) {
-//              $('#protagonists_users').append(data.protagonists);
-//              // Update all protagonists that are already added but also part of the current selected group with the group_id
-//              for (userId in data.usersExcluded) {
-//                  $('.protagonists_user[user_id=' + data.usersExcluded[userId] + ']').attr('group_id', $(event.target).val());
-//              }
-//              protagonist_new_id ++;
-//              fix_new_protagonists_ids();
-//          }).error(function(jqXHR, textStatus, errorThrown) { console.log(textStatus + ': ' + errorThrown); });
-//      } else {
-//          $('.protagonists_user[group_id]').fadeOut('normal', function() { 
-//              $(this).remove(); 
-//              fix_new_protagonists_ids();
-//          }); 
-//      }
-//  });
-    
-//  // Delete
-//  $('body').on('click', '.protagonists_user .close', function(event) {
-//      event.preventDefault(); 
-//      protagonist_key = $(this).parents('.protagonists_user').attr('protagonist_key');
-//      if ($(this).parent().attr('protagonist_new_id') == 0) { 
-//          $(this).popover({ title: $(this).attr('confirmation-title'), content: $(this).attr('confirmation-body'), placement: 'left', html: true }).popover('show');
-//          $(this).next('.popover').find('.btn-primary').bind('click', function(event) {                   
-//              event.preventDefault();
-//              console.log(protagonist_key);
-//              protagonist_delete(event, protagonist_key); 
-//          });
-//          $(this).next('.popover').find('.btn-close').bind('click', function(event) { 
-//              event.preventDefault(); 
-//              $(this).parents('.popover').prev().popover('destroy'); 
-//          });
-//      } else {
-//          $(this).parent().fadeOut('normal', function() { 
-//              $('input[name*="' + $(this).attr('protagonist_key') + '"]').remove();
-//              $(this).remove(); 
-//              fix_new_protagonists_ids();
-//          });
-//      }
-//  });
-    
-//  function protagonist_delete(event, protagonist_key) {
-//      $.get(event.target.href, function(data) {   
-//          $('.protagonists_user[protagonist_key="' + protagonist_key + '"]').fadeOut('normal', function() { $(this).remove(); });
-//          $('input[name*="[Protagonist][' + protagonist_key + ']"]').remove();
-//          $('.protagonists_user').each(function(index,element) {
-//              if (parseInt($(element).attr('protagonist_key')) > protagonist_key) {
-//                  $(element).attr('protagonist_key', $(element).attr('protagonist_key') - 1);
-//              }
-//          });
-//          $('*[name*="Protagonist"]:not([name*="newProtagonist"])').each(function(index, element) {
-//              $(element).attr('name', $(element).attr('name').replace(/\d{1,}/, function(value) { return parseInt(value) > protagonist_key ? parseInt(value) - 1 : value; }));
-//              $(element).attr('id', $(element).attr('id').replace(/\d{1,}/, function(value) { return parseInt(value) > protagonist_key ? parseInt(value) - 1 : value; }));
-//          });
-//          $('label[for*="Protagonist"]:not([for*="newProtagonist"])').each(function(index, element) {
-//              $(element).attr('for', $(element).attr('for').replace(/\d{1,}/, function(value) { return parseInt(value) > protagonist_key ? parseInt(value) - 1 : value; }));
-//          });
-//      }).error(function(jqXHR, textStatus, errorThrown) { 
-//          $(event.target).closest('.btn').addClass('btn-danger').text(textStatus + ': ' + errorThrown ); 
-//          console.log(textStatus + ': ' + errorThrown); 
-//      }); 
-//  }   
-    
-//  function fix_new_protagonists_ids() {
-//      $('form > input[name*="newProtagonist"]').remove();
-//      $('.protagonists_user[protagonist_new_id!=0]').each(function(index, element) {
-//          $(element).attr('protagonist_key', $(element).attr('protagonist_key').replace(/newProtagonist\d/, 'newProtagonist' + (index + 1)));
-//          $(element).find('*[name*="newProtagonist"]').each(function(sub_index, element) {
-//              $(element).attr('name', $(element).attr('name').replace(/newProtagonist\d/, 'newProtagonist' + (index + 1)));
-//              $(element).attr('id', $(element).attr('id').replace(/newProtagonist\d/, 'newProtagonist' + (index + 1)));
-//          });
-//          $(element).attr('protagonist_new_id', index + 1);
-//          protagonist_new_id = index + 1;
-//      });
-//  }
-    
-    
-    
-//  /* DISCS */
-//  // Add track
-//  new_track_id = 1;
-//  $('form').on('click', '.track-add', function(event) {
-//      event.preventDefault();
-//      $.get(event.currentTarget.href, { new_track_id: new_track_id }, function(data) {
-//          $(event.target).closest('table').append(data);
-//          new_track_id++;
-//      });
-//  });
-//  // Delete track
-//  $('#tracks').on('click', '.close', function(event) {
-// /*       console.log($('#tracks tr').index($(event.target).closest('tr'))); */
-//      event.preventDefault();
-//      $('input[name="entity[DiscTrack][' + $('#tracks tr').index($(event.target).closest('tr')) + '][delete]"]').val('on');
-//      $(event.target).closest('tr').fadeOut();
-//  });
     
     
     
@@ -341,39 +204,22 @@ $(function() {
         $(event.currentTarget).find('[address-coordinates]').val(datum.coords);
     });
 
-    // // City autocomplete
-    // $('[autocomplete-city]').typeahead({
-    //     name: 'cities',
-    //     minLength: 3,
-    //     template: '<div>{{ value.dir }}</div>',
-    //     engine: Hogan,
-    //     remote: {
-    //         url: 'http://ws.geonames.org/searchJSON?featureClass=P&style=full&username=circuitomusica&maxRows=8&lang=en&name_startsWith=%QUERY&type=json',
-    //         filter: function(data) {
-    //             data = $.map(data.geonames, function(city) {
-    //                 return valcity.name + (city.adminName1 ? ", " + city.adminName1 : "") + ", " + city.countryName;
-    //             });
-    //             return data;
-    //         }
-    //     }
-    // });
-
-    // $('form').on('click', '[autocomplete-city]', function() {
-    //     console.log(666);
-    //     $(this).typeahead({
-    //         minLength:      3,
-    //     source:             function (query, process) {
-    //       return $.getJSON('http://ws.geonames.org/searchJSON', { featureClass: 'P', style: 'full', username: 'circuitomusica', maxRows: 8, lang: culture, name_startsWith: query, type: 'json' }, function (data) {
-    //                 cities = new Array(); // CREDO NON SERVA PIU'
-    //                 return process(
-    //                     $.map(data.geonames, function(city) {
-    //                         return city.name + (city.adminName1 ? ", " + city.adminName1 : "") + ", " + city.countryName;
-    //                     })
-    //                 );
-    //       });
-    //     }
-    //     });
-    // });
+    // City autocomplete
+    $('[autocomplete-city]').typeahead({
+        name: 'cities',
+        minLength: 3,
+        template: '<div>{{ value }}</div>',
+        engine: Hogan,
+        remote: {
+            url: 'http://api.geonames.org/searchJSON?formatted=true&style=full&username=circuitomusica&maxRows=8&lang=' + culture + '&q=%QUERY&type=json',
+            filter: function(data) {
+                data = $.map(data.geonames, function(city) {
+                    return city.name + (city.adminName1 ? ", " + city.adminName1 : "") + ", " + city.countryName;
+                });
+                return data;
+            }
+        }
+    });
     
 //     var GooglePlacesService = new google.maps.places.AutocompleteService();
     
@@ -510,22 +356,30 @@ $(function() {
     //         }
     //     });
     // }
-    
-    
-    
-//  /* EMBED RELATION */
-//  // Add
-//  $('form .item-add').on('click', function(event) {
-//      event.preventDefault();
-//      console.log($('input').filter(function() { return this.id.match(new RegExp($(event.target).attr('id') + '\\d{1,2}_id')); }));
-//      $.get(event.currentTarget.href, { new_id: $('input').filter(function() { return this.id.match(new RegExp($(event.target).attr('id') + '\\d{1,2}_id')); }).size() + 1 }, function(data) {
-//          $(event.target).closest('.objects').find('ul').append(data);
-//      });
-//  });
-//  // Remove
-//  $('form').on('click', '.item-remove', function(event) {
-//      event.preventDefault();
-//      $('input[name="' + $(event.currentTarget).attr('rel') + '"]').val('on');
-//      $(event.target).closest('li.object').fadeOut();
-//  });     
+
+
+
+    /* TINY-MCE */
+
+    tinymce.baseURL = '/lib/tinymce';
+    tinymce.suffix = '.min';
+    tinymce.init({
+        selector: 'textarea.tinymce',
+        language: culture,
+        plugins: [
+            "paste"
+        ],
+        menubar: false,
+        toolbar: "undo redo | bold italic",
+        statusbar: false
+    });
+    tinymce.init({
+        selector: 'textarea.tinymce-advanced',
+        language: culture,
+        plugins: [
+            "paste"
+        ],
+        menubar: false,
+        height: 300
+    });
 });
