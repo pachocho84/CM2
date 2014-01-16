@@ -30,7 +30,7 @@ class BaseEntityType extends AbstractType
     {
         if (in_array('ROLE_CLIENT', $options['roles'])) {
             $builder->add('translations', 'a2lix_translations', array(
-                    'locales' => $options['locales'],
+                    'locales' => array('en', 'it'), // FIXME: $options['locales'],
                     'required' => true,
                     'fields' => array(
                         'title' => $options['title'] ? array() : array(
@@ -78,7 +78,7 @@ class BaseEntityType extends AbstractType
             'roles' => array(),
             'user_tags' => array(),
             'locale' => 'en',
-            'locales' => array('en', 'it'),
+            'locales' => array('en'),
             'articleWriter' => false,
             'add_category' => true,
             'add_users' => true,

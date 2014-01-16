@@ -278,6 +278,14 @@
 {% endspaceless %}
 {% endblock %}
 
+{% block choice_row %}
+    <div class="form-group">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
+
 {% block checkbox_row %}
 {% spaceless %}
   <div class="form-group">
@@ -285,6 +293,21 @@
       <div class="checkbox">
         <label>
             {{ form_widget(form) }} {{ form.vars.label|default(form.vars.name|humanize)|trans({}, translation_domain) }}
+        </label>
+        {{ form_errors(form) }}
+      </div>
+    </div>
+  </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block radio_row %}
+{% spaceless %}
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+      <div class="radio">
+        <label>
+            {{ form_widget(form) }} {{ form.vars.label|default(form.vars.name|humanize)|trans({}, translation_domain) }} lacaccaS
         </label>
         {{ form_errors(form) }}
       </div>
@@ -304,7 +327,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="collapse-basic-informations" class="panel-collapse collapse">
+            <div id="collapse-basic-informations" class="panel-collapse collapse in">
                 <div class="panel-body" {{ block('widget_container_attributes') }}> 
                     {{ form_widget(form) }}
                 </div>

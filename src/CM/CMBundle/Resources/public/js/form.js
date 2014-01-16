@@ -9,6 +9,7 @@ function addRecipient(c, d, a)
 
 $(function() {
     /* PROTAGONIST */
+
     var protagonist_new_id = parseInt(1 + $('.protagonists_user:last').attr('protagonist_new_id')) + 5;
     var collection = $('.protagonist_typeahead').children('.collection-items');
     $('#protagonists_finder').typeahead({
@@ -371,7 +372,8 @@ $(function() {
         ],
         menubar: false,
         toolbar: "undo redo | bold italic",
-        statusbar: false
+        statusbar: false,
+        height: 150
     });
     tinymce.init({
         selector: 'textarea.tinymce-advanced',
