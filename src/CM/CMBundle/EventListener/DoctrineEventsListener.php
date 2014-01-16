@@ -103,7 +103,7 @@ class DoctrineEventsListener
         if ($object instanceof Relation && $object->getAccepted()) {
             $this->relationUpdatedRoutine($object, $em);
         }
-        if ($object instanceof User) {
+        if ($object instanceof User && !is_null($this->get('security.context')->getToken())) {
             $this->get('cm.user_authentication')->updateProfile();
         }
     }
