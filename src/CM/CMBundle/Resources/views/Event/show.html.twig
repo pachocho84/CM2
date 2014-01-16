@@ -1,19 +1,29 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
 {% block body %}
-    <article class="blog">
-        <header>
-            <h2>{{ event.id }} {{ event.getTitle }}</h2>
-            <h3>{{ event.getSubtitle }}</h3>
-            {% if can_manage(event) %}
+    <h2>{{ event.getTitle }}</h2>
+    {% if event.getSubtitle is not null %}<h3>{{ event.getSubtitle }}</h3>{% endif %}
+    
+    <div class="box">
+        {% if can_manage(event) %}
+            <div class="objects clearfix">
                 <div class="media">
-                    <div class="btn pull-left alert-info"><a href="{{ path('event_edit', {'id': event.id, 'slug': event.getSlug}) }}">{{ "Edit" | trans }}</a></div>
-                    <div class="btn pull-right alert-danger"><a href="{{ path('event_delete', {'id': event.id}) }}">{{ "Delete" | trans }}</a></div>
+                    <div class="btn pull-left alert-info"><a href="{{ path('event_edit', {'id': event.id, 'slug': event.getSlug}) }}">{{ "Edit"|trans }}</a></div>
+                    <div class="btn pull-right alert-danger"><a href="{{ path('event_delete', {'id': event.id}) }}">{{ "Delete"|trans }}</a></div>
                 </div>
-            {% endif %}
-        </header>
-        <div>
-            <p>{{ event.getText | raw }}</p>
+            </div>
+        {% endif %}
+        <div class="objects clearfix">
+            <div class="media object">
+                {% if event.getImages|length > 0 %}
+                    <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}" class="pull-left img-thumbnail"><img src="{{ event.getImages[0].img|imagine_filter('350') }}" class="pull-left img-thumbnail" width=200 /></a>
+                {% endif %}
+                <div>
+                    <div class="text-justify">{{ event.getText|raw }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="objects clearfix">
             {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'entity': event}) }}
             <ul>
                 {% for protagonist in event.entityUsers if protagonist.status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_ACTIVE') %}
@@ -27,19 +37,22 @@
                     </li>
                 {% endfor %}
             </ul>
+        </div>
+        <div class="objects clearfix">
             <ul>
                 {% for date in event.eventDates %}
-                    <li>{{ date.start | format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</li>
+                    <li>{{ date.start|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</li>
                 {% endfor %}
             </ul>
         </div>
+        <div class="objects">
             {% for image in event.getImages %}
-                <img src="{{ asset(uploaded_images_full_dir~'/'~image.img) }}" width=200 />
+                <img src="{{ image.img|imagine_filter('350') }}" width=200 />
             {% endfor %}
           
             {{ include('CMBundle::social.html.twig', {'post': event.post}) }}
         </div>
-    </article> 
+    </div> 
 {% endblock %}
 
 {% block javascripts %}

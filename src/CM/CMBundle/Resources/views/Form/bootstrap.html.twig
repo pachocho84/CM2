@@ -25,6 +25,17 @@
 {% endspaceless %}
 {% endblock form_widget_simple %}
 
+{% block button_widget %}
+{% spaceless %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' btn btn-primary')|trim}) %}
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ label|trans({}, translation_domain) }}</button>
+{% endspaceless %}
+{% endblock button_widget %}
+
+
 {% block datetime_widget %}
 {% spaceless %}
     {% if widget == 'single_text' %}
@@ -286,6 +297,12 @@
     </div>
 {% endblock %}
 
+{% block button_row %}
+    <div class="text-right">
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}
+
 {% block checkbox_row %}
 {% spaceless %}
   <div class="form-group">
@@ -318,21 +335,8 @@
 
 {% block a2lix_translations_row %}
 {% spaceless %}
-    <div class="panel-group" id="accordion-protagonists">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion-protagonists" href="#collapse-basic-informations">
-                        {{ 'Basic informations'|trans }} <small>{{ 'click to expand'|trans }}</small>
-                    </a>
-                </h4>
-            </div>
-            <div id="collapse-basic-informations" class="panel-collapse collapse in">
-                <div class="panel-body" {{ block('widget_container_attributes') }}> 
-                    {{ form_widget(form) }}
-                </div>
-            </div>
-        </div>
+    <div {{ block('widget_container_attributes') }}> 
+        {{ form_widget(form) }}
     </div>
 {% endspaceless %}
 {% endblock %}

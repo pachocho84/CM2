@@ -5,19 +5,27 @@
 
 {% block body %}
 
-    <h3>{{ show_icon('Nameplatealt')|raw }} <span>{{ block('title') }}</span></h3>                             
 
-
+    
      
     {#<ul class="breadcrumb">
       <li><?php echo link_to('Home', '@homepage') ?></li>
       <li><?php echo link_to(__('Account'), '@account') ?></li>
       <li class="active"><?php echo $sf_response->getTitle() ?></li>
     </ul>#}
-
-
-
     <div class="box">
+        <div class="box-top">
+            <div class="row">
+                <div class="col-lg-5">
+                    <h2>{{ show_icon('Photo')|raw }} {{ block('title') }}</h2>
+                </div>
+                <div class="col-lg-7 text-right">
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ path('user_show', {'slug': app.user.slug}) }}" class="btn btn-default">{{ show_icon('User')|raw }} {{ 'View profile'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="objects">
             {{ form_start(form) }}
 

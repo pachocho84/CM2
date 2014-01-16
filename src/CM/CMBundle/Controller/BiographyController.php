@@ -99,7 +99,7 @@ class BiographyController extends Controller
     }
 
     /**
-     * @Route("pages/{slug}/account/biography", name="page_biography_edit")
+     * @Route("/pages/{slug}/account/biography", name="page_biography_edit")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
@@ -151,7 +151,7 @@ class BiographyController extends Controller
     }
 
     /**
-     * @Route("/{slug}/biography", name="page_biography")
+     * @Route("/pages/{slug}/biography", name="page_biography")
      * @Template
      */
     public function pageAction(Request $request, $slug)
@@ -175,7 +175,7 @@ class BiographyController extends Controller
     }
 
     /**
-     * @Route("/{slug}/account/biography", name="group_biography_edit")
+     * @Route("/groups/{slug}/account/biography", name="group_biography_edit")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
@@ -227,7 +227,7 @@ class BiographyController extends Controller
     }
 
     /**
-     * @Route("/{slug}/biography", name="group_biography")
+     * @Route("/groups/{slug}/biography", name="group_biography")
      * @Template
      */
     public function groupAction(Request $request, $slug)

@@ -2,13 +2,31 @@
 
 {% set inAccountPage = true %}
 
+{% block bodyHeading %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="text-center">{{ 'Account edit'|trans }}</h2>
+        </div>
+    </div>
+{% endblock %}
+
 {% block accountSidebar %}
+    <div class="media">
+        <div class="pull-left">{{ show_img_box(app.user.img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': app.user.imgOffset})|raw }}</div>
+        <div class="media-body">
+            <h4 class="media-heading">
+                {{ app.user }}
+            </h4>
+            <small>{{ app.user.userTags|join(', ')|trim }}</small>
+        </div>
+    </div>
+
     <ul class="nav nav-pills nav-stacked">
         <li{% if inProfilePage is defined and inProfilePage %} class="active"{% endif %}>
-            <a href="{{ path('fos_user_profile') }}"><span class="glyphicons cogwheels"></span> {{ 'Basic information' | trans }}</a>
+            <a href="{{ path('fos_user_profile') }}">{{ show_icon('Options') }} {{ 'Basic information' | trans }}</a>
         </li>
         <li{% if inPicturesPage is defined and inPicturesPage %} class="active"{% endif %}>
-            <a href="{{ path('user_image_edit') }}"></span> <span class="glyphicons camera"></span> {{ 'Profile & Cover pictures' | trans }}</a>
+            <a href="{{ path('user_image_edit') }}"></span>{{ show_icon('Photo') }} {{ 'Profile & Cover pictures' | trans }}</a>
         </li>
         <li{% if inBiographyPage is defined and inBiographyPage %} class="active"{% endif %}>
             <a href="{{ path('user_biography_edit') }}"><span class="glyphicon glyphicon-book"></span> {{ 'Biography' | trans }}</a>

@@ -890,6 +890,10 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-bell"></span>';
             case 'Request_out':
                 return '<span class="glyphicon glyphicon-share-alt"></span>';
+            case 'Options':
+                return '<span class="glyphicons cogwheels"></span>';
+            case 'Photo':
+                return '<span class="glyphicons camera"></span>';
             default:
                 return '<span style="color:red;">missing glyphicon for '.$object.'</span>';
         }

@@ -175,7 +175,7 @@ class EventController extends Controller
     }
     
     /**
-     * @Route("/date/{id}/{slug}", name="event_dates_show", requirements={"id" = "\d+", "_locale" = "en|fr|it"})
+     * @Route("/date/{id}/{slug}", name="event_date_show", requirements={"id" = "\d+", "_locale" = "en|fr|it"})
      * @Template
      */
     public function showDateAction(Request $request, $id, $slug)

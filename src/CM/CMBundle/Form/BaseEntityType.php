@@ -36,8 +36,10 @@ class BaseEntityType extends AbstractType
                         'title' => $options['title'] ? array() : array(
                             'display' => false
                         ),
-                        'subtitle' => array(
+                        'subtitle' => $options['title'] ? array(
                             'required' => false,
+                        ) : array(
+                            'display' => false
                         ),
                         'extract' => array(
                             'attr' => array(

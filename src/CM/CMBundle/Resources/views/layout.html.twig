@@ -91,7 +91,10 @@
 {% endblock %}
 
 {% block container %}
+    {% block bodyHeading %}{% endblock %}
+    
     <div class="row">
+    
         {% set noColumns = noColumns|default(false) %}
         {% set inAccountPage = inAccountPage|default(false) %}
         {# LEFT COLUMN #}
@@ -104,7 +107,7 @@
 
         <div class="col-md-{% if inAccountPage %}9{% else %}8{% endif %}">
             {# FLASH #}
-            {% block body %}{% endblock %}
+            {% block layoutBody %}{% block body %}{% endblock %}{% endblock %}
         </div>
 
         {# RIGHT COLUMN #}
