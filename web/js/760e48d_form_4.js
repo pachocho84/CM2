@@ -1,5 +1,15 @@
+function addRecipient(c, d, a)
+{
+    recipients = $(c).find('#recipients');
+    messageRecipients = $(c).find('#message_recipients');
+    r = recipients.attr('prototype').replace("__id__", d['id']).replace("__username__", d['username']).replace("__fullname__", d['fullname']);
+    recipients.html(recipients.html() + r);
+    messageRecipients.val(messageRecipients.val() + (messageRecipients.val() ? ',' : '') + d['username']);
+}
+
 $(function() {
     /* PROTAGONIST */
+
     var protagonist_new_id = parseInt(1 + $('.protagonists_user:last').attr('protagonist_new_id')) + 5;
     var collection = $('.protagonist_typeahead').children('.collection-items');
     $('#protagonists_finder').typeahead({
@@ -11,15 +21,29 @@ $(function() {
             url: typeaheadHintRoute + '?query=%QUERY',
             replace: function (url, uriEncodedQuery) {
                 return url.replace('%QUERY', uriEncodedQuery) + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',');
-            }
+            },
+            cache: false
         },
     });
-    collection.on('typeahead:autocompleted typeahead:selected', function (event, datum) {
+    $(document).on('typeahead:autocompleted typeahead:selected', '.protagonist_typeahead', function (event, datum) {
         protagonist_new_id += 1;
-        $.get($(event.currentTarget).closest('.protagonist_typeahead').attr('typeahead-callback') + '?user_id=' + datum.id + '&protagonist_new_id=' + protagonist_new_id + '&entity_type=' + $('#protagonists').attr('object'), function (data) {
-            $('.protagonists_user:last').after(data);
-            $('#protagonists_finder').val('');
-        });
+        if ($(event.currentTarget).is('[typeahead-callback]')) {
+            callback = $(event.currentTarget).attr('typeahead-callback');
+        } else {
+            callback = $(event.currentTarget).find('li[typeahead-callback]').attr('typeahead-callback');
+        }
+        if (callback.substring(0, 1) == '$') {
+            callback = callback.substring(1);
+            func = callback.split('(')[0];
+            args = callback.split('(').slice(1).join('(').slice(0, -1);
+            window[func](event.currentTarget, datum, args);
+        } else {
+            target = callback.replace(/USER_ID/, datum.id).replace(/NEW_ID/, protagonist_new_id).replace(/ENTITY_TYPE/, $('#protagonists').attr('object'));
+            $.get(target, function (data) {
+                $('.protagonists_user:last').after(data);
+            });
+        }
+        $('#protagonists_finder').typeahead('setQuery', '');
     });
 
     $(document).on('click', '.protagonists_remove', function (event) {
@@ -55,181 +79,148 @@ $(function() {
             });
         }
     });
-
-//  $('.protagonists_user:last').attr('protagonist_new_id') != undefined ? protagonist_new_id = $('.protagonists_user:last').attr('protagonist_new_id') : protagonist_new_id = 1;
-
-    // // Add
-    // $('#protagonists_finder').typeahead({
-    //     minLength: 2,
-    //     source: function (query, process) {
-    //         return $.get(script + '/utenti/autocomplete_users', { query: query, exclusion: $('.protagonists_user, .protagonists_group_user').map(function() { return $(this).attr('user_id'); }).get().join(',') }, function (data) {
-    //             users = data;
-    //             return process(
-    //                 $.map(data, function(user) {
-    //                     item = new String(user.FirstName + ' ' + user.LastName);
-    //                     item.data = user;
-    //                     return item;
-    //                 })
-    //             );
-    //         });
-    //     },
-    //     highlighter: function(item) {
-    //         return '<img src="' + item.data.Img + '" class="pull-left" /> ' + item;
-    //     },
-    //     item: '<li class="media"><a href="' + script + '"></a></li>',
-    //     items: 8,
-    //     updater: function(item) {
-    //         $.get(script + '/protagonist/add', { user_id: users[item].Id, protagonist_new_id: parseInt(protagonist_new_id) + 1, entity_type: $('#protagonists').attr('object') }, function(data) {
-    //             $('#protagonists_users').append(data);
-    //             protagonist_new_id ++;
-    //         });
-    //         return '';
-    //     }
-    // });
-
-//  // Group
-//  $('body').on('change', 'select[name*="group_id"]', function(event) {
-//      // Mark all protagonists from previous selected group for delete
-//      $('.protagonists_user[group_id]').each(function (index, element) {
-//          $('input[name$="[Protagonist][' + $(element).attr('protagonist_key') + '][delete]"]').attr('value', 1);
-//      });
-//      if ($(event.target).val() != '') {
-//          // Remove all protagonists from previous selected group
-//          $('.protagonists_user[group_id]').remove();
-//          // Fetch all protagonists from current selected group
-//          $.getJSON(script + '/protagonist/addGroup', { group_id: $(event.target).val(), protagonist_new_id: parseInt(protagonist_new_id) + 1, entity_type: $('#protagonists').attr('object'), exclusion: $('.protagonists_user, .protagonists_group_user').map(function() { return $(this).attr('user_id'); }).get().join(',') }, function(data) {
-//              $('#protagonists_users').append(data.protagonists);
-//              // Update all protagonists that are already added but also part of the current selected group with the group_id
-//              for (userId in data.usersExcluded) {
-//                  $('.protagonists_user[user_id=' + data.usersExcluded[userId] + ']').attr('group_id', $(event.target).val());
-//              }
-//              protagonist_new_id ++;
-//              fix_new_protagonists_ids();
-//          }).error(function(jqXHR, textStatus, errorThrown) { console.log(textStatus + ': ' + errorThrown); });
-//      } else {
-//          $('.protagonists_user[group_id]').fadeOut('normal', function() { 
-//              $(this).remove(); 
-//              fix_new_protagonists_ids();
-//          }); 
-//      }
-//  });
-    
-//  // Delete
-//  $('body').on('click', '.protagonists_user .close', function(event) {
-//      event.preventDefault(); 
-//      protagonist_key = $(this).parents('.protagonists_user').attr('protagonist_key');
-//      if ($(this).parent().attr('protagonist_new_id') == 0) { 
-//          $(this).popover({ title: $(this).attr('confirmation-title'), content: $(this).attr('confirmation-body'), placement: 'left', html: true }).popover('show');
-//          $(this).next('.popover').find('.btn-primary').bind('click', function(event) {                   
-//              event.preventDefault();
-//              console.log(protagonist_key);
-//              protagonist_delete(event, protagonist_key); 
-//          });
-//          $(this).next('.popover').find('.btn-close').bind('click', function(event) { 
-//              event.preventDefault(); 
-//              $(this).parents('.popover').prev().popover('destroy'); 
-//          });
-//      } else {
-//          $(this).parent().fadeOut('normal', function() { 
-//              $('input[name*="' + $(this).attr('protagonist_key') + '"]').remove();
-//              $(this).remove(); 
-//              fix_new_protagonists_ids();
-//          });
-//      }
-//  });
-    
-//  function protagonist_delete(event, protagonist_key) {
-//      $.get(event.target.href, function(data) {   
-//          $('.protagonists_user[protagonist_key="' + protagonist_key + '"]').fadeOut('normal', function() { $(this).remove(); });
-//          $('input[name*="[Protagonist][' + protagonist_key + ']"]').remove();
-//          $('.protagonists_user').each(function(index,element) {
-//              if (parseInt($(element).attr('protagonist_key')) > protagonist_key) {
-//                  $(element).attr('protagonist_key', $(element).attr('protagonist_key') - 1);
-//              }
-//          });
-//          $('*[name*="Protagonist"]:not([name*="newProtagonist"])').each(function(index, element) {
-//              $(element).attr('name', $(element).attr('name').replace(/\d{1,}/, function(value) { return parseInt(value) > protagonist_key ? parseInt(value) - 1 : value; }));
-//              $(element).attr('id', $(element).attr('id').replace(/\d{1,}/, function(value) { return parseInt(value) > protagonist_key ? parseInt(value) - 1 : value; }));
-//          });
-//          $('label[for*="Protagonist"]:not([for*="newProtagonist"])').each(function(index, element) {
-//              $(element).attr('for', $(element).attr('for').replace(/\d{1,}/, function(value) { return parseInt(value) > protagonist_key ? parseInt(value) - 1 : value; }));
-//          });
-//      }).error(function(jqXHR, textStatus, errorThrown) { 
-//          $(event.target).closest('.btn').addClass('btn-danger').text(textStatus + ': ' + errorThrown ); 
-//          console.log(textStatus + ': ' + errorThrown); 
-//      }); 
-//  }   
-    
-//  function fix_new_protagonists_ids() {
-//      $('form > input[name*="newProtagonist"]').remove();
-//      $('.protagonists_user[protagonist_new_id!=0]').each(function(index, element) {
-//          $(element).attr('protagonist_key', $(element).attr('protagonist_key').replace(/newProtagonist\d/, 'newProtagonist' + (index + 1)));
-//          $(element).find('*[name*="newProtagonist"]').each(function(sub_index, element) {
-//              $(element).attr('name', $(element).attr('name').replace(/newProtagonist\d/, 'newProtagonist' + (index + 1)));
-//              $(element).attr('id', $(element).attr('id').replace(/newProtagonist\d/, 'newProtagonist' + (index + 1)));
-//          });
-//          $(element).attr('protagonist_new_id', index + 1);
-//          protagonist_new_id = index + 1;
-//      });
-//  }
-    
-    
-    
-//  /* DISCS */
-//  // Add track
-//  new_track_id = 1;
-//  $('form').on('click', '.track-add', function(event) {
-//      event.preventDefault();
-//      $.get(event.currentTarget.href, { new_track_id: new_track_id }, function(data) {
-//          $(event.target).closest('table').append(data);
-//          new_track_id++;
-//      });
-//  });
-//  // Delete track
-//  $('#tracks').on('click', '.close', function(event) {
-// /*       console.log($('#tracks tr').index($(event.target).closest('tr'))); */
-//      event.preventDefault();
-//      $('input[name="entity[DiscTrack][' + $('#tracks tr').index($(event.target).closest('tr')) + '][delete]"]').val('on');
-//      $(event.target).closest('tr').fadeOut();
-//  });
+    // relation
+    $(document).on('click', '#protagonists_finder_container .dropdown-menu li', function(event) {
+        $('#protagonists_finder_container .dropdown-menu li').each(function(i, li) {
+            $(li).removeAttr('active');
+        });
+        $(event.currentTarget).attr('active', 'active');
+        $(event.currentTarget).parent().siblings('button').html($(event.currentTarget).attr('name') + ' <span class="caret"></span>');
+    });
+    // recipient
+    $(document).on('click', '.recipient .close', function(event) {
+        val = $(event.currentTarget).closest('.protagonist_typeahead').find('#message_recipients').val().split(',');
+        i = val.indexOf($(event.currentTarget).parent().attr('recipient'));
+        if (i >= 0) {
+            val.splice(i, 1);
+        }
+        $(event.currentTarget).closest('.protagonist_typeahead').find('#message_recipients').val(val.join(','));
+        console.log($(event.currentTarget).closest('.protagonist_typeahead').find('#message_recipients').val());
+        $(event.currentTarget).parent().remove();
+    });
     
     
     
     /* AUTOCOMPLETE */
 
-    // City autocomplete
+    // Places autocomplete
+    function initialize(index) {
+        canvas = $('[gmap-canvas]').get(index);
+        input = $(canvas).parent().parent().parent().find('[places-autocomplete]').get(0);
 
+        var mapOptions = {
+            center: new google.maps.LatLng(45.4654542, 9.186515999999999),
+            zoom: 14
+        };
+        var map = new google.maps.Map(canvas,
+            mapOptions);
+
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.bindTo('bounds', map);
+
+        var infowindow = new google.maps.InfoWindow();
+        var marker = new google.maps.Marker({
+            map: map
+        });
+
+        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+            infowindow.close();
+            marker.setVisible(false);
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                return;
+            }
+
+            // If the place has a geometry, then present it on a map.
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);  // Why 17? Because it looks good.
+            }
+            marker.setIcon(/** @type {google.maps.Icon} */({
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(35, 35)
+            }));
+            marker.setPosition(place.geometry.location);
+            marker.setVisible(true);
+
+            var address = '';
+            if (place.address_components) {
+                address = [
+                    (place.address_components[0] && place.address_components[0].short_name || ''),
+                    (place.address_components[1] && place.address_components[1].short_name || ''),
+                    (place.address_components[2] && place.address_components[2].short_name || '')
+                ].join(' ');
+            }
+
+            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+            $(canvas).parent().parent().parent().find('[address-autocomplete]').val(address);
+            $(canvas).parent().parent().parent().find('[places-autocomplete]').val(place.name);
+            infowindow.open(map, marker);
+        });
+    }
+    
+    $('[gmap-canvas]').each(function(i) {
+        google.maps.event.addDomListener(window, 'load', initialize(i));
+    });
+    $(document).on('collection-added', function(event) {
+        google.maps.event.addDomListener(window, 'load', initialize(-1));
+    });
+
+    $(document).on('keydown', '[gmap-canvas]', function(event) {
+        if (event.which == 13) {
+            event.preventDefault();
+        }
+    });
+
+    // Address autocomplete
+    $('[address-autocomplete]').typeahead({
+        name: 'address',
+        // minLength: 3,
+        valueKey: 'val',
+        template: '<div>{{ val }}</div>',
+        engine: Hogan,
+        remote: {
+            url: 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&culture=' + culture + '&address=%QUERY',
+            replace: function (url, uriEncodedQuery) {
+                return url.replace('%QUERY', uriEncodedQuery);
+            },
+            filter: function(data) {
+                if (data.status == 'OK') {
+                    return $.map(data.results, function(address) {
+                        value = new Object();
+                        value.val = address.formatted_address;
+                        value.coords = address.geometry.location.lat + ',' + address.geometry.location.lng;
+                        return value;
+                    });
+                }
+            }
+        }
+    });
+    $(document).on('typeahead:autocompleted typeahead:selected', '.event_date', function (event, datum) {
+        $(event.currentTarget).find('[address-coordinates]').val(datum.coords);
+    });
+
+    // City autocomplete
     $('[autocomplete-city]').typeahead({
         name: 'cities',
         minLength: 3,
         template: '<div>{{ value }}</div>',
         engine: Hogan,
         remote: {
-            url: 'http://ws.geonames.org/searchJSON?featureClass=P&style=full&username=circuitomusica&maxRows=8&lang=en&name_startsWith=%QUERY&type=json',
+            url: 'http://api.geonames.org/searchJSON?formatted=true&style=full&username=circuitomusica&maxRows=8&lang=' + culture + '&q=%QUERY&type=json',
             filter: function(data) {
-                return $.map(data.geonames, function(city) {
+                data = $.map(data.geonames, function(city) {
                     return city.name + (city.adminName1 ? ", " + city.adminName1 : "") + ", " + city.countryName;
                 });
+                return data;
             }
         }
     });
-
-    // $('form').on('click', '[autocomplete-city]', function() {
-    //     console.log(666);
-    //     $(this).typeahead({
-    //         minLength:      3,
-    //     source:             function (query, process) {
-    //       return $.getJSON('http://ws.geonames.org/searchJSON', { featureClass: 'P', style: 'full', username: 'circuitomusica', maxRows: 8, lang: culture, name_startsWith: query, type: 'json' }, function (data) {
-    //                 cities = new Array(); // CREDO NON SERVA PIU'
-    //                 return process(
-    //                     $.map(data.geonames, function(city) {
-    //                         return city.name + (city.adminName1 ? ", " + city.adminName1 : "") + ", " + city.countryName;
-    //                     })
-    //                 );
-    //       });
-    //     }
-    //     });
-    // });
     
 //     var GooglePlacesService = new google.maps.places.AutocompleteService();
     
@@ -309,29 +300,6 @@ $(function() {
     //     });
     // }
      
-//     // Address autocomplete
-    $('[address-autocomplete]').typeahead({
-        name: 'address',
-        // minLength: 3,
-        template: '<div>{{ value }}</div>',
-        engine: Hogan,
-        remote: {
-            url: 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&culture=' + culture + '&address=%QUERY',
-            replace: function (url, uriEncodedQuery) {
-                return url.replace('%QUERY', uriEncodedQuery);
-            },
-            filter: function(data) {
-                if (data.status == 'OK') {
-                    return $.map(data.results, function(address) {
-                        return address.formatted_address;
-                    });
-                }
-            }
-        }
-    });
-    $('[address-autocomplete]').on('typeahead:autocompleted typeahead:selected', function (event, datum) {
-        
-    });
 //     $('form ul').on('focus', 'input[address-autocomplete]', function() {
 //         input = this;
 //         found = false;
@@ -389,22 +357,31 @@ $(function() {
     //         }
     //     });
     // }
-    
-    
-    
-//  /* EMBED RELATION */
-//  // Add
-//  $('form .item-add').on('click', function(event) {
-//      event.preventDefault();
-//      console.log($('input').filter(function() { return this.id.match(new RegExp($(event.target).attr('id') + '\\d{1,2}_id')); }));
-//      $.get(event.currentTarget.href, { new_id: $('input').filter(function() { return this.id.match(new RegExp($(event.target).attr('id') + '\\d{1,2}_id')); }).size() + 1 }, function(data) {
-//          $(event.target).closest('.objects').find('ul').append(data);
-//      });
-//  });
-//  // Remove
-//  $('form').on('click', '.item-remove', function(event) {
-//      event.preventDefault();
-//      $('input[name="' + $(event.currentTarget).attr('rel') + '"]').val('on');
-//      $(event.target).closest('li.object').fadeOut();
-//  });     
+
+
+
+    /* TINY-MCE */
+
+    tinymce.baseURL = '/lib/tinymce';
+    tinymce.suffix = '.min';
+    tinymce.init({
+        selector: 'textarea.tinymce',
+        language: culture,
+        plugins: [
+            "paste"
+        ],
+        menubar: false,
+        toolbar: "undo redo | bold italic",
+        statusbar: false,
+        height: 150
+    });
+    tinymce.init({
+        selector: 'textarea.tinymce-advanced',
+        language: culture,
+        plugins: [
+            "paste"
+        ],
+        menubar: false,
+        height: 300
+    });
 });

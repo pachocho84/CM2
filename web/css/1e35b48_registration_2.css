@@ -1,0 +1,67 @@
+#registration
+{
+}
+#registration #registration-main_box
+{
+	width: 980px;
+	/*height: 600px;*/
+	background: url(/images/layout/pagine/registrazione/box_big_bg.png) bottom repeat-x;
+	position: relative;
+	margin-bottom: 25px;  
+	float: right;
+}
+#registration #registration-main_box h2
+{
+	position: absolute;
+	top: 0px;
+	left: 200px;
+	background: url(/images/layout/pagine/registrazione/iscriviti_e_gratis_approfitta_dei_vantaggi_che_circuito_musica_ti_offre.png) no-repeat;
+	width: 590px;
+	height: 70px;
+	text-indent: -10000em;
+}
+#registration #registration-main_box .form-container
+{
+	width: 930px;
+	/*height: 490px;*/     
+	background: transparent url(/images/layout/pagine/registrazione/leggio_poltrona.jpg) 15px bottom no-repeat;
+	padding: 50px 25px 0; 
+	float: right;
+}      
+#registration #registration-main_box .form-container .form
+{       
+	float: right;   
+	background: transparent;
+	border: none;
+	padding: 0px;
+	margin: 0px;
+}      
+#registration #registration-main_box .form-container .form h3
+{                 
+	background: transparent; 
+	border: none;
+	text-align: right;
+	color: #990000;
+	font-size: 22px;  
+	margin-top: 5px;
+}      
+#registration #registration-main_box .form-container .form .form-row
+{
+	border: none;
+	margin-bottom: 0px;
+}
+#registration .small_boxes .box
+{
+	width: 310px;
+	height: 600px;
+	background: url(/images/layout/pagine/registrazione/box_small_bg.png) no-repeat;
+	margin-left: 25px;
+	float: left;
+	padding: 0px;
+	clear: none;
+	border: none;
+}
+#registration .small_boxes .box:first-child
+{
+	margin-left: 0px;
+}
