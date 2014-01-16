@@ -33,7 +33,9 @@ class BaseEntityType extends AbstractType
                     'locales' => $options['locales'],
                     'required' => true,
                     'fields' => array(
-                        'title' => $options['title'] ? array() : array('display' => false),
+                        'title' => $options['title'] ? array() : array(
+                            'display' => false
+                        ),
                         'subtitle' => array(
                             'required' => false,
                         ),

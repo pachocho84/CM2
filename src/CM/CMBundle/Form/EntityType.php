@@ -18,6 +18,8 @@ class EntityType extends BaseEntityType
 
     public function __construct(array $options = array())
     {
+        parent::__construct($options);
+
         $resolver = new OptionsResolver();
         $this->setDefaultOptions($resolver);
     }
@@ -66,6 +68,7 @@ class EntityType extends BaseEntityType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'title' => true,
             'roles' => array(),
             'user_tags' => array(),
             'locale' => 'en',
