@@ -68,6 +68,20 @@
 
 
 
+/* ENTITIES */
+.entity-images {
+    padding: 15px 10px;
+}
+.entity-images .col-xs-4 {
+    padding: 0 5px;
+}
+/* event */
+.event-date-map {
+    border: 1px solid #bbbbbb;
+}
+
+
+
 /* OBJECT */
 .objects
 {
