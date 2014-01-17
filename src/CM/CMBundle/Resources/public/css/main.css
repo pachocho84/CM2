@@ -509,8 +509,17 @@ form .panel-group .panel {
     border-width: 9px;
 } 
 .box .objects  {
+    border-top: 1px solid #dddddd;
     padding: 14px;
     margin: 0px;
+}
+.box .objects:first-of-type  {
+    border: none;
+    padding: 14px;
+    margin: 0px;
+}
+.box .objects.objects-alt  {
+    background-color: #efefef;
 }
 form .nav-tabs {
     border-bottom: 1px solid #bbbbbb;
