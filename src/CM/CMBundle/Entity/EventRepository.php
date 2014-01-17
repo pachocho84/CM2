@@ -145,6 +145,7 @@ class EventRepository extends BaseRepository
             ->leftJoin('eu.user', 'us')
             ->andWhere('e.id = :id')->setParameter('id', $id)
             ->andWhere('t.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->orderBy('d.start', 'asc')
             ->getQuery()
             ->getSingleResult();
     }

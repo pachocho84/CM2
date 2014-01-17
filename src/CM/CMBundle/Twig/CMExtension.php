@@ -864,6 +864,7 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-plus"></span>';
             case 'Minus':
                 return '<span class="glyphicon glyphicon-minus"></span>';
+            case 'Protagonist':
             case 'Crown':
                 return '<span class="glyphicons crown"></span>';
             case 'Ok':
