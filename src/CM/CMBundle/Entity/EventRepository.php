@@ -22,6 +22,7 @@ class EventRepository extends BaseRepository
             'archive'       => null, 
             'category_id'   => null,
             'currentUserId' => null,
+            'mainImageOnly' => false,
             'paginate'      => true,
             'locale'        => 'en',
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
@@ -129,11 +130,14 @@ class EventRepository extends BaseRepository
     {
         $options = self::getOptions($options);
         
-        return $this->createQueryBuilder('e')->select('e, t, d, i, p, l, c, u, lu, cu, pg, gr, eu, us')
+        $query = $this->createQueryBuilder('e')->select('e, t, d, i, p, l, c, u, lu, cu, pg, gr, eu, us')
             ->leftJoin('e.eventDates', 'd')
             ->leftJoin('e.translations', 't')
-            ->leftJoin('e.images', 'i')
-            ->leftJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
+            ->leftJoin('e.images', 'i');
+        if ($options['mainImageOnly']) {
+            $query->andHaving('i.main = '.true);
+        }
+        return $query->leftJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
             ->leftJoin('p.likes', 'l')
             ->leftJoin('p.comments', 'c')
             ->leftJoin('p.user', 'u')
