@@ -47,7 +47,8 @@ class LikeController extends Controller
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse(array(
                 'likes' => $this->renderView('CMBundle:Like:like.html.twig', array('post' => $post)), 
-                'likeActions' => $this->renderView('CMBundle:Like:likeActions.html.twig', array('post' => $post)),
+                'likeActions' => $this->renderView('CMBundle:Like:likeActions.html.twig', array('post' => $post, 'selector' => $request->get('selector'))),
+                'likeActionsButton' => $this->renderView('CMBundle:Like:likeActions.html.twig', array('post' => $post, 'button' => true, 'selector' => $request->get('selector'))),
                 'likeCount' => $this->renderView('CMBundle:Like:likeCount.html.twig', array('post' => $post))
             ));
         }
@@ -86,7 +87,8 @@ class LikeController extends Controller
 
             return new JsonResponse(array(
                 'likes' => $this->renderView('CMBundle:Like:like.html.twig', array('post' => $post)), 
-                'likeActions' => $this->renderView('CMBundle:Like:likeActions.html.twig', array('post' => $post)),
+                'likeActions' => $this->renderView('CMBundle:Like:likeActions.html.twig', array('post' => $post, 'selector' => $request->get('selector'))),
+                'likeActionsButton' => $this->renderView('CMBundle:Like:likeActions.html.twig', array('post' => $post, 'button' => true, 'selector' => $request->get('selector'))),
                 'likeCount' => $this->renderView('CMBundle:Like:likeCount.html.twig', array('post' => $post)),
             ));
         }
