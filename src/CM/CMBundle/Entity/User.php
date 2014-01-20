@@ -312,7 +312,7 @@ class User extends BaseUser implements ParticipantInterface
     
     public function __toString()
     {
-        return $this->getFirstName()." ".$this->getLastName();
+        return $this->getFullname();
     }
 
     public static function className()
@@ -323,6 +323,11 @@ class User extends BaseUser implements ParticipantInterface
     protected function getRootDir()
     {
         return __DIR__.'/../Resources/public/';
+    }
+
+    public function getFullname()
+    {
+        return $this->getFirstName()." ".$this->getLastName();
     }
 
     /**

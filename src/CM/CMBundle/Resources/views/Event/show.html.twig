@@ -19,7 +19,7 @@
                                 <div class="media-body">
                                     <small><a href="{{ path('user_show', {'slug': protagonist.user.slug}) }}">{{ protagonist.user }}</a></small><br/>
                                     
-                                    <small class="text-muted" data-toggle="tooltip" data-placement="bottom auto" data-container="body" data-html="true" data-title="{% for userTag in protagonist.userTags %}{{ tags[userTag] }}<br/>{% endfor %}">
+                                    <small class="text-muted" {{ tooltip(protagonist.userTags, {'closure': '$a[0][$v]', 'args': tags}) }}>
                                         {% for userTag in protagonist.userTags[:2] %}{{ tags[userTag] }}{% if not loop.last %}, {% endif %}{% if loop.last and loop.index < protagonist.userTags|length %}...{% endif %}{% endfor %}
                                     </small>
                                 </div>
@@ -63,7 +63,8 @@
                                     {{ date.start|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
                                 </a>
                                 <div id="event_date-{{ loop.index }}" class="row event-date-map collapse">
-                                    <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=488x80&markers={{ date.coordinates|e }}&sensor=false" />
+                                    <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=488x80&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
+                                    <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank">{{ 'Get directions'|trans }}</a>
                                 </div>
                             </div>
                         {% endfor %}

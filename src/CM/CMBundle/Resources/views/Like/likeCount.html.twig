@@ -2,7 +2,7 @@
 {% set whoLikesIt = post.whoLikesIt(app.user, is_granted('ROLE_USER')) %}
 
 {% if userLikesIt + whoLikesIt > 0 %}
-    <a href="{{ path('who_likes_it', {'type': post | class_name | lower, 'id': post.id}) }}" class="modal-trigger bottom-like-count">{{ show_icon('Like')|raw }} {{ userLikesIt + whoLikesIt }}</a>
+    <a href="{{ path('who_likes_it', {'type': post|class_name|lower, 'id': post.id}) }}" class="modal-trigger bottom-like-count">{{ show_icon('Like')|raw }} {{ userLikesIt + whoLikesIt }}</a>
 {% else %}
     <span class="bottom-like-count"></span>
 {% endif %}

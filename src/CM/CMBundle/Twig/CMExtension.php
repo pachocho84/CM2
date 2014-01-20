@@ -82,6 +82,7 @@ class CMExtension extends \Twig_Extension
             'entity_short_text' => new \Twig_Function_Method($this, 'getEntityShortText', array('is_safe' => array('html'))),
             'post_text' => new \Twig_Function_Method($this, 'getPostText', array('is_safe' => array('html'))),
             'show_icon' => new \Twig_Function_Method($this, 'getShowIcon', array('is_safe' => array('html'))),
+            'tooltip' => new \Twig_Function_Method($this, 'getTooltip', array('is_safe' => array('html'))),
         );
     }
 
@@ -898,6 +899,38 @@ class CMExtension extends \Twig_Extension
             default:
                 return '<span style="color:red;">missing glyphicon for '.$object.'</span>';
         }
+    }
+
+    public function getTooltip($what, $options = array())
+    {
+        if (empty($what) or is_null($what)) {
+            return '';
+        }
+
+        $options = array_merge(array(
+            'placement' => 'bottom auto',
+            'container' => 'body',
+            'html' => true,
+            'separator' => '<br/>',
+            'closure' => null,
+            'args' => array(),
+            'limit' => 20
+        ), $options);
+
+        if (!is_null($options['limit'])) {
+            $what = array_slice($what, 0, $options['limit'], true);
+        }
+
+        if (is_array($what) && !is_null($options['closure'])) {
+            $closure = create_function('$v, $a', 'return '.$options['closure'].';');
+            foreach ($what as &$v) {
+                $v = $closure($v, $options[args]);
+            }
+        }
+
+        $what = join((array)$what, $options['separator']);
+
+        return 'data-toggle="tooltip" data-placement="'.$options['placement'].'" data-container="'.$options['container'].'" data-html="'.($options['html'] ? 'true' : 'false').'" data-title="'.$what.'"';
     }
 
     public function getName()
