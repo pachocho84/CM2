@@ -44,7 +44,7 @@
         </div>
         <div class="clearfix entity-images">
             {% for image in event.getImages[:5] %}
-                {{ show_img_box(image.img|imagine_filter('350'), {width: 146, height: 146, link: path('user_image', {slug: event.post.user.slug, id: image.id}), link_attributes: {class: 'pull-left'}}) }}
+                {{ show_img_box(image.img|imagine_filter('350'), {width: 144, height: 144, link: path('user_image', {slug: event.post.user.slug, id: image.id}), link_attributes: {class: 'pull-left'}}) }}
             {% endfor %}
         </div>
     </div>
