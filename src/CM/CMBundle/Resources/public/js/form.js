@@ -160,6 +160,7 @@ $(function() {
             infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
             $(canvas).parent().parent().parent().find('[address-autocomplete]').val(address);
             $(canvas).parent().parent().parent().find('[places-autocomplete]').val(place.name);
+            $(canvas).parent().parent().parent().find('[address-coordinates]').val(place.geometry.location);
             infowindow.open(map, marker);
         });
     }
