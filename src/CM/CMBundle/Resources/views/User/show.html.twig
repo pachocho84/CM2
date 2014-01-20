@@ -15,7 +15,7 @@
 
     
     <div class="box">
-        <div class="box-top">
+        <div class="box-heading">
             <h2><a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ show_icon('Biography')|raw }} {{ 'Biography'|trans }}</a> <small><a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ 'show complete biography'|trans }}</small></a></h2>
         </div>
         
@@ -36,7 +36,7 @@
 
     
     <div class="box">
-        <div class="box-top">
+        <div class="box-heading">
             <h2><a href="{{ path('user_wall', {'slug': user.slug}) }}">{{ show_icon('Wall')|raw }} {{ 'Wall'|trans }}</a> <small><a href="{{ path('user_wall', {'slug': user.slug}) }}">{{ 'show all posts'|trans }}</small></a></h2>
         </div>
         

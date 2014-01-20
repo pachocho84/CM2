@@ -113,8 +113,8 @@
         {# RIGHT COLUMN #}
         {% if not noColumns and not inAccountPage %}
             <div class="sidebar col-md-4">
-                <img src="{{ asset('/bundles/cm/images/layout/banner.jpg') }}" alt="Symfony!" />
                 {% block sidebar %}
+                    <img src="{{ asset('/bundles/cm/images/layout/banner.jpg') }}" alt="Symfony!" />
                 {% endblock %}
             </div>
         {% endif %}
