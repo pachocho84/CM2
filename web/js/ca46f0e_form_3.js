@@ -104,7 +104,7 @@ $(function() {
     /* AUTOCOMPLETE */
 
     // Places autocomplete
-    function initialize(index) {
+    function initializePlaces(index) {
         canvas = $('[gmap-canvas]').get(index);
         input = $(canvas).parent().parent().parent().find('[places-autocomplete]').get(0);
 
@@ -165,10 +165,10 @@ $(function() {
     }
     
     $('[gmap-canvas]').each(function(i) {
-        google.maps.event.addDomListener(window, 'load', initialize(i));
+        google.maps.event.addDomListener(window, 'load', initializePlaces(i));
     });
     $(document).on('collection-added', function(event) {
-        google.maps.event.addDomListener(window, 'load', initialize(-1));
+        google.maps.event.addDomListener(window, 'load', initializePlaces(-1));
     });
 
     $(document).on('keydown', '[gmap-canvas]', function(event) {

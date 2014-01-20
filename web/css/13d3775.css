@@ -2986,6 +2986,20 @@
 
 
 
+/* ENTITIES */
+.entity-images {
+    padding: 15px 10px;
+}
+.entity-images .col-xs-4 {
+    padding: 0 5px;
+}
+/* event */
+.event-date-map img {
+    border: 1px solid #bbbbbb;
+}
+
+
+
 /* OBJECT */
 .objects
 {
@@ -3618,7 +3632,7 @@ form .tab-content {
     overflow: visible;
 }
 .glyphicon { 
-    top: 0;
+/*     top: 0; */
 /*     padding: 0 1px 0 0;   */
 }
 .glyphicons { 
@@ -3641,6 +3655,7 @@ form .tab-content {
 
 /* TAGS */
 body {
+    background-color: #efefef;
 /*     background-image: url(/images/subtle_grunge.jpg); */
 /*     background-attachment: fixed; */
 }
@@ -3654,8 +3669,11 @@ body {
     padding: 0px;
 }
 .row h2 {
+/*
     font-family: "Georgia", Times new roman, serif;
     font-variant: small-caps;
+*/
+    font-weight: normal;
     text-shadow: 0 1px 0 #ffffff;
     line-height: 32px;
     margin: 0 0 20px 0;
@@ -3920,7 +3938,6 @@ form .panel-group .panel {
     color: #333333;
     background: #ffffff;
     border: 1px solid #bbbbbb;
-    border-top: 3px solid #990000;
 /*     -webkit-box-shadow: 5px 2px 10px rgba(0, 0, 0, 0.1), -5px 2px 10px rgba(0, 0, 0, 0.1); */
     -webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
         -moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
@@ -3936,9 +3953,9 @@ form .panel-group .panel {
 }
 .box .box-top {
     background: #f7f7f7;
-    padding: 0px 14px;
-    border-top: 1px solid #dddddd;
+/*     border-top: 2px solid #990000; */
     border-bottom: 1px solid #dddddd;
+    padding: 0px 14px;
 }
 .box .box-top.box-top-big {
     padding: 14px 14px 5px;
@@ -3948,20 +3965,22 @@ form .panel-group .panel {
     font-size: 26px;
 }
 .box .box-top h2 {
-    line-height: 30px;
+    line-height: 38px;
     margin: 0;
-    font-size: 20px;
+    font-size: 18px;
 }
 .box .box-top h2 a {
     color: #333333;
 }
-.box .box-top h2 i {
+.box .box-top h2 span.glyphicon,
+.box .box-top h2 span.glyphicons {
     vertical-align: baseline;
+    font-size: 15px;
 }
 .box .box-top h2 small {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 12px;
-    line-height: 32px;
+    line-height: 40px;
     float: right;
 }
 .box .box-top .nav li {

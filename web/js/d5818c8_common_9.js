@@ -303,6 +303,38 @@ $(function() {
         $(event.target).popover('hide');
     });
 */
+
+    /* GMAPS */
+
+    // map visualization
+    // function initializeMap(canvas) {
+    //     // canvas = $('[gmap-show]').get(index);
+    //     coords = $(canvas).attr('coords');
+
+    //     var mapOptions = {
+    //         zoom: 8,
+    //         center: new google.maps.LatLng(-34.397, 150.644)
+    //     };
+    //     var map = new google.maps.Map(
+    //         canvas,
+    //         mapOptions
+    //     );
+
+    //     $(canvas).attr('map', map);
+    // }
     
+    // $('[gmap-show]').each(function(i) {
+    //     google.maps.event.addDomListener(window, 'load', initializeMap(i));
+    // });
+
+    // $('.event_date').one('show.bs.collapse', function(event) {
+    //     console.log(666);
+    //     google.maps.event.addDomListener(window, 'load', initializeMap($(event.currentTarget).find('[gmap-show]').get(0)));
+
+    // });
+
+    // $(document).on('click', '[gmap-show]', function(event) {
+    //     google.maps.event.trigger($(event.currentTarget).find('[gmap-show]'), 'resize');
+    // });
                             
 });

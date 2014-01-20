@@ -71,13 +71,15 @@
 /* ENTITIES */
 .entity-images {
     padding: 15px 10px;
+    margin: 0 -5px;
 }
-.entity-images .col-xs-4 {
+.entity-images a {
     padding: 0 5px;
 }
 /* event */
 .event-date-map img {
     border: 1px solid #bbbbbb;
+    margin: 0 -10px;
 }
 
 
