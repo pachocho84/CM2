@@ -1,6 +1,7 @@
 {% set button = button|default(false) %}
+{% set selector = selector|default(null) %}
 {% if not post.userLikesIt(app.user, is_granted('ROLE_USER')) %}
-    <a href="{{ path('like', {type: post|class_name|lower, id: post.id}) }}" class="iLikeIt{{ is_granted('ROLE_USER') ? '' : ' unlogged' }}{% if button %} btn btn-default{% endif %}"{% if selector is defined %} social-selector="{{ selector }}"{% endif %}>{{ (button ? show_icon('Like') : "Like"|trans)|raw }}</a>
+    <a href="{{ path('like', {type: post|class_name|lower, id: post.id, button: button, selector: selector}) }}" class="iLikeIt{{ is_granted('ROLE_USER') ? '' : ' unlogged' }}{% if button %} btn btn-default{% endif %}"{% if button and selector is not null %} social-selector="{{ selector }}"{% endif %}>{{ (button ? show_icon('Like') : "Like"|trans)|raw }}</a>
 {% else %}
-   <a href="{{ path('unlike', {type: post|class_name|lower, id: post.id}) }}" class="iLikeIt{{ is_granted('ROLE_USER') ? '' : ' unlogged' }}{% if button %} btn btn-default active{% endif %}"{% if selector is defined %} social-selector="{{ selector }}"{% endif %}>{{ (button ? show_icon('Like') : "Unlike"|trans)|raw }}</a>
+   <a href="{{ path('unlike', {type: post|class_name|lower, id: post.id, button: button, selector: selector}) }}" class="iLikeIt{{ is_granted('ROLE_USER') ? '' : ' unlogged' }}{% if button %} btn btn-default active{% endif %}"{% if button and selector is not null %} social-selector="{{ selector }}"{% endif %}>{{ (button ? show_icon('Like') : "Unlike"|trans)|raw }}</a>
 {% endif %}

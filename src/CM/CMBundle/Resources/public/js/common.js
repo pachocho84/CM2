@@ -185,10 +185,10 @@ $(function() {
         $.getJSON(event.currentTarget.href, function(data) {          
             if ($(event.currentTarget).is('[social-selector]')) {
                 social = $($(event.currentTarget).attr('social-selector'));
-                $(event.currentTarget).toggleClass('active'); // TODO: change the controller!!!!!
+                $(event.currentTarget).replaceWith(data.likeActionsButton);
             } else {
                 social = $(event.target).closest('.object');
-                $('[social-selector="#' + social.attr('id') + '"]').toggleClass('active');
+                $('[social-selector="#' + social.attr('id') + '"]').replaceWith(data.likeActionsButton);
             }
             social.find('.bottom-like-count').replaceWith(data.likeCount);
             social.find('.bottom-likes').replaceWith(data.likes);

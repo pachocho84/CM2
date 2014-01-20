@@ -53,7 +53,7 @@
             <h2>{{ 'Social'|trans }}</h2>
         </div>
         <div id="social" class="box-body object">
-            {{ include('CMBundle::social.html.twig', {post: event.post}) }}
+            {{ include('CMBundle::social.html.twig', {post: event.post, selector: '#social'}) }}
         </div>
     </div>
 {% endblock %}
