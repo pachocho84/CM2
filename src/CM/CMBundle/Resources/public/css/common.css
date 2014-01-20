@@ -77,6 +77,14 @@
     padding: 0 5px;
 }
 /* event */
+.event-date-map {
+    position: relative;
+}
+.event-date-map .btn {
+    position: absolute;
+    right: 10px;
+    top: 27px;
+}
 .event-date-map img {
     border: 1px solid #bbbbbb;
     margin: 0 -10px;
