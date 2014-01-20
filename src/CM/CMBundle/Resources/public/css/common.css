@@ -480,6 +480,16 @@
 
 
 /* BOOTSTRAP FIXES */
+.media h2 {
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
+.btn.btn-default.active span.glyphicon,
+.btn.btn-default.active span.glyphicons {
+    color: #990000;
+}
+
 .breadcrumb .dropdown li 
 { 
     display: block; 

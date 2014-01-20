@@ -1,5 +1,5 @@
 {# <?php if ($sf_context->getSito()->getLikesEnabled() && $sf_context->getSito()->getLikesDisplay()): ?> #}
-    {% include('CMBundle:Like:likeActions.html.twig') %}
+    {{ include('CMBundle:Like:likeActions.html.twig') }}
 {# <?php endif ?> #}
 
 {# <?php if ($sf_context->getSito()->getLikesEnabled() && $sf_context->getSito()->getLikesDisplay() && $sf_context->getSito()->getCommentsEnabled() && $sf_context->getSito()->getCommentsDisplay()): ?> #}

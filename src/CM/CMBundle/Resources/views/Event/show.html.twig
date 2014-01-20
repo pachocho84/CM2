@@ -1,18 +1,32 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
-{% block body %}
-    <h2>{{ event.getTitle }}</h2>
-    {% if event.getSubtitle is not null %}<h3>{{ event.getSubtitle }}</h3>{% endif %}
-        
-    <div class="box">
-        {% if can_manage(event) %}
-            <div class=box-body " clearfix">
-                <div class="media">
-                    <div class="btn pull-left alert-info"><a href="{{ path('event_edit', {'id': event.id, 'slug': event.getSlug}) }}">{{ "Edit"|trans }}</a></div>
-                    <div class="btn pull-right alert-danger"><a href="{{ path('event_delete', {'id': event.id}) }}">{{ "Delete"|trans }}</a></div>
-                </div>
+{% block bodyHeading %}
+    <div class="media">
+        <div class="pull-right">
+            <div class="btn-group">
+                {{ include('CMBundle:Like:likeActions.html.twig', {post: event.post, button: true, selector: '#social'}) }}
+                <a href="{# {{ path('post_show', {'post_id': postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ show_icon('Comment') }}</a>
             </div>
-        {% endif %}
+            {% if can_manage(event) %}
+                <div class="btn-group">
+                    <a href="{{ path('event_edit', {'id': event.id, 'slug': event.getSlug}) }}" class="btn btn-default">{{ "Edit"|trans }}</a>
+                    <a href="{{ path('event_delete', {'id': event.id}) }}" class="btn btn-default">{{ "Delete"|trans }}</a>
+                </div>
+            {% endif %}
+            {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'entity': event}) }}
+        </div>
+        <div class="media-body">
+            <h2>{{ event.getTitle }}</h2>
+            {% if event.getSubtitle is not null %}<h3>{{ event.getSubtitle }}</h3>{% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="box">
+        <div class="box-heading">
+            <h2>{{ show_icon('Event') }} {{ 'Details'|trans }}</h2>
+        </div>
         {% if event.getImages|length > 1 %}
             <div class="box-body clearfix">
                 <div class="media object">
@@ -29,8 +43,7 @@
             <h2>{{ show_icon('Photo') }} {{ 'Event photos'|trans }} <small><a href="{{ path('user_album', {'slug': event.post.user.slug, 'id': event.id}) }}">{{ 'View all photos'|trans }} ({{ event.getImages|length }})</a></small></h2>
         </div>
         <div class="clearfix entity-images">
-            {% set images = event.getImages.toArray|merge(event.getImages.toArray|merge(event.getImages.toArray)) %}
-            {% for image in images[:5] %}
+            {% for image in event.getImages[:5] %}
                 {{ show_img_box(image.img|imagine_filter('350'), {width: 146, height: 146, link: path('user_image', {slug: event.post.user.slug, id: image.id}), link_attributes: {class: 'pull-left'}}) }}
             {% endfor %}
         </div>
@@ -39,8 +52,8 @@
         <div class="box-heading">
             <h2>{{ 'Social'|trans }}</h2>
         </div>
-        <div class="box-body clearfix">
-            {{ include('CMBundle::social.html.twig', {'post': event.post}) }}
+        <div id="social" class="box-body object">
+            {{ include('CMBundle::social.html.twig', {post: event.post}) }}
         </div>
     </div>
 {% endblock %}
@@ -51,23 +64,24 @@
             <h2>{{ show_icon('Calendar') }} {{ 'Event dates'|trans }}</h2>
         </div>
         <div class="box-body">
-            {% for date in event.eventDates if date.start >= date('now') %}
+            {% set dates = event.eventDates.toArray|merge(event.eventDates.toArray|merge(event.eventDates.toArray)) %}
+            {% for date in dates if date.start >= date('now') %}
                 {% if loop.index == 2 %}
                     </div>
                     <div class="box-heading">
-                        <h2>{{ 'Next dates'|trans }}</h2>
+                        <h3>{{ 'Next dates'|trans }}</h3>
                     </div>
                     <div class="box-body">
                 {% endif %}
-                <div class="event_date">
+                <div class="event_date object">
                     <p>
-                        {% if not loop.first %}<a href="#event_date-{{ loop.index }}" data-toggle="collapse" data-parent="#event_dates" class="text-muted">{% endif %}
-                            {{ show_icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::SHORT')) }}
+                        {% if not loop.first %}<a href="#event_date-{{ loop.index }}" data-toggle="collapse" data-parent="#event_dates" class="text-muted collapsed">{% endif %}
+                            {{ show_icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
                             {{ show_icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
-                        {% if loop.first %}</a>{% endif %}
+                        {% if not loop.first %}</a>{% endif %}
                     </p>
                     <div id="event_date-{{ loop.index }}" class="event-date-map collapse{% if loop.first %} in{% endif %}">
-                        <p>{{ show_icon('Map') }} {{ date.location }} <small>({{ date.address }})</small></p>
+                        <p><span {{ tooltip(date.address) }}>{{ show_icon('Map') }} {{ date.location }}</span></p>
                         <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=385x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
                         <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank">{{ 'Get directions'|trans }}</a>
                     </div>
@@ -75,22 +89,22 @@
             {% endfor %}
         </div>
         <div class="box-heading">
-            <h2>
+            <h3>
                 {{ 'Passed dates'|trans }}
-                <small><a href="#event_date-passed" class="pull-right" data-toggle="collapse" data-parent="#event_dates">{{ 'show'|trans }}</a></small>
-            </h2>
+                <small><a href="#event_date-passed" class="pull-right box-collapser collapsed" data-toggle="collapse" data-parent="#event_dates">{{ show_icon('Folder') }} {{ 'show'|trans }}</a></small>
+            </h3>
         </div>
         <div class="box-body collapse" id="event_date-passed">
             {% for date in event.eventDates if date.start < date('now') %}
-                <div class="event_date">
+                <div class="event_date object">
                     <p>
-                        <a href="#event_date-passed-{{ loop.index }}" data-toggle="collapse" data-parent="#event_dates" class="text-muted">
-                            {{ show_icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::SHORT')) }}
+                        <a href="#event_date-passed-{{ loop.index }}" data-toggle="collapse" data-parent="#event_dates" class="text-muted collapsed">
+                            {{ show_icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
                             {{ show_icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
                         </a>
                     </p>
                     <div id="event_date-passed-{{ loop.index }}" class="event-date-map collapse">
-                        <p>{{ show_icon('Map') }} {{ date.location }} <small>({{ date.address }})</small></p>
+                        <p><span {{ tooltip(date.address) }}>{{ show_icon('Map') }} {{ date.location }}</span></p>
                         <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=385x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
                         <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank">{{ 'Get directions'|trans }}</a>
                     </div>
@@ -103,9 +117,8 @@
             <h2>{{ show_icon('Protagonist') }} {{ 'Protagonists'|trans }}</h2>
         </div>
         <div class="box-body">
-            {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'entity': event}) }}
             <ul class="media-list">
-                {% for protagonist in event.entityUsers if protagonist.status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_ACTIVE') %}
+                {% for protagonist in event.entityUsers[:3] if protagonist.status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_ACTIVE') %}
                     <li class="media">
                         {{ show_img_box(protagonist.user.img|imagine_filter('50'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'link_attributes': {'class': 'pull-left'}}) }}
                         <div class="media-body">
@@ -118,6 +131,25 @@
                     </li>
                 {% endfor %}
             </ul>
+            {% if event.entityUsers|length > 3 %}
+                <ul id="event_protagonists-more" class="media-list collapse">
+                    {% for protagonist in event.entityUsers[3:] if protagonist.status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_ACTIVE') %}
+                        <li class="media">
+                            {{ show_img_box(protagonist.user.img|imagine_filter('50'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'link_attributes': {'class': 'pull-left'}}) }}
+                            <div class="media-body">
+                                <small><a href="{{ path('user_show', {'slug': protagonist.user.slug}) }}">{{ protagonist.user }}</a></small><br/>
+                                
+                                <small class="text-muted" {{ tooltip(protagonist.userTags, {closure: '$a[0][$v]', args: [tags], limit: 3}) }}>
+                                    {% for userTag in protagonist.userTags[:3] %}{{ tags[userTag] }}{% if not loop.last %}, {% endif %}{% if loop.last and loop.index < protagonist.userTags|length %}...{% endif %}{% endfor %}
+                                </small>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <p class="text-center">
+                    <small><a href="#event_protagonists-more" data-toggle="collapse" data-parent="#event_dates" class="text-muted collapsed">{{ 'Show all %count%'|trans({'%count%': event.entityUsers|length - 5})}}</a></small>
+                </p>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

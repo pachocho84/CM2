@@ -896,6 +896,11 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicons cogwheels"></span>';
             case 'Photo':
                 return '<span class="glyphicons camera"></span>';
+            case 'Folder':
+            case 'Folder_Close':
+                return '<span class="glyphicon glyphicon-folder-close"></span>';
+            case 'Folder_Open':
+                return '<span class="glyphicon glyphicon-folder-open"></span>';
             default:
                 return '<span style="color:red;">missing glyphicon for '.$object.'</span>';
         }
@@ -903,7 +908,7 @@ class CMExtension extends \Twig_Extension
 
     public function getTooltip($what, $options = array())
     {
-        if (empty($what) or is_null($what)) {
+        if (empty($what) || is_null($what)) {
             return '';
         }
 
@@ -917,7 +922,7 @@ class CMExtension extends \Twig_Extension
             'limit' => 20
         ), $options);
 
-        if (!is_null($options['limit'])) {
+        if (is_array($what) && !is_null($options['limit'])) {
             $what = array_slice($what, 0, $options['limit'], true);
         }
 
@@ -928,7 +933,9 @@ class CMExtension extends \Twig_Extension
             }
         }
 
-        $what = join((array)$what, $options['separator']);
+        if (is_array($what)) {
+            $what = join($what, $options['separator']);
+        }
 
         return 'data-toggle="tooltip" data-placement="'.$options['placement'].'" data-container="'.$options['container'].'" data-html="'.($options['html'] ? 'true' : 'false').'" data-title="'.$what.'"';
     }
