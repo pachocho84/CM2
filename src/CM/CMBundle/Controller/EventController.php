@@ -142,7 +142,8 @@ class EventController extends Controller
             return $this->render('CMBundle:Event:object.html.twig', array('date' => $date));
         }
         
-        $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale(), 'protagonists' => true));
+/*         $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale(), 'protagonists' => true)); */
+        $event = $em->getRepository('CMBundle:Event')->findOneById($id);
         $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
 
         $images = new ArrayCollection();

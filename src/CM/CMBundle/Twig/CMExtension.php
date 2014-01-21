@@ -843,7 +843,7 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-thumbs-up"></span>';
             case 'Comment':
             case 'Comment_'.Post::TYPE_CREATION:
-                return '<span class="glyphicon glyphicon-comment"></span>';
+                return '<span class="glyphicons conversation"></span>';
             case 'Wall':
             case 'Post':
                 return '<span class="glyphicon glyphicon-th-list"></span>';

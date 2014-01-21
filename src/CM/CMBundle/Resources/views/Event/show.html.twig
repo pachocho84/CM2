@@ -50,7 +50,7 @@
     </div>
     <div class="box">
         <div class="box-heading">
-            <h2>{{ 'Social'|trans }}</h2>
+            <h2>{{ show_icon('Comment') }} {{ 'Social'|trans }}</h2>
         </div>
         <div id="social" class="box-body object">
             {{ include('CMBundle::social.html.twig', {post: event.post, selector: '#social'}) }}
@@ -84,7 +84,7 @@
                         <p><span {{ tooltip(date.address) }}>{{ show_icon('Map') }} {{ date.location }}</span></p>
                         <div class="event-date-map">
                             <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=385x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
-                            <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" data-toggle="tooltip" data-title="{{ 'Get directions'|trans }}" data-placement="left">{{ show_icon('Map') }}</a>
+                            <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
                         </div>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
                     <div id="event_date-passed-{{ loop.index }}" class="event-date-map collapse">
                         <p><span {{ tooltip(date.address) }}>{{ show_icon('Map') }} {{ date.location }}</span></p>
                         <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=385x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
-                        <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank">{{ 'Get directions'|trans }}</a>
+                            <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
                     </div>
                 </div>
             {% endfor %}
