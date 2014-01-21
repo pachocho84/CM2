@@ -20,6 +20,7 @@ use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
+use CM\CMBundle\Entity\Multimedia;
 use CM\CMBundle\Entity\Sponsored;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\ImageCollectionType;
@@ -222,10 +223,11 @@ class EventController extends Controller
                 ->setUser($user);
             $event->addImage($image);
 
+            $event->addMultimedia(new Multimedia);
+
             $event->addEventDate(new EventDate);
 
             $post = $this->get('cm.post_center')->getNewPost($user, $user);
-
             $event->addPost($post);
         } else {
             $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale(), 'protagonists' => true, 'mainImageOnly' => true));

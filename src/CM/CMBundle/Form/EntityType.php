@@ -31,7 +31,7 @@ class EntityType extends BaseEntityType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-        
+
         $builder->add('entityCategory', 'entity', array(
                 'label' => 'Category',
                 'class' => 'CMBundle:EntityCategory',
@@ -47,7 +47,6 @@ class EntityType extends BaseEntityType
                 'options' => array(
                     'error_bubbling' => false,
                 )
-            ))
             ))->add('multimedia', 'collection', array(
                 'type' => new MultimediaType,
                 'by_reference' => false,
@@ -67,6 +66,8 @@ class EntityType extends BaseEntityType
                     'locales' => $options['locales'],
                 )
             ));
+        
+        // var_dump($builder);
     }
     
     /**
