@@ -154,30 +154,14 @@ class EventRepository extends BaseRepository
             ->getSingleResult();
     }
 
-    public function getDate($id, array $options = array())
+    public function getDatesPerEvent($id)
     {   
-        $options = self::getOptions($options);
-        
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('d, e, t, i, p, l, c, u, lu, cu, pg, gr, eu, us')
+            ->select('d')
             ->from('CMBundle:EventDate','d')
-            ->join('d.event', 'e')
-            ->leftJoin('e.translations', 't')
-            ->leftJoin('e.images', 'i')
-            ->leftJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
-            ->leftJoin('p.likes', 'l')
-            ->leftJoin('p.comments', 'c')
-            ->leftJoin('p.user', 'u')
-            ->leftJoin('l.user', 'lu')
-            ->leftJoin('c.user', 'cu')
-            ->leftJoin('p.page', 'pg')
-            ->leftJoin('p.group', 'gr')
-            ->leftJoin('e.entityUsers', 'eu')
-            ->leftJoin('eu.user', 'us')
-            ->andWhere('d.id = :id')->setParameter('id', $id)
-            ->andWhere('t.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->where('d.eventId = :id')->setParameter('id', $id)
             ->getQuery()
-            ->getSingleResult();
+            ->getResult();
     }
 
     public function getSponsored(array $options = array())

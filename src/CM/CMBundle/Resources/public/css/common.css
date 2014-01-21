@@ -89,65 +89,51 @@
 }
 .event-date-map img {
     border: 1px solid #bbbbbb;
-    margin: 0 -10px;
+    margin: 0 -15px;
 }
 
 
 
 /* OBJECT */
-.objects
-{
+.objects {
     position: relative;
 }
-.object
-{
+.object,
+.object:first-child.object-following {
     margin-top: 15px;
     border-top: 1px solid #dddddd;
     padding-top: 15px;
     position: relative;
 }
-.object.object-hidden
-{
+.object.object-hidden {
     background-color: #f7f7f7;
     filter: alpha(opacity=50);
     opacity: 0.5;
     zoom: 1;
 }
-.object:first-child
-{
+.object:first-child {
     margin-top: 0px;
     border-top: none;
     padding-top: 0px;
 }
-.object h3
-{
+.object h3 {
     font-size: 18px;
     margin-top: 0px;
 }
-.object h4
-{
+.object h4 {
     font-size: 14px;
     line-height: 16px;
     margin-top: 0px;
 }
-.object p
-{
-   font-size: 13px;
-   line-height: 1.38;
-   margin-bottom: 0px;
-}
-.objects .object dl
-{
+.objects .object dl {
     font-size: 13px;
     margin-bottom: 10px;
 }
-.objects .object .dl-horizontal dd
-{
+.objects .object .dl-horizontal dd {
     margin-left: 170px;
 }
 .objects .caption,
-.object .caption
-{
+.object .caption {
     background: #333333;
     background: rgba(0, 0, 0, 0.75);
     position: absolute;
@@ -339,6 +325,16 @@
 .object.object-detail .bottom ul li.comment form textarea
 {
     height: 50px;
+}
+
+
+
+/* POST */
+.post p
+{
+   font-size: 13px;
+   line-height: 1.38;
+   margin-bottom: 0px;
 }
 
 

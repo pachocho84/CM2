@@ -370,13 +370,6 @@ img {
 
 
 
-/* SIDEBAR */
-.sidebar .box .box-body {
-    padding: 9px;
-}
-
-
-
 /* FORM */
 form label.required:after {
     color: #cc0000;
