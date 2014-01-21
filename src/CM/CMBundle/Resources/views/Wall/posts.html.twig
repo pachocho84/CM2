@@ -59,7 +59,7 @@
                 <?php endif ?>
 
                 <p class="text-muted">
-                    <?php echo show_icon($post->getObject().'_'.$post->getType()) ?>
+                    <?php echo icon($post->getObject().'_'.$post->getType()) ?>
                     <small>
                         <?php echo format_datetime($post->getUpdatedAt(), 'EEEE d MMMM yyy H:mm') ?>
                         <?php if (!$post->getProtagonists()->isEmpty()): ?>

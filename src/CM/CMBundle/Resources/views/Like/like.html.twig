@@ -2,7 +2,7 @@
 
     <li class="bottom-likes">
         
-        {{ show_icon('Like')|raw }}
+        {{ icon('Like')|raw }}
         
         {% set userLikesIt = post.userLikesIt(app.user, is_granted('ROLE_USER')) %}
         {% set whoLikesIt = post.whoLikesIt(app.user, is_granted('ROLE_USER')) %}

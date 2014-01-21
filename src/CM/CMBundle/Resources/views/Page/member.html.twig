@@ -20,12 +20,12 @@
             {#<?php if ($page->getUserId() != $member->getUserId()): ?>#}
 
                 {% if member.admin %}
-                    <a href="{{ path('page_remove_admin', {'id': member.id}) }}" class="btn btn-default ajax-link">{{ show_icon('Down')|raw }} {{ 'Remove as admin'|trans }}</a>
+                    <a href="{{ path('page_remove_admin', {'id': member.id}) }}" class="btn btn-default ajax-link">{{ icon('Down')|raw }} {{ 'Remove as admin'|trans }}</a>
                 {% else %}
-                    <a href="{{ path('page_promote_admin', {'id': member.id}) }}" class="btn btn-default ajax-link">{{ show_icon('Up')|raw }} {{ 'Promote to admin'|trans }}</a>
+                    <a href="{{ path('page_promote_admin', {'id': member.id}) }}" class="btn btn-default ajax-link">{{ icon('Up')|raw }} {{ 'Promote to admin'|trans }}</a>
                 {% endif %}
 
-                <a href="{{ path('page_remove_user', {'id': member.id})}}" class="btn btn-default ajax-link">{{ show_icon('Minus')|raw }} {{ 'Remove member'|trans }}</a>
+                <a href="{{ path('page_remove_user', {'id': member.id})}}" class="btn btn-default ajax-link">{{ icon('Minus')|raw }} {{ 'Remove member'|trans }}</a>
 
             {% endif %}
 

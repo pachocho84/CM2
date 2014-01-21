@@ -1,7 +1,7 @@
 {% for article in articles %}
         
     <div class="box-heading">
-        <h2>{{ show_icon('Article') }} <a href="{{ path('article_show', {'id': article.id, 'slug': article.getSlug }) }}"><span>{{ article.getTitle }}</span></a></h2>
+        <h2>{{ icon('Article') }} <a href="{{ path('article_show', {'id': article.id, 'slug': article.getSlug }) }}"><span>{{ article.getTitle }}</span></a></h2>
     </div>
 
     <ul class="media-list objects{# article#}">

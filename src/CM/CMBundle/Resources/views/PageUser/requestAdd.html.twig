@@ -4,11 +4,11 @@
         
         <div class="btn-page btn-page-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                {{ show_icon('Crown')|raw }} {{ 'You have been added as member'|trans }} <span class="caret"></span>
+                {{ icon('Crown')|raw }} {{ 'You have been added as member'|trans }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="{{ path('request_update', {'choice': 'accept', 'id' : request.id}) }}" class="ajax-link">{{ show_icon('Ok')|raw }} {{ 'Accept'|trans }}</a></li>
-                <li><a href="{{ path('request_update', {'choice': 'refuse', 'id' : request.id}) }}" class="ajax-link">{{ show_icon('Remove')|raw }} {{ 'Refuse'|trans }}</a></li>
+                <li><a href="{{ path('request_update', {'choice': 'accept', 'id' : request.id}) }}" class="ajax-link">{{ icon('Ok')|raw }} {{ 'Accept'|trans }}</a></li>
+                <li><a href="{{ path('request_update', {'choice': 'refuse', 'id' : request.id}) }}" class="ajax-link">{{ icon('Remove')|raw }} {{ 'Refuse'|trans }}</a></li>
             </ul>
         </div>
 
@@ -16,7 +16,7 @@
 
         <div class="btn-page btn-page-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                {{ show_icon('Crown')|raw }} {{ 'You are a member'|trans }} <span class="caret"></span>
+                {{ icon('Crown')|raw }} {{ 'You are a member'|trans }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li><a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">{{ 'Cancel participation'|trans }}</a></li>
@@ -25,11 +25,11 @@
 
     {% elseif request is not null and request.page.pageUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_REFUSED_ADMIN') %}
         
-        <span class="btn btn-default disabled">{{ show_icon('Crown')|raw }} {{ 'Your request has been refused'|trans }}</span>
+        <span class="btn btn-default disabled">{{ icon('Crown')|raw }} {{ 'Your request has been refused'|trans }}</span>
 
     {% elseif request is not null and request.page.pageUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_REFUSED_GROUP_USER') %}
         
-        <span class="btn btn-default disabled">{{ show_icon('Crown')|raw }} {{ 'You refused the join request'|trans }}</span>
+        <span class="btn btn-default disabled">{{ icon('Crown')|raw }} {{ 'You refused the join request'|trans }}</span>
         
     {% endif %}
 {% endif %}
