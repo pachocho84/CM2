@@ -19,7 +19,7 @@ class MultimediaType extends BaseEntityType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-        
+
         $builder->add('url', 'url');
     }
     
