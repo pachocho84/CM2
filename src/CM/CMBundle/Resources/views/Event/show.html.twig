@@ -25,7 +25,7 @@
 {% block body %}
     <div class="box">
         <div class="box-heading">
-            <h2>{{ icon('Event') }} {{ 'Details'|trans }}</h2>
+            <h2>{{ icon('Info') }} {{ 'Details'|trans }}</h2>
         </div>
         {% if event.getImages|length > 1 %}
             <div class="box-body clearfix">
@@ -38,16 +38,40 @@
             </div>
         {% endif %}
     </div>
-    <div class="box">
-        <div class="box-heading">
-            <h2>{{ icon('Photo') }} {{ 'Event photos'|trans }} <small><a href="{{ path('user_album', {'slug': event.post.user.slug, 'id': event.id}) }}">{{ 'View all photos'|trans }} ({{ event.getImages|length }})</a></small></h2>
+    
+    {% if event.getImages|length > 1 %}
+        <div class="box">
+            <div class="box-heading">
+                <h2>{{ icon('Photo') }} {{ 'Event photos'|trans }} <small><a href="{{ path('user_album', {'slug': event.post.user.slug, 'id': event.id}) }}">{{ 'View all photos'|trans }} ({{ event.getImages|length }})</a></small></h2>
+            </div>
+            <div class="clearfix entity-images">
+                {% for image in event.getImages[:5] %}
+                    {{ show_img_box(image.img|imagine_filter('350'), {width: 144, height: 144, link: path('user_image', {slug: event.post.user.slug, id: image.id}), link_attributes: {class: 'pull-left'}}) }}
+                {% endfor %}
+            </div>
         </div>
-        <div class="clearfix entity-images">
-            {% for image in event.getImages[:5] %}
-                {{ show_img_box(image.img|imagine_filter('350'), {width: 146, height: 146, link: path('user_image', {slug: event.post.user.slug, id: image.id}), link_attributes: {class: 'pull-left'}}) }}
-            {% endfor %}
+    {% endif %}
+    
+    {% if event.getMultimedia|length > 1 %}
+        <div class="box">
+            <div class="box-heading">
+                <h2>{{ icon('Multimedia') }} {{ 'Event multimedia'|trans }} <small><a href="{#{{ path('user_album', {'slug': event.post.user.slug, 'id': event.id}) }}#}">{{ 'View all multimedia'|trans }} ({{ event.getMultimedia|length }})</a></small></h2>
+            </div>
+            <div class="clearfix entity-images">
+                {% for multimedia in event.getMultimedia[:5] %}
+                    {% if multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_YOUTUBE') %}
+                        <img width="144px" height="144px" src="http://img.youtube.com/vi/{{ multimedia.link }}/0.jpg" youtube-video-link="{{ multimedia.link }}" />
+                        {#<iframe width="144px" height="144px" src="//www.youtube.com/embed/{{ multimedia.link }}" frameborder="0" allowfullscreen></iframe>#}
+                    {% elseif multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_VIMEO') %}
+                        <iframe src="//player.vimeo.com/video/{{ multimedia.link }}?color=040505" width="144px" height="144px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                    {% elseif multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_SOUNDCLOUD') %}
+                        <iframe width="144px" height="144px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{{ multimedia.link }}&amp;color=000000&amp;auto_play=false&amp;show_artwork=true"></iframe>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
-    </div>
+    {% endif %}
+    
     <div class="box">
         <div class="box-heading">
             <h2>{{ icon('Comment') }} {{ 'Social'|trans }}</h2>
@@ -90,6 +114,7 @@
                 </div>
             {% endfor %}
         </div>
+        
         <div class="box-heading">
             <h3>
                 {{ 'Passed dates'|trans }}

@@ -901,6 +901,8 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-folder-close"></span>';
             case 'Folder_Open':
                 return '<span class="glyphicon glyphicon-folder-open"></span>';
+            case 'Info':
+                return '<span class="glyphicons pushpin"></span>';
             default:
                 return '<span style="color:red;">missing glyphicon for '.$object.'</span>';
         }
