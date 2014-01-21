@@ -10,7 +10,7 @@ use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Form\DataTransformer\ArrayCollectionToEntityTransformer;
 
-class MultimediaType extends AbstractType
+class MultimediaType extends BaseEntityType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -18,7 +18,9 @@ class MultimediaType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('link');
+        parent::buildForm($builder, $options);
+        
+        $builder->add('url', 'url');
     }
     
     /**
