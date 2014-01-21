@@ -2989,13 +2989,23 @@
 /* ENTITIES */
 .entity-images {
     padding: 15px 10px;
+    margin: 0 -5px;
 }
-.entity-images .col-xs-4 {
+.entity-images a {
     padding: 0 5px;
 }
 /* event */
+.event-date-map {
+    position: relative;
+}
+.event-date-map .btn {
+    position: absolute;
+    right: 10px;
+    top: 27px;
+}
 .event-date-map img {
     border: 1px solid #bbbbbb;
+    margin: 0 -10px;
 }
 
 
@@ -3396,6 +3406,16 @@
 
 
 /* BOOTSTRAP FIXES */
+.media h2 {
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
+.btn.btn-default.active span.glyphicon,
+.btn.btn-default.active span.glyphicons {
+    color: #990000;
+}
+
 .breadcrumb .dropdown li 
 { 
     display: block; 
@@ -3875,7 +3895,7 @@ img {
 
 
 /* SIDEBAR */
-.sidebar .box .objects {
+.sidebar .box .box-body {
     padding: 9px;
 }
 
@@ -3915,7 +3935,7 @@ form .panel-group .panel {
 
 
 .box-container .nav,
-.box .box-top .nav {
+.box .box-heading .nav {
     margin-bottom: 0;
 }
 .box-container .nav-tabs>.active>a,
@@ -3951,51 +3971,82 @@ form .panel-group .panel {
 .box:first-child {
     margin-top: 0;
 }
-.box .box-top {
+.box .box-heading {
     background: #f7f7f7;
 /*     border-top: 2px solid #990000; */
+    border-top: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
     padding: 0px 14px;
 }
-.box .box-top.box-top-big {
+.box .box-heading:first-child {
+    border-top: none;
+}
+.box .box-heading.box-heading-big {
     padding: 14px 14px 5px;
 }
-.box .box-top.box-top-big h2 {
+.box .box-heading.box-heading-big h2 {
     margin-bottom: 9px;
     font-size: 26px;
 }
-.box .box-top h2 {
+.box .box-heading h2 {
     line-height: 38px;
     margin: 0;
     font-size: 18px;
 }
-.box .box-top h2 a {
+.box .box-heading h2 a, 
+.box .box-heading h3 a {
     color: #333333;
 }
-.box .box-top h2 span.glyphicon,
-.box .box-top h2 span.glyphicons {
+.box .box-heading h2 span.glyphicon,
+.box .box-heading h2 span.glyphicons {
     vertical-align: baseline;
     font-size: 15px;
 }
-.box .box-top h2 small {
+.box .box-heading h2 small span.glyphicon,
+.box .box-heading h2 small span.glyphicons {
+    font-size: inherit;
+}
+.box .box-heading h3 {
+    line-height: 30px;
+    margin: 0;
+    font-size: 14px;
+}
+.box .box-heading h3 small {
+    font-size: 12px;
+}
+.box .box-heading h3 span.glyphicon,
+.box .box-heading h3 span.glyphicons {
+    vertical-align: baseline;
+    font-size: 12px;
+}
+.box .box-heading .box-collapser .glyphicon.glyphicon-folder-close {
+    margin-right: 3px;
+}
+.box .box-heading .box-collapser .glyphicon.glyphicon-folder-close:before {
+    content: "\e118";
+}
+.box .box-heading .box-collapser.collapsed .glyphicon.glyphicon-folder-close:before {
+    content: "\e117";
+}
+.box .box-heading h2 small {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 12px;
     line-height: 40px;
     float: right;
 }
-.box .box-top .nav li {
+.box .box-heading .nav li {
     float: left;
     margin-right: 20px;
 }
-.box .box-top .nav li a,
-.box .box-top .nav li a:hover,
-.box .box-top .nav li a:focus {
+.box .box-heading .nav li a,
+.box .box-heading .nav li a:hover,
+.box .box-heading .nav li a:focus {
     background: transparent;
     position: relative;
     float: left;
     padding: 0 0 10px;
 }
-.box .box-top .nav li.active a:before {
+.box .box-heading .nav li.active a:before {
     position: absolute;
     bottom: -6px;
     left: 50%;
@@ -4006,7 +4057,7 @@ form .panel-group .panel {
     border-style: solid;
     border-width: 10px;
 }
-.box .box-top .nav li.active a:after {
+.box .box-heading .nav li.active a:after {
     position: absolute;
     bottom: -6px;
     left: 50%;
@@ -4016,8 +4067,8 @@ form .panel-group .panel {
     border-color: transparent transparent #ffffff;
     border-style: solid;
     border-width: 9px;
-} 
-.box .objects  {
+}
+.box .box-body  {
     padding: 14px;
     margin: 0px;
 }

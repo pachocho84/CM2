@@ -82,7 +82,7 @@
                         {{ show_img_box(date.event.img|imagine_filter('350'), {'width': 300, 'height': 180, 'offset': date.event.imgOffset, 'link': path('event_show', {'id': date.event.id, 'slug': date.event.slug}), 'link_attributes': {'class': 'image-container'}}) }}
                     {% endif %}                                                                
                     <h3><a href="{{ path('event_show', {'id': date.event.id, 'slug': date.event.getSlug}) }}">{{ date.event.getTitle }}</a></h3>
-                    <h4>{{ show_icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }} {{ show_icon('Map') }} {{ date.location }} <small>({{ date.address }})</small></h4>
+                    <h4>{{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }} {{ icon('Map') }} {{ date.location }} <small>({{ date.address }})</small></h4>
                 </div>    
             {% endfor %} 
         </div>   

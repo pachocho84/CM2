@@ -150,13 +150,15 @@ $(function() {
                 map.setCenter(place.geometry.location);
                 map.setZoom(17);  // Why 17? Because it looks good.
             }
-            marker.setIcon(/** @type {google.maps.Icon} */({
+  /*
+          marker.setIcon(({
                 url: place.icon,
                 size: new google.maps.Size(71, 71),
                 origin: new google.maps.Point(0, 0),
                 anchor: new google.maps.Point(17, 34),
                 scaledSize: new google.maps.Size(35, 35)
             }));
+*/
             marker.setPosition(place.geometry.location);
             marker.setVisible(true);
 
@@ -172,6 +174,7 @@ $(function() {
             infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
             $(canvas).parent().parent().parent().find('[address-autocomplete]').val(address);
             $(canvas).parent().parent().parent().find('[places-autocomplete]').val(place.name);
+            $(canvas).parent().parent().parent().find('[address-coordinates]').val(place.geometry.location);
             infowindow.open(map, marker);
         });
     }

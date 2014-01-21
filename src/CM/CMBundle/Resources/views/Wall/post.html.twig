@@ -12,7 +12,7 @@
         {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
 
         <p class="text-muted">
-            {{ show_icon((post.object|class_name)~'_'~(post.type)) }}
+            {{ icon((post.object|class_name)~'_'~(post.type)) }}
             <small>
                 {{ post.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
                 {% if post.entity is not null and post.entity.entityUsers|length > 0 %}

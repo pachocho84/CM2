@@ -18,8 +18,8 @@
             </h5>
 
             <p class="text-muted">
-                {{ show_icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
-                {{ show_icon('Map') }} {{ date.location }} <small>({{ date.address }})</small>
+                {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
+                {{ icon('Map') }} {{ date.location }} <small>({{ date.address }})</small>
             </p>
     
             <p>{{ date.event.getExtract|raw }}</p>

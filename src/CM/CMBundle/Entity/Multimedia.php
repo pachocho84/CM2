@@ -27,6 +27,19 @@ class Multimedia extends Entity
     protected $id;
 
     /**
+     * @ORM\Column(name="entity_id", type="integer", nullable=true)
+     **/
+    private $entityId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="Entity", inversedBy="multimedia")
+     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     */
+    private $entity;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="type", type="smallint", nullable=false)
@@ -73,6 +86,42 @@ class Multimedia extends Entity
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get entityId
+     *
+     * @return integer 
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    /**
+     * Set entity
+     *
+     * @param Entity $entity
+     * @return Image
+     */
+    public function setEntity(Entity $entity = null)
+    {
+        $this->entity = $entity;
+        if (!is_null($entity)) {
+            $this->entityId = $entity->getId();
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Get entity
+     *
+     * @return Entity 
+     */
+    public function getEntity()
+    {
+        return $this->entity;
     }
 
     /**

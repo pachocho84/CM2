@@ -113,7 +113,6 @@ class MultimediaController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-
             switch (substr(preg_split('/(www|m)\./', parse_url($multimedia->getLink(), PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
                 case 'yout':
                     $info = json_decode(file_get_contents($request->getScheme().'://www.youtube.com/oembed?format=json&url='.urlencode($multimedia->getLink())));
@@ -152,6 +151,59 @@ class MultimediaController extends Controller
             'form' => $form->createView(),
             'entity' => $multimedia,
             'joinEntityType' => 'joinalbum'
+        );
+    }
+
+    /**
+     * @Route("/multimedia/{id}/add", name="multimediaalbum_add_multimedia", requirements={"id" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template("CMBundle:MultimediaAlbum:singleMultimedia.html.twig")
+     */
+    public function addMultimediaAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $album = $em->getRepository('CMBundle:MultimediaAlbum')->getAlbum($id, array('locale' => $request->getLocale()));
+
+        if (!$this->get('cm.user_authentication')->canManage($album)) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $multimedia = new Multimedia;
+        $multimedia->setType($type);
+        $multimedia->setLink($link);
+        $multimedia->setTitle($info->title)
+            ->setText($info->description);;
+        if (!is_null($album->getPost()->getPage())) {
+            $multimedia->setPage($album->getPost()->getPage());
+            $publisher = $album->getPost()->getPage();
+            $link = 'page_multimedia';
+        } elseif (!is_null($album->getPost()->getGroup())) {
+            $multimedia->setGroup($album->getPost()->getGroup());
+            $publisher = $album->getPost()->getGroup();
+            $link = 'group_multimedia';
+        } else {
+            $publisher = $this->getUser();
+            $link = 'user_multimedia';
+        }
+
+        foreach ($request->files as $file) {
+            $multimedia->setImgFile($file);
+        }
+
+        $errors = $this->get('validator')->validate($multimedia);
+
+        if (count($errors) > 0) {
+            throw new HttpException(403, $this->get('translator')->trans('Error in file.', array(), 'http-errors'));
+        }
+
+        $em->persist($album);
+        $em->flush();
+
+        return array(
+            'multimedia' => $multimedia,
+            'link' => $link,
+            'publisher' => $publisher
         );
     }
     

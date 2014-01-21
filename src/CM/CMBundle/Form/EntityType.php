@@ -47,6 +47,13 @@ class EntityType extends BaseEntityType
                 'options' => array(
                     'error_bubbling' => false,
                 )
+            ))
+            ))->add('multimedia', 'collection', array(
+                'type' => new MultimediaType,
+                'by_reference' => false,
+                'options' => array(
+                    'error_bubbling' => false,
+                )
             ))->add('entityUsers', 'collection', array(
                 'type' => new EntityUserType,
                 'allow_add' => true,

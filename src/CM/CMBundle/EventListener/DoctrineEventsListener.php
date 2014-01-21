@@ -22,6 +22,7 @@ use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\Page;
 use CM\CMBundle\Entity\Group;
 use CM\CMBundle\Entity\Relation;
+use CM\CMBundle\Entity\Multimedia;
 
 class DoctrineEventsListener
 {
@@ -42,6 +43,9 @@ class DoctrineEventsListener
 
     private function getUser()
     {
+        if (is_null($this->get('security.context'))) {
+            return null;
+        }
         return $this->get('security.context')->getToken()->getUser();
     }
 
@@ -77,6 +81,9 @@ class DoctrineEventsListener
         }
         if ($object instanceof Relation && !$object->getAccepted()) {
             $this->relationPersistedRoutine($object, $em);
+        }
+        if ($object instanceof Multimedia && !is_null($object->getEntity())) {
+            $this->entityMultimediaPersistedRoutine($object, $em);
         }
     }
 
@@ -148,6 +155,9 @@ class DoctrineEventsListener
         }
         if ($object instanceof Relation) {
             $this->relationRemovedRoutine($object, $em);
+        }
+        if ($object instanceof Multimedia) {
+            $this->entityMultimediaRemovedRoutine($object, $em);
         }
     }
 
@@ -884,6 +894,30 @@ class DoctrineEventsListener
                 $relation->getFromUser(),
                 get_class($relation),
                 array($relation->getId())
+            );
+        } catch (\Exception $e) {
+        }
+    }
+
+    private function entityMultimediaPersistedRoutine(Multimedia $multimedia, EntityManager $em)
+    {
+        $post = $this->get('cm.post_center')->getNewPost(
+            is_null($this->get('security.context')->getToken()) ? $multimedia->getEntity()->getPost()->getCreator() : $this->getUser(),
+            is_null($this->get('security.context')->getToken()) ? $multimedia->getEntity()->getPost()->getUser() : $this->getUser(),
+            Post::TYPE_CREATION,
+            get_class($multimedia),
+            array($multimedia),
+            $multimedia->getEntity()
+        );
+    }
+
+    private function entityMultimediaRemovedRoutine(Multimedia $multimedia, EntityManager $em)
+    {
+        try {
+            $this->get('cm.post_center')->removePost(
+                null, null,
+                get_class($multimedia),
+                array($multimedia->getId())
             );
         } catch (\Exception $e) {
         }
