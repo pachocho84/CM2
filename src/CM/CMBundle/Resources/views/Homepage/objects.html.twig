@@ -19,7 +19,7 @@
             <h2><a href="{{ path('homepage_show', {'id': object.id}) }}">{{ object.getTitle }}</a></h2>
             {% if object.getSubtitle is not empty %}{{ object.getSubtitle }}{% endif %} 
     
-            {{ entity_short_text(object)|raw }}
+            {{ entity_short_text(object) }}
             {#<?php echo show_extract($oggetto->getStampa()->getRawValue()->getNotizia(), $oggetto->getStampa()->getRawValue()->getEstratto()) ?>#}
         </div>
 

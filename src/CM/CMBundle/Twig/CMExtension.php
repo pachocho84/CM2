@@ -75,11 +75,11 @@ class CMExtension extends \Twig_Extension
             'is_admin' => new \Twig_Function_Method($this, 'getIsAdmin'),
             'related_object' => new \Twig_Function_Method($this, 'getRelatedObject'),
             'delete_link' => new \Twig_Function_Method($this, 'getDeleteLink', array('is_safe' => array('html'))),
+            'entity_short_text' => new \Twig_Function_Method($this, 'getEntityShortText', array('is_safe' => array('html'))),
             'user_box' => new \Twig_Function_Method($this, 'getUserBox', array('is_safe' => array('html'))),
             'show_img_box' => new \Twig_Function_Method($this, 'getShowImgBox', array('is_safe' => array('html'))),
             'request_tag' => new \Twig_Function_Method($this, 'getRequestTag', array('is_safe' => array('html'))),
             'notification_tag' => new \Twig_Function_Method($this, 'getNotificationTag', array('is_safe' => array('html'))),
-            'entity_short_text' => new \Twig_Function_Method($this, 'getEntityShortText', array('is_safe' => array('html'))),
             'post_text' => new \Twig_Function_Method($this, 'getPostText', array('is_safe' => array('html'))),
             'icon' => new \Twig_Function_Method($this, 'getIcon', array('is_safe' => array('html'))),
             'tooltip' => new \Twig_Function_Method($this, 'getTooltip', array('is_safe' => array('html'))),
@@ -175,6 +175,54 @@ class CMExtension extends \Twig_Extension
         return '<a href="'.$link.'" >'.$text.'</a>';
 
         // echo link_to($text, $link, $options);
+    }
+
+    public function getEntityShortText(Entity $entity, $options = array())
+    {
+        $options = array_merge(array(
+            'max' => 400,
+            'stripped' => false,
+            'more' => false,
+            'moreText' => 'show more',
+            'moreTextAlt' => 'show less'
+        ), $options);
+
+        if (!$options['more'] && $entity->getExtract() && ($this->securityContext->isGranted('ROLE_ADMIN') || $this->securityContext->isGranted('ROLE_CLIENT'))) {
+            $text = $entity->getExtract();
+        } else {
+            $text = $entity->getText();
+        }
+
+        $text_stripped = strip_tags($text);
+
+        if ($stripped) {
+            $text = $text_stripped;
+        }
+
+        if ($text == '') {
+            return false;
+        }
+
+        if (strlen($text_stripped) > $max) {
+            preg_match("#^.{1,".$max."}(\.|\:|\!|\?)#s", $text_stripped, $matches);
+            if (array_key_exists(0, $matches)) {
+                $text = rtrim($matches[0], '.:').'.';
+            } else {
+                $text = rtrim(Helper::truncate_text($text_stripped, $max, '', true), ',.;!?:');
+                if (!$options['more']) {
+                    $text .= '...';
+                }
+            }
+        }
+
+        $text = $stripped ? $this->getSimpleFormatText($text) : $this->getShowText($text);
+
+        if ($options['more']) {
+            $text .= ' <div id="show_more-entity_'.$entity->getId().'">'.substr($entity->getText(), strlen($text)).'</div>';
+            // $text .= '<a href="show_more-entity_'.$entity->getId().'" class="box-collapser collapsed" data-toggle="collapse"'.' text-alt="'+ $this->translator->trans($options['moreTextAlt']).'">'.$this->translator->trans($options['moreText']).'</a>';
+        }
+
+        return $text;
     }
 
     public function getUserBox($publisher, $options = array())
@@ -433,32 +481,6 @@ class CMExtension extends \Twig_Extension
                 return $this->getClassName($notification->getPost()->getObject()).'_'.$notification->getType();
                 // return 'Case: '.$notification->getPost()->getObject().'_'.$notification->getType().', PostId: '.$notification->getPostId().', From: '.$notification->getFromUser().', Type: '.$notification->getType().', Object: '.$notification->getObject();
         }
-    }
-
-    public function getEntityShortText(Entity $entity, $max = 400, $stripped = false)
-    {
-        $text = $entity->getExtract() && ($this->securityContext->isGranted('ROLE_ADMIN') || $this->securityContext->isGranted('ROLE_CLIENT')) ? $entity->getExtract() : $entity->getText();
-
-        $text_stripped = strip_tags($text);
-
-        if ($stripped) {
-            $text = $text_stripped;
-        }
-
-        if ($text == '') {
-            return false;
-        }
-
-        if (strlen($text_stripped) > $max) {
-            preg_match("#^.{1,".$max."}(\.|\:|\!|\?)#s", $text_stripped, $matches);
-            if (array_key_exists(0, $matches)) {
-                $text = rtrim($matches[0], '.:').'.';
-            } else {
-                $text = rtrim(Helper::truncate_text($text_stripped, $max, '', true), ',.;!?:').'...';
-            }
-        }
-
-        return $stripped ? $this->getSimpleFormatText($text) : $this->getShowText($text);
     }
 
     public function getPostText(Post $post, $relatedObjects = null)

@@ -10,7 +10,7 @@
     
         <h4><a href="{{ path('event_show', {'id': post.entity.id, 'slug': post.entity.getSlug}) }}">{{ post.entity }}</a></h4>
 
-        {{ entity_short_text(post.entity)|raw }}
+        {{ entity_short_text(post.entity) }}
 
     </div><!-- END Media Body -->
 

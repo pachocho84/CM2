@@ -98,7 +98,7 @@ class LikeController extends Controller
     }
 
     /**
-     * @Route("/who_likes/{type}/{id}", name="who_likes_it", requirements={"_request_type"="json"})
+     * @Route("/whoLikes/{type}/{id}", name="who_likes_it", requirements={"type" = "post|image", "_request_type"="json"})
      */
     public function whoLikesItAction(Request $request, $type, $id)
     {

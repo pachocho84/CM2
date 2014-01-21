@@ -27,16 +27,14 @@
         <div class="box-heading">
             <h2>{{ icon('Info') }} {{ 'Details'|trans }}</h2>
         </div>
-        {% if event.getImages|length > 1 %}
-            <div class="box-body clearfix">
-                <div class="media object">
-                    <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}" class="pull-left"><img src="{{ event.getImages[0].img|imagine_filter('350') }}" width=200 /></a>
-                    <div>
-                        <div class="text-justify">{{ event.getText|raw }}</div>
-                    </div>
+        <div class="box-body clearfix">
+            <div class="media object">
+                <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}" class="pull-left"><img src="{{ event.getImages[0].img|imagine_filter('350') }}" width=200 /></a>
+                <div>
+                    <div class="text-justify">{{ entity_short_text(event, {more: true}) }}</div>
                 </div>
             </div>
-        {% endif %}
+        </div>
     </div>
     
     {% if event.getImages|length > 1 %}
@@ -45,8 +43,8 @@
                 <h2>{{ icon('Photo') }} {{ 'Event photos'|trans }} <small><a href="{{ path('user_album', {'slug': event.post.user.slug, 'id': event.id}) }}">{{ 'View all photos'|trans }} ({{ event.getImages|length }})</a></small></h2>
             </div>
             <div class="clearfix entity-assets">
-                {#{% for image in event.getImages.toArray|merge(event.getImages.toArray|merge(event.getImages.toArray)) %}{#}
-                {% for image in event.getImages[:5] %}
+                {##{% for image in event.getImages.toArray|merge(event.getImages.toArray|merge(event.getImages.toArray)) %}{#}
+                {% for image in event.getImages[:5] %}{##}
                     {{ show_img_box(image.img|imagine_filter('350'), {width: 144, height: 144, link: path('user_image', {slug: event.post.user.slug, id: image.id}), link_attributes: {class: 'pull-left entity-asset'}}) }}
                 {% endfor %}
             </div>
@@ -121,7 +119,7 @@
                         <p><span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span></p>
                         <div class="event-date-map">
                             <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=385x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
-                            <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
+                            <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" gmap-directions target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
                         </div>
                     </div>
                 </div>
@@ -147,7 +145,7 @@
                         <div id="event_date-past-{{ loop.index }}" class="event-date-map collapse">
                             <p><span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span></p>
                             <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=385x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
-                                <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
+                                <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" gmap-directions target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
                         </div>
                     </div>
                 {% endfor %}

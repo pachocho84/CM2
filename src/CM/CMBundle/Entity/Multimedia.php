@@ -172,7 +172,6 @@ class Multimedia extends Entity
 
     public function setUrl($url, $scheme = 'https')
     {
-
         switch (substr(preg_split('/(www|m)\./', parse_url($url, PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
             case 'yout':
                 $info = json_decode(file_get_contents($scheme.'://www.youtube.com/oembed?format=json&url='.urlencode($url)));

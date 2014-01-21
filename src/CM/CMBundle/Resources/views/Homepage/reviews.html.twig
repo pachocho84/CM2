@@ -30,7 +30,7 @@
 
                     {% if object.getSubtitle is not empty %}{{ object.getSubtitle }}{% endif %}
 
-                    {{ entity_short_text(object)|raw }}
+                    {{ entity_short_text(object) }}
                     {#<?php echo show_extract($oggetto->getStampa()->getRawValue()->getNotizia(), $oggetto->getStampa()->getRawValue()->getEstratto(), false, 200) ?>#} 
             
                 </div>             

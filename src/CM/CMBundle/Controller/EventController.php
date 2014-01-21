@@ -223,7 +223,7 @@ class EventController extends Controller
                 ->setUser($user);
             $event->addImage($image);
 
-            $event->addMultimedia(new Multimedia);
+            // $event->addMultimedia(new Multimedia);
 
             $event->addEventDate(new EventDate);
 
