@@ -71,13 +71,23 @@
 /* ENTITIES */
 .entity-images {
     padding: 15px 10px;
+    margin: 0 -5px;
 }
-.entity-images .col-xs-4 {
+.entity-images a {
     padding: 0 5px;
 }
 /* event */
+.event-date-map {
+    position: relative;
+}
+.event-date-map .btn {
+    position: absolute;
+    right: 10px;
+    top: 27px;
+}
 .event-date-map img {
     border: 1px solid #bbbbbb;
+    margin: 0 -10px;
 }
 
 
@@ -478,6 +488,16 @@
 
 
 /* BOOTSTRAP FIXES */
+.media h2 {
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
+.btn.btn-default.active span.glyphicon,
+.btn.btn-default.active span.glyphicons {
+    color: #990000;
+}
+
 .breadcrumb .dropdown li 
 { 
     display: block; 

@@ -843,7 +843,7 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-thumbs-up"></span>';
             case 'Comment':
             case 'Comment_'.Post::TYPE_CREATION:
-                return '<span class="glyphicon glyphicon-comment"></span>';
+                return '<span class="glyphicons conversation"></span>';
             case 'Wall':
             case 'Post':
                 return '<span class="glyphicon glyphicon-th-list"></span>';
@@ -901,6 +901,8 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-folder-close"></span>';
             case 'Folder_Open':
                 return '<span class="glyphicon glyphicon-folder-open"></span>';
+            case 'Info':
+                return '<span class="glyphicons pushpin"></span>';
             default:
                 return '<span style="color:red;">missing glyphicon for '.$object.'</span>';
         }

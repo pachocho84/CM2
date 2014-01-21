@@ -182,11 +182,18 @@ $(function() {
     /* LIKE */
     $('body').on('click', '.iLikeIt', function(event) {
         event.preventDefault();
-        $.getJSON(event.currentTarget.href, function(data) {
-            $(event.target).closest('.object').find('.bottom-like-count').replaceWith(data.likeCount);
-            $(event.target).closest('.object').find('.bottom-likes').replaceWith(data.likes);
-            fix_triangle($(event.target));
-            $(event.target).closest('.object').find('.iLikeIt').replaceWith(data.likeActions);
+        $.getJSON(event.currentTarget.href, function(data) {          
+            if ($(event.currentTarget).is('[social-selector]')) {
+                social = $($(event.currentTarget).attr('social-selector'));
+                $(event.currentTarget).replaceWith(data.likeActionsButton);
+            } else {
+                social = $(event.target).closest('.object');
+                $('[social-selector="#' + social.attr('id') + '"]').replaceWith(data.likeActionsButton);
+            }
+            social.find('.bottom-like-count').replaceWith(data.likeCount);
+            social.find('.bottom-likes').replaceWith(data.likes);
+/*             fix_triangle(social); */
+            social.find('.iLikeIt').replaceWith(data.likeActions);
         });
     });
     

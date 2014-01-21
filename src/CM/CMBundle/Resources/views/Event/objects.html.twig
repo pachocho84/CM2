@@ -10,7 +10,7 @@
             <h2>{{ icon('Event') }} <span>{{ date.start | format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</span></h2>
         </div>
         
-        <ul class="media-list objects">
+        <ul class="box-body media-list">
     {% endif %}
     
     {{ include('CMBundle:Event:object.html.twig' ) }}
