@@ -13,7 +13,7 @@
 
     <div class="box">
         <div class="box-heading">
-            <h3>{{ show_icon('Wall') | raw }} <span>{{ 'Last posts' | trans }}</span></h3>
+            <h3>{{ icon('Wall') | raw }} <span>{{ 'Last posts' | trans }}</span></h3>
         </div>
         <ul class="media-list objects">
             {{ include('CMBundle:Wall:posts.html.twig', {'slug': group.slug}) }}

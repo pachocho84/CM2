@@ -17,9 +17,9 @@
                         {% else %}
                             {% set object = request.object %}{% set objectId = request.objectId %}
                         {% endif %}
-                        <a href="{{ path('request_update', {'choice': 'accept', 'id': request.id}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading'|trans }}">{{ show_icon('Ok')|raw }} {{ 'Accept'|trans }}</a>
+                        <a href="{{ path('request_update', {'choice': 'accept', 'id': request.id}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading'|trans }}">{{ icon('Ok')|raw }} {{ 'Accept'|trans }}</a>
     
-                        <a href="{{ path('request_update', {'choice': 'refuse', 'id': request.id}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading'|trans }}">{{ show_icon('Remove')|raw }} {{ 'Refuse'|trans }}</a>
+                        <a href="{{ path('request_update', {'choice': 'refuse', 'id': request.id}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading'|trans }}">{{ icon('Remove')|raw }} {{ 'Refuse'|trans }}</a>
                     </div>
                 {% endif %}
             </div> 

@@ -1,6 +1,6 @@
 <div class="col-lg-7 text-right">
     <div class="btn-group btn-group-sm">
-        <a href="{{ path('link_index') }}" class="{{ app.request.attributes.get('_route') == 'link_index' ? 'btn btn-default active' : 'btn btn-default'}}">{{ show_icon('List')|raw }} {{ 'List'|trans }}</a>
-        <a href="{{ path('link_new') }}" class="{{ app.request.attributes.get('_route') == 'link_new' ? 'btn btn-default active' : 'btn btn-default'}}">{{ show_icon('Plus')|raw }} {{ 'Create' | trans }}</a>
+        <a href="{{ path('link_index') }}" class="{{ app.request.attributes.get('_route') == 'link_index' ? 'btn btn-default active' : 'btn btn-default'}}">{{ icon('List')|raw }} {{ 'List'|trans }}</a>
+        <a href="{{ path('link_new') }}" class="{{ app.request.attributes.get('_route') == 'link_new' ? 'btn btn-default active' : 'btn btn-default'}}">{{ icon('Plus')|raw }} {{ 'Create' | trans }}</a>
     </div>
 </div>

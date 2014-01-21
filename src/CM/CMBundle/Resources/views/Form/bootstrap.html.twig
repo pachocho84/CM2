@@ -422,7 +422,7 @@
             <div id="collapse-eventDates" class="panel-collapse collapse">
                 <div class="panel-body" {{ block('widget_container_attributes') }}>
                     {{ block('form_rows') }}
-                    <a href="#" class="btn btn-default add_date_link" delete_date-text="{{ 'Delete this date'|trans }}">{{ show_icon('Plus')|raw }} {{ 'Add a date'|trans }}</a>
+                    <a href="#" class="btn btn-default add_date_link" delete_date-text="{{ 'Delete this date'|trans }}">{{ icon('Plus')|raw }} {{ 'Add a date'|trans }}</a>
                 </div>
             </div>
         </div>
@@ -473,7 +473,7 @@
         <div class="panel-heading"><h3 class="panel-title">{{ 'Disc Tracks'|trans }}</h3></div>
         <div class="panel-body" {{ block('widget_container_attributes') }}>
             {{ block('form_rows') }}
-            <a href="#" class="btn btn-default add_track_link" delete_track-text="{{ 'Delete this track'|trans }}">{{ show_icon('Plus')|raw }} {{ 'Add a track'|trans }}</a>
+            <a href="#" class="btn btn-default add_track_link" delete_track-text="{{ 'Delete this track'|trans }}">{{ icon('Plus')|raw }} {{ 'Add a track'|trans }}</a>
         </div>
     </div>
 {% endspaceless %}

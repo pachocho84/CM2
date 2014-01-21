@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <h3>{{ show_icon('Nameplatealt') }} <span>{{ block('title') }}</span></h3>                             
+    <h3>{{ icon('Nameplatealt') }} <span>{{ block('title') }}</span></h3>                             
 
 
      
@@ -23,14 +23,14 @@
                 {{ form_row(form.imgFile) }}
                 {{ form_row(form.imgOffset, {'attr': {'img-offset-field': null}}) }}
                 {% if group.img is not null %}
-                    <div class="alert alert-info">{{ show_icon('Alert')|raw }} {{ 'Drag the image to adjust position.' | trans }}</div>
+                    <div class="alert alert-info">{{ icon('Alert')|raw }} {{ 'Drag the image to adjust position.' | trans }}</div>
                     {{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ group.img), {'width': 150, 'height': 150, 'offset': group.imgOffset, 'box_attributes': {'id': 'profile-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px;'}}) | raw }}
                 {% endif %}
             
                 {{ form_row(form.coverImgFile) }}
                 {{ form_row(form.coverImgOffset, {'attr': {'cover-img-offset-field': null}}) }}
                 {% if group.coverImg is not null %}
-                    <div class="alert alert-info">{{ show_icon('Alert')|raw }} {{ 'Drag the image to adjust position.' | trans }}</div>
+                    <div class="alert alert-info">{{ icon('Alert')|raw }} {{ 'Drag the image to adjust position.' | trans }}</div>
                     <div>{{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ group.coverImg), {'width': 700, 'height': 266, 'offset': group.coverImgOffset, 'box_attributes': {'id': 'cover-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px; width: 702px; height 266px;' }}) | raw }}</div>
                 {% endif %}
             

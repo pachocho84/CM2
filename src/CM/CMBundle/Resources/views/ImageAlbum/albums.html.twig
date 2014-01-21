@@ -3,10 +3,10 @@
     <div class="box-heading box-heading-big">
         <div class="media">
             <div class="pull-right">
-                <a href="{{ path('imagealbum_new') }}" class="btn btn-default btn-sm">{{ show_icon('Plus')|raw }} {{ 'Create a new album'|trans }}</a>
+                <a href="{{ path('imagealbum_new') }}" class="btn btn-default btn-sm">{{ icon('Plus')|raw }} {{ 'Create a new album'|trans }}</a>
             </div>
             <div class="media-body">
-                <h2>{{ show_icon('Image')|raw }} {{ 'Albums'|trans }}</h2>
+                <h2>{{ icon('Image')|raw }} {{ 'Albums'|trans }}</h2>
             </div>
         </div>
         {{ include('CMBundle:ImageAlbum:menu.html.twig', {'inAlbumsPage': true}) }}

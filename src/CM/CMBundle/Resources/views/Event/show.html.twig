@@ -5,7 +5,7 @@
         <div class="pull-right">
             <div class="btn-group">
                 {{ include('CMBundle:Like:likeActions.html.twig', {post: event.post, button: true, selector: '#social'}) }}
-                <a href="{# {{ path('post_show', {'post_id': postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ show_icon('Comment') }}</a>
+                <a href="{# {{ path('post_show', {'post_id': postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }}</a>
             </div>
             {% if can_manage(event) %}
                 <div class="btn-group">
@@ -25,7 +25,7 @@
 {% block body %}
     <div class="box">
         <div class="box-heading">
-            <h2>{{ show_icon('Event') }} {{ 'Details'|trans }}</h2>
+            <h2>{{ icon('Event') }} {{ 'Details'|trans }}</h2>
         </div>
         {% if event.getImages|length > 1 %}
             <div class="box-body clearfix">
@@ -40,7 +40,7 @@
     </div>
     <div class="box">
         <div class="box-heading">
-            <h2>{{ show_icon('Photo') }} {{ 'Event photos'|trans }} <small><a href="{{ path('user_album', {'slug': event.post.user.slug, 'id': event.id}) }}">{{ 'View all photos'|trans }} ({{ event.getImages|length }})</a></small></h2>
+            <h2>{{ icon('Photo') }} {{ 'Event photos'|trans }} <small><a href="{{ path('user_album', {'slug': event.post.user.slug, 'id': event.id}) }}">{{ 'View all photos'|trans }} ({{ event.getImages|length }})</a></small></h2>
         </div>
         <div class="clearfix entity-images">
             {% for image in event.getImages[:5] %}
@@ -50,7 +50,7 @@
     </div>
     <div class="box">
         <div class="box-heading">
-            <h2>{{ show_icon('Comment') }} {{ 'Social'|trans }}</h2>
+            <h2>{{ icon('Comment') }} {{ 'Social'|trans }}</h2>
         </div>
         <div id="social" class="box-body object">
             {{ include('CMBundle::social.html.twig', {post: event.post, selector: '#social'}) }}
@@ -61,7 +61,7 @@
 {% block sidebar %}
     <div id="event_dates" class="box">
         <div class="box-heading">
-            <h2>{{ show_icon('Calendar') }} {{ 'Event dates'|trans }}</h2>
+            <h2>{{ icon('Calendar') }} {{ 'Event dates'|trans }}</h2>
         </div>
         <div class="box-body">
             {% set dates = event.eventDates.toArray|merge(event.eventDates.toArray|merge(event.eventDates.toArray)) %}
@@ -76,12 +76,12 @@
                 <div class="event_date object">
                     <p>
                         {% if not loop.first %}<a href="#event_date-{{ loop.index }}" data-toggle="collapse" data-parent="#event_dates" class="text-muted collapsed">{% endif %}
-                            {{ show_icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
-                            {{ show_icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
+                            {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
+                            {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
                         {% if not loop.first %}</a>{% endif %}
                     </p>
                     <div id="event_date-{{ loop.index }}" class="collapse{% if loop.first %} in{% endif %}">
-                        <p><span {{ tooltip(date.address) }}>{{ show_icon('Map') }} {{ date.location }}</span></p>
+                        <p><span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span></p>
                         <div class="event-date-map">
                             <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=385x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
                             <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
@@ -93,7 +93,7 @@
         <div class="box-heading">
             <h3>
                 {{ 'Passed dates'|trans }}
-                <small><a href="#event_date-passed" class="pull-right box-collapser collapsed" data-toggle="collapse" data-parent="#event_dates">{{ show_icon('Folder') }} {{ 'show'|trans }}</a></small>
+                <small><a href="#event_date-passed" class="pull-right box-collapser collapsed" data-toggle="collapse" data-parent="#event_dates">{{ icon('Folder') }} {{ 'show'|trans }}</a></small>
             </h3>
         </div>
         <div class="box-body collapse" id="event_date-passed">
@@ -101,12 +101,12 @@
                 <div class="event_date object">
                     <p>
                         <a href="#event_date-passed-{{ loop.index }}" data-toggle="collapse" data-parent="#event_dates" class="text-muted collapsed">
-                            {{ show_icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
-                            {{ show_icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
+                            {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
+                            {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
                         </a>
                     </p>
                     <div id="event_date-passed-{{ loop.index }}" class="event-date-map collapse">
-                        <p><span {{ tooltip(date.address) }}>{{ show_icon('Map') }} {{ date.location }}</span></p>
+                        <p><span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span></p>
                         <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=385x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
                             <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
                     </div>
@@ -116,7 +116,7 @@
     </div>
     <div class="box">
         <div class="box-heading">
-            <h2>{{ show_icon('Protagonist') }} {{ 'Protagonists'|trans }}</h2>
+            <h2>{{ icon('Protagonist') }} {{ 'Protagonists'|trans }}</h2>
         </div>
         <div class="box-body">
             <ul class="media-list">

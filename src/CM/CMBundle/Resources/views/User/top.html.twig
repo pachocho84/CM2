@@ -19,25 +19,25 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse user-menu">
             <ul class="nav navbar-nav">
                 <li{% if inPage == 'profile' %} class="active"{% endif %}>
-                    <a href="{{ path('user_show', {'slug': user.slug}) }}">{{ show_icon('User')|raw }} {{ 'Profile'|trans }}</a>
+                    <a href="{{ path('user_show', {'slug': user.slug}) }}">{{ icon('User')|raw }} {{ 'Profile'|trans }}</a>
                 </li>
                 <li{% if inPage == 'wall' %} class="active"{% endif %}>
-                    <a href="{{ path('user_wall', {'slug': user.slug}) }}">{{ show_icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
+                    <a href="{{ path('user_wall', {'slug': user.slug}) }}">{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
                 </li>
                 <li{% if inPage == 'biography' %} class="active"{% endif %}>
-                    <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ show_icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
+                    <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
                 </li>
                 <li{% if inPage == 'event' %} class="active"{% endif %}>
-                    <a href="{{ path('user_events', {'slug': user.slug}) }}">{{ show_icon('Event')|raw }} {{ 'Events'|trans }}</a>
+                    <a href="{{ path('user_events', {'slug': user.slug}) }}">{{ icon('Event')|raw }} {{ 'Events'|trans }}</a>
                 </li>
                 <li{% if inPage == 'image' %} class="active"{% endif %}>
-                    <a href="{{ path('user_images', {'slug': user.slug}) }}">{{ show_icon('Image')|raw }} {{ 'Images'|trans }}</a>
+                    <a href="{{ path('user_images', {'slug': user.slug}) }}">{{ icon('Image')|raw }} {{ 'Images'|trans }}</a>
                 </li>
                 <li{% if inPage == 'multimedia' %} class="active"{% endif %}>
-                    <a href="{{ path('user_multimedia', {'slug': user.slug}) }}">{{ show_icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
+                    <a href="{{ path('user_multimedia', {'slug': user.slug}) }}">{{ icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
                 </li>
                 <li{% if inPage == 'disc' %} class="active"{% endif %}>
-                    <a href="{{ path('user_discs', {'slug': user.slug}) }}">{{ show_icon('Disc')|raw }} {{ 'Discs'|trans }}</a>
+                    <a href="{{ path('user_discs', {'slug': user.slug}) }}">{{ icon('Disc')|raw }} {{ 'Discs'|trans }}</a>
                 </li>
             </ul>
             <ul class="nav nav navbar-nav pull-right">
@@ -45,14 +45,14 @@
                     <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">{{ 'More'|trans }} <b class="caret"></b></a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
                         <li>
-                            <a href="{{ path('fan_user', {'slug': user.slug}) }}">{{ show_icon('Fan')|raw }} {{ 'Fans'|trans }}</a>
+                            <a href="{{ path('fan_user', {'slug': user.slug}) }}">{{ icon('Fan')|raw }} {{ 'Fans'|trans }}</a>
                         </li>
                         <li>
-                            <a href="{{ path('relation_user', {'slug': user.slug}) }}">{{ show_icon('Relation')|raw }} {{ 'Relations'|trans }}</a>
+                            <a href="{{ path('relation_user', {'slug': user.slug}) }}">{{ icon('Relation')|raw }} {{ 'Relations'|trans }}</a>
                         </li>
                         <li role="presentation" class="divider"></li>
                         <li>
-                            <a href="{{ path('fan_user', {'slug': user.slug}) }}">{{ show_icon('Work')|raw }} {{ 'Work and education [TODO]'|trans }}</a>
+                            <a href="{{ path('fan_user', {'slug': user.slug}) }}">{{ icon('Work')|raw }} {{ 'Work and education [TODO]'|trans }}</a>
                         </li>
                     </ul>
                 </li>
@@ -83,20 +83,20 @@
     <nav class="navbar navbar-default" role="navigation">
         <div class="collapse navbar-collapse navbar-ex1-collapse user-menu">
             <ul class="nav navbar-nav">
-                <li<?php $inPage == 'show' and print ' class="active"' ?>><?php echo link_to(show_icon('user').' '.__('Profile'), $user->getRawValue()->getLinkShow()) ?></li>
-                <li<?php $inPage == 'wall' and print ' class="active"' ?>><?php echo link_to(show_icon('wall').' '.__('Wall'), '@wall_user?user='.$user->getUsername()) ?></li>
-                <li<?php $inPage == 'biography' and print ' class="active"' ?>><?php echo link_to(show_icon('biography').' '.__('Biography'), '@biography_user?user='.$user->getUsername()) ?></li>
-                <li<?php $inPage == 'event' and print ' class="active"' ?>><?php echo link_to(show_icon('event').' '.__('Events'), '@image_user?user='.$user->getUsername()) ?></li>
-                <li<?php $inPage == 'image' and print ' class="active"' ?>><?php echo link_to(show_icon('image').' '.__('Images'), '@image_user?user='.$user->getUsername()) ?></li>
-                <li<?php $inPage == 'disc' and print ' class="active"' ?>><?php echo link_to(show_icon('disc').' '.__('Discs'), '@disc_user?user='.$user->getUsername()) ?></li>
+                <li<?php $inPage == 'show' and print ' class="active"' ?>><?php echo link_to(icon('user').' '.__('Profile'), $user->getRawValue()->getLinkShow()) ?></li>
+                <li<?php $inPage == 'wall' and print ' class="active"' ?>><?php echo link_to(icon('wall').' '.__('Wall'), '@wall_user?user='.$user->getUsername()) ?></li>
+                <li<?php $inPage == 'biography' and print ' class="active"' ?>><?php echo link_to(icon('biography').' '.__('Biography'), '@biography_user?user='.$user->getUsername()) ?></li>
+                <li<?php $inPage == 'event' and print ' class="active"' ?>><?php echo link_to(icon('event').' '.__('Events'), '@image_user?user='.$user->getUsername()) ?></li>
+                <li<?php $inPage == 'image' and print ' class="active"' ?>><?php echo link_to(icon('image').' '.__('Images'), '@image_user?user='.$user->getUsername()) ?></li>
+                <li<?php $inPage == 'disc' and print ' class="active"' ?>><?php echo link_to(icon('disc').' '.__('Discs'), '@disc_user?user='.$user->getUsername()) ?></li>
             </ul>
             <ul class="nav nav navbar-nav pull-right">
                 <li class="dropdown<?php in_array($inPage, array('fan', 'education')) and print ' active' ?>">
             <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><?php echo __('More') ?> <b class="caret"></b></a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                <li><?php echo link_to(show_icon('fan').' '.__('Fans'), '@fan_user?user='.$user->getUsername()) ?></li>
+                <li><?php echo link_to(icon('fan').' '.__('Fans'), '@fan_user?user='.$user->getUsername()) ?></li>
               <li role="presentation" class="divider"></li>
-                <li><?php echo link_to(show_icon('work').' '.__('Work and education'), '@work_education_user?user='.$user->getUsername()) ?></li>
+                <li><?php echo link_to(icon('work').' '.__('Work and education'), '@work_education_user?user='.$user->getUsername()) ?></li>
             </ul>
           </li>
             </ul>

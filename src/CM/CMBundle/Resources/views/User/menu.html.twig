@@ -1,7 +1,7 @@
 <li class="dropdown menu-tab{% if inMessagePage %} active{% endif %}">
     
     <a href="{{ path('message_index') }}" id="menu-messages" class="dropdown-toggle" data-toggle="dropdown">
-        {{ show_icon('Message')|raw }}
+        {{ icon('Message')|raw }}
         <span class="countNew" id="requestsCounter">{% if fos_message_nb_unread() > 0 %}{{ fos_message_nb_unread() }}{% endif %}</span>
     </a>
     
@@ -23,7 +23,7 @@
 </li><li class="dropdown menu-tab{% if inRequestPage %} active{% endif %}">
     
     <a href="{{ path('request_index') }}" id="menu-requests" class="dropdown-toggle" data-toggle="dropdown">
-        {{ show_icon('Request')|raw }}
+        {{ icon('Request')|raw }}
         <span class="countNew" id="requestsCounter">{% if newRequests > 0 %}{{ newRequests }}{% endif %}</span>
     </a>
     
@@ -47,7 +47,7 @@
 <li class="dropdown menu-tab{% if inNotificationPage %} active{% endif %}">
 	
 	<a href="{{ path('user_notifications') }}" id="menu-notifications" class="dropdown-toggle" data-toggle="dropdown">
-        {{ show_icon('Notification')|raw }}</span>
+        {{ icon('Notification')|raw }}</span>
 		<span class="countNew" id="notificationsCounter">{% if newNotifications > 0 %}{{ newNotifications }}{% endif %}</span>
 	</a>
 	

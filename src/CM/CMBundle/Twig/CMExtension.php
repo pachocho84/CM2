@@ -81,7 +81,7 @@ class CMExtension extends \Twig_Extension
             'notification_tag' => new \Twig_Function_Method($this, 'getNotificationTag', array('is_safe' => array('html'))),
             'entity_short_text' => new \Twig_Function_Method($this, 'getEntityShortText', array('is_safe' => array('html'))),
             'post_text' => new \Twig_Function_Method($this, 'getPostText', array('is_safe' => array('html'))),
-            'show_icon' => new \Twig_Function_Method($this, 'getShowIcon', array('is_safe' => array('html'))),
+            'icon' => new \Twig_Function_Method($this, 'getIcon', array('is_safe' => array('html'))),
             'tooltip' => new \Twig_Function_Method($this, 'getTooltip', array('is_safe' => array('html'))),
         );
     }
@@ -789,7 +789,7 @@ class CMExtension extends \Twig_Extension
         }
     }
 
-    function getShowIcon($object)
+    function getIcon($object)
     {
         switch ($object) {
             case 'Up':

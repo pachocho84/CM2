@@ -7,7 +7,7 @@
             <div class="media-body ajax-link-target">
                 {{ notification_tag(notification) | raw }}
                 {#<?php echo $notification->getRawValue()->getText() ?>#}
-                <p class="text-muted">{#<?php echo show_icon($notification->getType()) ?>#} <small>{{ notification.createdAt | format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</small></p>
+                <p class="text-muted">{#<?php echo icon($notification->getType()) ?>#} <small>{{ notification.createdAt | format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</small></p>
             </div> 
         </li>
     {% endfor %}

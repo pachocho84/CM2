@@ -1,8 +1,8 @@
 <div class="col-lg-7 text-right">
     <div class="btn-group btn-group-sm">
-        <a href="{{ path('article_index') }}" class="{{ app.request.attributes.get('_route') == 'article_index' ? 'btn btn-default active' : 'btn btn-default'}}">{{ show_icon('List')|raw }} {{ 'List'|trans }}</a>
+        <a href="{{ path('article_index') }}" class="{{ app.request.attributes.get('_route') == 'article_index' ? 'btn btn-default active' : 'btn btn-default'}}">{{ icon('List')|raw }} {{ 'List'|trans }}</a>
         <div class="btn-group btn-group-sm">
-            <a href="{{ path('article_index') }}" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{ show_icon('Tag')|raw }} {{ 'Categories'|trans }} <b class="caret"></b></a>
+            <a href="{{ path('article_index') }}" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{ icon('Tag')|raw }} {{ 'Categories'|trans }} <b class="caret"></b></a>
             <ul class="dropdown-menu pull-right text-left" role="menu" aria-labelledby="dropdownMenu">
                 <li><a href="{{ path('article_index') }}">{{ 'Articles'|trans }}</a></li>
                 <li class="divider"></li>
@@ -11,6 +11,6 @@
                 {% endfor %}
             </ul>
         </div>
-        <a href="{{ path('article_new') }}" class="{{ app.request.attributes.get('_route') == 'article_new' ? 'btn btn-default active' : 'btn btn-default'}}">{{ show_icon('Plus')|raw }} {{ 'Create' | trans }}</a>
+        <a href="{{ path('article_new') }}" class="{{ app.request.attributes.get('_route') == 'article_new' ? 'btn btn-default active' : 'btn btn-default'}}">{{ icon('Plus')|raw }} {{ 'Create' | trans }}</a>
     </div>
 </div>
