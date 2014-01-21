@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
+use CM\CMBundle\Entity\Multimedia;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Like;
 use CM\CMBundle\Entity\User;
@@ -87,6 +88,13 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
     private $images = array('bb01acb97854b24ed23598bd4f055eba.jpeg', 'ff9398d3d47436e2b4f72874a2c766fd.jpeg');
 
+    private $urls = array(
+        'https://youtu.be/yVpbFMhOAwE',
+        'http://vimeo.com/57815442',
+        'https://soundcloud.com/aleksander-vinter/sheep-heavy-metal',
+        
+    );
+
     /**
      * {@inheritDoc}
      */
@@ -151,7 +159,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             $userNum = rand(1, 8);
             $user = $manager->merge($this->getReference('user-'.$userNum));
 
-            if (rand(0, 4) > 0) {
+            if (rand(0, 8) > 0) {
                 $image = new Image;
                 $image
                     ->setImg($this->events[$eventNum]['img'])
@@ -170,7 +178,36 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                     
                     $event->addImage($image);
                 }
-    
+            }
+
+            for ($j = 0; $j < rand(0, 8); $j++) {
+                $url = $this->urls[rand(0, 2)];
+                switch (substr(preg_split('/(www|m)\./', parse_url($url, PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
+                    case 'yout':
+                        $info = json_decode(file_get_contents('http://www.youtube.com/oembed?format=json&url='.urlencode($url)));
+                        $type = Multimedia::TYPE_YOUTUBE;
+                        $link = preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info->html);
+                        $info = json_decode(file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$link.'?v=2&alt=jsonc'))->data;
+                        break;
+                    case 'vime':
+                        $info = json_decode(file_get_contents('http://vimeo.com/api/oembed.json?url='.urlencode($url)));
+                        $type = Multimedia::TYPE_VIMEO;
+                        $link = $info->video_id;
+                        break;
+                    case 'soun':
+                        $info = json_decode(file_get_contents('http://soundcloud.com/oembed.json?url='.urlencode($url)));
+                        $type = Multimedia::TYPE_SOUNDCLOUD;
+                        $link = preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info->html);
+                        break;
+                }
+
+                $multimedia = new Multimedia;
+                $multimedia->setType($type);
+                $multimedia->setLink($link);
+                $multimedia->setTitle($info->title)
+                    ->setText($info->description);
+
+                $event->addMultimedia($multimedia);
             }
             
             $category = $manager->merge($this->getReference('event_category-'.rand(1, 3)));

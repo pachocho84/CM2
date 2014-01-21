@@ -135,7 +135,7 @@ class ImageAlbumController extends Controller
     }
 
     /**
-     * @Route("/albums/addImage/{id}", name="imagealbum_add_image", requirements={"id" = "\d+"})
+     * @Route("/albums/image/{id}/add", name="imagealbum_add_image", requirements={"id" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template("CMBundle:ImageAlbum:singleImage.html.twig")
      */

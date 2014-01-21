@@ -56,6 +56,12 @@ abstract class Entity
      * @Assert\Valid
      */
     private $images;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Multimedia", mappedBy="entity", cascade={"persist", "remove"})
+     * @Assert\Valid
+     */
+    private $multimedia;
 
     /**
      * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity", cascade={"persist", "remove"})
@@ -66,6 +72,7 @@ abstract class Entity
     public function __construct()
     {
         $this->images = new ArrayCollection();
+        $this->multimedia = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->entityUsers = new ArrayCollection();
         $this->requests = new ArrayCollection();
@@ -149,6 +156,36 @@ abstract class Entity
     public function getImages()
     {
         return $this->images;
+    }
+
+    /**
+     * @param Multimedia $multimedia
+     * @return Entity
+     */
+    public function addMultimedia(Multimedia $multimedia)
+    {
+        if (!$this->multimedia->contains($multimedia)) {
+            $this->multimedia[] = $multimedia;
+            $multimedia->setEntity($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param Multimedia $multimedia
+     */
+    public function removeMultimedia(Multimedia $multimedia)
+    {
+        $this->multimedia->removeElement($multimedia);
+    }
+
+    /**
+     * @return ArrayCollection 
+     */
+    public function getMultimedias()
+    {
+        return $this->multimedia;
     }
 
     public function getPost()
