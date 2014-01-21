@@ -69,11 +69,13 @@
 
 
 /* ENTITIES */
-.entity-images {
+.entity-assets {
     padding: 15px 10px;
 /*     margin: 0 -5px; */
 }
-.entity-images a {
+.entity-assets .entity-asset {
+    box-sizing: content-box;
+    float: left;
     padding: 0 5px;
 }
 /* event */

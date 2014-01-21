@@ -20,6 +20,19 @@ Browse: Sfoglia
 Make admin: Rendi amministratore
 click to expand: clicca per espandere
 Save: Salva
+Details: Dettagli
+Show: Mostra
+Show all (%count%): Mostra tutto (%count%)
+Hide: Nascondi
+
+# DAYS
+sunday: domenica
+monday: lunedì
+tuesday: martedì
+wednesday: mercoledì
+thursday: giovedì
+friday: venerdì
+saturday: sabato
 
 # USER
 
@@ -40,14 +53,9 @@ This element will be automatically added to %user%'s profile due to his group se
 %user% will recive a request to add this element to his profile.: %user% riceverà una richiesta per aggiungere questo elemento al suo profilo.
 This element will appear on your profile.: Questo elemento comparirà sul tuo profilo.
 
-# DATE
-sunday: domenica
-monday: lunedì
-tuesday: martedì
-wednesday: mercoledì
-thursday: giovedì
-friday: venerdì
-saturday: sabato
+# ENTITY
+View all photos: Guarda tutte le foto
+View all multimedia: Guarda tutti i multimedia
 
 # EVENT
 Events: Eventi
@@ -58,6 +66,12 @@ Sponsored Events: Eventi Sponsorizzati
 Add event: Aggiungi evento
 Add date: Aggiungi data
 Delete date: Rimuovi data
+Event photos: Foto dell'evento
+Event multimedia: Multimedia dell'evento
+Event dates: Date dell'evento
+Next dates: Prossime date
+Past dates: Date passate
+Get directions: Indicazioni stradali
 
 # DISC
 Discs: Dischi
@@ -93,3 +107,4 @@ You like this.: Ti piace.
 # COMMENT
 Comment: Commenta
 Comments: Commenti
+View all %count% comments: Mostra tutti e %count% i commenti

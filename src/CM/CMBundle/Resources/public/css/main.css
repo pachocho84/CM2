@@ -495,15 +495,6 @@ form .panel-group .panel {
     vertical-align: baseline;
     font-size: 12px;
 }
-.box .box-heading .box-collapser .glyphicon.glyphicon-folder-close {
-    margin-right: 3px;
-}
-.box .box-heading .box-collapser .glyphicon.glyphicon-folder-close:before {
-    content: "\e118";
-}
-.box .box-heading .box-collapser.collapsed .glyphicon.glyphicon-folder-close:before {
-    content: "\e117";
-}
 .box .box-heading h2 small {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 12px;

@@ -144,6 +144,8 @@ class EventController extends Controller
         
 /*         $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale(), 'protagonists' => true)); */
         $event = $em->getRepository('CMBundle:Event')->findOneById($id);
+        $event->setEntityUsers($em->getRepository('CMBundle:EntityUser')->getActiveForEntity($id));
+        
         $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
 
         $images = new ArrayCollection();
@@ -172,7 +174,12 @@ class EventController extends Controller
             $req = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('entityId' => $event->getId()));
         }
         
-        return array('event' => $event, 'request' => $req, 'tags' => $tags, 'form' => $form->createView());
+        return array(
+            'event' => $event,
+            'request' => $req,
+            'tags' => $tags,
+            'form' => $form->createView()
+        );
     }
     
     /**

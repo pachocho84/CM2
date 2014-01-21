@@ -179,6 +179,15 @@ $(function() {
     
     
     
+    /* CHANGE TEXT */
+    $('body').on('click', '[text-alt]', function(event) {
+        previousText = $(event.currentTarget).html();
+        $(event.currentTarget).html($(event.currentTarget).attr('text-alt'));
+        $(event.currentTarget).attr('text-alt', previousText);
+    });
+    
+    
+    
     /* LIKE */
     $('body').on('click', '.iLikeIt', function(event) {
         event.preventDefault();

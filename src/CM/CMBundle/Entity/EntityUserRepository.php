@@ -12,6 +12,15 @@ use Doctrine\ORM\EntityRepository as BaseRepository;
  */
 class EntityUserRepository extends BaseRepository
 {
+    public function getActiveForEntity($entityId) {
+        return $this->createQueryBuilder('eu')
+            ->select('eu, u')
+            ->leftJoin('eu.user', 'u')
+            ->andWhere('eu.status = :status')->setParameter('status', EntityUser::STATUS_ACTIVE)
+            ->andWhere('eu.entityId = :entity_id')->setParameter('entity_id', $entityId)
+            ->getQuery()->getResult();
+    }
+    
     public function delete($userId, $entityId)
     {
         $this->createQueryBuilder('eu')

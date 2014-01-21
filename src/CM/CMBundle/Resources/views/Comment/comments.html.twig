@@ -1,6 +1,6 @@
 {% if comments | length > 0 %}
     {% if comments | length > 3 %}
-        <li><a href="{# {{ path('post_show', {'post_id': post.id}) }} #}" class="comments-show_all">{{ 'View all %comments% comments' | trans({'%comments%': comments | length }) }}</a></li>
+        <li><a href="{# {{ path('post_show', {'post_id': post.id}) }} #}" class="comments-show_all">{{ 'View all %count% comments' | trans({'%count%': comments | length }) }}</a></li>
     {% endif %}
 
     {% for comment in comments %}

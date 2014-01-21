@@ -30,7 +30,7 @@
         {% if event.getImages|length > 1 %}
             <div class="box-body clearfix">
                 <div class="media object">
-                    <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}" class="pull-left img-thumbnail"><img src="{{ event.getImages[0].img|imagine_filter('350') }}" width=200 /></a>
+                    <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}" class="pull-left"><img src="{{ event.getImages[0].img|imagine_filter('350') }}" width=200 /></a>
                     <div>
                         <div class="text-justify">{{ event.getText|raw }}</div>
                     </div>
@@ -44,9 +44,10 @@
             <div class="box-heading">
                 <h2>{{ icon('Photo') }} {{ 'Event photos'|trans }} <small><a href="{{ path('user_album', {'slug': event.post.user.slug, 'id': event.id}) }}">{{ 'View all photos'|trans }} ({{ event.getImages|length }})</a></small></h2>
             </div>
-            <div class="clearfix entity-images">
+            <div class="clearfix entity-assets">
+                {#{% for image in event.getImages.toArray|merge(event.getImages.toArray|merge(event.getImages.toArray)) %}{#}
                 {% for image in event.getImages[:5] %}
-                    {{ show_img_box(image.img|imagine_filter('350'), {width: 144, height: 144, link: path('user_image', {slug: event.post.user.slug, id: image.id}), link_attributes: {class: 'pull-left'}}) }}
+                    {{ show_img_box(image.img|imagine_filter('350'), {width: 144, height: 144, link: path('user_image', {slug: event.post.user.slug, id: image.id}), link_attributes: {class: 'pull-left entity-asset'}}) }}
                 {% endfor %}
             </div>
         </div>
@@ -57,15 +58,16 @@
             <div class="box-heading">
                 <h2>{{ icon('Multimedia') }} {{ 'Event multimedia'|trans }} <small><a href="{#{{ path('user_album', {'slug': event.post.user.slug, 'id': event.id}) }}#}">{{ 'View all multimedia'|trans }} ({{ event.getMultimedia|length }})</a></small></h2>
             </div>
-            <div class="clearfix entity-images">
+            <div class="clearfix entity-assets">
+                {#{% for multimedia in event.getMultimedia.toArray|merge(event.getMultimedia.toArray|merge(event.getMultimedia.toArray)) %}{#}
                 {% for multimedia in event.getMultimedia[:5] %}
                     {% if multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_YOUTUBE') %}
-                        <img width="144px" height="144px" src="http://img.youtube.com/vi/{{ multimedia.link }}/0.jpg" youtube-video-link="{{ multimedia.link }}" />
+                        <img width="144px" height="144px" src="http://img.youtube.com/vi/{{ multimedia.link }}/0.jpg" youtube-video-link="{{ multimedia.link }}" class="entity-asset" />
                         {#<iframe width="144px" height="144px" src="//www.youtube.com/embed/{{ multimedia.link }}" frameborder="0" allowfullscreen></iframe>#}
                     {% elseif multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_VIMEO') %}
-                        <iframe src="//player.vimeo.com/video/{{ multimedia.link }}?color=040505" width="144px" height="144px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                        <iframe src="//player.vimeo.com/video/{{ multimedia.link }}?color=040505" width="144px" height="144px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen class="entity-asset"></iframe>
                     {% elseif multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_SOUNDCLOUD') %}
-                        <iframe width="144px" height="144px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{{ multimedia.link }}&amp;color=000000&amp;auto_play=false&amp;show_artwork=true"></iframe>
+                        <iframe width="144px" height="144px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{{ multimedia.link }}&amp;color=000000&amp;auto_play=false&amp;show_artwork=true" class="entity-asset"></iframe>
                     {% endif %}
                 {% endfor %}
             </div>
@@ -89,13 +91,24 @@
         </div>
         <div class="box-body">
             {% set dates = event.eventDates.toArray|merge(event.eventDates.toArray|merge(event.eventDates.toArray)) %}
-            {% for date in dates if date.start >= date('now') %}
+            {% set count = 0 %}
+            {% for key, date in dates if date.start >= date('now') %}
+                {% set count = loop.index %}
                 {% if loop.index == 2 %}
                     </div>
                     <div class="box-heading">
-                        <h3>{{ 'Next dates'|trans }}</h3>
+                        <h3>
+                            {{ 'Next dates'|trans }}
+                            {% if event.eventDates|length - key - 5 > 0 %}
+                                <small><a href="#event_date-next" class="pull-right box-collapser collapsed" data-toggle="collapse" data-parent="#event_dates" text-alt="{{ 'Hide'|trans }}">{{ 'Show all (%count%)'|trans({'%count%': event.eventDates|length - key}) }}</a></small>
+                            {% endif %}
+                        </h3>
                     </div>
                     <div class="box-body">
+                {% endif %}
+                {% if loop.index == 6 %}
+                    </div>
+                    <div id="event_date-next" class="box-body collapse">
                 {% endif %}
                 <div class="event_date object">
                     <p>
@@ -115,37 +128,40 @@
             {% endfor %}
         </div>
         
-        <div class="box-heading">
-            <h3>
-                {{ 'Passed dates'|trans }}
-                <small><a href="#event_date-passed" class="pull-right box-collapser collapsed" data-toggle="collapse" data-parent="#event_dates">{{ icon('Folder') }} {{ 'show'|trans }}</a></small>
-            </h3>
-        </div>
-        <div class="box-body collapse" id="event_date-passed">
-            {% for date in event.eventDates if date.start < date('now') %}
-                <div class="event_date object">
-                    <p>
-                        <a href="#event_date-passed-{{ loop.index }}" data-toggle="collapse" data-parent="#event_dates" class="text-muted collapsed">
-                            {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
-                            {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
-                        </a>
-                    </p>
-                    <div id="event_date-passed-{{ loop.index }}" class="event-date-map collapse">
-                        <p><span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span></p>
-                        <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=385x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
-                            <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
+        {% if event.eventDates|length - count > 0 %}
+            <div class="box-heading">
+                <h3>
+                    {{ 'Past dates'|trans }}
+                    <small><a href="#event_date-past" class="pull-right box-collapser collapsed" data-toggle="collapse" data-parent="#event_dates" text-alt="{{ 'Hide'|trans }}">{{ 'Show all (%count%)'|trans({'%count%': event.eventDates|length - count}) }}</a></small>
+                </h3>
+            </div>
+            <div class="box-body collapse" id="event_date-past">
+                {% for date in event.eventDates if date.start < date('now') %}
+                    <div class="event_date object">
+                        <p>
+                            <a href="#event_date-past-{{ loop.index }}" data-toggle="collapse" data-parent="#event_dates" class="text-muted collapsed">
+                                {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
+                                {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
+                            </a>
+                        </p>
+                        <div id="event_date-past-{{ loop.index }}" class="event-date-map collapse">
+                            <p><span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span></p>
+                            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=385x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
+                                <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
+    
     <div class="box">
         <div class="box-heading">
             <h2>{{ icon('Protagonist') }} {{ 'Protagonists'|trans }}</h2>
         </div>
         <div class="box-body">
             <ul class="media-list">
-                {% for protagonist in event.entityUsers[:3] if protagonist.status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_ACTIVE') %}
+                {% for protagonist in event.getEntityUsers[:5] %}
                     <li class="media">
                         {{ show_img_box(protagonist.user.img|imagine_filter('50'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'link_attributes': {'class': 'pull-left'}}) }}
                         <div class="media-body">
@@ -158,9 +174,9 @@
                     </li>
                 {% endfor %}
             </ul>
-            {% if event.entityUsers|length > 3 %}
+            {% if event.getEntityUsers|length > 5 %}
                 <ul id="event_protagonists-more" class="media-list collapse">
-                    {% for protagonist in event.entityUsers[3:] if protagonist.status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_ACTIVE') %}
+                    {% for protagonist in event.getEntityUsers[5:] %}
                         <li class="media">
                             {{ show_img_box(protagonist.user.img|imagine_filter('50'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'link_attributes': {'class': 'pull-left'}}) }}
                             <div class="media-body">
@@ -174,7 +190,7 @@
                     {% endfor %}
                 </ul>
                 <p class="text-center">
-                    <small><a href="#event_protagonists-more" data-toggle="collapse" data-parent="#event_dates" class="text-muted collapsed">{{ 'Show all %count%'|trans({'%count%': event.entityUsers|length - 5})}}</a></small>
+                    <small><a href="#event_protagonists-more" data-toggle="collapse" data-parent="#event_dates" class="text-muted collapsed" text-alt="{{ 'Hide'|trans }}">{{ 'Show all (%count%)'|trans({'%count%': event.getEntityUsers|length}) }}</a></small>
                 </p>
             {% endif %}
         </div>

@@ -183,7 +183,7 @@ abstract class Entity
     /**
      * @return ArrayCollection 
      */
-    public function getMultimedias()
+    public function getMultimedia()
     {
         return $this->multimedia;
     }
@@ -292,9 +292,9 @@ abstract class Entity
     /**
      * @param EntityUser $users
      */
-    public function setEntityUsers(ArrayCollection $entityUser)
+    public function setEntityUsers($entityUsers)
     {
-        $this->entityUsers = $entityUsers;
+        $this->entityUsers = new ArrayCollection($entityUsers);
     }
 
     /**
