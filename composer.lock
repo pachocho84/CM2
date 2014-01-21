@@ -359,12 +359,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/data-fixtures.git",
-                "reference": "4a81be009d8437326acfcdd68888d1c5b8e2fb40"
+                "reference": "dfc0dc9a3f6258c878768218fe49cc092ea8a8d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/data-fixtures/zipball/4a81be009d8437326acfcdd68888d1c5b8e2fb40",
-                "reference": "4a81be009d8437326acfcdd68888d1c5b8e2fb40",
+                "url": "https://api.github.com/repos/doctrine/data-fixtures/zipball/dfc0dc9a3f6258c878768218fe49cc092ea8a8d1",
+                "reference": "dfc0dc9a3f6258c878768218fe49cc092ea8a8d1",
                 "shasum": ""
             },
             "require": {
@@ -398,8 +398,7 @@
                 {
                     "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/",
-                    "role": "Creator"
+                    "homepage": "http://www.jwage.com/"
                 }
             ],
             "description": "Data Fixtures for all Doctrine Object Managers",
@@ -407,7 +406,7 @@
             "keywords": [
                 "database"
             ],
-            "time": "2013-12-02 21:23:23"
+            "time": "2013-10-16 14:26:38"
         },
         {
             "name": "doctrine/dbal",
@@ -607,12 +606,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineMigrationsBundle.git",
-                "reference": "10fb83cf27c23e2eff148dcbac105532ad75ce83"
+                "reference": "65bdcc9510c77c02f548e8da425826422ee4becf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/10fb83cf27c23e2eff148dcbac105532ad75ce83",
-                "reference": "10fb83cf27c23e2eff148dcbac105532ad75ce83",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/65bdcc9510c77c02f548e8da425826422ee4becf",
+                "reference": "65bdcc9510c77c02f548e8da425826422ee4becf",
                 "shasum": ""
             },
             "require": {
@@ -657,7 +656,7 @@
                 "migrations",
                 "schema"
             ],
-            "time": "2013-11-24 10:00:31"
+            "time": "2013-10-24 10:22:11"
         },
         {
             "name": "doctrine/inflector",
@@ -780,12 +779,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "ce2ffa17a642267d48b9df6c5eba94e9d773e22f"
+                "reference": "37aacdae6507faad03c3df1624e7d3a6e6c1b388"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/ce2ffa17a642267d48b9df6c5eba94e9d773e22f",
-                "reference": "ce2ffa17a642267d48b9df6c5eba94e9d773e22f",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/37aacdae6507faad03c3df1624e7d3a6e6c1b388",
+                "reference": "37aacdae6507faad03c3df1624e7d3a6e6c1b388",
                 "shasum": ""
             },
             "require": {
@@ -832,7 +831,7 @@
                 "database",
                 "migrations"
             ],
-            "time": "2013-12-03 00:28:34"
+            "time": "2013-11-10 05:33:50"
         },
         {
             "name": "doctrine/orm",
@@ -972,12 +971,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSUserBundle.git",
-                "reference": "6596b9d754b6cb094e10470967ed7b51e2aa9e12"
+                "reference": "e543600e49216765315610b6281349ee86dfe87e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/6596b9d754b6cb094e10470967ed7b51e2aa9e12",
-                "reference": "6596b9d754b6cb094e10470967ed7b51e2aa9e12",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/e543600e49216765315610b6281349ee86dfe87e",
+                "reference": "e543600e49216765315610b6281349ee86dfe87e",
                 "shasum": ""
             },
             "require": {
@@ -1032,7 +1031,7 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2013-12-16 16:36:36"
+            "time": "2013-11-07 03:54:10"
         },
         {
             "name": "imagine/imagine",
@@ -1553,12 +1552,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/DoctrineBehaviors.git",
-                "reference": "55a0ab1b01631b37d6103a7a8ad6e3add4bfb148"
+                "reference": "759a9399e9c03542605810b76324c4692ad30893"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/DoctrineBehaviors/zipball/55a0ab1b01631b37d6103a7a8ad6e3add4bfb148",
-                "reference": "55a0ab1b01631b37d6103a7a8ad6e3add4bfb148",
+                "url": "https://api.github.com/repos/KnpLabs/DoctrineBehaviors/zipball/759a9399e9c03542605810b76324c4692ad30893",
+                "reference": "759a9399e9c03542605810b76324c4692ad30893",
                 "shasum": ""
             },
             "require": {
@@ -1602,7 +1601,7 @@
                 "translatable",
                 "tree"
             ],
-            "time": "2013-11-20 12:07:50"
+            "time": "2013-09-16 09:39:07"
         },
         {
             "name": "knplabs/knp-components",
@@ -1785,12 +1784,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/KnpPaginatorBundle.git",
-                "reference": "5386aa8e79c8758f4b8ea3627623e54ba5c40845"
+                "reference": "769b83d01b3f76b011522599bd48e5e202d94ff4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/KnpPaginatorBundle/zipball/5386aa8e79c8758f4b8ea3627623e54ba5c40845",
-                "reference": "5386aa8e79c8758f4b8ea3627623e54ba5c40845",
+                "url": "https://api.github.com/repos/KnpLabs/KnpPaginatorBundle/zipball/769b83d01b3f76b011522599bd48e5e202d94ff4",
+                "reference": "769b83d01b3f76b011522599bd48e5e202d94ff4",
                 "shasum": ""
             },
             "require": {
@@ -1835,7 +1834,7 @@
                 "pagination",
                 "paginator"
             ],
-            "time": "2013-12-17 17:55:56"
+            "time": "2013-09-23 09:04:09"
         },
         {
             "name": "knplabs/knp-snappy",
@@ -2019,12 +2018,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/leafo/lessphp.git",
-                "reference": "33a82c3d65d8004872f2f560a4d35eca8b85762b"
+                "reference": "bc4f33b4bfc889018ebe53611050729641b82dc6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leafo/lessphp/zipball/33a82c3d65d8004872f2f560a4d35eca8b85762b",
-                "reference": "33a82c3d65d8004872f2f560a4d35eca8b85762b",
+                "url": "https://api.github.com/repos/leafo/lessphp/zipball/bc4f33b4bfc889018ebe53611050729641b82dc6",
+                "reference": "bc4f33b4bfc889018ebe53611050729641b82dc6",
                 "shasum": ""
             },
             "type": "library",
@@ -2052,7 +2051,7 @@
             ],
             "description": "lessphp is a compiler for LESS written in PHP.",
             "homepage": "http://leafo.net/lessphp/",
-            "time": "2013-12-05 20:49:10"
+            "time": "2013-10-17 16:23:00"
         },
         {
             "name": "liip/imagine-bundle",
@@ -2061,12 +2060,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/liip/LiipImagineBundle.git",
-                "reference": "66770454617f8281b00508d6cea89a3e8872c30e"
+                "reference": "61597fc20329ccce762b07c89f6ba2d8fa0f4c09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liip/LiipImagineBundle/zipball/66770454617f8281b00508d6cea89a3e8872c30e",
-                "reference": "66770454617f8281b00508d6cea89a3e8872c30e",
+                "url": "https://api.github.com/repos/liip/LiipImagineBundle/zipball/61597fc20329ccce762b07c89f6ba2d8fa0f4c09",
+                "reference": "61597fc20329ccce762b07c89f6ba2d8fa0f4c09",
                 "shasum": ""
             },
             "require": {
@@ -2107,7 +2106,7 @@
                 "image",
                 "imagine"
             ],
-            "time": "2013-12-05 10:26:20"
+            "time": "2013-11-11 13:41:33"
         },
         {
             "name": "monolog/monolog",
@@ -2411,12 +2410,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataAdminBundle.git",
-                "reference": "3ba0220a35a441da0a9fcab6bf2520d2e9d52a16"
+                "reference": "d7402590f87334f5bff49f9ec268d304c7d410c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataAdminBundle/zipball/3ba0220a35a441da0a9fcab6bf2520d2e9d52a16",
-                "reference": "3ba0220a35a441da0a9fcab6bf2520d2e9d52a16",
+                "url": "https://api.github.com/repos/sonata-project/SonataAdminBundle/zipball/d7402590f87334f5bff49f9ec268d304c7d410c0",
+                "reference": "d7402590f87334f5bff49f9ec268d304c7d410c0",
                 "shasum": ""
             },
             "require": {
@@ -2424,7 +2423,6 @@
                 "knplabs/knp-menu-bundle": "~1.1",
                 "sensio/generator-bundle": "~2.2",
                 "sonata-project/block-bundle": "~2.2,>=2.2.7",
-                "sonata-project/core-bundle": "~2.2@dev",
                 "sonata-project/exporter": "1.*",
                 "sonata-project/jquery-bundle": "1.8.*",
                 "symfony/class-loader": "~2.2",
@@ -2482,7 +2480,7 @@
                 "bootstrap",
                 "sonata"
             ],
-            "time": "2013-12-17 13:45:32"
+            "time": "2013-11-12 14:10:21"
         },
         {
             "name": "sonata-project/block-bundle",
@@ -2555,12 +2553,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataCoreBundle.git",
-                "reference": "e8bddae6acedd376fea658345891da97efe860fd"
+                "reference": "0c72b6b0212014c5b5e015b4bf3811bf42fb3728"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataCoreBundle/zipball/e8bddae6acedd376fea658345891da97efe860fd",
-                "reference": "e8bddae6acedd376fea658345891da97efe860fd",
+                "url": "https://api.github.com/repos/sonata-project/SonataCoreBundle/zipball/0c72b6b0212014c5b5e015b4bf3811bf42fb3728",
+                "reference": "0c72b6b0212014c5b5e015b4bf3811bf42fb3728",
                 "shasum": ""
             },
             "require": {
@@ -2604,7 +2602,7 @@
             "keywords": [
                 "sonata"
             ],
-            "time": "2013-12-17 13:45:05"
+            "time": "2014-01-09 14:35:33"
         },
         {
             "name": "sonata-project/doctrine-orm-admin-bundle",
@@ -2613,18 +2611,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataDoctrineORMAdminBundle.git",
-                "reference": "db0a852ca5c0de79c74ef8c1df578adb8c34d41b"
+                "reference": "0663803ca2e95fe23a038134e2e30fc7357bee5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataDoctrineORMAdminBundle/zipball/db0a852ca5c0de79c74ef8c1df578adb8c34d41b",
-                "reference": "db0a852ca5c0de79c74ef8c1df578adb8c34d41b",
+                "url": "https://api.github.com/repos/sonata-project/SonataDoctrineORMAdminBundle/zipball/0663803ca2e95fe23a038134e2e30fc7357bee5f",
+                "reference": "0663803ca2e95fe23a038134e2e30fc7357bee5f",
                 "shasum": ""
             },
             "require": {
                 "doctrine/orm": "~2.3",
-                "sonata-project/admin-bundle": "~2.2,>=2.2.2",
-                "sonata-project/core-bundle": "~2.2@dev",
+                "sonata-project/admin-bundle": ">=2.2.2",
                 "symfony/symfony": "~2.2"
             },
             "type": "symfony-bundle",
@@ -2662,7 +2659,7 @@
                 "generator",
                 "sonata"
             ],
-            "time": "2013-12-17 11:46:09"
+            "time": "2013-11-12 15:41:10"
         },
         {
             "name": "sonata-project/exporter",
@@ -3219,12 +3216,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "91fdd891000b1110c7585aab1156a3edea718567"
+                "reference": "c1c2a8e18867bfa1644928428c693b367a5617a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/91fdd891000b1110c7585aab1156a3edea718567",
-                "reference": "91fdd891000b1110c7585aab1156a3edea718567",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/c1c2a8e18867bfa1644928428c693b367a5617a1",
+                "reference": "c1c2a8e18867bfa1644928428c693b367a5617a1",
                 "shasum": ""
             },
             "type": "library",
@@ -3253,7 +3250,7 @@
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-12-18 06:49:55"
+            "time": "2013-11-11 22:44:40"
         },
         {
             "name": "twig/extensions",
