@@ -46,10 +46,12 @@ class EventRepository extends BaseRepository
             ->join('e.posts', 'p');
                     
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('d, e, t, i, p, l, c, u, lu, cu, pg, gr')
+            ->select('d, e, t, ec, ect, i, p, l, c, u, lu, cu, pg, gr')
             ->from('CMBundle:EventDate','d')
             ->join('d.event', 'e')
             ->leftJoin('e.translations', 't')
+            ->leftJoin('e.entityCategory', 'ec')
+            ->leftJoin('ec.translations', 'ect')
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
             ->innerJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
             ->leftJoin('e.entityUsers', 'eu', '', '', 'eu.userId')
@@ -61,7 +63,8 @@ class EventRepository extends BaseRepository
             ->leftJoin('c.user', 'cu')
             ->leftJoin('p.page', 'pg')
             ->leftJoin('p.group', 'gr')
-            ->where('t.locale in (:locales)');
+            ->andWhere('t.locale IN (:locales)')
+            ->andWhere('ect.locale IN (:locales)');
             
         if ($options['protagonists']) {
             $query->addSelect('eu, us');
@@ -126,13 +129,15 @@ class EventRepository extends BaseRepository
             ->getResult();
     }
 
-    public function getEvent($id, array $options = array())
+    public function getEventJoined($id, array $options = array())
     {
         $options = self::getOptions($options);
         
-        $query = $this->createQueryBuilder('e')->select('e, t, d, i, p, l, c, u, lu, cu, pg, gr, eu, us')
+        $query = $this->createQueryBuilder('e')->select('e, t, ec, ect, d, i, p, l, c, u, lu, cu, pg, gr, eu, us')
             ->leftJoin('e.eventDates', 'd')
             ->leftJoin('e.translations', 't')
+            ->leftJoin('e.entityCategory', 'ec')
+            ->leftJoin('ec.translations', 'ect')
             ->leftJoin('e.images', 'i');
         if ($options['mainImageOnly']) {
             $query->andHaving('i.main = '.true);
@@ -148,8 +153,31 @@ class EventRepository extends BaseRepository
             ->leftJoin('e.entityUsers', 'eu')
             ->leftJoin('eu.user', 'us')
             ->andWhere('e.id = :id')->setParameter('id', $id)
-            ->andWhere('t.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->andWhere('t.locale IN (:locales)')
+            ->andWhere('ect.locale IN (:locales)')
+            ->setParameter('locales', $options['locales'])
             ->orderBy('d.start', 'asc')
+            ->getQuery()
+            ->getSingleResult();
+    }
+    
+    public function getEvent($id, array $options = array())
+    {
+        $options = self::getOptions($options);
+        
+        return $this->createQueryBuilder('e')->select('e, t, ec, ect, i, p, u, pg, gr')
+            ->leftJoin('e.translations', 't')
+            ->leftJoin('e.entityCategory', 'ec')
+            ->leftJoin('ec.translations', 'ect')
+            ->leftJoin('e.images', 'i', 'with', 'i.main = '.true)
+            ->leftJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
+            ->leftJoin('p.user', 'u')
+            ->leftJoin('p.page', 'pg')
+            ->leftJoin('p.group', 'gr')
+            ->andWhere('e.id = :id')->setParameter('id', $id)
+            ->andWhere('t.locale IN (:locales)')
+            ->andWhere('ect.locale IN (:locales)')
+            ->setParameter('locales', $options['locales'])
             ->getQuery()
             ->getSingleResult();
     }

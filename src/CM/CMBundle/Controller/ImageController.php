@@ -25,6 +25,19 @@ use Symfony\Component\HttpFoundation\File\File;
 class ImageController extends Controller
 {
     /**
+     * @Route("/entity/{type}/{id}", name="image_entity", requirements={"id" = "\d+"}) 
+     * @Template
+     */
+    public function entityAction(Request $request, $id, $type)
+    {
+        return array(
+            'entityId' => $id,
+            'entityType' => $type,
+            'images' => $this->getDoctrine()->getManager()->getRepository('CMBundle:Image')->findBy(array('entityId' => $id), array('main' => 'desc', 'sequence' => 'asc'), 5)
+        );
+    }
+    
+    /**
      * @Route("/makeProfile/{id}", name="image_make_profile", requirements={"id" = "\d+"}) 
      * @JMS\Secure(roles="ROLE_USER")
      */

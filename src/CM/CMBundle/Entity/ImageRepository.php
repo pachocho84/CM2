@@ -154,6 +154,18 @@ class ImageRepository extends BaseRepository
         return $query->getQuery()->getSingleResult();
     }
 
+    public function getImageWithSocial($id)
+    {
+        return $this->createQueryBuilder('i')
+            ->select('i, c, cu, l, lu')
+            ->leftJoin('i.comments', 'c')
+            ->leftJoin('c.user', 'cu')
+            ->leftJoin('i.likes', 'l')
+            ->leftJoin('l.user', 'lu')
+            ->where('i.id = :id')->setParameter('id', $id)
+            ->getQuery()->getSingleResult();
+    }
+
     public function getImageWithComments($id)
     {
         return $this->createQueryBuilder('i')

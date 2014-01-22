@@ -179,6 +179,15 @@ $(function() {
     
     
     
+    /* CHANGE TEXT */
+    $('body').on('click', '[text-alt]', function(event) {
+        previousText = $(event.currentTarget).html();
+        $(event.currentTarget).html($(event.currentTarget).attr('text-alt'));
+        $(event.currentTarget).attr('text-alt', previousText);
+    });
+    
+    
+    
     /* LIKE */
     $('body').on('click', '.iLikeIt', function(event) {
         event.preventDefault();
@@ -313,6 +322,23 @@ $(function() {
 
     /* GMAPS */
 
+    // directions
+    $('body').on('click', '[gmap-directions]', function(event) {
+        coords = $(event.currentTarget).attr('href').match(/daddr=([\d\.]+),([\d\.]+)/);
+
+        if (coords != null) {
+            $.ajax({
+                url: 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&lang=' + culture + '&latlng=' + coords[1] + ',' + coords[2],
+                async: false
+            }).done(function(data) {
+                console.log(data);
+                if (data.status == 'OK') {
+                    $(event.currentTarget).attr('href', 'https://maps.google.com/maps?daddr=' + data.results[0].formatted_address);
+                }
+            });
+        }
+    });
+
     // map visualization
     // function initializeMap(canvas) {
     //     // canvas = $('[gmap-show]').get(index);
@@ -343,5 +369,15 @@ $(function() {
     // $(document).on('click', '[gmap-show]', function(event) {
     //     google.maps.event.trigger($(event.currentTarget).find('[gmap-show]'), 'resize');
     // });
-                            
+    
+    
+    
+    /* AJAX LOAD CONTROLLER */
+    $('[data-ajax-url]').each(function(i, elem) {
+        $.get($(this).attr('data-ajax-url'), function(data) {
+            data = $(data).hide();
+            $(elem).replaceWith(data);
+            $(data).fadeIn();
+        });
+    });                     
 });

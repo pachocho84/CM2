@@ -31,10 +31,24 @@ use CM\CMBundle\Form\ArticleType;
 use CM\CMBundle\Form\ImageCollectionType;
 
 /**
- * @Route("/protagonist")
+ * @Route("/protagonists")
  */
 class EntityUserController extends Controller
 {
+    /**
+     * @Route("/{id}", name="entityuser_protagonists", requirements={"id" = "\d+"})
+     * @Template
+     */
+    public function protagonistsAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+            
+        return array(
+    		'protagonists' => $em->getRepository('CMBundle:EntityUser')->getActiveForEntity($id),
+            'tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()))
+        );
+    }
+    
     /**
      * @Route("/add/{object}", name="entityuser_add")
      * @Route("/addGroup/{object}", name="entityuser_add_group")

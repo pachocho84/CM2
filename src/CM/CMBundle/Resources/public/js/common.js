@@ -369,5 +369,15 @@ $(function() {
     // $(document).on('click', '[gmap-show]', function(event) {
     //     google.maps.event.trigger($(event.currentTarget).find('[gmap-show]'), 'resize');
     // });
-                            
+    
+    
+    
+    /* AJAX LOAD CONTROLLER */
+    $('[data-ajax-url]').each(function(i, elem) {
+        $.get($(this).attr('data-ajax-url'), function(data) {
+            data = $(data).hide();
+            $(elem).replaceWith(data);
+            $(data).fadeIn();
+        });
+    });                     
 });

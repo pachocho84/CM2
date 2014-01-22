@@ -47,6 +47,19 @@ class MultimediaController extends Controller
             'multimedias' => $pagination
         );
     }
+    
+    /**
+     * @Route("/entity/{type}/{id}", name="multimedia_entity", requirements={"id" = "\d+"}) 
+     * @Template
+     */
+    public function entityAction(Request $request, $id, $type)
+    {
+        return array(
+            'entityId' => $id,
+            'entityType' => $type,
+            'multimedias' => $this->getDoctrine()->getManager()->getRepository('CMBundle:Multimedia')->findBy(array('entityId' => $id), array(), 5)
+        );
+    }
 
     /**
      * @Route("/new/{object}/{objectId}", name="multimedia_new", requirements={"objectId" = "\d+"})

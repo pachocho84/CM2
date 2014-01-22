@@ -40,6 +40,30 @@ class WallController extends Controller
 
         return array('posts' => $pagination);
     }
+    
+    /**
+     * @Route("/social/{id}", name="wall_social", requirements={"id" = "\d+"})
+     * @Template
+     */
+    public function socialAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $isImage = !is_null($request->get('image'));
+
+        if ($isImage) {
+            $post = $em->getRepository('CMBundle:Image')->getImageWithSocial($id);
+        } else {
+            $post = $em->getRepository('CMBundle:Post')->getPostWithSocial($id);
+        }
+        
+        return array(
+            'post' => $post,
+            'isImage' => $isImage,
+            'button' => $request->get('button'),
+            'selector' => $request->get('selector')
+        );
+    }
 
     /**
      * @Route("/{lastUpdated}/update", name="wall_index_update")
@@ -64,7 +88,7 @@ class WallController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $post = $em->getRepository('CMBundle:Post')->findOneById($postId);
+        $post = $em->getRepository('CMBundle:Post')->getPostWithSocial($postId);
 
         return array('post' => $post);
     }

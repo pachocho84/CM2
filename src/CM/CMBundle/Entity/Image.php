@@ -140,6 +140,52 @@ class Image
     {
         return $this->id;
     }
+    
+    public function getPublisher()
+    {
+        if ($this->getPage()) {
+            return $this->getPage();
+        } elseif ($this->getGroup()) {
+            return $this->getGroup();
+        } else {
+            return $this->getUser();
+        }
+    }
+    
+    public function getPublisherId()
+    {
+        if ($this->getPage()) {
+            return $this->getPageId();
+        } elseif ($this->getGroup()) {
+            return $this->getGroupId();
+        } else {
+            return $this->getUserId();
+        }
+    }
+    
+    public function getPublisherRoute()
+    {
+        if ($this->getPage()) {
+            return 'page';
+        } elseif ($this->getGroup()) {
+            return 'group';
+        } else {
+            return 'user';
+        }
+    }
+
+    public function getPublisherSex($type = 'he')
+    {
+        if (!is_null($this->getPageId()) || !is_null($this->getGroupId())) {
+            $sex = array('he' => 'it', 'his' => 'its', 'M' => '');
+        } elseif ($this->getUser()->getSex() == User::SEX_M) {
+            $sex = array('he' => 'he', 'his' => 'his', 'M' => 'M');
+        } else {
+            $sex = array('he' => 'she', 'his' => 'her', 'M' => 'F');
+        }
+
+        return $sex[$type];
+    }
 
     /**
      * Set main

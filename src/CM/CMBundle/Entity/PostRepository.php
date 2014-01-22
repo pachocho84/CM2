@@ -27,6 +27,18 @@ class PostRepository extends BaseRepository
         ), $options);
     }
 
+    public function getPostWithSocial($id)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p, c, cu, l, lu')
+            ->leftJoin('p.comments', 'c')
+            ->leftJoin('c.user', 'cu')
+            ->leftJoin('p.likes', 'l')
+            ->leftJoin('l.user', 'lu')
+            ->where('p.id = :id')->setParameter('id', $id)
+            ->getQuery()->getSingleResult();
+    }
+
     public function getEntity($entityId)
     {
         return $this->createQueryBuilder('p')

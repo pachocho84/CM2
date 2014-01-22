@@ -29,115 +29,36 @@
         <div class="box-heading">
             <h2>{{ icon('Info') }} {{ 'Details'|trans }}</h2>
         </div>
-        {% if event.getImages|length > 1 %}
-            <div class="box-body">
-                <div class="object">
-                    <p>
-                        {{ 'Created by'|trans }} <a href="{{ path('user_show', {'slug': event.post.user.slug}) }}" {{ user_box(event.post.user) }}>{{ event.post.user }}</a>
-                        &middot;
-                        TODO: Far vedere qui la categoria linkata alla pagina events per category
-                    </p>
-                </div>
-                <div class="media object">
-                    <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}" class="pull-left"><img src="{{ event.getImages[0].img|imagine_filter('350') }}" width=200 /></a>
-                    <div>
-                        <div class="text-justify">{{ event.getText|raw }}</div>
-                    </div>
+        <div class="box-body">
+            <div class="object">
+                <p>
+                    {{ "Created by %publisher%"|trans({'%publisher%': '<a ' ~ user_box(event.post.publisher) ~ ' href="'~path(event.post.publisherRoute ~ '_show', {'slug': event.post.publisher.slug})~'">'~event.post.publisher~'</a>'})|raw }}
+                    &middot;
+                    <a href="{{ path('event_category', { 'categorySlug': event.entityCategory.getSlug }) }}">{{ event.entityCategory|capitalize }}</a>
+                </p>
+            </div>
+            <div class="media object">
+                <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}" class="pull-left"><img src="{{ event.getImages[0].img|imagine_filter('350') }}" width=200 /></a>
+                <div>
+                    <div class="text-justify">{{ event.getText|raw }}</div>
                 </div>
             </div>
         </div>
     </div>
     
-    {% if event.getImages|length > 1 %}
-        <div class="box">
-            <div class="box-heading">
-                <h2>{{ icon('Photo') }} {{ 'Event photos'|trans }} <small><a href="{{ path('user_album', {'slug': event.post.user.slug, 'id': event.id}) }}">{{ 'View all photos'|trans }} ({{ event.getImages|length }})</a></small></h2>
-            </div>
-            <div class="clearfix entity-assets">
-                {##{% for image in event.getImages.toArray|merge(event.getImages.toArray|merge(event.getImages.toArray)) %}{#}
-                {% for image in event.getImages[:5] %}{##}
-                    {{ show_img_box(image.img|imagine_filter('350'), {width: 144, height: 144, link: path('user_image', {slug: event.post.user.slug, id: image.id}), link_attributes: {class: 'pull-left entity-asset'}}) }}
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
+    <div data-ajax-url="{{ path('image_entity', {id: event.id, type: event|class_name}) }}"></div>
     
-    {% if event.getMultimedia|length > 1 %}
-        <div class="box">
-            <div class="box-heading">
-                <h2>{{ icon('Multimedia') }} {{ 'Event multimedia'|trans }} <small><a href="{#{{ path('user_album', {'slug': event.post.user.slug, 'id': event.id}) }}#}">{{ 'View all multimedia'|trans }} ({{ event.getMultimedia|length }})</a></small></h2>
-            </div>
-            <div class="clearfix entity-assets">
-                {#{% for multimedia in event.getMultimedia.toArray|merge(event.getMultimedia.toArray|merge(event.getMultimedia.toArray)) %}{#}
-                {% for multimedia in event.getMultimedia[:5] %}
-                    {% if multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_YOUTUBE') %}
-                        <img width="144px" height="144px" src="http://img.youtube.com/vi/{{ multimedia.link }}/0.jpg" youtube-video-link="{{ multimedia.link }}" class="entity-asset" />
-                        {#<iframe width="144px" height="144px" src="//www.youtube.com/embed/{{ multimedia.link }}" frameborder="0" allowfullscreen></iframe>#}
-                    {% elseif multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_VIMEO') %}
-                        <iframe src="//player.vimeo.com/video/{{ multimedia.link }}?color=040505" width="144px" height="144px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen class="entity-asset"></iframe>
-                    {% elseif multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_SOUNDCLOUD') %}
-                        <iframe width="144px" height="144px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{{ multimedia.link }}&amp;color=000000&amp;auto_play=false&amp;show_artwork=true" class="entity-asset"></iframe>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
+    <div data-ajax-url="{{ path('multimedia_entity', {id: event.id, type: event|class_name}) }}"></div>
     
-    <div class="box">
-        <div class="box-heading">
-            <h2>{{ icon('Comment') }} {{ 'Social'|trans }}</h2>
-        </div>
-        <div id="social" class="box-body object">
-            {{ include('CMBundle::social.html.twig', {post: event.post, selector: '#social'}) }}
-        </div>
-    </div>
+    <div data-ajax-url="{{ path('wall_social', {id: event.post.id, selector: '#social'}) }}"></div>
 {% endblock %}
 
 
 
 {% block sidebar %}
-	{{ render(controller('CMBundle:Event:dates', { 'id': event.id })) }}
+    <div data-ajax-url="{{ path('event_dates', {id: event.id}) }}"></div>
     
-    <div class="box">
-        <div class="box-heading">
-            <h2>{{ icon('Protagonist') }} {{ 'Protagonists'|trans }}</h2>
-        </div>
-        <div class="box-body">
-            <ul class="media-list">
-                {% for protagonist in event.getEntityUsers[:5] %}
-                    <li class="media">
-                        {{ show_img_box(protagonist.user.img|imagine_filter('50'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'link_attributes': {'class': 'pull-left'}}) }}
-                        <div class="media-body">
-                            <small><a href="{{ path('user_show', {'slug': protagonist.user.slug}) }}" {{ user_box(protagonist.user) }}>{{ protagonist.user }}</a></small><br/>
-                            
-                            <small class="text-muted" {{ tooltip(protagonist.userTags, {closure: '$a[0][$v]', args: [tags], limit: 3}) }}>
-                                {% for userTag in protagonist.userTags[:3] %}{{ tags[userTag] }}{% if not loop.last %}, {% endif %}{% if loop.last and loop.index < protagonist.userTags|length %}...{% endif %}{% endfor %}
-                            </small>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
-            {% if event.getEntityUsers|length > 5 %}
-                <ul id="event_protagonists-more" class="media-list collapse">
-                    {% for protagonist in event.getEntityUsers[5:] %}
-                        <li class="media">
-                            {{ show_img_box(protagonist.user.img|imagine_filter('50'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'link_attributes': {'class': 'pull-left'}}) }}
-                            <div class="media-body">
-                                <small><a href="{{ path('user_show', {'slug': protagonist.user.slug}) }}" {{ user_box(protagonist.user) }}>{{ protagonist.user }}</a></small><br/>
-                                
-                                <small class="text-muted" {{ tooltip(protagonist.userTags, {closure: '$a[0][$v]', args: [tags], limit: 3}) }}>
-                                    {% for userTag in protagonist.userTags[:3] %}{{ tags[userTag] }}{% if not loop.last %}, {% endif %}{% if loop.last and loop.index < protagonist.userTags|length %}...{% endif %}{% endfor %}
-                                </small>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-                <p class="text-center">
-                    <small><a href="#event_protagonists-more" data-toggle="collapse" data-parent="#event-dates" class="text-muted collapsed" text-alt="{{ 'Hide'|trans }}">{{ 'Show all (%count%)'|trans({'%count%': event.getEntityUsers|length}) }}</a></small>
-                </p>
-            {% endif %}
-        </div>
-    </div>
+    <div data-ajax-url="{{ path('entityuser_protagonists', {id: event.id}) }}"></div>
 {% endblock %}
 
 {% block javascripts %}

@@ -41,6 +41,7 @@ $(function() {
             target = callback.replace(/USER_ID/, datum.id).replace(/NEW_ID/, protagonist_new_id).replace(/ENTITY_TYPE/, $('#protagonists').attr('object'));
             $.get(target, function (data) {
                 $('.protagonists_user:last').after(data);
+                $('.protagonists_user:last').trigger('protagonist-added');
             });
         }
         $('#protagonists_finder').typeahead('setQuery', '');
@@ -162,7 +163,7 @@ $(function() {
             infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
             $(canvas).parent().parent().parent().find('[address-autocomplete]').val(address);
             $(canvas).parent().parent().parent().find('[places-autocomplete]').val(place.name);
-            $(canvas).parent().parent().parent().find('[address-coordinates]').val(place.geometry.location);
+            $(canvas).parent().parent().parent().find('[address-coordinates]').val(place.geometry.location.lat() + ',' + place.geometry.location.lng());
             infowindow.open(map, marker);
         });
     }
@@ -365,26 +366,37 @@ $(function() {
 
     /* TINY-MCE */
 
-    tinymce.baseURL = '/lib/tinymce';
-    tinymce.suffix = '.min';
-    tinymce.init({
-        selector: 'textarea.tinymce',
-        language: culture,
-        plugins: [
-            "paste"
-        ],
-        menubar: false,
-        toolbar: "undo redo | bold italic",
-        statusbar: false,
-        height: 150
-    });
-    tinymce.init({
-        selector: 'textarea.tinymce-advanced',
-        language: culture,
-        plugins: [
-            "paste"
-        ],
-        menubar: false,
-        height: 300
+    if (typeof tinymce == undefined) {
+        tinymce.baseURL = '/lib/tinymce';
+        tinymce.suffix = '.min';
+        tinymce.init({
+            selector: 'textarea.tinymce',
+            language: culture,
+            plugins: [
+                "paste"
+            ],
+            menubar: false,
+            toolbar: "undo redo | bold italic",
+            statusbar: false,
+            height: 150
+        });
+        tinymce.init({
+            selector: 'textarea.tinymce-advanced',
+            language: culture,
+            plugins: [
+                "paste"
+            ],
+            menubar: false,
+            height: 300
+        });
+    }
+
+
+
+    /* TAGS */
+
+    $('[select2]').select2();
+    $('body').on('protagonist-added', '.protagonists_user', function(event) {
+        $(event.currentTarget).find('[select2]').select2();
     });
 });

@@ -329,11 +329,12 @@ class ImageAlbumController extends Controller
     }
 
     /**
+     * @Route("/image/{id}", name="image_show", requirements={"id" = "\d+"})
      * @Route("/{slug}/image/{id}", name="user_image", requirements={"id" = "\d+"})
      * @Route("/pages/{slug}/image/{id}", name="page_image", requirements={"id" = "\d+"})
      * @Route("/groups/{slug}/image/{id}", name="group_image", requirements={"id" = "\d+"})
      */
-    public function imageAction(Request $request, $slug, $id)
+    public function imageAction(Request $request, $id, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
 

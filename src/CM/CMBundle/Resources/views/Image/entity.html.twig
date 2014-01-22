@@ -1,0 +1,12 @@
+{% if images|length > 1 %}
+    <div class="box">
+        <div class="box-heading">
+            <h2>{{ icon('Photo') }} {{ entityType ~ ' photos'|trans }} <small><a href="{#{{ path('user_album', {'slug': event.post.user.slug, 'id': event.id}) }}#}">{{ 'View all photos'|trans }} ({{ images|length }})</a></small></h2>
+        </div>
+        <div class="box-body clearfix entity-assets">
+            {% for image in images %}
+                {{ show_img_box(image.img|imagine_filter('350'), {width: 144, height: 144, link: path('image_show', {id: image.id}), link_attributes: {class: 'pull-left entity-asset'}}) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
