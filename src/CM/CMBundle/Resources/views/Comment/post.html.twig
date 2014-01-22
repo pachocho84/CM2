@@ -1,17 +1,22 @@
 <div class="media">
 
-    {% set post = post.entity.post %}
+    {% if not inEntity %}
 
-    {% if post.entity.images|length > 0 %}
-        {{ show_img_box(post.entity.images[0]|imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #}
-    {% endif %}
-
-    <div class="media-body">
+        {% if post.entity.images|length > 0 %}
+            {{ show_img_box(post.entity.images[0]|imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #}
+        {% endif %}
     
-        <h4><a href="{{ path('event_show', {'id': post.entity.id, 'slug': post.entity.getSlug}) }}">{{ post.entity }}</a></h4>
+        <div class="media-body">
+        
+            <h4><a href="{{ path('event_show', {'id': post.entity.id, 'slug': post.entity.getSlug}) }}">{{ post.entity }}</a></h4>
+    
+            {{ entity_short_text(post.entity) }}
+    
+        </div><!-- END Media Body -->
 
-        {{ entity_short_text(post.entity) }}
-
-    </div><!-- END Media Body -->
-
+    {% else %}
+        <div class="media-body">
+            {{ post.entity.post.comments[post.objectIds[0]] }}
+        </div>
+    {% endif %}
 </div><!-- END Object -->

@@ -42,27 +42,24 @@ class WallController extends Controller
     }
     
     /**
-     * @Route("/social/{id}", name="wall_social", requirements={"id" = "\d+"})
-     * @Template
+     * @Route("/entity/{id}/{page}", name="wall_entity", requirements={"id" = "\d+", "page" = "\d+"})
+     * @Route("/entity/{id}/{lastUpdated}/update", name="wall_entity_update")
+     * @Route("/entity/update", name="_update")
+     * @Route("/entity/update", name="")
+     * @Template("CMBundle:Wall:posts.html.twig")
      */
-    public function socialAction(Request $request, $id)
+    public function entityAction(Request $request, $id, $page = 1, $lastUpdated = null)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $isImage = !is_null($request->get('image'));
-
-        if ($isImage) {
-            $post = $em->getRepository('CMBundle:Image')->getImageWithSocial($id);
+        if (is_null($lastUpdated)) {
+            $posts = $this->getDoctrine()->getManager()->getRepository('CMBundle:Post')->getLastPosts(array('entityId' => $id, 'locale' => $request->getLocale()));
         } else {
-            $post = $em->getRepository('CMBundle:Post')->getPostWithSocial($id);
+            $after = new \DateTime;
+            $after->setTimestamp($lastUpdated);
+            $posts = $this->getDoctrine()->getManager()->getRepository('CMBundle:Post')->getLastPosts(array('entityId' => $id, 'locale' => $request->getLocale(), 'after' => $after));
         }
+        $pagination = $this->get('knp_paginator')->paginate($posts, $page, 10);
         
-        return array(
-            'post' => $post,
-            'isImage' => $isImage,
-            'button' => $request->get('button'),
-            'selector' => $request->get('selector')
-        );
+        return array('posts' => $pagination, 'inEntity' => true);
     }
 
     /**

@@ -68,6 +68,11 @@ class Comment
     {
         return get_class();
     }
+    
+    public function __toString()
+    {
+        return $this->comment;
+    }
 
     /**
      * Get id

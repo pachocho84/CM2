@@ -35,7 +35,6 @@
 {% endspaceless %}
 {% endblock button_widget %}
 
-
 {% block datetime_widget %}
 {% spaceless %}
     {% if widget == 'single_text' %}
@@ -210,8 +209,10 @@
 {% endspaceless %}
 {% endblock  %}
 
-{% block _cm_cmbundle_entityuser_userTags_widget %}
+{% block _cm_cmbundle_comment_comment_widget %}
 {% spaceless %}
+    {% set attr = attr|merge({placeholder: 'write a comment...'|trans}) %}
+    {{ block('textarea_widget') }}
 {% endspaceless %}
 {% endblock  %}
 

@@ -33,7 +33,7 @@ class ImageController extends Controller
         return array(
             'entityId' => $id,
             'entityType' => $type,
-            'images' => $this->getDoctrine()->getManager()->getRepository('CMBundle:Image')->findBy(array('entityId' => $id), array('main' => 'desc', 'sequence' => 'asc'), 5)
+            'images' => $this->getDoctrine()->getManager()->getRepository('CMBundle:Image')->findBy(array('entityId' => $id), array('main' => 'desc', 'sequence' => 'asc'), 3)
         );
     }
     

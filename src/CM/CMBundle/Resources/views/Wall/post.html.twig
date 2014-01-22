@@ -2,13 +2,13 @@
     {% set relatedObjects = related_object(post.object, post.objectIds) %}
 {% endif %}
 
-<li class="media object post"{% if loop is defined and loop.index == 1 %}update_more="{{ path(app.request.attributes.get('_route')|replace({'_update': ''})~'_update', app.request.attributes.get('_route_params')|merge({ 'lastUpdated': post.updatedAt.timestamp })) }}"{% endif %}>
+<div class="media object post"{% if loop is defined and loop.index == 1 %}update_more="{{ path(app.request.attributes.get('_route')|replace({'_update': ''})~'_update', app.request.attributes.get('_route_params')|merge({ 'lastUpdated': post.updatedAt.timestamp })) }}"{% endif %}>
     {{ show_img_box(post.publisher.img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': post.publisher.imgOffset,  'link': path(post.publisherRoute ~ '_show', {'slug': post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}, 'default': 'user'}) }}
 
     <div class="media-body">
 
-        <p>{{ post_text(post, relatedObjects) }}</p>
-
+        {% if not inEntity %}<p>{{ post_text(post, relatedObjects) }}</p>{% endif %}
+    
         {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
 
         <p class="text-muted">
@@ -21,22 +21,21 @@
                         {{ protagonist.user }}{% if loop.index > 1 and loop.index + 1 == post.entity.entityUsers|length %} and {% elseif loop.index < post.entity.entityUsers|length %}, {% else %}.{% endif %}
                     {% endfor %}
                 {% endif %}
-                {#<?php if (!$post->getProtagonists()->isEmpty()): ?>
-                    &middot; <?php echo __('with') ?> <?php include_component('protagonist', 'protagonists', array('post' => $post)) ?>
-                <?php endif ?>#}
             </small>
         </p>
 
-        {% if (post.object|class_name == 'Like' or post.object|class_name == 'Comment') and relatedObjects.imageId is not null %}
-            {{ include('CMBundle::social.html.twig', {'post': relatedObjects.image, 'isImage': true}) }}
-        {% elseif (post.object|class_name == 'Like' or post.object|class_name == 'Comment') %}
-            {{ include('CMBundle::social.html.twig', {'post': relatedObjects.post}) }}
-        {% elseif post.object|class_name == 'Biography' %}
-            {{ include('CMBundle::social.html.twig', {'post': post.entity.post}) }}
-        {% elseif (post.object|class_name) == 'Fan' %}
-        {% else  %}
-            {{ include('CMBundle::social.html.twig') }}
+        {% if not inEntity %}
+            {% if (post.object|class_name == 'Like' or post.object|class_name == 'Comment') and relatedObjects.imageId is not null %}
+                {{ include('CMBundle::social.html.twig', {'post': relatedObjects.image, 'isImage': true}) }}
+            {% elseif (post.object|class_name == 'Like' or post.object|class_name == 'Comment') %}
+                {{ include('CMBundle::social.html.twig', {'post': relatedObjects.post}) }}
+            {% elseif post.object|class_name == 'Biography' %}
+                {{ include('CMBundle::social.html.twig', {'post': post.entity.post}) }}
+            {% elseif (post.object|class_name) == 'Fan' %}
+            {% else  %}
+                {{ include('CMBundle::social.html.twig') }}
+            {% endif %}
         {% endif %}
-
+        
     </div>
-</li>
+</div>

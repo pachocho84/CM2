@@ -377,7 +377,7 @@ $(function() {
         $.get($(this).attr('data-ajax-url'), function(data) {
             data = $(data).hide();
             $(elem).replaceWith(data);
-            $(data).fadeIn();
+            $(data).fadeIn('fast');
         });
     });                     
 });

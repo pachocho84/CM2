@@ -1,25 +1,13 @@
+{% set inEntity = inEntity|default(false) %}
+
 {% for post in posts %}
-
-    {% set relatedObjects = related_object(post.object, post.objectIds) %}
-
-    {% if format is defined and format == 'short' %}
-
-    {{ post.relatedImg }}
-
-        <li class="media object object-small" {#update_more="{{ post.id }}"#}>
-            {{ show_img_box(post.relatedImg|imagine_filter('50'), {'width': 32, 'height': 32,  'link': path('wall_show', {'postId': post.id}), 'link_attributes': {'class': 'pull.left'}, 'default': 'user'})|raw }}
-
-            <div class="media-body">
-                {{ post_text(post, relatedObjects)|simple_format_text|raw }}
-                <small class="text-muted">{{ post.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</small>
-            </div>
-        </li>
-
-    {% else %}
-
-        {{ include('CMBundle:Wall:post.html.twig', {'updateMore': (loop.index == 1 and updateMoreLink is defined)})}}
-
-    {% endif %}
+    <div class="box">
+        {% set relatedObjects = related_object(post.object, post.objectIds) %}
+        
+        <div class="box-body">
+            {{ include('CMBundle:Wall:post.html.twig', {updateMore: (loop.index == 1 and updateMoreLink is defined), relatedObjects: related_object(post.object, post.objectIds)})}}
+        </div>
+    </div>
 {% endfor %}
 
 {% if posts.paginationData is defined and posts.paginationData.current < posts.paginationData.last %}
@@ -28,56 +16,3 @@
         <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({ 'page': posts.getPaginationData.next, 'slug': slug })) }}">{{ 'Load more'|trans }}</a>
     </div>
 {% endif %}
-
-{#
-<?php if (isset($format) && $format == 'short'): ?>
-
-    <?php foreach ($posts as $post): ?>
-        <li class="media object object-small">
-            <?php show_img_box($post->getRelatedImg(), array('width' => 32, 'height' => 32, 'default' => $post->getEntityId() && in_array($post->getObject(), array('event', 'disc', 'article')) ? $post->getObject() : get_class($post->getRawValue()->getPublisher()), 'link' => $post->getRawValue()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left'))) ?>
-            <div class="media-body">
-                <?php echo simple_format_text($post->getRawValue()->getText()) ?>
-                <small class="text-muted"><?php echo format_datetime($post->getUpdatedAt(), 'EEEE d MMMM yyy H:mm') ?></small>
-            </div>
-        </li>
-    <?php endforeach ?>
-
-<?php else: ?>
-
-    <?php foreach ($posts as $post): ?>
-        <li class="media object post<?php $post->getEntity() && $post->getEntity()->getVisible() == 0 and print ' object-hidden' ?>">
-            <?php show_img_box($post->getPublisher()->getImg(), array('width' => 50, 'height' => 50, 'offset' => $post->getPublisher()->getImgOffset(), 'link' => $post->getPublisher()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left'), 'default' => strtolower(get_class($post->getRawValue()->getPublisher())))) ?>
-
-            <div class="media-body">
-
-                <p><?php echo $post->getRawValue()->getText() ?></p>
-
-                <?php if ($post->getType() != 'fan'): ?>
-                    <?php include_partial($post->getObject().'/post', array('post' => $post)) ?>
-                <?php else: ?>
-                    <?php include_partial($post->getType().'/post', array('post' => $post)) ?>
-                <?php endif ?>
-
-                <p class="text-muted">
-                    <?php echo icon($post->getObject().'_'.$post->getType()) ?>
-                    <small>
-                        <?php echo format_datetime($post->getUpdatedAt(), 'EEEE d MMMM yyy H:mm') ?>
-                        <?php if (!$post->getProtagonists()->isEmpty()): ?>
-                            &middot; <?php echo __('with') ?> <?php include_component('protagonist', 'protagonists', array('post' => $post)) ?>
-                        <?php endif ?>
-                    </small>
-                </p>
-                <?php include_partial('utility/bottom', array('post' => $post)) ?>
-
-            </div>
-        </li>
-    <?php endforeach ?>
-
-<?php endif ?>
-
-
-<?php if (get_class($posts->getRawValue()) == 'PropelModelPager' && $posts->getLastPage() != $posts->getPage()): ?>
-    <div id="load_more_posts" class="well well-small">
-        <?php echo link_to(__('Show more'), $url.$posts->getNextPage()) ?>
-    </div>
-<?php endif ?>#}

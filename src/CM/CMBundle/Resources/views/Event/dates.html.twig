@@ -1,6 +1,9 @@
 <div id="event-dates" class="box">
     <div class="box-heading">
-        <h2>{{ icon('Calendar') }} {{ 'Event dates'|trans }}</h2>
+        <h2>
+            {{ icon('Calendar') }} {{ dates[0].start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
+            {{ icon('Time') }} {{ dates[0].start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
+        </h2>
     </div>
     <div class="box-body">
         {% set count = 0 %}
@@ -22,12 +25,14 @@
                 <div id="event-date-next" class="collapse">
             {% endif %}
             <div class="event-date object{% if loop.index == 5 %} object-following{% endif %}">
-                <p>
-                    {% if not loop.first %}<a href="#event-date-{{ loop.index }}" data-toggle="collapse" data-parent="#event-dates" class="text-muted collapsed">{% endif %}
-                        {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
-                        {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
-                    {% if not loop.first %}</a>{% endif %}
-                </p>
+                {% if not loop.first %}
+                    <p>
+                        <a href="#event-date-{{ loop.index }}" data-toggle="collapse" data-parent="#event-dates" class="text-muted collapsed">
+                            {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
+                            {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
+                        </a>
+                    </p>
+                {% endif %}
                 <div id="event-date-{{ loop.index }}" class="collapse{% if loop.first %} in{% endif %}">
                     <p><span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span></p>
                     <div class="event-date-map">

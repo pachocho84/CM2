@@ -21,6 +21,8 @@ class PostRepository extends BaseRepository
             'userId' => null,
             'pageId' => null,
             'groupId' => null,
+            'locale' => 'en',
+            'locales' => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate' => true,
             'limit' => null,
             'objects' => array()
@@ -52,44 +54,57 @@ class PostRepository extends BaseRepository
     {
         $options = self::getOptions($options);
 
+        $count = $this->createQueryBuilder('p')
+            ->select('count(p)');
+            
         $query = $this->createQueryBuilder('p')
-            ->select('distinct p, e, t, c, i, eu, ep, epl, epc, eplu, epcu');
-        $query->leftJoin('p.entity', 'e')
+            ->select('p, e, t, c, ct, i, eu, ep, epl, epc, eplu, epcu')
+            ->leftJoin('p.entity', 'e')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.entityCategory', 'c')
+            ->leftJoin('c.translations', 'ct')
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
             ->leftJoin('e.entityUsers', 'eu', 'WITH', 'eu.status = '.EntityUser::STATUS_ACTIVE)
             ->leftJoin('e.posts', 'ep')
             ->leftJoin('ep.likes', 'epl')
-            ->leftJoin('ep.comments', 'epc')
+            ->leftJoin('ep.comments', 'epc', '', '', 'epc.id')
             ->leftJoin('epl.user', 'eplu')
-            ->leftJoin('epc.user', 'epcu');
+            ->leftJoin('epc.user', 'epcu')
+            ->andWhere('t.locale IN (:locales)')
+            ->andWhere('ct.locale IN (:locales)')
+            ->setParameter('locales', $options['locales']);
         if (!is_null($options['entityId'])) {
+            $count->leftJoin('p.entity', 'e')
+                ->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId']);
             $query->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId']);
         }
         if (!is_null($options['object'])) {
+            $count->andWhere('p.object = :object')->setParameter('object', $options['object']);
             $query->andWhere('p.object = :object')->setParameter('object', $options['object']);
         } elseif (count($options['objects'])) {
+            $count->andWhere('p.object in (:objects)')->setParameter('objects', $options['objects']);
             $query->andWhere('p.object in (:objects)')->setParameter('objects', $options['objects']);
         }
         if (!is_null($options['after'])) {
+            $count->andWhere('p.updatedAt > :after')->setParameter('after', $options['after']);
             $query->andWhere('p.updatedAt > :after')->setParameter('after', $options['after']);
         }
         if (!is_null($options['pageId'])) {
+            $count->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         } elseif (!is_null($options['groupId'])) {
+            $count->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
             $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         } elseif (!is_null($options['userId'])) {
-            $query->andWhere('p.userId = :user_id')
-                ->setParameter('user_id', $options['userId']);
+            $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
+            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
         }
-        $query->orderBy('p.updatedAt', 'desc')
-            ->addOrderBy('p.id', 'desc');
+        $query->orderBy('p.updatedAt', 'desc');
         if (!$options['paginate'] && !is_null($options['limit'])) {
             $query->setMaxResults($options['limit']);
         }
 
-        return $options['paginate'] ? $query->getQuery() : $query->getQuery()->getResult();
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->getQuery()->getResult();
     }
 
     public function getLastPostFor($userId, $type, $object = null, $objectId = null, $options = array())

@@ -1,8 +1,12 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
 {% block bodyHeading %}
-    <div class="media">
-        <div class="pull-right">
+    <div class="row">
+        <div class="col-lg-8">
+            <h2>{{ event.getTitle }}</h2>
+            {% if event.getSubtitle is not null %}<h3>{{ event.getSubtitle }}</h3>{% endif %}
+        </div>
+        <div class="col-lg-4 text-right pull-right">
             <div class="btn-group">
                 {{ include('CMBundle:Like:likeActions.html.twig', {post: event.post, button: true, selector: '#social'}) }}
                 <a href="{# {{ path('post_show', {'post_id': postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }}</a>
@@ -14,10 +18,6 @@
                 </div>
             {% endif %}
             {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'entity': event}) }}
-        </div>
-        <div class="media-body">
-            <h2>{{ event.getTitle }}</h2>
-            {% if event.getSubtitle is not null %}<h3>{{ event.getSubtitle }}</h3>{% endif %}
         </div>
     </div>
 {% endblock %}
@@ -46,19 +46,21 @@
         </div>
     </div>
     
-    <div data-ajax-url="{{ path('image_entity', {id: event.id, type: event|class_name}) }}"></div>
-    
-    <div data-ajax-url="{{ path('multimedia_entity', {id: event.id, type: event|class_name}) }}"></div>
-    
-    <div data-ajax-url="{{ path('wall_social', {id: event.post.id, selector: '#social'}) }}"></div>
+{#     <div data-ajax-url="{{ path('wall_entity', {id: event.id}) }}"></div> #}
+    {{ render(controller('CMBundle:Wall:entity', {id: event.id})) }}
 {% endblock %}
 
 
 
+{% set sticky = false %}
 {% block sidebar %}
-    <div data-ajax-url="{{ path('event_dates', {id: event.id}) }}"></div>
+    {#<div data-ajax-url="{{ path('event_dates', {id: event.id}) }}"></div>
     
-    <div data-ajax-url="{{ path('entityuser_protagonists', {id: event.id}) }}"></div>
+    <div data-ajax-url="{{ path('image_entity', {id: event.id, type: event|class_name}) }}"></div>
+    
+    <div data-ajax-url="{{ path('multimedia_entity', {id: event.id, type: event|class_name}) }}"></div>
+    
+    <div data-ajax-url="{{ path('entityuser_protagonists', {id: event.id}) }}"></div>#}
 {% endblock %}
 
 {% block javascripts %}

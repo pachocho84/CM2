@@ -112,7 +112,10 @@
 
         {# RIGHT COLUMN #}
         {% if not noColumns and not inAccountPage %}
-            <div class="sidebar col-md-4">
+            {% if sticky is not defined %}
+                {% set sticky = true %}
+            {% endif %}
+            <div class="col-md-4"{% if sticky %} sticky{% endif %}>
                 {% block sidebar %}
                     <img src="{{ asset('/bundles/cm/images/layout/banner.jpg') }}" alt="Symfony!" />
                 {% endblock %}
