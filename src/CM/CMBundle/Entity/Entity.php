@@ -24,7 +24,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * })
  * @ORM\HasLifecycleCallbacks
  */
-class Entity
+abstract class Entity
 {
     use ORMBehaviors\Translatable\Translatable;
     

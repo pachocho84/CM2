@@ -9,8 +9,7 @@
     </div>
     <div class="box-body">
         {% for post in posts %}
-            {% if not inEntity %}{% set relatedObjects = related_object(post.object, post.objectIds) %}{% endif %}
-            {{ include('CMBundle:Wall:post.html.twig', {updateMore: (loop.index == 1 and updateMoreLink is defined), relatedObjects: related_object(post.object, post.objectIds)})}}
+            {{ include('CMBundle:Wall:post.html.twig', {updateMore: (loop.first and updateMoreLink is defined)}) }}
         {% endfor %}
     </div>
 </div>

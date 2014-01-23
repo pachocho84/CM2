@@ -1,4 +1,4 @@
-{% if relatedObjects is not defined %}
+{% if not inEntity and relatedObjects is not defined %}
     {% set relatedObjects = related_object(post.object, post.objectIds) %}
 {% endif %}
 

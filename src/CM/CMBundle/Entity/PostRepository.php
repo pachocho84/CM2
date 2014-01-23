@@ -14,6 +14,10 @@ class PostRepository extends BaseRepository
 {
     static protected function getOptions(array $options = array())
     {
+        $options = array_merge(array(
+            'locale' => 'en'
+        ), $options);
+
         return array_merge(array(
             'entityId' => null,
             'object' => null,
@@ -21,7 +25,6 @@ class PostRepository extends BaseRepository
             'userId' => null,
             'pageId' => null,
             'groupId' => null,
-            'locale' => 'en',
             'locales' => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate' => true,
             'limit' => null,

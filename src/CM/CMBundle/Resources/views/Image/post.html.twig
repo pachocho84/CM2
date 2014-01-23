@@ -1,4 +1,8 @@
-<div class="media">
+{% if relatedObjects is not defined %}
+    {% set relatedObjects = related_object(post.object, post.objectIds) %}
+{% endif %}
+
+ <div class="media">
 
     <div class="media-body">
 
