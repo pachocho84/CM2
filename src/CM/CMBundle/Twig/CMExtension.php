@@ -818,18 +818,17 @@ class CMExtension extends \Twig_Extension
         switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Comment_'.Post::TYPE_CREATION:
                 return '<a href="'.$userLink.'">'.$post->getPublisher().'</a>';
-            case 'Image_'.Post::TYPE_CREATION:
-                if (count($post->objectIds()) == 1) {
-                    return $this->translator->trans('%user% added an image.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>'
-                    ));
-                } else {
-                    return $this->translator->trans('%user% added %count% images.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-                        '%count%' => count($post->objectIds())
-                    ));
-                }
-                
+            // case 'Image_'.Post::TYPE_CREATION:
+            //     if (count($post->objectIds()) == 1) {
+            //         return $this->translator->trans('%user% added an image.', array(
+            //             '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>'
+            //         ));
+            //     } else {
+            //         return $this->translator->trans('%user% added %count% images.', array(
+            //             '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+            //             '%count%' => count($post->objectIds())
+            //         ));
+            //     }
             default:
                 return $this->getClassName($post->getObject()).'_'.$post->getType();
         }

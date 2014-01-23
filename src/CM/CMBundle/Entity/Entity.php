@@ -248,10 +248,11 @@ abstract class Entity
         return $this->multimedia;
     }
 
-    public function getPost()
+    public function getPost($a = false)
     {
         foreach ($this->posts as $post) {
-            if ($post->getType() == Post::TYPE_CREATION && $post->getObject() == get_class($this)) {
+            if ($a) var_dump($post->getObject(), $this->className());
+            if ($post->getType() == Post::TYPE_CREATION && $post->getObject() == $this->className()) {
                 return $post;
             }
         }

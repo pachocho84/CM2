@@ -67,13 +67,13 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
     );
 
     private $archives = array(
-        array('user' => 1, 'article' => 38, 'category' => 3),
-        array('user' => 1, 'article' => 46, 'category' => 0),
-        array('user' => 1, 'article' => 47, 'category' => 0),
-        array('user' => 1, 'article' => 48, 'category' => 0),
-        array('user' => 1, 'article' => 51, 'category' => 0),
-        array('user' => 1/*115*/, 'article' => 53, 'category' => 1),
-        array('user' => 1/*115*/, 'article' => 54, 'category' => 3),
+        array('user' => 1, 'article' => 1, 'category' => 3),
+        array('user' => 1, 'article' => 4, 'category' => 0),
+        array('user' => 1, 'article' => 2, 'category' => 0),
+        array('user' => 1, 'article' => 8, 'category' => 0),
+        array('user' => 1, 'article' => 5, 'category' => 0),
+        array('user' => 1/*115*/, 'article' => 3, 'category' => 1),
+        array('user' => 1/*115*/, 'article' => 7, 'category' => 3),
     );
 
     private $boxes = array(
