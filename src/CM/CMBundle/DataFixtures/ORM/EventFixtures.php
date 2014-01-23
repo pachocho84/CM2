@@ -79,11 +79,11 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
     );
     
     private $locations = array(
-        array('Auditorium di Milano', 'Largo Mahler, 20136 Milano', '45.446592,9.179087'),
-        array('Teatro alla Scala', 'Via Filodrammatici, 2, 20121 Milano', '45.467402,9.189551'),
-        array('Teatro dell\'Elfo', 'Corso Buenos Aires, 33, 20124 Milano', '45.479404,9.209745'),
-        array('Piccolo Teatro', 'Largo Antonio Greppi, 1, 20121 Milano', '45.472337,9.182449'),
-        array('Teatro degli Arcimboldi', 'Viale dell\'Innovazione, 20, 20125 Milano', '45.51170,9.21109'),
+        array('Auditorium di Milano', 'Largo Mahler, 10136 Milano', '45.446592,9.179087'),
+        array('Teatro alla Scala', 'Via Filodrammatici, 2, 10121 Milano', '45.467402,9.189551'),
+        array('Teatro dell\'Elfo', 'Corso Buenos Aires, 33, 10124 Milano', '45.479404,9.209745'),
+        array('Piccolo Teatro', 'Largo Antonio Greppi, 1, 10121 Milano', '45.472337,9.182449'),
+        array('Teatro degli Arcimboldi', 'Viale dell\'Innovazione, 20, 10125 Milano', '45.51170,9.21109'),
     );
 
     private $images = array('bb01acb97854b24ed23598bd4f055eba.jpeg', 'ff9398d3d47436e2b4f72874a2c766fd.jpeg');
@@ -105,7 +105,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
     public function load(ObjectManager $manager)
     {
-        for ($i = 1; $i < 201; $i++) {
+        for ($i = 1; $i < 101; $i++) {
             $eventNum = rand(0, count($this->events) - 1);
             $event = new Event;
             $event->setTitle($this->events[$eventNum]['title'].' (en)')
@@ -114,19 +114,19 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
             $manager->persist($event);
     
-            // if (0 == rand(0, 2)) {
+            if (0 == rand(0, 2)) {
                 $event->translate('it')
                     ->setTitle($this->events[$eventNum]['title'].' (it)')
                     ->setExtract($this->events[$eventNum]['extract'])
                     ->setText($this->events[$eventNum]['text']);
-            // }
+            }
     
-            // if (0 == rand(0, 4)) {
+            if (0 == rand(0, 4)) {
                 $event->translate('fr')
                     ->setTitle($this->events[$eventNum]['title'].' (fr)')
                     ->setExtract($this->events[$eventNum]['extract'])
                     ->setText($this->events[$eventNum]['text']);
-            // }
+            }
     
     /*
             $event->translate('ru')->setTitle('Печатное (RU) '.$i)
@@ -186,24 +186,24 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                     case 'yout':
                         $info = json_decode(file_get_contents('http://www.youtube.com/oembed?format=json&url='.urlencode($url)));
                         $type = Multimedia::TYPE_YOUTUBE;
-                        $link = preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info->html);
-                        $info = json_decode(file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$link.'?v=2&alt=jsonc'))->data;
+                        $source = preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info->html);
+                        $info = json_decode(file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$source.'?v=2&alt=jsonc'))->data;
                         break;
                     case 'vime':
                         $info = json_decode(file_get_contents('http://vimeo.com/api/oembed.json?url='.urlencode($url)));
                         $type = Multimedia::TYPE_VIMEO;
-                        $link = $info->video_id;
+                        $source = $info->video_id;
                         break;
                     case 'soun':
                         $info = json_decode(file_get_contents('http://soundcloud.com/oembed.json?url='.urlencode($url)));
                         $type = Multimedia::TYPE_SOUNDCLOUD;
-                        $link = preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info->html);
+                        $source = preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info->html);
                         break;
                 }
 
                 $multimedia = new Multimedia;
                 $multimedia->setType($type);
-                $multimedia->setLink($link);
+                $multimedia->setSource($source);
                 $multimedia->setTitle($info->title)
                     ->setText($info->description);
 
