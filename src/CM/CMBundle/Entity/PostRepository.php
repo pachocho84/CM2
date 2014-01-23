@@ -61,13 +61,12 @@ class PostRepository extends BaseRepository
             ->select('count(p)');
             
         $query = $this->createQueryBuilder('p')
-            ->select('p, e, t, c, ct, i, eu, ep, epl, epc, eplu, epcu')
+            ->select('p, e, t, c, ct, i, ep, epl, epc, eplu, epcu')
             ->leftJoin('p.entity', 'e')
             ->leftJoin('e.translations', 't', 'with', 't.locale in (:locales)')->setParameter('locales', $options['locales'])
             ->leftJoin('e.entityCategory', 'c')
             ->leftJoin('c.translations', 'ct', 'with', 'ct.locale = :locale')->setParameter('locale', $options['locale'])
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
-            ->leftJoin('e.entityUsers', 'eu', 'WITH', 'eu.status = '.EntityUser::STATUS_ACTIVE)
             ->leftJoin('e.posts', 'ep')
             ->leftJoin('ep.likes', 'epl')
             ->leftJoin('ep.comments', 'epc', '', '', 'epc.id')

@@ -7,7 +7,11 @@
 
     <div class="media-body">
 
-        {% if not inEntity %}<p>{{ post_text(post, relatedObjects) }}</p>{% endif %}
+        {% if not inEntity %}
+            <p>{{ post_text(post, relatedObjects) }}</p>
+        {% else %}
+            {{ post.publisher }}
+        {% endif %}
     
         {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
 
@@ -15,12 +19,6 @@
             {{ icon((post.object|class_name)~'_'~(post.type)) }}
             <small>
                 {{ post.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
-                {% if post.entity is not null and post.entity.entityUsers|length > 0 %}
-                    &middot; {{ 'with'|trans }}
-                    {% for protagonist in post.entity.entityUsers  %}
-                        {{ protagonist.user }}{% if loop.index > 1 and loop.index + 1 == post.entity.entityUsers|length %} and {% elseif loop.index < post.entity.entityUsers|length %}, {% else %}.{% endif %}
-                    {% endfor %}
-                {% endif %}
             </small>
         </p>
 
