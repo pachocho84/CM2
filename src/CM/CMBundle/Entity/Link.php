@@ -22,14 +22,6 @@ class Link extends Entity
      */
     protected $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="url", type="string", length=250)
-     * @Assert\Url
-     */
-    private $url;
-
     public function __construct()
     {
         parent::__construct();
@@ -51,28 +43,5 @@ class Link extends Entity
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set url
-     *
-     * @param string $url
-     * @return Link
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-    
-        return $this;
-    }
-
-    /**
-     * Get url
-     *
-     * @return string 
-     */
-    public function getUrl()
-    {
-        return $this->url;
     }
 }

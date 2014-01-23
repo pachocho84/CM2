@@ -26,13 +26,6 @@ class ImageAlbum extends Entity
      */
     protected $id;
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="type", type="smallint", nullable=false)
-     */
-    private $type;
-
     public function __construct()
     {
         parent::__construct();

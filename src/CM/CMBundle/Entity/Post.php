@@ -80,6 +80,14 @@ class Post
     private $entity;
 
     /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="PostEntity", inversedBy="posts")
+     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
+     */
+    private $postEntity;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="object", type="string", length=50)

@@ -27,7 +27,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'city_current' => 'Milan',
             'birth_date' => array(1984, 6, 17),
             'birth_date_visible' => User::BIRTHDATE_VISIBLE,
-            'img' => '1074169_10201332211257910_2077101884_o.jpg',
+            'img' => '1074169_10101332211257910_2077101884_o.jpg',
             'imgOffset' => 0,
             'cover' => 'erteda50c9566f74859fb54a7f7912225deed5f1.jpg',
             'coverOffset' => 10,

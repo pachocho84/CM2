@@ -41,18 +41,18 @@ class MultimediaFixtures extends AbstractFixture implements OrderedFixtureInterf
                 case 'yout':
                     $info = json_decode(file_get_contents('http://www.youtube.com/oembed?format=json&url='.urlencode($url)));
                     $type = Multimedia::TYPE_YOUTUBE;
-                    $link = preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info->html);
-                    $info = json_decode(file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$link.'?v=2&alt=jsonc'))->data;
+                    $source = preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info->html);
+                    $info = json_decode(file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$source.'?v=2&alt=jsonc'))->data;
                     break;
                 case 'vime':
                     $info = json_decode(file_get_contents('http://vimeo.com/api/oembed.json?url='.urlencode($url)));
                     $type = Multimedia::TYPE_VIMEO;
-                    $link = $info->video_id;
+                    $source = $info->video_id;
                     break;
                 case 'soun':
                     $info = json_decode(file_get_contents('http://soundcloud.com/oembed.json?url='.urlencode($url)));
                     $type = Multimedia::TYPE_SOUNDCLOUD;
-                    $link = preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info->html);
+                    $source = preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info->html);
                     break;
             }
 
@@ -61,7 +61,7 @@ class MultimediaFixtures extends AbstractFixture implements OrderedFixtureInterf
 
                 $multimedia = new Multimedia;
                 $multimedia->setType($type);
-                $multimedia->setLink($link);
+                $multimedia->setSource($source);
                 $multimedia->setTitle($info->title)
                     ->setText($info->description);
 

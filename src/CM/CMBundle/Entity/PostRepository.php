@@ -17,7 +17,7 @@ class PostRepository extends BaseRepository
         $options = array_merge(array(
             'locale' => 'en'
         ), $options);
-
+        
         return array_merge(array(
             'entityId' => null,
             'object' => null,
@@ -63,25 +63,22 @@ class PostRepository extends BaseRepository
         $query = $this->createQueryBuilder('p')
             ->select('p, e, t, c, ct, i, eu, ep, epl, epc, eplu, epcu')
             ->leftJoin('p.entity', 'e')
-            ->leftJoin('e.translations', 't')
+            ->leftJoin('e.translations', 't', 'with', 't.locale in (:locales)')->setParameter('locales', $options['locales'])
             ->leftJoin('e.entityCategory', 'c')
-            ->leftJoin('c.translations', 'ct')
+            ->leftJoin('c.translations', 'ct', 'with', 'ct.locale = :locale')->setParameter('locale', $options['locale'])
             ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
             ->leftJoin('e.entityUsers', 'eu', 'WITH', 'eu.status = '.EntityUser::STATUS_ACTIVE)
             ->leftJoin('e.posts', 'ep')
             ->leftJoin('ep.likes', 'epl')
             ->leftJoin('ep.comments', 'epc', '', '', 'epc.id')
             ->leftJoin('epl.user', 'eplu')
-            ->leftJoin('epc.user', 'epcu')
-            ->andWhere('t.locale IN (:locales)')
-            ->andWhere('ct.locale IN (:locales)')
-            ->setParameter('locales', $options['locales']);
+            ->leftJoin('epc.user', 'epcu');
         if (!is_null($options['entityId'])) {
             $count->leftJoin('p.entity', 'e')
                 ->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId'])
-                ->andWhere('p.object != :like')->setParameter('like', 'CM\CMBundle\Entity\Like');
+                ->andWhere('p.object != :like')->setParameter('like', Like::className());
             $query->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId'])
-                ->andWhere('p.object != :like')->setParameter('like', 'CM\CMBundle\Entity\Like');;
+                ->andWhere('p.object != :like')->setParameter('like', Like::className());;
         }
         if (!is_null($options['object'])) {
             $count->andWhere('p.object = :object')->setParameter('object', $options['object']);

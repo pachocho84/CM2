@@ -32,13 +32,6 @@ class Article extends Entity
     private $homepageArchive = null;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="source", type="string", length=100)
-     */
-    private $source;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="date")
@@ -120,29 +113,6 @@ class Article extends Entity
     public function getHomepageArchive()
     {
         return $this->homepageArchive;
-    }
-
-    /**
-     * Set source
-     *
-     * @param string $source
-     * @return Article
-     */
-    public function setSource($source)
-    {
-        $this->source = $source;
-    
-        return $this;
-    }
-
-    /**
-     * Get source
-     *
-     * @return string 
-     */
-    public function getSource()
-    {
-        return $this->source;
     }
 
     /**
