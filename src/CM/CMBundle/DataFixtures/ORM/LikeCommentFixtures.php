@@ -16,7 +16,7 @@ class LikeCommentFixtures extends AbstractFixture implements OrderedFixtureInter
 {
     public function load(ObjectManager $manager)
     {
-        for ($i = 1; $i < 101; $i++) {
+        for ($i = 1; $i < 201; $i++) {
 
             for ($j = 1; $j < rand(1, 10); $j++) {
                 $like = new Like;

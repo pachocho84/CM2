@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity(repositoryClass="EntityRepository")
  * @ORM\Table(name="entity")
- * @ORM\InheritanceType("JOINED")
+ * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
  *     "entity"="Entity",
