@@ -158,7 +158,10 @@ class DiscFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                     ->setText('main image for disc "'.$disc->getTitle().'"')
                     ->setMain(true)
                     ->setUser($user);
-                $disc->addImage($image);                
+                $disc->addImage($image);
+
+                $manager->persist($event);
+                $manager->flush();                  
     
                 for ($j = rand(1, 4); $j > 0; $j--) {
                     $image = new Image;

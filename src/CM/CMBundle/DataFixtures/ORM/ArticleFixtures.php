@@ -89,8 +89,11 @@ class ArticleFixtures extends AbstractFixture implements OrderedFixtureInterface
                     ->setText('main image for article "'.$article->getTitle().'"')
                     ->setMain(true)
                     ->setUser($user);
-                $article->addImage($image);                
-    
+                $article->addImage($image);
+
+                $manager->persist($event);
+                $manager->flush();   
+                    
                 for ($j = rand(1, 4); $j > 0; $j--) {
                     $image = new Image;
                     $image->setImg($this->articles[$articleNum]['img'])

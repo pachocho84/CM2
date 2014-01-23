@@ -622,6 +622,8 @@ class DoctrineEventsListener
             'limit' => 1
         ));
 
+        var_dump('img: '.$image->getText().' entity #'.$entity->getId().' posts: '.count($post));
+
         if (count($post) >= 1) {
             $post = $post[0];
             $post->addObjectId($image->getId());

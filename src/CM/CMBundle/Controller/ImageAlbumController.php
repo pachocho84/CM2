@@ -108,7 +108,6 @@ class ImageAlbumController extends Controller
 
         if ($form->isValid()) {
             $em->persist($album);
-
             $em->flush();
 
             switch ($object) {
