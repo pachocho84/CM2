@@ -39,20 +39,6 @@ class Multimedia extends Entity
      */
     private $entity;
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="type", type="smallint", nullable=false)
-     */
-    private $type;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="link", type="string", length=150, nullable=false)
-     */
-    private $link;
-
     public function __construct()
     {
         parent::__construct();
@@ -124,70 +110,24 @@ class Multimedia extends Entity
         return $this->entity;
     }
 
-    /**
-     * Set type
-     *
-     * @param integer $type
-     * @return Multimedia
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer 
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Set link
-     *
-     * @param integer $link
-     * @return Multimedia
-     */
-    public function setLink($link)
-    {
-        $this->link = $link;
-    
-        return $this;
-    }
-
-    /**
-     * Get link
-     *
-     * @return integer 
-     */
-    public function getLink()
-    {
-        return $this->link;
-    }
-
     public function setUrl($url, $scheme = 'https')
     {
         switch (substr(preg_split('/(www|m)\./', parse_url($url, PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
             case 'yout':
                 $info = json_decode(file_get_contents($scheme.'://www.youtube.com/oembed?format=json&url='.urlencode($url)));
                 $this->setType(Multimedia::TYPE_YOUTUBE)
-                    ->setLink(preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info->html));
+                    ->setSource(preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info->html));
                 $info = json_decode(file_get_contents($scheme.'://gdata.youtube.com/feeds/api/videos/'.$url.'?v=2&alt=jsonc'))->data;
                 break;
             case 'vime':
                 $info = json_decode(file_get_contents($scheme.'://vimeo.com/api/oembed.json?url='.urlencode($url)));
                 $this->setType(Multimedia::TYPE_VIMEO)
-                    ->setLink($info->video_id);
+                    ->setSource($info->video_id);
                 break;
             case 'soun':
                 $info = json_decode(file_get_contents($scheme.'://soundcloud.com/oembed.json?url='.urlencode($url)));
                 $this->setType(Multimedia::TYPE_SOUNDCLOUD)
-                    ->setLink(preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info->html));
+                    ->setSource(preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info->html));
                 break;
         }
 
