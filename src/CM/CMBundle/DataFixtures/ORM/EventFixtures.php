@@ -166,7 +166,10 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                     ->setText('main image for event "'.$event->getTitle().'"')
                     ->setMain(true)
                     ->setUser($user);
-                $event->addImage($image);                
+                $event->addImage($image);
+
+                $manager->persist($event);
+                $manager->flush();               
     
                 for ($j = rand(1, 4); $j > 0; $j--) {
                     $image = new Image;
