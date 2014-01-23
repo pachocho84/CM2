@@ -114,19 +114,19 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
             $manager->persist($event);
     
-            // if (0 == rand(0, 2)) {
+            if (0 == rand(0, 2)) {
                 $event->translate('it')
                     ->setTitle($this->events[$eventNum]['title'].' (it)')
                     ->setExtract($this->events[$eventNum]['extract'])
                     ->setText($this->events[$eventNum]['text']);
-            // }
+            }
     
-            // if (0 == rand(0, 4)) {
+            if (0 == rand(0, 4)) {
                 $event->translate('fr')
                     ->setTitle($this->events[$eventNum]['title'].' (fr)')
                     ->setExtract($this->events[$eventNum]['extract'])
                     ->setText($this->events[$eventNum]['text']);
-            // }
+            }
     
     /*
             $event->translate('ru')->setTitle('Печатное (RU) '.$i)
