@@ -75,8 +75,10 @@ class PostRepository extends BaseRepository
             ->setParameter('locales', $options['locales']);
         if (!is_null($options['entityId'])) {
             $count->leftJoin('p.entity', 'e')
-                ->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId']);
-            $query->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId']);
+                ->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId'])
+                ->andWhere('p.object != :like')->setParameter('like', 'CM\CMBundle\Entity\Like');
+            $query->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId'])
+                ->andWhere('p.object != :like')->setParameter('like', 'CM\CMBundle\Entity\Like');;
         }
         if (!is_null($options['object'])) {
             $count->andWhere('p.object = :object')->setParameter('object', $options['object']);

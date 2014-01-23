@@ -431,9 +431,11 @@ form .panel-group .panel {
     -webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
         -moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
             box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
+/*
     border-radius: 0px 0px 3px 3px;
         -webkit-border-radius: 0px 0px 3px 3px;
             -moz-border-radius: 0px 0px 3px 3px;
+*/
     position: relative;
     margin-top: 20px;
 }
