@@ -17,7 +17,7 @@ class SponsoredFixtures extends AbstractFixture implements OrderedFixtureInterfa
             $sponsored = new Sponsored;
             $event = $manager->merge($this->getReference('event-'.rand(1, 200)));
             $sponsored->setEvent($event)
-                ->setUser($event->getPosts()[0]->getUser())
+                ->setUser($event->getPost()->getUser())
                 ->setViews(rand(0, 100));
             $dateStart = new \DateTime;
             $dateStart->setTimestamp(time() - 604800);
