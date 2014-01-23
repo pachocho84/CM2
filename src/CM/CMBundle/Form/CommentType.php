@@ -14,7 +14,8 @@ class CommentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('comment');
+        $builder->add('comment')
+            ->add('comment', 'text');
     }
     
     /**
@@ -23,6 +24,7 @@ class CommentType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'type' => 'textarea',
             'data_class' => 'CM\CMBundle\Entity\Comment'
         ));
     }
@@ -35,3 +37,4 @@ class CommentType extends AbstractType
         return 'cm_cmbundle_comment';
     }
 }
+    

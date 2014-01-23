@@ -46,20 +46,36 @@ class WallController extends Controller
      * @Route("/entity/{id}/{lastUpdated}/update", name="wall_entity_update")
      * @Route("/entity/update", name="_update")
      * @Route("/entity/update", name="")
-     * @Template("CMBundle:Wall:posts.html.twig")
+     * @Template
      */
     public function entityAction(Request $request, $id, $page = 1, $lastUpdated = null)
     {
+        $em = $this->getDoctrine()->getManager();
+        
         if (is_null($lastUpdated)) {
-            $posts = $this->getDoctrine()->getManager()->getRepository('CMBundle:Post')->getLastPosts(array('entityId' => $id, 'locale' => $request->getLocale()));
+            $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('entityId' => $id, 'locale' => $request->getLocale()));
         } else {
             $after = new \DateTime;
             $after->setTimestamp($lastUpdated);
-            $posts = $this->getDoctrine()->getManager()->getRepository('CMBundle:Post')->getLastPosts(array('entityId' => $id, 'locale' => $request->getLocale(), 'after' => $after));
+            $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('entityId' => $id, 'locale' => $request->getLocale(), 'after' => $after));
         }
         $pagination = $this->get('knp_paginator')->paginate($posts, $page, 10);
-        
-        return array('posts' => $pagination, 'inEntity' => true);
+
+        $comment = new Comment;
+        $form = $this->createForm(new CommentType, $comment, array(
+            'action' => $this->generateUrl('comment_entity_new', array(
+                'id' => $pagination[0]->getEntity()->getPost()->getId()
+            )),
+            'cascade_validation' => true
+        ));
+
+        $form = $form->createView();
+                
+        return array(
+            'posts' => $pagination,
+            'inEntity' => true,
+            'commentForm' => $form
+        );
     }
 
     /**

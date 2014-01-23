@@ -14,5 +14,6 @@
         </div><!-- END Media Body -->
     </div><!-- END Object -->
 {% else %}
-    <p>{{ post.entity.post.comments[post.objectIds[0]] }}</p>
+    {{ dump(post.entity.post)}}
+{#     <p>{{ post.entity.post.comments[post.objectIds[0]] }}</p> #}
 {% endif %}

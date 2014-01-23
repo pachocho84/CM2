@@ -16,13 +16,13 @@ class LikeCommentFixtures extends AbstractFixture implements OrderedFixtureInter
 {
     public function load(ObjectManager $manager)
     {
-        for ($i = 1; $i < 201; $i++) {
+        for ($i = 1; $i < 11; $i++) {
 
             for ($j = 1; $j < rand(1, 10); $j++) {
                 $like = new Like;
                 $user = $manager->merge($this->getReference('user-'.rand(1, 8)));
                 $like->setUser($user);
-                $post = $manager->merge($this->getReference('event-'.$i))->getPosts()[0];
+                $post = $manager->merge($this->getReference('event-'.$i))->getPost();
                 $post->addLike($like);
 
                 $manager->persist($like);
@@ -33,7 +33,7 @@ class LikeCommentFixtures extends AbstractFixture implements OrderedFixtureInter
                 $comment->setComment("Comment");
                 $user = $manager->merge($this->getReference('user-'.rand(1, 8)));
                 $comment->setUser($user);
-                $post = $manager->merge($this->getReference('event-'.$i))->getPosts()[0];
+                $post = $manager->merge($this->getReference('event-'.$i))->getPost();
                 $post->addComment($comment);
 
                 $manager->persist($comment);

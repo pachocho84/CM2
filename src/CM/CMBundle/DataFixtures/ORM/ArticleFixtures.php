@@ -55,7 +55,7 @@ class ArticleFixtures extends AbstractFixture implements OrderedFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        for ($i = 1; $i < 201; $i++) {
+        for ($i = 1; $i < 11; $i++) {
             $articleNum = rand(0, count($this->articles) - 1);
             $article = new article;
             $article->setSource($this->articles[$articleNum]['source'])
@@ -91,7 +91,7 @@ class ArticleFixtures extends AbstractFixture implements OrderedFixtureInterface
                     ->setUser($user);
                 $article->addImage($image);
 
-                $manager->persist($event);
+                $manager->persist($article);
                 $manager->flush();   
                     
                 for ($j = rand(1, 4); $j > 0; $j--) {

@@ -105,7 +105,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
     public function load(ObjectManager $manager)
     {
-        for ($i = 1; $i < 201; $i++) {
+        for ($i = 1; $i < 11; $i++) {
             $eventNum = rand(0, count($this->events) - 1);
             $event = new Event;
             $event->setTitle($this->events[$eventNum]['title'].' (en)')

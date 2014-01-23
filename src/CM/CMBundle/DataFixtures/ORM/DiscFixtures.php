@@ -120,7 +120,7 @@ class DiscFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 
     public function load(ObjectManager $manager)
     {
-        for ($i = 1; $i < 201; $i++) {
+        for ($i = 1; $i < 11; $i++) {
             $discNum = rand(0, count($this->discs) - 1);
             $disc = new Disc;
             $disc->setAuthors($this->discs[$discNum]['authors'])
@@ -160,7 +160,7 @@ class DiscFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                     ->setUser($user);
                 $disc->addImage($image);
 
-                $manager->persist($event);
+                $manager->persist($disc);
                 $manager->flush();                  
     
                 for ($j = rand(1, 4); $j > 0; $j--) {

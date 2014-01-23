@@ -1,18 +1,8 @@
 {% set inEntity = inEntity|default(false) %}
 
-<div class="box">
-    <div class="box-heading">
-        <h2>
-            {{ icon('Wall') }}
-            {{ 'Wall'|trans }}
-        </h2>
-    </div>
-    <div class="box-body">
-        {% for post in posts %}
-            {{ include('CMBundle:Wall:post.html.twig', {updateMore: (loop.first and updateMoreLink is defined)}) }}
-        {% endfor %}
-    </div>
-</div>
+{% for post in posts %}
+    {{ include('CMBundle:Wall:post.html.twig', {updateMore: (loop.first and updateMoreLink is defined)}) }}
+{% endfor %}
 
 {% if posts.paginationData is defined and posts.paginationData.current < posts.paginationData.last %}
     <div class="well well-small load_more">

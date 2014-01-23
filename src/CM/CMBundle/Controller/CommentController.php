@@ -23,7 +23,8 @@ use CM\CMBundle\Form\CommentType;
 class CommentController extends Controller
 {
     /**
-     * @Route("/new/{id}/{isImage}", name="comment_new", requirements={"id" = "\d+"}) 
+     * @Route("/new/{id}/{isImage}", name="comment_new", requirements={"id" = "\d+"})
+     * @Route("/entity/new/{id}", name="comment_entity_new", requirements={"id" = "\d+"})
      * @Template
      */
     public function commentsAction(Request $request, $id = null, $isImage = false)
