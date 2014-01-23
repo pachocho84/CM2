@@ -13,7 +13,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
- *     "post_entity"="PostEntity",
  *     "entity"="Entity",
  *     "event"="Event",
  *     "disc"="Disc",
