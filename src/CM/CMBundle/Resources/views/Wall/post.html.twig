@@ -7,20 +7,20 @@
 
     <div class="media-body">
 
-        {% if not inEntity %}
-            <p>{{ post_text(post, relatedObjects) }}</p>
-        {% else %}
-            {{ post.publisher }}
-        {% endif %}
+        <p class="small">
+            {% if not inEntity %}
+                {{ post_text(post, relatedObjects) }}
+            {% else %}
+                {{ entity_post_text(post) }}
+            {% endif %}
+        </p>
     
         {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
 
-        <p class="text-muted">
+        <small class="text-muted">
             {{ icon((post.object|class_name)~'_'~(post.type)) }}
-            <small>
-                {{ post.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
-            </small>
-        </p>
+            {{ post.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
+        </small>
 
         {% if not inEntity %}
             {% if (post.object|class_name == 'Like' or post.object|class_name == 'Comment') and relatedObjects.imageId is not null %}

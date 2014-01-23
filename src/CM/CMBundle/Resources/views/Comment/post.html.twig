@@ -1,6 +1,5 @@
-<div class="media object post">
-
-    {% if not inEntity %}
+{% if not inEntity %}
+    <div class="media object post">
 
         {% if post.entity.images|length > 0 %}
             {{ show_img_box(post.entity.images[0]|imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #}
@@ -13,10 +12,7 @@
             {{ entity_short_text(post.entity) }}
     
         </div><!-- END Media Body -->
-
-    {% else %}
-        <div class="media-body">
-            {{ post.entity.post.comments[post.objectIds[0]] }}
-        </div>
-    {% endif %}
-</div><!-- END Object -->
+    </div><!-- END Object -->
+{% else %}
+    <p>{{ post.entity.post.comments[post.objectIds[0]] }}</p>
+{% endif %}

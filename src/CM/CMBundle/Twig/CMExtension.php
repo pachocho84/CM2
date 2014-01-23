@@ -81,6 +81,7 @@ class CMExtension extends \Twig_Extension
             'request_tag' => new \Twig_Function_Method($this, 'getRequestTag', array('is_safe' => array('html'))),
             'notification_tag' => new \Twig_Function_Method($this, 'getNotificationTag', array('is_safe' => array('html'))),
             'post_text' => new \Twig_Function_Method($this, 'getPostText', array('is_safe' => array('html'))),
+            'entity_post_text' => new \Twig_Function_Method($this, 'getEntityPostText', array('is_safe' => array('html'))),
             'icon' => new \Twig_Function_Method($this, 'getIcon', array('is_safe' => array('html'))),
             'tooltip' => new \Twig_Function_Method($this, 'getTooltip', array('is_safe' => array('html'))),
         );
@@ -806,6 +807,17 @@ class CMExtension extends \Twig_Extension
                 // return __('%user% has updated '.$post->getPublisherSex('his').' %masterclasses%.', array('%user%'   => link_to($post->getUser(), $post->getUser()->getLinkShow()), '%masterclasses%' => link_to(__('masterclasses'), '@work_education_user?user='.$post->getUser()->getUsername())));
             case 'job_update':
                 // return __('%user% has updated '.$post->getPublisherSex('his').' %works%.', array('%user%'   => link_to($post->getUser(), $post->getUser()->getLinkShow()), '%works%' => link_to(__('works'), '@work_education_user?user='.$post->getUser()->getUsername())));
+            default:
+                return $this->getClassName($post->getObject()).'_'.$post->getType();
+        }
+    }
+
+    public function getEntityPostText(Post $post)
+    {
+        $userLink = $this->router->generate($post->getPublisherRoute().'_show', array('slug' => $post->getPublisher()->getSlug()));
+        switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
+            case 'Comment_'.Post::TYPE_CREATION:
+                return '<a href="'.$userLink.'">'.$post->getPublisher().'</a>';
             default:
                 return $this->getClassName($post->getObject()).'_'.$post->getType();
         }
