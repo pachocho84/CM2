@@ -85,7 +85,7 @@ $(function() {
   
   
     /* SIDEBAR */
-    $('.sidebar').hcSticky({
+    $('[sticky]').hcSticky({
         top: 50,
         bottom: 15
     });

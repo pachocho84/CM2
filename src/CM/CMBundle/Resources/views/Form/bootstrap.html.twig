@@ -506,6 +506,9 @@
         {% set form_method = "POST" %}
     {% endif %}
     {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-horizontal')|trim}) %}
+    {% if app.environment == 'dev' %}
+        {% set attr = attr|merge({novalidate: 'novalidate'}) %}
+    {% endif %}
     <form method="{{ form_method|lower }}" action="{{ action }}"{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
     {% if form_method != method %}
         <input type="hidden" name="_method" value="{{ method }}" />
