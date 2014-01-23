@@ -20,7 +20,7 @@ class EntityTranslation
     use ORMBehaviors\Translatable\Translation;
 
     /**
-     * @ORM\OneToOne(targetEntity="Entity")
+     * @ORM\ManyToOne(targetEntity="Entity")
      * @ORM\JoinColumn(name="translatable_id", referencedColumnName="id")
      */
     private $entity;
