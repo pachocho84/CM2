@@ -246,7 +246,7 @@ $(function() {
     });
     // Enter key press submit
     $('body').on('keydown', 'form .comment', function(event) { // .comment_new form textarea
-        if (event.keyCode == '13' && event.shiftKey === false) { 
+        if (event.keyCode == '13' && event.shiftKey === false) {
             event.preventDefault();
             if ($(this).val().length > 1) { 
                 $(this).closest('form').submit();
@@ -257,11 +257,14 @@ $(function() {
     $(document).on('submit', '.comment_new form', function(event) {
         event.preventDefault();
         $(event.currentTarget).ajaxSubmit({
-            dataType:      'json',
-            success:         function(data, statusText, xhr, form) {
-                form.closest('li').before(data.comment);
-                form.closest('.object').find('.bottom-comment-count').replaceWith(data.commentCount);
-                form.find('textarea').focus().val('');
+            dataType: 'json',
+            success: function(data, statusText, xhr, form) {
+                console.log($(event.currentTarget).find('.comment'));
+                $(event.currentTarget).closest('.comment_new').after(data.comment);
+                $(event.currentTarget).find('.comment').val('');
+                // form.closest('li').before(data.comment);
+                // form.closest('.object').find('.bottom-comment-count').replaceWith(data.commentCount);
+                // form.find('textarea').focus().val('');
             }
         });
     });

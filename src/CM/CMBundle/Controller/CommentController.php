@@ -34,11 +34,9 @@ class CommentController extends Controller
         if (!$isImage) {
             $post = $em->getRepository('CMBundle:Post')->getPostWithComments($id);
             $image = null;
-            $link = '';//$this->generateUrl('comment_new', array('postId' => $post->getId());
         } else {
             $post = null;
             $image = $em->getRepository('CMBundle:Image')->getImageWithComments($id);
-            $link = '';//$this->generateUrl('comment_new', array('postId' => $post->getId());
         }
 
         $form = null;
@@ -64,8 +62,9 @@ class CommentController extends Controller
 
 
                 if ($request->get('_route') == 'comment_entity_new') {
+                    $post = $em->getRepository('CMBundle:Post')->findOneBy(array('object' => $comment->className(), 'objectIds' => ','.$comment->getId().','));
                     return new JsonResponse(array(
-                        'comment' => $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $comment->getPost(), 'inEntity' => true))
+                        'comment' => $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post, 'comment' => $comment, 'inEntity' => true, 'singleComment' => true))
                     ));
                 } elseif ($request->isXmlHttpRequest()) {
                     if (!is_null($post)) {
