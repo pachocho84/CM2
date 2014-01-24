@@ -54,6 +54,7 @@
 
 {% set sticky = false %}
 {% block sidebar %}
+{#
     <div data-ajax-url="{{ path('event_dates', {id: event.id}) }}"></div>
     
     <div data-ajax-url="{{ path('image_entity', {id: event.id, type: event|class_name}) }}"></div>
@@ -61,6 +62,7 @@
     <div data-ajax-url="{{ path('multimedia_entity', {id: event.id, type: event|class_name}) }}"></div>
     
     <div data-ajax-url="{{ path('entityuser_protagonists', {id: event.id}) }}"></div>
+#}
 {% endblock %}
 
 {% block javascripts %}
