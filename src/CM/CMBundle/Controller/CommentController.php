@@ -61,14 +61,19 @@ class CommentController extends Controller
                     ->setImage($image);
                 $em->persist($comment);
                 $em->flush();
-    
-                if ($request->isXmlHttpRequest()) {
+
+
+                if ($request->get('_route') == 'comment_entity_new') {
+                    return new JsonResponse(array(
+                        'comment' => $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $comment->getPost(), 'inEntity' => true))
+                    ));
+                } elseif ($request->isXmlHttpRequest()) {
                     if (!is_null($post)) {
                         $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getPost()));
                     } else {
                         $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getImage()));
                     }
-    
+        
                     return new JsonResponse(array(
                         'comment' => $this->renderView('CMBundle:Comment:comment.html.twig', array('comment' => $comment)),
                         'commentCount' => $commentCount
@@ -77,6 +82,9 @@ class CommentController extends Controller
     
                 $this->get('session')->getFlashBag('confirm', 'Comment successfully added.');
             } else {
+                if ($request->get('_route') == 'comment_entity_new') {
+                    throw new HttpException(400, $this->get('translator')->trans('Error.', array(), 'http-errors'));
+                }
                 $form = $form->createView();
             }
         }

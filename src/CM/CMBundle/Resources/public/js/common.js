@@ -241,11 +241,11 @@ $(function() {
     // $('.comment_new form input[type="submit"]').addClass('hide');
     // Elastic textarea
     $('body').on('keyup', '.bottom textarea', function() { 
-      $(this).height(0); 
-      $(this).height($(this).get(0).scrollHeight - 8); 
-  });
+        $(this).height(0); 
+        $(this).height($(this).get(0).scrollHeight - 8); 
+    });
     // Enter key press submit
-    $('body').on('keydown', '.comment_new form textarea', function(event) {
+    $('body').on('keydown', 'form .comment', function(event) { // .comment_new form textarea
         if (event.keyCode == '13' && event.shiftKey === false) { 
             event.preventDefault();
             if ($(this).val().length > 1) { 

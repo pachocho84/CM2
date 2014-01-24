@@ -1,7 +1,7 @@
 {% set inEntity = inEntity|default(false) %}
 
 {% for post in posts %}
-    {{ include('CMBundle:Wall:post.html.twig', {updateMore: (loop.first and updateMoreLink is defined)}) }}
+    {{ include('CMBundle:Wall:post.html.twig', {updateMore: (loop.first and updateMoreLink|default(null) is not null)}) }}
 {% endfor %}
 
 {% if posts.paginationData is defined and posts.paginationData.current < posts.paginationData.last %}

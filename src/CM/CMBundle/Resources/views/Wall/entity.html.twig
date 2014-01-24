@@ -1,10 +1,10 @@
 {% form_theme commentForm _self %}
 
 {% block _cm_cmbundle_comment_comment_widget %}
-    {% spaceless %}
-        {% set attr = {placeholder: 'write a comment...'|trans, class: 'input-lg'} %}
-        {{ block('form_widget_simple') }}
-    {% endspaceless %}
+{% spaceless %}
+    {% set attr = {placeholder: 'write a comment...'|trans, class: 'input-lg comment'} %}
+    {{ block('form_widget_simple') }}
+{% endspaceless %}
 {% endblock  %}
 
 <div class="box">
@@ -15,7 +15,7 @@
         </h2>
     </div>
     <div class="box-body">
-        {{ form(commentForm) }}
+        {% if is_granted('ROLE_USER') %}<div class="comment_new">{{ form(commentForm) }}</div>{% endif %}
     
         {{ include('CMBundle:Wall:posts.html.twig') }}
     </div>
