@@ -1,4 +1,4 @@
-{% if not inEntity %}
+{% if not inEntity and not singleComment|default(false) %}
     <div class="media object post">
 
         {% if post.entity.images|length > 0 %}
@@ -13,6 +13,8 @@
     
         </div><!-- END Media Body -->
     </div><!-- END Object -->
+{% elseif singleComment|default(false) %}
+     <p>{{ comment }}</p>
 {% else %}
      <p>{{ post.entity.post.comments[post.objectIds[0]] }}</p>
 {% endif %}
