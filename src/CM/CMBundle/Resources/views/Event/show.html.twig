@@ -7,10 +7,12 @@
             {% if event.getSubtitle is not null %}<h3>{{ event.getSubtitle }}</h3>{% endif %}
         </div>
         <div class="col-lg-4 text-right pull-right">
-            <div class="btn-group">
-                {{ include('CMBundle:Like:likeActions.html.twig', {post: event.post, button: true, selector: '#social'}) }}
-                <a href="{# {{ path('post_show', {'post_id': postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }}</a>
-            </div>
+            {% if is_granted('ROLE_USER') %}
+                <div class="btn-group">
+                    {{ include('CMBundle:Like:likeActions.html.twig', {post: event.post, button: true, selector: '#social'}) }}
+                    <a href="{# {{ path('post_show', {'post_id': postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }}</a>
+                </div>
+            {% endif %}
             {% if can_manage(event) %}
                 <div class="btn-group">
                     <a href="{{ path('event_edit', {'id': event.id, 'slug': event.getSlug}) }}" class="btn btn-default">{{ "Edit"|trans }}</a>
