@@ -25,8 +25,6 @@ class DiscFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 
     private $discs = array(
         array('title' => 'Concerto per pianoforte e orchestra n.I in si bemolle minore',
-            'authors' => 'Pyotr Ilyich Tchaikovsky',
-            'interpreters' => 'Svjatolav Richter, pianoforte; Wiener Symphoniker; Herbert von Karajan, direttore',
             'label' => 'EMI',
             'year' => '1962-1-1',
             'discTracks' => array(
@@ -52,8 +50,6 @@ class DiscFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'img' => 'xb7e2be2de282f6cd99a91874f2f5134dd76cdd8.jpg'
         ),
         array('title' => 'La Folia',
-            'authors' => 'Corelli, Marais, Martín y Coll, Ortiz & Anónimos',
-            'interpreters' => 'Jordi Savall, Rolf Lislevand, Michael Behringer, Arianna Savall, Bruno Cocset, Pedro Estevan, Adela Gonzalez-Campa',
             'label' => 'AliaVox',
             'year' => '1998-1-1',
             'discTracks' => array(
@@ -123,10 +119,8 @@ class DiscFixtures extends AbstractFixture implements OrderedFixtureInterface, C
         for ($i = 1; $i < 11; $i++) {
             $discNum = rand(0, count($this->discs) - 1);
             $disc = new Disc;
-            $disc->setAuthors($this->discs[$discNum]['authors'])
-                ->setInterpreters($this->discs[$discNum]['interpreters'])
-                ->setLabel($this->discs[$discNum]['label'])
-                ->setYear(new \DateTime($this->discs[$discNum]['year']));
+            $disc->setLabel($this->discs[$discNum]['label'])
+                ->setDate(new \DateTime($this->discs[$discNum]['year']));
             $disc->setTitle($this->discs[$discNum]['title']);
 
             $manager->persist($disc);

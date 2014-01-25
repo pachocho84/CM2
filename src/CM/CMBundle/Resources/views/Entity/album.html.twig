@@ -1,0 +1,74 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+
+
+    <div class="box">
+
+
+        <div class="box-heading box-heading-big clearfix">
+            <div class="media">
+                <div class="pull-right">
+                    {% if can_manage(album) %}
+                        <span class="btn btn-default btn-sm fileinput-button" data-redirect="{{ path('imagealbum_edit', {'id': album.id, 'slug': album.getSlug, 'publisher': album|class_name}) }}">
+                            {{ icon('Plus')|raw }} {{ 'Add photos'|trans }}
+                            <form action="{{ path('imagealbum_add_image', {'id': album.id}) }}" method="post" enctype="multipart/form-data">
+                                <input id="images" type="file" name="images" multiple />
+                            </form>
+                        </span>
+                        <a href="{{ path('imagealbum_edit', {'id': album.id, 'slug': album.getSlug, 'publisher': album|class_name}) }}" class="btn btn-default btn-sm">{{ icon('Edit')|raw }} {{ 'Edit'|trans }}</a> '{{ icon('Edit')|raw }}</a>
+                    {% endif %}
+                </div>
+            
+                <div class="media-body">
+                    <h2>{{ icon('Image')|raw }} {{ album }} - {{ 'images' }}</h2>
+                </div>
+
+            </div>
+        </div>
+
+
+        {% if can_manage(album) %}
+            <div class="objects hidden">
+                <div class="progress progress-striped active" style="margin-bottom: 0;">
+                    <div class="bar bar-success" style="width: 0%;"></div>
+                </div>
+            </div>
+        {% endif %}
+
+
+        
+
+        <ul class="list-unstyled objects images{% if can_manage(album) and images|length > 1 %} images-sortable{% endif %} clearfix">
+            {% if can_manage(album) and images|length > 1 %}
+                <form action="{{ path('imagealbum_sort', {'id': album.id, 'slug': album.getSlug, 'publisher': album|class_name}) }}" method="post">
+                    <div class="alert alert-info">
+                        {{ 'Drag and drop the images to sort them, then press save.'|trans }}
+                        <input type="submit" class="btn btn-primaty" value="{{ 'Save'|trans }}" />
+                    </div>
+            {% endif %}
+            
+            {{ include('CMBundle:Entity:imageList.html.twig') }}
+
+            {% if can_manage(album) and images|length > 1 %}
+                </form>
+            {% endif %}
+        </ul>
+
+    </div>
+  
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %}
+        {% javascripts
+            'lib/fileupload/js/jquery.fileupload.js'
+            'lib/fileupload/js/jquery.fileupload-ui.js'
+            'lib/fileupload/js/jquery.iframe-transport.js'
+            '@CMBundle/Resources/public/js/images.js'
+        %}
+            <script src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    {% endif %}
+{% endblock %}

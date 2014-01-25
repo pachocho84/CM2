@@ -60,14 +60,13 @@ class CommentController extends Controller
                 $em->persist($comment);
                 $em->flush();
 
-
-                if ($request->get('_route') == 'comment_entity_new') {
-                    $post = $em->getRepository('CMBundle:Post')->findOneBy(array('object' => $comment->className(), 'objectIds' => ','.$comment->getId().','));
-                    return new JsonResponse(array(
-                        'comment' => $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post, 'comment' => $comment, 'inEntity' => true, 'singleComment' => true))
-                    ));
-                } elseif ($request->isXmlHttpRequest()) {
-                    if (!is_null($post)) {
+                if ($request->isXmlHttpRequest()) {
+                    if ($request->get('_route') == 'comment_entity_new') {
+                        $post = $em->getRepository('CMBundle:Post')->findOneBy(array('object' => $comment->className(), 'objectIds' => ','.$comment->getId().','));
+                        return new JsonResponse(array(
+                            'comment' => $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post, 'comment' => $comment, 'inEntity' => true, 'singleComment' => true))
+                        ));
+                    } elseif (!is_null($post)) {
                         $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getPost()));
                     } else {
                         $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getImage()));
@@ -77,6 +76,8 @@ class CommentController extends Controller
                         'comment' => $this->renderView('CMBundle:Comment:comment.html.twig', array('comment' => $comment)),
                         'commentCount' => $commentCount
                     ));
+                } else {
+                    return new RedirectResponse($request->getUri());
                 }
     
                 $this->get('session')->getFlashBag('confirm', 'Comment successfully added.');
@@ -104,7 +105,7 @@ class CommentController extends Controller
 
         $comment = $em->getRepository('CMBundle:Comment')->findOneById($id);
 
-        if (!$this->get('cm.user_authentication')->canManage($comment)) {
+        if (!$this->get('cm.user_authentication')->canManage($comment) && !$this->get('cm.user_authentication')->canManage($comment->getPost()->getEntity())) {
             throw new HttpException(401, 'Unauthorized access.');
         }
             
