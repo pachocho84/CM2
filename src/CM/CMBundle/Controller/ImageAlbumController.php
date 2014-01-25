@@ -446,15 +446,26 @@ class ImageAlbumController extends Controller
     }
 
     /**
+     * @Route("/{type}/{id}/album/{page}", name="entity_album", requirements={"id" = "\d+", "page" = "\d+"})
      * @Route("/{slug}/album/{id}/{page}", name="user_album", requirements={"id" = "\d+", "page" = "\d+"})
      * @Route("/pages/{slug}/album/{id}/{page}", name="page_album", requirements={"id" = "\d+", "page" = "\d+"})
      * @Route("/groups/{slug}/album/{id}/{page}", name="group_album", requirements={"id" = "\d+", "page" = "\d+"})
      */
-    public function albumAction(Request $request, $slug, $id, $page = 1)
+    public function albumAction(Request $request, $id, $type = null, $slug = null, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
 
-        if ($request->get('_route') == 'user_album') {
+        if ($request->get('_route') == 'entity_album') {
+            $publisher = $em->getRepository('CMBundle:'.$type)->findOneById($id);
+            
+            if (!$publisher) {
+                throw new NotFoundHttpException($this->get('translator')->trans($type.' not found.', array(), 'http-errors'));
+            }
+            
+            $publisherType = $type;
+
+            $template = 'CMBundle:Entity:album.html.twig';
+        } elseif ($request->get('_route') == 'user_album') {
             $publisher = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
             
             if (!$publisher) {
@@ -505,7 +516,7 @@ class ImageAlbumController extends Controller
         }
 
         return new Response($this->renderView($template, array(
-            $publisherType => $publisher,
+            strtolower($publisherType) => $publisher,
             'album' => $album,
             'images' => $pagination,
             'count' => $this->countAlbumsAndImages(array($publisherType.'Id' => $publisher->getId()))

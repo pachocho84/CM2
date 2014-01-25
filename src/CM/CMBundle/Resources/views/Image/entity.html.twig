@@ -1,7 +1,7 @@
 {% if images|length > 1 %}
     <div class="box">
         <div class="box-heading">
-            <h2>{{ icon('Photo') }} {{ 'Photos'|trans }} <small><a href="{#{{ path('user_album', {'slug': event.post.user.slug, 'id': event.id}) }}#}">{{ 'View all photos'|trans }} ({{ images|length }})</a></small></h2>
+            <h2>{{ icon('Photo') }} {{ 'Photos'|trans }} <small><a href="{{ path('entity_album', {'id': entityId, 'type': entityType}) }}">{{ 'View all photos'|trans }} ({{ images|length }})</a></small></h2>
         </div>
         <div class="box-body clearfix entity-assets">
             {% for image in images %}
