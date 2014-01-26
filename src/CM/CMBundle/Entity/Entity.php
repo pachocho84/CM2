@@ -52,6 +52,13 @@ abstract class Entity
     private $source;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="date")
+     */
+    private $date;
+
+    /**
      * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")
      * @ORM\JoinColumn(name="entity_category_id", referencedColumnName="id")
      * @Assert\Valid
@@ -167,6 +174,29 @@ abstract class Entity
     public function getSource()
     {
         return $this->source;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     * @return Article
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+    
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime 
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
     
     /**

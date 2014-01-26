@@ -17,10 +17,8 @@ class DiscType extends EntityType
     {
         parent::buildForm($builder, $options);
     
-        $builder->add('authors')
-            ->add('interpreters')
-            ->add('label')
-            ->add('year')
+        $builder->add('label')
+            ->add('date')
             ->add('discTracks', 'collection', array(
                 'type' => new DiscTrackType,
                 'allow_add' => true,

@@ -18,8 +18,6 @@
                     {#<p class="text-muted"><?php echo __('Published on') ?> <?php echo format_date($post->getCreatedAt(), 'D') ?> <?php echo __('by') ?> <?php echo link_to($post->getPublisher(), $post->getRawValue()->getPublisher()->getLinkShow()) ?>, <?php echo __('with') ?> <?php include_component('protagonist', 'protagonists', array('post' => $post)) ?></p>#}
 
                     <dl class="dl-horizontal">
-                        {% if disc.authors is not null %}<dt>Author</dt><dd>{{ disc.authors }}</dd>{% endif %}
-                        {% if disc.interpreters is not null %}<dt>Interpreter</dt><dd>{{ disc.interpreters }}</dd>{% endif %}
                         {% if disc.label is not null %}<dt>Label</dt><dd>{{ disc.label }}</dd>{% endif %}
                         {% if disc.year is not null %}<dt>Year</dt><dd>{{ disc.year|date('Y') }}</dd>{% endif %}
                     </dl>

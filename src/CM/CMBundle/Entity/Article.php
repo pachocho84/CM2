@@ -22,21 +22,9 @@ class Article extends Entity
     protected $id;
 
     /**
-     * @ORM\Column(name="homepage", type="boolean")
-     */
-    private $homepage = false;
-
-    /**
      * @ORM\OneToOne(targetEntity="HomepageArchive", mappedBy="article", cascade={"persist", "remove"})
      **/
     private $homepageArchive = null;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date", type="date")
-     */
-    private $date;
 
     public function __construct()
     {
@@ -67,29 +55,6 @@ class Article extends Entity
     }
 
     /**
-     * Set homepage
-     *
-     * @param string $homepage
-     * @return Article
-     */
-    public function setHomepage($homepage)
-    {
-        $this->homepage = $homepage;
-    
-        return $this;
-    }
-
-    /**
-     * Get homepage
-     *
-     * @return string 
-     */
-    public function getHomepage()
-    {
-        return $this->homepage;
-    }
-
-    /**
      * Set homepageArchive
      *
      * @param string $homepageArchive
@@ -113,28 +78,5 @@ class Article extends Entity
     public function getHomepageArchive()
     {
         return $this->homepageArchive;
-    }
-
-    /**
-     * Set date
-     *
-     * @param \DateTime $date
-     * @return Article
-     */
-    public function setDate($date)
-    {
-        $this->date = $date;
-    
-        return $this;
-    }
-
-    /**
-     * Get date
-     *
-     * @return \DateTime 
-     */
-    public function getDate()
-    {
-        return $this->date;
     }
 }

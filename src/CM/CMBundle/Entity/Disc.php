@@ -24,32 +24,11 @@ class Disc extends Entity
     protected $id;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(name="authors", type="string", length=150)
-     */
-    private $authors;
-
-    /**
-     * @var array
-     *
-     * @ORM\Column(name="interpreters", type="string", length=150)
-     */
-    private $interpreters;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="`label`", type="string", length=150)
      */
     private $label;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="year", type="date")
-     */
-    private $year;
     
     /**
      * @ORM\OneToMany(targetEntity="DiscTrack", mappedBy="disc", cascade={"persist", "remove"})
@@ -152,29 +131,6 @@ class Disc extends Entity
     public function getLabel()
     {
         return $this->label;
-    }
-
-    /**
-     * Set year
-     *
-     * @param \DateTime $year
-     * @return Disc
-     */
-    public function setYear($year)
-    {
-        $this->year = $year;
-    
-        return $this;
-    }
-
-    /**
-     * Get year
-     *
-     * @return \DateTime 
-     */
-    public function getYear()
-    {
-        return $this->year;
     }
 
     /**

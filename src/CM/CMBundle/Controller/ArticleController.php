@@ -213,11 +213,6 @@ class ArticleController extends Controller
 
             $em->flush();
 
-            // foreach ($article->getEntityUsers() as $entityUser) {
-            //     echo $entityUser->getUser().' -> i: '.count($entityUser->getUser()->getRequestsIncoming()).', o: '.'<br/>';
-            // }
-            // die;
-
             return new RedirectResponse($this->generateUrl('article_show', array('id' => $article->getId(), 'slug' => $article->getSlug())));
         }
 
