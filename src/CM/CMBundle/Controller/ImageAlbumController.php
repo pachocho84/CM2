@@ -312,7 +312,7 @@ class ImageAlbumController extends Controller
 
         $images = $em->getRepository('CMBundle:Image')->getImages(array($publisherType.'Id' => $publisher->getId()));
         
-        $pagination = $this->get('knp_paginator')->paginate($images, $page, 32);
+        $pagination = $this->get('knp_paginator')->paginate($images, $page, 40);
 
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:ImageAlbum:imageList.html.twig', array(
@@ -402,7 +402,7 @@ class ImageAlbumController extends Controller
             $publisherType.'Id' => $publisher->getId(),
         ));
         
-        $pagination = $this->get('knp_paginator')->paginate($albums, $page, 32);
+        $pagination = $this->get('knp_paginator')->paginate($albums, $page, 40);
 
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:ImageAlbum:albumList.html.twig', array(
@@ -438,7 +438,7 @@ class ImageAlbumController extends Controller
 
         $images = $em->getRepository('CMBundle:Image')->getImages(array('albumId' => $id));
         
-        $pagination = $this->get('knp_paginator')->paginate($images, $page, 4);
+        $pagination = $this->get('knp_paginator')->paginate($images, $page, 40);
 
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:ImageAlbum:imageList.html.twig', array(
@@ -503,7 +503,7 @@ class ImageAlbumController extends Controller
             // 'paginate' => false
         ));
         
-        $pagination = $this->get('knp_paginator')->paginate($entities, $page, 32);
+        $pagination = $this->get('knp_paginator')->paginate($entities, $page, 40);
 
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:ImageAlbum:imageEntityList.html.twig', array(
