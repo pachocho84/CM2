@@ -689,6 +689,9 @@ form .form-tab-content {
 
 
 /* IMAGES */
+.images {
+	margin: 0 -2px !important;
+}
 .images > .object > a {
   opacity: 0; 
   filter: alpha(opacity=0);
@@ -708,36 +711,35 @@ form .form-tab-content {
 .images-sortable .image a {
     cursor: move;
 }
-.images li.album,
-.images li.image,
-.images li.image:first-child {
-    width: 180px; 
-    margin: 2px 2px 2px 1px; 
-    padding: 0;
+.images .album,
+.images .image {
+    width: 188px; 
+    height: 188px;
+    margin: 2px 2px 2px 1px;
     float: left;
     border: 1px solid #dddddd;
     position: relative;
 }
-.images li.album,
-.images li.album .image-container {
+.images .album,
+.images .album .image-container {
     position: relative;
     height: 247px;
 }
-.images li.image,
-.images li.image .image-container {
+.images .image,
+.images .image .image-container {
     position: relative;
-    height: 180px;
+    height: 188px;
 }
-.images li .btn-group {
+.images .btn-group {
     position: absolute;
     right: 5px;
     top: 5px;
     z-index: 10;
 }
-.images li .btn-group a.btn-small {
+.images .btn-group a.btn-small {
     padding: 2px 5px;
 }
-.images li.album .album-preview {
+.images .album .album-preview {
     width: 180px;
     height: 180px;
     overflow: hidden;

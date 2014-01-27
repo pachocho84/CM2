@@ -311,12 +311,12 @@ $(function() {
     // $('.comment_new form input[type="submit"]').addClass('hide');
     // Elastic textarea
     $('body').on('keyup', '.bottom textarea', function() { 
-      $(this).height(0); 
-      $(this).height($(this).get(0).scrollHeight - 8); 
-  });
+        $(this).height(0); 
+        $(this).height($(this).get(0).scrollHeight - 8); 
+    });
     // Enter key press submit
-    $('body').on('keydown', '.comment_new form textarea', function(event) {
-        if (event.keyCode == '13' && event.shiftKey === false) { 
+    $('body').on('keydown', 'form .comment', function(event) { // .comment_new form textarea
+        if (event.keyCode == '13' && event.shiftKey === false) {
             event.preventDefault();
             if ($(this).val().length > 1) { 
                 $(this).closest('form').submit();
@@ -327,11 +327,14 @@ $(function() {
     $(document).on('submit', '.comment_new form', function(event) {
         event.preventDefault();
         $(event.currentTarget).ajaxSubmit({
-            dataType:      'json',
-            success:         function(data, statusText, xhr, form) {
-                form.closest('li').before(data.comment);
-                form.closest('.object').find('.bottom-comment-count').replaceWith(data.commentCount);
-                form.find('textarea').focus().val('');
+            dataType: 'json',
+            success: function(data, statusText, xhr, form) {
+                console.log($(event.currentTarget).find('.comment'));
+                $(event.currentTarget).closest('.comment_new').after(data.comment);
+                $(event.currentTarget).find('.comment').val('');
+                // form.closest('li').before(data.comment);
+                // form.closest('.object').find('.bottom-comment-count').replaceWith(data.commentCount);
+                // form.find('textarea').focus().val('');
             }
         });
     });
