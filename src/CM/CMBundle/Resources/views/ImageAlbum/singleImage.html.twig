@@ -20,7 +20,7 @@
     {% endif %}
     
     <div class="image-container">
-        <a href="{{ link }}">
+        <a href="{{ path('image_show', {id: image.id}) }}">
             {{ show_img_box(image.getImg|imagine_filter('medium'), {width: 180, box_attributes: {'class': 'pull-left'}})|raw }}
             <div class="image-overlay"></div>
         </a>

@@ -62,7 +62,7 @@ class ImageRepository extends BaseRepository
         if (!is_null($options['groupId'])) {
             $query->andWhere('i.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
-        $query->addOrderBy('i.sequence', 'desc');
+        $query->addOrderBy('i.sequence');
 
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
