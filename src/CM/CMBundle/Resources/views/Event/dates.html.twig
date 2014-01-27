@@ -36,7 +36,7 @@
                 <div id="event-date-{{ loop.index }}" class="collapse{% if loop.first %} in{% endif %}">
                     <p><span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span></p>
                     <div class="event-date-map">
-                        <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=350x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
+                        <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=378x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
                         <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                     </p>
                     <div id="event-date-past-{{ loop.index }}" class="event-date-map collapse">
                         <p><span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span></p>
-                        <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=350x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
+                        <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=378x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
                             <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
                     </div>
                 </div>

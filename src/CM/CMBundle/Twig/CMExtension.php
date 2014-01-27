@@ -257,8 +257,8 @@ class CMExtension extends \Twig_Extension
             'img_attributes'  => array()
         ), $options);
 
-        $width  = intval($options['width']);
-        $height = is_null($options['height']) ? $width : intval($options['height']);
+        $width  = $options['width'];
+        $height = is_null($options['height']) ? $width : $options['height'];
 
         // Get image dimensions
         $fileName = preg_replace('/^\/.*\//', '', $img);

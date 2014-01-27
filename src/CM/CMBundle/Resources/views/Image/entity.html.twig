@@ -5,7 +5,7 @@
         </div>
         <div class="box-body clearfix entity-assets">
             {% for image in images %}
-                {{ show_img_box(image.img|imagine_filter('medium'), {width: 112, height: 112, link: path('image_show', {id: image.id}), box_attributes: {class: 'pull-left entity-asset'}}) }}
+                {{ show_img_box(image.img|imagine_filter('medium'), {width: 110, link: path('image_show', {id: image.id}), box_attributes: {class: 'pull-left entity-asset'}}) }}
             {% endfor %}
         </div>
     </div>
