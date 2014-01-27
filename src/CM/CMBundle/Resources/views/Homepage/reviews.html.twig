@@ -13,7 +13,7 @@
                 <div class="box_home-oggetto">                        
                     
                     {% if object.img is not null %}
-                        {{ show_img_box(object.img|imagine_filter('350'), {'width': 150, 'offset': object.imgOffset, 'link': path('homepage_show', {'id': object.id}), 'link_attributes': {'class': 'pull-left'}}) }}
+                        {{ show_img_box(object.img|imagine_filter('medium'), {'width': 150, 'offset': object.imgOffset, 'link': path('homepage_show', {'id': object.id}), 'link_attributes': {'class': 'pull-left'}}) }}
                     {% else %}
                         <a href="<?php echo url_for('@homepage_show?id='.$oggetto->getStampa()->getId()) ?>" class="immagine">
                             <img src="/images/default_recensione.jpg" width="150" />         

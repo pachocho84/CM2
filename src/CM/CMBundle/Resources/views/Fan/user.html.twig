@@ -34,7 +34,7 @@
         <ul class="media-list objects">
             {% for fan in fans %}
                 <li class="media object">
-                    {{ show_img_box(fan.img | imagine_filter('350'), {'width': 200, 'height': 120, 'offset': fan.imgOffset,  'link': path('user_show', {'slug': fan.slug}), 'default': 'user', 'link_attributes': {'class': 'pull-left img-thumbnail'}}) | raw }}
+                    {{ show_img_box(fan.img | imagine_filter('medium'), {'width': 200, 'height': 120, 'offset': fan.imgOffset,  'link': path('user_show', {'slug': fan.slug}), 'default': 'user', 'link_attributes': {'class': 'pull-left img-thumbnail'}}) | raw }}
                     <div class="media-body">
                         <h4>
                             <a href="{{ path('user_show', {'slug': fan.slug}) }}">{{ fan }}</a>

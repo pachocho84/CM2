@@ -22,7 +22,7 @@
             <h2>{{ icon('Biography') }} <a href="{{ path('group_biography', {'slug': group.slug}) }}">{{ 'Biography'|trans }}</a> <small><a href="{{ path('group_biography', {'slug': group.slug}) }}">{{ 'show complete biography'|trans }}</small></a></h2>
         </div>
         <div class="media objects">
-            {{ show_img_box(group.img|imagine_filter('350'), {'width': 200, 'offset': group.imgOffset, 'default': 'group', 'box_attributes': {'class': 'pull-left img-thumbnail'}}) }}
+            {{ show_img_box(group.img|imagine_filter('medium'), {'width': 200, 'offset': group.imgOffset, 'default': 'group', 'box_attributes': {'class': 'pull-left img-thumbnail'}}) }}
             <div class="meda-body">
                 <h4>
                     {{ group }}

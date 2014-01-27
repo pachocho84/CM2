@@ -45,7 +45,7 @@
 
                 {{ 'Founder'|trans }}:
                 <div class="immagine">
-                    {{ show_img_box(group.creator.img|imagine_filter('350'), {'width': 75, 'height': 75, 'offset': group.creator.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+                    {{ show_img_box(group.creator.img|imagine_filter('medium'), {'width': 75, 'height': 75, 'offset': group.creator.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
                 </div>
 
                 <div class="contenuto">

@@ -66,7 +66,7 @@ class PostRepository extends BaseRepository
             ->leftJoin('e.translations', 't', 'with', 't.locale in (:locales)')->setParameter('locales', $options['locales'])
             ->leftJoin('e.entityCategory', 'c')
             ->leftJoin('c.translations', 'ct', 'with', 'ct.locale = :locale')->setParameter('locale', $options['locale'])
-            ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
+            ->leftJoin('e.images', 'i', 'with', 'i.main = '.true)
             ->leftJoin('e.posts', 'ep')
             ->leftJoin('ep.likes', 'epl')
             ->leftJoin('ep.comments', 'epc', '', '', 'epc.id')
@@ -83,8 +83,8 @@ class PostRepository extends BaseRepository
             $count->andWhere('p.object = :object')->setParameter('object', $options['object']);
             $query->andWhere('p.object = :object')->setParameter('object', $options['object']);
         } elseif (count($options['objects'])) {
-            $count->andWhere('p.object in (:objects)')->setParameter('objects', $options['objects']);
-            $query->andWhere('p.object in (:objects)')->setParameter('objects', $options['objects']);
+            $count->andWhere('p.object IN (:objects)')->setParameter('objects', $options['objects']);
+            $query->andWhere('p.object IN (:objects)')->setParameter('objects', $options['objects']);
         }
         if (!is_null($options['after'])) {
             $count->andWhere('p.updatedAt > :after')->setParameter('after', $options['after']);

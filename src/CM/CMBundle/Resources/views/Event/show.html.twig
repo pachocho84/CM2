@@ -40,7 +40,7 @@
                 </p>
             </div>
             <div class="media object">
-                <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}" class="pull-left"><img src="{{ event.getImages[0].img|imagine_filter('350') }}" width=200 /></a>
+                <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}" class="pull-left"><img src="{{ event.getImages[0].img|imagine_filter('medium') }}" width=200 /></a>
                 <div>
                     <div class="text-justify">{{ event.getText|raw }}</div>
                 </div>
@@ -56,7 +56,6 @@
 
 {% set sticky = false %}
 {% block sidebar %}
-{#
     <div data-ajax-url="{{ path('event_dates', {id: event.id}) }}"></div>
     
     <div data-ajax-url="{{ path('image_entity', {id: event.id, type: event|class_name}) }}"></div>
@@ -64,7 +63,6 @@
     <div data-ajax-url="{{ path('multimedia_entity', {id: event.id, type: event|class_name}) }}"></div>
     
     <div data-ajax-url="{{ path('entityuser_protagonists', {id: event.id}) }}"></div>
-#}
 {% endblock %}
 
 {% block javascripts %}

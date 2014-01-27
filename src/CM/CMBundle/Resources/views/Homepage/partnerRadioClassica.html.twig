@@ -7,7 +7,7 @@
             <div class="oggetto">
 
                 {% if article.images|length > 0 %}
-                    <div class="image-container">{{ show_img_box(article.images[0].img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': article.images[0].imgOffset, 'link': path('homepage_show', {'id': article.id})}) }}</div>
+                    <div class="image-container">{{ show_img_box(article.images[0].img|imagine_filter('small'), {'width': 50, 'height': 50, 'offset': article.images[0].imgOffset, 'link': path('homepage_show', {'id': article.id})}) }}</div>
                 {% endif %}
                 <h3><a href="{{ path('homepage_show', {'id': article.id}) }}">{{ article.getTitle }}</a></h3> 
             

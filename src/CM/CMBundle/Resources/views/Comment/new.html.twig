@@ -1,5 +1,5 @@
 <li class="media comment comment_new {# <?php $comments->count() == 0 && $sf_request->getParameter('action') != 'show' and print ' hidden' ?> #}">
-    {{ show_img_box(app.user.img|imagine_filter('50'), {'width': 32, 'height': 32, 'offset': app.user.imgOffset,  'link': path('user_show', {'slug': app.user.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) }}
+    {{ show_img_box(app.user.img|imagine_filter('small'), {'width': 32, 'height': 32, 'offset': app.user.imgOffset,  'link': path('user_show', {'slug': app.user.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) }}
     <div class="media-body">      
             {{ form_start(form) }}
                 {{ form_widget(form.comment, {'no_container_class': true, 'attr': {'class': 'input-lg', 'comment_new': ''}}) }}

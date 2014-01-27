@@ -16,7 +16,7 @@
             </p></a>
             
             <div class="media-body">
-                {{ show_img_box(message.thread.creator.img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': message.thread.creator.imgOffset,  'link': path('user_show', {'slug': message.thread.creator.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+                {{ show_img_box(message.thread.creator.img|imagine_filter('small'), {'width': 50, 'height': 50, 'offset': message.thread.creator.imgOffset,  'link': path('user_show', {'slug': message.thread.creator.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
                 <a href="{{ path('message_show', {'threadId': message.thread.id}) }}">{{ message.thread.lastMessage.body|length > 50 ? message.thread.lastMessage.body|slice(0, 47) ~ '...' : message.thread.lastMessage.body }}</a>
                 <p class="text-muted"><small>{{ message.thread.lastMessage.createdAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</small></p>
             </div>

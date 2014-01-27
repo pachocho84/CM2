@@ -24,7 +24,7 @@
         </div>
         <div class="objects">
             <div class="media object">
-                <a href="{{ path('user_biography', {'slug': user.slug}) }}" class="pull-left img-thumbnail"><img src='{{ asset(user.img|imagine_filter('350')) }}' width=200 class="media-object" /></a>
+                <a href="{{ path('user_biography', {'slug': user.slug}) }}" class="pull-left img-thumbnail"><img src='{{ asset(user.img|imagine_filter('medium')) }}' width=200 class="media-object" /></a>
                 <div>
                     <h3 class="media-heading">
                         {{ user }}

@@ -328,16 +328,22 @@ class ImageAlbumController extends Controller
     }
 
     /**
-     * @Route("/image/{id}", name="image_show", requirements={"id" = "\d+"})
+     * @Route("/{type}/{entityId}/image/{id}", name="image_show", requirements={"id" = "\d+", "entityId" = "\d+"})
      * @Route("/{slug}/image/{id}", name="user_image", requirements={"id" = "\d+"})
      * @Route("/pages/{slug}/image/{id}", name="page_image", requirements={"id" = "\d+"})
      * @Route("/groups/{slug}/image/{id}", name="group_image", requirements={"id" = "\d+"})
      */
-    public function imageAction(Request $request, $id, $slug = null)
+    public function imageAction(Request $request, $id, $slug = null, $type = null, $entityId = null)
     {
         $em = $this->getDoctrine()->getManager();
 
-        if ($request->get('_route') == 'user_image') {
+        if ($request->get('_route') == 'image_show') {
+            $publisher = $em->getRepository('CMBundle:'.$type)->findOneById($entityId);
+
+            $publisherType = 'album';
+
+            $template = 'CMBundle:Entity:image.html.twig';
+        } elseif ($request->get('_route') == 'user_image') {
             $publisher = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
             
             if (!$publisher) {
@@ -369,14 +375,13 @@ class ImageAlbumController extends Controller
             $template = 'CMBundle:Group:image.html.twig';
         }
 
-        try {
-            $image = $em->getRepository('CMBundle:Image')->getImage($id, array($publisherType.'Id' => $publisher->getId()));
-        } catch (\Exception $e) {
+        $image = $em->getRepository('CMBundle:Image')->getImage($id);
+        
+        if ($image->getPublisher()->getSlug() == $slug) {
             throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));
         }
 
         return new Response($this->renderView($template, array(
-            $publisherType => $publisher,
             'image' => $image,
             'count' => $this->countAlbumsAndImages(array($publisherType.'Id' => $publisher->getId()))
         )));
@@ -462,7 +467,7 @@ class ImageAlbumController extends Controller
                 throw new NotFoundHttpException($this->get('translator')->trans($type.' not found.', array(), 'http-errors'));
             }
             
-            $publisherType = $type;
+            $publisherType = 'entity';
 
             $template = 'CMBundle:Entity:album.html.twig';
         } elseif ($request->get('_route') == 'user_album') {

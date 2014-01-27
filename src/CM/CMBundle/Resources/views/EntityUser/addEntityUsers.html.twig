@@ -55,7 +55,7 @@
         <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user media alert {{ alertClass }}" user_id="{{ user.id }}" {% if target is defined and target|length == 2 %}{{ target.type }}_id="{{ target.obj.id }}"{% endif %}>
             {{ form_errors(field) }}
             {% if user.id != app.security.token.user.id %}<a class="protagonists_remove close" aria-hidden="true" id="protagonists_remove_{{ loop.index0 }}">&times;</a>{% endif %}
-            {{ show_img_box(user.img|imagine_filter('350'), {'width': 75, 'height': 75, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'img-thumbnail pull-left'}})|raw }}
+            {{ show_img_box(user.img|imagine_filter('medium'), {'width': 75, 'height': 75, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'img-thumbnail pull-left'}})|raw }}
             <div class="media-body">
                 <h4 class="media-heading">{{ user }}</h4>
                 <p>{{ requestText }}</p>

@@ -12,7 +12,7 @@
 
 {% block accountSidebar %}
     <div class="media">
-        <div class="pull-left">{{ show_img_box(app.user.img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': app.user.imgOffset})|raw }}</div>
+        <div class="pull-left">{{ show_img_box(app.user.img|imagine_filter('small'), {'width': 50, 'height': 50, 'offset': app.user.imgOffset})|raw }}</div>
         <div class="media-body">
             <h4 class="media-heading">
                 {{ app.user }}

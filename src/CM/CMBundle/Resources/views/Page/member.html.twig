@@ -1,7 +1,7 @@
 <div protagonist_new_id="0" class="collection-item protagonists_user media ajax-link-target alert alert-{% if member.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_ACTIVE') %}success{% else %}warning{% endif %}" user_id="{{ member.userId }}">
 
     <div class="immagine">
-        {{ show_img_box(member.user.img|imagine_filter('350'), {'width': 75, 'height': 75, 'offset': member.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+        {{ show_img_box(member.user.img|imagine_filter('medium'), {'width': 75, 'height': 75, 'offset': member.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
     </div>
 
     <div class="contenuto">

@@ -47,7 +47,7 @@
             {% for article in articles %}
                 <div class="box_home-oggetto">
                     {% if article.img is not null %}
-                        {{ show_img_box(article.img|imagine_filter('350'), {'width': 300, 'height': 180, 'offset': article.imgOffset, 'link': path('homepage_show', {'id': article.id}), 'link_attributes': {'class': 'image-container'}}) }}
+                        {{ show_img_box(article.img|imagine_filter('medium'), {'width': 300, 'height': 180, 'offset': article.imgOffset, 'link': path('homepage_show', {'id': article.id}), 'link_attributes': {'class': 'image-container'}}) }}
                     {% endif %}                                                                
                     <h3><a href="{{ path('homepage_show', {'id': article.id}) }}">{{ article.getTitle }}</a></h3>
                     <h4>{{ article.getSubtitle }}</h4>
@@ -63,7 +63,7 @@
             {% for article in news %}
                 <div class="box_home-oggetto">
                     {% if article.img is not null %}
-                        {{ show_img_box(article.img|imagine_filter('350'), {'width': 300, 'height': 180, 'offset': article.imgOffset, 'link': path('article_show', {'id': article.id, 'slug': article.slug}), 'link_attributes': {'class': 'image-container'}}) }}
+                        {{ show_img_box(article.img|imagine_filter('medium'), {'width': 300, 'height': 180, 'offset': article.imgOffset, 'link': path('article_show', {'id': article.id, 'slug': article.slug}), 'link_attributes': {'class': 'image-container'}}) }}
                     {% endif %}                                                                
                     <h3><a href="{{ path('article_show', {'id': article.id, 'slug': article.slug}) }}">{{ article.getTitle }}</a></h3>
                     <h4>{{ article.getSubtitle }}</h4>
@@ -79,7 +79,7 @@
             {% for date in events %}
                 <div class="box_home-oggetto">
                     {% if date.getEvent.img is not null %}
-                        {{ show_img_box(date.event.img|imagine_filter('350'), {'width': 300, 'height': 180, 'offset': date.event.imgOffset, 'link': path('event_show', {'id': date.event.id, 'slug': date.event.slug}), 'link_attributes': {'class': 'image-container'}}) }}
+                        {{ show_img_box(date.event.img|imagine_filter('medium'), {'width': 300, 'height': 180, 'offset': date.event.imgOffset, 'link': path('event_show', {'id': date.event.id, 'slug': date.event.slug}), 'link_attributes': {'class': 'image-container'}}) }}
                     {% endif %}                                                                
                     <h3><a href="{{ path('event_show', {'id': date.event.id, 'slug': date.event.getSlug}) }}">{{ date.event.getTitle }}</a></h3>
                     <h4>{{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }} {{ icon('Map') }} {{ date.location }} <small>({{ date.address }})</small></h4>

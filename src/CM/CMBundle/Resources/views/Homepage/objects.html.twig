@@ -4,7 +4,7 @@
 
         {% if object.img is not null %}
             <div class="immagine">
-                <a href="{{ path('homepage_show', {'id': object.id}) }}"><img src="{{ object.img|imagine_filter('350') }}" class="recent_article_box-photo" /></a>
+                <a href="{{ path('homepage_show', {'id': object.id}) }}"><img src="{{ object.img|imagine_filter('medium') }}" class="recent_article_box-photo" /></a>
             </div>
         {% endif %}
 

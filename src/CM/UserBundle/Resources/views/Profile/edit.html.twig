@@ -17,11 +17,11 @@
         <div class="box-top">
             <div class="row">
                 <div class="col-lg-5">
-                    <h2>{{ show_icon('Options')|raw }} <span>{{ block('title') }}</h2>
+                    <h2>{{ icon('Options') }} <span>{{ block('title') }}</h2>
                 </div>
                 <div class="col-lg-7 text-right">
                     <div class="btn-group btn-group-sm">
-                        <a href="{{ path('user_show', {'slug': app.user.slug}) }}" class="btn btn-default">{{ show_icon('User')|raw }} {{ 'View profile'|trans }}</a>
+                        <a href="{{ path('user_show', {'slug': app.user.slug}) }}" class="btn btn-default">{{ icon('User') }} {{ 'View profile'|trans }}</a>
                     </div>
                 </div>
             </div>
