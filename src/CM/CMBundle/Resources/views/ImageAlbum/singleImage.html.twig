@@ -1,4 +1,4 @@
-<li class="object image" data-type="image" data-id="{{ image.id }}" data-toggle-hover>
+<div class="image" data-type="image" data-id="{{ image.id }}" data-toggle-hover>
 
     {% if can_manage(image.entity) %}
         <div class="btn-group pull-right invisible" data-toggle>
@@ -21,7 +21,7 @@
     
     <div class="image-container">
         <a href="{{ link }}">
-            {{ show_img_box(image.getImg|imagine_filter('medium'), {width: 180, box_attributes: {'class': 'pull-left'}})|raw }}
+            {{ show_img_box(image.getImg|imagine_filter('medium'), {width: 188, box_attributes: {'class': 'pull-left'}})|raw }}
             <div class="image-overlay"></div>
         </a>
         <div class="image-overlay-content">
@@ -43,4 +43,4 @@
         </div>
     </div>
     <input type="hidden" name="{{ image.id }}" />
-</li>
+</div>
