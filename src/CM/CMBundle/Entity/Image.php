@@ -163,7 +163,7 @@ class Image
         }
     }
     
-    public function getPublisherRoute()
+    public function getPublisherType()
     {
         if ($this->getPage()) {
             return 'page';

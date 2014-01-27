@@ -351,58 +351,30 @@ class ImageAlbumController extends Controller
     }
 
     /**
-     * @Route("/image/{id}", name="image_show", requirements={"id" = "\d+"})
-     * @Route("/{slug}/image/{id}", name="user_image", requirements={"id" = "\d+"})
-     * @Route("/pages/{slug}/image/{id}", name="page_image", requirements={"id" = "\d+"})
-     * @Route("/groups/{slug}/image/{id}", name="group_image", requirements={"id" = "\d+"})
+     * @Route("/image/{id}", name="image_show", requirements={"id" = "\d+", "entityId" = "\d+"})
+     * @Template
      */
-    public function imageAction(Request $request, $id, $slug = null)
+    public function imageAction(Request $request, $id, $slug = null, $type = null, $entityId = null)
     {
         $em = $this->getDoctrine()->getManager();
 
-        if ($request->get('_route') == 'user_image') {
-            $publisher = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
-            
-            if (!$publisher) {
-                throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
-            }
-
-            $publisherType = 'user';
-
-            $template = 'CMBundle:User:image.html.twig';
-        } elseif ($request->get('_route') == 'page_image') {
-            $publisher = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
-            
-            if (!$publisher) {
-                throw new NotFoundHttpException($this->get('translator')->trans('Page not found.', array(), 'http-errors'));
-            }
-
-            $publisherType = 'page';
-
-            $template = 'CMBundle:Page:image.html.twig';
-        } elseif ($request->get('_route') == 'group_image') {
-            $publisher = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
-            
-            if (!$publisher) {
-                throw new NotFoundHttpException($this->get('translator')->trans('Group not found.', array(), 'http-errors'));
-            }
-
-            $publisherType = 'group';
-
-            $template = 'CMBundle:Group:image.html.twig';
-        }
-
-        try {
-            $image = $em->getRepository('CMBundle:Image')->getImage($id, array($publisherType.'Id' => $publisher->getId()));
-        } catch (\Exception $e) {
+        $image = $em->getRepository('CMBundle:Image')->getImage($id);
+        
+        if (is_null($image)) {
             throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));
         }
 
-        return new Response($this->renderView($template, array(
-            $publisherType => $publisher,
+        $imageIdsInAlbum = $em->getRepository('CMBundle:ImageAlbum')->getImageIdsInAlbum($image->getEntityId());
+        $index = array_search($id, $imageIdsInAlbum);
+        $prev = array_key_exists($index - 1, $imageIdsInAlbum) ? $imageIdsInAlbum[$index - 1]['id'] : null;
+        $next = array_key_exists($index + 1, $imageIdsInAlbum) ? $imageIdsInAlbum[$index + 1]['id'] : null;
+
+        return array(
             'image' => $image,
-            'count' => $this->countAlbumsAndImages(array($publisherType.'Id' => $publisher->getId()))
-        )));
+            'prevId' => $prev,
+            'nextId' => $next,
+            // 'count' => $this->countAlbumsAndImages(array($image->getPublisherType().'Id' => $image->getPublisher()->getId()))
+        );
     }
 
     /**
@@ -485,7 +457,7 @@ class ImageAlbumController extends Controller
                 throw new NotFoundHttpException($this->get('translator')->trans($type.' not found.', array(), 'http-errors'));
             }
             
-            $publisherType = $type;
+            $publisherType = 'entity';
 
             $template = 'CMBundle:Entity:album.html.twig';
         } elseif ($request->get('_route') == 'user_album') {

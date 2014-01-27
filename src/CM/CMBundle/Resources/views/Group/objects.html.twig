@@ -3,7 +3,7 @@
     <div class="media">
 
         {% if group.images|length > 0 %}
-            {{ show_img_box(group.images[0]|imagine_filter('350'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #}
+            {{ show_img_box(group.images[0]|imagine_filter('medium'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #}
         {% endif %}
 
         <div class="media-body">

@@ -1,1 +1,1 @@
-<div style="overflow:auto;">{{ show_img_box(user.img | imagine_filter('50'), {'width': 50, 'height': 50, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) | raw }} <div class="media">{{ user.firstName }} {{ user.lastName }}</div></div>
+<div style="overflow:auto;">{{ show_img_box(user.img | imagine_filter('small'), {'width': 50, 'height': 50, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) | raw }} <div class="media">{{ user.firstName }} {{ user.lastName }}</div></div>

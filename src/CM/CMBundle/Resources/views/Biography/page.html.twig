@@ -23,7 +23,7 @@
         </div>
         <div class="media objects">
             <div class="media object">
-                <a href="{{ path('page_biography', {'slug': page.slug}) }}" class="pull-left img-thumbnail"><img src='{{ asset(page.img|imagine_filter('350')) }}' width=200 class="media-object" /></a>
+                <a href="{{ path('page_biography', {'slug': page.slug}) }}" class="pull-left img-thumbnail"><img src='{{ asset(page.img|imagine_filter('medium')) }}' width=200 class="media-object" /></a>
                 <div>
                     <div class="text-justify">{{ biography }}</div>                
                 

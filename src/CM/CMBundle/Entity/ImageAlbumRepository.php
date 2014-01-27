@@ -99,6 +99,17 @@ class ImageAlbumRepository extends BaseRepository
         return $album;
     }
 
+    public function getImageIdsInAlbum($id)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('partial i.{id}')
+            ->from('CMBundle:Image', 'i')
+            ->where('i.entityId = :album_id')->setParameter('album_id', $id)
+            ->orderBy('i.sequence')
+            ->addOrderBy('i.createdAt')
+            ->getQuery()->getArrayResult();
+    }
+
     public function getLastPost($id, $options = array())
     {
         $options = self::getOptions($options);

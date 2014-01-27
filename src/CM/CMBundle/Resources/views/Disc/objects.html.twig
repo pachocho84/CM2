@@ -6,7 +6,7 @@
             {{ disc.id }}  
             {% if disc.getImages|length > 0 %}
                 <a href="{{ path('disc_show', { 'id': disc.id, 'slug': disc.getSlug }) }}" class="pull-left img-thumbnail disc-cover">
-                    <img src='{{ asset(disc.images[0].img|imagine_filter('350')) }}' width="200px" />
+                    <img src='{{ asset(disc.images[0].img|imagine_filter('medium')) }}' width="200px" />
                 </a>
             {% endif %}
             <h4><a href="{{ path('disc_show', { 'id': disc.id, 'slug': disc.getSlug }) }}">{{ disc.getTitle }}</a></h4>

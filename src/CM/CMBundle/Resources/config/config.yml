@@ -111,18 +111,18 @@ liip_imagine:
     cache_prefix: %images.dir%
     cache_clearer: false
     filter_sets:
-        50:
+        small:
             quality: 100
             filters:
                 thumbnail: { size: [50, 50], mode: inset }
-        350:
+        medium:
             quality: 100
             filters:
-                thumbnail: { size: [350, 350], mode: inset }
-        750:
+                thumbnail: { size: [400, 400], mode: inset }
+        big:
             quality: 100
             filters:
-                thumbnail: { size: [750, 750], mode: inset }
+                thumbnail: { size: [800, 800], mode: inset }
         full:
             quality: 100
 

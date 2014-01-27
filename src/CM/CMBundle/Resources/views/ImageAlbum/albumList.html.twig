@@ -3,16 +3,16 @@
         <div class="meda-body">
             {% if album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_PROFILE') %}
                 <h4 class="media-heading">{{ album.id }}: {{ 'Profile images'|trans }}</h4>
-                {{ show_img_box(album.images[0].getImg | imagine_filter('350'), {'width': 150, 'height': 150, 'offset': album.images[0].imgOffset, 'link': path(link, {'slug': publisher.slug, 'id': album.id}), 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+                {{ show_img_box(album.images[0].getImg | imagine_filter('medium'), {'width': 150, 'height': 150, 'offset': album.images[0].imgOffset, 'link': path(link, {'slug': publisher.slug, 'id': album.id}), 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
             {% elseif album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_COVER') %}
                 <h4 class="media-heading">{{ album.id }}: {{ 'Cover images'|trans }}</h4>
-                {{ show_img_box(album.images[0].getImg | imagine_filter('350'), {'width': 150, 'height': 150, 'offset': album.images[0].imgOffset, 'link': path(link, {'slug': publisher.slug, 'id': album.id}), 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+                {{ show_img_box(album.images[0].getImg | imagine_filter('medium'), {'width': 150, 'height': 150, 'offset': album.images[0].imgOffset, 'link': path(link, {'slug': publisher.slug, 'id': album.id}), 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
             {% elseif album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_BACKGROUND') %}
                 <h4 class="media-heading">{{ album.id }}: {{ 'Background images'|trans }}</h4>
-                {{ show_img_box(album.images[0].getImg | imagine_filter('350'), {'width': 150, 'height': 150, 'link': path(link, {'slug': publisher.slug, 'id': album.id}), 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+                {{ show_img_box(album.images[0].getImg | imagine_filter('medium'), {'width': 150, 'height': 150, 'link': path(link, {'slug': publisher.slug, 'id': album.id}), 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
             {% elseif album.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_ALBUM') %}
                 <h4 class="media-heading">{{ album.id }}: {{ album }}</h4>
-                {{ show_img_box(album.images[0].getImg | imagine_filter('350'), {'width': 150, 'height': 150, 'link': path(link, {'slug': publisher.slug, 'id': album.id}), 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+                {{ show_img_box(album.images[0].getImg | imagine_filter('medium'), {'width': 150, 'height': 150, 'link': path(link, {'slug': publisher.slug, 'id': album.id}), 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
             {% endif %}
         </div>
     </div>

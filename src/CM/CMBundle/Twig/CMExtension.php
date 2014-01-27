@@ -495,7 +495,7 @@ class CMExtension extends \Twig_Extension
     public function getPostText(Post $post, $relatedObjects = null)
     {
         // $object_page = '@'.$post->getObject().'_index';
-        $userLink = $this->router->generate($post->getPublisherRoute().'_show', array('slug' => $post->getPublisher()->getSlug()));
+        $userLink = $this->router->generate($post->getPublisherType().'_show', array('slug' => $post->getPublisher()->getSlug()));
         $userBox = $this->getUserBox($post->getPublisher());
         switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Event_'.Post::TYPE_CREATION:
@@ -520,7 +520,7 @@ class CMExtension extends \Twig_Extension
                 if ($this->getClassName($post->getObject()).'_'.$post->getType() == 'Like_'.Post::TYPE_CREATION) {
                     $likeOrComment = 'likes';
                 }
-                $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
+                $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherType().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
                 $publisherBox = $this->getUserBox($post->getEntity()->getPost()->getPublisher());
                 if (is_null($post->getEntity())) {
                     return 'asd';
@@ -530,7 +530,7 @@ class CMExtension extends \Twig_Extension
                     } else {
                         $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
-                    $objectLink = $this->router->generate($post->getPublisherRoute().'_biography', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
+                    $objectLink = $this->router->generate($post->getPublisherType().'_biography', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
                     return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %biographyLinkStart%Biography%biographyLinkEnd%.', array(
                         '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%publisher%' => $publisher,
@@ -561,7 +561,7 @@ class CMExtension extends \Twig_Extension
                         '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                     ));
                 } elseif ($post->getEntity() instanceof ImageAlbum) {
-                    $objectLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
+                    $objectLink = $this->router->generate($post->getPublisherType().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
                     if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
                         $publisher = $this->translator->trans($post->getPublisherSex('his'));
                     } else {
@@ -597,7 +597,7 @@ class CMExtension extends \Twig_Extension
                         '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                     ));
                 } elseif (!is_null($relatedObjects->getImageId())) {
-                    $objectLink = $this->router->generate($post->getPublisherRoute().'_image', array('id' => $relatedObjects->getImageId(), 'slug' => $post->getPublisher()->getSlug()));
+                    $objectLink = $this->router->generate($post->getPublisherType().'_image', array('id' => $relatedObjects->getImageId(), 'slug' => $post->getPublisher()->getSlug()));
                     if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
                         $publisher = $this->translator->trans($post->getPublisherSex('his'));
                     } else {
@@ -622,7 +622,7 @@ class CMExtension extends \Twig_Extension
                     '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                     '%biographyLinkStart%' => '<a href="'.$objectLink.'">', '%biographyLinkEnd%' => '</a>'
                 ));case 'ImageAlbum_'.Post::TYPE_CREATION:
-                $objectLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
+                $objectLink = $this->router->generate($post->getPublisherType().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
                 return $this->translator->trans('%user% created the album %object%.', array(
                     '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                     '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
@@ -635,7 +635,7 @@ class CMExtension extends \Twig_Extension
                         $entityString = ' event';
                         break;
                     case 'ImageAlbum':
-                        $entityLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
+                        $entityLink = $this->router->generate($post->getPublisherType().'_album', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
                         $albumString = $post->getEntity()->getType() == ImageAlbum::TYPE_ALBUM ? ' album' : '';
                         break;
                     default:
@@ -821,7 +821,7 @@ class CMExtension extends \Twig_Extension
 
     public function getEntityPostText(Post $post)
     {
-        $userLink = $this->router->generate($post->getPublisherRoute().'_show', array('slug' => $post->getPublisher()->getSlug()));
+        $userLink = $this->router->generate($post->getPublisherType().'_show', array('slug' => $post->getPublisher()->getSlug()));
         $userBox = $this->getUserBox($post->getPublisher());
         switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Comment_'.Post::TYPE_CREATION:

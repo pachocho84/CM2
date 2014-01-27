@@ -1,6 +1,6 @@
 {% if not user.coverImg or user.coverImg == '' %}
     <div class="media">
-        {{ show_img_box(user.img|imagine_filter('50'), {'width': 35, 'height': 35, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+        {{ show_img_box(user.img|imagine_filter('small'), {'width': 35, 'height': 35, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
         <div class="media-body">
             <h2>{{ user }}</h2>
         </div>
@@ -10,7 +10,7 @@
 <div class="profile-header shadow">
     {% if user.coverImg != '' %}
         <div class="cover image_box">
-            {{ show_img_box(user.coverImg|imagine_filter('750'), {'width': 750, 'height': 285, 'offset': user.coverImgOffset, 'img_only': true})|raw }}
+            {{ show_img_box(user.coverImg|imagine_filter('big'), {'width': 750, 'height': 285, 'offset': user.coverImgOffset, 'img_only': true})|raw }}
             <div class="cover-shadow"></div>
             <h2>{{ user }}</h2>
         </div>

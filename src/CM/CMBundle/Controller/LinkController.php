@@ -140,7 +140,7 @@ class LinkController extends Controller
 
             $em->flush();
 
-            return new RedirectResponse($this->generateUrl($link->getPost()->getPublisherRoute().'_link_show', array('id' => $link->getId(), 'slug' => $link->getPost()->getPublisher()->getSlug())));
+            return new RedirectResponse($this->generateUrl($link->getPost()->getPublisherType().'_link_show', array('id' => $link->getId(), 'slug' => $link->getPost()->getPublisher()->getSlug())));
         }
 
         $users = array();

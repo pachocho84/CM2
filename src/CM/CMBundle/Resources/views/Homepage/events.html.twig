@@ -17,7 +17,7 @@
     
                 <div class="events_box-event">
                     {% if date.getEvent.getImages|length > 0 %}
-                        {{ show_img_box(date.getEvent.getImages[0].img|imagine_filter('350'), {'width': 100, 'height': 60, 'box_attributes': {'class': 'event-photo'}}) }}
+                        {{ show_img_box(date.getEvent.getImages[0].img|imagine_filter('medium'), {'width': 100, 'height': 60, 'box_attributes': {'class': 'event-photo'}}) }}
                     {% else %}
                         <a href="<?php echo url_for($oggetti[$i]->getRawValue()->getLinkShow()) ?>"><img class="event-photo" src="/images/layout/default_eventi_homepage.jpg" /></a> 
                     {% endif %}

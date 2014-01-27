@@ -1,0 +1,15 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block body %}
+
+    <div class="box">
+        <div class="box-heading">
+            {{ image.entity }}
+        </div>
+        
+        <div class="media-list objects">
+            {{ include('CMBundle:ImageAlbum:imageObject.html.twig') }}
+        </div>
+    </div>
+  
+{% endblock %}

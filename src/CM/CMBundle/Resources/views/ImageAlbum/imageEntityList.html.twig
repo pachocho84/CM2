@@ -3,14 +3,14 @@
         <div class="object col-lg-3 cycle-slideshow" data-cycle-slides="> div" data-cycle-fx="scrollVert">
             <h4 class="media-heading">{{ entity.id }}: {{ entity }}</h4>
             <div>
-                {{ show_img_box(entity.images[0].getImg|imagine_filter('350'), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'link': path(link, {'slug': publisher.slug, 'id': entity.id})})|raw }}
+                {{ show_img_box(entity.images[0].getImg|imagine_filter('medium'), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'link': path(link, {'slug': publisher.slug, 'id': entity.id})})|raw }}
             </div>
             <div>
-                {{ show_img_box(entity.images[1].getImg|imagine_filter('350'), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'link': path(link, {'slug': publisher.slug, 'id': entity.id})})|raw }}
+                {{ show_img_box(entity.images[1].getImg|imagine_filter('medium'), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'link': path(link, {'slug': publisher.slug, 'id': entity.id})})|raw }}
             </div>
             {% if entity.images[2] is defined %}
                 <div>
-                    {{ show_img_box(entity.images[2].getImg|imagine_filter('350'), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'link': path(link, {'slug': publisher.slug, 'id': entity.id})})|raw }}
+                    {{ show_img_box(entity.images[2].getImg|imagine_filter('medium'), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'link': path(link, {'slug': publisher.slug, 'id': entity.id})})|raw }}
                 </div>
             {% endif %}
         </div>

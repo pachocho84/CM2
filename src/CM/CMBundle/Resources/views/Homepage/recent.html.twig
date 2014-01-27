@@ -10,7 +10,7 @@
             <div class="recent_articles_box-article">  
 
                 {% if article.images|length > 0 %}
-                    <div class="recent_article_box-photo">{{ show_img_box(article.images[0].img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': article.images[0].imgOffset, 'link': path('homepage_show', {'id': article.id})}) }}</div>
+                    <div class="recent_article_box-photo">{{ show_img_box(article.images[0].img|imagine_filter('small'), {'width': 50, 'height': 50, 'offset': article.images[0].imgOffset, 'link': path('homepage_show', {'id': article.id})}) }}</div>
                 {% endif %}
                 <h5>{{ article.createdAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }} &middot; <a href="{{ path('user_show', {'slug': article.post.user.slug}) }}">{{ article.post.user }}</a></h5>
 

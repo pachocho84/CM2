@@ -16,6 +16,7 @@
                                 <input id="images" type="file" name="images" multiple />
                             </form>
                         </span>
+                        <a href="{{ path('imagealbum_edit', {'id': album.id, 'slug': album.getSlug, 'publisher': album|class_name}) }}" class="btn btn-default btn-sm">{{ icon('Edit') }} {{ 'Edit'|trans }}</a> '{{ icon('Edit') }}</a>
                     {% endif %}
                 </div>
             

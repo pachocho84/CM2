@@ -152,7 +152,7 @@ class MultimediaController extends Controller
 
             $em->flush();
 
-            return new RedirectResponse($this->generateUrl($multimedia->getPost()->getPublisherRoute().'_multimedia_show', array('id' => $multimedia->getId(), 'slug' => $multimedia->getPost()->getPublisher()->getSlug())));
+            return new RedirectResponse($this->generateUrl($multimedia->getPost()->getPublisherType().'_multimedia_show', array('id' => $multimedia->getId(), 'slug' => $multimedia->getPost()->getPublisher()->getSlug())));
         }
 
         $users = array();

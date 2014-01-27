@@ -34,13 +34,13 @@
         <div class="box-body">
             <div class="object">
                 <p>
-                    {{ "Created by %publisher%"|trans({'%publisher%': '<a ' ~ user_box(event.post.publisher) ~ ' href="' ~ path(event.post.publisherRoute ~ '_show', {'slug': event.post.publisher.slug}) ~ '">' ~ event.post.publisher~'</a>'})|raw }}
+                    {{ "Created by %publisher%"|trans({'%publisher%': '<a ' ~ user_box(event.post.publisher) ~ ' href="' ~ path(event.post.publisherType ~ '_show', {'slug': event.post.publisher.slug}) ~ '">' ~ event.post.publisher~'</a>'})|raw }}
                     &middot;
                     <a href="{{ path('event_category', { 'categorySlug': event.entityCategory.getSlug }) }}">{{ event.entityCategory|capitalize }}</a>
                 </p>
             </div>
             <div class="media object">
-                <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}" class="pull-left"><img src="{{ event.getImages[0].img|imagine_filter('350') }}" width=200 /></a>
+                <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}" class="pull-left"><img src="{{ event.getImages[0].img|imagine_filter('medium') }}" width=200 /></a>
                 <div>
                     <div class="text-justify">{{ event.getText|raw }}</div>
                 </div>

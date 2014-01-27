@@ -7,7 +7,7 @@
         <div class="objects fans">
             {% for i in 0..(fans|length - 1) if i < 7 or i < fans|length - (fans|length % 7) %}
                 {% set fan = fans[i] %}
-                {{ show_img_box(fan.img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': fan.imgOffset,  'link': path('user_show', {'slug': fan.slug}), 'default': 'user', 'link_attributes': {'class': 'fan-user'}})|raw }}
+                {{ show_img_box(fan.img|imagine_filter('small'), {'width': 50, 'height': 50, 'offset': fan.imgOffset,  'link': path('user_show', {'slug': fan.slug}), 'default': 'user', 'link_attributes': {'class': 'fan-user'}})|raw }}
             {% endfor %}
         </div>
 

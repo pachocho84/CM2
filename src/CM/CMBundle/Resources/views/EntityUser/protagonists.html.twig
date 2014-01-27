@@ -6,7 +6,7 @@
         <ul class="media-list">
             {% for protagonist in protagonists[:5] %}
                 <li class="media">
-                    {{ show_img_box(protagonist.user.img|imagine_filter('50'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'link_attributes': {'class': 'pull-left'}}) }}
+                    {{ show_img_box(protagonist.user.img|imagine_filter('small'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'box_attributes': {'class': 'pull-left'}}) }}
                     <div class="media-body">
                         <small><a href="{{ path('user_show', {'slug': protagonist.user.slug}) }}" {{ user_box(protagonist.user) }}>{{ protagonist.user }}</a></small><br/>
                         
@@ -21,7 +21,7 @@
             <ul id="event_protagonists-more" class="media-list collapse">
                 {% for protagonist in protagonists[5:] %}
                     <li class="media">
-                        {{ show_img_box(protagonist.user.img|imagine_filter('50'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'link_attributes': {'class': 'pull-left'}}) }}
+                        {{ show_img_box(protagonist.user.img|imagine_filter('small'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'link_attributes': {'class': 'pull-left'}}) }}
                         <div class="media-body">
                             <small><a href="{{ path('user_show', {'slug': protagonist.user.slug}) }}" {{ user_box(protagonist.user) }}>{{ protagonist.user }}</a></small><br/>
                             

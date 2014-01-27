@@ -9,7 +9,7 @@
                 
                 {% if user.img is not null %}
                     <div class="immagine">
-                        {{ show_img_box(user.img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': user.imgOffset, 'link': path('user_show', {'id': user.id, 'slug': user.slug})}) }}
+                        {{ show_img_box(user.img|imagine_filter('small'), {'width': 50, 'height': 50, 'offset': user.imgOffset, 'link': path('user_show', {'id': user.id, 'slug': user.slug})}) }}
                     </div>
                 {% endif %}
                 <div class="contenuto">

@@ -17,11 +17,11 @@
         <div class="box-heading">
             <div class="row">
                 <div class="col-lg-5">
-                    <h2>{{ icon('Photo')|raw }} {{ block('title') }}</h2>
+                    <h2>{{ icon('Photo') }} {{ block('title') }}</h2>
                 </div>
                 <div class="col-lg-7 text-right">
                     <div class="btn-group btn-group-sm">
-                        <a href="{{ path('user_show', {'slug': app.user.slug}) }}" class="btn btn-default">{{ icon('User')|raw }} {{ 'View profile'|trans }}</a>
+                        <a href="{{ path('user_show', {'slug': app.user.slug}) }}" class="btn btn-default">{{ icon('User') }} {{ 'View profile'|trans }}</a>
                     </div>
                 </div>
             </div>
@@ -32,15 +32,15 @@
                 {{ form_row(form.imgFile) }}
                 {{ form_row(form.imgOffset, {'attr': {'img-offset-field': null}}) }}
                 {% if user.img is not null %}
-                    <div class="alert alert-info">{{ icon('Alert')|raw }} {{ 'Drag the image to adjust position.' | trans }}</div>
-                    {{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.img), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'box_attributes': {'id': 'profile-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px;'}}) | raw }}
+                    <div class="alert alert-info">{{ icon('Alert') }} {{ 'Drag the image to adjust position.'|trans }}</div>
+                    {{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.img), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'box_attributes': {'id': 'profile-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px;'}}) }}
                 {% endif %}
             
                 {{ form_row(form.coverImgFile) }}
                 {{ form_row(form.coverImgOffset, {'attr': {'cover-img-offset-field': null}}) }}
                 {% if user.coverImg is not null %}
-                    <div class="alert alert-info">{{ icon('Alert')|raw }} {{ 'Drag the image to adjust position.' | trans }}</div>
-                    <div>{{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.coverImg), {'width': 700, 'height': 266, 'offset': user.coverImgOffset, 'box_attributes': {'id': 'cover-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px; width: 702px; height 266px;' }}) | raw }}</div>
+                    <div class="alert alert-info">{{ icon('Alert') }} {{ 'Drag the image to adjust position.'|trans }}</div>
+                    <div>{{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.coverImg), {'width': 700, 'height': 266, 'offset': user.coverImgOffset, 'box_attributes': {'id': 'cover-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px; width: 702px; height 266px;' }}) }}</div>
                 {% endif %}
             
             {{ form_end(form) }}
@@ -51,17 +51,19 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript">//<![CDATA[ 
+    <script type="text/javascript"> 
         $(function(){   
             /* PROFILE & COVER PICTURE */
             function image_position(box, target) {
                 box.css('cursor', 'move');
                 img = box.find('img');
                 offset = [img.position().left, img.position().top];
+                console.log([box.outerWidth(), box.outerHeight()], [box.width(), box.height()], [img.outerWidth(), img.outerHeight()], [img.width(), img.height()], offset);
                 img.draggable({
                     scroll: false,
                     drag: function(event, ui) {
-                        if (ui.position.top > 0) {
+                        console.log(ui.position, ui.position.top < 0);
+                        if (ui.position.top < 0) {
                             ui.position.top = 0;
                         } else if (ui.position.top < box.outerHeight() - img.height()) {
                             ui.position.top = box.outerHeight() - img.height();
@@ -73,6 +75,7 @@
                         }
                     },
                     stop: function(event, ui) {
+                        console.log(ui.position, [box.outerWidth(), box.outerHeight()], [box.width(), box.height()], [img.outerWidth(), img.outerHeight()], [img.width(), img.height()]);
                         offsetX = Math.abs(100 * ui.position.left / box.outerWidth()).toFixed(2);
                         offsetY = Math.abs(100 * ui.position.top / box.outerHeight()).toFixed(2);
                         target.val(img.width() >= img.height() ? offsetX : offsetY);   
@@ -85,7 +88,7 @@
             if ($('#cover-pic').length == 1) {
                 image_position($('#cover-pic'), $('[cover-img-offset-field]'));
             }
-        });//]]>  
+        });
     </script>
 {% endblock %}
 

@@ -14,7 +14,7 @@
             <div class="oggetto elemento">
                 
                 <div class="immagine-utente">
-                    {{ show_img_box(post.publisher.img|imagine_filter('50'), {'width': 50, 'height': 50, 'offset': post.publisher.imgOffset,  'link': path(post.publisherRoute ~ '_show', {'slug': post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}, 'default': 'user'}) }}
+                    {{ show_img_box(post.publisher.img|imagine_filter('small'), {'width': 50, 'height': 50, 'offset': post.publisher.imgOffset,  'link': path(post.publisherType ~ '_show', {'slug': post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}, 'default': 'user'}) }}
                 </div> 
                 
                 <div class="contenuto">

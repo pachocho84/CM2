@@ -3,7 +3,7 @@
         
         {% if date.getEvent.getImages|length > 0 %}
             <a href="{{ path('event_show', { 'id': date.event.id, 'slug': date.event.getSlug }) }}" class="pull-left img-thumbnail">
-                {{ show_img_box(date.event.getImages[0].img|imagine_filter('350'), {'width': 200, 'height': 133}) }}
+                {{ show_img_box(date.event.getImages[0].img|imagine_filter('medium'), {'width': 200, 'height': 133}) }}
             </a>
         {% endif %}
 {#                         <?php show_img_box($post->getImages()->getFirst(), array('width' => 200, 'height' => 140, 'link' => $post->getRawValue()->getEntity()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left img-thumbnail'))) ?>     #}
@@ -14,7 +14,7 @@
             
             <h4><a href="{{ path('event_show', {'id': date.event.id, 'slug': date.event.getSlug}) }}">{{ date.event.getTitle }}</a></h4>
             <h5>
-                {{ "Published by %publisher% in %category%"|trans({'%publisher%': '<a ' ~ user_box(publisher) ~ ' href="'~path(date.event.posts[0].publisherRoute ~ '_show', {'slug': publisher.slug})~'">'~publisher~'</a>', '%category%': '<a href="'~path('event_category', { 'categorySlug': date.event.entityCategory.getSlug })~'">'~date.event.entityCategory~'</a>' })|raw }}
+                {{ "Published by %publisher% in %category%"|trans({'%publisher%': '<a ' ~ user_box(publisher) ~ ' href="'~path(date.event.posts[0].publisherType ~ '_show', {'slug': publisher.slug})~'">'~publisher~'</a>', '%category%': '<a href="'~path('event_category', { 'categorySlug': date.event.entityCategory.getSlug })~'">'~date.event.entityCategory~'</a>' })|raw }}
             </h5>
 
             <p class="text-muted">
