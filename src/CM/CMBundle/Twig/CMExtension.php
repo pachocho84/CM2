@@ -253,18 +253,12 @@ class CMExtension extends \Twig_Extension
             'offset'          => null,
             'default'         => false,
             'link'            => null,
-            'link_attributes' => array(),
             'box_attributes'  => array(),
-            'img_attributes'  => array(),
-            'img_only'        => false,
+            'img_attributes'  => array()
         ), $options);
 
         $width  = intval($options['width']);
-        $height = is_null($options['height']) ? $width : intval($options['height']) ;
-        $ratio = $width / $height;
-
-        // Get max dimension for filtered image
-        $maxDim = preg_filter(['/\/(?:.(?!\/))+$/', '/^(.*\/)*/'], ['', ''], $img);
+        $height = is_null($options['height']) ? $width : intval($options['height']);
 
         // Get image dimensions
         $fileName = preg_replace('/^\/.*\//', '', $img);
@@ -272,109 +266,70 @@ class CMExtension extends \Twig_Extension
         if (!$imageFileSize) {
             return '';
         }
-        $imageFileWidth = $imageFileSize[0];
-        $imageFileHeight = $imageFileSize[1];
-
-        // // No height
-        if (!$height) {
-            $imgBox = '<div><img src="/'.$folder.$img.' width="'.$width.'"';
-            foreach ($options['box_attributes'] as $key => $attr) {
-                $imgBox .= ' '.$key.'="'.$attr.'"';
-            }
-            $imgBox .= ' /></div>';
-            // $img_box = content_tag('div', image_tag('/'.$folder.$img, array('width' => $width)), $options['box_attributes']);
-            $link = '<a href="'.$options['link'].'"';
-            foreach ($options['link_attributes'] as $key => $attr) {
-                $link .= ' '.$key.'="'.$attr.'"';
-            }
-            $link .= '>'.$imgBox.'</a>';
-            return is_null($options['link']) ? $img_box : $link; // link_to($img_box, $options['link'], $options['link_attributes']);
-        }
 
         // Ratio
-        $imageRatio = $imageFileWidth / $imageFileHeight;
+        $imageRatio = $imageFileSize[0] / $imageFileSize[1];
         $boxRatio = $width / $height;
+        $ratio = $imageRatio / $boxRatio;
 
         // Image format
-        if ($imageRatio == $ratio) {
+        if ($ratio == 1) {
             $imageResizedWidth = $width;
             $imageResizedHeight = $height;
-        } elseif ($imageRatio > $ratio) {
+        } elseif ($ratio > 1) {
             $imageResizedHeight = $height;
             $imageResizedWidth = $height * $imageRatio;
-        } elseif ($imageRatio < $ratio) {
+        } elseif ($ratio < 1) {
             $imageResizedHeight = $width / $imageRatio;
             $imageResizedWidth = $width;
         }
 
-        // Resized image size (checks if the resized height is still high enough, otherwise the resized is based on the height instead of the width)
-        // if ($imageFileHeight / ($imageFileWidth / $width) >= $height) {
-        //     $imageResizedWidth = $width;
-        //     $imageResizedHeight = intval($imageFileHeight / ($imageFileWidth / $width));
-        // } else {
-        //     $imageResizedHeight = $height;
-        //     $imageResizedWidth = intval($imageFileWidth / ($imageFileHeight / $height));
-        // }
+        // Offset
+        $imgStyle = array();
+        if (is_null($options['offset'])) {
+            if ($ratio > 1) { // landscape
+                $imgStyle[] = 'left: -'.(($imageResizedWidth - $width) / 2).'px';
+            } elseif ($ratio < 1) { // portrait
+                $imgStyle[] = 'top: -'.(min($imageResizedHeight - $height, $imageResizedHeight / 10)).'px';
+            }
+        } else {
+            $imgStyle[] = ($ratio > 1 ? 'left' : 'top').': -'.$options['offset'].'%';
+        }
 
         // Attributes
-        $options['box_attributes']['style'] = array_key_exists('style', $options['box_attributes']) ? 'width: '.$width.'px;  height: '.$height.'px; '.$options['box_attributes']['style'] : 'width: '.$width.'px;  height: '.$height.'px;';
-        $options['box_attributes']['class'] = array_key_exists('class', $options['box_attributes']) ? 'image_box '.$options['box_attributes']['class'] : 'image_box';
+        $options['box_attributes']['style'] = 'width: '.$width.'px;  height: '.$height.'px;'.(array_key_exists('style', $options['box_attributes']) ? ' '.$options['box_attributes']['style'] : '');
+        $options['box_attributes']['class'] = 'image_box'.(array_key_exists('class', $options['box_attributes']) ? ' '.$options['box_attributes']['class'] : '');
 
-        $imgStyle   = array();
-        $imgStyle[] = 'width: '.$imageResizedWidth.'px;';
-        $imgStyle[] = 'height: '.$imageResizedHeight.'px;';
+        $imgStyle[] = 'width: '.$imageResizedWidth.'px';
+        $imgStyle[] = 'height: '.$imageResizedHeight.'px';
         if (array_key_exists('style', $options['img_attributes'])) {
             $imgStyle[] = $options['img_attributes']['style'];
             unset($options['img_attributes']['style']);
         }
 
-        // Align
-        if ($imageRatio > 1 && isset($options['offset'])) {
-            $imgStyle[] = 'left: -'.$options['offset'].'%';
-        } elseif ($imageRatio > 1) {
-            $imgStyle[] = 'left: -'.(($imageResizedWidth - $width) / 2).'px';
-        } elseif ($imageRatio < 1 && isset($options['offset'])) {
-            $imgStyle[] = 'top: -'.$options['offset'].'%';
-        } elseif ($imageRatio < 1) {
-            $imgStyle[] = 'top: -'.(($imageResizedHeight - $height) / 10).'px';
-        }
-
-        // Write <img> tag
-        $img = '<img src="'.$img.'" style="';
+        // Write img tag
+        $imgTag = '<img src="'.$img.'" style="';
         foreach ($imgStyle as $attr) {
-            $img .= $attr;
+            $imgTag .= $attr.'; ';
         }
-        $img .= '"';
+        $imgTag .= '"';
         foreach ($options['img_attributes'] as $key => $attr) {
-            $img .= ' '.$key.'="'.$attr.'"';
+            $imgTag .= ' '.$key.'="'.$attr.'"';
         }
-        $img .= ' />';
+        $imgTag .= ' />';
 
-        if ($options['img_only']) {
-            return $img;
-            // return image_tag('/'.$folder.$img, array_merge(array('style' => implode($imgStyle, ' ')), $options['img_attributes']));
+        // Write box tag
+        if (!is_null($options['link'])) {
+            $boxTag = '<a href="'.$options['link'].'"';
+            $boxTagEnd = '</a>';
+        } else {
+            $boxTag = '<div';
+            $boxTagEnd = '</div>';
         }
-
-        // Write <div> tag
-        $imgBox = '<div';
         foreach ($options['box_attributes'] as $key => $attr) {
-            $imgBox .= ' '.$key.'="'.$attr.'"';
+            $boxTag .= ' '.$key.'="'.$attr.'"';
         }
-        $imgBox .= '><div class="image_box-inner">'.$img.'</div></div>';
-
-        if (is_null($options['link'])) {
-            return $imgBox;
-        }
-
-        // Write <a> tag
-        // $img_box = content_tag('div', image_tag('/'.$folder.$img, array_merge(array('style' => implode($imgStyle, ' ')), $options['img_attributes'])), $options['box_attributes']);
-        $link = '<a href="'.$options['link'].'"';
-        foreach ($options['link_attributes'] as $key => $attr) {
-            $link .= ' '.$key.'="'.$attr.'"';
-        }
-        $link .= '>'.$imgBox.'</a>';
-
-        return $link; // link_to($img_box, $options['link'], $options['link_attributes']);
+        return $boxTag.'>'.$imgTag.$boxTagEnd;
     }
 
     public function getRequestTag(Request $request)
