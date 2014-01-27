@@ -19,6 +19,8 @@ class ImageRepository extends BaseRepository
             'userId'       => null,
             'groupId'      => null,
             'pageId'       => null,
+            'next' => null,
+            'entityId' => null,
             'type'       => ImageAlbum::TYPE_ALBUM,
             'paginate'      => true,
             'limit'         => 25,
@@ -125,7 +127,7 @@ class ImageRepository extends BaseRepository
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
-    public function getImage($id, $options = array())
+    public function getImage($id = null, $options = array())
     {
         $options = self::getOptions($options);
 
@@ -137,8 +139,10 @@ class ImageRepository extends BaseRepository
             ->leftJoin('i.likes', 'l')
             ->leftJoin('l.user', 'lu')
             ->leftJoin('i.comments', 'c')
-            ->leftJoin('c.user', 'cu')
-            ->where('i.id = :id')->setParameter('id', $id);
+            ->leftJoin('c.user', 'cu');
+        if (!is_null($id)) {
+            $query->andWhere('i.id = :id')->setParameter('id', $id);
+        }
         if (!is_null($options['userId'])) {
             $query->andWhere('i.userId = :user_id')->setParameter('user_id', $options['userId'])
                 ->andWhere('i.pageId is NULL')
@@ -149,6 +153,10 @@ class ImageRepository extends BaseRepository
         }
         if (!is_null($options['groupId'])) {
             $query->andWhere('i.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+        if (!is_null($options['next'])) {
+            $query->andWhere('i.entityId = :entity_id')->setParameter('entity_id', $entityId)
+                ->andWhere('i.sequence = :seq')->setParameter('seq', $options['next']);
         }
 
         return $query->getQuery()->getSingleResult();

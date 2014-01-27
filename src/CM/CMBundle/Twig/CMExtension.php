@@ -8,6 +8,7 @@ use CM\CMBundle\Service\Helper;
 use Symfony\Component\Security\Core\SecurityContext;
 use CM\CMBundle\Service\UserAuthentication;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
+use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\Entity;
 use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\Event;
@@ -228,6 +229,10 @@ class CMExtension extends \Twig_Extension
 
     public function getUserBox($publisher, $options = array())
     {
+        if (!$publisher instanceof User) {
+            return '';
+        }
+
         $options = array_merge(array(
         ), $options);
 
@@ -378,70 +383,72 @@ class CMExtension extends \Twig_Extension
 
         if ($user->getId() == $request->getUser()->getId()) {
             $userLink = $this->router->generate('user_show', array('slug' => $request->getFromUser()->getSlug()));
+            $userBox = $this->getUserBox($request->getFromUser());
             if (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
                 $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to be added as protagonist to your event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                return $this->translator->trans('%user% would like to be added as protagonist to your event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event') {
                 $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to add you as protagonist to the event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                return $this->translator->trans('%user% would like to add you as protagonist to the event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Disc' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
                 $entityLink = $this->router->generate('disc_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to be added as protagonist to your disc %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                return $this->translator->trans('%user% would like to be added as protagonist to your disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
                 // return __('%user% would like to be added as protagonist to your disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Disc') {
                 $entityLink = $this->router->generate('disc_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to add you as protagonist to the disc %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                return $this->translator->trans('%user% would like to add you as protagonist to the disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
                 // return __('%user% would like to add you as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Multimedia' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
                 $entityLink = $this->router->generate('multimedia_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to be added as protagonist to your multimedia %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                return $this->translator->trans('%user% would like to be added as protagonist to your multimedia %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Multimedia') {
                 $entityLink = $this->router->generate('multimedia_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to add you as protagonist to the multimedia %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                return $this->translator->trans('%user% would like to add you as protagonist to the multimedia %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Article' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
                 $entityLink = $this->router->generate('article_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to be added as protagonist to your article %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                return $this->translator->trans('%user% would like to be added as protagonist to your article %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
                 // return __('%user% would like to be added as protagonist to your article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Article') {
                 $entityLink = $this->router->generate('article_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to add you as protagonist to the article %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                return $this->translator->trans('%user% would like to add you as protagonist to the article %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
                 // return __('%user% would like to add you as protagonist to the article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
             } elseif (!is_null($request->getGroup()) && $this->userAuthentication->isAdminOf($request->getGroup())) {
                 $group = $request->getGroup();
                 $groupLink = $this->router->generate('group_show', array('slug' => $group->getSlug()));
-                return $this->translator->trans('%user% would like to join the group %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
+                return $this->translator->trans('%user% would like to join the group %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
             } elseif (!is_null($request->getGroup())) {
                 $group = $request->getGroup();
                 $groupLink = $this->router->generate('group_show', array('slug' => $group->getSlug()));
-                return $this->translator->trans('%user% would like you to join the group %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
+                return $this->translator->trans('%user% would like you to join the group %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
             } elseif (!is_null($request->getPage()) && $this->userAuthentication->isAdminOf($request->getPage())) {
                 $page = $request->getPage();
                 $pageLink = $this->router->generate('page_show', array('slug' => $page->getSlug()));
-                return $this->translator->trans('%user% would like to join the page %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
+                return $this->translator->trans('%user% would like to join the page %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
             } elseif (!is_null($request->getPage())) {
                 $page = $request->getPage();
                 $pageLink = $this->router->generate('page_show', array('slug' => $page->getSlug()));
-                return $this->translator->trans('%user% would like you to join the page %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
+                return $this->translator->trans('%user% would like you to join the page %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
             }
         } elseif ($user->getId() == $request->getFromUser()->getId()) {
             $userLink = $this->router->generate('user_show', array('slug' => $request->getUser()->getSlug()));
+            $userBox = $this->getUserBox($request->getUser());
             if (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event') {
                 $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('You requested %user% to be added as protagonist to the event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                return $this->translator->trans('You requested %user% to be added as protagonist to the event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Disc') {
                 $entityLink = $this->router->generate('disc_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('You requested %user% to be added as protagonist to the disc %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                return $this->translator->trans('You requested %user% to be added as protagonist to the disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
                 // return __('You requested %user% to be added as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Article') {
                 // return __('You requested %user% to be added as protagonist to the article %object%.', array('%user%' => link_to($this->getUserRelatedByUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
             } elseif (!is_null($request->getGroup())) {
                 $group = $request->getGroup();
                 $groupLink = $this->router->generate('group_show', array('slug' => $group->getSlug()));
-                return $this->translator->trans('You requested %user% to join the group %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
+                return $this->translator->trans('You requested %user% to join the group %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
             } elseif (!is_null($request->getPage())) {
                 $page = $request->getPage();
                 $pageLink = $this->router->generate('page_show', array('slug' => $page->getSlug()));
-                return $this->translator->trans('You requested %user% to join the page %object%.', array('%user%' => '<a href="'.$userLink.'">'.$request->getUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
+                return $this->translator->trans('You requested %user% to join the page %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
             }
         }
     }
@@ -449,34 +456,35 @@ class CMExtension extends \Twig_Extension
     public function getNotificationTag(Notification $notification)
     {
         $userLink = $this->router->generate('user_show', array('slug' => $notification->getFromUser()->getSlug()));
+        $userBox = $this->getUserBox($notification->getFromUser());
         switch ($this->getClassName($notification->getPost()->getObject()).'_'.$notification->getType()) {
             case 'Event_'.Notification::TYPE_REQUEST_ACCEPTED:
                 $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% joined your event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% joined your event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
                 break;
             case 'Event_'.Notification::TYPE_LIKE:
                 $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% likes your event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% likes your event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'Event_'.Notification::TYPE_COMMENT:
                 $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% has commented your event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% has commented your event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'Disc_'.Notification::TYPE_REQUEST_ACCEPTED:
                 $entityLink = $this->router->generate('disc_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% joined your disc %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% joined your disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
                 break;
             case 'Disc_'.Notification::TYPE_LIKE:
                 $entityLink = $this->router->generate('disc_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% likes your disc %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% likes your disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'Disc_'.Notification::TYPE_COMMENT:
                 $entityLink = $this->router->generate('disc_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% has commented your disc %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% has commented your disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'user_like':
                 // return __('%user% likes your %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to(__('post'), $this->getPost()->getLinkShow())));
             case 'Group_'.Notification::TYPE_REQUEST_ACCEPTED:
-                return $this->translator->trans('%user% joined the group %group%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>'));
+                return $this->translator->trans('%user% joined the group %group%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>'));
                 break;
             case 'Fan_'.Notification::TYPE_FAN:
-                return $this->translator->trans('%user% became your fan.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>'));
+                return $this->translator->trans('%user% became your fan.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>'));
                 // return __('%user% became your fan.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow())));
             default:
                 return $this->getClassName($notification->getPost()->getObject()).'_'.$notification->getType();
@@ -488,12 +496,13 @@ class CMExtension extends \Twig_Extension
     {
         // $object_page = '@'.$post->getObject().'_index';
         $userLink = $this->router->generate($post->getPublisherRoute().'_show', array('slug' => $post->getPublisher()->getSlug()));
+        $userBox = $this->getUserBox($post->getPublisher());
         switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Event_'.Post::TYPE_CREATION:
                 $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
                 $categoryLink  = $this->router->generate('event_category', array('category_slug' => $post->getEntity()->getEntityCategory()->getSlug()));
                 return $this->translator->trans('%user% published the event %object% in %category%.', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                     '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>',
                     '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getEntityCategory()->getPlural()).'</a>'
                 ));
@@ -501,7 +510,7 @@ class CMExtension extends \Twig_Extension
                 $objectLink = $this->router->generate('disc_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
                 $categoryLink  = $this->router->generate('disc_category', array('category_slug' => $post->getEntity()->getEntityCategory()->getSlug()));
                 return $this->translator->trans('%user% published the dics %object% in %category%.', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                     '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>',
                     '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getEntityCategory()->getPlural()).'</a>'
                 ));
@@ -511,96 +520,91 @@ class CMExtension extends \Twig_Extension
                 if ($this->getClassName($post->getObject()).'_'.$post->getType() == 'Like_'.Post::TYPE_CREATION) {
                     $likeOrComment = 'likes';
                 }
+                $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
+                $publisherBox = $this->getUserBox($post->getEntity()->getPost()->getPublisher());
                 if (is_null($post->getEntity())) {
                     return 'asd';
                 } elseif ($post->getEntity() instanceof Biography) {
-                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
                     if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser()->getId() == $post->getPublisherId()) {
                         $publisher = $this->translator->trans($post->getPublisherSex('his'));
                     } else {
-                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
                     $objectLink = $this->router->generate($post->getPublisherRoute().'_biography', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
                     return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %biographyLinkStart%Biography%biographyLinkEnd%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%publisher%' => $publisher,
                         '%biographyLinkStart%' => '<a href="'.$objectLink.'">', '%biographyLinkEnd%' => '</a>'
                     ));
                 } elseif ($post->getEntity() instanceof Event) {
                     $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
                     if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
                         $publisher = $this->translator->trans($post->getPublisherSex('his'));
                     } else {
-                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
                     return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%publisher%' => $publisher,
                         '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                     ));
                 } elseif ($post->getEntity() instanceof Disc) {
                     $objectLink = $this->router->generate('disc_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
                     if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
                         $publisher = $this->translator->trans($post->getPublisherSex('his'));
                     } else {
-                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
                     return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%publisher%' => $publisher,
                         '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                     ));
                 } elseif ($post->getEntity() instanceof ImageAlbum) {
                     $objectLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
-                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
                     if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
                         $publisher = $this->translator->trans($post->getPublisherSex('his'));
                     } else {
-                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
                     return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%publisher%' => $publisher,
                         '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                     ));
                 } elseif ($post->getEntity() instanceof Multimedia) {
                     $objectLink = $this->router->generate('multimedia_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
                     if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
                         $publisher = $this->translator->trans($post->getPublisherSex('his'));
                     } else {
-                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
                     return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%publisher%' => $publisher,
                         '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                     ));
                 } elseif ($post->getEntity() instanceof Article) {
                     $objectLink = $this->router->generate('article_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
-                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
                     if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
                         $publisher = $this->translator->trans($post->getPublisherSex('his'));
                     } else {
-                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
                     return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%publisher%' => $publisher,
                         '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                     ));
                 } elseif (!is_null($relatedObjects->getImageId())) {
                     $objectLink = $this->router->generate($post->getPublisherRoute().'_image', array('id' => $relatedObjects->getImageId(), 'slug' => $post->getPublisher()->getSlug()));
-                    $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherRoute().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
                     if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
                         $publisher = $this->translator->trans($post->getPublisherSex('his'));
                     } else {
-                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'">'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
                     return $this->translator->trans('%user% '.$likeOrComment.' %objectLinkStart%a photo%objectLinkEnd%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%objectLinkStart%' => '<a href="'.$objectLink.'">', '%objectLinkEnd%' => '</a>'
                     ));
                 }
@@ -615,12 +619,12 @@ class CMExtension extends \Twig_Extension
             case 'Biography_'.Post::TYPE_UPDATE:
                 $objectLink = $this->router->generate('user_biography', array('slug' => $post->getUser()->getSlug()));
                 return $this->translator->trans('%user% updated '.$post->getPublisherSex('his').' %biographyLinkStart%biography%biographyLinkEnd%.', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                     '%biographyLinkStart%' => '<a href="'.$objectLink.'">', '%biographyLinkEnd%' => '</a>'
                 ));case 'ImageAlbum_'.Post::TYPE_CREATION:
                 $objectLink = $this->router->generate($post->getPublisherRoute().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
                 return $this->translator->trans('%user% created the album %object%.', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                     '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                 ));
             case 'Image_'.Post::TYPE_CREATION:
@@ -639,39 +643,39 @@ class CMExtension extends \Twig_Extension
                         break;
                 }
                 return $this->translator->trans('%user% added images to '.$post->getPublisherSex('his').$entityString.' %entity%.', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                     '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>'
                 ));
             case 'Multimedia_'.Post::TYPE_CREATION:
                 $multimediaLink = $this->router->generate('multimedia_show', array('id' => $post->getEntityId(), 'slug' => $post->getEntity()->getSlug()));
                 return $this->translator->trans('%user% added a new %albumLinkStart%'.$post->getEntity()->typeString().'%albumLinkEnd%.', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                     '%albumLinkStart%' => '<a href="'.$multimediaLink.'">', '%albumLinkEnd%' => '</a>'
                 ));
             case 'Article_'.Post::TYPE_CREATION:
                 $objectLink = $this->router->generate('article_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
                 return $this->translator->trans('%user% published the article %object%.', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                     '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
                 ));
             case 'user_'.Post::TYPE_REGISTRATION:
                 // return __('%user% registered on Circuito Musica. - '.$post->getPublisherSex('M'), array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow())));
             case 'User_'.Post::TYPE_CREATION:
                 return $this->translator->trans('%user% registered on Circuito Musica..', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>'
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>'
                 ));
             case 'Group_'.Post::TYPE_CREATION:
                 $userLink = $this->router->generate('user_show', array('slug' => $post->getGroup()->getCreator()->getSlug()));
                 $objectLink = $this->router->generate('group_show', array('slug' => $post->getGroup()->getSlug()));
                 return $this->translator->trans('%user% opened the group %group%.', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getGroup()->getCreator().'</a>',
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getGroup()->getCreator().'</a>',
                     '%group%' => '<a href="'.$objectLink.'">'.$post->getGroup().'</a>'
                 ));
             case 'Page_'.Post::TYPE_CREATION:
                 $userLink = $this->router->generate('user_show', array('slug' => $post->getPage()->getCreator()->getSlug()));
                 $objectLink = $this->router->generate('page_show', array('slug' => $post->getPage()->getSlug()));
                 return $this->translator->trans('%user% opened the page %page%.', array(
-                    '%user%' => '<a href="'.$userLink.'">'.$post->getPage()->getCreator().'</a>',
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPage()->getCreator().'</a>',
                     '%page%' => '<a href="'.$objectLink.'">'.$post->getPage().'</a>'
                 ));
                 // return __('%user% has opened the page %page%', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%page%' => link_to($post->getRelatedObject()->getFirst(), $post->getRelatedObject()->getFirst()->getLinkShow())));
@@ -686,38 +690,41 @@ class CMExtension extends \Twig_Extension
                     default:
                     case 3:
                         $fan3Link = $this->router->generate('user_show', array('slug' => $relatedObjects[2]->getUser()->getSlug()));
+                        $fan3Box = $this->getUserBox($relatedObjects[2]->getUser());
                     case 2:
                         $fan2Link = $this->router->generate('user_show', array('slug' => $relatedObjects[1]->getUser()->getSlug()));
+                        $fan2Box = $this->getUserBox($relatedObjects[1]->getUser());
                     case 1:
                         $fan1Link = $this->router->generate('user_show', array('slug' => $relatedObjects[0]->getUser()->getSlug()));
+                        $fan1Box = $this->getUserBox($relatedObjects[0]->getUser());
                     case 0:
                         break;
                 }
                 if (count($post->getObjectIds()) == 1) {
                     return $this->translator->trans('%user% became fan of %fan1%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-                        '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getUser().'</a>'
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                        '%fan1%' => '<a href="'.$fan1Link.'" '.$fan1Box.'>'.$relatedObjects[0]->getUser().'</a>'
                     ));
                 } elseif (count($post->getObjectIds()) == 2) {
                     return $this->translator->trans('%user% became fan of %fan1% and %fan2%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-                        '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getUser().'</a>',
-                        '%fan2%' => '<a href="'.$fan2Link.'">'.$relatedObjects[1]->getUser().'</a>'
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                        '%fan1%' => '<a href="'.$fan1Link.'" '.$fan1Box.'>'.$relatedObjects[0]->getUser().'</a>',
+                        '%fan2%' => '<a href="'.$fan2Link.'" '.$fan2Box.'>'.$relatedObjects[1]->getUser().'</a>'
                     ));
                 } elseif (count($post->getObjectIds()) == 3) {
                     return $this->translator->trans('%user% became fan of %fan1%, %fan2% and %fan3%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-                        '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getUser().'</a>',
-                        '%fan2%' => '<a href="'.$fan2Link.'">'.$relatedObjects[1]->getUser().'</a>',
-                        '%fan3%' => '<a href="'.$fan3Link.'">'.$relatedObjects[2]->getUser().'</a>'
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                        '%fan1%' => '<a href="'.$fan1Link.'" '.$fan1Box.'>'.$relatedObjects[0]->getUser().'</a>',
+                        '%fan2%' => '<a href="'.$fan2Link.'" '.$fan2Box.'>'.$relatedObjects[1]->getUser().'</a>',
+                        '%fan3%' => '<a href="'.$fan3Link.'" '.$fan3Box.'>'.$relatedObjects[2]->getUser().'</a>'
                     ));
                 } else {
                     $countLink = $this->router->generate('wall__show', array('id' => $pst->getId()));
                     return $this->translator->trans('%user% became fan of %fan1%, %fan2%, %fan3% and %count% more.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-                        '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getUser().'</a>',
-                        '%fan2%' => '<a href="'.$fan2Link.'">'.$relatedObjects[1]->getUser().'</a>',
-                        '%fan3%' => '<a href="'.$fan3Link.'">'.$relatedObjects[2]->getUser().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                        '%fan1%' => '<a href="'.$fan1Link.'" '.$fan1Box.'>'.$relatedObjects[0]->getUser().'</a>',
+                        '%fan2%' => '<a href="'.$fan2Link.'" '.$fan2Box.'>'.$relatedObjects[1]->getUser().'</a>',
+                        '%fan3%' => '<a href="'.$fan3Link.'" '.$fan3Box.'>'.$relatedObjects[2]->getUser().'</a>',
                         '%count%' => '<a href="'.$countLink.'">'.count($post->getObjectIds()).'</a>'
                     ));
                 }
@@ -735,18 +742,18 @@ class CMExtension extends \Twig_Extension
                 }
                 if (count($post->getObjectIds()) == 1) {
                     return $this->translator->trans('%user% became fan of the page %fan1%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getPage().'</a>'
                     ));
                 } elseif (count($post->getObjectIds()) == 2) {
                     return $this->translator->trans('%user% became fan of the pages %fan1% and %fan2%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getPage().'</a>',
                         '%fan2%' => '<a href="'.$fan2Link.'">'.$relatedObjects[1]->getPage().'</a>'
                     ));
                 } elseif (count($post->getObjectIds()) == 3) {
                     return $this->translator->trans('%user% became fan of the pages %fan1%, %fan2% and %fan3%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getPage().'</a>',
                         '%fan2%' => '<a href="'.$fan2Link.'">'.$relatedObjects[1]->getPage().'</a>',
                         '%fan3%' => '<a href="'.$fan3Link.'">'.$relatedObjects[2]->getPage().'</a>'
@@ -754,7 +761,7 @@ class CMExtension extends \Twig_Extension
                 } else {
                     $countLink = $this->router->generate('wall__show', array('id' => $pst->getId()));
                     return $this->translator->trans('%user% became fan of the pages %fan1%, %fan2%, %fan3% and %count% more.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getPage().'</a>',
                         '%fan2%' => '<a href="'.$fan2Link.'">'.$relatedObjects[1]->getPage().'</a>',
                         '%fan3%' => '<a href="'.$fan3Link.'">'.$relatedObjects[2]->getPage().'</a>',
@@ -775,18 +782,18 @@ class CMExtension extends \Twig_Extension
                 }
                 if (count($post->getObjectIds()) == 1) {
                     return $this->translator->trans('%user% became fan of the group %fan1%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getGroup().'</a>'
                     ));
                 } elseif (count($post->getObjectIds()) == 2) {
                     return $this->translator->trans('%user% became fan of the groups %fan1% and %fan2%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getGroup().'</a>',
                         '%fan2%' => '<a href="'.$fan2Link.'">'.$relatedObjects[1]->getGroup().'</a>'
                     ));
                 } elseif (count($post->getObjectIds()) == 3) {
                     return $this->translator->trans('%user% became fan of the groups %fan1%, %fan2% and %fan3%.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getGroup().'</a>',
                         '%fan2%' => '<a href="'.$fan2Link.'">'.$relatedObjects[1]->getGroup().'</a>',
                         '%fan3%' => '<a href="'.$fan3Link.'">'.$relatedObjects[2]->getGroup().'</a>'
@@ -794,7 +801,7 @@ class CMExtension extends \Twig_Extension
                 } else {
                     $countLink = $this->router->generate('wall__show', array('id' => $pst->getId()));
                     return $this->translator->trans('%user% became fan of the groups %fan1%, %fan2%, %fan3% and %count% more.', array(
-                        '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
+                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                         '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getGroup().'</a>',
                         '%fan2%' => '<a href="'.$fan2Link.'">'.$relatedObjects[1]->getGroup().'</a>',
                         '%fan3%' => '<a href="'.$fan3Link.'">'.$relatedObjects[2]->getGroup().'</a>',
@@ -815,9 +822,10 @@ class CMExtension extends \Twig_Extension
     public function getEntityPostText(Post $post)
     {
         $userLink = $this->router->generate($post->getPublisherRoute().'_show', array('slug' => $post->getPublisher()->getSlug()));
+        $userBox = $this->getUserBox($post->getPublisher());
         switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Comment_'.Post::TYPE_CREATION:
-                return '<a href="'.$userLink.'">'.$post->getPublisher().'</a>';
+                return '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>';
             // case 'Image_'.Post::TYPE_CREATION:
             //     if (count($post->objectIds()) == 1) {
             //         return $this->translator->trans('%user% added an image.', array(

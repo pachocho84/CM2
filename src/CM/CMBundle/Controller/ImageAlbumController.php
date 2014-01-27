@@ -134,6 +134,26 @@ class ImageAlbumController extends Controller
     }
 
     /**
+     * @Route("/albums/{albumId}/image/{seq}/next", name="imagealbum_next_image", requirements={"id" = "\d+", "albumId" = "\d+"})
+     * @Template("CMBundle:ImageAlbum:singleImage.html.twig")
+     */
+    public function nextImageAction(Request $request, $id, $albumId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $image = $em->getRepository('CMBundle:Image')->getImage($id, array(
+            'locale' => $request->getLocale(),
+            'next' => $seq + 1,
+            'entityId' => $albumId
+        ));
+
+
+        return array(
+            'image' => $image
+        );
+    }
+
+    /**
      * @Route("/albums/image/{id}/add", name="imagealbum_add_image", requirements={"id" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template("CMBundle:ImageAlbum:singleImage.html.twig")
@@ -226,6 +246,9 @@ class ImageAlbumController extends Controller
         switch ($request->get('publisher')) {
             case 'User':
                 return $this->redirect($this->generateUrl('user_album', array('slug' => $slug, 'id' => $id)), 301);
+                break;
+            case 'Event':
+                return $this->redirect($this->generateUrl('entity_album', array('type' => $request->get('publisher'), 'id' => $id)), 301);
                 break;
             
             default:
