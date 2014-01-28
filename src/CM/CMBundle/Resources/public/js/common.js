@@ -176,7 +176,69 @@ $(function() {
     
     /* TOOLTIP */
     $("*[data-toggle=tooltip]").tooltip({ delay: { show: 250, hide: 0 } });
+
+
+
+    /* FULLSCREEN */
+
+    // $('body').on('click', '[ilightbox]', function(event) {
+    //     event.preventDefault();
+
+    //     console.log($(event.currentTarget).attr('href').replace(/__WHAT__/, 'content'));
+    //     $.iLightBox({
+    //         URL: $(event.currentTarget).attr('href').replace(/__WHAT__/, 'content'),
+    //         type: 'ajax'
+    //     });
+    // });
     
+    $('body').on('click', '[ilightbox="image"]', function(event){
+        var sidebar = $('<div id="ilightbox-sidebar"></div>');
+        var slideshow = $('<div id="ilightbox-slideshow"></div>');
+        $.iLightBox([{
+                URL: $(event.currentTarget).attr('href'),
+                type: 'ajax'
+            }],
+            {
+                innerToolbar: true,
+                controls: {
+                    fullscreen: false
+                },
+                skin: 'metro-black',
+                fullViewPort: 'fit',
+                overlay: {
+                    opacity: 0.80
+                },
+                minScale: 1,
+                callback: {
+                    onOpen: function(){
+                        history.pushState({}, '', $(event.currentTarget).attr('href'));
+                        if ($(event.currentTarget).attr('sidebar')) {
+                            $('body').append(sidebar);
+                            $.get($(event.currentTarget).attr('sidebar'), function(data) {
+                                sidebar.html(data);
+                            });
+                        }
+                        if ($(event.currentTarget).attr('slideshow')) {
+                            $('body').append(slideshow);
+                            $.get($(event.currentTarget).attr('slideshow'), function(data) {
+                                slideshow.html(data);
+                            });
+                        }
+                    },
+                    onAfterLoad: function(api){
+                        sidebar.fadeIn(180);
+                        slideshow.fadeIn(180);
+                    },
+                    onHide: function(){
+                        sidebar.hide().remove();
+                        slideshow.hide().remove();
+                    }
+                }
+            }
+                
+        );
+        return false;
+    });
     
     
     /* CHANGE TEXT */

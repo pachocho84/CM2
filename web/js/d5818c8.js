@@ -246,6 +246,13 @@ $(function() {
     
     /* TOOLTIP */
     $("*[data-toggle=tooltip]").tooltip({ delay: { show: 250, hide: 0 } });
+
+
+
+    /* FULLSCREEN IMAGE */
+    $.iLightBox({
+        url: 'http://cm2/app_dev.php/bundles/cm/uploads/images/full/a702f79522d2b77a9df4f973c6997fe7379ed360.jpg'
+    });
     
     
     

@@ -1,55 +1,8 @@
-<div class="objects text-center images ajax-link-target">
-
-
-
-    <div class="object">
-        <img src="{{ image.getImg|imagine_filter('full') }}" class="img-responsive"/>
-        {#<?php echo image_tag('/uploads/images/770/'.$image, array('id' => 'image', 'style' => 'max-height: 740px;')) ?>
-        <?php $images->count() > 1 and print link_to('‹', !isset($album) ? '@image_show?id=img_'.$prev : '@image_show?id=img_'.$prev.'&album_id='.$album->getId(), array('class' => 'left carousel-control ajax-link')) ?>
-        <?php $images->count() > 1 and print link_to('›', !isset($album) ? '@image_show?id=img_'.$next : '@image_show?id=img_'.$next.'&album_id='.$album->getId(), array('class' => 'right carousel-control ajax-link')) ?>#}
-    </div>
-
-
-    {% if image.text %}<div class="object">{{ image.text|simple_format_text|raw }}</div>{% endif %}
-
-    
-    <div class="row-fluid object text-left">
-
-        <div class="col-lg-7">
-            <div class="media">
-                {{ show_img_box(image.entity.post.publisher.img|imagine_filter('small'), {'width': 32, 'height': 32, 'offset': image.entity.post.publisher.imgOffset, 'link': path(image.entity.post.publisherType ~ '_show', {'slug': image.entity.post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}}) }}
-                <div class="media-body">
-                    <h4><a href="{{ path(image.entity.post.publisherType ~ '_show', {'slug': image.entity.post.publisher.slug}) }}">{{ image.entity.post.publisher }}</a></h4>
-                    
-                    {{ include('CMBundle::social.html.twig', {'post': image, 'isImage': true}) }} 
-                
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-lg-5">
-            <ul class="nav nav-list">
-                {#<li><?php echo link_to('<i class="glyphicon glyphicon-picture"></i> '.__('Album').': '.__($image->getEntity()), $image->getRawValue()->getEntity()->getLinkShow('image_album')) ?></li>
-                <li><a href="/uploads/images/full/<?php echo $image->getImg() ?>" target="_blank"><i class="glyphicon glyphicon-fullscreen"></i> <?php echo __('High resolution') ?></a></li>#}
-                
-                {% if can_manage(image) %}
-                    {#<li class="divider"></li>
-                    <li><?php echo link_to('<i class="glyphicon glyphicon-pencil"></i> '.__('Edit'), '@image_album_edit?id='.$image->getEntityId()) ?></li>
-                    <li><?php delete_link('@image_delete?id='.$image->getId(), 'image') ?></li>
-                    <li class="divider"></li>#}
-                    <li><a class="ajax-link" href="{{ path('image_make_profile', {'id': image.id}) }}">{{ 'Make profile picture'|trans }}</a></li>
-                    <li><a class="ajax-link" href="{{ path('image_make_cover', {'id': image.id}) }}">{{ 'Make cover picture'|trans }}</a></li>
-                    <li class="divider"></li>
-                    {#<li><?php echo link_to('<i class="glyphicon-unshare"></i> '.__('Rotate left'), 'image/rotate?direction=anticlockwise&id='.$image->getId()) ?></li>
-                    <li><?php echo link_to('<i class="glyphicon glyphicon-share-alt"></i> '.__('Rotate right'), 'image/rotate?direction=clockwise&id='.$image->getId()) ?></li>#}
-
-                {% endif %}
-            </ul>
-        </div>
-
-    </div>
-
-
-
+<div>
+    <img src="{{ image.getImg|imagine_filter('full') }}"/>
 </div>
+
+<ul>
+    <li><a href="{{ path('image_show', {id: nextId}) }}">{{ 'Next image'|trans }}</a></li>
+    <li><a href="{{ path('image_show', {id: prevId}) }}">{{ 'Previoous image'|trans }}</a></li>
+</ul>

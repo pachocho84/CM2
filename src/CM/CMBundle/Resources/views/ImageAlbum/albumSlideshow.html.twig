@@ -1,0 +1,3 @@
+{% for img in image.entity.images %}
+    {{ show_img_box(img.getImg|imagine_filter('medium'), {width: 100, offset: img.imgOffset, link: path('image_show', {id: img.id}), box_attributes: {class: 'pull-left' ~ (img.id == image.id ? ' active' : ''), sidebar: path('image_show', {id: img.id, w: 'sidebar'}), slideshow: path('image_show', {id: img.id, w: 'slideshow'})}}) }}
+{% endfor %}

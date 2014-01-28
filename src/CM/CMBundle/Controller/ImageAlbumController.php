@@ -349,6 +349,18 @@ class ImageAlbumController extends Controller
         $prev = array_key_exists($index - 1, $imageIdsInAlbum) ? $imageIdsInAlbum[$index - 1]['id'] : $imageIdsInAlbum[count($imageIdsInAlbum) - 1]['id'];
         $next = array_key_exists($index + 1, $imageIdsInAlbum) ? $imageIdsInAlbum[$index + 1]['id'] : $imageIdsInAlbum[0]['id'];
 
+        if ($request->isXmlHttpRequest()) {
+            switch ($request->get('w')) {
+                default:
+                case 'content':
+                    return $this->render('CMBundle:ImageAlbum:imageObject.html.twig', array('image' => $image, 'prevId' => $prev, 'nextId' => $next));
+                case 'sidebar':
+                    return $this->render('CMBundle:Wall:sidebarSocial.html.twig', array('post' => $image, 'isImage' => true));
+                case 'slideshow':
+                    return $this->render('CMBundle:ImageAlbum:albumSlideshow.html.twig', array('image' => $image, 'prevId' => $prev, 'nextId' => $next));
+            }
+        }
+
         return array(
             'image' => $image,
             'prevId' => $prev,
@@ -449,7 +461,7 @@ class ImageAlbumController extends Controller
         }
 
         $publisherType = strtolower($album->getPost()->getPublisher()->className());
-        return new Response($this->renderView('CMBundle:'.strtoupper(substr($request->get('_route'), 0, -6)).':album.html.twig', array(
+        return new Response($this->renderView('CMBundle:'.ucfirst(substr($request->get('_route'), 0, -6)).':album.html.twig', array(
             $publisherType => $album->getPost()->getPublisher(),
             'album' => $album,
             'images' => $pagination,

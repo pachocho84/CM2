@@ -1,5 +1,35 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+    #ilightbox-sidebar {
+        display: none;
+        position: fixed;
+        width: 350px;
+        top: 0px;
+        bottom: 0px;
+        right: 0px;
+        background: #fff;
+        z-index: 100100;
+        padding: 10px;
+        font-size: 16px;
+    }
+    #ilightbox-slideshow {
+        display: none;
+        position: fixed;
+        height: 200px;
+        bottom: 0px;
+        left: 0px;
+        right: 350px;
+        background: #fff;
+        z-index: 100100;
+        padding: 10px;
+        font-size: 16px;
+    }
+    </style>
+{% endblock %}
+
 {% block body %}
 
     <div class="box">
@@ -29,7 +59,7 @@
                         <div class="media-body">
                             <h4><a href="{{ path(image.entity.post.publisherType ~ '_show', {'slug': image.entity.post.publisher.slug}) }}">{{ image.entity.post.publisher }}</a></h4>
                             
-                            {{ include('CMBundle::social.html.twig', {'post': image, 'isImage': true}) }} 
+                            {{ include('CMBundle::social.html.twig', {'post': image, 'isImage': true}) }}
                         
                         </div>
                     </div>
@@ -40,10 +70,11 @@
                     <ul class="nav nav-list">
                         {#<li><?php echo link_to('<i class="glyphicon glyphicon-picture"></i> '.__('Album').': '.__($image->getEntity()), $image->getRawValue()->getEntity()->getLinkShow('image_album')) ?></li>
                         <li><a href="/uploads/images/full/<?php echo $image->getImg() ?>" target="_blank"><i class="glyphicon glyphicon-fullscreen"></i> <?php echo __('High resolution') ?></a></li>#}
-                        {% if nextId is not null %}<li><a href="{{ path('image_show', {id: nextId}) }}">{{ 'Next image'|trans }}</a></li>{% endif %}
-                        {% if prevId is not null %}<li><a href="{{ path('image_show', {id: prevId}) }}">{{ 'Previoous image'|trans }}</a></li>{% endif %}
+                        <li><a href="{{ path('image_show', {id: image.id}) }}" ilightbox="image" ilightbox-sidebar="{{ path('image_show', {id: image.id, w: 'sidebar'}) }}" ilightbox-slideshow="{{ path('image_show', {id: image.id, w: 'slideshow'}) }}" ilightbox-next="{{ path('image_show', {id: nextId}) }}" ilightbox-prev="{{ path('image_show', {id: prevId}) }}">{{ icon('Fullscreen') }}</a></li>
+                        <li><a href="{{ path('image_show', {id: nextId}) }}">{{ 'Next image'|trans }}</a></li>
+                        <li><a href="{{ path('image_show', {id: prevId}) }}">{{ 'Previoous image'|trans }}</a></li>
                         
-                        {% if can_manage(image) %}
+                        {% if can_manage(image.entity) %}
                             {#<li class="divider"></li>
                             <li><?php echo link_to('<i class="glyphicon glyphicon-pencil"></i> '.__('Edit'), '@image_album_edit?id='.$image->getEntityId()) ?></li>
                             <li><?php delete_link('@image_delete?id='.$image->getId(), 'image') ?></li>
