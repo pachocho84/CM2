@@ -114,15 +114,15 @@ liip_imagine:
         small:
             quality: 100
             filters:
-                thumbnail: { size: [50, 50], mode: inset }
+                thumbnail_min: { size: 50, mode: inset }
         medium:
             quality: 100
             filters:
-                thumbnail: { size: [400, 400], mode: inset }
-        big:
+                thumbnail_min: { size: 400, mode: inset }
+        large:
             quality: 100
             filters:
-                thumbnail: { size: [800, 800], mode: inset }
+                thumbnail_min: { size: 800, mode: inset }
         full:
             quality: 100
 
@@ -215,3 +215,8 @@ services:
         arguments: [%fos_user.model.user.class%]
         tags:
             - { name: form.type, alias: cm_cmbundle_user_profile }
+
+    liip_imagine.filter.loader.thumbnail_min:
+        class: CM\CMBundle\Service\ThumbnailMinFilterLoader
+        tags:
+            - { name: liip_imagine.filter.loader, loader: thumbnail_min }
