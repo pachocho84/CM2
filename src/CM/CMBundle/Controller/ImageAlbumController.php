@@ -350,15 +350,11 @@ class ImageAlbumController extends Controller
         $next = array_key_exists($index + 1, $imageIdsInAlbum) ? $imageIdsInAlbum[$index + 1]['id'] : $imageIdsInAlbum[0]['id'];
 
         if ($request->isXmlHttpRequest()) {
-            switch ($request->get('w')) {
-                default:
-                case 'content':
-                    return $this->render('CMBundle:ImageAlbum:imageObject.html.twig', array('image' => $image, 'prevId' => $prev, 'nextId' => $next));
-                case 'sidebar':
-                    return $this->render('CMBundle:Wall:sidebarSocial.html.twig', array('post' => $image, 'isImage' => true));
-                case 'slideshow':
-                    return $this->render('CMBundle:ImageAlbum:albumSlideshow.html.twig', array('image' => $image, 'prevId' => $prev, 'nextId' => $next));
-            }
+            return new JsonResponse(array(
+                'image' => $this->renderView('CMBundle:ImageAlbum:imageObject.html.twig', array('image' => $em->getRepository('CMBundle:Image')->findOneById($next))),
+                'url' => $this->get('router')->generate('image_show', array('id' => $next)),
+                'sidebar' => $this->renderView('CMBundle:Wall:sidebarSocial.html.twig', array('post' => $image, 'isImage' => true))
+            ));
         }
 
         return array(

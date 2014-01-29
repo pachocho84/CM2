@@ -180,56 +180,83 @@ $(function() {
 
 
     /* FULLSCREEN */
-
-    // $('body').on('click', '[ilightbox]', function(event) {
-    //     event.preventDefault();
-
-    //     console.log($(event.currentTarget).attr('href').replace(/__WHAT__/, 'content'));
-    //     $.iLightBox({
-    //         URL: $(event.currentTarget).attr('href').replace(/__WHAT__/, 'content'),
-    //         type: 'ajax'
-    //     });
-    // });
     
     $('body').on('click', '[ilightbox="image"]', function(event){
         var sidebar = $('<div id="ilightbox-sidebar"></div>');
         var slideshow = $('<div id="ilightbox-slideshow"></div>');
-        $.iLightBox([{
-                URL: $(event.currentTarget).attr('href'),
-                type: 'ajax'
-            }],
-            {
-                innerToolbar: true,
-                controls: {
-                    fullscreen: false
-                },
+        var data = [{
+            URL: $(event.currentTarget).attr('ilightbox-image'),
+            type: 'image',
+            page: $(event.currentTarget).attr('href'),
+            json: $(event.currentTarget).attr('ilightbox-json')
+        }];
+        var newItem;
+        $.iLightBox(data, {
                 skin: 'metro-black',
-                fullViewPort: 'fit',
+                fullViewPort: 'center',
+                minScale: 0.3,
+                maxScale: 1,
+                height: '100%',
                 overlay: {
-                    opacity: 0.80
+                    opacity: 0.9
                 },
-                minScale: 1,
                 callback: {
-                    onOpen: function(){
-                        history.pushState({}, '', $(event.currentTarget).attr('href'));
-                        if ($(event.currentTarget).attr('sidebar')) {
-                            $('body').append(sidebar);
-                            $.get($(event.currentTarget).attr('sidebar'), function(data) {
-                                sidebar.html(data);
-                            });
-                        }
-                        if ($(event.currentTarget).attr('slideshow')) {
-                            $('body').append(slideshow);
-                            $.get($(event.currentTarget).attr('slideshow'), function(data) {
-                                slideshow.html(data);
-                            });
-                        }
+                    onOpen: function() {
+                        $('body').append(sidebar);
+                        
+                        var currentItem = this.items[this.ui.currentItem];
+        				newItem = $.extend({}, currentItem);
+                        
+                        history.pushState({}, '', currentItem.page);
+                        
+                        $.ajax({
+                            url: currentItem.page,
+                            async: false
+                        }).done(function(data) {
+                            console.log(data);
+                            sidebar.html(data.sidebar);
+                            newItem.URL = data.image;
+                            newItem.page = data.url;
+                        });
+
+                        console.log(newItem);
+
+        				this.items.push(newItem);
+        				this.normalizeItems();
+        				this.vars.next = this.ui.currentItem + 1;
                     },
-                    onAfterLoad: function(api){
+                    onAfterChange: function(api) {
+                        console.log('after', api);
+                        var currentItem = this.items[this.ui.currentItem];
+        				newItem = $.extend({}, currentItem);
+                        
+                        history.pushState({}, '', currentItem.page);
+                        
+                        var iL = this;
+                        $.ajax({
+                            url: currentItem.page,
+                            async: true
+                        }).done(function(data) {
+                            console.log(data);
+                            sidebar.html(data.sidebar);
+                            newItem.URL = data.image;
+                            newItem.page = data.url;
+
+                            console.log(newItem);
+    
+            				iL.items.push(newItem);
+            				iL.normalizeItems();
+            				iL.vars.next = iL.ui.currentItem + 1;
+                        });
+                    },
+                    onBeforeLoad: function(api) {
                         sidebar.fadeIn(180);
                         slideshow.fadeIn(180);
                     },
-                    onHide: function(){
+                    onAfterLoad: function(api) {
+                        console.log(api, this);
+                    },
+                    onHide: function() {
                         sidebar.hide().remove();
                         slideshow.hide().remove();
                     }
@@ -307,7 +334,7 @@ $(function() {
         $(this).height($(this).get(0).scrollHeight - 8); 
     });
     // Enter key press submit
-    $('body').on('keydown', 'form .comment', function(event) { // .comment_new form textarea
+    $('body').on('keydown', '.comment_new form textarea', function(event) { // form .comment
         if (event.keyCode == '13' && event.shiftKey === false) {
             event.preventDefault();
             if ($(this).val().length > 1) { 
@@ -321,12 +348,13 @@ $(function() {
         $(event.currentTarget).ajaxSubmit({
             dataType: 'json',
             success: function(data, statusText, xhr, form) {
-                console.log($(event.currentTarget).find('.comment'));
+/*
                 $(event.currentTarget).closest('.comment_new').after(data.comment);
                 $(event.currentTarget).find('.comment').val('');
-                // form.closest('li').before(data.comment);
-                // form.closest('.object').find('.bottom-comment-count').replaceWith(data.commentCount);
-                // form.find('textarea').focus().val('');
+*/
+                form.closest('li').before(data.comment);
+                form.closest('.object').find('.bottom-comment-count').replaceWith(data.commentCount);
+                form.find('textarea').focus().val('');
             }
         });
     });

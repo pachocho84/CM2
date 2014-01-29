@@ -1,8 +1,1 @@
-<div>
-    <img src="{{ image.getImg|imagine_filter('full') }}"/>
-</div>
-
-<ul>
-    <li><a href="{{ path('image_show', {id: nextId}) }}">{{ 'Next image'|trans }}</a></li>
-    <li><a href="{{ path('image_show', {id: prevId}) }}">{{ 'Previoous image'|trans }}</a></li>
-</ul>
+{{ image.getImg|imagine_filter('full') }}

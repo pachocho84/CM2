@@ -3,6 +3,9 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
+    .ilightbox-container img {
+        max-width: 100%;
+    }
     #ilightbox-sidebar {
         display: none;
         position: fixed;
@@ -70,7 +73,7 @@
                     <ul class="nav nav-list">
                         {#<li><?php echo link_to('<i class="glyphicon glyphicon-picture"></i> '.__('Album').': '.__($image->getEntity()), $image->getRawValue()->getEntity()->getLinkShow('image_album')) ?></li>
                         <li><a href="/uploads/images/full/<?php echo $image->getImg() ?>" target="_blank"><i class="glyphicon glyphicon-fullscreen"></i> <?php echo __('High resolution') ?></a></li>#}
-                        <li><a href="{{ path('image_show', {id: image.id}) }}" ilightbox="image" ilightbox-sidebar="{{ path('image_show', {id: image.id, w: 'sidebar'}) }}" ilightbox-slideshow="{{ path('image_show', {id: image.id, w: 'slideshow'}) }}" ilightbox-next="{{ path('image_show', {id: nextId}) }}" ilightbox-prev="{{ path('image_show', {id: prevId}) }}">{{ icon('Fullscreen') }}</a></li>
+                        <li><a href="{{ path('image_show', {id: image.id}) }}" ilightbox="image" ilightbox-image="{{ image.getImg|imagine_filter('full') }}" ilightbox-json="{{ path('image_show', {id: image.id}) }}" ilightbox-next="{{ path('image_show', {id: nextId}) }}" ilightbox-prev="{{ path('image_show', {id: prevId}) }}">{{ icon('Fullscreen') }}</a></li>
                         <li><a href="{{ path('image_show', {id: nextId}) }}">{{ 'Next image'|trans }}</a></li>
                         <li><a href="{{ path('image_show', {id: prevId}) }}">{{ 'Previoous image'|trans }}</a></li>
                         
