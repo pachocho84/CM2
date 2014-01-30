@@ -181,6 +181,17 @@ $(function() {
 
     /* FULLSCREEN */
     
+    // images
+    $('body').on('click', '[ilightbox="album"]', function(event){
+        event.preventDefault();
+
+        console.log($(event.currentTarget).closest('[ilightbox="album"]').find('[ilightbox="image"]'));
+
+        $('[ilightbox="album"]').iLightBox({
+        });
+
+    });
+
     $('body').on('click', '[ilightbox="image"]', function(event){
         var sidebar = $('<div id="ilightbox-sidebar"></div>');
         var slideshow = $('<div id="ilightbox-slideshow"></div>');
@@ -265,6 +276,14 @@ $(function() {
                 
         );
         return false;
+    });
+
+    // images
+    $('body').on('click', '[ilightbox="multimedia"]', function(event){
+        event.preventDefault();
+
+        $('[ilightbox="multimedia"]').iLightBox({
+        });
     });
     
     

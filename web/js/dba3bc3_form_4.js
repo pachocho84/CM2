@@ -99,6 +99,17 @@ $(function() {
         console.log($(event.currentTarget).closest('.protagonist_typeahead').find('#message_recipients').val());
         $(event.currentTarget).parent().remove();
     });
+
+
+
+
+    /* DATETIME PICKER */
+    $('body').on('click', '[datepicker-date]', function(event) {
+        console.log(event);
+        $(event.currentTarget).closest('.input-group').find('[input="date"]').datetimepicker({
+            timepicker: false
+        });
+    });
     
     
     

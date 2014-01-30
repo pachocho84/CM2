@@ -99,6 +99,38 @@ $(function() {
         console.log($(event.currentTarget).closest('.protagonist_typeahead').find('#message_recipients').val());
         $(event.currentTarget).parent().remove();
     });
+
+
+
+
+    /* DATETIME PICKER */
+
+    // date
+    $('body').on('click', '[datetimepicker="date"]', function(event) {
+        $(event.currentTarget).find('input[type="text"]').datetimepicker({
+            timepicker: false,
+            lang: culture,
+            format: $(event.currentTarget).attr('datetimepicker-format'),
+            onSelectDate: function(date, $input) {
+                date = new Date(date);
+                zeros = function(num) { return num < 10 ? '0' + num : num; };
+                date = date.getFullYear() + '-' + zeros(date.getMonth() + 1) + '-' + zeros(date.getDate());
+                $input.siblings('input[type="hidden"]').val(date);
+            }
+        });
+        $(event.currentTarget).find('input[type="text"]').datetimepicker('show');
+    });
+
+    // time
+    $('body').on('click', '[datetimepicker="time"]', function(event) {
+        $(event.currentTarget).find('input[type="text"]').datetimepicker({
+            datepicker: false,
+            lang: culture,
+            format: 'H:i',
+            step: 15
+        });
+        $(event.currentTarget).find('input[type="text"]').datetimepicker('show');
+    });
     
     
     

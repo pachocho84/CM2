@@ -2,12 +2,15 @@
 
 namespace CM\CMBundle\Twig;
 
+use Symfony\Component\Intl\Intl;
 use Symfony\Component\Translation\Translator;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use CM\CMBundle\Service\Helper;
 use Symfony\Component\Security\Core\SecurityContext;
 use CM\CMBundle\Service\UserAuthentication;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
+use Sonata\IntlBundle\Locale\LocaleDetectorInterface;
+use Sonata\IntlBundle\Timezone\TimezoneDetectorInterface;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\Entity;
 use CM\CMBundle\Entity\Biography;
@@ -23,6 +26,8 @@ use CM\CMBundle\Entity\Post;
 
 class CMExtension extends \Twig_Extension
 {
+    private $datetime;
+
     private $translator;
 
     private $router;
@@ -35,6 +40,10 @@ class CMExtension extends \Twig_Extension
 
     private $imagineFilter;
 
+    protected $timezoneDetector;
+
+    protected $localeDetector;
+
     private $options;
 
     public function __construct(
@@ -44,6 +53,8 @@ class CMExtension extends \Twig_Extension
         SecurityContext $securityContext,
         UserAuthentication $userAuthentication,
         CacheManager $imagineFilter,
+        TimezoneDetectorInterface $timezoneDetector,
+        LocaleDetectorInterface $localeDetector,
         $options = array()
     )
     {
@@ -53,6 +64,8 @@ class CMExtension extends \Twig_Extension
         $this->securityContext = $securityContext;
         $this->userAuthentication = $userAuthentication;
         $this->imagineFilter = $imagineFilter;
+        $this->timezoneDetector = $timezoneDetector;
+        $this->localeDetector = $localeDetector;
         $this->options = array_merge(array(
             'images_abs_dir' => '/',
             'sizes' => array()
@@ -72,6 +85,7 @@ class CMExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
+            'date_format' => new \Twig_Function_Method($this, 'getDateFormat', array('is_safe' => array('html'))),
             'can_manage' => new \Twig_Function_Method($this, 'getCanManage'),
             'is_admin' => new \Twig_Function_Method($this, 'getIsAdmin'),
             'related_object' => new \Twig_Function_Method($this, 'getRelatedObject'),
@@ -85,6 +99,8 @@ class CMExtension extends \Twig_Extension
             'entity_post_text' => new \Twig_Function_Method($this, 'getEntityPostText', array('is_safe' => array('html'))),
             'icon' => new \Twig_Function_Method($this, 'getIcon', array('is_safe' => array('html'))),
             'tooltip' => new \Twig_Function_Method($this, 'getTooltip', array('is_safe' => array('html'))),
+            'vimeoImage' => new \Twig_Function_Method($this, 'getVimeoImage', array('is_safe' => array('html'))),
+            'soundcloudImage' => new \Twig_Function_Method($this, 'getSoundcloudImage', array('is_safe' => array('html'))),
         );
     }
 
@@ -135,6 +151,19 @@ class CMExtension extends \Twig_Extension
         } else {
             return $this->getSimpleFormatText($text);
         }
+    }
+
+    public function getDateFormat()
+    {
+        $formatter = new \IntlDateFormatter(
+            $this->localeDetector->getLocale(),
+            \IntlDateFormatter::SHORT,
+            \IntlDateFormatter::NONE,
+            $this->timezoneDetector->getTimezone(),
+            \IntlDateFormatter::GREGORIAN,
+            ''
+        );
+        return $formatter->getPattern();
     }
 
     public function getCanManage($object)
@@ -952,6 +981,24 @@ class CMExtension extends \Twig_Extension
         }
 
         return 'data-toggle="tooltip" data-placement="'.$options['placement'].'" data-container="'.$options['container'].'" data-html="'.($options['html'] ? 'true' : 'false').'" data-title="'.$what.'"';
+    }
+
+    public function getVimeoImage($id, $dim = 'medium')
+    {
+        $hash = unserialize(file_get_contents('https://vimeo.com/api/v2/video/'.$id.'.php'));
+
+        return $hash[0]['thumbnail_'.$dim];
+    }
+
+    public function getSoundcloudImage($id)
+    {
+        $json = json_decode(file_get_contents('https://api.soundcloud.com/tracks/'.$id.'.json?client_id=69181ee06df52a18c656847d8796d1c0'));
+
+        if (!is_null($json->artwork_url)) {
+            return preg_replace('/-[\w\d]+\.jpg/', '-t300x300.jpg', $json->artwork_url);
+        } else {
+            return $json->waveform_url;
+        }
     }
 
     public function getName()

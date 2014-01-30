@@ -1,9 +1,8 @@
-{% extends 'CMBundle::layout.html.twig' %}
+{% extends 'CMBundle:Form:layout.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets
-        '@CMBundle/Resources/public/css/typeahead.js-bootstrap.css'
         'lib/select2/select2-bootstrap.css'
         'lib/select2/select2.css'
     %}
@@ -76,17 +75,10 @@
 
 {% block javascripts %}
     {{ parent() }}
-        <script type="text/javascript">
-            var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
-        </script>
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&language={{ app.request.locale }}"></script>
-        {% javascripts
-            '@CMBundle/Resources/public/js/hogan-2.0.0.min.js'
-            '@CMBundle/Resources/public/js/typeahead.min.js'
-            '@CMBundle/Resources/public/js/uploadCollection.js'
-            '@CMBundle/Resources/public/js/form.js'
-            'lib/select2/select2.js'
-        %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&language={{ app.request.locale }}"></script>
+    {% javascripts
+        'lib/select2/select2.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

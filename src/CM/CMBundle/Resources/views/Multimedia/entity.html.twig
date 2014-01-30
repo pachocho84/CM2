@@ -1,17 +1,18 @@
 {% if multimedias|length > 1 %}
     <div class="box">
         <div class="box-heading">
-            <h2>{{ icon('Multimedia') }} {{ 'Multimedia'|trans }} <small><a href="{#{{ path('user_album', {'id': entityId}) }}#}">{{ 'View all multimedia'|trans }} ({{ multimedias|length }})</a></small></h2>
+            <h2>{{ icon('Multimedia') }} {{ 'Multimedia'|trans }} <small><a href="{{ path('multimedia_show_all', {entityId: entityId}) }}">{{ 'View all multimedia'|trans }} ({{ multimedias|length }})</a></small></h2>
         </div>
         <div class="box-body clearfix entity-assets">
             {% for multimedia in multimedias %}
                 {% if multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_YOUTUBE') %}
-                    <img width="110px" height="110px" src="http://img.youtube.com/vi/{{ multimedia.link }}/0.jpg" youtube-video-link="{{ multimedia.link }}" class="entity-asset" />
-{#                     <iframe width="112px" height="112px" src="//www.youtube.com/embed/{{ multimedia.link }}" frameborder="0" allowfullscreen></iframe> #}
+                    <img width="110px" height="110px" src="http://img.youtube.com/vi/{{ multimedia.source }}/0.jpg" youtube-video-link="{{ multimedia.source }}" class="entity-asset" />
+                    {#<iframe width="112px" height="112px" src="//www.youtube.com/embed/{{ multimedia.source }}" frameborder="0" allowfullscreen></iframe>#}
                 {% elseif multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_VIMEO') %}
-                    <iframe src="//player.vimeo.com/video/{{ multimedia.link }}?color=040505" width="110px" height="110px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen class="entity-asset"></iframe>
+                    <img width="110px" height="110px" src="{{ vimeoImage(multimedia.source) }}" vimeo-video-link="{{ multimedia.source }}" class="entity-asset" />
+                    {#<iframe src="//player.vimeo.com/video/{{ multimedia.source }}?color=040505" width="110px" height="110px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen class="entity-asset"></iframe>#}
                 {% elseif multimedia.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_SOUNDCLOUD') %}
-                    <iframe width="110px" height="110px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{{ multimedia.link }}&amp;color=000000&amp;auto_play=false&amp;show_artwork=true" class="entity-asset"></iframe>
+                    {#<iframe width="110px" height="110px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{{ multimedia.source }}&amp;color=000000&amp;auto_play=false&amp;show_artwork=true" class="entity-asset"></iframe>#}
                 {% endif %}
             {% endfor %}
         </div>

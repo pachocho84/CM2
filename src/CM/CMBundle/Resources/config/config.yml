@@ -159,6 +159,8 @@ services:
             securityContext: @security.context
             userAuthentication: @cm.user_authentication
             imagineFilter: @liip_imagine.cache.manager
+            timezoneDetector: @sonata.intl.timezone_detector
+            localeDetector: @sonata.intl.locale_detector
             options: 
                 images_dir: %kernel.root_dir%/../web%images_full.dir%
                 sizes: %liip_imagine.filter_sets% 

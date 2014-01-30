@@ -3,15 +3,6 @@
 
 {% block title %}{{ 'Basic informations'|trans }}{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {% stylesheets
-        '@CMBundle/Resources/public/css/typeahead.js-bootstrap.css'
-    %}
-        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
-    {% endstylesheets %}
-{% endblock %}
-
 {% block body %}
     <div class="box">
         <div class="box-top">
@@ -35,19 +26,4 @@
             {{ form_end(form) }}
         </div>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-        <script type="text/javascript">
-            var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
-        </script>
-        {% javascripts
-            '@CMBundle/Resources/public/js/hogan-2.0.0.min.js'
-            '@CMBundle/Resources/public/js/typeahead.min.js'
-            '@CMBundle/Resources/public/js/uploadCollection.js'
-            '@CMBundle/Resources/public/js/form.js'
-        %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
 {% endblock %}

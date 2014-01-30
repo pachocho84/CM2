@@ -38,10 +38,25 @@ class MultimediaController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:Multimedia:objects.html.twig', array(
-                'group' => $group,
                 'multimedias' => $pagination
             ));
         }
+
+        return array(
+            'multimedias' => $pagination
+        );
+    }
+
+    /**
+     * @Route("/all/{entityId}/{page}", name="multimedia_show_all", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function showAllAction(Request $request, $entityId, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $multimedias = $em->getRepository('CMBundle:Multimedia')->getMultimedias(array('entityId' => $entityId));
+        $pagination = $this->get('knp_paginator')->paginate($multimedias, $page, 10);
 
         return array(
             'multimedias' => $pagination

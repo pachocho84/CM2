@@ -1,0 +1,27 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+        'lib/datetimepicker/css/jquery.datetimepicker.css'
+        '@CMBundle/Resources/public/css/typeahead.js-bootstrap.css'
+    %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
+    </script>
+    {% javascripts
+        'lib/datetimepicker/js/jquery.datetimepicker.js'
+        '@CMBundle/Resources/public/js/hogan-2.0.0.min.js'
+        '@CMBundle/Resources/public/js/typeahead.min.js'
+        '@CMBundle/Resources/public/js/uploadCollection.js'
+        '@CMBundle/Resources/public/js/form.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

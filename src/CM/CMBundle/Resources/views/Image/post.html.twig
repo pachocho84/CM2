@@ -4,10 +4,12 @@
 
 <div class="media">
 
-    <div class="media-body">
+    <div class="media-body" ilightbox="album">
 
         {% for image in relatedObjects|slice(0, 6) %}
-            {{ show_img_box(image.getImg|imagine_filter('medium'), {'width': 150, 'height': 150, 'box_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
+            <a href="{{ image.getImg|imagine_filter('medium') }}" ilightbox="image">
+                {{ show_img_box(image.getImg|imagine_filter('medium'), {width: 150, height: 150, box_attributes: {class: 'pull-left img-thumbnail'}}) }}
+            </a>
         {% endfor %}
 
     </div><!-- END Media Body -->

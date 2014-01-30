@@ -18,6 +18,7 @@ class MultimediaRepository extends BaseRepository
             'userId' => null,
             'pageId' => null,
             'groupId' => null,
+            'entityId' => null,
             'paginate' => true,
             'limit' => null
         ), $options);
@@ -45,6 +46,9 @@ class MultimediaRepository extends BaseRepository
         }
         if (!is_null($options['groupId'])) {
             $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+        if (!is_null($options['entityId'])) {
+            $query->andWhere('m.entityId = :entity_id')->setParameter('entity_id', $options['entityId']);
         }
 
         if (is_null($options['paginate']) && !is_null($options['limit'])) {
