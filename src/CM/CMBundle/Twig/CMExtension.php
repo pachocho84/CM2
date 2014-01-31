@@ -9,8 +9,6 @@ use CM\CMBundle\Service\Helper;
 use Symfony\Component\Security\Core\SecurityContext;
 use CM\CMBundle\Service\UserAuthentication;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
-use Sonata\IntlBundle\Locale\LocaleDetectorInterface;
-use Sonata\IntlBundle\Timezone\TimezoneDetectorInterface;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\Entity;
 use CM\CMBundle\Entity\Biography;
@@ -26,8 +24,6 @@ use CM\CMBundle\Entity\Post;
 
 class CMExtension extends \Twig_Extension
 {
-    private $datetime;
-
     private $translator;
 
     private $router;
@@ -40,10 +36,6 @@ class CMExtension extends \Twig_Extension
 
     private $imagineFilter;
 
-    protected $timezoneDetector;
-
-    protected $localeDetector;
-
     private $options;
 
     public function __construct(
@@ -53,8 +45,6 @@ class CMExtension extends \Twig_Extension
         SecurityContext $securityContext,
         UserAuthentication $userAuthentication,
         CacheManager $imagineFilter,
-        TimezoneDetectorInterface $timezoneDetector,
-        LocaleDetectorInterface $localeDetector,
         $options = array()
     )
     {
@@ -64,8 +54,6 @@ class CMExtension extends \Twig_Extension
         $this->securityContext = $securityContext;
         $this->userAuthentication = $userAuthentication;
         $this->imagineFilter = $imagineFilter;
-        $this->timezoneDetector = $timezoneDetector;
-        $this->localeDetector = $localeDetector;
         $this->options = array_merge(array(
             'images_abs_dir' => '/',
             'sizes' => array()
@@ -85,7 +73,7 @@ class CMExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'date_format' => new \Twig_Function_Method($this, 'getDateFormat', array('is_safe' => array('html'))),
+            'datetime_format' => new \Twig_Function_Method($this, 'getDateTimeFormat', array('is_safe' => array('html'))),
             'can_manage' => new \Twig_Function_Method($this, 'getCanManage'),
             'is_admin' => new \Twig_Function_Method($this, 'getIsAdmin'),
             'related_object' => new \Twig_Function_Method($this, 'getRelatedObject'),
@@ -153,17 +141,9 @@ class CMExtension extends \Twig_Extension
         }
     }
 
-    public function getDateFormat()
+    public function getDateTimeFormat($lang = 'js')
     {
-        $formatter = new \IntlDateFormatter(
-            $this->localeDetector->getLocale(),
-            \IntlDateFormatter::SHORT,
-            \IntlDateFormatter::NONE,
-            $this->timezoneDetector->getTimezone(),
-            \IntlDateFormatter::GREGORIAN,
-            ''
-        );
-        return $formatter->getPattern();
+        return $this->helper->dateTimeFormat($lang);
     }
 
     public function getCanManage($object)

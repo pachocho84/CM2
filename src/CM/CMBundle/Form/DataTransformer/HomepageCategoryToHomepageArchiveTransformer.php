@@ -14,16 +14,13 @@ class HomepageCategoryToHomepageArchiveTransformer implements DataTransformerInt
      * @var ObjectManager
      */
     private $om;
-    
-    private $index;
 
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om, $index = 0)
+    public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->index = $index;
     }
 
     /**

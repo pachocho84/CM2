@@ -21,7 +21,7 @@ class EventType extends EntityType
         parent::buildForm($builder, $options);
     
         $builder->add('eventDates', 'collection', array(
-                'type' => new EventDateType(),
+                'type' => 'cm_cmbundle_eventdate',
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,

@@ -103,33 +103,27 @@ $(function() {
 
 
 
-    /* DATETIME PICKER */
+    /* DATETIME PICKER & INPUT MASK */
 
     // date
-    $('body').on('click', '[datetimepicker="date"]', function(event) {
-        $(event.currentTarget).find('input[type="text"]').datetimepicker({
-            timepicker: false,
+    initDatetimepicker = function(elem) {
+        $(elem).datetimepicker({
             lang: culture,
-            format: $(event.currentTarget).attr('datetimepicker-format'),
-            onSelectDate: function(date, $input) {
-                date = new Date(date);
-                zeros = function(num) { return num < 10 ? '0' + num : num; };
-                date = date.getFullYear() + '-' + zeros(date.getMonth() + 1) + '-' + zeros(date.getDate());
-                $input.siblings('input[type="hidden"]').val(date);
-            }
+            format: $(elem).attr('datetimepicker-format'),
+            autoclose: true,
+            todayBtn: true,
+            pickerPosition: "bottom-left",
+            linkField: $(elem).siblings('input[type="hidden"]').attr('id'),
+            linkFormat: "yyyy-mm-dd hh:ii"
         });
-        $(event.currentTarget).find('input[type="text"]').datetimepicker('show');
+    }
+    $('[datetimepicker-container]').each(function(i, elem) {
+        initDatetimepicker(elem);
     });
-
-    // time
-    $('body').on('click', '[datetimepicker="time"]', function(event) {
-        $(event.currentTarget).find('input[type="text"]').datetimepicker({
-            datepicker: false,
-            lang: culture,
-            format: 'H:i',
-            step: 15
+    $('body').on('collection-added', '.add_date_link', function(event, elem) {
+        $(elem).find('[datetimepicker-container]').each(function(i, elem) {
+            initDatetimepicker(elem);
         });
-        $(event.currentTarget).find('input[type="text"]').datetimepicker('show');
     });
     
     

@@ -3,7 +3,7 @@
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets
-        'lib/datetimepicker/css/jquery.datetimepicker.css'
+        'lib/datetimepicker/css/bootstrap-datetimepicker.min.css'
         '@CMBundle/Resources/public/css/typeahead.js-bootstrap.css'
     %}
         <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
@@ -16,7 +16,7 @@
         var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
     </script>
     {% javascripts
-        'lib/datetimepicker/js/jquery.datetimepicker.js'
+        'lib/datetimepicker/js/bootstrap-datetimepicker.min.js'
         '@CMBundle/Resources/public/js/hogan-2.0.0.min.js'
         '@CMBundle/Resources/public/js/typeahead.min.js'
         '@CMBundle/Resources/public/js/uploadCollection.js'

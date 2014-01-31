@@ -42,7 +42,8 @@ function uploadCollection($target, trigger, text) {
 
         addFormDeleteLink($newForm, text);
 
-        $(e.currentTarget).trigger("collection-added");
+        console.log('creating', e.currentTarget, $newForm);
+        $(e.currentTarget).trigger('collection-added', $newForm);
     });
 }
 

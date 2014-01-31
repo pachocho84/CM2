@@ -6,14 +6,7 @@
 {% spaceless %}
     {% set type = type|default('text') %}
     {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
-    {% if type == 'date' %}
-        <div{% if 'datetime' not in form.parent.vars.block_prefixes %} class="col-lg-9"{% endif %} datetimepicker="{{ type }}" datetimepicker-format="{{ date_format() }}">
-        <input type="text" class="form-control" />
-        {% set type = 'hidden' %}
-    {% elseif type == 'time' %}
-        <div{% if 'datetime' not in form.parent.vars.block_prefixes %} class="col-lg-9"{% endif %} datetimepicker="{{ type }}">
-        {% set type = 'text' %}
-    {% elseif type == 'hidden' %}
+    {% if type == 'hidden' %}
         <div>
     {% elseif type == 'file' %}
         {% set required = false %}
@@ -21,6 +14,13 @@
             <div class="col-lg-9 input-group"><span class="btn btn-default btn-file input-group-addon">{{ 'Browse'|trans({}, translation_domain) }}
     {% else %}
         <div class="col-lg-9">
+    {% endif %}
+    {% if type == 'text' and form.vars.attr.datetimepicker is defined %}
+        <div class="input-group input-append date" datetimepicker-container datetimepicker-format="{{ datetime_format('js') }}">
+            <input type="text" class="form-control" readonly {% if value is not empty %}value="{{ value|format_datetime(datetime_format('php')) }}" {% endif %} />
+            <span class="input-group-addon">{{ icon('Calendar') }}</span>
+        </div>
+        {% set type = 'hidden' %}
     {% endif %}
         <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     {% if type == 'file' %}

@@ -5,9 +5,21 @@ namespace CM\CMBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use CM\CMBundle\Service\Helper;
+use CM\CMBundle\Form\DataTransformer\DateTimeToTextTransformer;
 
 class EventDateType extends AbstractType
 {
+    private $intl;
+    
+    private $helper;
+
+    public function __construct($intl, Helper $helper)
+    {
+        $this->intl = $intl;
+        $this->helper = $helper;
+    }
+
      /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -15,19 +27,11 @@ class EventDateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('start', 'datetime', array(
-                'date_widget'       => 'single_text',
-                'time_widget'       => 'single_text',
-                'model_timezone'    => 'GMT',
-                'view_timezone'     => 'Europe/Rome'
-            ))
-            ->add('end', 'datetime', array(
-                'required'            => false,
-                'date_widget'       => 'single_text',
-                'time_widget'       => 'single_text',
-                'model_timezone'    => 'GMT',
-                'view_timezone'     => 'Europe/Rome',
-            ))
+            ->add($builder->create('start', 'text', array('attr' => array('datetimepicker' => '')))->addModelTransformer(new DateTimeToTextTransformer($this->intl, $this->helper)))
+            ->add($builder->create('end', 'text', array('attr' => array('datetimepicker' => '')))->addModelTransformer(new DateTimeToTextTransformer($this->intl, $this->helper)))
+            // ->add('end', 'datetime', array(
+            //     'attr' => array('datetimepicker' => '')
+            // ))
             ->add('location', 'text', array(
                 'attr' => array('places-autocomplete' => '')
             ))

@@ -3,6 +3,8 @@
 namespace CM\CMBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use Sonata\IntlBundle\Locale\LocaleDetectorInterface;
+use Sonata\IntlBundle\Timezone\TimezoneDetectorInterface;
 use CM\CMBundle\Entity\Notification;
 use CM\CMBundle\Entity\EntityUser;
 
@@ -10,9 +12,19 @@ class Helper
 {
     private $em;
 
-    public function __construct(EntityManager $em)
+    protected $timezoneDetector;
+
+    protected $localeDetector;
+
+    public function __construct(
+        EntityManager $em,
+        TimezoneDetectorInterface $timezoneDetector,
+        LocaleDetectorInterface $localeDetector
+    )
     {
         $this->em = $em;
+        $this->timezoneDetector = $timezoneDetector;
+        $this->localeDetector = $localeDetector;
     }
 
     public static function className($object)
@@ -37,6 +49,24 @@ class Helper
             default:
                 return $shortName::className();
                 // throw new \Exception('add class name '.$shortName);
+        }
+    }
+
+    public function dateTimeFormat($lang = 'js')
+    {
+        $formatter = new \IntlDateFormatter(
+            $this->localeDetector->getLocale(),
+            \IntlDateFormatter::SHORT,
+            \IntlDateFormatter::SHORT,
+            $this->timezoneDetector->getTimezone(),
+            \IntlDateFormatter::GREGORIAN,
+            ''
+        );
+
+        if ($lang == 'js') {
+            return str_replace('a', 'p', str_replace('m', 'i', $formatter->getPattern()));
+        } elseif ($lang == 'php') {
+            return $formatter->getPattern();
         }
     }
 

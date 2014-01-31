@@ -149,6 +149,8 @@ services:
         class: CM\CMBundle\Service\Helper
         arguments:
             em: @doctrine.orm.entity_manager
+            timezoneDetector: @sonata.intl.timezone_detector
+            localeDetector: @sonata.intl.locale_detector
 
     cm.twig.cm_extension:
         class: CM\CMBundle\Twig\CMExtension
@@ -159,8 +161,6 @@ services:
             securityContext: @security.context
             userAuthentication: @cm.user_authentication
             imagineFilter: @liip_imagine.cache.manager
-            timezoneDetector: @sonata.intl.timezone_detector
-            localeDetector: @sonata.intl.locale_detector
             options: 
                 images_dir: %kernel.root_dir%/../web%images_full.dir%
                 sizes: %liip_imagine.filter_sets% 
@@ -205,6 +205,14 @@ services:
             session: @session
             entityManager: @doctrine.orm.entity_manager
             helper: @cm.helper
+
+    cm.form.type.eventdate:
+        class: CM\CMBundle\Form\EventDateType
+        arguments:
+            intl: @sonata.intl.templating.helper.datetime
+            helper: @cm.helper
+        tags:
+            - { name: form.type, alias: cm_cmbundle_eventdate }
 
     cm.user_registration.type:
         class: CM\CMBundle\Form\RegistrationType
