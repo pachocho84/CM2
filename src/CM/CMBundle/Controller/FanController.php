@@ -54,11 +54,18 @@ class FanController extends Controller
     }
 
     /**
+     * @Route("/{slug}/fans/sidebar", name="fan_user_sidebar")
      * @Template
      */
-    public function userSidebarAction(Request $request, User $user)
+    public function userSidebarAction(Request $request, $slug)
     {
         $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
 
         $fans = $em->getRepository('CMBundle:Fan')->getUserFans($user->getId(), 16);
 

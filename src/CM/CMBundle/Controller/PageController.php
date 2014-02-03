@@ -262,8 +262,8 @@ class PageController extends Controller
         $events = $em->getRepository('CMBundle:Event')->getEvents(array(
             'locale'        => $request->getLocale(), 
             'archive'       => $request->get('_route') == 'page_events_archive' ? true : null,
-            'category_id'   => $category_slug ? $category->getId() : null,
-            'page_id'      => $page->getId()      
+            'categoryId'   => $category_slug ? $category->getId() : null,
+            'pageId'      => $page->getId()      
         ));
         
         $pagination = $this->get('knp_paginator')->paginate($events, $pageNum, 10);

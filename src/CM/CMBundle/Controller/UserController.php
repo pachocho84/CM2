@@ -317,7 +317,7 @@ class UserController extends Controller
      * @Route("/{slug}/events/category/{category_slug}/{page}", name="user_events_category", requirements={"page" = "\d+"})
      * @Template
      */
-    public function eventsAction(Request $request, $slug, $page = 1, $category_slug = null)
+    public function eventsAction(Request $request, $slug, $page = 1, $limit = 10, $category_slug = null)
     {
         $em = $this->getDoctrine()->getManager();
         
@@ -338,11 +338,11 @@ class UserController extends Controller
         $events = $em->getRepository('CMBundle:Event')->getEvents(array(
             'locale'        => $request->getLocale(), 
             'archive'       => $request->get('_route') == 'event_archive' ? true : null,
-            'category_id'   => $category_slug ? $category->getId() : null,
-            'user_id'       => $user->getId()       
+            'categoryId'   => $category_slug ? $category->getId() : null,
+            'userId'       => $user->getId()       
         ));
         
-        $pagination = $this->get('knp_paginator')->paginate($events, $page, 10);
+        $pagination = $this->get('knp_paginator')->paginate($events, $page, $limit);
         
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'page' => $page));

@@ -1,0 +1,28 @@
+{% if dates|length > 0 %}
+    <div class="box">
+        <div class="box-heading">
+            <h2>
+                {{ icon('Event') }} {{ 'Next events'|trans }}
+                <small><a href="{{ path(dates[0].event.post.publisherType ~ '_events', {'slug': dates[0].event.post.publisher.slug}) }}" class="pull-right">{{ 'Show all (%count%)'|trans({'%count%': count}) }}</a></small>
+            </h2>
+        </div>
+
+        <div class="box-body objects">
+            {% for date in dates %}
+                <div class="media object">
+                    {% if date.event.images|length > 0 %}
+                        {{ show_img_box(date.event.images[0]|imagine_filter('medium'), {width: 100, height: 66, box_attributes: {class: 'pull-left'}}) }}
+                        <div class="media-body">
+                            <h4>{{ date.event }}</h4>
+                            <p>
+                                {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
+                                {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}<br/>
+                                <span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span>
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

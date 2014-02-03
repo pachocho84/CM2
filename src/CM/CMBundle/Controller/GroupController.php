@@ -262,8 +262,8 @@ class GroupController extends Controller
         $events = $em->getRepository('CMBundle:Event')->getEvents(array(
             'locale'        => $request->getLocale(), 
             'archive'       => $request->get('_route') == 'group_events_archive' ? true : null,
-            'category_id'   => $category_slug ? $category->getId() : null,
-            'group_id'      => $group->getId()      
+            'categoryId'   => $category_slug ? $category->getId() : null,
+            'groupId'      => $group->getId()      
         ));
         
         $pagination = $this->get('knp_paginator')->paginate($events, $page, 10);
