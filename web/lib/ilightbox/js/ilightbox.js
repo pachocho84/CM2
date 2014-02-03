@@ -1148,7 +1148,7 @@
 			});
 
 			if(opts.controls.swipe) holders.on(touchStartEvent, function (event) {
-				if (vars.nextLock || vars.prevLock) return;
+				// if (vars.nextLock || vars.prevLock) return;
 				if (vars.total == 1) return;
 				if (vars.lockSwipe) return;
 				
@@ -1259,7 +1259,7 @@
 			else if(diff == -1) iL.moveTo('prev');
 			else {
 			
-				if(vars.nextLock || vars.prevLock) return false;
+				// if(vars.nextLock || vars.prevLock) return false;
 				
 				//Trigger the onBeforeChange callback
 				if(typeof opts.callback.onBeforeChange == 'function') opts.callback.onBeforeChange.call(iL, iL.ui);
@@ -1322,7 +1322,7 @@
 			viewport = getViewport(),
 			switchSpeed = opts.effects.switchSpeed;
 			
-			if(vars.nextLock || vars.prevLock) return false;
+			if(false && (vars.nextLock || vars.prevLock)) return false;
 			else {
 				
 				var item = (side == "next") ? vars.next : vars.prev;
@@ -1352,8 +1352,7 @@
 				//Trigger the onBeforeChange callback
 				if(typeof opts.callback.onBeforeChange == 'function') opts.callback.onBeforeChange.call(iL, iL.ui);
 				
-                // (side == "next") ? vars.nextLock = true : vars.prevLock = true;
-				(side == "next") ? vars.nextLock = false : vars.prevLock = false;
+				(side == "next") ? vars.nextLock = true : vars.prevLock = true;
 				
 				var captionFirst = $('div.ilightbox-caption', secondHolder),
 				socialFirst = $('div.ilightbox-social', secondHolder);
