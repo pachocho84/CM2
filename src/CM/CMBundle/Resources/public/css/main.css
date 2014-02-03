@@ -584,15 +584,41 @@ form .form-tab-content {
 
 /* USER */
 .profile-header {
-/*     border: 1px solid #bbbbbb; */
-    border-radius: 0px 0px 3px 3px;
-    -webkit-border-radius: 0px 0px 3px 3px;
-    -moz-border-radius: 0px 0px 3px 3px;
-    background: #f7f7f7;
+    margin-bottom: 20px;
 }
+.profile-header .col-md-4.profile-header-info {
+    border-right: 1px solid #bbbbbb;
+    height: 285px;
+}
+.profile-header .col-md-4.profile-header-info .profile-header-picture {
+    margin: 0 auto 15px;
+    width: 130px;
+}
+.profile-header .col-md-4.profile-header-info h2 {
+    font-size: 26px;
+    margin: 0 0 15px;
+}
+.profile-header .col-md-4.profile-header-info h3 {
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0 0 15px;
+}
+.profile-header .col-md-8.profile-header-cover {
+    height: 285px;
+    padding: 0px;
+}
+.profile-header .col-md-8.profile-header-cover .image_box, 
+.profile-header .col-md-8.profile-header-cover img {
+    width: 100% !important;
+}
+.profile-header .col-md-8.profile-header-cover img {
+    height: auto !important;
+}
+
 .profile-header .navbar {
     margin-bottom: 0;
-    border: 1px solid #bbbbbb;
+    border: 0px;
+    border-top: 1px solid #bbbbbb;
     border-radius: 0;
     min-height: 0;
 }
@@ -626,7 +652,7 @@ form .form-tab-content {
     box-shadow: none;
     position: relative;
 }
-.profile-header .navbar .user-menu > ul.nav > li.active > a:before {
+/*.profile-header .navbar .user-menu > ul.nav > li.active > a:before {
   position: absolute;
   bottom: -24px;
   left: 50%;
@@ -636,8 +662,8 @@ form .form-tab-content {
   border-bottom: 13px solid #990000;
   border-left: 13px solid transparent;
   content: '';
-}
-.profile-header .navbar .user-menu > ul.nav > li.active > a:after {
+}*/
+/*.profile-header .navbar .user-menu > ul.nav > li.active > a:after {
   position: absolute;
   bottom: -25px;
   left: 50%;
@@ -648,7 +674,7 @@ form .form-tab-content {
   border-left: 10px solid transparent;
   content: '';
   z-index: 1;
-} 
+} */
 .profile-header .navbar .user-menu li.active a.dropdown-toggle .caret { 
     border-top-color: #990000;
     border-bottom-color: #990000;
@@ -660,30 +686,6 @@ form .form-tab-content {
 }
 .profile-header .navbar .nav li.dropdown.open>.dropdown-toggle {
     background: #ffffff;
-}
-.profile-header .cover {
-    position: relative;
-    width: 770px;
-    height: 285px;
-}
-.profile-header .cover-shadow  {
-    background: url(/images/cover_shadow.png) bottom left repeat-x; 
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-}
-.profile-header .cover h2 {
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 0;
-    left: 20px;
-    font-size: 50px;
-    line-height: 35px;
-    color: #ffffff;    
-    text-rendering: optimizelegibility;
-    text-shadow: 0 0 3px rgba(0,0,0,0.8);
 }
 
 

@@ -20,11 +20,11 @@ class EventRepository extends BaseRepository
         ), $options);
         
         return array_merge(array(
-            'user_id'       => null,
-            'group_id'      => null,
-            'page_id'       => null,
+            'userId'       => null,
+            'groupId'      => null,
+            'pageId'       => null,
             'archive'       => null, 
-            'category_id'   => null,
+            'categoryId'   => null,
             'currentUserId' => null,
             'mainImageOnly' => false,
             'paginate'      => true,
@@ -71,28 +71,28 @@ class EventRepository extends BaseRepository
             $query->addSelect('eu, us');
         }
         
-        if ($options['user_id']) {
+        if ($options['userId']) {
             $count->andWhere('p.user = :user_id');
             $query->andWhere('p.user = :user_id');
-            $parameters['user_id'] = $options['user_id'];
+            $parameters['user_id'] = $options['userId'];
         }
         
-        if ($options['page_id']) {
+        if ($options['pageId']) {
             $count->andWhere('p.page = :page_id');
             $query->andWhere('p.page = :page_id');
-            $parameters['page_id'] = $options['page_id'];
+            $parameters['page_id'] = $options['pageId'];
         }
         
-        if ($options['group_id']) {
+        if ($options['groupId']) {
             $count->andWhere('p.group = :group_id');
             $query->andWhere('p.group = :group_id');
-            $parameters['group_id'] = $options['group_id'];
+            $parameters['group_id'] = $options['groupId'];
         }
         
-        if ($options['category_id']) {
+        if ($options['categoryId']) {
             $count->andWhere('e.entityCategory = :category_id');
             $query->andWhere('e.entityCategory = :category_id');
-            $parameters['category_id'] = $options['category_id'];
+            $parameters['category_id'] = $options['categoryId'];
         }
         
         if ($options['archive']) {
@@ -179,6 +179,66 @@ class EventRepository extends BaseRepository
             ->andWhere('e.id = :id')->setParameter('id', $id)
             ->getQuery()
             ->getSingleResult();
+    }
+
+    public function getNextDates($options = array())
+    {
+        $options = self::getOptions($options);
+        
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('d, e, p, i')
+            ->from('CMBundle:EventDate', 'd')
+            ->join('d.event', 'e')
+            ->join('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')->setParameter('object', Event::className())
+            ->leftJoin('e.images', 'i', 'with', 'i.main = '.true)
+            ->andWhere('d.start >= :now')->setParameter('now', new \DateTime)
+            ->orderBy('d.start');
+        if (!is_null($options['userId'])) {
+            $query->andWhere('p.userId = :user_id')
+                ->setParameter('user_id', $options['userId']);
+        }
+        if (!is_null($options['pageId'])) {
+            $query->andWhere('p.pageId = :page_id')
+                ->setParameter('page_id', $options['pageId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $query->andWhere('p.groupId = :group_id')
+                ->setParameter('group_id', $options['groupId']);
+        }
+        if (!is_null($options['limit'])) {
+            $query->setMaxResults($options['limit']);
+        }
+
+        return $query->getQuery()
+            ->getResult();
+    }
+
+    public function countNextDates($options = array())
+    {
+        $options = self::getOptions($options);
+        
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('count(d.id)')
+            ->from('CMBundle:EventDate', 'd')
+            ->join('d.event', 'e')
+            ->join('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')->setParameter('object', Event::className())
+            ->andWhere('d.start >= :now')->setParameter('now', new \DateTime)
+            ->orderBy('d.start');
+        if (!is_null($options['userId'])) {
+            $query->andWhere('p.userId = :user_id')
+                ->setParameter('user_id', $options['userId']);
+        }
+        if (!is_null($options['pageId'])) {
+            $query->andWhere('p.pageId = :page_id')
+                ->setParameter('page_id', $options['pageId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $query->andWhere('p.groupId = :group_id')
+                ->setParameter('group_id', $options['groupId']);
+        }
+
+        return $query->getQuery()
+            ->getSingleScalarResult();
     }
 
     public function getDatesPerEvent($id)

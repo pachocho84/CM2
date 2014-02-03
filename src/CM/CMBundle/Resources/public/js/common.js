@@ -180,6 +180,8 @@ $(function() {
 
 
     /* FULLSCREEN */
+
+    // TODO: http://codecanyon.net/item/nacho-lightbox-flat-responsive-lightbox/5434882
     
     // images
     // $('body').on('click', '[ilightbox="album"]', function(event){
@@ -237,7 +239,7 @@ $(function() {
         				this.vars.next = this.ui.currentItem + 1;
                     },
                     onAfterChange: function(api) {
-                        // console.log('after', api);
+                        console.log();
                         var currentItem = this.items[this.ui.currentItem];
         				newItem = $.extend({}, currentItem);
                         

@@ -1,5 +1,9 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+{% block bodyHeading %}
+    {{ include('CMBundle:User:top.html.twig', {'inPage': 'profile'}) }}
+{% endblock %}
+
 {% block body %}
 
     {% if is_granted('ROLE_USER') %}
@@ -10,8 +14,6 @@
         {% endif %}
     {% endif %}  
 
-    {{ include('CMBundle:User:top.html.twig', {'inPage': 'profile'}) }}
-
 
     
     <div class="box">
@@ -19,17 +21,8 @@
             <h2><a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ icon('Biography') }} {{ 'Biography'|trans }}</a> <small><a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ 'show complete biography'|trans }}</small></a></h2>
         </div>
         
-        <div class="objects">
-            <div class="media object">
-                <a href="{{ path('user_biography', {'slug': user.slug}) }}" class="pull-left img-thumbnail"><img src='{{ asset(uploaded_images_full_dir~'/'~user.img) }}' width=200 class="media-object" /></a>
-                <div class="media-body">
-                    <h3 class="media-heading">
-                        {{ user }}
-                        <small>{{ user.userTags|join(', ')|trim }}</small>
-                    </h3>
-                    {% if biography is not null %}{{ entity_short_text(biography) }}{% endif %}
-                </div>
-            </div>
+        <div class="box-body">
+            {% if biography is not null %}{{ entity_short_text(biography) }}{% endif %}
         </div>
     </div>
 
@@ -48,5 +41,7 @@
 {% endblock %}
 
 {% block sidebar %}
-    {{ render(controller('CMBundle:Fan:userSidebar', {'user': user})) }}
+    <div data-ajax-url="{{ path('fan_user_sidebar', {slug: user.slug}) }}"></div>
+    {#<div data-ajax-url="{{ path('event_next_dates', {object: 'user', objectId: user.id, limit: 3}) }}"></div>#}
+    {{ render(controller('CMBundle:Event:nextDates', {object: 'user', objectId: user.id, limit: 3})) }}
 {% endblock %}

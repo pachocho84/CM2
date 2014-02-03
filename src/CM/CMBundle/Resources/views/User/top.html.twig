@@ -1,20 +1,22 @@
-{% if not user.coverImg or user.coverImg == '' %}
-    <div class="media">
-        {{ show_img_box(user.img|imagine_filter('small'), {'width': 35, 'height': 35, 'offset': user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
-        <div class="media-body">
+<div class="box profile-header">
+    <div class="clearfix">
+        <div class="col-md-4 box-body profile-header-info text-center">
+            <div class="profile-header-picture thumbnail">
+                {{ show_img_box(user.img|imagine_filter('medium'), {width: 120, offset: user.imgOffset}) }}
+            </div>
             <h2>{{ user }}</h2>
+            <h3 class="text-muted" {{ user.userTags|length > 3 and tooltip(user.userTags) }}>
+                {{ user.userTags[:3]|join(', ')|trim }}{% if user.userTags|length > 3 %}...{% endif %}
+            </h3>
+            {{ icon('Map') }} {{ user.cityBirth }}
+            {{ icon('Map') }} {{ user.cityCurrent }}
+        </div>
+        <div class="col-md-8 profile-header-cover">
+            {% if user.coverImg != '' %}
+                {{ show_img_box(user.coverImg|imagine_filter('large'), {width: 780, height: 285, offset: user.coverImgOffset}) }}
+            {% endif %}
         </div>
     </div>
-{% endif %}
-
-<div class="profile-header shadow">
-    {% if user.coverImg != '' %}
-        <div class="cover image_box">
-            {{ show_img_box(user.coverImg|imagine_filter('large'), {'width': 750, 'height': 285, 'offset': user.coverImgOffset, 'img_only': true})|raw }}
-            <div class="cover-shadow"></div>
-            <h2>{{ user }}</h2>
-        </div>
-    {% endif %}
     <nav class="navbar navbar-default" role="navigation">
         <div class="collapse navbar-collapse navbar-ex1-collapse user-menu">
             <ul class="nav navbar-nav">

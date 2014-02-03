@@ -52,7 +52,7 @@ class EventController extends Controller
         $events = $em->getRepository('CMBundle:Event')->getEvents(array(
             'locale'        => $request->getLocale(), 
             'archive'       => $request->get('_route') == 'event_archive' ? true : null,
-            'category_id'   => $categorySlug ? $category->getId() : null
+            'categoryId'   => $categorySlug ? $category->getId() : null
         ));
         
         $pagination = $this->get('knp_paginator')->paginate($events, $page, 10);
@@ -174,6 +174,20 @@ class EventController extends Controller
         return array(
             'event' => $event,
             'request' => $req
+        );
+    }
+    
+    /**
+     * @Route("/dates/next/{object}/{objectId}/{limit}", name="event_next_dates", requirements={"id" = "\d+"})
+     * @Template
+     */
+    public function nextDatesAction(Request $request, $object, $objectId, $limit = 3)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        return array(
+            'dates' => $em->getRepository('CMBundle:Event')->getNextDates(array($object.'Id' => $objectId, 'limit' => $limit)),
+            'count' => $em->getRepository('CMBundle:Event')->countNextDates(array($object.'Id' => $objectId))
         );
     }
     
