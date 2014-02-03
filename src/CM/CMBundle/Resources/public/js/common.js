@@ -182,15 +182,15 @@ $(function() {
     /* FULLSCREEN */
     
     // images
-    $('body').on('click', '[ilightbox="album"]', function(event){
-        event.preventDefault();
+    // $('body').on('click', '[ilightbox="album"]', function(event){
+    //     event.preventDefault();
 
-        console.log($(event.currentTarget).closest('[ilightbox="album"]').find('[ilightbox="image"]'));
+    //     console.log($(event.currentTarget).closest('[ilightbox="album"]').find('[ilightbox="image"]'));
 
-        $('[ilightbox="album"]').iLightBox({
-        });
+    //     $('[ilightbox="album"]').iLightBox({
+    //     });
 
-    });
+    // });
 
     $('body').on('click', '[ilightbox="image"]', function(event){
         var sidebar = $('<div id="ilightbox-sidebar"></div>');
@@ -224,20 +224,20 @@ $(function() {
                             url: currentItem.page,
                             async: false
                         }).done(function(data) {
-                            console.log(data);
+                            // console.log(data);
                             sidebar.html(data.sidebar);
                             newItem.URL = data.image;
                             newItem.page = data.url;
                         });
 
-                        console.log(newItem);
+                        // console.log(newItem);
 
         				this.items.push(newItem);
         				this.normalizeItems();
         				this.vars.next = this.ui.currentItem + 1;
                     },
                     onAfterChange: function(api) {
-                        console.log('after', api);
+                        // console.log('after', api);
                         var currentItem = this.items[this.ui.currentItem];
         				newItem = $.extend({}, currentItem);
                         
@@ -248,12 +248,12 @@ $(function() {
                             url: currentItem.page,
                             async: true
                         }).done(function(data) {
-                            console.log(data);
+                            // console.log(data);
                             sidebar.html(data.sidebar);
                             newItem.URL = data.image;
                             newItem.page = data.url;
 
-                            console.log(newItem);
+                            // console.log(newItem);
     
             				iL.items.push(newItem);
             				iL.normalizeItems();
@@ -265,7 +265,7 @@ $(function() {
                         slideshow.fadeIn(180);
                     },
                     onAfterLoad: function(api) {
-                        console.log(api, this);
+                        // console.log(api, this);
                     },
                     onHide: function() {
                         sidebar.hide().remove();

@@ -40,104 +40,108 @@
 		flash: 'http://www.adobe.com/go/getflash'
 	},
 
-	iLightBox = function (el, options, items, instant) {
-		var iL = this;
-		
-		iL.options = options,
-		iL.selector = el.selector || el,
-		iL.context = el.context,
-		iL.instant = instant;
-		
-		if(items.length < 1) iL.attachItems();
-		else iL.items = items;
-		
-		iL.vars = {
-			total: iL.items.length,
-			start: 0,
-			current: null,
-			next: null,
-			prev: null,
-			BODY: $('body'),
-			loadRequests: 0,
-			overlay: $('<div class="ilightbox-overlay"></div>'),
-			loader: $('<div class="ilightbox-loader"><div></div></div>'),
-			toolbar: $('<div class="ilightbox-toolbar"></div>'),
-			innerToolbar: $('<div class="ilightbox-inner-toolbar"></div>'),
-			title: $('<div class="ilightbox-title"></div>'),
-			closeButton: $('<a class="ilightbox-close" title="'+iL.options.text.close+'"></a>'),
-			fullScreenButton: $('<a class="ilightbox-fullscreen" title="'+iL.options.text.enterFullscreen+'"></a>'),
-			innerPlayButton: $('<a class="ilightbox-play" title="'+iL.options.text.slideShow+'"></a>'),
-			innerNextButton: $('<a class="ilightbox-next-button" title="'+iL.options.text.next+'"></a>'),
-			innerPrevButton: $('<a class="ilightbox-prev-button" title="'+iL.options.text.previous+'"></a>'),
-			holder: $('<div class="ilightbox-holder" ondragstart="return false;"><div class="ilightbox-container"></div></div>'),
-			nextPhoto: $('<div class="ilightbox-holder ilightbox-next" ondragstart="return false;"><div class="ilightbox-container"></div></div>'),
-			prevPhoto: $('<div class="ilightbox-holder ilightbox-prev" ondragstart="return false;"><div class="ilightbox-container"></div></div>'),
-			nextButton: $('<a class="ilightbox-button ilightbox-next-button" ondragstart="return false;" title="'+iL.options.text.next+'"><span></span></a>'),
-			prevButton: $('<a class="ilightbox-button ilightbox-prev-button" ondragstart="return false;" title="'+iL.options.text.previous+'"><span></span></a>'),
-			thumbnails: $('<div class="ilightbox-thumbnails" ondragstart="return false;"><div class="ilightbox-thumbnails-container"><a class="ilightbox-thumbnails-dragger"></a><div class="ilightbox-thumbnails-grid"></div></div></div>'),
-			thumbs: false,
-			nextLock: false,
-			prevLock: false,
-			hashLock: false,
-			isMobile: false,
-			mobileMaxWidth: 980,
-			isInFullScreen: false,
-			isSwipe: false,
-			mouseID: 0,
-			cycleID: 0,
-			isPaused: 0
-		};
-		
-		// Hideable elements with mousemove event
-		iL.vars.hideableElements = iL.vars.nextButton.add(iL.vars.prevButton);
+    iLightBox = function (el, options, items, instant) {
+            var iL = this;
 
-		iL.normalizeItems();
+            iL.init = true;
+            
+            iL.options = options,
+            iL.selector = el.selector || el,
+            iL.context = el.context,
+            iL.instant = instant;
+            
+            if(items.length < 1) iL.attachItems();
+            else iL.items = items;
+            
+            iL.vars = {
+                total: iL.items.length,
+                start: 0,
+                current: null,
+                next: null,
+                prev: null,
+                BODY: $('body'),
+                loadRequests: 0,
+                overlay: $('<div class="ilightbox-overlay"></div>'),
+                loader: $('<div class="ilightbox-loader"><div></div></div>'),
+                toolbar: $('<div class="ilightbox-toolbar"></div>'),
+                innerToolbar: $('<div class="ilightbox-inner-toolbar"></div>'),
+                title: $('<div class="ilightbox-title"></div>'),
+                closeButton: $('<a class="ilightbox-close" title="'+iL.options.text.close+'"></a>'),
+                fullScreenButton: $('<a class="ilightbox-fullscreen" title="'+iL.options.text.enterFullscreen+'"></a>'),
+                innerPlayButton: $('<a class="ilightbox-play" title="'+iL.options.text.slideShow+'"></a>'),
+                innerNextButton: $('<a class="ilightbox-next-button" title="'+iL.options.text.next+'"></a>'),
+                innerPrevButton: $('<a class="ilightbox-prev-button" title="'+iL.options.text.previous+'"></a>'),
+                holder: $('<div class="ilightbox-holder" ondragstart="return false;"><div class="ilightbox-container"></div></div>'),
+                nextPhoto: $('<div class="ilightbox-holder ilightbox-next" ondragstart="return false;"><div class="ilightbox-container"></div></div>'),
+                prevPhoto: $('<div class="ilightbox-holder ilightbox-prev" ondragstart="return false;"><div class="ilightbox-container"></div></div>'),
+                nextButton: $('<a class="ilightbox-button ilightbox-next-button" ondragstart="return false;" title="'+iL.options.text.next+'"><span></span></a>'),
+                prevButton: $('<a class="ilightbox-button ilightbox-prev-button" ondragstart="return false;" title="'+iL.options.text.previous+'"><span></span></a>'),
+                thumbnails: $('<div class="ilightbox-thumbnails" ondragstart="return false;"><div class="ilightbox-thumbnails-container"><a class="ilightbox-thumbnails-dragger"></a><div class="ilightbox-thumbnails-grid"></div></div></div>'),
+                thumbs: false,
+                nextLock: false,
+                prevLock: false,
+                hashLock: false,
+                isMobile: false,
+                mobileMaxWidth: 980,
+                isInFullScreen: false,
+                isSwipe: false,
+                mouseID: 0,
+                cycleID: 0,
+                isPaused: 0
+            };
+            
+            // Hideable elements with mousemove event
+            iL.vars.hideableElements = iL.vars.nextButton.add(iL.vars.prevButton);
 
-		//Check necessary plugins
-		iL.availPlugins();
+            iL.normalizeItems();
 
-		//Set startFrom
-		iL.options.startFrom = (iL.options.startFrom > 0 && iL.options.startFrom >= iL.vars.total) ? iL.vars.total - 1 : iL.options.startFrom;
+            //Check necessary plugins
+            iL.availPlugins();
 
-		//If randomStart
-		iL.options.startFrom = (iL.options.randomStart) ? Math.floor(Math.random() * iL.vars.total) : iL.options.startFrom;
-		iL.vars.start = iL.options.startFrom;
+            //Set startFrom
+            iL.options.startFrom = (iL.options.startFrom > 0 && iL.options.startFrom >= iL.vars.total) ? iL.vars.total - 1 : iL.options.startFrom;
 
-		if(instant) iL.instantCall();
-		else iL.patchItemsEvents();
+            //If randomStart
+            iL.options.startFrom = (iL.options.randomStart) ? Math.floor(Math.random() * iL.vars.total) : iL.options.startFrom;
+            iL.vars.start = iL.options.startFrom;
 
-		if(iL.options.linkId) {
-			iL.hashChangeHandler();
-			$win.iLightBoxHashChange(function(){
-				iL.hashChangeHandler();
-			});
-		}
+            if(instant) iL.instantCall();
+            else iL.patchItemsEvents();
 
-		if(supportTouch) {
-			var RegExp = /(click|mouseenter|mouseleave|mouseover|mouseout)/ig,
-			replace = "itap";
-			iL.options.caption.show = iL.options.caption.show.replace(RegExp, replace),
-			iL.options.caption.hide = iL.options.caption.hide.replace(RegExp, replace),
-			iL.options.social.show = iL.options.social.show.replace(RegExp, replace),
-			iL.options.social.hide = iL.options.social.hide.replace(RegExp, replace);
-		}
+            if(iL.options.linkId) {
+                iL.hashChangeHandler();
+                $win.iLightBoxHashChange(function(){
+                    iL.hashChangeHandler();
+                });
+            }
 
-		if(iL.options.controls.arrows) {
-			$.extend(iL.options.styles, {
-				nextOffsetX: 0,
-				prevOffsetX: 0,
-				nextOpacity: 0,
-				prevOpacity: 0
-			});
-		}
-	};
+            if(supportTouch) {
+                var RegExp = /(click|mouseenter|mouseleave|mouseover|mouseout)/ig,
+                replace = "itap";
+                iL.options.caption.show = iL.options.caption.show.replace(RegExp, replace),
+                iL.options.caption.hide = iL.options.caption.hide.replace(RegExp, replace),
+                iL.options.social.show = iL.options.social.show.replace(RegExp, replace),
+                iL.options.social.hide = iL.options.social.hide.replace(RegExp, replace);
+            }
+
+            if(iL.options.controls.arrows) {
+                $.extend(iL.options.styles, {
+                    nextOffsetX: 0,
+                    prevOffsetX: 0,
+                    nextOpacity: 0,
+                    prevOpacity: 0
+                });
+            }
+        };
 
 	//iLightBox helpers
 	iLightBox.prototype = {
+        init: false,
+
 		showLoader: function(){
 			var iL = this;
 			iL.vars.loadRequests += 1;
-			if(iL.options.path.toLowerCase() == "horizontal") iL.vars.loader.stop().animate({ top: '-30px' }, iL.options.show.speed, 'easeOutCirc');
+			if (iL.options.path.toLowerCase() == "horizontal") iL.vars.loader.stop().animate({ top: '-30px' }, iL.options.show.speed, 'easeOutCirc');
 			else iL.vars.loader.stop().animate({ left: '-30px' }, iL.options.show.speed, 'easeOutCirc');
 		},
 		
@@ -145,7 +149,7 @@
 			var iL = this;
 			iL.vars.loadRequests -= 1;
 			iL.vars.loadRequests = (iL.vars.loadRequests < 0) ? 0 : iL.vars.loadRequests;
-			if(iL.options.path.toLowerCase() == "horizontal") {
+			if (iL.options.path.toLowerCase() == "horizontal") {
 				if(iL.vars.loadRequests <= 0) iL.vars.loader.stop().animate({ top: '-192px' }, iL.options.show.speed, 'easeInCirc');
 			} else {
 				if(iL.vars.loadRequests <= 0) iL.vars.loader.stop().animate({ left: '-192px' }, iL.options.show.speed, 'easeInCirc');
@@ -201,54 +205,59 @@
 			iL.items = items,
 			iL.itemsObject = itemsObject;
 		},
+
+        normalizeItem: function(item) {
+            var iL = this;
+
+            if(typeof item == "string") item = { url:item };
+            
+            var URL = item.url || item.URL || null,
+            options = item.options || {},
+            caption = item.caption || null,
+            title = item.title || null,
+            type = (item.type) ? item.type.toLowerCase() : getTypeByExtension(URL),
+            ext = (typeof URL != 'object') ? pathInfo(URL, 'PATHINFO_EXTENSION') : '';
+            
+            options.thumbnail = options.thumbnail || ((type=="image") ? URL : null),
+            options.videoType = options.videoType || null,
+            options.skin = options.skin || iL.options.skin,
+            options.width = options.width || null,
+            options.height = options.height || null,
+            options.mousewheel = (typeof options.mousewheel != 'undefined') ? options.mousewheel : true,
+            options.swipe = (typeof options.swipe != 'undefined') ? options.swipe : true,
+            options.social = (typeof options.social != 'undefined') ? options.social : iL.options.social.buttons && $.extend({}, {}, iL.options.social.buttons);
+            if(type == "video") {
+                options.html5video = (typeof options.html5video != 'undefined') ? options.html5video : {};
+                
+                options.html5video.webm = options.html5video.webm || options.html5video.WEBM || null;
+                options.html5video.controls = (typeof options.html5video.controls != 'undefined') ? options.html5video.controls : "controls";
+                options.html5video.preload = options.html5video.preload || "metadata";
+                options.html5video.autoplay = (typeof options.html5video.autoplay != 'undefined') ? options.html5video.autoplay : false;
+            }
+            
+            if(!options.width || !options.height){
+                if(type == "video") options.width = 1280, options.height = 720;
+                else if(type == "iframe") options.width = '100%', options.height = '90%';
+                else if(type == "flash") options.width = 1280, options.height = 720;
+            }
+            
+            delete item.url;
+            item.URL = URL;
+            item.caption = caption;
+            item.title = title;
+            item.type = type;
+            item.options = options;
+            item.ext = ext;
+
+            return item;
+        },
 		
 		normalizeItems: function(){
 			var iL = this,
 			newItems = new Array();
 			
-			$.each(iL.items, function(key, val){
-			
-				if(typeof val == "string") val = { url:val };
-				
-				var URL = val.url || val.URL || null,
-				options = val.options || {},
-				caption = val.caption || null,
-				title = val.title || null,
-				type = (val.type) ? val.type.toLowerCase() : getTypeByExtension(URL),
-				ext = (typeof URL != 'object') ? pathInfo(URL, 'PATHINFO_EXTENSION') : '';
-				
-				options.thumbnail = options.thumbnail || ((type=="image") ? URL : null),
-				options.videoType = options.videoType || null,
-				options.skin = options.skin || iL.options.skin,
-				options.width = options.width || null,
-				options.height = options.height || null,
-				options.mousewheel = (typeof options.mousewheel != 'undefined') ? options.mousewheel : true,
-				options.swipe = (typeof options.swipe != 'undefined') ? options.swipe : true,
-				options.social = (typeof options.social != 'undefined') ? options.social : iL.options.social.buttons && $.extend({}, {}, iL.options.social.buttons);
-				if(type == "video") {
-					options.html5video = (typeof options.html5video != 'undefined') ? options.html5video : {};
-					
-					options.html5video.webm = options.html5video.webm || options.html5video.WEBM || null;
-					options.html5video.controls = (typeof options.html5video.controls != 'undefined') ? options.html5video.controls : "controls";
-					options.html5video.preload = options.html5video.preload || "metadata";
-					options.html5video.autoplay = (typeof options.html5video.autoplay != 'undefined') ? options.html5video.autoplay : false;
-				}
-				
-				if(!options.width || !options.height){
-					if(type == "video") options.width = 1280, options.height = 720;
-					else if(type == "iframe") options.width = '100%', options.height = '90%';
-					else if(type == "flash") options.width = 1280, options.height = 720;
-				}
-				
-				delete val.url;
-				val.URL = URL;
-				val.caption = caption;
-				val.title = title;
-				val.type = type;
-				val.options = options;
-				val.ext = ext;
-				
-				newItems.push(val);
+			$.each(iL.items, function(i, item){
+				newItems.push(iL.normalizeItem(item));
 			});
 			
 			iL.items = newItems;
@@ -364,6 +373,7 @@
 			iL.createUI();
 			
 			window.iLightBox = {
+                init: false,
 				close: function(){
 					iL.closeAction();
 				},
@@ -1342,7 +1352,8 @@
 				//Trigger the onBeforeChange callback
 				if(typeof opts.callback.onBeforeChange == 'function') opts.callback.onBeforeChange.call(iL, iL.ui);
 				
-				(side == "next") ? vars.nextLock = true : vars.prevLock = true;
+                // (side == "next") ? vars.nextLock = true : vars.prevLock = true;
+				(side == "next") ? vars.nextLock = false : vars.prevLock = false;
 				
 				var captionFirst = $('div.ilightbox-caption', secondHolder),
 				socialFirst = $('div.ilightbox-social', secondHolder);
@@ -2595,6 +2606,8 @@
 
 	// Begin the iLightBox plugin
 	$.fn.iLightBox = function () {
+        // if (this.init) return;
+        // this.init = true;
 
 		var args = arguments,
 		opt = ($.isPlainObject(args[0])) ? args[0] : args[1],
@@ -2767,6 +2780,7 @@
 	};
 	
 	$.iLightBox = function(){
+        console.log('$');
 		return $.fn.iLightBox(arguments[0], arguments[1]);
 	};
 	
