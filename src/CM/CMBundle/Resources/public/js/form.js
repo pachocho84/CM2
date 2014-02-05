@@ -106,7 +106,7 @@ $(function() {
     /* DATETIME PICKER & INPUT MASK */
     initDatetimepicker = function(elem) {
         $(elem).datetimepicker({
-            language: culture,
+            language: 'it',
             format: $(elem).attr('datetimepicker-format'),
             autoclose: true,
             todayBtn: true,

@@ -13,6 +13,6 @@
 
     {{ render(controller('CMBundle:Event:sponsored')) }}
 	
-	{{ render(controller('CMBundle:Event:calendarMonth', { 'year': year, 'month': month } )) }}
+	{{ render(controller('CMBundle:Event:calendarMonth', {year: year, month: month, loadMore: true} )) }}
 	
 {% endblock %} 

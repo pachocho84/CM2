@@ -41,6 +41,11 @@ trait ImageTrait
      */
     private $imgFile;
 
+    public static function defaultImg()
+    {
+        return 'default.png';
+    }
+
     /**
      * Set img
      *
@@ -61,7 +66,7 @@ trait ImageTrait
      */
     public function getImg()
     {
-        return empty($this->img) ? 'default.png' : $this->img;
+        return empty($this->img) ? $this->defaultImg() : $this->img;
     }
 
     /**

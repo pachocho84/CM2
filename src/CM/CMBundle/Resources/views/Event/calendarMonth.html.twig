@@ -1,13 +1,12 @@
-{% if dates|length > 0 and dates[0].start|date('U') <= 'now'|date ('U') %}
+{% if month.timestamp|date('U') <= 'now'|date('U') %}
 	<div class="ajax-link-target text-center" style="margin-top: 20px;">
-	    <a href="{{ path('event_calendar', { 'year': month.prev_year, 'month': month.prev_month }) }}" class="btn btn-default ajax-link">{{ icon('Calendar')|raw }} {{ dates[0].start|date_modify('-1 month')|format_date('MMMM Y')|capitalize }}</a>
+	    <a href="{{ path('event_calendar', {year: month.prev_year, month: month.prev_month }) }}" class="btn btn-default ajax-link">{{ icon('Calendar') }} {{ month.timestamp|date_modify('-1 month')|format_date('MMMM Y', null, 'GMT')|capitalize }}</a>
 	</div>
 {% endif %}
 
-
 <div class="box">
 	<div class="box-heading">
-		<h2 class="text-center">{% if dates|length > 0 %}{{ dates[0].start|format_date('MMMM Y')|capitalize }}{% else %}?{% endif %}</h2>
+		<h2 class="text-center">{{ month.timestamp|format_date('MMMM Y', null, 'GMT')|capitalize }}</h2>
 	</div>
 	
 	<table class="table table-bordered events events_calendar" style="table-layout: fixed;">
@@ -65,9 +64,8 @@
 </div>
 
 
-
-{% if dates|length > 0 and dates[dates|length - 1].start|date('U') >= 'now'|date ('U') %}
-	<div class="well well-small load_more">
-	    <a href=" {{ path('event_calendar', { 'year': month.next_year, 'month': month.next_month }) }}">{{ icon('Calendar') }} {{ dates[0].start|date_modify('+1 month')|format_date('MMMM Y')|capitalize }}</a>
-	</div>
+{% if loadMore|default(false) %}
+    <div class="well well-small load_more">
+        <a href=" {{ path('event_calendar', {year: month.next_year, month: month.next_month, loadMore: true}) }}">{{ icon('Calendar') }} {{ month.timestamp|date_modify('+1 month')|format_date('MMMM Y', null, 'GMT')|capitalize }}</a>
+    </div>
 {% endif %}

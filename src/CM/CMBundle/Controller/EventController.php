@@ -50,8 +50,8 @@ class EventController extends Controller
         }
             
         $events = $em->getRepository('CMBundle:Event')->getEvents(array(
-            'locale'        => $request->getLocale(), 
-            'archive'       => $request->get('_route') == 'event_archive' ? true : null,
+            'locale' => $request->getLocale(), 
+            'archive' => $request->get('_route') == 'event_archive' ? true : null,
             'categoryId'   => $categorySlug ? $category->getId() : null
         ));
         
@@ -72,7 +72,7 @@ class EventController extends Controller
     {
             
         if ($request->isXmlHttpRequest()) {
-            return $this->forward('CMBundle:Event:calendarMonth', array('request' => $request, 'month' => $month, 'year' => $year));
+            return $this->forward('CMBundle:Event:calendarMonth', array('request' => $request, 'month' => $month, 'year' => $year, 'loadMore' => $request->get('loadMore')));
         }
         
         $month = !is_null($month) ? $month : date('n');
@@ -113,7 +113,7 @@ class EventController extends Controller
             $cMonth['next_year'] = $cMonth['cYear'] + 1;
         }
                     
-        $cMonth['timestamp'] = mktime(0, 0, 0, $cMonth['cMonth'], 1, $cMonth['cYear']);
+        $cMonth['timestamp'] = mktime(12, 0, 0, $cMonth['cMonth'], 1, $cMonth['cYear']);
         $cMonth['maxday'] = date('t', strtotime($year.'-'.$month.'-01'));
         $cMonth['thismonth'] = getdate($cMonth['timestamp']);
         $cMonth['startday'] = $cMonth['thismonth']['wday'];
@@ -124,10 +124,10 @@ class EventController extends Controller
 /*      $cMonth['calendar'] = \IntlCalendar::createInstance(); */
             
         if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Event:calendarMonth.html.twig', array('dates' => $dates, 'month' => $cMonth));
+            return $this->render('CMBundle:Event:calendarMonth.html.twig', array('dates' => $dates, 'month' => $cMonth, 'loadMore' => $request->get('loadMore')));
         }
 
-        return array('dates' => $dates, 'month' => $cMonth);
+        return array('dates' => $dates, 'month' => $cMonth, 'loadMore' => $request->get('loadMore'));
     }
 
     /**

@@ -24,4 +24,7 @@
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
+    {% if app.request.locale != 'en' %}
+        <script type="text/javascript" src="{{ asset('lib/datetimepicker/js/bootstrap-datetimepicker.' ~ app.request.locale ~ '.js') }}"></script>
+    {% endif %}
 {% endblock %}

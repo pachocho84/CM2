@@ -218,6 +218,22 @@ abstract class Entity
         return $this->entityCategory;
     }
 
+    public function getImage()
+    {
+        if (count($this->images) <= 0) {
+            $emptyImage = new Image;
+            $name = new \ReflectionClass($this->className());
+            $emptyImage->setImg(strtolower($name->getShortName()).'_'.Image::defaultImg());
+            return $emptyImage;
+        }
+        foreach ($this->images as $image) {
+            if ($image->getMain()) {
+                return $image;
+            }
+        }
+        return $this->images[0];
+    }
+
     /**
      * @param Image $images
      * @return Entity
@@ -278,10 +294,9 @@ abstract class Entity
         return $this->multimedia;
     }
 
-    public function getPost($a = false)
+    public function getPost()
     {
         foreach ($this->posts as $post) {
-            if ($a) var_dump($post->getObject(), $this->className());
             if ($post->getType() == Post::TYPE_CREATION && $post->getObject() == $this->className()) {
                 return $post;
             }
