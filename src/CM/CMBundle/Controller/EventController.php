@@ -85,6 +85,7 @@ class EventController extends Controller
     }
     
     /**
+     * @Route("/calendarMonth/{year}/{month}", name = "event_calendar_month", requirements={"month" = "\d+", "year" = "\d+"})
      * @Template
      */
     public function calendarMonthAction(Request $request, $year, $month)
@@ -122,10 +123,6 @@ class EventController extends Controller
         echo $cal1->getFirstDayOfWeek(); // Monday
 */
 /*      $cMonth['calendar'] = \IntlCalendar::createInstance(); */
-            
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Event:calendarMonth.html.twig', array('dates' => $dates, 'month' => $cMonth, 'loadMore' => $request->get('loadMore')));
-        }
 
         return array('dates' => $dates, 'month' => $cMonth, 'loadMore' => $request->get('loadMore'));
     }
@@ -353,6 +350,7 @@ class EventController extends Controller
     }
     
     /**
+     * @Route("/sponsored/{limit}", name="event_sponsored", requirements={"limit" = "\d+"})
      * @Template
      */
     public function sponsoredAction(Request $request, $limit = 3)
