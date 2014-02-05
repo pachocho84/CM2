@@ -355,7 +355,7 @@ $(function() {
         $(this).height($(this).get(0).scrollHeight - 8); 
     });
     // Enter key press submit
-    $('body').on('keydown', '.comment_new form textarea', function(event) { // form .comment
+    $('body').on('keydown', '.comment_new form textarea, .comment_new form input', function(event) { // form .comment
         if (event.keyCode == '13' && event.shiftKey === false) {
             event.preventDefault();
             if ($(this).val().length > 1) { 
@@ -369,13 +369,17 @@ $(function() {
         $(event.currentTarget).ajaxSubmit({
             dataType: 'json',
             success: function(data, statusText, xhr, form) {
-/*
-                $(event.currentTarget).closest('.comment_new').after(data.comment);
-                $(event.currentTarget).find('.comment').val('');
-*/
-                form.closest('li').before(data.comment);
-                form.closest('.object').find('.bottom-comment-count').replaceWith(data.commentCount);
-                form.find('textarea').focus().val('');
+                var commentType = form.find('[comment-type]').attr('comment-type');
+                var media = form.closest('.media');
+
+                if (commentType == 'upward') {
+                    media.before(data.comment);
+                    form.closest('.bottom').find('.bottom-comment-count').replaceWith(data.commentCount);
+                    form.find('textarea').focus().val('');
+                } else if (commentType == 'downward') {
+                    media.after(data.comment);
+                    form.find('input').focus().val('');
+                }
             }
         });
     });
@@ -389,7 +393,7 @@ $(function() {
         $.get($(event.target).attr('href'), function(data) {
 /*             $(event.target).closest('.bottom').find('.modal').modal('hide');  */
             $(event.target).closest('li').slideUp(300, function() {
-                $(event.target).closest('.object').find('.bottom-comment-count').replaceWith(data); 
+                $(event.target).closest('.bottom').find('.bottom-comment-count').replaceWith(data); 
                 $(this).remove(); 
             });
         });

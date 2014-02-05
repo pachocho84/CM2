@@ -24,6 +24,17 @@ class MultimediaRepository extends BaseRepository
         ), $options);
     }
 
+    public function countBy($options)
+    {
+        $query = $this->createQueryBuilder('m')
+            ->select('count(m.id)');
+        foreach ($options as $cond => $attr) {
+            $query->andWhere('m.'.$cond.'  = :attr_'.$cond)
+                ->setParameter('attr_'.$cond, $attr);
+        }
+        return $query->getQuery()->getSingleScalarResult();
+    }
+
     public function getMultimedias($options = array())
     {
         $options = self::getOptions($options);

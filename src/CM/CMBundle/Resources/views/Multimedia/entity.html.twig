@@ -1,7 +1,7 @@
 {% if multimedias|length > 1 %}
     <div class="box">
         <div class="box-heading">
-            <h2>{{ icon('Multimedia') }} {{ 'Multimedia'|trans }} <small><a href="{{ path('multimedia_show_all', {entityId: entityId}) }}">{{ 'View all multimedia'|trans }} ({{ multimedias|length }})</a></small></h2>
+            <h2>{{ icon('Multimedia') }} {{ 'Multimedia'|trans }} <small><a href="{{ path('multimedia_show_all', {entityId: entityId}) }}">{{ 'View all multimedia'|trans }} ({{ count }})</a></small></h2>
         </div>
         <div class="box-body clearfix entity-assets">
             {% for multimedia in multimedias %}

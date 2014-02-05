@@ -16,7 +16,7 @@
         <div class="col-lg-9">
     {% endif %}
     {% if type == 'text' and form.vars.attr.datetimepicker is defined %}
-        <div class="input-group input-append date" datetimepicker-container datetimepicker-format="{{ datetime_format('js') }}">
+        <div class="input-group input-append date" datetimepicker-container datetimepicker-format="{{ datetime_format('js') }}" datetimepicker-format-php="{{ datetime_format('php') }}">
             <input type="text" class="form-control" readonly {% if value is not empty %}value="{{ value|format_datetime(datetime_format('php')) }}" {% endif %} />
             <span class="input-group-addon">{{ icon('Calendar') }}</span>
         </div>
@@ -216,8 +216,20 @@
 
 {% block _cm_cmbundle_comment_comment_widget %}
 {% spaceless %}
-    {% set attr = attr|merge({placeholder: 'write a comment...'|trans}) %}
-    {{ block('textarea_widget') }}
+    {% if downward|default(false) %}
+        {% set attr = {placeholder: 'write a comment...'|trans, class: 'input-lg comment form-control'} %}
+        <div class="col-xs-12">
+            <input autocomplete="off" comment-type="downward" type="text" {{ block('widget_attributes') }} />
+        </div>
+    {% else %}
+        {% set attr = attr|merge({placeholder: 'write a comment...'|trans, 'comment-type': 'upward', autocomplete: 'off'}) %}
+        {{ block('textarea_widget') }}
+    {% endif %}
+{% endspaceless %}
+{% endblock  %}
+
+{% block _cm_cmbundle_comment_comment_widget1 %}
+{% spaceless %}
 {% endspaceless %}
 {% endblock  %}
 

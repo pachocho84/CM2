@@ -39,14 +39,15 @@ class EventRepository extends BaseRepository
         $options = self::getOptions($options);
 
         $parameters = array(
-            'now' => new \DateTime
+            'now' => new \DateTime,
+            'object' => Event::className()
         );
         
         $count = $this->getEntityManager()->createQueryBuilder()
             ->select('count(d.id)')
             ->from('CMBundle:EventDate','d')
             ->join('d.event', 'e')
-            ->join('e.posts', 'p');
+            ->join('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object');
                     
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('d, e, t, ec, ect, i, p, l, c, u, lu, cu, pg, gr')
@@ -108,7 +109,6 @@ class EventRepository extends BaseRepository
         $count->setParameters($parameters);
         $parameters['locale'] = $options['locale'];
         $parameters['locales'] = $options['locales'];
-        $parameters['object'] = Event::className();
         $query->setParameters($parameters);
         
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();

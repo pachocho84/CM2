@@ -104,14 +104,13 @@ $(function() {
 
 
     /* DATETIME PICKER & INPUT MASK */
-
-    // date
     initDatetimepicker = function(elem) {
         $(elem).datetimepicker({
-            lang: culture,
+            language: culture,
             format: $(elem).attr('datetimepicker-format'),
             autoclose: true,
             todayBtn: true,
+            todayHighlight: true,
             pickerPosition: "bottom-left",
             linkField: $(elem).siblings('input[type="hidden"]').attr('id'),
             linkFormat: "yyyy-mm-dd hh:ii"

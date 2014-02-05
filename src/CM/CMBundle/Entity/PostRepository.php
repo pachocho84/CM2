@@ -153,13 +153,16 @@ class PostRepository extends BaseRepository
             
     // }
 
-    public function delete($creatorId, $userId, $object, $objectIds, $entityId = null)
+    public function delete($creatorId, $userId, $object, $objectIds = array(), $entityId = null)
     {
         $query = $this->createQueryBuilder('p')
             ->delete('CMBundle:Post', 'p')
             ->where('p.creator = :creator_id')->setParameter('creator_id', $creatorId)
             ->andWhere('p.user = :user_id')->setParameter('user_id', $userId)
             ->andWhere('p.object = :object')->setParameter('object', $object);
+        if (count($objectIds) > 0) {
+            $query->andWhere('p.objectIds = :objectIds')->setParameter('objectIds', ','.implode(',', $objectIds).',');
+        }
         if (!is_null($entityId)) {
             $query->andWhere('p.entity = :entity_id')->setParameter('entity_id', $entityId);
         }
