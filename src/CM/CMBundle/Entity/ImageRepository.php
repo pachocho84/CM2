@@ -27,6 +27,17 @@ class ImageRepository extends BaseRepository
         ), $options);
     }
 
+    public function countBy($options)
+    {
+        $query = $this->createQueryBuilder('i')
+            ->select('count(i.id)');
+        foreach ($options as $cond => $attr) {
+            $query->andWhere('i.'.$cond.'  = :attr_'.$cond)
+                ->setParameter('attr_'.$cond, $attr);
+        }
+        return $query->getQuery()->getSingleScalarResult();
+    }
+
     public function getImagesByIds($ids, $options = array())
     {
         $options = self::getOptions($options);

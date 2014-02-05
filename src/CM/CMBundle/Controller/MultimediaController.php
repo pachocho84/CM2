@@ -72,6 +72,7 @@ class MultimediaController extends Controller
         return array(
             'entityId' => $id,
             'entityType' => $type,
+            'count' => $this->getDoctrine()->getManager()->getRepository('CMBundle:Multimedia')->countBy(array('entityId' => $id)),
             'multimedias' => $this->getDoctrine()->getManager()->getRepository('CMBundle:Multimedia')->findBy(array('entityId' => $id), array(), 3)
         );
     }

@@ -64,7 +64,14 @@ class Helper
         );
 
         if ($lang == 'js') {
-            return str_replace('a', 'p', str_replace('m', 'i', $formatter->getPattern()));
+            $format = str_replace('m', 'i', $formatter->getPattern());
+            $format = str_replace('a', 'p', $format);
+            if (strpos($format, 'h') !== false) {
+                $format = str_replace('h', 'H', $format);
+            } elseif (strpos($format, 'H') !== false) {
+                $format = str_replace('H', 'h', $format);
+            }
+            return $format;
         } elseif ($lang == 'php') {
             return $formatter->getPattern();
         }

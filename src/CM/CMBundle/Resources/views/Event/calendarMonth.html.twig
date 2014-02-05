@@ -1,13 +1,13 @@
-{% if dates[0].start | date('U') <= 'now' | date ('U') %}
+{% if dates|length > 0 and dates[0].start|date('U') <= 'now'|date ('U') %}
 	<div class="ajax-link-target text-center" style="margin-top: 20px;">
-	    <a href="{{ path('event_calendar', { 'year': month.prev_year, 'month': month.prev_month }) }}" class="btn btn-default ajax-link">{{ icon('Calendar')|raw }} {{ dates[0].start | date_modify('-1 month') | format_date('MMMM Y') | capitalize }}</a>
+	    <a href="{{ path('event_calendar', { 'year': month.prev_year, 'month': month.prev_month }) }}" class="btn btn-default ajax-link">{{ icon('Calendar')|raw }} {{ dates[0].start|date_modify('-1 month')|format_date('MMMM Y')|capitalize }}</a>
 	</div>
 {% endif %}
 
 
 <div class="box">
 	<div class="box-heading">
-		<h2 class="text-center">{{ dates[0].start | format_date('MMMM Y') | capitalize }}</h2>
+		<h2 class="text-center">{% if dates|length > 0 %}{{ dates[0].start|format_date('MMMM Y')|capitalize }}{% else %}?{% endif %}</h2>
 	</div>
 	
 	<table class="table table-bordered events events_calendar" style="table-layout: fixed;">
@@ -15,7 +15,7 @@
 		<thead>
 			<tr>
 			    {% for day in month.weekdayNames %}
-			        <th>{{ day | trans | capitalize }}</th>
+			        <th>{{ day|trans|capitalize }}</th>
 			     {% endfor %}
 {#
 				<?php foreach(sfDateTimeFormatInfo::getInstance($sf_user->getCulture())->getDayNames() as $dayName): ?>
@@ -38,10 +38,10 @@
 							<div><small><strong>{{ i - month.startday + 1 }}</strong></small></div>
 							<ul class="media-list objects">
 								{% for date in dates %}
-									{% if date.start | date('d') == i - month.startday + 1 %}
+									{% if date.start|date('d') == i - month.startday + 1 %}
 										<li class="object">
 										    <a href="{{ path('event_show', { 'id': date.getEvent.id, 'slug': date.getEvent.getSlug }) }}" data-target="{{ path('event_show', { 'id': date.id, 'slug': date.getEvent.getSlug }) }}">
-												{{ date.event | slice(0, 340) }}
+												{{ date.event|slice(0, 340) }}
 											</a>
 										</li>
 									{% endif %}
@@ -54,7 +54,7 @@
 			        {% endif %}
 			    {% endfor %}
 				
-				{% for i in 0..((month.maxday + month.startday) / 7) | ceil * 7 - (month.maxday + month.startday) if i > 0 %}
+				{% for i in 0..((month.maxday + month.startday) / 7)|ceil * 7 - (month.maxday + month.startday) if i > 0 %}
 					<td style="background: #f7f7f7;"></td>
 				{% endfor %}
 				
@@ -66,8 +66,8 @@
 
 
 
-{% if dates[dates | length - 1].start | date('U') >= 'now' | date ('U') %}
+{% if dates|length > 0 and dates[dates|length - 1].start|date('U') >= 'now'|date ('U') %}
 	<div class="well well-small load_more">
-	    <a href=" {{ path('event_calendar', { 'year': month.next_year, 'month': month.next_month }) }}">{{ icon('Calendar')|raw }} {{ dates[0].start | date_modify('+1 month') | format_date('MMMM Y') | capitalize }}</a>
+	    <a href=" {{ path('event_calendar', { 'year': month.next_year, 'month': month.next_month }) }}">{{ icon('Calendar') }} {{ dates[0].start|date_modify('+1 month')|format_date('MMMM Y')|capitalize }}</a>
 	</div>
 {% endif %}
