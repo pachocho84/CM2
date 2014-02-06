@@ -6,42 +6,14 @@
 
 {% block body %}
 
-    {% if is_granted('ROLE_USER') %}
-        {{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id})) }}
-        {% if user.id != app.user.id %}
-            {{ render(controller('CMBundle:Relation:button', {'user': user})) }}
-            <div class="btn-group btn-group-sm"><a class="btn btn-default" href="{{ path('message_new', {'userId': user.id}) }}">{{ 'Send a message'|trans }}</a></div>
-        {% endif %}
-    {% endif %}  
+    <div data-ajax-url="{{ path('user_biography', {slug: user.slug, simple: true}) }}"></div>
 
-
-    
-    <div class="box">
-        <div class="box-heading">
-            <h2><a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ icon('Biography') }} {{ 'Biography'|trans }}</a> <small><a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ 'show complete biography'|trans }}</small></a></h2>
-        </div>
-        
-        <div class="box-body">
-            {% if biography is not null %}{{ entity_short_text(biography) }}{% endif %}
-        </div>
-    </div>
-
-
-    
-    <div class="box">
-        <div class="box-heading">
-            <h2><a href="{{ path('user_wall', {'slug': user.slug}) }}">{{ icon('Wall') }} {{ 'Wall'|trans }}</a> <small><a href="{{ path('user_wall', {'slug': user.slug}) }}">{{ 'show all posts'|trans }}</small></a></h2>
-        </div>
-        
-        <ul class="media-list objects">
-            {#{{ include('CMBundle:Wall:posts.html.twig', {'slug': user.slug}) }}#}
-        </ul>
-    </div>
+    <div data-ajax-url="{{ path('wall_user', {slug: user.slug, simple: true}) }}"></div>
   
 {% endblock %}
 
 {% block sidebar %}
-    {#<div data-ajax-url="{{ path('fan_user_sidebar', {slug: user.slug}) }}"></div>#}
-    {#<div data-ajax-url="{{ path('event_next_dates', {object: 'user', objectId: user.id, limit: 3}) }}"></div>#}
-    {#{{ render(controller('CMBundle:Event:nextDates', {object: 'user', objectId: user.id, limit: 3})) }}#}
+    <div data-ajax-url="{{ path('fan_user_sidebar', {slug: user.slug}) }}"></div>
+
+    <div data-ajax-url="{{ path('event_next_dates', {object: 'user', objectId: user.id, limit: 3}) }}"></div>
 {% endblock %}

@@ -1,0 +1,15 @@
+<div class="box">
+    <div class="box-heading">
+        <h2>
+            {% if simple|default(false) %}
+                {{ icon('Wall') }} {{ 'Wall'|trans }} <small><a href="{{ link }}">{{ 'show all posts'|trans }}</small></a>
+                {% else %}
+                    {{ icon('Wall') | raw }} {{ 'Last posts' | trans }}
+                {% endif %}
+        </h2>
+    </div>
+    
+    <div class="box-body objects">
+        {{ include('CMBundle:Wall:posts.html.twig') }}
+    </div>
+</div>

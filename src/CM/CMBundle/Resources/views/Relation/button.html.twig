@@ -1,62 +1,37 @@
 {% if is_granted('ROLE_USER') and user.id != app.user.id %}
 
-    {% if relation is null %}
+    <span class="dropdown ajax-link-target">
+        <a href="#" data-toggle="dropdown">{{ icon('Crown') }}</a>
+        <ul class="dropdown-menu">
+            {% if relation is null %}
         
-        <div class="btn-group btn-group-sm ajax-link-target">
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                {{ icon('Crown')|raw }} {{ 'Request a relation'|trans }} <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
+                <li class="dropdown-header">{{ 'Request a relation'|trans }}</li>
+                <li class="divider"></li>
                 <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_STUDENT')}) }}" class="ajax-link">{{ 'student'|trans }}</a></li>
                 <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_TEACHER')}) }}" class="ajax-link">{{ 'teacher'|trans }}</a></li>
                 <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_AGENT')}) }}" class="ajax-link">{{ 'agent'|trans }}</a></li>
                 <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_CLIENT')}) }}" class="ajax-link">{{ 'client'|trans }}</a></li>
-                {#<li><a href="{{ path('relation_add', {'slug': user.slug, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_STUDENT')}) }}" class="ajax-link">{{ 'student'|trans }}</a></li>
-                <li><a href="{{ path('relation_add', {'slug': user.slug, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_TEACHER')}) }}" class="ajax-link">{{ 'teacher'|trans }}</a></li>
-                <li><a href="{{ path('relation_add', {'slug': user.slug, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_AGENT')}) }}" class="ajax-link">{{ 'agent'|trans }}</a></li>
-                <li><a href="{{ path('relation_add', {'slug': user.slug, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_CLIENT')}) }}" class="ajax-link">{{ 'client'|trans }}</a></li>>#}
-            </ul>
-        </div>
 
-    {% elseif relation.accepted and inverse.accepted %}
+            {% elseif relation.accepted and inverse.accepted %}
 
-        <div class="btn-group btn-group-sm ajax-link-target">
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                {{ icon('Crown')|raw }} {{ ('%user% is your ' ~ inverse)|trans({'%user%': user.firstName}) }} <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
+                <li class="dropdown-header">{{ ('%user% is your ' ~ inverse)|trans({'%user%': user.firstName}) }}</li>
+                <li class="divider"></li>
                 <li><a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">{{ 'Cancel relation'|trans }}</a></li>
-                {#<li><a href="{{ path('relation_delete', {'id': relation.id, 'slug': user.slug}) }}" class="ajax-link">{{ 'Cancel relation'|trans }}</a></li>#}
-            </ul>
-        </div>
 
-    {% elseif relation.accepted and not inverse.accepted %}
+            {% elseif relation.accepted and not inverse.accepted %}
 
-        <div class="btn-group btn-group-sm ajax-link-target">
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                {{ icon('Crown')|raw }} {{ ('You said %user% is your ' ~ inverse)|trans({'%user%': user.firstName}) }} <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
+                <li class="dropdown-header">{{ ('You said %user% is your ' ~ inverse)|trans({'%user%': user.firstName}) }}</li>
+                <li class="divider"></li>
                 <li><a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">{{ 'Cancel relation'|trans }}</a></li>
-                {#<li><a href="{{ path('relation_delete', {'id': relation.id, 'slug': user.slug}) }}" class="ajax-link">{{ 'Cancel relation'|trans }}</a></li>#}
-            </ul>
-        </div>
 
-    {% elseif not relation.accepted and inverse.accepted %}
+            {% elseif not relation.accepted and inverse.accepted %}
 
-        <div class="btn-group btn-group-sm ajax-link-target">
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                {{ icon('Crown')|raw }} {{ ('%user% said you are *FIXME* ' ~ relation)|trans({'%user%': user.firstName}) }} <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
+                <li class="dropdown-header">{{ ('%user% said you are *FIXME* ' ~ relation)|trans({'%user%': user.firstName}) }}</li>
+                <li class="divider"></li>
                 <li><a href="{{ path('request_update', {'choice': 'accept', 'id': request.id}) }}" class="ajax-link">{{ 'Accept'|trans }}</a></li>
                 <li><a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">{{ 'Refuse'|trans }}</a></li>
-                {#<li><a href="{{ path('relation_accept', {'id': relation.id, 'slug': user.slug}) }}" class="ajax-link">{{ 'Accept'|trans }}</a></li>
-                <li><a href="{{ path('relation_delete', {'id': relation.id, 'slug': user.slug}) }}" class="ajax-link">{{ 'Refuse'|trans }}</a></li>#}
-            </ul>
-        </div>
 
-    {% else %}
-        boh
-    {% endif %}
+            {% endif %}
+        </ul>
+    </span>
 {% endif %}

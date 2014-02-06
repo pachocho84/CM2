@@ -8,12 +8,25 @@
             <h3 class="text-muted" {{ user.userTags|length > 3 and tooltip(user.userTags) }}>
                 {{ user.userTags[:3]|join(', ')|trim }}{% if user.userTags|length > 3 %}...{% endif %}
             </h3>
-            {{ icon('Map') }} {{ user.cityBirth }}
-            {{ icon('Map') }} {{ user.cityCurrent }}
+
+            <p>
+                {{ icon('Map') }} {{ user.cityBirth }}
+                {{ icon('Map') }} {{ user.cityCurrent }}
+            </p>
+
+            {% if is_granted('ROLE_USER') %}
+                <div>
+                    {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
+                    {% if user.id != app.user.id %}
+                        {{ render(controller('CMBundle:Relation:button', {user: user})) }}
+                        <a href="{{ path('message_new', {'userId': user.id}) }}">{{ icon('Message') }}</a>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
         <div class="col-md-8 profile-header-cover">
             {% if user.coverImg != '' %}
-                {{ show_img_box(user.coverImg|imagine_filter('large'), {width: 780, height: 285, offset: user.coverImgOffset}) }}
+                {{ show_img_box(user.coverImg|imagine_filter('large'), {width: 780, height: 300, offset: user.coverImgOffset}) }}
             {% endif %}
         </div>
     </div>
@@ -21,7 +34,7 @@
     <div class="profile-menu">
         {% spaceless %}
             <a href="{{ path('user_show', {'slug': user.slug}) }}">{{ icon('User')|raw }} {{ 'Profile'|trans }}</a>
-            <a href="{{ path('user_wall', {'slug': user.slug}) }}">{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
+            <a href="{{ path('wall_user', {'slug': user.slug}) }}">{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
             <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
             <a href="{{ path('user_events', {'slug': user.slug}) }}">{{ icon('Event')|raw }} {{ 'Events'|trans }}</a>
             <a href="{{ path('user_images', {'slug': user.slug}) }}">{{ icon('Image')|raw }} {{ 'Images'|trans }}</a>
@@ -36,7 +49,7 @@
             <a href="{{ path('user_show', {'slug': user.slug}) }}">{{ icon('User')|raw }} {{ 'Profile'|trans }}</a>
         </li>
         <li{% if inPage == 'wall' %} class="active"{% endif %}>
-            <a href="{{ path('user_wall', {'slug': user.slug}) }}">{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
+            <a href="{{ path('wall_user', {'slug': user.slug}) }}">{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
         </li>
         <li{% if inPage == 'biography' %} class="active"{% endif %}>
             <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
@@ -64,7 +77,7 @@
                     <a href="{{ path('user_show', {'slug': user.slug}) }}">{{ icon('User')|raw }} {{ 'Profile'|trans }}</a>
                 </li>
                 <li{% if inPage == 'wall' %} class="active"{% endif %}>
-                    <a href="{{ path('user_wall', {'slug': user.slug}) }}">{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
+                    <a href="{{ path('wall_user', {'slug': user.slug}) }}">{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
                 </li>
                 <li{% if inPage == 'biography' %} class="active"{% endif %}>
                     <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ icon('Biography')|raw }} {{ 'Biography'|trans }}</a>

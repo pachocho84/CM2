@@ -1,0 +1,15 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block title %}{{ '%user%&#39;s wall' | trans({'%user%': user}) | raw }}{% endblock %}
+
+{% block body %}
+    {{ include('CMBundle:User:top.html.twig', {'inPage': 'wall'}) }}
+    
+    {#<ul class="breadcrumb">
+      <li><?php echo link_to('Home', '@homepage') ?></li>
+      <li class="active">{{ block('title') }}</li>
+    </ul>#}
+
+    <div data-ajax-url="{{ path('wall_user', {slug: user.slug}) }}"></div>
+
+{% endblock %}

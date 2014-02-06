@@ -17,29 +17,7 @@
 
 
 
-    <div class="box">
-        <div class="box-heading">
-            <h2>{{ icon('Biography')|raw }} <span>{{ block('title') }}</span> <a class="pull-right" href="{{ path('file_biography_pdf', {'slug': user.slug})}}">{{ 'download the pdf version'|trans }}</a></h2>
-
-        </div>
-        <div class="objects">
-            <div class="media object">
-                <a href="{{ path('user_biography', {'slug': user.slug}) }}" class="pull-left img-thumbnail"><img src='{{ asset(user.img|imagine_filter('medium')) }}' width=200 class="media-object" /></a>
-                <div>
-                    <h3 class="media-heading">
-                        {{ user }}
-                        <small>{{ user.userTags|join(', ')|trim }}</small>
-                    </h3>
-
-                    <div class="text-justify">{{ biography }}</div>                
-                
-                    {% if is_granted('ROLE_USER') and biography is not null and biography.post is not null %}
-                        {{ include('CMBundle::social.html.twig', {'post': biography.post}) }}
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
+    <div data-ajax-url="{{ path('user_biography', {slug: user.slug}) }}"></div>
 
 
 

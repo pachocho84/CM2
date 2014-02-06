@@ -1,10 +1,10 @@
 {% if fans|length > 0 %}
     <div class="box clearfix">
         <div class="box-heading">
-            <h3>
+            <h2>
                 {{ icon('Fan') }} <span>{{ 'Fans'|trans }}</span>
                 <small><a href="{{ path('fan_user', {'slug': user.slug}) }}" class="pull-right">{{ 'Show all'|trans }}</a></small>
-            </h3>
+            </h2>
         </div>
 
         <div class="objects box-body fans">
