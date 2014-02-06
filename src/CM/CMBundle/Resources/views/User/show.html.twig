@@ -34,14 +34,14 @@
         </div>
         
         <ul class="media-list objects">
-            {{ include('CMBundle:Wall:posts.html.twig', {'slug': user.slug}) }}
+            {#{{ include('CMBundle:Wall:posts.html.twig', {'slug': user.slug}) }}#}
         </ul>
     </div>
   
 {% endblock %}
 
 {% block sidebar %}
-    <div data-ajax-url="{{ path('fan_user_sidebar', {slug: user.slug}) }}"></div>
+    {#<div data-ajax-url="{{ path('fan_user_sidebar', {slug: user.slug}) }}"></div>#}
     {#<div data-ajax-url="{{ path('event_next_dates', {object: 'user', objectId: user.id, limit: 3}) }}"></div>#}
-    {{ render(controller('CMBundle:Event:nextDates', {object: 'user', objectId: user.id, limit: 3})) }}
+    {#{{ render(controller('CMBundle:Event:nextDates', {object: 'user', objectId: user.id, limit: 3})) }}#}
 {% endblock %}

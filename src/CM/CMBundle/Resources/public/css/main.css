@@ -618,6 +618,36 @@ form .form-tab-content {
 .profile-header .col-md-8.profile-header-cover img {
     height: auto !important;
 }
+.profile-menu {
+    height: 45px;
+    text-align: center;
+    border-top: 1px solid #bbbbbb;
+}
+.profile-menu a {
+    line-height: 44px;
+    color: #333333;
+    padding: 14px 10px 11px;
+}
+.profile-menu li {
+    display: inline-block;
+    text-overflow: ellipsis;
+    min-width: 20px;
+    max-width: 180px;
+}
+.profile-menu li a {
+    height: 44px;
+    display: inline-block;
+    color: #333333;
+    background: #efefef;
+    padding: 10px;
+}
+.profile-menu a:hover,
+.profile-menu a.active {
+    border-bottom: 3px solid #990000;
+}
+.profile-header .navbar {
+    display: none;
+}
 
 .profile-header .navbar {
     margin-bottom: 0;
