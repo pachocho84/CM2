@@ -245,11 +245,6 @@ class DiscController extends Controller
     public function showAction(Request $request, $id, $slug)
     {
         $em = $this->getDoctrine()->getManager();
-            
-        // if ($request->isXmlHttpRequest()) {
-        //     $date = $em->getRepository('CMBundle:Disc')->getDate($id, array('locale' => $request->getLocale()));
-        //     return $this->render('CMBundle:Disc:object.html.twig', array('date' => $date));
-        // }
         
         $disc = $em->getRepository('CMBundle:Disc')->getDisc($id, array('locale' => $request->getLocale(), 'protagonists' => true));
         $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));

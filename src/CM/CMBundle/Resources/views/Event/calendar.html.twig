@@ -11,8 +11,8 @@
 		{{ include('CMBundle:Event:menu.html.twig') }}
 	</div>
 
-    {{ render(controller('CMBundle:Event:sponsored')) }}
+    <div data-ajax-url="{{ path('event_sponsored') }}"></div>
 	
-	{{ render(controller('CMBundle:Event:calendarMonth', { 'year': year, 'month': month } )) }}
+    <div data-ajax-url="{{ path('event_calendar_month', {year: year, month: month, loadMore: true}) }}"></div>
 	
 {% endblock %} 

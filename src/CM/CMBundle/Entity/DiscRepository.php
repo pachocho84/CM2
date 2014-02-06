@@ -33,14 +33,16 @@ class DiscRepository extends BaseRepository
                  
         $count = $this->createQueryBuilder('d')
             ->select('count(d.id)')
-            ->leftJoin('d.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION);
+            ->join('d.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
+            ->setParameter('object', Disc::className());
 
         $query = $this->createQueryBuilder('d')
             ->select('d, dt, t, i, p, l, c, u, lu, cu, pg, gr'.($options['protagonists'] ? ', eu, us' : ''))
             ->leftJoin('d.discTracks','dt')
             ->leftJoin('d.translations', 't')
             ->leftJoin('d.images', 'i', 'WITH', 'i.main = '.true)
-            ->leftJoin('d.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
+            ->join('d.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
+            ->setParameter('object', Disc::className())
             ->leftJoin('p.likes', 'l')
             ->leftJoin('p.comments', 'c')
             ->leftJoin('p.user', 'u')
@@ -77,7 +79,6 @@ class DiscRepository extends BaseRepository
                 ->setParameter(':category_id', $options['categoryId']);
         }
 
-        $count->orderBy('p.createdAt', 'desc');
         $query->orderBy('p.createdAt', 'desc');
         
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
@@ -88,22 +89,17 @@ class DiscRepository extends BaseRepository
         $options = self::getOptions($options);
         
         return $this->createQueryBuilder('d')
-            ->select('d, t, dt, i, p, l, c, u, lu, cu, pg, gr, eu, us')
+            ->select('d, t, ec, ect, dt, i, p, u, pg, gr')
+            ->leftJoin('d.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->leftJoin('d.entityCategory', 'ec')
+            ->leftJoin('ec.translations', 'ect', 'with', 'ect.locale = :locale')->setParameter('locale', $options['locale'])
             ->leftJoin('d.discTracks', 'dt')
-            ->leftJoin('d.translations', 't')
-            ->leftJoin('d.images', 'i')
+            ->leftJoin('d.images', 'i', 'with', 'i.main = '.true)
             ->leftJoin('d.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
-            ->leftJoin('p.likes', 'l')
-            ->leftJoin('p.comments', 'c')
             ->leftJoin('p.user', 'u')
-            ->leftJoin('l.user', 'lu')
-            ->leftJoin('c.user', 'cu')
             ->leftJoin('p.page', 'pg')
             ->leftJoin('p.group', 'gr')
-            ->leftJoin('d.entityUsers', 'eu')
-            ->leftJoin('eu.user', 'us')
             ->andWhere('d.id = :id')->setParameter('id', $id)
-            ->andWhere('t.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->getQuery()
             ->getSingleResult();
     }

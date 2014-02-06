@@ -607,7 +607,7 @@ class DoctrineEventsListener
         $page = $image->getPage();
         $group = $image->getGroup();
 
-        if (!is_null($entity) && is_null($entity->getId())) {
+        if ((!is_null($entity) && is_null($entity->getId())) || $image->getMain()) {
             return;
         }
 

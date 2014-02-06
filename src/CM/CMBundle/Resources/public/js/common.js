@@ -355,22 +355,24 @@ $(function() {
         $(this).height($(this).get(0).scrollHeight - 8); 
     });
     // Enter key press submit
-    $('body').on('keydown', '.comment_new form textarea, .comment_new form input', function(event) { // form .comment
+    $('body').on('keydown', '.comment_new form textarea, .comment_new form input, .comment_edit form textarea', function(event) {
         if (event.keyCode == '13' && event.shiftKey === false) {
             event.preventDefault();
-            if ($(this).val().length > 1) { 
+            if ($(this).val().length > 1) {
                 $(this).closest('form').submit();
             }                         
         }
     });
     // AJAX comment form
-    $(document).on('submit', '.comment_new form', function(event) {
+    $(document).on('submit', '.comment_new form, .comment_edit form', function(event) {
         event.preventDefault();
         $(event.currentTarget).ajaxSubmit({
             dataType: 'json',
             success: function(data, statusText, xhr, form) {
-                var commentType = form.find('[comment-type]').attr('comment-type');
+                var commentType = form.find('[comment-type]').attr('comment-type').split(' ');
                 var media = form.closest('.media');
+
+                console.log(commentType);
 
                 if (commentType == 'upward') {
                     media.before(data.comment);
@@ -379,23 +381,52 @@ $(function() {
                 } else if (commentType == 'downward') {
                     media.after(data.comment);
                     form.find('input').focus().val('');
+                } else if ($.inArray('edit', commentType)) {
+                    form.closest('.comment').replaceWith(data.comment);
                 }
             }
         });
     });
-
-
-
-    // Delete comment
-    $('body').on('click', '.comment .popover .btn-primary', function(event) {
+    // // Delete comment
+    // $('body').on('click', '.comment .popover .btn-primary', function(event) {
+    //     event.preventDefault();
+    //     event.stopPropagation();
+    //     $.get($(event.target).attr('href'), function(data) {
+    //         // $(event.target).closest('.bottom').find('.modal').modal('hide');  
+    //         $(event.target).closest('li').slideUp(300, function() {
+    //             $(event.target).closest('.bottom').find('.bottom-comment-count').replaceWith(data); 
+    //             $(this).remove(); 
+    //         });
+    //     });
+    // });
+    // Modify comment
+    $('body').on('click', '.comment .comment_edit-btn', function(event) {
         event.preventDefault();
-        event.stopPropagation();
-        $.get($(event.target).attr('href'), function(data) {
-/*             $(event.target).closest('.bottom').find('.modal').modal('hide');  */
-            $(event.target).closest('li').slideUp(300, function() {
-                $(event.target).closest('.bottom').find('.bottom-comment-count').replaceWith(data); 
-                $(this).remove(); 
-            });
+
+        var $comment = $(event.currentTarget).closest('.comment');
+        var $image = $comment.find('.image_box');
+        var href = $(event.currentTarget).attr('href');
+        var text = $comment.find('.comment-body').text().trim();
+        var old = $comment.html();
+        $comment.html('');
+        $comment.append($image);
+        $comment.append('\
+            <div class="media-body comment_edit">\
+                <form method="post" action="' + href + '" class="form-horizontal" novalidate="novalidate">\
+                    <div>\
+                        <textarea id="cm_cmbundle_comment_comment" name="cm_cmbundle_comment[comment]" required="required" class="input-lg form-control" comment_new="" placeholder="write a comment..." comment-type="upward edit" autocomplete="off"></textarea>\
+                    </div>\
+                    <input type="submit" name="commit" value="Send" class="pull-right btn btn-mini hidden">\
+                </form>\
+                <div class="text-muted">Press ESC to cancel</div>\
+            </div>'
+        );
+        $comment.find('textarea').focus().html(text);
+
+        $comment.find('textarea').on('keyup', function(event) {
+            if (event.keyCode == 27) {
+                $comment.html(old);
+            }
         });
     });
 
