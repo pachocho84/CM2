@@ -102,31 +102,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/{slug}/wall/{page}", name="user_wall", requirements={"page" = "\d+"})
-     * @Template
-     */
-    public function wallAction(Request $request, $slug, $page = 1)
-    {
-        $em = $this->getDoctrine()->getManager();
-        
-        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
-        
-        if (!$user) {
-            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
-        }
-        
-        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('userId' => $user->getId()));
-        $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
-        
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Wall:posts.html.twig', array('posts' => $pagination, 'slug' => $user->getSlug()));
-        }
-
-        return array('posts' => $pagination, 'user' => $user);
-    }
-
-    /**
-     * @Route("/{slug}/wall/{lastUpdated}/update", name="user_wall_update")
+     * @Route("/{slug}/wall/{lastUpdated}/update", name="wall_user_update")
      * @Route("/{slug}/wall/{lastUpdated}/update", name="user_show_update")
      * @Template("CMBundle:Wall:posts.html.twig")
      */
@@ -459,21 +435,14 @@ class UserController extends Controller
         if (!$user) {
             throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
         }
-
-        $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
-        if (count($biography) == 0) {
-            $biography = null;
-        } else {
-            $biography = $biography[0];
-        }
-
-        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('userId' => $user->getId()));
-        $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
         
         if ($request->isXmlHttpRequest()) {
+            $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('userId' => $user->getId()));
+            $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
+
             return $this->render('CMBundle:Wall:posts.html.twig', array('slug' => $user->getSlug(), 'posts' => $pagination, 'page' => $page));
         }
 
-        return array('user' => $user, 'biography' => $biography, 'posts' => $pagination);
+        return array('user' => $user);
     }
 }

@@ -593,8 +593,8 @@ form .form-tab-content {
 }
 .profile-header .col-md-4.profile-header-info {
     border-right: 1px solid #bbbbbb;
-    height: 285px;
     background: url(../images/layout/shadow.png) bottom repeat-x;
+    height: 300px;
 }
 .profile-header .col-md-4.profile-header-info .profile-header-picture {
     margin: 0 auto 15px;
@@ -610,7 +610,7 @@ form .form-tab-content {
     margin: 0 0 15px;
 }
 .profile-header .col-md-8.profile-header-cover {
-    height: 285px;
+    height: 300px;
     padding: 0px;
 }
 .profile-header .col-md-8.profile-header-cover .image_box, 

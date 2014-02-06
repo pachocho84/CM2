@@ -226,10 +226,10 @@ $(function() {
                             url: currentItem.page,
                             async: false
                         }).done(function(data) {
-                            // console.log(data);
-                            sidebar.html(data.sidebar);
-                            newItem.URL = data.image;
-                            newItem.page = data.url;
+                            console.log(data);
+                            // sidebar.html(data.sidebar);
+                            // newItem.URL = data.image;
+                            // newItem.page = data.url;
                         });
 
                         // console.log(newItem);
@@ -238,30 +238,30 @@ $(function() {
         				this.normalizeItems();
         				this.vars.next = this.ui.currentItem + 1;
                     },
-                    onAfterChange: function(api) {
-                        console.log();
-                        var currentItem = this.items[this.ui.currentItem];
-        				newItem = $.extend({}, currentItem);
+            //         onAfterChange: function(api) {
+            //             console.log();
+            //             var currentItem = this.items[this.ui.currentItem];
+        				// newItem = $.extend({}, currentItem);
                         
-                        history.pushState({}, '', currentItem.page);
+            //             history.pushState({}, '', currentItem.page);
                         
-                        var iL = this;
-                        $.ajax({
-                            url: currentItem.page,
-                            async: true
-                        }).done(function(data) {
-                            // console.log(data);
-                            sidebar.html(data.sidebar);
-                            newItem.URL = data.image;
-                            newItem.page = data.url;
+            //             var iL = this;
+            //             $.ajax({
+            //                 url: currentItem.page,
+            //                 async: true
+            //             }).done(function(data) {
+            //                 // console.log(data);
+            //                 sidebar.html(data.sidebar);
+            //                 newItem.URL = data.image;
+            //                 newItem.page = data.url;
 
-                            // console.log(newItem);
+            //                 // console.log(newItem);
     
-            				iL.items.push(newItem);
-            				iL.normalizeItems();
-            				iL.vars.next = iL.ui.currentItem + 1;
-                        });
-                    },
+            // 				iL.items.push(newItem);
+            // 				iL.normalizeItems();
+            // 				iL.vars.next = iL.ui.currentItem + 1;
+            //             });
+            //         },
                     onBeforeLoad: function(api) {
                         sidebar.fadeIn(180);
                         slideshow.fadeIn(180);

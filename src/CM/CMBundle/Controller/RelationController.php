@@ -52,6 +52,7 @@ class RelationController extends Controller
     }
 
     /**
+     * @Route("relations/button/{userId}", name="relation_button", requirements={"userId" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */

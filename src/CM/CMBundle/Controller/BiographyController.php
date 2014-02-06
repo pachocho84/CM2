@@ -95,6 +95,13 @@ class BiographyController extends Controller
             $biography = $biography[0];
         }
 
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Biography:box.html.twig', array(
+                'user' => $user, 'biography' => $biography,
+                'simple' => $request->get('simple')
+            ));
+        }
+
         return array('user' => $user, 'biography' => $biography);
     }
 
