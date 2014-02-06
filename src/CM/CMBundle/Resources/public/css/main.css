@@ -589,10 +589,12 @@ form .form-tab-content {
 /* USER */
 .profile-header {
     margin-bottom: 20px;
+    background: url(../images/layout/damascato_silver.jpg) repeat;
 }
 .profile-header .col-md-4.profile-header-info {
     border-right: 1px solid #bbbbbb;
     height: 285px;
+    background: url(../images/layout/shadow.png) bottom repeat-x;
 }
 .profile-header .col-md-4.profile-header-info .profile-header-picture {
     margin: 0 auto 15px;
@@ -622,12 +624,14 @@ form .form-tab-content {
     height: 45px;
     text-align: center;
     border-top: 1px solid #bbbbbb;
+    background: #ffffff;
 }
 .profile-menu a {
     line-height: 44px;
     color: #333333;
     padding: 14px 10px 11px;
 }
+/*
 .profile-menu li {
     display: inline-block;
     text-overflow: ellipsis;
@@ -641,14 +645,13 @@ form .form-tab-content {
     background: #efefef;
     padding: 10px;
 }
+*/
 .profile-menu a:hover,
 .profile-menu a.active {
     border-bottom: 3px solid #990000;
 }
-.profile-header .navbar {
-    display: none;
-}
 
+/*
 .profile-header .navbar {
     margin-bottom: 0;
     border: 0px;
@@ -666,12 +669,8 @@ form .form-tab-content {
 .profile-header .navbar .user-menu > .nav > li > a {
     font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
     font-size: 13px;
-/*     font-weight: bold; */
     border-right: 1px solid #bbbbbb;
     padding: 10px;
-}
-.profile-header .navbar .user-menu > .nav > li > a i {
-/*     display: none; */
 }
 .profile-header .navbar .user-menu > .nav.pull-right > li > a {
     border-left: 1px solid #bbbbbb;
@@ -686,6 +685,7 @@ form .form-tab-content {
     box-shadow: none;
     position: relative;
 }
+*/
 /*.profile-header .navbar .user-menu > ul.nav > li.active > a:before {
   position: absolute;
   bottom: -24px;
@@ -709,6 +709,7 @@ form .form-tab-content {
   content: '';
   z-index: 1;
 } */
+/*
 .profile-header .navbar .user-menu li.active a.dropdown-toggle .caret { 
     border-top-color: #990000;
     border-bottom-color: #990000;
@@ -721,6 +722,7 @@ form .form-tab-content {
 .profile-header .navbar .nav li.dropdown.open>.dropdown-toggle {
     background: #ffffff;
 }
+*/
 
 
 
