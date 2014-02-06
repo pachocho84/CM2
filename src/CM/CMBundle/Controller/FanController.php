@@ -136,14 +136,14 @@ class FanController extends Controller
         }
 
         // if ($request->isXmlHttpRequest()) {
-        return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array(
+        return new Response($this->renderView('CMBundle:Fan:button.html.twig', array(
             'userId' => $fanId,
             'object' => $object,
             'imFan' => true,
         )));
         // }
 
-        return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array('userId' => $fanId, 'imFan' => $imFan, 'class' => $request->get('class'), 'fanBecomeText' => $request->get('fanBecomeText'))));
+        return new Response($this->renderView('CMBundle:Fan:button.html.twig', array('userId' => $fanId, 'imFan' => $imFan, 'class' => $request->get('class'), 'fanBecomeText' => $request->get('fanBecomeText'))));
         
         // $this->getUser()->setFlash('success', $this->getContext()->getI18N()->__('You became fan.'));
         // $this->redirect($request->getReferer() ? $request->getReferer() : '@homepage');
@@ -175,14 +175,14 @@ class FanController extends Controller
         $em->flush();
         
         // if ($request->isXmlHttpRequest()) {
-        return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array(
+        return new Response($this->renderView('CMBundle:Fan:button.html.twig', array(
             'userId' => $fanId,
             'object' => $object,
             'imFan' => false,
         )));
         // }
         
-        return new Response($this->renderView('CMBundle:Fan:fanButton.html.twig', array('userId' => $fanId, 'imFan' => false)));
+        return new Response($this->renderView('CMBundle:Fan:button.html.twig', array('userId' => $fanId, 'imFan' => false)));
 
 
         // $this->getUser()->setFlash('success', $this->getContext()->getI18N()->__('You are not fan anymore.'));
@@ -191,10 +191,11 @@ class FanController extends Controller
 
     
     /**
+     * @Route("/fans/button/{userId}", name="fan_button", requirements={"userId" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function fanButtonAction(Request $request, $userId, $object = 'User')
+    public function buttonAction(Request $request, $userId, $object = 'User')
     {
         $em = $this->getDoctrine()->getManager();
 

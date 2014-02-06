@@ -19,12 +19,12 @@ use CM\CMBundle\Entity\Comment;
 use CM\CMBundle\Form\CommentType;
 
 /**
- * @Route("/wall")
+ * @Route("")
  */
 class WallController extends Controller
 {
     /**
-     * @Route("/{page}", name="wall_index", requirements={"page" = "\d+"})
+     * @Route("/wall/{page}", name="wall_index", requirements={"page" = "\d+"})
      * @Template
      */
     public function indexAction(Request $request, $page = 1)
@@ -42,10 +42,10 @@ class WallController extends Controller
     }
     
     /**
-     * @Route("/entity/{id}/{page}", name="wall_entity", requirements={"id" = "\d+", "page" = "\d+"})
-     * @Route("/entity/{id}/{lastUpdated}/update", name="wall_entity_update")
-     * @Route("/entity/update", name="_update")
-     * @Route("/entity/update", name="")
+     * @Route("/wall/entity/{id}/{page}", name="wall_entity", requirements={"id" = "\d+", "page" = "\d+"})
+     * @Route("/wall/entity/{id}/{lastUpdated}/update", name="wall_entity_update")
+     * @Route("/wall/entity/update", name="_update")
+     * @Route("/wall/entity/update", name="")
      * @Template
      */
     public function entityAction(Request $request, $id, $page = 1, $lastUpdated = null)
@@ -79,7 +79,7 @@ class WallController extends Controller
     }
 
     /**
-     * @Route("/{lastUpdated}/update", name="wall_index_update")
+     * @Route("/wall/{lastUpdated}/update", name="wall_index_update")
      * @Template
      */
     public function postsAction(Request $request, $lastUpdated)
@@ -94,7 +94,42 @@ class WallController extends Controller
     }
 
     /**
-     * @Route("/show/{postId}", name="wall_show", requirements={"postId" = "\d+"})
+     * @Route("/{slug}/wall/{page}", name="wall_user", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function userAction(Request $request, $slug, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+        }
+        
+        if ($request->isXmlHttpRequest()) {
+            $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('userId' => $user->getId()));
+            $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
+            
+            if ($page == 1) {
+                return $this->render('CMBundle:Wall:box.html.twig', array(
+                    'posts' => $pagination,
+                    'slug' => $user->getSlug(),
+                    'simple' => $request->get('simple'),
+                    'link' => $this->generateUrl('wall_user', array(
+                        'slug' => $slug
+                    ))
+                ));
+            } else {
+                return $this->render('CMBundle:Wall:posts.html.twig', array('posts' => $pagination, 'slug' => $user->getSlug()));
+            }
+        }
+
+        return array('user' => $user);
+    }
+
+    /**
+     * @Route("/wall/show/{postId}", name="wall_show", requirements={"postId" = "\d+"})
      * @Template
      */
     public function showAction(Request $request, $postId)

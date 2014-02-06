@@ -345,17 +345,22 @@ class ImageAlbumController extends Controller
         }
 
         $imageIdsInAlbum = $em->getRepository('CMBundle:ImageAlbum')->getImageIdsInAlbum($image->getEntityId());
-        $index = array_search(array('id' => $id), $imageIdsInAlbum);
-        $prev = array_key_exists($index - 1, $imageIdsInAlbum) ? $imageIdsInAlbum[$index - 1]['id'] : $imageIdsInAlbum[count($imageIdsInAlbum) - 1]['id'];
-        $next = array_key_exists($index + 1, $imageIdsInAlbum) ? $imageIdsInAlbum[$index + 1]['id'] : $imageIdsInAlbum[0]['id'];
 
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse(array(
-                'image' => $this->renderView('CMBundle:ImageAlbum:imageObject.html.twig', array('image' => $em->getRepository('CMBundle:Image')->findOneById($next))),
-                'url' => $this->get('router')->generate('image_show', array('id' => $next)),
-                'sidebar' => $this->renderView('CMBundle:Wall:sidebarSocial.html.twig', array('post' => $image, 'isImage' => true))
+                'id' => $id,
+                'images' => $imageIdsInAlbum
             ));
+            // return new JsonResponse(array(
+            //     'image' => $this->renderView('CMBundle:ImageAlbum:imageObject.html.twig', array('image' => $em->getRepository('CMBundle:Image')->findOneById($next))),
+            //     'url' => $this->get('router')->generate('image_show', array('id' => $next)),
+            //     'sidebar' => $this->renderView('CMBundle:Wall:sidebarSocial.html.twig', array('post' => $image, 'isImage' => true))
+            // ));
         }
+        
+        $index = array_search(array('id' => $id), $imageIdsInAlbum);
+        $prev = array_key_exists($index - 1, $imageIdsInAlbum) ? $imageIdsInAlbum[$index - 1]['id'] : $imageIdsInAlbum[count($imageIdsInAlbum) - 1]['id'];
+        $next = array_key_exists($index + 1, $imageIdsInAlbum) ? $imageIdsInAlbum[$index + 1]['id'] : $imageIdsInAlbum[0]['id'];
 
         return array(
             'image' => $image,
