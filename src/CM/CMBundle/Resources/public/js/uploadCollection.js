@@ -65,8 +65,15 @@ jQuery(document).ready(function() {
         
         // make a copy of each input
         $(event.currentTarget).closest('.panel-body').find('input, textarea, select').each(function(i, elem) {
-            console.log(elem);
+            var copy = $newForm.find('input, textarea, select').get(i);
+            var id = $(copy).attr('id');
+            var name = $(copy).attr('name');
+            $(copy).replaceWith($(elem).clone(true, true));
+            $(copy).attr('id', id);
+            $(copy).attr('name', name);
         });
+        
+        $(event.currentTarget).closest('.panel').after($newForm);
     });
 });
 

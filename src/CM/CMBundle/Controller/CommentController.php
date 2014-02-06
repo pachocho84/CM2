@@ -24,10 +24,11 @@ class CommentController extends Controller
 {
     /**
      * @Route("/new/{id}/{isImage}", name="comment_new", requirements={"id" = "\d+"})
+     * @Route("/edit/{commentId}/{id}/{isImage}", name="comment_edit", requirements={"id" = "\d+", "commentId" = "\d+"})
      * @Route("/entity/new/{id}", name="comment_entity_new", requirements={"id" = "\d+"})
      * @Template
      */
-    public function commentsAction(Request $request, $id = null, $isImage = false)
+    public function commentsAction(Request $request, $id = null, $commentId = null, $isImage = false)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -41,28 +42,45 @@ class CommentController extends Controller
 
         $form = null;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
-            $comment = new Comment;
-            $form = $this->createForm(new CommentType, $comment, array(
-                'action' => $this->generateUrl('comment_new', array(
-                    'id' => $id,
-                    'isImage' => $isImage
-                )),
-                'cascade_validation' => true
-            ));
 
-            $form->handleRequest($request);
+            if ($request->get('_route') == 'comment_edit') {
+                $comment = $em->getRepository('CMBundle:Comment')->findOneById($commentId);
 
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getEntityManager();
+                $text = trim($request->get('cm_cmbundle_comment')['comment']);
+                if ($text == '' || Text == $comment->getComment()) {
+                    throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                } else {
+                    $comment->setComment($text);
+                    $isValid = true;
+                }
+            } else {
+                $comment = new Comment;
+                $form = $this->createForm(new CommentType, $comment, array(
+                    'action' => $this->generateUrl('comment_new', array(
+                        'id' => $id,
+                        'isImage' => $isImage
+                    )),
+                    'cascade_validation' => true
+                ));
+
+                $form->handleRequest($request);
+
+                $isValid = $form->isValid();
+
                 $comment->setUser($this->getUser())
                     ->setPost($post)
                     ->setImage($image);
+            }
+
+            if ($isValid) {
+                $em = $this->getDoctrine()->getEntityManager();
                 $em->persist($comment);
                 $em->flush();
 
                 if ($request->isXmlHttpRequest()) {
                     if ($request->get('_route') == 'comment_entity_new') {
                         $post = $em->getRepository('CMBundle:Post')->findOneBy(array('object' => $comment->className(), 'objectIds' => ','.$comment->getId().','));
+                        
                         return new JsonResponse(array(
                             'comment' => $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post, 'comment' => $comment, 'inEntity' => true, 'singleComment' => true))
                         ));
