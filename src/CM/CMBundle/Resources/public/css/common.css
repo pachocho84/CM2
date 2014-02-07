@@ -46,6 +46,8 @@
 .image_box img 
 { 
     position: absolute;
+    top: 0px;
+    left: 0px;
 }
 .image_box.pull-left 
 {

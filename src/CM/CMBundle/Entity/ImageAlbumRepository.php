@@ -99,10 +99,10 @@ class ImageAlbumRepository extends BaseRepository
         return $album;
     }
 
-    public function getImageIdsInAlbum($id)
+    public function getImagesDataInAlbum($id, $data = 'id')
     {
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('partial i.{id, img, imgOffset}')
+            ->select('partial i.{'.$data.'}')
             ->from('CMBundle:Image', 'i')
             ->where('i.entityId = :album_id')->setParameter('album_id', $id)
             ->orderBy('i.sequence')
