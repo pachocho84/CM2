@@ -3,13 +3,13 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
-    .ilightbox-container img {
-        max-width: 100%;
+    #blueimp-gallery .slide-content {
+        padding-right: 250px !important;
     }
-    #ilightbox-sidebar {
+    #blueimp-gallery .sidebar {
         display: none;
         position: fixed;
-        width: 350px;
+        width: 250px;
         top: 0px;
         bottom: 0px;
         right: 0px;
@@ -18,17 +18,16 @@
         padding: 10px;
         font-size: 16px;
     }
-    #ilightbox-slideshow {
-        display: none;
-        position: fixed;
-        height: 200px;
-        bottom: 0px;
-        left: 0px;
-        right: 350px;
-        background: #fff;
-        z-index: 100100;
-        padding: 10px;
-        font-size: 16px;
+    #blueimp-gallery .prev,
+    #blueimp-gallery .next {
+        line-height: 34px !important;
+    }
+    #blueimp-gallery .next {
+        right: 265px !important;
+    }
+    #blueimp-gallery .close {
+        left: 15px !important;
+        right: auto !important;
     }
     </style>
 {% endblock %}
@@ -58,7 +57,7 @@
 
                 <div class="col-lg-7">
                     <div class="media">
-                        {{ show_img_box(image.entity.post.publisher.img|imagine_filter('small'), {'width': 32, 'height': 32, 'offset': image.entity.post.publisher.imgOffset, 'link': path(image.entity.post.publisherType ~ '_show', {'slug': image.entity.post.publisher.slug}), 'link_attributes': {'class': 'pull-left'}}) }}
+                        {{ show_img_box(image.entity.post.publisher.img|imagine_filter('small'), {width: 32, height: 32, offset: image.entity.post.publisher.imgOffset, link: path(image.entity.post.publisherType ~ '_show', {slug: image.entity.post.publisher.slug}), box_attributes: {class: 'pull-left'}}) }}
                         <div class="media-body">
                             <h4><a href="{{ path(image.entity.post.publisherType ~ '_show', {'slug': image.entity.post.publisher.slug}) }}">{{ image.entity.post.publisher }}</a></h4>
                             
@@ -73,7 +72,7 @@
                     <ul class="nav nav-list">
                         {#<li><?php echo link_to('<i class="glyphicon glyphicon-picture"></i> '.__('Album').': '.__($image->getEntity()), $image->getRawValue()->getEntity()->getLinkShow('image_album')) ?></li>
                         <li><a href="/uploads/images/full/<?php echo $image->getImg() ?>" target="_blank"><i class="glyphicon glyphicon-fullscreen"></i> <?php echo __('High resolution') ?></a></li>#}
-                        <li><a href="{{ path('image_show', {id: image.id}) }}" ilightbox="image" ilightbox-image="{{ image.getImg|imagine_filter('full') }}" ilightbox-json="{{ path('image_show', {id: image.id}) }}" ilightbox-next="{{ path('image_show', {id: nextId}) }}" ilightbox-prev="{{ path('image_show', {id: prevId}) }}">{{ icon('Fullscreen') }}</a></li>
+                        <li><a href="{{ path('image_show', {id: image.id}) }}" lightbox="image" lightbox-src="{{ image.getImg|imagine_filter('full') }}" lightbox-json="{{ path('images_data', {id: image.id}) }}">{{ icon('Fullscreen') }}</a></li>
                         <li><a href="{{ path('image_show', {id: nextId}) }}">{{ 'Next image'|trans }}</a></li>
                         <li><a href="{{ path('image_show', {id: prevId}) }}">{{ 'Previoous image'|trans }}</a></li>
                         

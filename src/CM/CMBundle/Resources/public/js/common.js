@@ -194,97 +194,95 @@ $(function() {
 
     // });
 
-    $('body').on('click', '[ilightbox="image"]', function(event){
-        var sidebar = $('<div id="ilightbox-sidebar"></div>');
-        var slideshow = $('<div id="ilightbox-slideshow"></div>');
-        var data = [{
-            URL: $(event.currentTarget).attr('ilightbox-image'),
-            type: 'image',
-            page: $(event.currentTarget).attr('href'),
-            json: $(event.currentTarget).attr('ilightbox-json')
-        }];
-        var newItem;
-        $.iLightBox(data, {
-                skin: 'metro-black',
-                fullViewPort: 'center',
-                minScale: 0.3,
-                maxScale: 1,
-                height: '100%',
-                overlay: {
-                    opacity: 0.9
+    // document.getElementById('links').onclick = function (event) {
+    //     event = event || window.event;
+    //     var target = event.target || event.srcElement,
+    //         link = target.src ? target.parentNode : target,
+    //         options = {index: link, event: event},
+    //         links = this.getElementsByTagName('a');
+    //     blueimp.Gallery(links, options);
+    // };
+
+
+    $('body').on('click', '[lightbox="image"]', function(event){
+        var $sidebar = $('#blueimp-gallery .sidebar');
+        var $target = $(event.currentTarget);
+        var href = $target.attr('lightbox-src') || $target.find('img').attr('src');
+        var imageUrl = href.split('/');
+        imageUrl = imageUrl.slice(0, imageUrl.length - 1).join('/') + '/';
+        var pageUrl = $target.attr('href').split('/');
+        pageUrl = pageUrl.slice(0, pageUrl  .length - 1).join('/') + '/';
+        var json = {};
+        var sidebarReq = null;
+
+        var gallery = blueimp.Gallery([{
+                href: href,
+                thumbnail: href
+            }], {
+                event: event,
+                transitionSpeed: 0,
+                slideshowTransitionSpeed: 0,
+                onopened: function() {
+                    $.get($target.attr('lightbox-json'), function(data) {
+                        json = data;
+
+                        var index = -1;
+                        for (var i = 0; i < json.images.length; i++) {
+                            var image = json.images[i];
+                            
+                            if (image.id == json.id) {
+                                index = i;
+                            } else if (index != -1) {
+                                gallery.add([{
+                                    href: imageUrl + image.img,
+                                    thumbnail: imageUrl.replace('full', 'small') + image.img
+                                }]);
+                            }
+                        }
+
+                        if (index == -1) {
+                            return;
+                        }
+
+                        for (var i = 0; i < json.images.length; i++) {
+                            var image = json.images[i];
+
+                            if (i == index) {
+                                break;
+                            }
+
+                            gallery.add([{
+                                href: imageUrl + image.img,
+                                thumbnail: imageUrl.replace('full', 'small') + image.img
+                            }]);
+                        }
+
+                        json = json.images.slice(index).concat(json.images.slice(0, index));
+                    });
+
+                    $sidebar.show().html();
                 },
-                callback: {
-                    onOpen: function() {
-                        $('body').append(sidebar);
-                        
-                        var currentItem = this.items[this.ui.currentItem];
-        				newItem = $.extend({}, currentItem);
-                        
-                        history.pushState({}, '', currentItem.page);
-                        
-                        $.ajax({
-                            url: currentItem.page,
-                            async: false
-                        }).done(function(data) {
-                            console.log(data);
-                            // sidebar.html(data.sidebar);
-                            // newItem.URL = data.image;
-                            // newItem.page = data.url;
-                        });
-
-                        // console.log(newItem);
-
-        				this.items.push(newItem);
-        				this.normalizeItems();
-        				this.vars.next = this.ui.currentItem + 1;
-                    },
-            //         onAfterChange: function(api) {
-            //             console.log();
-            //             var currentItem = this.items[this.ui.currentItem];
-        				// newItem = $.extend({}, currentItem);
-                        
-            //             history.pushState({}, '', currentItem.page);
-                        
-            //             var iL = this;
-            //             $.ajax({
-            //                 url: currentItem.page,
-            //                 async: true
-            //             }).done(function(data) {
-            //                 // console.log(data);
-            //                 sidebar.html(data.sidebar);
-            //                 newItem.URL = data.image;
-            //                 newItem.page = data.url;
-
-            //                 // console.log(newItem);
-    
-            // 				iL.items.push(newItem);
-            // 				iL.normalizeItems();
-            // 				iL.vars.next = iL.ui.currentItem + 1;
-            //             });
-            //         },
-                    onBeforeLoad: function(api) {
-                        sidebar.fadeIn(180);
-                        slideshow.fadeIn(180);
-                    },
-                    onAfterLoad: function(api) {
-                        // console.log(api, this);
-                    },
-                    onHide: function() {
-                        sidebar.hide().remove();
-                        slideshow.hide().remove();
+                onslide: function(i, slide) {
+                    if (sidebarReq != null) {
+                        sidebarReq.abort();
                     }
+
+                    var url;
+                    if (i == 0) {
+                        url = $target.attr('href');
+                    } else {
+                        url = pageUrl + json[i].id;
+                    }
+
+                    sidebarReq = $.get(url, function(data) {
+                        history.pushState('', '', url);
+                        
+                        $sidebar.html(data);
+                    });
+                },
+                onclose: function() {
+                    $sidebar.hide();
                 }
-            }
-                
-        );
-        return false;
-    });
-
-    // images
-    $('body').on('click', '[ilightbox="multimedia"]', function(event){
-        event.preventDefault();
-
-        $('[ilightbox="multimedia"]').iLightBox({
         });
     });
     

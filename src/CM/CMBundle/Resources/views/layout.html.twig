@@ -7,7 +7,7 @@
         'css/jquery-ui.min.css'
         'lib/bootstrap/css/bootstrap.min.css'
         'lib/bootstrap/css/bootstrap-theme.min.css'
-        'lib/ilightbox/css/ilightbox.css'
+        'lib/blueimp-gallery/css/blueimp-gallery.min.css'
         'lib/glyphicons/css/glyphicons.css'
         'bundles/cm/css/common.css'
         'bundles/cm/css/main.css'
@@ -113,10 +113,10 @@
 
         {# RIGHT COLUMN #}
         {% if not noColumns and not inAccountPage %}
-            {% if sticky is not defined %}
+            {#{% if sticky is not defined %}
                 {% set sticky = true %}
-            {% endif %}
-            <div class="col-md-4"{% if sticky %} sticky{% endif %}>
+            {% endif %}#}
+            <div class="col-md-4"{#{% if sticky %} sticky{% endif %}#}>
                 {% block sidebar %}
                     <img src="{{ asset('/bundles/cm/images/layout/banner.jpg') }}" alt="Symfony!" />
                 {% endblock %}
@@ -143,9 +143,7 @@
         'js/jquery-ui.min.js'
         'js/i18n/jquery-ui-i18n.min.js'
         'lib/bootstrap/js/bootstrap.min.js'
-        'lib/ilightbox/js/jquery.requestAnimationFrame.js'
-        'lib/ilightbox/js/jquery.mousewheel.js'
-        'lib/ilightbox/js/ilightbox.js'
+        'lib/blueimp-gallery/js/jquery.blueimp-gallery.min.js'
         'js/jquery.hcsticky-min.js'
         'js/jquery.cycle2.min.js'
         'js/jquery.cycle2.scrollVert.min.js'

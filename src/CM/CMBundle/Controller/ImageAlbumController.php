@@ -344,18 +344,10 @@ class ImageAlbumController extends Controller
             throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));
         }
 
-        $imageIdsInAlbum = $em->getRepository('CMBundle:ImageAlbum')->getImageIdsInAlbum($image->getEntityId());
+        $imageIdsInAlbum = $em->getRepository('CMBundle:ImageAlbum')->getImagesDataInAlbum($image->getEntityId());
 
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse(array(
-                'id' => $id,
-                'images' => $imageIdsInAlbum
-            ));
-            // return new JsonResponse(array(
-            //     'image' => $this->renderView('CMBundle:ImageAlbum:imageObject.html.twig', array('image' => $em->getRepository('CMBundle:Image')->findOneById($next))),
-            //     'url' => $this->get('router')->generate('image_show', array('id' => $next)),
-            //     'sidebar' => $this->renderView('CMBundle:Wall:sidebarSocial.html.twig', array('post' => $image, 'isImage' => true))
-            // ));
+            return $this->render('CMBundle:Wall:sidebarSocial.html.twig', array('post' => $image, 'isImage' => true));
         }
         
         $index = array_search(array('id' => $id), $imageIdsInAlbum);
@@ -368,6 +360,27 @@ class ImageAlbumController extends Controller
             'nextId' => $next,
             // 'count' => $this->countAlbumsAndImages(array($image->getPublisherType().'Id' => $image->getPublisher()->getId()))
         );
+    }
+
+    /**
+     * @Route("/images/data/{id}", name="images_data", requirements={"id" = "\d+", "entityId" = "\d+"})
+     */
+    public function imagesDataAction(Request $request, $id, $slug = null, $type = null, $entityId = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $image = $em->getRepository('CMBundle:Image')->getImage($id);
+        
+        if (is_null($image)) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));
+        }
+
+        $imagesDataInAlbum = $em->getRepository('CMBundle:ImageAlbum')->getImagesDataInAlbum($image->getEntityId(), 'id, img, imgOffset');
+
+        return new JsonResponse(array(
+            'id' => $id,
+            'images' => $imagesDataInAlbum
+        ));
     }
 
     /**
