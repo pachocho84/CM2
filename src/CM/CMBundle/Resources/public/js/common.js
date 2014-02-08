@@ -206,19 +206,22 @@ $(function() {
 
     $('body').on('click', '[lightbox="image"]', function(event){
         var $sidebar = $('#blueimp-gallery .sidebar');
+        var $title = $('#blueimp-gallery .title');
+        var $sequence = $('#blueimp-gallery .sequence');
         var $target = $(event.currentTarget);
         var href = $target.attr('lightbox-src') || $target.find('img').attr('src');
         var imageUrl = href.split('/');
         imageUrl = imageUrl.slice(0, imageUrl.length - 1).join('/') + '/';
         var pageUrl = $target.attr('href').split('/');
         pageUrl = pageUrl.slice(0, pageUrl  .length - 1).join('/') + '/';
-        var json = {};
+        var json = null;
         var sidebarReq = null;
 
         var gallery = blueimp.Gallery([{
                 href: href,
                 thumbnail: href
             }], {
+
                 event: event,
                 transitionSpeed: 0,
                 slideshowTransitionSpeed: 0,
@@ -233,6 +236,8 @@ $(function() {
                             if (image.id == json.id) {
                                 index = i;
                             } else if (index != -1) {
+                                json.images[i].index = i;
+
                                 gallery.add([{
                                     href: imageUrl + image.img,
                                     thumbnail: imageUrl.replace('full', 'small') + image.img
@@ -243,10 +248,12 @@ $(function() {
                         if (index == -1) {
                             return;
                         }
+                        $sequence.html(index + '/' + json.images.length);
 
                         for (var i = 0; i < json.images.length; i++) {
                             var image = json.images[i];
 
+                            json.images[i].index = i;
                             if (i == index) {
                                 break;
                             }
@@ -260,12 +267,14 @@ $(function() {
                         json = json.images.slice(index).concat(json.images.slice(0, index));
                     });
 
-                    $sidebar.show().html();
+                    $sidebar.show().html('');
                 },
                 onslide: function(i, slide) {
                     if (sidebarReq != null) {
                         sidebarReq.abort();
                     }
+                    $title.html('');
+                    $sidebar.html('');
 
                     var url;
                     if (i == 0) {
@@ -277,8 +286,12 @@ $(function() {
                     sidebarReq = $.get(url, function(data) {
                         history.pushState('', '', url);
                         
-                        $sidebar.html(data);
+                        $title.html(data.albumTitle);
+                        $sidebar.html(data.sidebar);
                     });
+                    if (json != null) {
+                        $sequence.html(json[i].index  + '/' + json.length);
+                    }
                 },
                 onclose: function() {
                     $sidebar.hide();
