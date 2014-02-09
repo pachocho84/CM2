@@ -14,6 +14,10 @@ class ImageRepository extends BaseRepository
 {
     static protected function getOptions(array $options = array())
     {
+        $options = array_merge(array(
+            'locale'        => 'en'
+        ), $options);
+        
         return array_merge(array(
             'albumId' => null,
             'userId'       => null,
@@ -22,6 +26,7 @@ class ImageRepository extends BaseRepository
             'next' => null,
             'entityId' => null,
             'type'       => ImageAlbum::TYPE_ALBUM,
+            'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate'      => true,
             'limit'         => 25,
         ), $options);
@@ -110,7 +115,8 @@ class ImageRepository extends BaseRepository
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('e, t, i')
             ->from('CMBundle:Entity', 'e')
-            ->leftJoin('e.translations', 't')
+            ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')
+            ->setParameter('locales', $options['locales'])
             ->where('e not instance of :image_album')->setParameter('image_album', 'image_album')
             ->leftJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
             ->andWhere('p.object in (:objects)')->setParameter('objects', array(
@@ -138,6 +144,18 @@ class ImageRepository extends BaseRepository
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
+    public function getImageWithEntity($id, $options = array())
+    {
+        $options = self::getOptions($options);
+
+        return $this->createQueryBuilder('i')
+            ->select('i, e, t, p, l, lu, c, cu')
+            ->leftJoin('i.entity', 'e')
+            ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')
+            ->setParameter('locales', $options['locales'])
+            ->getQuery()->getSingleResult();
+    }
+
     public function getImage($id = null, $options = array())
     {
         $options = self::getOptions($options);
@@ -145,7 +163,8 @@ class ImageRepository extends BaseRepository
         $query = $this->createQueryBuilder('i')
             ->select('i, e, t, p, l, lu, c, cu')
             ->leftJoin('i.entity', 'e')
-            ->leftJoin('e.translations', 't')
+            ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')
+            ->setParameter('locales', $options['locales'])
             ->leftJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
             ->leftJoin('i.likes', 'l')
             ->leftJoin('l.user', 'lu')
@@ -200,7 +219,8 @@ class ImageRepository extends BaseRepository
         return $this->createQueryBuilder('i')
             ->select('i, e, t, p, l, lu, c, cu')
             ->leftJoin('i.entity', 'e')
-            ->leftJoin('e.translations', 't')
+            ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')
+            ->setParameter('locales', $options['locales'])
             ->leftJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
             ->leftJoin('p.user', 'pu')
             ->leftJoin('i.likes', 'l')

@@ -338,17 +338,26 @@ class ImageAlbumController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $image = $em->getRepository('CMBundle:Image')->getImage($id);
+        if ($request->isXmlHttpRequest()) {
+            $image = $em->getRepository('CMBundle:Image')->getImage($id, array('locale' => $request->getLocale()));
+            
+            if (is_null($image)) {
+                throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));
+            }
+
+            return new JsonResponse(array(
+                'albumTitle' => $image->getEntity()->getTitle(),
+                'sidebar' => $this->renderView('CMBundle:Wall:sidebarSocial.html.twig', array('post' => $image, 'isImage' => true))
+            ));
+        }
+
+        $image = $em->getRepository('CMBundle:Image')->getImage($id, array('locale' => $request->getLocale()));
         
         if (is_null($image)) {
             throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));
         }
 
         $imageIdsInAlbum = $em->getRepository('CMBundle:ImageAlbum')->getImagesDataInAlbum($image->getEntityId());
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Wall:sidebarSocial.html.twig', array('post' => $image, 'isImage' => true));
-        }
         
         $index = array_search(array('id' => $id), $imageIdsInAlbum);
         $prev = array_key_exists($index - 1, $imageIdsInAlbum) ? $imageIdsInAlbum[$index - 1]['id'] : $imageIdsInAlbum[count($imageIdsInAlbum) - 1]['id'];
@@ -369,7 +378,7 @@ class ImageAlbumController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $image = $em->getRepository('CMBundle:Image')->getImage($id);
+        $image = $em->getRepository('CMBundle:Image')->findOneById($id);
         
         if (is_null($image)) {
             throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));

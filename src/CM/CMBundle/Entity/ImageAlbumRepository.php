@@ -14,11 +14,16 @@ class ImageAlbumRepository extends BaseRepository
 {
     static protected function getOptions(array $options = array())
     {
+        $options = array_merge(array(
+            'locale'        => 'en'
+        ), $options);
+        
         return array_merge(array(
             'userId'       => null,
             'groupId'      => null,
             'pageId'       => null,
             'type'       => ImageAlbum::TYPE_ALBUM,
+            'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'after' => null,
             'paginate'      => true,
             'limit'         => 25,
