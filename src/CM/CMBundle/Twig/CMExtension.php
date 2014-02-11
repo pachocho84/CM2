@@ -911,6 +911,8 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-bell"></span>';
             case 'Request_out':
                 return '<span class="glyphicon glyphicon-share-alt"></span>';
+            case 'Relation':
+                return '<span class="glyphicon glyphicon-refresh"></span>';
             case 'Options':
                 return '<span class="glyphicons cogwheels"></span>';
             case 'Photo':

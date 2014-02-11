@@ -20,8 +20,25 @@ class UserRepository extends BaseRepository
             'page_id'       => null,
             'archive'       => null, 
             'paginate'      => true,
-            'limit'         => 25
+            'limit'         => 25,
+            'tags'          => false
         ), $options);
+    }
+
+    public function getUserBySlug($slug, array $options = array())
+    {
+        $query = $this->createQueryBuilder('u')
+            ->select('u'); 
+                       
+        if ($options['tags']) {
+            $query->addSelect('uut, ut, utt')
+            ->leftJoin('u.userUserTags', 'uut')
+            ->leftJoin('uut.userTag', 'ut')
+            ->leftJoin('ut.translations', 'utt');
+        }
+        
+        $query->andWhere('u.usernameCanonical = :slug')->setParameter('slug', $slug);
+        return $query->getQuery()->getSingleResult();
     }
 
     public function getAdminGroupsIds($user_id)

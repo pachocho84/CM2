@@ -1,18 +1,16 @@
-{% if userId != app.user.id %}
-    <span class="dropdown ajax-link-target">
-        <a href="#" data-toggle="dropdown">{{ icon('Fan') }}</a>
-        <ul class="dropdown-menu">
-            {% if not imFan %}
+<div class="dropdown ajax-link-target">
+    <a href="#" data-toggle="dropdown" class="btn btn-default">{{ icon('Fan') }}</a>
+    <ul class="dropdown-menu">
+        {% if not imFan %}
 
-                <li><a href="{{ path('fan_become', {'fanId': userId, 'object': object}) }}" class="fan-become ajax-link">{{ 'Become fan'|trans }}</a></li>
+            <li><a href="{{ path('fan_become', {'fanId': userId, 'object': object}) }}" class="fan-become ajax-link">{{ 'Become fan'|trans }}</a></li>
 
-            {% else %}
+        {% else %}
 
-                <li class="dropdown-header">{{ 'You are fan'|trans }}</li>
-                <li class="divider"></li>
-                <li><a href="{{ path('fan_unbecome', {'fanId': userId, 'object': object}) }}" class="fan-become ajax-link">{{ 'Unbecome fan'|trans }}</a></li>
+            <li>{{ 'You are fan'|trans }}</li>
+            <li class="divider"></li>
+            <li><a href="{{ path('fan_unbecome', {'fanId': userId, 'object': object}) }}" class="fan-become ajax-link">{{ 'Unbecome fan'|trans }}</a></li>
 
-            {% endif %}
-        </ul>
-    </span>
-{% endif %}
+        {% endif %}
+    </ul>
+</div>

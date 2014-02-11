@@ -593,7 +593,7 @@ form .form-tab-content {
 }
 .profile-header .col-md-4.profile-header-info {
     border-right: 1px solid #bbbbbb;
-    background: url(../images/layout/shadow.png) bottom repeat-x;
+/*     background: url(../images/layout/shadow.png) bottom repeat-x; */
     height: 300px;
 }
 .profile-header .col-md-4.profile-header-info .profile-header-picture {
@@ -612,6 +612,7 @@ form .form-tab-content {
 .profile-header .col-md-8.profile-header-cover {
     height: 300px;
     padding: 0px;
+    position: relative;
 }
 .profile-header .col-md-8.profile-header-cover .image_box, 
 .profile-header .col-md-8.profile-header-cover img {
@@ -619,6 +620,11 @@ form .form-tab-content {
 }
 .profile-header .col-md-8.profile-header-cover img {
     height: auto !important;
+}
+.profile-header .profile-header-cover .profile-header-buttons {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
 }
 .profile-menu {
     height: 45px;

@@ -1,7 +1,7 @@
-{% if is_granted('ROLE_USER') and user.id != app.user.id %}
+{% if is_granted('ROLE_USER') %}
 
-    <span class="dropdown ajax-link-target">
-        <a href="#" data-toggle="dropdown">{{ icon('Crown') }}</a>
+    <div class="dropdown ajax-link-target">
+        <a href="#" data-toggle="dropdown" class="btn btn-default">{{ icon('Relation') }}</a>
         <ul class="dropdown-menu">
             {% if relation is null %}
         
@@ -33,5 +33,5 @@
 
             {% endif %}
         </ul>
-    </span>
+    </div>
 {% endif %}

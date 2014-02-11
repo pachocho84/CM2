@@ -16,8 +16,8 @@
 
             {% if is_granted('ROLE_USER') %}
                 <div>
-                    {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
-                    {% if user.id != app.user.id %}
+                    {% if user.id != app.user.id and 1 == 0 %}
+                        {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
                         {{ render(controller('CMBundle:Relation:button', {user: user})) }}
                         <a href="{{ path('message_new', {'userId': user.id}) }}">{{ icon('Message') }}</a>
                     {% endif %}
@@ -28,46 +28,29 @@
             {% if user.coverImg != '' %}
                 {{ show_img_box(user.coverImg|imagine_filter('large'), {width: 780, height: 300, offset: user.coverImgOffset}) }}
             {% endif %}
+            <div class="profile-header-buttons">
+                <div class="btn-toolbar">
+                    {% if user.id != app.user.id %}
+                        {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
+                        {{ render(controller('CMBundle:Relation:button', {user: user})) }}
+                        <a href="{{ path('message_new', {'userId': user.id}) }}" class="btn btn-default">{{ icon('Message') }}</a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
     
     <div class="profile-menu">
         {% spaceless %}
-            <a href="{{ path('user_show', {'slug': user.slug}) }}">{{ icon('User')|raw }} {{ 'Profile'|trans }}</a>
-            <a href="{{ path('wall_user', {'slug': user.slug}) }}">{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
-            <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
-            <a href="{{ path('user_events', {'slug': user.slug}) }}">{{ icon('Event')|raw }} {{ 'Events'|trans }}</a>
-            <a href="{{ path('user_images', {'slug': user.slug}) }}">{{ icon('Image')|raw }} {{ 'Images'|trans }}</a>
-            <a href="{{ path('user_multimedia', {'slug': user.slug}) }}">{{ icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
-            <a href="{{ path('user_discs', {'slug': user.slug}) }}">{{ icon('Disc')|raw }} {{ 'Discs'|trans }}</a>
+            <a href="{{ path('user_show', {'slug': user.slug}) }}"{% if inPage == 'profile' %} class="active"{% endif %}>{{ icon('User')|raw }} {{ 'Profile'|trans }}</a>
+            <a href="{{ path('wall_user', {'slug': user.slug}) }}"{% if inPage == 'wall' %} class="active"{% endif %}>{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
+            <a href="{{ path('user_biography', {'slug': user.slug}) }}"{% if inPage == 'biography' %} class="active"{% endif %}>{{ icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
+            <a href="{{ path('user_events', {'slug': user.slug}) }}"{% if inPage == 'event' %} class="active"{% endif %}>{{ icon('Event')|raw }} {{ 'Events'|trans }}</a>
+            <a href="{{ path('user_images', {'slug': user.slug}) }}"{% if inPage == 'image' %} class="active"{% endif %}>{{ icon('Image')|raw }} {{ 'Images'|trans }}</a>
+            <a href="{{ path('user_multimedia', {'slug': user.slug}) }}"{% if inPage == 'multimedia' %} class="active"{% endif %}>{{ icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
+            <a href="{{ path('user_discs', {'slug': user.slug}) }}"{% if inPage == 'disc' %} class="active"{% endif %}>{{ icon('Disc')|raw }} {{ 'Discs'|trans }}</a>
         {% endspaceless %}
     </div>
-    
-{#
-    <ul class="profile-menu">
-        <li{% if inPage == 'profile' %} class="active"{% endif %}>
-            <a href="{{ path('user_show', {'slug': user.slug}) }}">{{ icon('User')|raw }} {{ 'Profile'|trans }}</a>
-        </li>
-        <li{% if inPage == 'wall' %} class="active"{% endif %}>
-            <a href="{{ path('wall_user', {'slug': user.slug}) }}">{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
-        </li>
-        <li{% if inPage == 'biography' %} class="active"{% endif %}>
-            <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
-        </li>
-        <li{% if inPage == 'event' %} class="active"{% endif %}>
-            <a href="{{ path('user_events', {'slug': user.slug}) }}">{{ icon('Event')|raw }} {{ 'Events'|trans }}</a>
-        </li>
-        <li{% if inPage == 'image' %} class="active"{% endif %}>
-            <a href="{{ path('user_images', {'slug': user.slug}) }}">{{ icon('Image')|raw }} {{ 'Images'|trans }}</a>
-        </li>
-        <li{% if inPage == 'multimedia' %} class="active"{% endif %}>
-            <a href="{{ path('user_multimedia', {'slug': user.slug}) }}">{{ icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
-        </li>
-        <li{% if inPage == 'disc' %} class="active"{% endif %}>
-            <a href="{{ path('user_discs', {'slug': user.slug}) }}">{{ icon('Disc')|raw }} {{ 'Discs'|trans }}</a>
-        </li>
-    </ul>
-#}
 
 {#
     <nav class="navbar navbar-default" role="navigation">
@@ -116,46 +99,3 @@
     </nav>
 #}
 </div>
-
-
-{#<?php if (!$user->getCoverImg() || !is_file('uploads/images/770/'.$user->getCoverImg())): ?>
-    <div class="media">
-        
-        <?php show_img_box($user->getImg(), array('width' => 35, 'height' => 35, 'offset' => $user->getImgOffset(), 'default' => 'user', 'box_attributes' => array('class' => 'pull-left'))) ?>
-        <div class="media-body">
-            <h2><?php echo $user ?></h2>
-        </div>
-    </div>
-<?php endif ?>
-
-<div class="profile-header shadow">
-    <?php if ($user->getCoverImg() && is_file('uploads/images/770/'.$user->getCoverImg())): ?>
-        <div class="cover image_box">
-            <?php show_img_box($user->getCoverImg(), array('width' => 770, 'height' => 285, 'offset' => $user->getCoverImgOffset(), 'img_only' => true)) ?>
-            <div class="cover-shadow"></div>
-            <h2><?php echo $user ?></h2>
-        </div>
-    <?php endif ?>
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="collapse navbar-collapse navbar-ex1-collapse user-menu">
-            <ul class="nav navbar-nav">
-                <li<?php $inPage == 'show' and print ' class="active"' ?>><?php echo link_to(icon('user').' '.__('Profile'), $user->getRawValue()->getLinkShow()) ?></li>
-                <li<?php $inPage == 'wall' and print ' class="active"' ?>><?php echo link_to(icon('wall').' '.__('Wall'), '@wall_user?user='.$user->getUsername()) ?></li>
-                <li<?php $inPage == 'biography' and print ' class="active"' ?>><?php echo link_to(icon('biography').' '.__('Biography'), '@biography_user?user='.$user->getUsername()) ?></li>
-                <li<?php $inPage == 'event' and print ' class="active"' ?>><?php echo link_to(icon('event').' '.__('Events'), '@image_user?user='.$user->getUsername()) ?></li>
-                <li<?php $inPage == 'image' and print ' class="active"' ?>><?php echo link_to(icon('image').' '.__('Images'), '@image_user?user='.$user->getUsername()) ?></li>
-                <li<?php $inPage == 'disc' and print ' class="active"' ?>><?php echo link_to(icon('disc').' '.__('Discs'), '@disc_user?user='.$user->getUsername()) ?></li>
-            </ul>
-            <ul class="nav nav navbar-nav pull-right">
-                <li class="dropdown<?php in_array($inPage, array('fan', 'education')) and print ' active' ?>">
-            <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><?php echo __('More') ?> <b class="caret"></b></a>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                <li><?php echo link_to(icon('fan').' '.__('Fans'), '@fan_user?user='.$user->getUsername()) ?></li>
-              <li role="presentation" class="divider"></li>
-                <li><?php echo link_to(icon('work').' '.__('Work and education'), '@work_education_user?user='.$user->getUsername()) ?></li>
-            </ul>
-          </li>
-            </ul>
-        </div>
-    </nav>
-</div>#}

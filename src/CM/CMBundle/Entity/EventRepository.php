@@ -159,8 +159,7 @@ class EventRepository extends BaseRepository
             ->andWhere('ect.locale IN (:locales)')
             ->setParameter('locales', $options['locales'])
             ->orderBy('d.start', 'asc')
-            ->getQuery()
-            ->getSingleResult();
+            ->getQuery()->getSingleResult();
     }
     
     public function getEvent($id, array $options = array())
@@ -177,8 +176,7 @@ class EventRepository extends BaseRepository
             ->leftJoin('p.page', 'pg')
             ->leftJoin('p.group', 'gr')
             ->andWhere('e.id = :id')->setParameter('id', $id)
-            ->getQuery()
-            ->getSingleResult();
+            ->getQuery()->getSingleResult();
     }
 
     public function getNextDates($options = array())
