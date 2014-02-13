@@ -1,16 +1,14 @@
-<div class="dropdown ajax-link-target">
-    <a href="#" data-toggle="dropdown" class="btn btn-default">{{ icon('Fan') }}</a>
-    <ul class="dropdown-menu">
-        {% if not imFan %}
-
-            <li><a href="{{ path('fan_become', {'fanId': userId, 'object': object}) }}" class="fan-become ajax-link">{{ 'Become fan'|trans }}</a></li>
-
-        {% else %}
-
-            <li>{{ 'You are fan'|trans }}</li>
-            <li class="divider"></li>
-            <li><a href="{{ path('fan_unbecome', {'fanId': userId, 'object': object}) }}" class="fan-become ajax-link">{{ 'Unbecome fan'|trans }}</a></li>
-
-        {% endif %}
-    </ul>
+<div class="btn-group ajax-link-target">
+	<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{ icon('Fan') }} {{ 'You are fan'|trans }}</button>
+	<ul class="dropdown-menu">
+	    {% if not imFan %}
+	
+	        <li><a href="{{ path('fan_become', {'fanId': userId, 'object': object}) }}" class="fan-become ajax-link">{{ 'Become fan'|trans }}</a></li>
+	
+	    {% else %}
+	
+	        <li><a href="{{ path('fan_unbecome', {'fanId': userId, 'object': object}) }}" class="fan-become ajax-link">{{ 'Unbecome fan'|trans }}</a></li>
+	
+	    {% endif %}
+	</ul>
 </div>

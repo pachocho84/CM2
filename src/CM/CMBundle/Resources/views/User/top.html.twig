@@ -28,14 +28,12 @@
             {% if user.coverImg != '' %}
                 {{ show_img_box(user.coverImg|imagine_filter('large'), {width: 780, height: 300, offset: user.coverImgOffset}) }}
             {% endif %}
-            <div class="profile-header-buttons">
-                <div class="btn-toolbar">
-                    {% if user.id != app.user.id %}
-                        {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
-                        {{ render(controller('CMBundle:Relation:button', {user: user})) }}
-                        <a href="{{ path('message_new', {'userId': user.id}) }}" class="btn btn-default">{{ icon('Message') }}</a>
-                    {% endif %}
-                </div>
+            <div class="profile-header-buttons btn-toolbar pull-right" role="toolbar">
+                {% if is_granted('ROLE_USER') and user.id != app.user.id %}
+                    {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
+{#                         {{ render(controller('CMBundle:Relation:button', {user: user})) }} #}
+                    <a href="{{ path('message_new', {'userId': user.id}) }}" class="btn btn-default">{{ icon('Message') }}</a>
+                {% endif %}
             </div>
         </div>
     </div>

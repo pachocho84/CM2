@@ -589,10 +589,10 @@ form .form-tab-content {
 /* USER */
 .profile-header {
     margin-bottom: 20px;
-    background: url(../images/layout/damascato_silver.jpg) repeat;
 }
 .profile-header .col-md-4.profile-header-info {
     border-right: 1px solid #bbbbbb;
+    background: url(../images/layout/damascato_silver.jpg) repeat;
 /*     background: url(../images/layout/shadow.png) bottom repeat-x; */
     height: 300px;
 }
@@ -624,7 +624,9 @@ form .form-tab-content {
 .profile-header .profile-header-cover .profile-header-buttons {
     position: absolute;
     bottom: 10px;
-    right: 10px;
+    right: 0px;
+    padding: 0 10px;
+    width: 100%;
 }
 .profile-menu {
     height: 45px;

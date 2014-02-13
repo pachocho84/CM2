@@ -6,7 +6,7 @@ $(function() {
 
         if ($(event.currentTarget).is('a')) {
             url = event.currentTarget.href;
-        }.85 
+        }
         if ($(event.currentTarget).is('input:submit') || $(event.currentTarget).is('button')) {
             $(this).closest('*[rel="tooltip"]').tooltip('destroy');
             url = $(event.currentTarget).closest('form').attr('action');
