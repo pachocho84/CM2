@@ -53,7 +53,9 @@ $(function() {
     
     /* MENU */
     $('#menu ul.pull-right li.menu-tab a').on('click', function(event) {
-        if ($(this).parent('li.dropdown.menu-tab').hasClass('open')) return;
+        if ($(this).parent('li.dropdown.menu-tab').hasClass('open')) {
+            return true;
+        }
 
         $.get(event.currentTarget.href, function(data) {
             $(event.target).closest('li.menu-tab').find('.dropdown-menu-body .dropdown-menu-loader').hide();

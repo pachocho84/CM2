@@ -4,6 +4,7 @@ namespace CM\CMBundle\Twig;
 
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use CM\CMBundle\Service\Helper;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -37,10 +38,20 @@ class CMExtension extends \Twig_Extension
     private $imagineFilter;
 
     private $options;
+    
+    protected $request;
+    
+    /**
+     *
+     * @var \Twig_Environment
+     */
+    protected $environment;
+
 
     public function __construct(
         Translator $translator,
         Router $router,
+        ContainerInterface $container,
         Helper $helper,
         SecurityContext $securityContext,
         UserAuthentication $userAuthentication,
@@ -50,6 +61,7 @@ class CMExtension extends \Twig_Extension
     {
         $this->translator = $translator;
         $this->router = $router;
+        $this->request = $container->get('request');
         $this->helper = $helper;
         $this->securityContext = $securityContext;
         $this->userAuthentication = $userAuthentication;
@@ -59,6 +71,11 @@ class CMExtension extends \Twig_Extension
             'sizes' => array()
         ), $options);
     }
+	
+	public function initRuntime(\Twig_Environment $environment)
+	{
+		$this->environment = $environment;
+	}
 
     public function getFilters()
     {
@@ -73,6 +90,8 @@ class CMExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
+	        'get_controller_name' => new \Twig_Function_Method($this, 'getControllerName'),
+            'get_action_name' => new \Twig_Function_Method($this, 'getActionName'),
             'datetime_format' => new \Twig_Function_Method($this, 'getDateTimeFormat', array('is_safe' => array('html'))),
             'can_manage' => new \Twig_Function_Method($this, 'getCanManage'),
             'is_admin' => new \Twig_Function_Method($this, 'getIsAdmin'),
@@ -140,6 +159,30 @@ class CMExtension extends \Twig_Extension
             return $this->getSimpleFormatText($text);
         }
     }
+	
+	/**
+	 * Get current controller name
+	 */
+	public function getControllerName()
+	{
+		$pattern = "#Controller\\\([a-zA-Z]*)Controller#";
+		$matches = array();
+		preg_match($pattern, $this->request->get('_controller'), $matches);
+		
+		return strtolower($matches[1]);
+	}
+	
+	/**
+	 * Get current action name 
+	 */
+	public function getActionName()
+	{
+		$pattern = "#::([a-zA-Z]*)Action#";
+		$matches = array();
+		preg_match($pattern, $this->request->get('_controller'), $matches);
+	
+		return $matches[1];
+	}
 
     public function getDateTimeFormat($lang = 'js')
     {

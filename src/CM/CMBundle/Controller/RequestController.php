@@ -35,7 +35,7 @@ class RequestController extends Controller
      * @Template
      */
     public function indexAction(Request $request, $page = 1, $perPage = 6)
-    {
+    {   
         $em = $this->getDoctrine()->getManager();
 
         $requests = $em->getRepository('CMBundle:Request')->getRequests($this->getUser()->getId());
@@ -47,6 +47,7 @@ class RequestController extends Controller
             return $this->render('CMBundle:Request:requestList.html.twig', array('requests' => $pagination));
         }
 
+/*
         $requestsOutgoing = $em->getRepository('CMBundle:Request')->getRequests($this->getUser()->getId(), 'outgoing');
         $paginationOutgoing = $this->get('knp_paginator')->paginate($requestsOutgoing, $page, $perPage);
 
@@ -54,6 +55,7 @@ class RequestController extends Controller
         if ($request->isXmlHttpRequest() && $request->get('outgoing')) {
             return $this->render('CMBundle:Request:requestOutgoingList.html.twig', array('requests' => $paginationOutgoing));
         }
+*/
 
         return array('requests' => $pagination, 'requestsOutgoing' => $paginationOutgoing);
     }

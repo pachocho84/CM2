@@ -1,5 +1,6 @@
 <div class="box profile-header">
     <div class="clearfix">
+    
         <div class="col-md-4 box-body profile-header-info text-center">
             <div class="profile-header-picture thumbnail">
                 {{ show_img_box(user.img|imagine_filter('medium'), {width: 120, offset: user.imgOffset}) }}
@@ -9,44 +10,33 @@
                 {{ user.userTags[:3]|join(', ')|trim }}{% if user.userTags|length > 3 %}...{% endif %}
             </h3>
 
-            <p>
-                {{ icon('Map') }} {{ user.cityBirth }}
-                {{ icon('Map') }} {{ user.cityCurrent }}
-            </p>
-
-            {% if is_granted('ROLE_USER') %}
-                <div>
-                    {% if user.id != app.user.id and 1 == 0 %}
-                        {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
-                        {{ render(controller('CMBundle:Relation:button', {user: user})) }}
-                        <a href="{{ path('message_new', {'userId': user.id}) }}">{{ icon('Message') }}</a>
-                    {% endif %}
-                </div>
-            {% endif %}
+            <p>{{ icon('Map') }} {{ 'comes from'|trans }}: {{ user.cityBirth }} - {{ 'lives here'|trans }}: {{ user.cityCurrent }}</p>
         </div>
+        
         <div class="col-md-8 profile-header-cover">
             {% if user.coverImg != '' %}
                 {{ show_img_box(user.coverImg|imagine_filter('large'), {width: 780, height: 300, offset: user.coverImgOffset}) }}
             {% endif %}
-            <div class="profile-header-buttons btn-toolbar pull-right" role="toolbar">
+            <div class="profile-header-buttons btn-toolbar" role="toolbar">
                 {% if is_granted('ROLE_USER') and user.id != app.user.id %}
                     {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
-{#                         {{ render(controller('CMBundle:Relation:button', {user: user})) }} #}
-                    <a href="{{ path('message_new', {'userId': user.id}) }}" class="btn btn-default">{{ icon('Message') }}</a>
+                    {{ render(controller('CMBundle:Relation:button', {user: user})) }}
+                    <a href="{{ path('message_new', {'userId': user.id}) }}" class="btn btn-default">{{ icon('Message') }} {{ 'Send a message'|trans }}</a>
                 {% endif %}
             </div>
+            
         </div>
     </div>
     
     <div class="profile-menu">
         {% spaceless %}
-            <a href="{{ path('user_show', {'slug': user.slug}) }}"{% if inPage == 'profile' %} class="active"{% endif %}>{{ icon('User')|raw }} {{ 'Profile'|trans }}</a>
-            <a href="{{ path('wall_user', {'slug': user.slug}) }}"{% if inPage == 'wall' %} class="active"{% endif %}>{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
-            <a href="{{ path('user_biography', {'slug': user.slug}) }}"{% if inPage == 'biography' %} class="active"{% endif %}>{{ icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
-            <a href="{{ path('user_events', {'slug': user.slug}) }}"{% if inPage == 'event' %} class="active"{% endif %}>{{ icon('Event')|raw }} {{ 'Events'|trans }}</a>
-            <a href="{{ path('user_images', {'slug': user.slug}) }}"{% if inPage == 'image' %} class="active"{% endif %}>{{ icon('Image')|raw }} {{ 'Images'|trans }}</a>
-            <a href="{{ path('user_multimedia', {'slug': user.slug}) }}"{% if inPage == 'multimedia' %} class="active"{% endif %}>{{ icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
-            <a href="{{ path('user_discs', {'slug': user.slug}) }}"{% if inPage == 'disc' %} class="active"{% endif %}>{{ icon('Disc')|raw }} {{ 'Discs'|trans }}</a>
+            <a href="{{ path('user_show', {'slug': user.slug}) }}"{% if inPage == 'profile' %} class="active"{% endif %}>{{ icon('User') }} {{ 'Profile'|trans }}</a>
+            <a href="{{ path('wall_user', {'slug': user.slug}) }}"{% if inPage == 'wall' %} class="active"{% endif %}>{{ icon('Wall') }} {{ 'Wall'|trans }}</a>
+            <a href="{{ path('user_biography', {'slug': user.slug}) }}"{% if inPage == 'biography' %} class="active"{% endif %}>{{ icon('Biography') }} {{ 'Biography'|trans }}</a>
+            <a href="{{ path('user_events', {'slug': user.slug}) }}"{% if inPage == 'event' %} class="active"{% endif %}>{{ icon('Event') }} {{ 'Events'|trans }}</a>
+            <a href="{{ path('user_images', {'slug': user.slug}) }}"{% if inPage == 'image' %} class="active"{% endif %}>{{ icon('Image') }} {{ 'Images'|trans }}</a>
+            <a href="{{ path('user_multimedia', {'slug': user.slug}) }}"{% if inPage == 'multimedia' %} class="active"{% endif %}>{{ icon('Multimedia') }} {{ 'Multimedia'|trans }}</a>
+            <a href="{{ path('user_discs', {'slug': user.slug}) }}"{% if inPage == 'disc' %} class="active"{% endif %}>{{ icon('Disc') }} {{ 'Discs'|trans }}</a>
         {% endspaceless %}
     </div>
 

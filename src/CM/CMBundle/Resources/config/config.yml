@@ -157,6 +157,7 @@ services:
         arguments:
             translator: @translator
             router: @router
+            containerInterface: @service_container
             helper: @cm.helper
             securityContext: @security.context
             userAuthentication: @cm.user_authentication

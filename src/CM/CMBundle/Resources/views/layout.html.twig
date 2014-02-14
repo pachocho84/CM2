@@ -73,9 +73,6 @@
                 <ul class="nav navbar-nav pull-right">
                     {% if is_granted('ROLE_USER') %}
                         {{ render(controller('CMBundle:User:menu', {'path': app.request.pathInfo} )) }}
-                        <li>
-                            <a href="{{ path('fos_user_security_logout') }}">{{ 'Logout'|trans }}</a>
-                        </li>
                     {% else %}
                         <li class="dropdown menu-tab">
                             <a href="{{ path('fos_user_security_login') }}" class="dropdown-toggle" data-toggle="dropdown">{{ 'Login'|trans }}</a>

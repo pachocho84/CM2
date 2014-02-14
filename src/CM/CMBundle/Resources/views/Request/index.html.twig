@@ -1,35 +1,21 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
 {% block body %}
-    <h2>
-        {{ icon('Globe')|raw }}
-        <?php echo $sf_response->getTitle() ?>#}
-    </h2>                                                                    
+    <div class="box">
+        <div class="box-heading">
+            <h2>{{ 'Review your %count% requests'|trans({'%count%': requests.getTotalItemCount }) }}</h2>
+            <p></p>
+        </div>
     
-    
-     
-    <ul class="breadcrumb">
-      {#<li><?php echo link_to('Home', '@homepage') ?></li>
-      <li class="active"><?php echo __($sf_response->getTitle()) ?></li>#}
-    </ul>
+        <div class="box-body">
 
-    <div class="objects-container">
-        
-        <ul class="nav nav-tabs">
-          <li class="active"><a href="#incomingRequests" data-toggle="tab">{{ icon('Request_in')|raw }} {{ 'Incoming requests' | trans }}</a></li>
-          <li><a href="#outgoingRequests" data-toggle="tab">{{ icon('Request_out')|raw }} {{ 'Outgoing requests' | trans }}</a></li>
-        </ul>
-
-        <div class="tab-content objects">
-
-            <div class="tab-pane fade in active" id="incomingRequests">
-                <div class="objects">
-                    <ul class="media-list">
-                        {{ include('CMBundle:Request:requestList.html.twig') }}
-                    </ul>
-                </div>
+            <div class="objects">
+                <ul class="media-list">
+                    {{ include('CMBundle:Request:requestList.html.twig') }}
+                </ul>
             </div>
 
+{#
             <div class="tab-pane fade" id="outgoingRequests">
                 <div class="objects">
                     <ul class="media-list">
@@ -37,6 +23,7 @@
                     </ul>
                 </div>
             </div>
+#}
 
         </div>
         

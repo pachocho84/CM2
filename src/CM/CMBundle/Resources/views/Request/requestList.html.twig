@@ -3,13 +3,14 @@
 {% else %}
     {% for request in requests %}
         <li class="media object">
-            {{ show_img_box(request.fromUser.img|imagine_filter('small'), {'width': 50, 'height': 50, 'offset': request.fromUser.imgOffset,  'link': path('user_show', {'slug': request.fromUser.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+            {{ show_img_box(request.fromUser.img|imagine_filter('small'), {'width': 50, 'offset': request.fromUser.imgOffset,  'link': path('user_show', {'slug': request.fromUser.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+            
             <div class="media-body ajax-link-target">
                 
-                {{ request.id }}: {{ request_tag(request)|raw }}
+                <p>{{ request_tag(request)|raw }}</p>
 
                 {% if request.isNewOrPending %}
-                    <div class="pull-right">
+                    <div>
                         {% if request.entityId is not null %}
                             {% set object = request.entity %}{% set objectId = request.entityId %}
                         {% elseif request.groupId is not null %}
@@ -17,9 +18,9 @@
                         {% else %}
                             {% set object = request.object %}{% set objectId = request.objectId %}
                         {% endif %}
-                        <a href="{{ path('request_update', {'choice': 'accept', 'id': request.id}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading'|trans }}">{{ icon('Ok')|raw }} {{ 'Accept'|trans }}</a>
+                        <a href="{{ path('request_update', {'choice': 'accept', 'id': request.id}) }}" class="btn btn-primary btn-sm ajax-link" data-loading-text="{{ 'Loading'|trans }}">{{ icon('Ok') }} {{ 'Accept'|trans }}</a>
     
-                        <a href="{{ path('request_update', {'choice': 'refuse', 'id': request.id}) }}" class="btn btn-mini ajax-link" data-loading-text="{{ 'Loading'|trans }}">{{ icon('Remove')|raw }} {{ 'Refuse'|trans }}</a>
+                        <a href="{{ path('request_update', {'choice': 'refuse', 'id': request.id}) }}" class="btn btn-default btn-sm ajax-link" data-loading-text="{{ 'Loading'|trans }}">{{ icon('Remove') }} {{ 'Refuse'|trans }}</a>
                     </div>
                 {% endif %}
             </div> 
@@ -30,7 +31,5 @@
         <div class="well well-small load_more">
             <a href="{{ path('request_index', { 'page': requests.getPaginationData.next }) }}">{{ 'Load more'|trans }}</a>
         </div>
-    {% else %}
-        <div class="well well-small"><span>{{ 'There are no more requests.'|trans }}</span></div>
     {% endif %}
 {% endif %}

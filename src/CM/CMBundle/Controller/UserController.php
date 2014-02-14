@@ -41,14 +41,6 @@ class UserController extends Controller
         $results = array();
         foreach($users as $user)
         {
-            // if ($user['img'] == '' || $user['img'] == null) {
-            //     $user['img'] = '/bundles/cm/uploads/images/50/default.jpg';
-            // } else {
-            //     $user['img'] = '/bundles/cm/uploads/images/350/'.$user['img'];
-            // }
-            // $user['fullname'] = $user['firstName'].' '.$user['lastName'];
-            // $results[] = $user;
-
             $view['id'] = $user['id'];
             $view['username'] = $user['usernameCanonical'];
             $view['fullname'] = $user['firstName'].' '.$user['lastName'];
@@ -67,16 +59,9 @@ class UserController extends Controller
         $newRequests = $this->get('cm.request_center')->getNewRequestsNumber($this->getUser()->getId());
         $newNotifications = $this->get('cm.notification_center')->getNewNotificationsNumber($this->getUser()->getId());
 
-        $inMessage = substr($request->get('realRoute'), 1, 7) == 'message';
-        $inRequest = substr($request->get('realRoute'), 1, 7) == 'request';
-        $inNotification = substr($request->get('realRoute'), 1, 12) == 'notification';
-
         return array(
             'newRequests' => $newRequests,
-            'newNotifications' => $newNotifications,
-            'inMessagePage' => $inMessage,
-            'inRequestPage' => $inRequest,
-            'inNotificationPage' => $inNotification
+            'newNotifications' => $newNotifications
         );
     }
 
