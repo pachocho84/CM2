@@ -14,12 +14,11 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 class Relation
 {
     use ORMBehaviors\Timestampable\Timestampable;
-    
-    const TYPE_TEACHER = 1;
-    const TYPE_STUDENT = -1;
-    const TYPE_AGENT = 2;
-    const TYPE_CLIENT = -2;
 
+    const ACCEPTED_NO = 0;
+    const ACCEPTED_UNI = 1;
+    const ACCEPTED_BOTH = 2;
+    
     /**
      * @var integer
      *
@@ -30,18 +29,22 @@ class Relation
     private $id;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="type", type="smallint")
-     */
-    private $type;
+     * @ORM\Column(name="relation_type", type="integer")
+     **/
+    private $relationTypeId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RelationType")
+     * @ORM\JoinColumn(name="relation_type", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     **/
+    private $relationType;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="accepted", type="boolean")
+     * @ORM\Column(name="accepted", type="smallint", nullable=false)
      */
-    private $accepted;
+    private $accepted = ACCEPTED_NO;
 
     /**
      * @ORM\Column(name="user_id", type="integer")
@@ -67,18 +70,7 @@ class Relation
 
     public function __toString()
     {
-        switch ($this->type) {
-            case self::TYPE_TEACHER:
-                return 'teacher';
-            case self::TYPE_STUDENT:
-                return 'student';
-            case self::TYPE_AGENT:
-                return 'agent';
-            case self::TYPE_CLIENT:
-                return 'client';
-            default:
-                return '';
-        }
+        return $this->relationType();
     }
 
     public static function className()
@@ -96,9 +88,14 @@ class Relation
         return $this->id;
     }
 
-    public static function inverseType($type)
+    /**
+     * Get type
+     *
+     * @return integer 
+     */
+    public function getRelationTypeId()
     {
-        return -$type;
+        return $this->relationTypeId;
     }
 
     /**
@@ -107,9 +104,12 @@ class Relation
      * @param integer $type
      * @return Relation
      */
-    public function setType($type)
+    public function setRelationType($relationType)
     {
-        $this->type = $type;
+        $this->relationType = $relationType;
+        if (!is_null($relationType)) {
+            $this->relationTypeId = $relationType->getId();
+        }
     
         return $this;
     }
@@ -119,19 +119,9 @@ class Relation
      *
      * @return integer 
      */
-    public function getType()
+    public function getRelationType()
     {
-        return $this->type;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer 
-     */
-    public function getInverseType()
-    {
-        return $this->inverseType($this->type);
+        return $this->relationType;
     }
 
     /**

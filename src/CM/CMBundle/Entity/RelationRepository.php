@@ -15,7 +15,8 @@ class RelationRepository extends BaseRepository
     public function getUserRelations($userId)
     {
         return $this->createQueryBuilder('r')
-            ->select('r, u, fu')
+            ->select('r, t, u, fu')
+            ->leftJoin('r.relationType', 't')
             ->leftJoin('r.user', 'u')
             ->leftJoin('r.fromUser', 'fu')
             ->where('r.fromUserId = :from_user_id')->setParameter('from_user_id', $userId)
@@ -23,21 +24,21 @@ class RelationRepository extends BaseRepository
             ->getQuery()->getResult();
     }
 
-    public function getInverse($type, $userId, $fromUserId)
+    public function getInverse($relationType, $userId, $fromUserId)
     {
         return $this->createQueryBuilder('r')
-            ->select('r')
-            ->where('r.type = :type')->setParameter('type', Relation::inverseType($type))
+            ->select('r, t')
+            ->leftJoin('r.relationType', 't', 'with', 't.id = relation_type_id')->setParameter('relation_type_id', $relationType->getInverseTypeId())
             ->andWhere('r.fromUserId = :from_user_id')->setParameter('from_user_id', $userId)
             ->andWhere('r.userId = :user_id')->setParameter('user_id', $fromUserId)
             ->getQuery()->getSingleResult();
     }
 
-    public function remove($type, $userId, $fromUserId)
+    public function remove($relationType, $userId, $fromUserId)
     {
         $this->createQueryBuilder('r')
             ->delete('CMBundle:Relation', 'r')
-            ->where('r.type = :type')->setParameter('type', $type)
+            ->where('r.relationTypeId = :relation_type_id')->setParameter('relation_type_id', $relationType)
             ->andWhere('r.fromUserId = :from_user_id')->setParameter('from_user_id', $fromUserId)
             ->andWhere('r.userId = :user_id')->setParameter('user_id', $userId)
             ->getQuery()->execute();

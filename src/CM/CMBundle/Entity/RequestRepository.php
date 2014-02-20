@@ -23,17 +23,50 @@ class RequestRepository extends BaseRepository
             'groupId' => null,
             'pageId' => null,
             'object' => null,
+            'indexBy' => null
         ), $options);
     }
 
     public function getFor($userId, $object, $objectId)
     {
         return $this->createQueryBuilder('r')
-            ->select('r')
             ->where('r.userId = :user_id')->setParameter('user_id', $userId)
             ->andWhere('r.object = :object')->setParameter('object', $object)
             ->andWhere('r.objectId = :objectId')->setParameter('objectId', $objectId)
             ->getQuery()->getResult();
+    }
+
+    public function getRequestsFor($user1Id, $user2Id, $options = array())
+    {
+        $options = self::getOptions($options);
+
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('r')
+            ->from($this->_entityName, 'r', is_null($options['indexBy']) ? null : 'r.'.$options['indexBy']);
+        $query->andWhere($query->expr()->orX(
+                $query->expr()->andX(
+                    $query->expr()->eq('r.userId', ':user_1_id'),
+                    $query->expr()->eq('r.fromUserId', ':user_2_id')
+                ),
+                $query->expr()->andX(
+                    $query->expr()->eq('r.userId', ':user_2_id'),
+                    $query->expr()->eq('r.fromUserId', ':user_1_id')
+                )
+            ))->setParameter('user_1_id', $user1Id)->setParameter('user_2_id', $user2Id);
+        if (!is_null($options['object'])) {
+            $query->andWhere('r.object = :object')->setParameter('object', $options['object']);
+        }
+        if (!is_null($options['entityId'])) {
+            $query->andWhere('r.entityId = :entity_id')->setParameter('entity_id', $options['entityId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $query->andWhere('r.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+        if (!is_null($options['pageId'])) {
+            $query->andWhere('r.pageIid = :page_id')->setParameter('page_id', $options['pageId']);
+        }
+
+        return $query->getQuery()->getResult();
     }
 
     public function getRequestFor($userId, $options = array())

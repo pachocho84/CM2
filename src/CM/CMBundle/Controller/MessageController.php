@@ -56,6 +56,10 @@ class MessageController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        if ($userId == $this->getUser()->getId()) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
         if (!is_null($userId)) {
             $user = $em->getRepository('CMBundle:User')->findOneById($userId);
         

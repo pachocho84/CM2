@@ -56,7 +56,7 @@ class RelationController extends Controller
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function buttonAction(User $user = null, $userId = null, $relation = null)
+    public function buttonAction(User $user = null, $userId = null)
     {
         $em = $this->getDoctrine()->getManager();
         
@@ -72,20 +72,34 @@ class RelationController extends Controller
             throw new HttpException(403, $this->get('translator')->trans('You cannot do this 1.', array(), 'http-errors'));
         }
 
-        if (is_null($relation)) {
-            $relation = $em->getRepository('CMBundle:Relation')->findOneBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId()));
-        }
-        if (!is_null($relation)) {
-            $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getType(), $relation->getUserId(), $relation->getFromUserId());
-        } else {
-            $inverse = null;
+        $relationTypes = $em->getRepository('CMBundle:RelationType')->getTypesPerUser($userId);
+
+        $requests = $em->getRepository('CMBundle:Request')->getRequestsFor($user->getId(), $this->getUser()->getId(), array('object' => Relation::className(), 'indexBy' => 'objectId'));
+
+        if (count($requests) > 0) {
+            $relations = $em->getRepository('CMBundle:Relation')->findBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId()));
+
+            $keys = array();
+            foreach ($relations as $relation) {
+                $keys[] = $relation->getRelationTypeId();
+            }
+            $relations = array_combine($keys, $relations);
         }
 
-        $request = $em->getRepository('CMBundle:Request')->findOneBy(array('fromUserId' => $user->getId(), 'userId' => $this->getUser()->getId(), 'object' => get_class($relation)));
-        if (is_null($request)) {
-            $request = $em->getRepository('CMBundle:Request')->findOneBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId(), 'object' => get_class($relation)));
-        }
+        // if (is_null($relation)) {
+        //     $relation = $em->getRepository('CMBundle:Relation')->findOneBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId()));
+        // }
+        // if (!is_null($relation)) {
+        //     $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getType(), $relation->getUserId(), $relation->getFromUserId());
+        // } else {
+        //     $inverse = null;
+        // }
 
-        return array('user' => $user, 'relation' => $relation, 'inverse' => $inverse, 'request' => $request);
+        // $request = $em->getRepository('CMBundle:Request')->findOneBy(array('fromUserId' => $user->getId(), 'userId' => $this->getUser()->getId(), 'object' => get_class($relation)));
+        // if (is_null($request)) {
+        //     $request = $em->getRepository('CMBundle:Request')->findOneBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId(), 'object' => get_class($relation)));
+        // }
+
+        return array('user' => $user, 'relationTypes' => $relationTypes, 'requests' => $requests, 'relations' => $relations);
     }
 }

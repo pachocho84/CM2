@@ -249,15 +249,17 @@ class RequestController extends Controller
                     throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
                 }
 
-                if (count($em->getRepository('CMBundle:Relation')->findBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId()))) > 0) {
-                    throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-                }
+                // if (count($em->getRepository('CMBundle:Relation')->findBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId()))) > 0) {
+                //     throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                // }
+
+                $relationType = $em->getRepository('CMBundle:RelationType')->findOneById($request->get('type'));
 
                 $relation = new Relation;
                 $relation->setFromUser($user)
                     ->setUser($this->getUser())
                     ->setAccepted(false)
-                    ->setType(Relation::inverseType($request->get('type')));
+                    ->setRelationType($relationType);
                 $em->persist($relation);
 
                 $em->flush();
@@ -351,7 +353,7 @@ class RequestController extends Controller
                 throw new NotFoundHttpException($this->get('translator')->trans('Relation not found.', array(), 'http-errors'));
             }
 
-            $relation->setAccepted(true);
+            $relation->setAccepted(Relation::ACCEPTED_BOTH);
             $em->persist($relation);
 
             if ($choice == 'accept') {

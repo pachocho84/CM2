@@ -248,7 +248,7 @@ $(function() {
                         if (index == -1) {
                             return;
                         }
-                        $sequence.html(index + '/' + json.images.length);
+                        $sequence.html(index + ' / ' + json.images.length);
 
                         for (var i = 0; i < json.images.length; i++) {
                             var image = json.images[i];
@@ -290,7 +290,7 @@ $(function() {
                         $sidebar.html(data.sidebar);
                     });
                     if (json != null) {
-                        $sequence.html(json[i].index  + '/' + json.length);
+                        $sequence.html(json[i].index  + ' / ' + json.length);
                     }
                 },
                 onclose: function() {

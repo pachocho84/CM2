@@ -4,12 +4,21 @@
     {{ parent() }}
     <style>
     #blueimp-gallery .info {
+        text-align: center;
         position: fixed;
-        bottom: 20px;
+        bottom: 0px;
+        right: 0px;
+        width: 100%;
+        margin-right: 250px;
+        font-size: 17px;
+    }
+    #blueimp-gallery .title {
+        max-width: 40%;
+        text-overflow: ellipsis;
     }
     #blueimp-gallery .slide-content {
-        padding-left: 20px !important;
-        padding-right: 270px !important;
+        padding: 35px !important;
+        padding-right: 285px !important;
     }
     #blueimp-gallery .sidebar {
         display: none;
@@ -26,6 +35,7 @@
     #blueimp-gallery .prev,
     #blueimp-gallery .next {
         line-height: 34px !important;
+        font-size: 20px;
     }
     #blueimp-gallery .next {
         right: 265px !important;

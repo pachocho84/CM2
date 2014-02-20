@@ -79,7 +79,7 @@ class DoctrineEventsListener
             && ($object->getImg() || $object->getCoverImg() || (property_exists($publisher, 'backgroundImg') && $publisher->getBackgroundImg()))) {
             $this->imgPersistedRoutine($object, $em);
         }
-        if ($object instanceof Relation && !$object->getAccepted()) {
+        if ($object instanceof Relation && !$object->getAccepted() && $object->getRelationType()->isPublic()) {
             $this->relationPersistedRoutine($object, $em);
         }
         if ($object instanceof Multimedia && !is_null($object->getEntity())) {
@@ -107,7 +107,7 @@ class DoctrineEventsListener
                 || array_key_exists('background_img', $em->getUnitOfWork()->getEntityChangeSet($object)))) {
             $this->imgUpdatedRoutine($object, $em);
         }
-        if ($object instanceof Relation && $object->getAccepted()) {
+        if ($object instanceof Relation && $object->getAccepted() && $object->getRelationType()->isPublic()) {
             $this->relationUpdatedRoutine($object, $em);
         }
         if ($object instanceof User && !is_null($this->get('security.context')->getToken())) {
@@ -849,8 +849,8 @@ class DoctrineEventsListener
     private function relationPersistedRoutine(Relation $relation, EntityManager $em)
     {
         $inverse = new Relation;
-        $inverse->setAccepted(true)
-            ->setType($relation->getInverseType())
+        $inverse->setAccepted(Relation::ACCEPTED_UNI)
+            ->setRelationType($relation->getRelationType()->getInverseType())
             ->setFromUser($relation->getUser())
             ->setUser($relation->getFromUser());
         $em->persist($inverse);
@@ -875,7 +875,7 @@ class DoctrineEventsListener
             array($relation->getId())
         );
 
-        $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getType(), $relation->getUserId(), $relation->getFromUserId());
+        $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getRelationType(), $relation->getUserId(), $relation->getFromUserId());
 
         $post = $this->get('cm.post_center')->newPost(
             $inverse->getFromUser(),

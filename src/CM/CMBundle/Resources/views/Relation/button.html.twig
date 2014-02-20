@@ -1,15 +1,50 @@
 <div class="btn-group ajax-link-target">
+
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{ icon('Relation') }} {{ 'Request a relation'|trans }}</button>
+    <ul class="dropdown-menu">
+        <li class="dropdown-header">{{ 'Request a relation'|trans }}</li>
+        <li class="divider"></li>
+
+        {% for relationType in relationTypes if relationType.userId is null %}
+            {% if relations is not null and relationType.id in relations|keys %}
+                {% set relation = relations[relationType.id] %}
+            {% else %}
+                {% set relation = null %}
+            {% endif %}
+
+            <li>
+                <a href="{{ path('request_add', {object: 'Relation', objectId: app.user.id, userId: user.id, type: relationType.inverseTypeId}) }}" class="ajax-link">
+                    <span class="glyphicon glyphicon-{% if relation is null %}unchecked{% elseif relation.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_NO') %}transfer{% elseif relation.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_UNI') %}plus{% elseif relation.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_BOTH') %}ok{% else %}cloud{% endif %}"></span>
+                    {{ relationType|trans }}
+                </a>
+            </li>
+        {% endfor %}
+
+        {{ dump(requests)}}
+
+    </ul>
+
+</div>
+
+{#
+<div class="btn-group ajax-link-target">
     
-    {% if relation is null %}
+    {% if relations is null %}
        
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{ icon('Relation') }} {{ 'Request a relation'|trans }}</button>
         <ul class="dropdown-menu">
             <li class="dropdown-header">{{ 'Request a relation'|trans }}</li>
             <li class="divider"></li>
-            <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_STUDENT')}) }}" class="ajax-link">{{ 'student'|trans }}</a></li>
-            <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_TEACHER')}) }}" class="ajax-link">{{ 'teacher'|trans }}</a></li>
-            <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_AGENT')}) }}" class="ajax-link">{{ 'agent'|trans }}</a></li>
-            <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_CLIENT')}) }}" class="ajax-link">{{ 'client'|trans }}</a></li>
+
+            {% for relationType in relationTypes if relationType.userId is null %}
+                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': relationType.inverseTypeId}) }}" class="ajax-link">{{ relationType|trans }}</a></li>
+            {% endfor %}
+
+            <li class="divider"></li>
+
+            {% for relationType in relationTypes if relationType.userId is not null %}
+                <li><a href="{{ path('request_add', {'object': 'Relation', 'objectId': app.user.id, 'userId': user.id, 'type': relationType.inverseTypeId}) }}" class="ajax-link">{{ relationType|trans }}</a></li>
+            {% endfor %}
         </ul>
 
     {% elseif relation.accepted and inverse.accepted %}
@@ -42,3 +77,4 @@
 
     {% endif %}
 </div>
+#}

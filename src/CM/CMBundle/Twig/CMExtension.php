@@ -4,7 +4,7 @@ namespace CM\CMBundle\Twig;
 
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use CM\CMBundle\Service\Helper;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -39,19 +39,19 @@ class CMExtension extends \Twig_Extension
 
     private $options;
     
-    protected $request;
+    private $request;
     
-    /**
-     *
-     * @var \Twig_Environment
-     */
-    protected $environment;
+    private $environment;
+
+    private $controllerName;
+
+    private $actionName;
 
 
     public function __construct(
         Translator $translator,
         Router $router,
-        ContainerInterface $container,
+        RequestStack $requestStack,
         Helper $helper,
         SecurityContext $securityContext,
         UserAuthentication $userAuthentication,
@@ -61,7 +61,7 @@ class CMExtension extends \Twig_Extension
     {
         $this->translator = $translator;
         $this->router = $router;
-        $this->request = $container->get('request');
+        $this->request = $requestStack->getCurrentRequest();
         $this->helper = $helper;
         $this->securityContext = $securityContext;
         $this->userAuthentication = $userAuthentication;
@@ -159,30 +159,38 @@ class CMExtension extends \Twig_Extension
             return $this->getSimpleFormatText($text);
         }
     }
-	
-	/**
-	 * Get current controller name
-	 */
-	public function getControllerName()
-	{
-		$pattern = "#Controller\\\([a-zA-Z]*)Controller#";
-		$matches = array();
-		preg_match($pattern, $this->request->get('_controller'), $matches);
-		
-		return strtolower($matches[1]);
-	}
-	
-	/**
-	 * Get current action name 
-	 */
-	public function getActionName()
-	{
-		$pattern = "#::([a-zA-Z]*)Action#";
-		$matches = array();
-		preg_match($pattern, $this->request->get('_controller'), $matches);
-	
-		return $matches[1];
-	}
+    
+    /**
+     * Get current controller name
+     */
+    public function getControllerName()
+    {
+        if (is_null($this->controllerName)) {
+            $pattern = "/Controller\\\([a-zA-Z]*)Controller/";
+            $matches = array();
+            preg_match($pattern, $this->request->get('_controller'), $matches);
+            
+            $this->controllerName = strtolower($matches[1]);
+        }
+
+        return $this->controllerName;
+    }
+    
+    /**
+     * Get current action name 
+     */
+    public function getActionName()
+    {
+        if (is_null($this->actionName)) {
+            $pattern = "/::([a-zA-Z]*)Action/";
+            $matches = array();
+            preg_match($pattern, $this->request->get('_controller'), $matches);
+            
+            $this->actionName = strtolower($matches[1]);
+        }
+
+        return $this->actionName;
+    }
 
     public function getDateTimeFormat($lang = 'js')
     {
