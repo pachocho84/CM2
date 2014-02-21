@@ -11,14 +11,14 @@ use CM\CMBundle\Entity\RelationType;
 class RelationTypeFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
     private $relationTypes = array(
-    	array('name' => 'student', 'inverse' => 1),
-    	array('name' => 'teacher', 'inverse' => 0),
-    	array('name' => 'class mate', 'inverse' => 2),
-    	array('name' => 'colleagues', 'inverse' => 3),
-    	array('name' => 'friend', 'inverse' => 4),
-    	array('name' => 'family', 'inverse' => 5),
-    	array('name' => 'aquitance', 'inverse' => 6),
-    	array('name' => 'following', 'inverse' => 7),
+    	array('name' => 'Students', 'inverse' => 1),
+    	array('name' => 'Teachers', 'inverse' => 0),
+    	array('name' => 'Class mates', 'inverse' => 2),
+    	array('name' => 'Colleagues', 'inverse' => 3),
+    	array('name' => 'Friends', 'inverse' => 4),
+    	array('name' => 'Family', 'inverse' => 5),
+    	array('name' => 'Aquitances', 'inverse' => 6),
+    	array('name' => 'Following', 'inverse' => 7),
     );
 
     public function load(ObjectManager $manager)

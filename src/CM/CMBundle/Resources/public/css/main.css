@@ -438,8 +438,8 @@ form .panel-group .panel {
     border-bottom-color: transparent;
     background: #ffffff;
     -webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
-        -moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
-            box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
+    -moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
 }
 .box-container .box {
     margin-top: 0;
@@ -1145,4 +1145,38 @@ border-bottom: 12px solid #ffffff;
 /* Fans */
 .sidebar .box .fans {
     padding: 11px;
+}
+
+
+
+/* span checkbox */
+span.checkbox {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    min-height: 13px;
+    min-width: 13px;
+    border: 1px solid #dddddd;
+    margin: 0px;
+    padding: 0px;
+    vertical-align: text-bottom;
+}
+span.checkbox[checked="true"] {
+    -webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
+    -moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
+}
+span.checkbox[checked="true"] > span {
+    top: -4px !important;
+}
+span.checkbox[checked="true"] > span:before {
+    content: "\e013";
+}
+
+
+
+/* Relations */
+.relations-menu {
+    max-height: 250px;
+    overflow-y: auto;
 }

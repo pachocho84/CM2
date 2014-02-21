@@ -1,26 +1,72 @@
+{% macro relations(relationType, relations, requests, user) %}
+    {% if relations is not null and relationType.id in relations|keys %}
+        {% set relation = relations[relationType.id] %} {# WARNING: it's the inverse relation! #}
+        {% set request = requests[relation.id] %}
+    {% else %}
+        {% set relation = null %}
+        {% set request = null %}
+    {% endif %}
+
+    <li>
+        {% if relation is null %}
+            <a href="{{ path('request_add', {object: 'Relation', objectId: app.user.id, userId: user.id, type: relationType.id}) }}" class="ajax-link">
+                <span class="checkbox" checked="false"><span class="glyphicon"></span></span>
+                {{ relationType|trans }}
+            </a>
+        {% elseif relation.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_NO') %}
+            <a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">
+                <span class="checkbox" checked="true"><span class="glyphicon"></span></span>
+                {{ relationType|trans }} ({{ 'pending'|trans }})
+            </a>
+        {% elseif relation.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_UNI') %}
+            {{ relationType|trans }} ({{ 'pending'|trans }})
+            <a href="{{ path('request_update', {'choice': 'accept', 'id': request.id}) }}" class="ajax-link">{{ 'Accept'|trans }}</a>
+            <a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">{{ 'Refuse'|trans }}</a>
+        {% elseif relation.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_BOTH') %}
+            <a href="{{ path('request_delete', {'id': request.id}) }}" class="ajax-link">
+                <span class="checkbox" checked="true"><span class="glyphicon"></span></span>
+                {{ relationType|trans }}
+            </a>
+        {% endif %}
+    </li>
+{% endmacro %}
+
 <div class="btn-group ajax-link-target">
 
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{ icon('Relation') }} {{ 'Request a relation'|trans }}</button>
-    <ul class="dropdown-menu">
-        <li class="dropdown-header">{{ 'Request a relation'|trans }}</li>
+    {% if relations|length == 1 and (relations|first).accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_BOTH') %}
+        {% set btnColour = 'primary' %}
+        {% set reqText = (relations|first).relationType.name %}
+    {% elseif relations|length == 1 and (relations|first).accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_UNI') %}
+        {% set btnColour = 'success' %}
+        {% set reqText = (relations|first).relationType.name %}
+    {% elseif relations|length > 1 %}
+        {% set btnColour = 'default' %}
+        {% set reqText = relations|length ~ ' connections' %}
+    {% else %}
+        {% set btnColour = 'default' %}
+        {% set reqText = 'Request a relation' %}
+    {% endif %}
+    <button type="button" class="btn btn-{{ btnColour }} dropdown-toggle" data-toggle="dropdown">{{ icon('Relation') }} {{ reqText|trans }}</button>
+    <ul class="dropdown-menu relations-menu">
+        <li class="dropdown-header">{{ 'Public network'|trans }}</li>
         <li class="divider"></li>
 
         {% for relationType in relationTypes if relationType.userId is null %}
-            {% if relations is not null and relationType.id in relations|keys %}
-                {% set relation = relations[relationType.id] %}
-            {% else %}
-                {% set relation = null %}
-            {% endif %}
+            {{ _self.relations(relationType, relations, requests, user) }}
+        {% endfor %}
+        
 
-            <li>
-                <a href="{{ path('request_add', {object: 'Relation', objectId: app.user.id, userId: user.id, type: relationType.inverseTypeId}) }}" class="ajax-link">
-                    <span class="glyphicon glyphicon-{% if relation is null %}unchecked{% elseif relation.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_NO') %}transfer{% elseif relation.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_UNI') %}plus{% elseif relation.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_BOTH') %}ok{% else %}cloud{% endif %}"></span>
-                    {{ relationType|trans }}
-                </a>
-            </li>
+        <li class="divider"></li>
+        <li class="dropdown-header">{{ 'Private network'|trans }}</li>
+        <li class="divider"></li>
+
+        {% for relationType in relationTypes if relationType.userId is not null %}
+            {{ _self.relations(relationType, relations, requests, user) }}
         {% endfor %}
 
-        {{ dump(requests)}}
+        <li class="dropdown-footer">
+            <input type="text" placeholder="add a new private relation"></input>
+        </li>
 
     </ul>
 

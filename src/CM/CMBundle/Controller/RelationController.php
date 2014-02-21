@@ -77,7 +77,7 @@ class RelationController extends Controller
         $requests = $em->getRepository('CMBundle:Request')->getRequestsFor($user->getId(), $this->getUser()->getId(), array('object' => Relation::className(), 'indexBy' => 'objectId'));
 
         if (count($requests) > 0) {
-            $relations = $em->getRepository('CMBundle:Relation')->findBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId()));
+            $relations = $em->getRepository('CMBundle:Relation')->findBy(array('userId' => $this->getUser()->getId(), 'fromUserId' => $user->getId()));
 
             $keys = array();
             foreach ($relations as $relation) {
