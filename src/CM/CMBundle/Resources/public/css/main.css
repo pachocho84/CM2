@@ -1119,7 +1119,7 @@ table.events .popover {
   display: inline-block;
   border-right: 12px solid transparent;
   border-bottom: 12px solid #e8e8e8;
-border-bottom: 12px solid #ffffff;
+  border-bottom: 12px solid #ffffff;
   border-left: 12px solid transparent;
   content: '';
 }  
@@ -1157,9 +1157,12 @@ span.checkbox {
     min-height: 13px;
     min-width: 13px;
     border: 1px solid #dddddd;
-    margin: 0px;
+    margin: 0 5px 0 0;
     padding: 0px;
     vertical-align: text-bottom;
+    -webkit-border-radius: 1px;
+       -moz-border-radius: 1px;
+            border-radius: 1px;
 }
 span.checkbox[checked="true"] {
     -webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
@@ -1176,7 +1179,19 @@ span.checkbox[checked="true"] > span:before {
 
 
 /* Relations */
-.relations-menu {
-    max-height: 250px;
+.relations-menu .relation-menu-body {
+	min-width: 200px;
+    max-height: 175px;
     overflow-y: auto;
+}
+.relations-menu li {
+	padding: 0 10px;
+}
+.relations-menu li a {
+	display: block;
+	clear: both;
+	font-weight: normal;
+	line-height: 1.428571429;
+	color: #333;
+	white-space: nowrap;
 }
