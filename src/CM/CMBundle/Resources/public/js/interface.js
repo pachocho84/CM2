@@ -142,12 +142,19 @@ $(function() {
 
 
 
-    // span checkbox
-    $('body').on('click', 'a', function(event) {
-        if ($(event.currentTarget).children('span.checkbox').length != 1) {
-            return;
-        }
+    // Relations
+    $('body').on('click', '.relations-menu .dropdown-menu', function(event) {
+        console.log($(this), event, $(event.currentTarget));
+        event.stopPropagation();
+    });
 
-        console.log("OK");
+    $('body').on('submit', '.relations-menu form', function(event) {
+        event.preventDefault();
+        $(event.currentTarget).ajaxSubmit({
+            dataType: 'json',
+            success: function(data, statusText, xhr, form) {
+                console.log(data);
+            }
+        });
     });
 });

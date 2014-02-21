@@ -12,6 +12,27 @@ use Doctrine\ORM\EntityRepository as BaseRepository;
  */
 class RelationRepository extends BaseRepository
 {
+    static protected function getOptions(array $options = array())
+    {
+        return array_merge(array(
+            'indexBy' => null
+        ), $options);
+    }
+    
+    public function getRelations($fields = array(), $options = array())
+    {
+        $options = self::getOptions($options);
+
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('r')
+            ->from($this->_entityName, 'r', is_null($options['indexBy']) ? null : 'r.'.$options['indexBy']);
+        foreach ($fields as $field => $value) {
+            $query->andWhere('r.'.$field.' = :field_'.$field)
+                ->setParameter('field_'.$field, $value);
+        }
+        return $query->getQuery()->getResult();
+    }
+
     public function getUserRelations($userId)
     {
         return $this->createQueryBuilder('r')
@@ -28,7 +49,7 @@ class RelationRepository extends BaseRepository
     {
         return $this->createQueryBuilder('r')
             ->select('r, t')
-            ->leftJoin('r.relationType', 't', 'with', 't.id = relation_type_id')->setParameter('relation_type_id', $relationType->getInverseTypeId())
+            ->leftJoin('r.relationType', 't', 'with', 't.id = :relation_type_id')->setParameter('relation_type_id', $relationType->getInverseTypeId())
             ->andWhere('r.fromUserId = :from_user_id')->setParameter('from_user_id', $userId)
             ->andWhere('r.userId = :user_id')->setParameter('user_id', $fromUserId)
             ->getQuery()->getSingleResult();

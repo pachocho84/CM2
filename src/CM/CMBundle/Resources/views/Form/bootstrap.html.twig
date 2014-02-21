@@ -228,8 +228,12 @@
 {% endspaceless %}
 {% endblock  %}
 
-{% block _cm_cmbundle_comment_comment_widget1 %}
+{% block _cm_cmbundle_relationtype_name_widget %}
 {% spaceless %}
+    {% set attr = {class: 'input-sm form-control'} %}
+    <div class="col-xs-9">
+        <input autocomplete="off" type="text" {{ block('widget_attributes') }} />
+    </div>
 {% endspaceless %}
 {% endblock  %}
 

@@ -17,6 +17,8 @@ use JMS\SecurityExtraBundle\Annotation as JMS;
 use Symfony\Component\Process\Exception\RuntimeException;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\Relation;
+use CM\CMBundle\Entity\RelationType;
+use CM\CMBundle\Form\RelationTypeType;
 
 class RelationController extends Controller
 {
@@ -56,7 +58,7 @@ class RelationController extends Controller
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function buttonAction(User $user = null, $userId = null)
+    public function buttonAction(Request $request, User $user = null, $userId = null)
     {
         $em = $this->getDoctrine()->getManager();
         
@@ -69,18 +71,20 @@ class RelationController extends Controller
         }
 
         if ($user->getId() == $this->getUser()->getId()) {
-            throw new HttpException(403, $this->get('translator')->trans('You cannot do this 1.', array(), 'http-errors'));
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
         }
 
-        $relationTypes = $em->getRepository('CMBundle:RelationType')->getTypesPerUser($userId);
+        $relationTypes = $em->getRepository('CMBundle:RelationType')->getTypesPerUser($this->getUser()->getId());
 
         $requests = $em->getRepository('CMBundle:Request')->getRequestsFor($user->getId(), $this->getUser()->getId(), array('object' => Relation::className(), 'indexBy' => 'objectId'));
 
         if (count($requests) > 0) {
-            $relations = $em->getRepository('CMBundle:Relation')->findBy(array('userId' => $this->getUser()->getId(), 'fromUserId' => $user->getId()));
-            
-            foreach ($requests as $key => &$request) {
-                $requests[$request->getInverseId()] = $request;
+            $relations = $em->getRepository('CMBundle:Relation')->getRelations(array('userId' => $this->getUser()->getId(), 'fromUserId' => $user->getId()), array('indexBy' => 'inverseId'));
+
+            foreach ($requests as $key => &$req) {
+                if (in_array($key, array_keys($relations))) {
+                    $requests[$relations[$key]->getId()] = $req;
+                }
             }
 
             $keys = array();
@@ -90,20 +94,67 @@ class RelationController extends Controller
             $relations = array_combine($keys, $relations);
         }
 
-        // if (is_null($relation)) {
-        //     $relation = $em->getRepository('CMBundle:Relation')->findOneBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId()));
-        // }
-        // if (!is_null($relation)) {
-        //     $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getType(), $relation->getUserId(), $relation->getFromUserId());
-        // } else {
-        //     $inverse = null;
-        // }
+        $form = $this->createForm(new RelationTypeType, null, array(
+            'action' => $this->generateUrl('relation_add_private_network')
+        ))->add('create', 'submit', array('attr' => array('class' => 'col-sm-3')))->createView();
 
-        // $request = $em->getRepository('CMBundle:Request')->findOneBy(array('fromUserId' => $user->getId(), 'userId' => $this->getUser()->getId(), 'object' => get_class($relation)));
-        // if (is_null($request)) {
-        //     $request = $em->getRepository('CMBundle:Request')->findOneBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId(), 'object' => get_class($relation)));
-        // }
+        return array('user' => $user, 'relationTypes' => $relationTypes, 'requests' => $requests, 'relations' => $relations, 'form' => $form);
+    }
 
-        return array('user' => $user, 'relationTypes' => $relationTypes, 'requests' => $requests, 'relations' => $relations);
+    /**
+     * @Route("relations/addPrivateNetwork", name="relation_add_private_network")
+     * @JMS\Secure(roles="ROLE_USER")
+     */
+    public function addPrivateNetworkAction(Request $request)
+    {
+        $relationType = new RelationType;
+        $relationType->setUser($this->getUser());
+
+        $form = $this->createForm(new RelationTypeType, $relationType);
+        
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            
+            if (!is_null($em->getRepository('CMBundle:RelationType')->findOneBy(array('userId' => $this->getUser()->getId(), 'name' => $request->get('cm_cmbundle_relationtype')['name'])))) {
+                throw new HttpException(403, $this->get('translator')->trans('Relation type already added.', array(), 'http-errors'));
+            }
+            
+            $em->persist($relationType);
+            $em->flush();
+        }
+
+        return new Response;
+    }
+
+    /**
+     * @Route("relations/addToPrivate", name="relation_add_to_private")
+     * @JMS\Secure(roles="ROLE_USER")
+     */
+    public function addToPrivateAction(Request $request)
+    {
+        $user = $em->getRepository('CMBundle:User')->findOneById($userId);
+        
+        if (!$user) {
+            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+        }
+
+        if ($user == $this->getUser()) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $relationType = $em->getRepository('CMBundle:RelationType')->findOneById($request->get('type'));
+
+        $relation = new Relation;
+        $relation->setFromUser($this->getUser())
+            ->setUser($user)
+            ->setAccepted(false)
+            ->setRelationType($relationType);
+        $em->persist($relation);
+
+        $em->flush();
+
+        return $this->forward('CMBundle:Relation:button', array('user' => $user));
     }
 }

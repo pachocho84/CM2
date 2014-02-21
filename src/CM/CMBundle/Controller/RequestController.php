@@ -238,7 +238,7 @@ class RequestController extends Controller
 
                 $response = $this->renderView('CMBundle:PageUser:requestAdd.html.twig', array('page' => $request->getPage(), 'request' => $request));
                 break;
-            case 'Relation':        
+            case 'Relation':
                 $user = $em->getRepository('CMBundle:User')->findOneById($userId);
                 
                 if (!$user) {
@@ -432,7 +432,7 @@ class RequestController extends Controller
                 throw new NotFoundHttpException($this->get('translator')->trans('Relation not found.', array(), 'http-errors'));
             }
 
-            $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getRelationType(), $relation->getUserId(), $relation->getFromUserId());
+            $inverse = $relation->getInverse();
 
             $em->remove($relation);
             $em->remove($inverse);

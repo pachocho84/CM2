@@ -1180,18 +1180,18 @@ span.checkbox[checked="true"] > span:before {
 
 /* Relations */
 .relations-menu .relation-menu-body {
-	min-width: 200px;
-    max-height: 175px;
+    min-width: 200px;
+    max-height: 180px;
     overflow-y: auto;
 }
-.relations-menu li {
-	padding: 0 10px;
+.relations-menu li:not(.dropdown-footer) {
+    padding: 0 10px;
 }
 .relations-menu li a {
-	display: block;
-	clear: both;
-	font-weight: normal;
-	line-height: 1.428571429;
-	color: #333;
-	white-space: nowrap;
+    display: block;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.428571429;
+    color: #333;
+    white-space: nowrap;
 }

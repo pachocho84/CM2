@@ -877,7 +877,8 @@ class DoctrineEventsListener
             array($relation->getId())
         );
 
-        $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getRelationType(), $relation->getUserId(), $relation->getFromUserId());
+        $inverse = $relation->getInverse();
+        $inverse->setAccepted(Relation::ACCEPTED_BOTH);
 
         $post = $this->get('cm.post_center')->newPost(
             $inverse->getFromUser(),
