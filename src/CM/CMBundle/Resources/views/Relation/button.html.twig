@@ -48,14 +48,19 @@
     {% endif %}
     <button type="button" class="btn btn-{{ btnColour }} dropdown-toggle" data-toggle="dropdown">{{ icon('Relation') }} {{ reqText|trans }}</button>
     <ul class="dropdown-menu relations-menu">
-        <li class="dropdown-header">{{ 'Public network'|trans }}</li>
-        <li class="divider"></li>
-
-        {% for relationType in relationTypes if relationType.userId is null %}
-            {{ _self.relations(relationType, relations, requests, user) }}
-        {% endfor %}
-
-        {% for relationType in relationTypes if relationType.userId is not null %}
+        
+        <div class="relation-menu-body">
+	        <li class="dropdown-header">{{ 'Public networks'|trans }}</li>
+	
+	        {% for relationType in relationTypes if relationType.userId is null %}
+	            {{ _self.relations(relationType, relations, requests, user) }}
+	        {% endfor %}
+	        
+	
+	        <li class="divider"></li>
+	        <li class="dropdown-header">{{ 'Private networks'|trans }}</li>
+	
+	        {% for relationType in relationTypes if relationType.userId is not null %}
 
             {% if loop.first %}
                 <li class="divider"></li>
@@ -63,11 +68,14 @@
                 <li class="divider"></li>
             {% endif %}
 
-            {{ _self.relations(relationType, relations, requests, user) }}
-        {% endfor %}
-
+	            {{ _self.relations(relationType, relations, requests, user) }}
+	        {% endfor %}
+		</div>
+		
+        <li class="divider"></li>
+        
         <li class="dropdown-footer">
-            <input type="text" placeholder="add a new private relation"></input>
+            <input type="text" placeholder="add a new private relation" class="form-control input-sm"></input>
         </li>
 
     </ul>

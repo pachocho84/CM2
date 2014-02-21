@@ -2067,12 +2067,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/liip/LiipImagineBundle.git",
-                "reference": "8581ab75984ecca377febe60c751d0260de54304"
+                "reference": "ac6794887fb8e6bcdd1867260760834a91fd8140"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liip/LiipImagineBundle/zipball/8581ab75984ecca377febe60c751d0260de54304",
-                "reference": "8581ab75984ecca377febe60c751d0260de54304",
+                "url": "https://api.github.com/repos/liip/LiipImagineBundle/zipball/ac6794887fb8e6bcdd1867260760834a91fd8140",
+                "reference": "ac6794887fb8e6bcdd1867260760834a91fd8140",
                 "shasum": ""
             },
             "require": {
@@ -2113,7 +2113,7 @@
                 "image",
                 "imagine"
             ],
-            "time": "2014-02-11 13:04:56"
+            "time": "2014-02-20 13:36:21"
         },
         {
             "name": "monolog/monolog",
@@ -3303,12 +3303,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "25d047ded4a828f114710f3f1f3af7a4839f96c9"
+                "reference": "0c98895604902495bbc6107c62d9d8574b755193"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/25d047ded4a828f114710f3f1f3af7a4839f96c9",
-                "reference": "25d047ded4a828f114710f3f1f3af7a4839f96c9",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/0c98895604902495bbc6107c62d9d8574b755193",
+                "reference": "0c98895604902495bbc6107c62d9d8574b755193",
                 "shasum": ""
             },
             "type": "library",
@@ -3337,7 +3337,7 @@
                 "bootstrap",
                 "css"
             ],
-            "time": "2014-02-18 11:21:05"
+            "time": "2014-02-19 20:41:46"
         },
         {
             "name": "twig/extensions",
