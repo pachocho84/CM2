@@ -34,10 +34,10 @@
 <div class="btn-group ajax-link-target">
 
     {% if relations|length == 1 and (relations|first).accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_BOTH') %}
-        {% set btnColour = 'primary' %}
+        {% set btnColour = 'success' %}
         {% set reqText = (relations|first).relationType.name %}
     {% elseif relations|length == 1 and (relations|first).accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_UNI') %}
-        {% set btnColour = 'success' %}
+        {% set btnColour = 'error' %}
         {% set reqText = (relations|first).relationType.name %}
     {% elseif relations|length > 1 %}
         {% set btnColour = 'default' %}
@@ -54,13 +54,15 @@
         {% for relationType in relationTypes if relationType.userId is null %}
             {{ _self.relations(relationType, relations, requests, user) }}
         {% endfor %}
-        
-
-        <li class="divider"></li>
-        <li class="dropdown-header">{{ 'Private network'|trans }}</li>
-        <li class="divider"></li>
 
         {% for relationType in relationTypes if relationType.userId is not null %}
+
+            {% if loop.first %}
+                <li class="divider"></li>
+                <li class="dropdown-header">{{ 'Private network'|trans }}</li>
+                <li class="divider"></li>
+            {% endif %}
+
             {{ _self.relations(relationType, relations, requests, user) }}
         {% endfor %}
 

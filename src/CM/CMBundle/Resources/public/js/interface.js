@@ -139,5 +139,15 @@ $(function() {
         videoId = $(event.currentTarget).attr('video-link');
         $(event.currentTarget).replaceWith('<iframe width="100%" height="450px" src="//www.youtube.com/embed/' + videoId + '?autoplay=1" frameborder="0" allowfullscreen></iframe>');
     });
-    
+
+
+
+    // span checkbox
+    $('body').on('click', 'a', function(event) {
+        if ($(event.currentTarget).children('span.checkbox').length != 1) {
+            return;
+        }
+
+        console.log("OK");
+    });
 });

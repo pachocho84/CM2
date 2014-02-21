@@ -3,9 +3,16 @@
 {% else %}
     {% for request in requests %}
         <li class="media object">
-            {{ show_img_box(request.fromUser.img|imagine_filter('small'), {'width': 50, 'height': 50, 'offset': request.fromUser.imgOffset,  'link': path('user_show', {'slug': request.fromUser.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+            {% if request.entity is not null %}
+                {{ show_img_box(request.entity.image.img|imagine_filter('small'), {width: 50, offset: request.entity.image.imgOffset, link: request.entity.image.id is not null ? path('image_show', {id: request.entity.image.id}) : null, box_attributes: {class: 'pull-left'}}) }}
+            {% else %}
+                {{ show_img_box(request.fromUser.img|imagine_filter('small'), {width: 50, offset: request.fromUser.imgOffset, link: path('user_show', {slug: request.fromUser.slug}), default: 'user', box_attributes: {class: 'pull-left'}}) }}
+            {% endif %}
+
             <div class="media-body ajax-link-target">
-                {{ request_tag(request)|raw }}
+
+                {{ request_tag(request) }}
+                
                 <div class="pull-right">
                     <a href="{{ path('request_delete', {'id': request.id}) }}" class="btn btn-mini btn-sm ajax-link" data-loading-text="{{ 'Loading'|trans }}">{{ icon('Remove')|raw }} {{ 'Cancel'|trans }}</a>
                 </div>

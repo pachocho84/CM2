@@ -32,7 +32,7 @@ class RelationType
      * @var integer
      *
      * @ORM\OneToOne(targetEntity="RelationType")
-     * @ORM\JoinColumn(name="inverse_type", referencedColumnName="id", onDelete="set null", nullable=true)
+     * @ORM\JoinColumn(name="inverse_type", referencedColumnName="id", onDelete="SET NULL", nullable=true)
      */
     private $inverseType;
 

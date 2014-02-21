@@ -855,6 +855,8 @@ class DoctrineEventsListener
             ->setUser($relation->getFromUser());
         $em->persist($inverse);
 
+        $relation->setInverse($inverse, true);
+
         $this->flushNeeded = true;
 
         $this->get('cm.request_center')->newRequest(

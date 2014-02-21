@@ -78,6 +78,10 @@ class RelationController extends Controller
 
         if (count($requests) > 0) {
             $relations = $em->getRepository('CMBundle:Relation')->findBy(array('userId' => $this->getUser()->getId(), 'fromUserId' => $user->getId()));
+            
+            foreach ($requests as $key => &$request) {
+                $requests[$request->getInverseId()] = $request;
+            }
 
             $keys = array();
             foreach ($relations as $relation) {

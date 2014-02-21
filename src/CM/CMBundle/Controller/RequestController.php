@@ -432,7 +432,7 @@ class RequestController extends Controller
                 throw new NotFoundHttpException($this->get('translator')->trans('Relation not found.', array(), 'http-errors'));
             }
 
-            $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getType(), $relation->getUserId(), $relation->getFromUserId());
+            $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getRelationType(), $relation->getUserId(), $relation->getFromUserId());
 
             $em->remove($relation);
             $em->remove($inverse);

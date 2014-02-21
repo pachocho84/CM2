@@ -952,9 +952,9 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-pencil"></span>';
             case 'Alert':
                 return '<span class="glyphicon glyphicon-exclamation-sign"></span>';
-            case 'Globe':
             case 'Message':
                 return '<span class="glyphicon glyphicon-envelope"></span>';
+            case 'Globe':
             case 'Notification':
                 return '<span class="glyphicon glyphicon-globe"></span>';
             case 'Request':
