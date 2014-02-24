@@ -148,13 +148,13 @@ $(function() {
         event.stopPropagation();
     });
 
-    $('body').on('submit', '.relations-menu form', function(event) {
-        event.preventDefault();
-        $(event.currentTarget).ajaxSubmit({
-            dataType: 'json',
-            success: function(data, statusText, xhr, form) {
-                console.log(data);
-            }
-        });
-    });
+    // $('body').on('submit', '.relations-menu form', function(event) {
+    //     event.preventDefault();
+    //     $(event.currentTarget).ajaxSubmit({
+    //         dataType: 'json',
+    //         success: function(data, statusText, xhr, form) {
+    //             console.log(data);
+    //         }
+    //     });
+    // });
 });

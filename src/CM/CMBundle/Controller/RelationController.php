@@ -79,20 +79,10 @@ class RelationController extends Controller
         $requests = $em->getRepository('CMBundle:Request')->getRequestsFor($user->getId(), $this->getUser()->getId(), array('object' => Relation::className(), 'indexBy' => 'objectId'));
 
         if (count($requests) > 0) {
-            $relations = $em->getRepository('CMBundle:Relation')->getRelations(array('userId' => $this->getUser()->getId(), 'fromUserId' => $user->getId()), array('indexBy' => 'inverseId'));
-
-            foreach ($requests as $key => &$req) {
-                if (in_array($key, array_keys($relations))) {
-                    $requests[$relations[$key]->getId()] = $req;
-                }
-            }
-
-            $keys = array();
-            foreach ($relations as $relation) {
-                $keys[] = $relation->getRelationTypeId();
-            }
-            $relations = array_combine($keys, $relations);
+            $relations = $em->getRepository('CMBundle:Relation')->getRelations($user->getId(), $this->getUser()->getId(), array('indexBy' => 'relationTypeId'));
         }
+
+        // var_dump(array_keys($requests), $relations);die;
 
         $form = $this->createForm(new RelationTypeType, null, array(
             'action' => $this->generateUrl('relation_add_private_network')

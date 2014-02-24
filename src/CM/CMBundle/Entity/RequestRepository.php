@@ -17,6 +17,7 @@ class RequestRepository extends BaseRepository
         return array_merge(array(
             'paginate'      => true,
             'limit'         => 25,
+            'userId' => null,
             'fromUserId' => null,
             'exclude' => false,
             'entityId' => null,

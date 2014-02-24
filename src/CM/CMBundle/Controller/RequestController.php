@@ -258,7 +258,7 @@ class RequestController extends Controller
                 $relation = new Relation;
                 $relation->setFromUser($user)
                     ->setUser($this->getUser())
-                    ->setAccepted(false)
+                    ->setAccepted(Relation::ACCEPTED_NO)
                     ->setRelationType($relationType);
                 $em->persist($relation);
 
@@ -272,13 +272,18 @@ class RequestController extends Controller
 
     /**
      * @Route("/requestUpdate/{id}/{choice}", name="request_update", requirements={"id"="\d+", "choice"="accept|refuse"})
+     * @Route("/requestUpdateByObject/{type}/{id}/{choice}", name="request_update_object", requirements={"id"="\d+", "choice"="accept|refuse"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function updateAction($id, $choice)
+    public function updateAction($id, $choice, $type = null)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $request = $em->getRepository('CMBundle:Request')->getRequest($id);
+        if (is_null($type)) {
+            $request = $em->getRepository('CMBundle:Request')->getRequest($id);
+        } else {
+            $request = $em->getRepository('CMBundle:Request')->findOneBy(array());
+        }
 
         if (in_array($request->getStatus(), array(\CM\CMBundle\Entity\Request::STATUS_ACCEPTED, \CM\CMBundle\Entity\Request::STATUS_REFUSED))) {
             throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
@@ -432,7 +437,7 @@ class RequestController extends Controller
                 throw new NotFoundHttpException($this->get('translator')->trans('Relation not found.', array(), 'http-errors'));
             }
 
-            $inverse = $relation->getInverse();
+            $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getType(), $relation->getUserId(), $relation->getFromUserId());
 
             $em->remove($relation);
             $em->remove($inverse);

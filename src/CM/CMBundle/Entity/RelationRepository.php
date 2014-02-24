@@ -19,17 +19,25 @@ class RelationRepository extends BaseRepository
         ), $options);
     }
     
-    public function getRelations($fields = array(), $options = array())
+    public function getRelations($user1Id, $user2Id, $options = array())
     {
+        $options = self::getOptions($options);
+
         $options = self::getOptions($options);
 
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('r')
             ->from($this->_entityName, 'r', is_null($options['indexBy']) ? null : 'r.'.$options['indexBy']);
-        foreach ($fields as $field => $value) {
-            $query->andWhere('r.'.$field.' = :field_'.$field)
-                ->setParameter('field_'.$field, $value);
-        }
+        $query->andWhere($query->expr()->orX(
+                $query->expr()->andX(
+                    $query->expr()->eq('r.userId', ':user_1_id'),
+                    $query->expr()->eq('r.fromUserId', ':user_2_id')
+                ),
+                $query->expr()->andX(
+                    $query->expr()->eq('r.userId', ':user_2_id'),
+                    $query->expr()->eq('r.fromUserId', ':user_1_id')
+                )
+            ))->setParameter('user_1_id', $user1Id)->setParameter('user_2_id', $user2Id);
         return $query->getQuery()->getResult();
     }
 

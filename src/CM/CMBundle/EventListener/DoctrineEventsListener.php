@@ -855,8 +855,6 @@ class DoctrineEventsListener
             ->setUser($relation->getFromUser());
         $em->persist($inverse);
 
-        $relation->setInverse($inverse, true);
-
         $this->flushNeeded = true;
 
         $this->get('cm.request_center')->newRequest(
@@ -877,7 +875,7 @@ class DoctrineEventsListener
             array($relation->getId())
         );
 
-        $inverse = $relation->getInverse();
+        $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getType(), $relation->getUserId(), $relation->getFromUserId());
         $inverse->setAccepted(Relation::ACCEPTED_BOTH);
 
         $post = $this->get('cm.post_center')->newPost(

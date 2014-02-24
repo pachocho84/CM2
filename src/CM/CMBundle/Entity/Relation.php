@@ -29,21 +29,6 @@ class Relation
     private $id;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="inverse", type="integer", nullable=false)
-     */
-    private $inverseId;
-
-    /**
-     * @var integer
-     *
-     * @ORM\OneToOne(targetEntity="Relation")
-     * @ORM\JoinColumn(name="inverse", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     */
-    private $inverse;
-
-    /**
      * @ORM\Column(name="relation_type", type="integer")
      **/
     private $relationTypeId;
@@ -59,7 +44,7 @@ class Relation
      *
      * @ORM\Column(name="accepted", type="smallint", nullable=false)
      */
-    private $accepted = ACCEPTED_NO;
+    private $accepted;
 
     /**
      * @ORM\Column(name="user_id", type="integer")
@@ -101,45 +86,6 @@ class Relation
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get 
-     *
-     * @return integer 
-     */
-    public function getInverseId()
-    {
-        return $this->inverseId;
-    }
-
-    /**
-     * Set 
-     *
-     * @param integer $
-     * @return Inverse
-     */
-    public function setInverse(Relation $inverse, $add = false)
-    {
-        $this->inverse = $inverse;
-        if (!is_null($inverse)) {
-            $this->inverseId = $inverse->getId();
-        }
-        if ($add) {
-            $inverse->setInverse($this);
-        }
-    
-        return $this;
-    }
-
-    /**
-     * Get 
-     *
-     * @return integer 
-     */
-    public function getInverse()
-    {
-        return $this->inverse;
     }
 
     /**
