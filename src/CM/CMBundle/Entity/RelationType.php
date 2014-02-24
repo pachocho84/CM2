@@ -3,6 +3,7 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Relation
@@ -42,17 +43,16 @@ class RelationType
      * @ORM\Column(name="name", type="string", length=50)
      */
     private $name;
-
+     
     /**
-     * @ORM\Column(name="user_id", type="integer", nullable=true)
-     **/
-    private $userId;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="relationsIncoming")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     **/
-    private $user;
+     * @ORM\OneToMany(targetEntity="Relation", mappedBy="relationType")
+     */
+    private $relations;
+    
+    public function __construct()
+    {
+        $this->relations = new ArrayCollection();
+    }
 
     public function __toString()
     {
@@ -120,38 +120,38 @@ class RelationType
     }
 
     /**
-     * Get user
+     * Add relations
      *
-     * @return User 
+     * @param \CM\CMBundle\Relation\EventDate $eventDates
+     * @return Event
      */
-    public function getUserId()
+    public function addRelation(Relation $relation)
     {
-        return $this->userId;
-    }
-
-    /**
-     * Set user
-     *
-     * @param User $user
-     * @return Request
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-        if (!is_null($user)) {
-            $this->userId = $user->getId();
+        if (!$this->relations->contains($relation)) {
+            $this->relations[] = $relation;
+            $relation->setRelationType($this);
         }
     
         return $this;
     }
 
     /**
-     * Get user
+     * Remove relations
      *
-     * @return User 
+     * @param \CM\CMBundle\Relation\EventDate $eventDates
      */
-    public function getUser()
+    public function removeRelation(Relation $relation)
     {
-        return $this->user;
+        $this->relations->removeElement($relation);
+    }
+
+    /**
+     * Get relations
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRelations()
+    {
+        return $this->relations;
     }
 }

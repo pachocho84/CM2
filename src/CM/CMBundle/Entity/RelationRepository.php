@@ -23,8 +23,6 @@ class RelationRepository extends BaseRepository
     {
         $options = self::getOptions($options);
 
-        $options = self::getOptions($options);
-
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('r')
             ->from($this->_entityName, 'r', is_null($options['indexBy']) ? null : 'r.'.$options['indexBy']);
@@ -41,6 +39,17 @@ class RelationRepository extends BaseRepository
         return $query->getQuery()->getResult();
     }
 
+    public function countBy($options = array())
+    {
+        $query = $this->createQueryBuilder('r')
+            ->select('count(r.id)');
+        foreach ($options as $field => $option) {
+            $query->andWhere('r.'.$field.' = :'.$field)
+                ->setParameter($field, $option);
+        }
+        return $query->getQuery()->getSingleScalarResult();
+    }
+
     public function getUserRelations($userId)
     {
         return $this->createQueryBuilder('r')
@@ -53,21 +62,32 @@ class RelationRepository extends BaseRepository
             ->getQuery()->getResult();
     }
 
-    public function getInverse($relationType, $userId, $fromUserId)
+    public function getInverse($relationTypeId, $userId, $fromUserId)
     {
         return $this->createQueryBuilder('r')
             ->select('r, t')
-            ->leftJoin('r.relationType', 't', 'with', 't.id = :relation_type_id')->setParameter('relation_type_id', $relationType->getInverseTypeId())
+            ->leftJoin('r.relationType', 't', 'with', 't.id = :relation_type_id')->setParameter('relation_type_id', $relationTypeId)
             ->andWhere('r.fromUserId = :from_user_id')->setParameter('from_user_id', $userId)
             ->andWhere('r.userId = :user_id')->setParameter('user_id', $fromUserId)
             ->getQuery()->getSingleResult();
     }
 
-    public function remove($relationType, $userId, $fromUserId)
+    public function updateInverse($relationTypeId, $userId, $fromUserId, $accepted)
+    {
+        return $this->createQueryBuilder('r')
+            ->update('CMBundle:Relation', 'r')
+            ->andWhere('r.relationType = :relation_type_id')->setParameter('relation_type_id', $relationTypeId)
+            ->andWhere('r.fromUserId = :from_user_id')->setParameter('from_user_id', $userId)
+            ->andWhere('r.userId = :user_id')->setParameter('user_id', $fromUserId)
+            ->set('r.accepted', $accepted)
+            ->getQuery()->getSingleResult();
+    }
+
+    public function remove($relationTypeId, $userId, $fromUserId)
     {
         $this->createQueryBuilder('r')
             ->delete('CMBundle:Relation', 'r')
-            ->where('r.relationTypeId = :relation_type_id')->setParameter('relation_type_id', $relationType)
+            ->where('r.relationTypeId = :relation_type_id')->setParameter('relation_type_id', $relationTypeId)
             ->andWhere('r.fromUserId = :from_user_id')->setParameter('from_user_id', $fromUserId)
             ->andWhere('r.userId = :user_id')->setParameter('user_id', $userId)
             ->getQuery()->execute();

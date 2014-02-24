@@ -74,56 +74,64 @@ class RelationController extends Controller
             throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
         }
 
-        $relationTypes = $em->getRepository('CMBundle:RelationType')->getTypesPerUser($this->getUser()->getId());
+        $relationTypes = $em->getRepository('CMBundle:RelationType')->getTypesPerUser($this->getUser()->getId(), $user->getId());
 
-        $requests = $em->getRepository('CMBundle:Request')->getRequestsFor($user->getId(), $this->getUser()->getId(), array('object' => Relation::className(), 'indexBy' => 'objectId'));
+        $acceptedRelations = 0;
+        $pendingRelations = 0;
+        $reqText = 'Request a relation';
+        $btnColour = 'danger';
+        foreach ($relationTypes as $relationType) {
+            foreach ($relationType->getRelations() as $relation) {
+                if ($relation->getAccepted() == Relation::ACCEPTED_BOTH && $relation->getFromUserId() == $this->getUser()->getId()) {
+                    $acceptedRelations++;
+                    $reqText = $relationType->getName();
+                    $btnColour = 'success';
+                    break;
+                } else {
+                    $btnColour = 'warning';
 
-        if (count($requests) > 0) {
-            $relations = $em->getRepository('CMBundle:Relation')->getRelations($user->getId(), $this->getUser()->getId(), array('indexBy' => 'relationTypeId'));
-        }
+                    if ($relation->getUserId() == $this->getUser()->getId() && $acceptedRelations == 0 && $pendingRelations == 0) {
+                        $reqText = 'Respond to a relation request';
+                    } elseif ($relation->getFromUserId() == $this->getUser()->getId() && $acceptedRelations == 0 && $pendingRelations == 0) {
+                        $reqText = $relationType->getName();
+                    }
 
-        // var_dump(array_keys($requests), $relations);die;
-
-        $form = $this->createForm(new RelationTypeType, null, array(
-            'action' => $this->generateUrl('relation_add_private_network')
-        ))->add('create', 'submit', array('attr' => array('class' => 'col-sm-3')))->createView();
-
-        return array('user' => $user, 'relationTypes' => $relationTypes, 'requests' => $requests, 'relations' => $relations, 'form' => $form);
-    }
-
-    /**
-     * @Route("relations/addPrivateNetwork", name="relation_add_private_network")
-     * @JMS\Secure(roles="ROLE_USER")
-     */
-    public function addPrivateNetworkAction(Request $request)
-    {
-        $relationType = new RelationType;
-        $relationType->setUser($this->getUser());
-
-        $form = $this->createForm(new RelationTypeType, $relationType);
-        
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            
-            if (!is_null($em->getRepository('CMBundle:RelationType')->findOneBy(array('userId' => $this->getUser()->getId(), 'name' => $request->get('cm_cmbundle_relationtype')['name'])))) {
-                throw new HttpException(403, $this->get('translator')->trans('Relation type already added.', array(), 'http-errors'));
+                    if ($relation->getAccepted() == Relation::ACCEPTED_UNI) {
+                        $pendingRelations++;
+                    }
+                }
             }
-            
-            $em->persist($relationType);
-            $em->flush();
         }
 
-        return new Response;
+        if ($acceptedRelations > 1) {
+            $reqText = $acceptedRelations.' connections';
+        } elseif ($acceptedRelations == 0 && $pendingRelations > 1) {
+            $reqText = $pendingRelations.' connections';
+        }
+        if ($acceptedRelations != 0) {
+            $btnColour = 'success';
+        }
+
+        // foreach ($relationTypes as $relationType) {
+        //     var_dump($relationType->getName(), $relationType->getRelations()->toArray());
+        // }
+
+        return array(
+            'user' => $user,
+            'relationTypes' => $relationTypes,
+            'reqText' => $reqText,
+            'btnColour' => $btnColour
+        );
     }
 
     /**
-     * @Route("relations/addToPrivate", name="relation_add_to_private")
+     * @Route("relations/add/{relationTypeId}/{userId}", name="relation_add", requirements={"relationTypeId" = "\d+", "userId" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function addToPrivateAction(Request $request)
+    public function addAction(Request $request, $relationTypeId, $userId)
     {
+        $em = $this->getDoctrine()->getManager();
+
         $user = $em->getRepository('CMBundle:User')->findOneById($userId);
         
         if (!$user) {
@@ -134,17 +142,98 @@ class RelationController extends Controller
             throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
         }
 
-        $relationType = $em->getRepository('CMBundle:RelationType')->findOneById($request->get('type'));
+        $relationType = $em->getRepository('CMBundle:RelationType')->findOneById($relationTypeId);
+
+        if (!$relationType) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Relation type not found.', array(), 'http-errors'));
+        }
+
+        if ($em->getRepository('CMBundle:Relation')->countBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId(), 'relationTypeId' => $relationType->getId())) > 0) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
 
         $relation = new Relation;
-        $relation->setFromUser($this->getUser())
-            ->setUser($user)
-            ->setAccepted(false)
-            ->setRelationType($relationType);
+        $relation->setFromUser($user)
+            ->setUser($this->getUser())
+            ->setAccepted(Relation::ACCEPTED_NO);
+
+        $relationType->addRelation($relation);
+
         $em->persist($relation);
 
         $em->flush();
 
+        return $this->forward('CMBundle:Relation:button', array('user' => $user));
+    }
+
+    /**
+     * @Route("relations/update/{choice}/{id}", name="relation_update", requirements={"id" = "\d+", "choice"="accept|refuse"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function updateAction(Request $request, $id, $choice)
+    {
+        $em = $this->getDoctrine()->getManager();
+     
+        $relation = $em->getRepository('CMBundle:Relation')->findOneById($id);
+
+        if (!$relation) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Relation not found.', array(), 'http-errors'));
+        }
+
+        if ($relation->getUserId() == $this->getUser()->getId()) {
+            $user = $relation->getFromUser();
+        } elseif ($relation->getFromUserId() == $this->getUser()->getId()) {
+            $user = $relation->getUser();
+        } else {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        if ($choice == 'accept') {
+            $relation->setAccepted(Relation::ACCEPTED_BOTH);
+            $em->persist($relation);
+        } elseif ($choice == 'refuse') {
+            $em->remove($relation);
+            $em->getRepository('CMBundle:Relation')->remove($relation->getRelationType()->getInverseTypeId(), $relation->getFromUserId(), $relation->getUserId());
+        }
+
+        $em->flush();
+
+        return $this->forward('CMBundle:Relation:button', array('user' => $user));
+    }
+
+    /**
+     * @Route("relations/delete/{id}", name="relation_delete", requirements={"id" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+     
+        $relation = $em->getRepository('CMBundle:Relation')->findOneById($id);
+
+        if (!$relation) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Relation not found.', array(), 'http-errors'));
+        }
+
+        if ($relation->getUserId() == $this->getUser()->getId()) {
+            $user = $relation->getFromUser();
+        } elseif ($relation->getFromUserId() == $this->getUser()->getId()) {
+            $user = $relation->getUser();
+        } else {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+
+        $em->remove($relation);
+        $em->getRepository('CMBundle:Relation')->remove($relation->getRelationType()->getInverseTypeId(), $relation->getFromUserId(), $relation->getUserId());
+
+        $em->flush();
+
+        if ($user->getId() == $this->getUser()->getId()) {
+            $user = $request->getUser();
+        }
         return $this->forward('CMBundle:Relation:button', array('user' => $user));
     }
 }

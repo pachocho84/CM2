@@ -82,7 +82,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'email' => 'lucasareto@gmail.it',
             'vip' => true,
             'sex' => User::SEX_M,
-            'city_birth' => 'Padua',
+            'city_birth' => 'Milan',
             'city_current' => 'Milan',
             'birth_date' => array(1990, 5, 15),
             'birth_date_visible' => User::BIRTHDATE_VISIBLE,

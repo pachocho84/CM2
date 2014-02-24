@@ -40,14 +40,8 @@ class Helper
     public static function fullClassName($shortName)
     {
         switch ($shortName) {
-            case 'Entity':
-                return 'CM\CMBundle\Entity\Entity';
-            case 'Event':
-                return 'CM\CMBundle\Entity\Event';
-            case 'Group':
-                return 'CM\CMBundle\Entity\Group';
             default:
-                return $shortName::className();
+                return 'CM\CMBundle\Entity\\'.$shortName;
                 // throw new \Exception('add class name '.$shortName);
         }
     }

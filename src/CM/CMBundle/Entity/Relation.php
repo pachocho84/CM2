@@ -34,7 +34,7 @@ class Relation
     private $relationTypeId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RelationType")
+     * @ORM\ManyToOne(targetEntity="RelationType", inversedBy="relations")
      * @ORM\JoinColumn(name="relation_type", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $relationType;
@@ -68,10 +68,10 @@ class Relation
      **/
     private $fromUser;
 
-    public function __toString()
-    {
-        return $this->relationType();
-    }
+    // public function __toString()
+    // {
+    //     return $this->relationType();
+    // }
 
     public static function className()
     {

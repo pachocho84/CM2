@@ -143,10 +143,10 @@ $(function() {
 
 
     // Relations
-    $('body').on('click', '.relations-menu .dropdown-menu', function(event) {
-        console.log($(this), event, $(event.currentTarget));
-        event.stopPropagation();
-    });
+    // $('body').on('click', '.relations-menu .dropdown-menu', function(event) {
+    //     console.log($(this), event, $(event.currentTarget));
+    //     event.stopPropagation();
+    // });
 
     // $('body').on('submit', '.relations-menu form', function(event) {
     //     event.preventDefault();

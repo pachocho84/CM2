@@ -238,33 +238,6 @@ class RequestController extends Controller
 
                 $response = $this->renderView('CMBundle:PageUser:requestAdd.html.twig', array('page' => $request->getPage(), 'request' => $request));
                 break;
-            case 'Relation':
-                $user = $em->getRepository('CMBundle:User')->findOneById($userId);
-                
-                if (!$user) {
-                    throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
-                }
-
-                if ($user == $this->getUser()) {
-                    throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-                }
-
-                // if (count($em->getRepository('CMBundle:Relation')->findBy(array('userId' => $user->getId(), 'fromUserId' => $this->getUser()->getId()))) > 0) {
-                //     throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-                // }
-
-                $relationType = $em->getRepository('CMBundle:RelationType')->findOneById($request->get('type'));
-
-                $relation = new Relation;
-                $relation->setFromUser($user)
-                    ->setUser($this->getUser())
-                    ->setAccepted(Relation::ACCEPTED_NO)
-                    ->setRelationType($relationType);
-                $em->persist($relation);
-
-                $em->flush();
-
-                return $this->forward('CMBundle:Relation:button', array('user' => $user));
         }
 
         return new Response($response);
@@ -272,17 +245,21 @@ class RequestController extends Controller
 
     /**
      * @Route("/requestUpdate/{id}/{choice}", name="request_update", requirements={"id"="\d+", "choice"="accept|refuse"})
-     * @Route("/requestUpdateByObject/{type}/{id}/{choice}", name="request_update_object", requirements={"id"="\d+", "choice"="accept|refuse"})
+     * @Route("/requestUpdateByObject/{object}/{id}/{choice}", name="request_update_object", requirements={"id"="\d+", "choice"="accept|refuse"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function updateAction($id, $choice, $type = null)
+    public function updateAction($id, $choice, $object = null)
     {
         $em = $this->getDoctrine()->getManager();
 
-        if (is_null($type)) {
+        if (is_null($object)) {
             $request = $em->getRepository('CMBundle:Request')->getRequest($id);
         } else {
-            $request = $em->getRepository('CMBundle:Request')->findOneBy(array());
+            $request = $em->getRepository('CMBundle:Request')->findOneBy(array(
+                'userId' => $this->getUser()->getId(),
+                'object' => $this->get('cm.helper')->fullClassName(ucfirst($object)),
+                'objectId' => $id
+            ));
         }
 
         if (in_array($request->getStatus(), array(\CM\CMBundle\Entity\Request::STATUS_ACCEPTED, \CM\CMBundle\Entity\Request::STATUS_REFUSED))) {
@@ -301,12 +278,8 @@ class RequestController extends Controller
             $entityUser = $em->getRepository('CMBundle:EntityUser')->findOneBy(array('userId' => $userId, 'entityId' => $request->getEntityId()));
             if ($choice == 'accept') {
                 $entityUser->setStatus(EntityUser::STATUS_ACTIVE);
-                
-                $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_ACCEPTED);
             } elseif ($choice == 'refuse') {
                 $entityUser->setStatus($entityUser->getStatus() == EntityUser::STATUS_PENDING ? EntityUser::STATUS_REFUSED_ENTITY_USER : EntityUser::STATUS_REFUSED_ADMIN);
-
-                $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_REFUSED);
             }
             $em->persist($entityUser);
 
@@ -324,11 +297,9 @@ class RequestController extends Controller
             if ($choice == 'accept') {
                 $groupUser->setStatus(GroupUser::STATUS_ACTIVE);
                 
-                $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_ACCEPTED);
             } elseif ($choice == 'refuse') {
                 $groupUser->setStatus($groupUser->getStatus() == GroupUser::STATUS_PENDING ? GroupUser::STATUS_REFUSED_GROUP_USER : GroupUser::STATUS_REFUSED_ADMIN);
 
-                $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_REFUSED);
             }
             $em->persist($groupUser);
 
@@ -339,39 +310,15 @@ class RequestController extends Controller
             $pageUser = $em->getRepository('CMBundle:PageUser')->findOneBy(array('userId' => $userId, 'pageId' => $request->getPageId()));
             if ($choice == 'accept') {
                 $pageUser->setStatus(PageUser::STATUS_ACTIVE);
-                
-                $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_ACCEPTED);
             } elseif ($choice == 'refuse') {
                 $pageUser->setStatus($pageUser->getStatus() == PageUser::STATUS_PENDING ? PageUser::STATUS_REFUSED_PAGE_USER : PageUser::STATUS_REFUSED_ADMIN);
-
-                $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_REFUSED);
             }
             $em->persist($pageUser);
 
             $response = $this->renderView('CMBundle:PageUser:requestAdd.html.twig', array('page' => $request->getPage(), 'request' => $request));
-        } elseif ($this->get('cm.helper')->className($request->getObject()) == 'Relation') {
-            $user = $request->getFromUser();
-
-            $relation = $em->getRepository('CMBundle:Relation')->findOneById($request->getObjectId());
-
-            if (!$relation) {
-                throw new NotFoundHttpException($this->get('translator')->trans('Relation not found.', array(), 'http-errors'));
-            }
-
-            $relation->setAccepted(Relation::ACCEPTED_BOTH);
-            $em->persist($relation);
-
-            if ($choice == 'accept') {
-                $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_ACCEPTED);
-            } elseif ($choice == 'refuse') {
-                $request->setStatus(\CM\CMBundle\Entity\Request::STATUS_REFUSED);
-            }
-
-            $em->flush();
-            return $this->forward('CMBundle:Relation:button', array('user' => $user));
         }
 
-        $em->persist($request);
+        $em->remove($request);
         $em->flush();
 
         return new Response($response);
@@ -381,7 +328,7 @@ class RequestController extends Controller
      * @Route("/requestDelete/{id}", name="request_delete", requirements={"id"="\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function deleteAction($id)
+    public function deleteAction($id, $object = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -401,7 +348,6 @@ class RequestController extends Controller
             }
 
             $em->getRepository('CMBundle:EntityUser')->delete($userId, $request->getEntityId());
-            
 
             $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('entity' => $request->getEntity(), 'request' => null));
         } elseif (!is_null($request->getGroupId())) {
@@ -437,7 +383,7 @@ class RequestController extends Controller
                 throw new NotFoundHttpException($this->get('translator')->trans('Relation not found.', array(), 'http-errors'));
             }
 
-            $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getType(), $relation->getUserId(), $relation->getFromUserId());
+            $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getRelationType(), $relation->getUserId(), $relation->getFromUserId());
 
             $em->remove($relation);
             $em->remove($inverse);

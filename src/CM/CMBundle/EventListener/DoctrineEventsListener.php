@@ -79,7 +79,7 @@ class DoctrineEventsListener
             && ($object->getImg() || $object->getCoverImg() || (property_exists($publisher, 'backgroundImg') && $publisher->getBackgroundImg()))) {
             $this->imgPersistedRoutine($object, $em);
         }
-        if ($object instanceof Relation && !$object->getAccepted() && $object->getRelationType()->isPublic()) {
+        if ($object instanceof Relation && $object->getAccepted() == Relation::ACCEPTED_NO) {
             $this->relationPersistedRoutine($object, $em);
         }
         if ($object instanceof Multimedia && !is_null($object->getEntity())) {
@@ -107,7 +107,7 @@ class DoctrineEventsListener
                 || array_key_exists('background_img', $em->getUnitOfWork()->getEntityChangeSet($object)))) {
             $this->imgUpdatedRoutine($object, $em);
         }
-        if ($object instanceof Relation && $object->getAccepted() && $object->getRelationType()->isPublic()) {
+        if ($object instanceof Relation && $object->getAccepted() == Relation::ACCEPTED_BOTH) {
             $this->relationUpdatedRoutine($object, $em);
         }
         if ($object instanceof User && !is_null($this->get('security.context')->getToken())) {
@@ -875,8 +875,18 @@ class DoctrineEventsListener
             array($relation->getId())
         );
 
-        $inverse = $em->getRepository('CMBundle:Relation')->getInverse($relation->getType(), $relation->getUserId(), $relation->getFromUserId());
-        $inverse->setAccepted(Relation::ACCEPTED_BOTH);
+        $em->getRepository('CMBundle:Request')->delete($this->getUser()->getId(), array(
+            'object' => $relation->className(),
+            'objectId' => $relation->getId()
+        ));
+
+        $em->getRepository('CMBundle:Relation')->updateInverse($relation->getRelationType()->getInverseTypeId(), $relation->getUserId(), $relation->getFromUserId(), Relation::ACCEPTED_BOTH);
+
+        $inverse = $em->getRepository('CMBundle:Relation')->findOneBy(array(
+            'relationTypeId' => $relation->getRelationType()->getInverseTypeId(),
+            'userId' => $relation->getFromUserId(),
+            'fromUserId' => $relation->getUserId()
+        ));
 
         $post = $this->get('cm.post_center')->newPost(
             $inverse->getFromUser(),
@@ -889,12 +899,34 @@ class DoctrineEventsListener
 
     private function relationRemovedRoutine(Relation $relation, EntityManager $em)
     {
+        $em->getRepository('CMBundle:Request')->delete($relation->getUserId(), array(
+            'object' => $relation->className(),
+            'objectId' => $relation->getId()
+        ));
+        $em->getRepository('CMBundle:Request')->delete($relation->getFromUserId(), array(
+            'object' => $relation->className(),
+            'objectId' => $relation->getId()
+        ));
+
         try {
             $this->get('cm.post_center')->removePost(
                 $relation->getFromUser(),
                 $relation->getFromUser(),
                 get_class($relation),
                 array($relation->getId())
+            );
+
+            $inverse = $em->getRepository('CMBundle:Relation')->findOneBy(array(
+                'relationTypeId' => $relation->getRelationType()->getInverseTypeId(),
+                'userId' => $relation->getFromUserId(),
+                'fromUserId' => $relation->getUserId()
+            ));
+            
+            $this->get('cm.post_center')->removePost(
+                $inverse->getFromUser(),
+                $inverse->getFromUser(),
+                get_class($inverse),
+                array($inverse->getId())
             );
         } catch (\Exception $e) {
         }
