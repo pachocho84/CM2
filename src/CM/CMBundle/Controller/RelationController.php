@@ -172,6 +172,25 @@ class RelationController extends Controller
         $relationType->addRelation($relation);
 
         $em->persist($relation);
+        
+        $inverse = new Relation;
+        $inverse->setAccepted(Relation::ACCEPTED_UNI)
+            ->setRelationType($relation->getRelationType()->getInverseType())
+            ->setFromUser($relation->getUser())
+            ->setUser($relation->getFromUser());
+
+        $relationType->addRelation($inverse);
+        
+        $em->persist($inverse);
+
+/*
+        $this->get('cm.request_center')->newRequest(
+            $inverse->getUser(),
+            $inverse->getFromUser(),
+            get_class($inverse),
+            $relation->getId()
+        );
+*/
 
         $em->flush();
 
