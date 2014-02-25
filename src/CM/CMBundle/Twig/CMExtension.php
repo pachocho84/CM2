@@ -90,8 +90,8 @@ class CMExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-	        'get_controller_name' => new \Twig_Function_Method($this, 'getControllerName'),
-            'get_action_name' => new \Twig_Function_Method($this, 'getActionName'),
+	        'controller_name' => new \Twig_Function_Method($this, 'getControllerName'),
+            'action_name' => new \Twig_Function_Method($this, 'getActionName'),
             'datetime_format' => new \Twig_Function_Method($this, 'getDateTimeFormat', array('is_safe' => array('html'))),
             'can_manage' => new \Twig_Function_Method($this, 'getCanManage'),
             'is_admin' => new \Twig_Function_Method($this, 'getIsAdmin'),

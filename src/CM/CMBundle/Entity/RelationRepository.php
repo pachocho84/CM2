@@ -18,6 +18,29 @@ class RelationRepository extends BaseRepository
             'indexBy' => null
         ), $options);
     }
+    public function getRelationTypesBetweenUsers($user1Id, $user2Id)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('rt, r')
+            ->from('CMBundle:RelationType', 'rt')
+            ->leftJoin('rt.relations', 'r', 'with', '(r.userId = :user_1_id AND r.fromUserId = :user_2_id) OR (r.userId = :user_2_id AND r.fromUserId = :user_1_id)')
+            ->setParameter('user_1_id', $user1Id)
+            ->setParameter('user_2_id', $user2Id)
+            ->orderBy('rt.id')
+            ->getQuery()->getResult();
+    }
+
+    public function getRelationTypesPerUser($userId, $accepted, $exclude = false)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('rt, r')
+            ->from('CMBundle:RelationType', 'rt')
+            ->leftJoin('rt.relations', 'r', 'with', 'r.userId = :user_id and r.accepted '.($exclude ? '!=' : '=').' :accepted')
+            ->setParameter('user_id', $userId)
+            ->setParameter('accepted', $accepted)
+            ->orderBy('rt.id')
+            ->getQuery()->getResult();
+    }
     
     public function getRelations($user1Id, $user2Id, $options = array())
     {
@@ -50,15 +73,27 @@ class RelationRepository extends BaseRepository
         return $query->getQuery()->getSingleScalarResult();
     }
 
-    public function getUserRelations($userId)
+    // public function getUserRelations($userId)
+    // {
+    //     return $this->createQueryBuilder('r')
+    //         ->select('r, t, u, fu')
+    //         ->leftJoin('r.relationType', 't')
+    //         ->leftJoin('r.user', 'u')
+    //         ->leftJoin('r.fromUser', 'fu')
+    //         ->where('r.fromUserId = :from_user_id')->setParameter('from_user_id', $userId)
+    //         ->orWhere('r.userId = :user_id')->setParameter('user_id', $userId)
+    //         ->getQuery()->getResult();
+    // }
+
+    public function getRelationsPerUser($userId, $accepted, $exclude = false)
     {
         return $this->createQueryBuilder('r')
-            ->select('r, t, u, fu')
-            ->leftJoin('r.relationType', 't')
-            ->leftJoin('r.user', 'u')
-            ->leftJoin('r.fromUser', 'fu')
-            ->where('r.fromUserId = :from_user_id')->setParameter('from_user_id', $userId)
-            ->orWhere('r.userId = :user_id')->setParameter('user_id', $userId)
+            ->select('r, rt, u')
+            ->leftJoin('r.relationType', 'rt')
+            ->leftJoin('r.fromUser', 'u')
+            ->andWhere('r.userId = :user_id')->setParameter('user_id', $userId)
+            ->andWhere('r.accepted '.($exclude ? '!=' : '=').' :accepted')->setParameter('accepted', $accepted)
+            ->orderBy('r.createdAt', 'desc')
             ->getQuery()->getResult();
     }
 

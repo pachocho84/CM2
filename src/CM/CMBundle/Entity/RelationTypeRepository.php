@@ -12,14 +12,4 @@ use Doctrine\ORM\EntityRepository as BaseRepository;
  */
 class RelationTypeRepository extends BaseRepository
 {
-    public function getTypesPerUser($user1Id, $user2Id)
-    {
-        return $this->createQueryBuilder('rt')
-            ->select('rt, r')
-            ->leftJoin('rt.relations', 'r', 'with', '(r.userId = :user_1_id AND r.fromUserId = :user_2_id) OR (r.userId = :user_2_id AND r.fromUserId = :user_1_id)')
-            ->setParameter('user_1_id', $user1Id)
-            ->setParameter('user_2_id', $user2Id)
-            ->orderBy('rt.id')
-            ->getQuery()->getResult();
-    }
 }

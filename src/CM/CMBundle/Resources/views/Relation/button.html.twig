@@ -21,44 +21,41 @@
         {% set reqText = 'Request a relation' %}
     {% endif %}#}
     <button type="button" class="btn btn-{{ btnColour }} dropdown-toggle ajax-link-target" data-toggle="dropdown">{{ icon('Relation') }} {{ reqText|trans }}</button>
-    <ul class="dropdown-menu">
-        
-        <div class="relation-menu-body">
-	        {% for relationType in relationTypes %}
-                {% set relationFrom = null %}
-                {% set relationTo = null %}
-                {% for relation in relationType.relations %}
-                    {% if relation.fromUserId == app.user.id %}
-                        {% set relationFrom = relation %}
-                    {% else %}
-                        {% set relationTo = relation %}
-                    {% endif %}
-                {% endfor %}
+    <ul class="dropdown-menu relation-menu-body">
+        {% for relationType in relationTypes %}
+            {% set relationFrom = null %}
+            {% set relationTo = null %}
+            {% for relation in relationType.relations %}
+                {% if relation.fromUserId == app.user.id %}
+                    {% set relationFrom = relation %}
+                {% else %}
+                    {% set relationTo = relation %}
+                {% endif %}
+            {% endfor %}
 
-                <li>
-                    {% if relationFrom is null or relationTo is null %}
-                        <a href="{{ path('relation_add', {userId: user.id, relationTypeId: relationType.id}) }}" class="ajax-link">
-                            <span class="checkbox" checked="false"><span class="glyphicon"></span></span>
-                            {{ relationType|trans }}
-                        </a>
-                    {% elseif relationFrom.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_UNI') %}
-                        <a href="{{ path('relation_delete', {id: relationTo.id}) }}" class="ajax-link">
-                            <span class="checkbox" checked="true"><span class="glyphicon"></span></span>
-                            {{ relationType|trans }} ({{ 'pending'|trans }})
-                        </a>
-                    {% elseif relationFrom.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_NO') %}
+            <li>
+                {% if relationFrom is null or relationTo is null %}
+                    <a href="{{ path('relation_add', {userId: user.id, relationTypeId: relationType.id}) }}" class="ajax-link">
+                        <span class="checkbox" checked="false"><span class="glyphicon"></span></span>
+                        {{ relationType|trans }}
+                    </a>
+                {% elseif relationFrom.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_UNI') %}
+                    <a href="{{ path('relation_delete', {id: relationTo.id}) }}" class="ajax-link">
+                        <span class="checkbox" checked="true"><span class="glyphicon"></span></span>
                         {{ relationType|trans }} ({{ 'pending'|trans }})
-                        <a href="{{ path('relation_update', {choice: 'accept', id: relationFrom.id}) }}" class="ajax-link">{{ 'Accept'|trans }}</a>
-                        <a href="{{ path('relation_update', {choice: 'refuse', id: relationFrom.id}) }}" class="ajax-link">{{ 'Refuse'|trans }}</a>
-                    {% elseif relationFrom.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_BOTH') %}
-                        <a href="{{ path('relation_delete', {id: relationTo.id}) }}" class="ajax-link">
-                            <span class="checkbox" checked="true"><span class="glyphicon"></span></span>
-                            {{ relationType|trans }}
-                        </a>
-                    {% endif %}
-                </li>
-	        {% endfor %}
-		</div>
+                    </a>
+                {% elseif relationFrom.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_NO') %}
+                    {{ relationType|trans }} ({{ 'pending'|trans }})
+                    <a href="{{ path('relation_update', {choice: 'accept', id: relationFrom.id}) }}" class="ajax-link">{{ 'Accept'|trans }}</a>
+                    <a href="{{ path('relation_update', {choice: 'refuse', id: relationFrom.id}) }}" class="ajax-link">{{ 'Refuse'|trans }}</a>
+                {% elseif relationFrom.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_BOTH') %}
+                    <a href="{{ path('relation_delete', {id: relationTo.id}) }}" class="ajax-link">
+                        <span class="checkbox" checked="true"><span class="glyphicon"></span></span>
+                        {{ relationType|trans }}
+                    </a>
+                {% endif %}
+            </li>
+        {% endfor %}
     </ul>
 
 </div>

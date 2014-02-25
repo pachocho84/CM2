@@ -1184,7 +1184,7 @@ span.checkbox[checked="true"] > span:before {
     max-height: 180px;
     overflow-y: auto;
 }
-.relations-menu li:not(.dropdown-footer) {
+.relations-menu li {
     padding: 0 10px;
 }
 .relations-menu li a {
@@ -1193,5 +1193,6 @@ span.checkbox[checked="true"] > span:before {
     font-weight: normal;
     line-height: 1.428571429;
     color: #333;
+    padding: 0px !important;
     white-space: nowrap;
 }

@@ -1014,10 +1014,6 @@ class User extends BaseUser implements ParticipantInterface
      */
     public function addRequestIncoming(Request $requestIncoming)
     {
-        var_dump('asd');
-        foreach ($this->requestsIncoming->toArray() as $key => $value) {
-            var_dump($value);
-        }
         if (!$this->requestsIncoming->contains($requestIncoming)) {
             $this->requestsIncoming[] = $requestIncoming;
             return true;

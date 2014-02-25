@@ -30,13 +30,19 @@
     
     <div class="profile-menu">
         {% spaceless %}
-            <a href="{{ path('user_show', {'slug': user.slug}) }}"{% if inPage == 'profile' %} class="active"{% endif %}>{{ icon('User') }} {{ 'Profile'|trans }}</a>
-            <a href="{{ path('wall_user', {'slug': user.slug}) }}"{% if inPage == 'wall' %} class="active"{% endif %}>{{ icon('Wall') }} {{ 'Wall'|trans }}</a>
-            <a href="{{ path('user_biography', {'slug': user.slug}) }}"{% if inPage == 'biography' %} class="active"{% endif %}>{{ icon('Biography') }} {{ 'Biography'|trans }}</a>
-            <a href="{{ path('user_events', {'slug': user.slug}) }}"{% if inPage == 'event' %} class="active"{% endif %}>{{ icon('Event') }} {{ 'Events'|trans }}</a>
-            <a href="{{ path('user_images', {'slug': user.slug}) }}"{% if inPage == 'image' %} class="active"{% endif %}>{{ icon('Image') }} {{ 'Images'|trans }}</a>
-            <a href="{{ path('user_multimedia', {'slug': user.slug}) }}"{% if inPage == 'multimedia' %} class="active"{% endif %}>{{ icon('Multimedia') }} {{ 'Multimedia'|trans }}</a>
-            <a href="{{ path('user_discs', {'slug': user.slug}) }}"{% if inPage == 'disc' %} class="active"{% endif %}>{{ icon('Disc') }} {{ 'Discs'|trans }}</a>
+            <a href="{{ path('user_show', {'slug': user.slug}) }}"{% if controller_name() == 'user' %} class="active"{% endif %}>{{ icon('User') }} {{ 'Profile'|trans }}</a>
+            <a href="{{ path('wall_user', {'slug': user.slug}) }}"{% if controller_name() == 'wall' %} class="active"{% endif %}>{{ icon('Wall') }} {{ 'Wall'|trans }}</a>
+            <a href="{{ path('user_biography', {'slug': user.slug}) }}"{% if controller_name() == 'biography' %} class="active"{% endif %}>{{ icon('Biography') }} {{ 'Biography'|trans }}</a>
+            <a href="{{ path('user_events', {'slug': user.slug}) }}"{% if controller_name() == 'event' %} class="active"{% endif %}>{{ icon('Event') }} {{ 'Events'|trans }}</a>
+            <a href="{{ path('user_images', {'slug': user.slug}) }}"{% if controller_name() == 'image' %} class="active"{% endif %}>{{ icon('Image') }} {{ 'Images'|trans }}</a>
+            <a href="{{ path('user_multimedia', {'slug': user.slug}) }}"{% if controller_name() == 'multimedia' %} class="active"{% endif %}>{{ icon('Multimedia') }} {{ 'Multimedia'|trans }}</a>
+            <a href="{{ path('user_discs', {'slug': user.slug}) }}"{% if controller_name() == 'disc' %} class="active"{% endif %}>{{ icon('Disc') }} {{ 'Discs'|trans }}</a>
+            <span class="dropdown">
+                <a href="#"{% if controller_name() in ['relation'] %} class="active"{% endif %} data-toggle="dropdown">{{ 'Other'|trans }} <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li>{{ icon('Relation') }} {{ 'Relations'|trans }}</li>
+                </ul>
+            </span>
         {% endspaceless %}
     </div>
 
@@ -44,30 +50,30 @@
     <nav class="navbar navbar-default" role="navigation">
         <div class="collapse navbar-collapse navbar-ex1-collapse user-menu">
             <ul class="nav navbar-nav">
-                <li{% if inPage == 'profile' %} class="active"{% endif %}>
+                <li{% if controller_name() == 'profile' %} class="active"{% endif %}>
                     <a href="{{ path('user_show', {'slug': user.slug}) }}">{{ icon('User')|raw }} {{ 'Profile'|trans }}</a>
                 </li>
-                <li{% if inPage == 'wall' %} class="active"{% endif %}>
+                <li{% if controller_name() == 'wall' %} class="active"{% endif %}>
                     <a href="{{ path('wall_user', {'slug': user.slug}) }}">{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
                 </li>
-                <li{% if inPage == 'biography' %} class="active"{% endif %}>
+                <li{% if controller_name() == 'biography' %} class="active"{% endif %}>
                     <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
                 </li>
-                <li{% if inPage == 'event' %} class="active"{% endif %}>
+                <li{% if controller_name() == 'event' %} class="active"{% endif %}>
                     <a href="{{ path('user_events', {'slug': user.slug}) }}">{{ icon('Event')|raw }} {{ 'Events'|trans }}</a>
                 </li>
-                <li{% if inPage == 'image' %} class="active"{% endif %}>
+                <li{% if controller_name() == 'image' %} class="active"{% endif %}>
                     <a href="{{ path('user_images', {'slug': user.slug}) }}">{{ icon('Image')|raw }} {{ 'Images'|trans }}</a>
                 </li>
-                <li{% if inPage == 'multimedia' %} class="active"{% endif %}>
+                <li{% if controller_name() == 'multimedia' %} class="active"{% endif %}>
                     <a href="{{ path('user_multimedia', {'slug': user.slug}) }}">{{ icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
                 </li>
-                <li{% if inPage == 'disc' %} class="active"{% endif %}>
+                <li{% if controller_name() == 'disc' %} class="active"{% endif %}>
                     <a href="{{ path('user_discs', {'slug': user.slug}) }}">{{ icon('Disc')|raw }} {{ 'Discs'|trans }}</a>
                 </li>
             </ul>
             <ul class="nav nav navbar-nav pull-right">
-                <li class="dropdown{% if inPage == 'fan' or inPage == 'relation' or inPage == 'education' %} active{% endif %}">
+                <li class="dropdown{% if controller_name() == 'fan' or controller_name() == 'relation' or controller_name() == 'education' %} active{% endif %}">
                     <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">{{ 'More'|trans }} <b class="caret"></b></a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
                         <li>

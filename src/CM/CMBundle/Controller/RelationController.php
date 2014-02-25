@@ -24,6 +24,7 @@ class RelationController extends Controller
 {
     /**
      * @Route("/{slug}/relations", name="relation_user")
+     * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
     public function userAction(Request $request, $slug)
@@ -36,20 +37,17 @@ class RelationController extends Controller
             throw new NotFoundHttpException('User not found.');
         }
 
-        $relations = $em->getRepository('CMBundle:Relation')->getUserRelations($user->getId());
-
-        $inverses = array();
-        foreach ($relations as $key => $relation) {
-            if ($relation->getUserId() == $user->getId()) {
-                $inverses[$relation->getFromUserId()] = $relation;
-                unset($relations[$key]);
-            }
+        if ($user->getId() == $this->getUser()->getId()) {
+            $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesPerUser($user->getId(), Relation::ACCEPTED_NO, true);
+            $pendingRelations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_NO);
+        } else {
+            $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesPerUser($user->getId(), Relation::ACCEPTED_BOTH);
         }
-        
+
         return array(
             'user' => $user,
-            'relations' => $relations,
-            'inverses' => $inverses
+            'pendingRelations' => $pendingRelations,
+            'relationTypes' => $relationTypes
         );
     }
 
@@ -74,7 +72,10 @@ class RelationController extends Controller
             throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
         }
 
-        $relationTypes = $em->getRepository('CMBundle:RelationType')->getTypesPerUser($this->getUser()->getId(), $user->getId());
+        $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesBetweenUsers($this->getUser()->getId(), $user->getId());
+        // foreach ($relationTypes as $relation) {
+        //     var_dump(count($relation->getRelations()));
+        // }
 
         $acceptedRelations = 0;
         $pendingRelations = 0;
@@ -142,7 +143,7 @@ class RelationController extends Controller
             throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
         }
 
-        $relationType = $em->getRepository('CMBundle:RelationType')->findOneById($relationTypeId);
+        $relationType = $em->getRepository('CMBundle:Relation')->findOneById($relationTypeId);
 
         if (!$relationType) {
             throw new NotFoundHttpException($this->get('translator')->trans('Relation type not found.', array(), 'http-errors'));
