@@ -848,6 +848,7 @@ class DoctrineEventsListener
 
     private function relationPersistedRoutine(Relation $relation, EntityManager $em)
     {
+/*
         $inverse = new Relation;
         $inverse->setAccepted(Relation::ACCEPTED_UNI)
             ->setRelationType($relation->getRelationType()->getInverseType())
@@ -863,6 +864,7 @@ class DoctrineEventsListener
             get_class($inverse),
             $relation->getId()
         );
+*/
     }
 
     private function relationUpdatedRoutine(Relation $relation, EntityManager $em)

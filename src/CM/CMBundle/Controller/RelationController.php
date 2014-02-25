@@ -143,7 +143,7 @@ class RelationController extends Controller
             throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
         }
 
-        $relationType = $em->getRepository('CMBundle:Relation')->findOneById($relationTypeId);
+        $relationType = $em->getRepository('CMBundle:RelationType')->findOneById($relationTypeId);
 
         if (!$relationType) {
             throw new NotFoundHttpException($this->get('translator')->trans('Relation type not found.', array(), 'http-errors'));
@@ -161,6 +161,25 @@ class RelationController extends Controller
         $relationType->addRelation($relation);
 
         $em->persist($relation);
+        
+        $inverse = new Relation;
+        $inverse->setAccepted(Relation::ACCEPTED_UNI)
+            ->setRelationType($relation->getRelationType()->getInverseType())
+            ->setFromUser($relation->getUser())
+            ->setUser($relation->getFromUser());
+
+        $relationType->addRelation($inverse);
+        
+        $em->persist($inverse);
+
+/*
+        $this->get('cm.request_center')->newRequest(
+            $inverse->getUser(),
+            $inverse->getFromUser(),
+            get_class($inverse),
+            $relation->getId()
+        );
+*/
 
         $em->flush();
 
