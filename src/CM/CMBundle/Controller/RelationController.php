@@ -124,10 +124,10 @@ class RelationController extends Controller
             $btnColour = 'success';
         }
 
-        // foreach ($relationTypes as $relationType) {
-        //     var_dump($relationType->getName(), $relationType->getRelations()->toArray());
-        // }
-
+//         foreach ($relationTypes as $relationType) {
+//             var_dump($relationType->getName(), $relationType->getRelations()->toArray());
+//         }
+// die;
         return array(
             'user' => $user,
             'relationTypes' => $relationTypes,
@@ -175,11 +175,10 @@ class RelationController extends Controller
         
         $inverse = new Relation;
         $inverse->setAccepted(Relation::ACCEPTED_UNI)
-            ->setRelationType($relation->getRelationType()->getInverseType())
             ->setFromUser($relation->getUser())
             ->setUser($relation->getFromUser());
 
-        $relationType->addRelation($inverse);
+        $relationType->getInverseType()->addRelation($inverse);
         
         $em->persist($inverse);
 
