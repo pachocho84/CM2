@@ -33,13 +33,14 @@ class RelationRepository extends BaseRepository
     public function getRelationTypesPerUser($userId, $accepted, $exclude = false)
     {
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('rt, r')
+            ->select('rt')
             ->from('CMBundle:RelationType', 'rt')
             ->leftJoin('rt.relations', 'r', 'with', 'r.userId = :user_id and r.accepted '.($exclude ? '!=' : '=').' :accepted')
             ->setParameter('user_id', $userId)
             ->setParameter('accepted', $accepted)
             ->orderBy('rt.id')
-            ->getQuery()->getResult();
+            ->getQuery()
+            ->getResult();
     }
     
     public function getRelations($user1Id, $user2Id, $options = array())
@@ -94,6 +95,7 @@ class RelationRepository extends BaseRepository
             ->andWhere('r.userId = :user_id')->setParameter('user_id', $userId)
             ->andWhere('r.accepted '.($exclude ? '!=' : '=').' :accepted')->setParameter('accepted', $accepted)
             ->orderBy('r.createdAt', 'desc')
+            ->groupBy('r.relationTypeId')
             ->getQuery()->getResult();
     }
 

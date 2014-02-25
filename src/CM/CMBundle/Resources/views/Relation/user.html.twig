@@ -54,7 +54,7 @@
         </div>
     {% endif %}
 
-    {% for relationType in relationTypes if relationType.relations|length > 0 %}
+    {% for relationType in relationTypes if relationType.id in relations|keys %}
         {% if loop.index is odd %}<div class="row">{% endif %}
 
         <div class="col-md-6">
@@ -64,7 +64,7 @@
                 </div>
 
                 <div class="box-body">
-                    {% for relation in relationType.relations %}
+                    {% for relation in relations[relationType.id] %}
                         {{ include('CMBundle:Relation:object.html.twig') }}
                     {% endfor %}
                 </div>
@@ -78,8 +78,6 @@
 {% endblock %}
 
 {% block sidebar %}
-
-caccapupù
 
 {#    <div data-ajax-url="{{ path('fan_user_sidebar', {slug: user.slug}) }}"></div>
 

@@ -1,5 +1,5 @@
 <div class="protagonists_user collection-item media{% if false and not inverses[relation.userId].accepted %} object-hidden{% endif %}" protagonist_new_id="0" user_id="{{ relation.userId }}">
-    {{ show_img_box(relation.user.img|imagine_filter('small'), {width: 50, offset: relation.fromUser.imgOffset, link: path('user_show', {slug: relation.fromUser.slug}), box_attributes: {class: 'pull-left'}}) }}
+    {{ show_img_box(relation.fromUser.img|imagine_filter('small'), {width: 50, offset: relation.fromUser.imgOffset, link: path('user_show', {slug: relation.fromUser.slug}), box_attributes: {class: 'pull-left'}}) }}
     <div class="media-body">
         <h4 class="media-heading">
             <a href="{{ path('user_show', {'slug': relation.user.slug}) }}">{{ relation.fromUser|trans }}</a>
