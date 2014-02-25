@@ -857,14 +857,14 @@ class DoctrineEventsListener
         $em->persist($inverse);
 
         $this->flushNeeded = true;
+*/
 
         $this->get('cm.request_center')->newRequest(
-            $inverse->getUser(),
-            $inverse->getFromUser(),
-            get_class($inverse),
+            $relation->getFromUser(),
+            $relation->getUser(),
+            get_class($relation),
             $relation->getId()
         );
-*/
     }
 
     private function relationUpdatedRoutine(Relation $relation, EntityManager $em)
@@ -877,17 +877,17 @@ class DoctrineEventsListener
             array($relation->getId())
         );
 
-        $em->getRepository('CMBundle:Request')->delete($this->getUser()->getId(), array(
-            'object' => $relation->className(),
-            'objectId' => $relation->getId()
-        ));
-
         $em->getRepository('CMBundle:Relation')->updateInverse($relation->getRelationType()->getInverseTypeId(), $relation->getUserId(), $relation->getFromUserId(), Relation::ACCEPTED_BOTH);
 
         $inverse = $em->getRepository('CMBundle:Relation')->findOneBy(array(
             'relationTypeId' => $relation->getRelationType()->getInverseTypeId(),
             'userId' => $relation->getFromUserId(),
             'fromUserId' => $relation->getUserId()
+        ));
+
+        $em->getRepository('CMBundle:Request')->delete($this->getUser()->getId(), array(
+            'object' => $inverse->className(),
+            'objectId' => $inverse->getId()
         ));
 
         $post = $this->get('cm.post_center')->newPost(

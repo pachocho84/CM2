@@ -94,7 +94,7 @@ class RelationController extends Controller
         $btnColour = 'danger';
         foreach ($relationTypes as $relationType) {
             foreach ($relationType->getRelations() as $relation) {
-                if ($relation->getAccepted() == Relation::ACCEPTED_BOTH && $relation->getFromUserId() == $this->getUser()->getId()) {
+                if ($relation->getAccepted() == Relation::ACCEPTED_BOTH && $relation->getUserId() == $this->getUser()->getId()) {
                     $acceptedRelations++;
                     $reqText = $relationType->getName();
                     $btnColour = 'success';
@@ -181,15 +181,6 @@ class RelationController extends Controller
         $relationType->getInverseType()->addRelation($inverse);
         
         $em->persist($inverse);
-
-/*
-        $this->get('cm.request_center')->newRequest(
-            $inverse->getUser(),
-            $inverse->getFromUser(),
-            get_class($inverse),
-            $relation->getId()
-        );
-*/
 
         $em->flush();
 
