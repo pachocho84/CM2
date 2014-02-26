@@ -539,5 +539,61 @@ $(function() {
             $(elem).replaceWith(data);
             $(data).fadeIn('fast');
         });
-    });                     
+    });  
+
+
+
+    /* MODAL */
+    $('body').on('click', 'a[confirm]', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var $link = $(event.currentTarget);
+        var title = $link.attr('data-confirm-title') || 'Confirm';
+        var text = $link.attr('data-confirm-text') || 'Are you sure you want to proceed?';
+        var btn1 = $link.attr('data-confirm-btn1') || 'Confirm';
+        var btn2 = $link.attr('data-confirm-btn2') || 'Cancel';
+        var btn1Class = $link.attr('data-confirm-btn1-class') || 'primary';
+        var btn2Class = $link.attr('data-confirm-btn2-class') || 'default';
+
+        var href = $link.attr('href');
+
+        var html = '\
+            <div class="modal fade" tabindex="-1" role="dialog">\
+                <div class="modal-dialog modal-sm">\
+                    <div class="modal-content">';
+        if (title != 'false') {
+        html += '\
+                        <div class="modal-header">\
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\
+                            <h4 class="modal-title">' + title + '</h4>\
+                        </div>';
+        }
+        html += '\
+                        <div class="modal-body">\
+                            <p>' + text + '</p>\
+                        </div>\
+                        <div class="modal-footer">\
+                            <button type="button" class="btn btn-' + btn1Class + '">' + btn1 + '</button>\
+                            <button type="button" class="btn btn-' + btn2Class + '" data-dismiss="modal">' + btn2 + '</button>\
+                        </div>\
+                    </div>\
+                </div>\
+            </div>';
+
+        var $modal = $(html);
+
+        $('body').append($modal);
+
+        $modal.modal();
+
+        $modal.find('.modal-footer button:first').on('click', function(event) {
+            $link.removeAttr('confirm').trigger('click').attr('confirm', '');
+            $modal.modal('hide');
+        });
+
+        $modal.on('hidden.bs.modal', function(event) {
+            $modal.remove();
+        });
+    });
 });

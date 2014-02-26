@@ -391,6 +391,17 @@ class User extends BaseUser implements ParticipantInterface
         return $this->lastName;
     }
 
+    public function getSexArray($type)
+    {
+        if ($this->getSex() == User::SEX_M) {
+            $sex = array('he' => 'he', 'his' => 'his', 'M' => 'M');
+        } else {
+            $sex = array('he' => 'she', 'his' => 'her', 'M' => 'F');
+        }
+
+        return $sex[$type];
+    }
+
     /**
      * Set sex
      *

@@ -40,15 +40,6 @@ a:hover {
     border-bottom-color: transparent;
     background: #ffffff;
 }
-.dropdown-menu li > span {
-    display: block;
-    padding: 3px 20px;
-    clear: both;
-    font-weight: normal;
-    line-height: 20px;
-    color: #333333;
-    white-space: nowrap;
-}
 .dropdown-menu .disabled > span {
     color:#999999;
 }
@@ -84,6 +75,9 @@ a:hover {
     color: #333333;
     font-size: 14px;
     text-shadow: none;
+}
+.dropdown-menu li a.btn {
+    display: inline;
 }
 /*
 .dropdown-menu:before {
@@ -1159,10 +1153,10 @@ span.checkbox {
     border: 1px solid #dddddd;
     margin: 0 5px 0 0;
     padding: 0px;
-    vertical-align: text-bottom;
+    vertical-align: -4px;
     -webkit-border-radius: 1px;
-       -moz-border-radius: 1px;
-            border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
 }
 span.checkbox[checked="true"] {
     -webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.08), -1px 1px 10px rgba(0, 0, 0, 0.08);
@@ -1181,18 +1175,25 @@ span.checkbox[checked="true"] > span:before {
 /* Relations */
 .relations-menu .relation-menu-body {
     min-width: 200px;
-    max-height: 180px;
-    overflow-y: auto;
 }
 .relations-menu li {
     padding: 0 10px;
 }
-.relations-menu li a {
+.relations-menu li a:not(.btn) {
     display: block;
     clear: both;
     font-weight: normal;
-    line-height: 1.428571429;
+    line-height: 1.5;
     color: #333;
     padding: 0px !important;
     white-space: nowrap;
+}
+.relations-menu li>a:hover,
+.relations-menu li>a:focus {
+    background: none;
+    color: #990000;
+}
+.relations-menu li>a:hover span.checkbox,
+.relations-menu li>a:focus span.checkbox {
+    border-color: #333333;
 }

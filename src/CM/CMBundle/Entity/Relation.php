@@ -93,6 +93,18 @@ class Relation
      *
      * @return integer 
      */
+    public function setRelationTypeId($relationTypeId)
+    {
+        $this->relationTypeId = $relationTypeId;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return integer 
+     */
     public function getRelationTypeId()
     {
         return $this->relationTypeId;

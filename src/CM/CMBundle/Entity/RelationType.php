@@ -93,6 +93,9 @@ class RelationType
 
     public function getInverseType()
     {
+        if ($this->inverseTypeId == $this->id) {
+            return $this;
+        }
         return $this->inverseType;
     }
 

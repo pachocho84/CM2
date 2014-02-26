@@ -196,14 +196,12 @@ class Post
     public function getPublisherSex($type = 'he')
     {
         if (!is_null($this->getPageId()) || !is_null($this->getGroupId())) {
-            $sex = array('he' => 'it', 'his' => 'its', 'M' => '');
-        } elseif ($this->getUser()->getSex() == User::SEX_M) {
-            $sex = array('he' => 'he', 'his' => 'his', 'M' => 'M');
+            $sex = array('he' => 'it', 'his' => 'its', 'M' => '')[$type];
         } else {
-            $sex = array('he' => 'she', 'his' => 'her', 'M' => 'F');
+            $sex = $this->getUser()->getSexArray($type);
         }
 
-        return $sex[$type];
+        return $sex;
     }
 
     /**

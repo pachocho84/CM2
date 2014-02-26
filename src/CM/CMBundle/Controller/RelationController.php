@@ -94,24 +94,36 @@ class RelationController extends Controller
         $btnColour = 'danger';
         foreach ($relationTypes as $relationType) {
             foreach ($relationType->getRelations() as $relation) {
-                if ($relation->getAccepted() == Relation::ACCEPTED_BOTH && $relation->getUserId() == $this->getUser()->getId()) {
+                if ($relation->getAccepted() == Relation::ACCEPTED_NO && $acceptedRelations == 0 && $pendingRelations == 0) {
+                    $reqText = 'Respond to a relation request';
+                    $btnColour = 'warning';
+                } elseif ($relation->getAccepted() == Relation::ACCEPTED_UNI && $acceptedRelations == 0 && $pendingRelations == 0) {
+                    $pendingRelations++;
+                    $reqText = $relationType->getName();
+                    $btnColour = 'warning';
+                } elseif ($relation->getAccepted() == Relation::ACCEPTED_BOTH) {
                     $acceptedRelations++;
                     $reqText = $relationType->getName();
                     $btnColour = 'success';
-                    break;
-                } else {
-                    $btnColour = 'warning';
-
-                    if ($relation->getUserId() == $this->getUser()->getId() && $acceptedRelations == 0 && $pendingRelations == 0) {
-                        $reqText = 'Respond to a relation request';
-                    } elseif ($relation->getFromUserId() == $this->getUser()->getId() && $acceptedRelations == 0 && $pendingRelations == 0) {
-                        $reqText = $relationType->getName();
-                    }
-
-                    if ($relation->getAccepted() == Relation::ACCEPTED_UNI) {
-                        $pendingRelations++;
-                    }
                 }
+                // if ($relation->getAccepted() == Relation::ACCEPTED_BOTH) {
+                //     $acceptedRelations++;
+                //     $reqText = $relationType->getName();
+                //     $btnColour = 'success';
+                //     break;
+                // } else {
+                //     $btnColour = 'warning';
+
+                //     if ($relation->getUserId() == $this->getUser()->getId() && $acceptedRelations == 0 && $pendingRelations == 0) {
+                //         $reqText = 'Respond to a relation request';
+                //     } elseif ($relation->getUserId() != $this->getUser()->getId() && $acceptedRelations == 0 && $pendingRelations == 0) {
+                //         $reqText = $relationType->getName();
+                //     }
+
+                //     if ($relation->getAccepted() == Relation::ACCEPTED_UNI) {
+                //         $pendingRelations++;
+                //     }
+                // }
             }
         }
 
@@ -165,22 +177,13 @@ class RelationController extends Controller
         }
 
         $relation = new Relation;
-        $relation->setFromUser($user)
-            ->setUser($this->getUser())
-            ->setAccepted(Relation::ACCEPTED_NO);
+        $relation->setUser($user)
+            ->setFromUser($this->getUser())
+            ->setAccepted(Relation::ACCEPTED_UNI);
 
         $relationType->addRelation($relation);
 
         $em->persist($relation);
-        
-        $inverse = new Relation;
-        $inverse->setAccepted(Relation::ACCEPTED_UNI)
-            ->setFromUser($relation->getUser())
-            ->setUser($relation->getFromUser());
-
-        $relationType->getInverseType()->addRelation($inverse);
-        
-        $em->persist($inverse);
 
         $em->flush();
 
@@ -202,9 +205,7 @@ class RelationController extends Controller
             throw new NotFoundHttpException($this->get('translator')->trans('Relation not found.', array(), 'http-errors'));
         }
 
-        if ($relation->getUserId() == $this->getUser()->getId()) {
-            $user = $relation->getFromUser();
-        } elseif ($relation->getFromUserId() == $this->getUser()->getId()) {
+        if ($relation->getFromUserId() == $this->getUser()->getId()) {
             $user = $relation->getUser();
         } else {
             throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
@@ -215,7 +216,7 @@ class RelationController extends Controller
             $em->persist($relation);
         } elseif ($choice == 'refuse') {
             $em->remove($relation);
-            $em->getRepository('CMBundle:Relation')->remove($relation->getRelationType()->getInverseTypeId(), $relation->getFromUserId(), $relation->getUserId());
+            $em->getRepository('CMBundle:Relation')->remove($relation->getRelationType()->getInverseTypeId(), $relation->getUserId(), $relation->getUserId());
         }
 
         $em->flush();
@@ -238,17 +239,14 @@ class RelationController extends Controller
             throw new NotFoundHttpException($this->get('translator')->trans('Relation not found.', array(), 'http-errors'));
         }
 
-        if ($relation->getUserId() == $this->getUser()->getId()) {
-            $user = $relation->getFromUser();
-        } elseif ($relation->getFromUserId() == $this->getUser()->getId()) {
+        if ($relation->getFromUserId() == $this->getUser()->getId()) {
             $user = $relation->getUser();
         } else {
             throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
         }
 
-
         $em->remove($relation);
-        $em->getRepository('CMBundle:Relation')->remove($relation->getRelationType()->getInverseTypeId(), $relation->getFromUserId(), $relation->getUserId());
+        $em->getRepository('CMBundle:Relation')->remove($relation->getRelationType()->getInverseTypeId(), $relation->getUserId(), $relation->getUserId());
 
         $em->flush();
 

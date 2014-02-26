@@ -18,14 +18,14 @@ class RelationRepository extends BaseRepository
             'indexBy' => null
         ), $options);
     }
-    public function getRelationTypesBetweenUsers($user1Id, $user2Id)
+    public function getRelationTypesBetweenUsers($userFromId, $userId)
     {
         return $this->getEntityManager()->createQueryBuilder()
             ->select('rt, r')
             ->from('CMBundle:RelationType', 'rt')
-            ->leftJoin('rt.relations', 'r', 'with', '(r.userId = :user_1_id AND r.fromUserId = :user_2_id) OR (r.userId = :user_2_id AND r.fromUserId = :user_1_id)')
-            ->setParameter('user_1_id', $user1Id)
-            ->setParameter('user_2_id', $user2Id)
+            ->leftJoin('rt.relations', 'r', 'with', 'r.userId = :user_id AND r.fromUserId = :user_from_id')
+            ->setParameter('user_from_id', $userFromId)
+            ->setParameter('user_id', $userId)
             ->orderBy('rt.id')
             ->getQuery()->getResult();
     }
@@ -109,7 +109,7 @@ class RelationRepository extends BaseRepository
             ->getQuery()->getSingleResult();
     }
 
-    public function updateInverse($relationTypeId, $userId, $fromUserId, $accepted)
+    public function update($relationTypeId, $userId, $fromUserId, $accepted)
     {
         return $this->createQueryBuilder('r')
             ->update('CMBundle:Relation', 'r')

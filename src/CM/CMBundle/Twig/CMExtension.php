@@ -106,6 +106,7 @@ class CMExtension extends \Twig_Extension
             'entity_post_text' => new \Twig_Function_Method($this, 'getEntityPostText', array('is_safe' => array('html'))),
             'icon' => new \Twig_Function_Method($this, 'getIcon', array('is_safe' => array('html'))),
             'tooltip' => new \Twig_Function_Method($this, 'getTooltip', array('is_safe' => array('html'))),
+            'modal' => new \Twig_Function_Method($this, 'getModal', array('is_safe' => array('html'))),
             'vimeoImage' => new \Twig_Function_Method($this, 'getVimeoImage', array('is_safe' => array('html'))),
             'soundcloudImage' => new \Twig_Function_Method($this, 'getSoundcloudImage', array('is_safe' => array('html'))),
         );
@@ -1014,6 +1015,27 @@ class CMExtension extends \Twig_Extension
         }
 
         return 'data-toggle="tooltip" data-placement="'.$options['placement'].'" data-container="'.$options['container'].'" data-html="'.($options['html'] ? 'true' : 'false').'" data-title="'.$what.'"';
+    }
+
+    public function getModal($options = array())
+    {
+        $options = array_merge(array(
+            'title' => 'false',
+            'text' => null,
+            'btn1' => null,
+            'btn2' => null,
+            'btn1Class' => null,
+            'btn2Class' => null,
+        ), $options);
+
+        $tag = 'confirm';
+        foreach ($options as $attr => $value) {
+            if (!is_null($value)) {
+                $tag .=' data-confirm-'.$attr.'="'.$value.'"';
+            }
+        }
+
+        return $tag;
     }
 
     public function getVimeoImage($id, $dim = 'medium')

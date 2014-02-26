@@ -79,8 +79,11 @@ class DoctrineEventsListener
             && ($object->getImg() || $object->getCoverImg() || (property_exists($publisher, 'backgroundImg') && $publisher->getBackgroundImg()))) {
             $this->imgPersistedRoutine($object, $em);
         }
+        if ($object instanceof Relation && $object->getAccepted() == Relation::ACCEPTED_UNI) {
+            $this->relationOutPersistedRoutine($object, $em);
+        }
         if ($object instanceof Relation && $object->getAccepted() == Relation::ACCEPTED_NO) {
-            $this->relationPersistedRoutine($object, $em);
+            $this->relationInPersistedRoutine($object, $em);
         }
         if ($object instanceof Multimedia && !is_null($object->getEntity())) {
             $this->entityMultimediaPersistedRoutine($object, $em);
@@ -846,19 +849,22 @@ class DoctrineEventsListener
         );
     }
 
-    private function relationPersistedRoutine(Relation $relation, EntityManager $em)
+    private function relationOutPersistedRoutine(Relation $relation, EntityManager $em)
     {
-/*
         $inverse = new Relation;
-        $inverse->setAccepted(Relation::ACCEPTED_UNI)
-            ->setRelationType($relation->getRelationType()->getInverseType())
+        $inverse->setUser($relation->getFromUser())
             ->setFromUser($relation->getUser())
-            ->setUser($relation->getFromUser());
+            ->setAccepted(Relation::ACCEPTED_NO);
+
+        $relation->getRelationType()->getInverseType()->addRelation($inverse);
+
         $em->persist($inverse);
 
         $this->flushNeeded = true;
-*/
+    }
 
+    private function relationInPersistedRoutine(Relation $relation, EntityManager $em)
+    {
         $this->get('cm.request_center')->newRequest(
             $relation->getFromUser(),
             $relation->getUser(),
@@ -870,29 +876,29 @@ class DoctrineEventsListener
     private function relationUpdatedRoutine(Relation $relation, EntityManager $em)
     {
         $post = $this->get('cm.post_center')->newPost(
-            $relation->getFromUser(),
-            $relation->getFromUser(),
+            $relation->getUser(),
+            $relation->getUser(),
             Post::TYPE_CREATION,
             get_class($relation),
             array($relation->getId())
         );
 
-        $em->getRepository('CMBundle:Relation')->updateInverse($relation->getRelationType()->getInverseTypeId(), $relation->getUserId(), $relation->getFromUserId(), Relation::ACCEPTED_BOTH);
+        $em->getRepository('CMBundle:Request')->delete($this->getUser()->getId(), array(
+            'object' => $relation->className(),
+            'objectId' => $relation->getId()
+        ));
+
+        $em->getRepository('CMBundle:Relation')->update($relation->getRelationType()->getInverseTypeId(), $relation->getUserId(), $relation->getFromUserId(), Relation::ACCEPTED_BOTH);
 
         $inverse = $em->getRepository('CMBundle:Relation')->findOneBy(array(
             'relationTypeId' => $relation->getRelationType()->getInverseTypeId(),
-            'userId' => $relation->getFromUserId(),
-            'fromUserId' => $relation->getUserId()
-        ));
-
-        $em->getRepository('CMBundle:Request')->delete($this->getUser()->getId(), array(
-            'object' => $inverse->className(),
-            'objectId' => $inverse->getId()
+            'fromUserId' => $relation->getUserId(),
+            'userId' => $relation->getFromUserId()
         ));
 
         $post = $this->get('cm.post_center')->newPost(
             $inverse->getFromUser(),
-            $inverse->getFromUser(),
+            $inverse->getUser(),
             Post::TYPE_CREATION,
             get_class($inverse),
             array($inverse->getId())
@@ -901,37 +907,37 @@ class DoctrineEventsListener
 
     private function relationRemovedRoutine(Relation $relation, EntityManager $em)
     {
-        $em->getRepository('CMBundle:Request')->delete($relation->getUserId(), array(
-            'object' => $relation->className(),
-            'objectId' => $relation->getId()
-        ));
         $em->getRepository('CMBundle:Request')->delete($relation->getFromUserId(), array(
             'object' => $relation->className(),
             'objectId' => $relation->getId()
         ));
 
-        try {
-            $this->get('cm.post_center')->removePost(
-                $relation->getFromUser(),
-                $relation->getFromUser(),
-                get_class($relation),
-                array($relation->getId())
-            );
+        $this->get('cm.post_center')->removePost(
+            $relation->getUser(),
+            $relation->getUser(),
+            get_class($relation),
+            array($relation->getId())
+        );
 
-            $inverse = $em->getRepository('CMBundle:Relation')->findOneBy(array(
-                'relationTypeId' => $relation->getRelationType()->getInverseTypeId(),
-                'userId' => $relation->getFromUserId(),
-                'fromUserId' => $relation->getUserId()
-            ));
-            
-            $this->get('cm.post_center')->removePost(
-                $inverse->getFromUser(),
-                $inverse->getFromUser(),
-                get_class($inverse),
-                array($inverse->getId())
-            );
-        } catch (\Exception $e) {
-        }
+        $inverse = $em->getRepository('CMBundle:Relation')->findOneBy(array(
+            'relationTypeId' => $relation->getRelationType()->getInverseTypeId(),
+            'fromUserId' => $relation->getUserId(),
+            'userId' => $relation->getFromUserId()
+        ));
+
+        $em->getRepository('CMBundle:Relation')->remove($inverse->getRelationTypeId(), $inverse->getUserId(), $inverse->getFromUserId());
+
+        $em->getRepository('CMBundle:Request')->delete($inverse->getFromUserId(), array(
+            'object' => $inverse->className(),
+            'objectId' => $inverse->getId()
+        ));
+        
+        $this->get('cm.post_center')->removePost(
+            $inverse->getUser(),
+            $inverse->getUser(),
+            get_class($inverse),
+            array($inverse->getId())
+        );
     }
 
     private function entityMultimediaPersistedRoutine(Multimedia $multimedia, EntityManager $em)
