@@ -28,7 +28,10 @@ class EducationController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $educations = $em->getRepository('CMBundle:Education')->findBy(array('userId' => $this->getUser()->getId()));
+        $educations = $em->getRepository('CMBundle:Education')->findBy(
+        	array('userId' => $this->getUser()->getId()),
+        	array('dateFrom' => 'desc')
+        );
 
         $education = new Education;
         $education->setUser($this->getUser());
@@ -42,7 +45,7 @@ class EducationController extends Controller
             $em->persist($education);
             $em->flush();
 
-            // return $this->render('CMBundle:Education:object.html.twig', array('education', $education));
+            return $this->render('CMBundle:Education:object.html.twig', array('education' => $education));
         }
         
         return array(
@@ -50,7 +53,7 @@ class EducationController extends Controller
             'form' => $form->createView()
         );
     }
-    
+
     /**
      * @Route("/{slug}/education", name="education_show")
      * @Template
@@ -65,7 +68,10 @@ class EducationController extends Controller
             throw new NotFoundHttpException('User not found.');
         }
 
-        $educations = $em->getRepository('CMBundle:Education')->findBy(array('userId' => $user->getId()));
+        $educations = $em->getRepository('CMBundle:Education')->findBy(
+        	array('userId' => $this->getUser()->getId()),
+        	array('dateFrom' => 'desc')
+        );
         
         return array(
         	'user' => $user,

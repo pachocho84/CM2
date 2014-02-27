@@ -534,7 +534,7 @@ $(function() {
     // $(document).on('click', '[gmap-show]', function(event) {
     //     google.maps.event.trigger($(event.currentTarget).find('[gmap-show]'), 'resize');
     // });
-    
+
     
     
     /* AJAX LOAD CONTROLLER */
@@ -552,6 +552,7 @@ $(function() {
     $('body').on('click', 'a[confirm]', function(event) {
         event.preventDefault();
         event.stopPropagation();
+        event.stopImmediatePropagation();
 
         var $link = $(event.currentTarget);
         var title = $link.attr('data-confirm-title') || 'Confirm';
@@ -593,7 +594,7 @@ $(function() {
         $modal.modal();
 
         $modal.find('.modal-footer button:first').on('click', function(event) {
-            $link.removeAttr('confirm').trigger('click').attr('confirm', '');
+            $link.removeAttr('confirm').trigger('click', $link).attr('confirm', '');
             $modal.modal('hide');
         });
 
@@ -604,6 +605,23 @@ $(function() {
 
 
 
+    /* RELATIONS */
+    $('body').on('click', '.relations-menu li a', function(event, target) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var $target = $(target || event.currentTarget);
+
+        $.get($target.attr('href'), function(data) {
+            $target.closest('.relations-menu').children('button:first').replaceWith(data.button);
+            $target.closest('div.relation-type').replaceWith(data.item);
+        });
+    });
+    $('body').on('hide.bs.dropdown', function(event) {
+        if ($(event.currentTarget).is('.modal-open')) {
+            event.preventDefault();
+        }
+    });
     $(document).on('click', '.relation-typeahead .dropdown-menu li', function (event) {
         $(event.currentTarget).closest('.relation-typeahead').attr('typeahead-callback', $(event.currentTarget).attr('typeahead-callback'));
     });

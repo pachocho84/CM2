@@ -23,7 +23,7 @@ use CM\CMBundle\Form\RelationTypeType;
 class RelationController extends Controller
 {
     /**
-     * @Route("/{slug}/relations", name="relation_user")
+     * @Route("/{slug}/relations", name="user_relation")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
@@ -84,6 +84,10 @@ class RelationController extends Controller
         }
 
         $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesBetweenUsers($this->getUser()->getId(), $user->getId());
+        // foreach ($relationTypes as $relType) {
+        //     var_dump($relType);
+        // }
+        // die;
 
         $acceptedRelations = 0;
         $pendingRelations = 0;
@@ -176,6 +180,8 @@ class RelationController extends Controller
         if (!is_null($request->get('pending'))) {
             return $this->render('CMBundle:Relation:pending.html.twig', array('user' => $user, 'relation' => $relation));
         }
+
+        return $this->buttonAction($request, $user, null, $relationType);
         return $this->forward('CMBundle:Relation:button', array('user' => $user, 'relationTypePassed' => $relationType));
     }
 
@@ -209,8 +215,8 @@ class RelationController extends Controller
 
         $em->flush();
 
-        return $this->forward('CMBundle:Relation:button', array('user' => $user, 'relationType' => $relation->getRelationType()));
-        return $this->render('CMBundle:Relation:item.html.twig', array('user' => $user, 'relationType' => $relation->getRelationType()));
+        return $this->buttonAction($request, $user, null, $relation->getRelationType());
+        return $this->forward('CMBundle:Relation:button', array('user' => $user, 'relationTypePassed' => $relation->getRelationType()));
     }
 
     /**
@@ -242,7 +248,7 @@ class RelationController extends Controller
             $user = $request->getUser();
         }
 
-        return $this->forward('CMBundle:Relation:button', array('user' => $user, 'relationType' => $relation->getRelationType()));
-        return $this->render('CMBundle:Relation:item.html.twig', array('user' => $user, 'relationType' => $relation->getRelationType()));
+        return $this->buttonAction($request, $user, null, $relation->getRelationType());
+        return $this->forward('CMBundle:Relation:button', array('user' => $user, 'relationTypePassed' => $relation->getRelationType()));
     }
 }

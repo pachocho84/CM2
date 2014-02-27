@@ -72,6 +72,15 @@
         </div>
 
         {% if loop.index is even %}</div>{% endif %}
+    {% else %}
+        <div class="box">
+            <div class="box-body">
+                {% if user != app.user %}
+                    <p>{{ '%user% has no relations yet.'|trans({'%user%': user.firstName}) }}</p>
+                    <p>{{ 'Do you want to add %him% in your relations?'|trans({'%him%': user.sexArray('him')}) }}{{ render(controller('CMBundle:Relation:button', {user: user})) }}</p>
+                {% endif %}
+            </div>
+        </div>
     {% endfor %}
 
 {% endblock %}

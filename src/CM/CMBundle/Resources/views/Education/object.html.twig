@@ -1,13 +1,22 @@
-<ul>
-    <li>{{ 'School'|trans }}: {{ education.school }}</li>
-    {% if education.course is not null %}<li>{{ 'Course'|trans }}: {{ education.course }}</li>{% endif %}
-    {% if education.teacher is not null %}<li>{{ 'Teacher'|trans }}: {{ education.teacher }}</li>{% endif %}
-    {% if education.dateFrom is not null %}<li>{{ 'From'|trans }}: {{ education.dateFrom|date('Y') }}</li>{% endif %}
-    <li>{% if education.dateFrom is not null %}{{ 'To'|trans }}: {{ education.dateFrom|date('Y') }}{% else %}{{ 'current'|trans }}{% endif %}</li>
-    {% if education.mark is not null %}<li>{{ 'Mark'|trans }}: {{ education.mark }} / {{ education.markScale }}</li>{% endif %}
-    {% if education.laude %}<li>{{ 'Laude'|trans }}: {{ education.laude }}</li>{% endif %}
-    {% if education.honour %}<li>{{ 'Honour'|trans }}: {{ education.honour }}</li>{% endif %}
-    {% if education.courseType is not null %}<li>{{ 'Course type'|trans }}: {{ education.courseType }}</li>{% endif %}
-    {% if education.degreeType is not null %}<li>{{ 'Degree type'|trans }}: {{ education.degreeType }}</li>{% endif %}
-    {% if education.description is not null %}<li>{{ 'Description'|trans }}: {{ education.description }}</li>{% endif %}
-</ul>
+<div class="box education">
+    <div class="box-heading">
+        <h3>{{ icon('Education') }} <span>{{ education.school }}</span></h3>
+    </div>
+
+    <div class="box-body">
+        <ul>
+            <li>{{ 'School'|trans }}: {{ education.school }}</li>
+            {% if education.course is not null %}<li>{{ 'Course'|trans }}: {{ education.course }}</li>{% endif %}
+            {% if education.teacher is not null %}<li>{{ 'Teacher'|trans }}: {{ education.teacher }}</li>{% endif %}
+            {% if education.dateFrom is not null %}<li>{{ 'From'|trans }}: {{ education.dateFrom|date('Y') }}</li>{% endif %}
+            <li>{% if education.dateFrom is not null %}{{ 'To'|trans }}: {{ education.dateFrom|date('Y') }}{% else %}{{ 'current'|trans }}{% endif %}</li>
+            {% if education.mark is not null %}<li>{{ 'Mark'|trans }}: {{ education.mark }} / {{ education.markScale }}</li>{% endif %}
+            {% if education.laude %}<li>{{ 'Laude'|trans }}: {{ education.laude }}</li>{% endif %}
+            {% if education.honour %}<li>{{ 'Honour'|trans }}: {{ education.honour }}</li>{% endif %}
+            {% if education.courseType is not null %}<li>{{ 'Course type'|trans }}: {{ education.courseType }}</li>{% endif %}
+            {% if education.degreeType is not null %}<li>{{ 'Degree type'|trans }}: {{ education.degreeType }}</li>{% endif %}
+            {% if education.description is not null %}<li>{{ 'Description'|trans }}: {{ education.description }}</li>{% endif %}
+        </ul>
+    </div>
+
+</div>

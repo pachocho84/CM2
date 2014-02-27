@@ -96,7 +96,6 @@ $(function() {
             val.splice(i, 1);
         }
         $(event.currentTarget).closest('.protagonist_typeahead').find('#message_recipients').val(val.join(','));
-        console.log($(event.currentTarget).closest('.protagonist_typeahead').find('#message_recipients').val());
         $(event.currentTarget).parent().remove();
     });
 
@@ -419,7 +418,6 @@ $(function() {
 
 
     /* TAGS */
-
     $('[select2]').select2();
     $('body').on('protagonist-added', '.protagonists_user', function(event) {
         $(event.currentTarget).find('[select2]').select2();

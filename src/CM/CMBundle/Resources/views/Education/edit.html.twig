@@ -9,20 +9,30 @@
 
         <div class="box-body">
             {{ form(form) }}
-
-            {% for education in educations %}
-                {{ include('CMBundle:Education:object.html.twig') }}
-            {% endfor %}
         </div>
-
     </div>
+
+
+    {% for education in educations %}
+        {{ include('CMBundle:Education:object.html.twig') }}
+    {% endfor %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript">//<![CDATA[ 
-        $(function(){   
+    <script type="text/javascript">
+        $(function(){
             /* EDUCATION */
-        });//]]>  
+            $(document).on('submit', 'form', function(event) {
+                event.preventDefault();
+
+                $(event.currentTarget).ajaxSubmit({
+                    success: function(data, statusText, xhr, form) {
+                        $('.education:first').before(data);
+                        form[0].reset();
+                    }
+                });
+            });
+        });
     </script>
 {% endblock %}
