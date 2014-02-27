@@ -21,9 +21,11 @@ use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\Notification;
+use CM\CMBundle\Entity\Education;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\BiographyType;
 use CM\CMBundle\Form\UserImageType;
+use CM\CMBundle\Form\EducationType;
 
 class UserController extends Controller
 {
@@ -239,6 +241,38 @@ class UserController extends Controller
         return array(
             'tags' => $tags,
             'availableTags' => $availableTags
+        );
+    }
+
+    /**
+     * @Route("/account/education", name="user_tags_edit")
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function educationAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $educations = $em->getRepository('CMBundle:Education')->findBy(array('userId' => $this->getUser()->getId()));
+
+        $education = new Education;
+        $education->setUser($this->getUser());
+        $form = $this->createForm(new EducationType(), $education, array(
+            'cascade_validation' => true
+        ))->add('save', 'submit');
+
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+            $em->persist($education);
+            $em->flush();
+
+            // return $this->render('CMBundle:Education:object.html.twig', array('education', $education));
+        }
+        
+        return array(
+            'educations' => $educations,
+            'form' => $form->createView()
         );
     }
 

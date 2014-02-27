@@ -187,13 +187,12 @@ class RelationController extends Controller
 
         $em->flush();
 
-        return $this->forward('CMBundle:Relation:button', array('user' => $user));
+        return $this->render('CMBundle:Relation:item.html.twig', array('user' => $user, 'relationType' => $relationType));
     }
 
     /**
      * @Route("relations/update/{choice}/{id}", name="relation_update", requirements={"id" = "\d+", "choice"="accept|refuse"})
      * @JMS\Secure(roles="ROLE_USER")
-     * @Template
      */
     public function updateAction(Request $request, $id, $choice)
     {
@@ -221,13 +220,12 @@ class RelationController extends Controller
 
         $em->flush();
 
-        return $this->forward('CMBundle:Relation:button', array('user' => $user));
+        return $this->render('CMBundle:Relation:item.html.twig', array('user' => $user, 'relationType' => $relation->getRelationType()));
     }
 
     /**
      * @Route("relations/delete/{id}", name="relation_delete", requirements={"id" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
-     * @Template
      */
     public function deleteAction(Request $request, $id)
     {
@@ -253,6 +251,7 @@ class RelationController extends Controller
         if ($user->getId() == $this->getUser()->getId()) {
             $user = $request->getUser();
         }
-        return $this->forward('CMBundle:Relation:button', array('user' => $user));
+
+        return $this->render('CMBundle:Relation:item.html.twig', array('user' => $user, 'relationType' => $relation->getRelationType()));
     }
 }
