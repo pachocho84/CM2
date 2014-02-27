@@ -125,7 +125,13 @@ $(function() {
             $(this).html('<img src="/images/loader.gif" /> ' + $(this).attr('data-loading-text'));
         }
         $.get(event.currentTarget.href, function(data, status, xhr) {
-            if (xhr.getResponseHeader('Content-Type') == 'application/json') {
+            var callback = $(event.currentTarget).attr('ajax-link-callback');
+            if (callback) {
+                callback = callback.substring(1);
+                func = callback.split('(')[0];
+                args = callback.split('(').slice(1).join('(').slice(0, -1);
+                window[func](event.currentTarget, data, args);
+            } else if (xhr.getResponseHeader('Content-Type') == 'application/json') {
                 $(event.target).closest('.ajax-link-target').replaceWith(data.main);
                 $.each(data, function(i, e) {
                     if (i != 'main') {

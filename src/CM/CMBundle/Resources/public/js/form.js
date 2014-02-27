@@ -9,7 +9,6 @@ function addRecipient(c, d, a)
 
 $(function() {
     /* PROTAGONIST */
-
     var protagonist_new_id = parseInt(1 + $('.protagonists_user:last').attr('protagonist_new_id')) + 5;
     var collection = $('.protagonist_typeahead').children('.collection-items');
     $('#protagonists_finder').typeahead({
@@ -38,8 +37,9 @@ $(function() {
             args = callback.split('(').slice(1).join('(').slice(0, -1);
             window[func](event.currentTarget, datum, args);
         } else {
-            target = callback.replace(/USER_ID/, datum.id).replace(/NEW_ID/, protagonist_new_id).replace(/ENTITY_TYPE/, $('#protagonists').attr('object'));
-            $.get(target, function (data) {
+            url = callback.replace(/USER_ID/, datum.id).replace(/NEW_ID/, protagonist_new_id).replace(/ENTITY_TYPE/, $('#protagonists').attr('object'));
+
+            $.get(url, function (data) {
                 $('.protagonists_user:last').after(data);
                 $('.protagonists_user:last').trigger('protagonist-added');
             });

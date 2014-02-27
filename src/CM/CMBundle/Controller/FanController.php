@@ -44,8 +44,6 @@ class FanController extends Controller
             $imFanOf = empty($imFanOf) ? false : in_array($this->getUser(), $imFanOf);
         }
         
-        // $this->getResponse()->setTitle($this->getContext()->getI18N()->__($this->user->getId() == $this->getUser()->getId() ? 'Your fans' : '%user%\'s fans', array('%user%' => $this->user)));
-        
         return array(
             'user' => $user,
             'fans' => $fans,
@@ -69,6 +67,8 @@ class FanController extends Controller
 
         $fans = $em->getRepository('CMBundle:Fan')->getUserFans($user->getId(), 16);
 
+        $count = $em->getRepository('CMBundle:Fan')->countUserFans($user->getId());
+
         $imFanOf = null;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $imFanOf = $em->getRepository('CMBundle:Fan')->getFanOf($this->getUser()->getId());
@@ -81,6 +81,7 @@ class FanController extends Controller
         return array(
             'user' => $user,
             'fans' => $fans,
+            'count' => $count,
             'imFanOf' => $imFanOf
         );
     }

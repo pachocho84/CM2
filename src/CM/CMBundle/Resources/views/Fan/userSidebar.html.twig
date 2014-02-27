@@ -3,7 +3,7 @@
         <div class="box-heading">
             <h2>
                 {{ icon('Fan') }} <span>{{ 'Fans'|trans }}</span>
-                <small><a href="{{ path('fan_user', {'slug': user.slug}) }}" class="pull-right">{{ 'Show all'|trans }}</a></small>
+                <small><a href="{{ path('fan_user', {'slug': user.slug}) }}" class="pull-right">{{ 'Show all'|trans }} ({{ count }})</a></small>
             </h2>
         </div>
 

@@ -5,39 +5,34 @@
 {% endblock %}
 
 {% block body %}
-    {% if is_granted('ROLE_USER') and false and app.user == user %}
+    {% if is_granted('ROLE_USER') and app.user == user %}
         <div class="box">
             <div class="box-heading">
                 <h3>{{ icon('Relation') }} <span>{{ 'Relations'|trans }}</span></h3>
             </div>
 
-            <div class=" text-center">
-                <div class="form-group protagonist_typeahead">
+            <div class="box-body">
+                <div class="form-group protagonist_typeahead relation-typeahead" typeahead-callback="{{ path('relation_add', {userId: 'USER_ID', relationTypeId: relationTypes[0].id, pending: true}) }}" name="{{ relationTypes[0]|trans }}" typeahead-target="#pending_relations">
 
                     <div id="protagonists_finder_container" class="form-group">
-                        <label class="control-label col-lg-3">Add new relation</label>
+                        <label class="control-label col-lg-3">{{ 'Add new relation'|trans }}</label>
                         <div class="col-lg-9">
                             <div class="input-group">
                                 <div class="input-group-btn">
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Relation <span class="caret"></span></button>
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{ relationTypes[0]|trans }} <span class="caret"></span></button>
                                     <ul class="dropdown-menu">
-                                        <li typeahead-callback="{{ path('request_add', {'object': 'Relation', 'objectId': user.id, 'userId': 'USER_ID', 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_STUDENT')}) }}" name="{{ 'student'|trans|capitalize }}"><a href="#">{{ 'student'|trans }}</a></li>
-                                        <li typeahead-callback="{{ path('request_add', {'object': 'Relation', 'objectId': user.id, 'userId': 'USER_ID', 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_TEACHER')}) }}" name="{{ 'teacher'|trans|capitalize }}"><a href="#">{{ 'teacher'|trans }}</a></li>
-                                        <li typeahead-callback="{{ path('request_add', {'object': 'Relation', 'objectId': user.id, 'userId': 'USER_ID', 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_AGENT')}) }}" name="{{ 'agent'|trans|capitalize }}"><a href="#">{{ 'agent'|trans }}</a></li>
-                                        <li typeahead-callback="{{ path('request_add', {'object': 'Relation', 'objectId': user.id, 'userId': 'USER_ID', 'type': constant('CM\\CMBundle\\Entity\\Relation::TYPE_CLIENT')}) }}" name="{{ 'client'|trans|capitalize }}"><a href="#">{{ 'client'|trans }}</a></li>
+                                        {% for relationType in relationTypes %}
+                                            <li typeahead-callback="{{ path('relation_add', {userId: 'USER_ID', relationTypeId: relationType.id, pending: true}) }}" name="{{ relationType|trans }}">
+                                                <a href="#">{{ relationType|trans }}</a>
+                                            </li>
+                                        {% endfor %}
                                     </ul>
                                 </div><!-- /btn-group -->
                                 <input type="text" id="protagonists_finder" class="form-control">
+                                <span class="input-group-btn"><button type="button" class="btn btn-default">{{ 'Add'|trans }}</button></span>
                             </div><!-- /input-group -->
                         </div>
                     </div>
-
-                    {% if relations|length > 0 %}
-                        <p class="text-center text-muted">{% if relations|length == 1 %}{{ '%user% has one relation.'|trans({'%user%': user}) }}{% else %}{{ '%user% has %count% relations.'|trans({'%user%': user, '%count%': relations|length}) }}{% endif %} 
-                    {% endif %}
-                    
-
-
                 </div>
 
         </div>
@@ -46,10 +41,14 @@
     {% if pendingRelations is not null %}
         <div class="box">
             <div class="box-heading">
-                <h3>{{ icon('Pending relation') }} <span>{{ 'Relations'|trans }}</span></h3>
+                <h3>{{ icon('Relation') }} <span>{{ 'Pending relation'|trans }}</span></h3>
             </div>
 
-            {{ pendingRelations|length }}
+            <div class="box-body" id="pending_relations">
+                {% for relation in pendingRelations %}
+                    {{ include('CMBundle:Relation:pending.html.twig') }}
+                {% endfor %}
+            </div>
 
         </div>
     {% endif %}

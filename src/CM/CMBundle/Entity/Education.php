@@ -13,10 +13,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Education
 {
-    const MARK_SCALE_10 = 0;
-    const MARK_SCALE_30 = 1;
-    const MARK_SCALE_60 = 2;
-    const MARK_SCALE_100 = 3;
+    const MARK_SCALE_10 = 10;
+    const MARK_SCALE_30 = 30;
+    const MARK_SCALE_60 = 60;
+    const MARK_SCALE_100 = 100;
 
     /**
      * @var integer
@@ -117,7 +117,7 @@ class Education
     private $userId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="relationsIncoming")
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $user;

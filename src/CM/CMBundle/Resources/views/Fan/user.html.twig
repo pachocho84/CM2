@@ -19,11 +19,13 @@
 
     <div class="box">
         <div class="box-heading">
-            <h2>{{ icon('Fan')|raw }} <span>{{ 'Fans'|trans }}</span></h2>
+            <h2>{{ icon('Fan') }} <span>{{ 'Fans'|trans }}</span></h2>
         </div>
 
         <div class=" text-center">
-            {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id})) }}{% endif %}
+            {% if is_granted('ROLE_USER') and user.id != app.user.id %}
+                {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
+            {% endif %}
             {#<?php include_partial('fanButton', array('user_id' => $user->getId(), 'imFan' => in_array($user->getId(), $whoImFanOf->getRawValue()->toArray()), 'class' => 'btn-large', 'fanBecomeText' => '<i class="glyphicon glyphicon-flag"></i> '.__('Become fan of %user%', array('%user%' => $user->getFirstName())))) ?>#}
         </div>
 
@@ -34,7 +36,7 @@
         <ul class="media-list objects">
             {% for fan in fans %}
                 <li class="media object">
-                    {{ show_img_box(fan.img | imagine_filter('medium'), {'width': 200, 'height': 120, 'offset': fan.imgOffset,  'link': path('user_show', {'slug': fan.slug}), 'default': 'user', 'link_attributes': {'class': 'pull-left img-thumbnail'}}) | raw }}
+                    {{ show_img_box(fan.img|imagine_filter('medium'), {'width': 200, 'height': 120, 'offset': fan.imgOffset,  'link': path('user_show', {'slug': fan.slug}), 'default': 'user', 'link_attributes': {'class': 'pull-left img-thumbnail'}}) }}
                     <div class="media-body">
                         <h4>
                             <a href="{{ path('user_show', {'slug': fan.slug}) }}">{{ fan }}</a>

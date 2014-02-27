@@ -67,7 +67,7 @@ class RelationController extends Controller
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function buttonAction(Request $request, User $user = null, $userId = null)
+    public function buttonAction(Request $request, User $user = null, $userId = null, RelationType $relationTypePassed = null)
     {
         $em = $this->getDoctrine()->getManager();
         
@@ -84,48 +84,31 @@ class RelationController extends Controller
         }
 
         $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesBetweenUsers($this->getUser()->getId(), $user->getId());
-        // foreach ($relationTypes as $relation) {
-        //     var_dump(count($relation->getRelations()));
-        // }
 
         $acceptedRelations = 0;
         $pendingRelations = 0;
         $reqText = 'Request a relation';
         $btnColour = 'danger';
-        foreach ($relationTypes as $relationType) {
-            foreach ($relationType->getRelations() as $relation) {
+        foreach ($relationTypes as $relType) {
+            foreach ($relType->getRelations() as $relation) {
+                // var_dump($relType->getName().' '.$relation->getId().' '.$relation->getAccepted().' '.$relation->getFromUserId().'->'.$relation->getUserId());
                 if ($relation->getAccepted() == Relation::ACCEPTED_NO && $acceptedRelations == 0 && $pendingRelations == 0) {
                     $reqText = 'Respond to a relation request';
                     $btnColour = 'warning';
-                } elseif ($relation->getAccepted() == Relation::ACCEPTED_UNI && $acceptedRelations == 0 && $pendingRelations == 0) {
+                } elseif ($relation->getAccepted() == Relation::ACCEPTED_UNI) {
+                    if ($acceptedRelations == 0 && $pendingRelations == 0) {
+                        $reqText = $relType->getName();
+                        $btnColour = 'warning';
+                    }
                     $pendingRelations++;
-                    $reqText = $relationType->getName();
-                    $btnColour = 'warning';
                 } elseif ($relation->getAccepted() == Relation::ACCEPTED_BOTH) {
                     $acceptedRelations++;
-                    $reqText = $relationType->getName();
+                    $reqText = $relType->getName();
                     $btnColour = 'success';
                 }
-                // if ($relation->getAccepted() == Relation::ACCEPTED_BOTH) {
-                //     $acceptedRelations++;
-                //     $reqText = $relationType->getName();
-                //     $btnColour = 'success';
-                //     break;
-                // } else {
-                //     $btnColour = 'warning';
-
-                //     if ($relation->getUserId() == $this->getUser()->getId() && $acceptedRelations == 0 && $pendingRelations == 0) {
-                //         $reqText = 'Respond to a relation request';
-                //     } elseif ($relation->getUserId() != $this->getUser()->getId() && $acceptedRelations == 0 && $pendingRelations == 0) {
-                //         $reqText = $relationType->getName();
-                //     }
-
-                //     if ($relation->getAccepted() == Relation::ACCEPTED_UNI) {
-                //         $pendingRelations++;
-                //     }
-                // }
             }
         }
+        // die;
 
         if ($acceptedRelations > 1) {
             $reqText = $acceptedRelations.' connections';
@@ -136,10 +119,13 @@ class RelationController extends Controller
             $btnColour = 'success';
         }
 
-//         foreach ($relationTypes as $relationType) {
-//             var_dump($relationType->getName(), $relationType->getRelations()->toArray());
-//         }
-// die;
+        if (!is_null($relationTypePassed)) {
+            return new JsonResponse(array(
+                'button' => $this->renderView('CMBundle:Relation:buttonItem.html.twig', array('reqText' => $reqText, 'btnColour' => $btnColour)),
+                'item' => $this->renderView('CMBundle:Relation:item.html.twig', array('user' => $user, 'relationType' => $relationTypePassed))
+            ));
+        }
+
         return array(
             'user' => $user,
             'relationTypes' => $relationTypes,
@@ -149,7 +135,7 @@ class RelationController extends Controller
     }
 
     /**
-     * @Route("relations/add/{relationTypeId}/{userId}", name="relation_add", requirements={"relationTypeId" = "\d+", "userId" = "\d+"})
+     * @Route("relations/add/{relationTypeId}/{userId}", name="relation_add", requirements={"relationTypeId" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
     public function addAction(Request $request, $relationTypeId, $userId)
@@ -187,7 +173,10 @@ class RelationController extends Controller
 
         $em->flush();
 
-        return $this->render('CMBundle:Relation:item.html.twig', array('user' => $user, 'relationType' => $relationType));
+        if (!is_null($request->get('pending'))) {
+            return $this->render('CMBundle:Relation:pending.html.twig', array('user' => $user, 'relation' => $relation));
+        }
+        return $this->forward('CMBundle:Relation:button', array('user' => $user, 'relationTypePassed' => $relationType));
     }
 
     /**
@@ -220,6 +209,7 @@ class RelationController extends Controller
 
         $em->flush();
 
+        return $this->forward('CMBundle:Relation:button', array('user' => $user, 'relationType' => $relation->getRelationType()));
         return $this->render('CMBundle:Relation:item.html.twig', array('user' => $user, 'relationType' => $relation->getRelationType()));
     }
 
@@ -252,6 +242,7 @@ class RelationController extends Controller
             $user = $request->getUser();
         }
 
+        return $this->forward('CMBundle:Relation:button', array('user' => $user, 'relationType' => $relation->getRelationType()));
         return $this->render('CMBundle:Relation:item.html.twig', array('user' => $user, 'relationType' => $relation->getRelationType()));
     }
 }

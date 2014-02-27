@@ -5,9 +5,9 @@ namespace CM\CMBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use CM\CMBundle\Entity\Education;
+use CM\CMBundle\Entity\Work;
 
-class EducationType extends AbstractType
+class WorkType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -17,22 +17,11 @@ class EducationType extends AbstractType
     {
         parent::buildForm($builder, $options);
     
-        $builder->add('school')
-            ->add('course')
-            ->add('teacher')
+        $builder->add('position')
+            ->add('employer')
+            ->add('company')
             ->add('dateFrom', 'date', array('required' => false, 'empty_value' => ''))
             ->add('dateTo', 'date', array('required' => false, 'empty_value' => ''))
-            ->add('mark')
-            ->add('markScale', 'choice', array('choices' => array(
-                Education::MARK_SCALE_10 => '10',
-                Education::MARK_SCALE_30 => '30',
-                Education::MARK_SCALE_60 => '60',
-                Education::MARK_SCALE_100 => '100',
-            )))
-            ->add('laude')
-            ->add('honour')
-            ->add('courseType')
-            ->add('degreeType')
             ->add('description');
     }
     
@@ -44,7 +33,7 @@ class EducationType extends AbstractType
         parent::setDefaultOptions($resolver);
         
         $resolver->setDefaults(array(
-            'data_class' => 'CM\CMBundle\Entity\Education',
+            'data_class' => 'CM\CMBundle\Entity\Work',
         ));
     }
 
@@ -53,6 +42,6 @@ class EducationType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_education';
+        return 'cm_cmbundle_work';
     }
 }

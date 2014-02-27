@@ -44,6 +44,11 @@ function infiniteUpdate() {
     }  
 }
 
+function insertRelationItem(c, d, a) {
+    $(c).closest('.relation-menu').children('button').replaceWith(d.button);
+    $(c).closest('div').replaceWith(d.item);
+}
+
 $(function() {
     UserActive.begin();
 
@@ -595,5 +600,11 @@ $(function() {
         $modal.on('hidden.bs.modal', function(event) {
             $modal.remove();
         });
+    });
+
+
+
+    $(document).on('click', '.relation-typeahead .dropdown-menu li', function (event) {
+        $(event.currentTarget).closest('.relation-typeahead').attr('typeahead-callback', $(event.currentTarget).attr('typeahead-callback'));
     });
 });

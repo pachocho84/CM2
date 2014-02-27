@@ -38,9 +38,10 @@
             <a href="{{ path('user_multimedia', {'slug': user.slug}) }}"{% if controller_name() == 'multimedia' %} class="active"{% endif %}>{{ icon('Multimedia') }} {{ 'Multimedia'|trans }}</a>
             <a href="{{ path('user_discs', {'slug': user.slug}) }}"{% if controller_name() == 'disc' %} class="active"{% endif %}>{{ icon('Disc') }} {{ 'Discs'|trans }}</a>
             <span class="dropdown">
-                <a href="#"{% if controller_name() in ['relation'] %} class="active"{% endif %} data-toggle="dropdown">{{ 'Other'|trans }} <span class="caret"></span></a>
+                <a href="#"{% if controller_name() in ['relation', 'education'] %} class="active"{% endif %} data-toggle="dropdown">{{ 'Other'|trans }} <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li>{{ icon('Relation') }} {{ 'Relations'|trans }}</li>
+                    <li>{{ icon('Education') }} {{ 'Education'|trans }}</li>
                 </ul>
             </span>
         {% endspaceless %}
