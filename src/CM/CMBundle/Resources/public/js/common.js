@@ -180,7 +180,11 @@ $(function() {
     
     
     /* TOOLTIP */
-    $("*[data-toggle=tooltip]").tooltip({ delay: { show: 250, hide: 0 } });
+    $('body').on('mouseenter', '[data-toggle=tooltip]', function() {
+        $("[data-toggle=tooltip]").tooltip({
+            delay: { show: 250, hide: 0 }
+        }).tooltip('show');
+    });
 
 
 

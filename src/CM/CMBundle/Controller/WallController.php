@@ -94,7 +94,7 @@ class WallController extends Controller
     }
 
     /**
-     * @Route("/{slug}/wall/{page}", name="user_wall", requirements={"page" = "\d+"})
+     * @Route("/{slug}/wall/{page}", name="wall_user", requirements={"page" = "\d+"})
      * @Template
      */
     public function userAction(Request $request, $slug, $page = 1)
@@ -116,7 +116,7 @@ class WallController extends Controller
                     'posts' => $pagination,
                     'slug' => $user->getSlug(),
                     'simple' => $request->get('simple'),
-                    'link' => $this->generateUrl('user_wall', array(
+                    'link' => $this->generateUrl('wall_user', array(
                         'slug' => $slug
                     ))
                 ));

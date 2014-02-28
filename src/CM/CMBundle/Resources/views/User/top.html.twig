@@ -31,7 +31,7 @@
     <div class="profile-menu">
         {% spaceless %}
             <a href="{{ path('user_show', {slug: user.slug}) }}"{% if controller_name() == 'user' %} class="active"{% endif %}>{{ icon('User') }} {{ 'Profile'|trans }}</a>
-            <a href="{{ path('user_wall', {slug: user.slug}) }}"{% if controller_name() == 'wall' %} class="active"{% endif %}>{{ icon('Wall') }} {{ 'Wall'|trans }}</a>
+            <a href="{{ path('wall_user', {slug: user.slug}) }}"{% if controller_name() == 'wall' %} class="active"{% endif %}>{{ icon('Wall') }} {{ 'Wall'|trans }}</a>
             <a href="{{ path('user_biography', {slug: user.slug}) }}"{% if controller_name() == 'biography' %} class="active"{% endif %}>{{ icon('Biography') }} {{ 'Biography'|trans }}</a>
             <a href="{{ path('user_events', {slug: user.slug}) }}"{% if controller_name() == 'event' %} class="active"{% endif %}>{{ icon('Event') }} {{ 'Events'|trans }}</a>
             <a href="{{ path('user_images', {slug: user.slug}) }}"{% if controller_name() == 'image' %} class="active"{% endif %}>{{ icon('Image') }} {{ 'Images'|trans }}</a>
@@ -40,7 +40,7 @@
             <span class="dropdown">
                 <a href="#"{% if controller_name() in ['relation', 'education'] %} class="active"{% endif %} data-toggle="dropdown">{{ 'Other'|trans }} <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{ path('user_relation', {slug: user.slug}) }}">{{ icon('Relation') }} {{ 'Relations'|trans }}</a></li>
+                    <li><a href="{{ path('relation_show', {slug: user.slug}) }}">{{ icon('Relation') }} {{ 'Relations'|trans }}</a></li>
                     <li><a href="{{ path('user_education', {slug: user.slug}) }}">{{ icon('Education') }} {{ 'Education'|trans }}</a></li>
                 </ul>
             </span>

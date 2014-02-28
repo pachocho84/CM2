@@ -17,7 +17,7 @@
         <li>
             <a href="{{ path('relation_delete', {id: relationTo.id}) }}" {{ modal({title: 'Cancel relation request'|trans, text: 'Are you sure you want to cancel this relation request?'|trans}) }}>
                 <span class="checkbox" checked="true"><span class="glyphicon"></span></span>
-                {{ relationType|trans }} ({{ 'pending'|trans }})
+                {{ relationType|trans }} ({{ 'requested'|trans }})
             </a>
         </li>
     {% elseif relationTo.accepted == constant('CM\\CMBundle\\Entity\\Relation::ACCEPTED_NO') %}

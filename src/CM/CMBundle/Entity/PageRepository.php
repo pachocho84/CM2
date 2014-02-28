@@ -110,6 +110,16 @@ class PageRepository extends BaseRepository
         return array_map(function ($user) { return $user['id']; }, $query->getQuery()->getResult());
     }
 
+    public function search($q, $limit)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->orWhere('p.name LIKE :query')
+            ->setParameter('query', $q)
+            ->setMaxResults($limit)
+            ->getQuery()->getResult();
+    }
+
     public function remove($id)
     {
         return $this->createQueryBuilder('p')

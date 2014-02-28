@@ -63,7 +63,7 @@ class UserAuthentication
         $this->session->set('user/img_offset', $user->getImgOffset());
         $this->session->set('user/groups_admin', $groups);
         $this->session->set('user/pages_admin', $pages);
-        // $this->session->set('user/user_tags', $user->getUserTags());
+        $this->session->set('user/user_tags', $user->getUserTags());
         // $this->session->set('siti_admin', $siti, 'user');
         // $this->session->set('languages', explode(', ', $user->getSiti()->getLingue()), 'user');
 

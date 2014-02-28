@@ -18,6 +18,7 @@ class RelationRepository extends BaseRepository
             'indexBy' => null
         ), $options);
     }
+    
     public function getRelationTypesBetweenUsers($userFromId, $userId)
     {
         return $this->getEntityManager()->createQueryBuilder()
@@ -97,6 +98,75 @@ class RelationRepository extends BaseRepository
             ->orderBy('r.createdAt', 'desc')
             ->groupBy('r.relationTypeId')
             ->getQuery()->getResult();
+    }
+
+    public function getSuggestedUsers($userId, $offset, $limit)
+    {
+        $closest = $this->createQueryBuilder('r')
+            ->select('partial r.{id, userId}')
+            ->where('r.fromUser = :user_id')->setParameter('user_id', $userId)
+            ->andWhere('r.accepted = :accepted')->setParameter('accepted', Relation::ACCEPTED_BOTH)
+            ->groupBy('r.userId')
+            ->getQuery()->getArrayResult();
+
+        if (count($closest) == 0) {
+            return;
+        }
+
+        $closest = array_map(function($v) { return $v['userId']; }, $closest);
+
+        $pending = $this->createQueryBuilder('r')
+            ->select('partial r.{id, userId}')
+            ->where('r.fromUser = :user_id')->setParameter('user_id', $userId)
+            ->andWhere('r.accepted = :accepted')->setParameter('accepted', Relation::ACCEPTED_UNI)
+            ->groupBy('r.userId')
+            ->getQuery()->getArrayResult();
+
+        $pending = array_map(function($v) { return $v['userId']; }, $pending);
+
+        $relations = $this->createQueryBuilder('r')
+            ->select('r, u')
+            ->leftJoin('r.fromUser', 'u')
+            ->andWhere('r.fromUserId in (:user_ids_in)')->setParameter('user_ids_in', $closest)
+            ->andWhere('r.userId not in (:user_ids_not_in)')->setParameter('user_ids_not_in', array_merge($closest, array_merge($pending, array($userId))))
+            ->andWhere('r.accepted = :accepted')->setParameter('accepted', Relation::ACCEPTED_BOTH)
+            ->getQuery()->getResult();
+
+        if (count($relations) == 0) {
+            return;
+        }
+
+        $suggestions = array();
+        foreach ($relations as $relation) {
+            if (!array_key_exists($relation->getUserId(), $suggestions)) {
+                $suggestions[$relation->getUserId()]['count'] = 0;
+                $suggestions[$relation->getUserId()]['userId'] = $relation->getUserId();
+                $suggestions[$relation->getUserId()]['references'] = array();
+            }
+            $suggestions[$relation->getUserId()]['count']++;
+            if (!array_key_exists($relation->getFromUserId(), $suggestions[$relation->getUserId()]['references'])) {
+                $suggestions[$relation->getUserId()]['references'][$relation->getFromUserId()] = $relation->getFromUser();
+            }
+        }
+
+        uasort($suggestions, function($a, $b) { return $a['count'] < $b['count']; });
+        $suggestions = array_slice($suggestions, $offset, $limit, true);
+
+        $users = $this->getEntityManager()->createQueryBuilder()
+            ->select('u, uut, ut, utt')
+            ->from('CMBundle:User', 'u')
+            ->leftJoin('u.userUserTags', 'uut')
+            ->leftJoin('uut.userTag', 'ut')
+            ->leftJoin('ut.translations', 'utt')
+            ->where('u.id in (:ids)')->setParameter('ids', array_keys($suggestions))
+            ->getQuery()
+            ->getResult();
+
+        foreach ($users as $user) {
+            $suggestions[$user->getId()]['user'] = $user;
+        }
+
+        return $suggestions;
     }
 
     public function getInverse($relationTypeId, $userId, $fromUserId)

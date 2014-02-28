@@ -23,46 +23,6 @@ use CM\CMBundle\Form\RelationTypeType;
 class RelationController extends Controller
 {
     /**
-     * @Route("/{slug}/relations", name="user_relation")
-     * @JMS\Secure(roles="ROLE_USER")
-     * @Template
-     */
-    public function userAction(Request $request, $slug)
-    {
-        $em = $this->getDoctrine()->getManager();
-        
-        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
-        
-        if (!$user) {
-            throw new NotFoundHttpException('User not found.');
-        }
-
-        if ($user->getId() == $this->getUser()->getId()) {
-            $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesPerUser($user->getId(), Relation::ACCEPTED_NO, true);
-            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_NO, true);
-            $pendingRelations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_NO);
-        } else {
-            $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesPerUser($user->getId(), Relation::ACCEPTED_BOTH);
-            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_BOTH);
-        }
-
-        $groupedRelations = array();
-        foreach ($relations as &$relation) {
-            if (!array_key_exists($relation->getRelationTypeId(), $groupedRelations)) {
-                $groupedRelations[$relation->getRelationTypeId()] = array();
-            }
-            $groupedRelations[$relation->getRelationTypeId()][] = $relation;
-        }
-
-        return array(
-            'user' => $user,
-            'pendingRelations' => $pendingRelations,
-            'relationTypes' => $relationTypes,
-            'relations' => $groupedRelations
-        );
-    }
-
-    /**
      * @Route("relations/button/{userId}", name="relation_button", requirements={"userId" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
@@ -84,48 +44,52 @@ class RelationController extends Controller
         }
 
         $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesBetweenUsers($this->getUser()->getId(), $user->getId());
-        // foreach ($relationTypes as $relType) {
-        //     var_dump($relType);
-        // }
-        // die;
 
+        $relationRequest = false;
         $acceptedRelations = 0;
         $pendingRelations = 0;
         $reqText = 'Request a relation';
         $btnColour = 'danger';
+        $tooltipArray = array();
         foreach ($relationTypes as $relType) {
             foreach ($relType->getRelations() as $relation) {
-                // var_dump($relType->getName().' '.$relation->getId().' '.$relation->getAccepted().' '.$relation->getFromUserId().'->'.$relation->getUserId());
-                if ($relation->getAccepted() == Relation::ACCEPTED_NO && $acceptedRelations == 0 && $pendingRelations == 0) {
-                    $reqText = 'Respond to a relation request';
-                    $btnColour = 'warning';
+                if ($relation->getAccepted() == Relation::ACCEPTED_NO) {
+                    $tooltipArray[] = $relType->getName().' (pending)';
+                    if (!$relationRequest) {
+                        $reqText = 'Respond to a relation request';
+                        $btnColour = 'warning';
+                        $relationRequest = true;
+                    }
                 } elseif ($relation->getAccepted() == Relation::ACCEPTED_UNI) {
-                    if ($acceptedRelations == 0 && $pendingRelations == 0) {
-                        $reqText = $relType->getName();
+                    $tooltipArray[] = $relType->getName();
+                    if ($acceptedRelations == 0 && $pendingRelations == 0 && !$relationRequest) {
+                        $reqText = $relType->getName().' (requested)';
                         $btnColour = 'warning';
                     }
                     $pendingRelations++;
                 } elseif ($relation->getAccepted() == Relation::ACCEPTED_BOTH) {
+                    $tooltipArray[] = $relType->getName();
+                    if (!$relationRequest) {
+                        $reqText = $relType->getName();
+                        $btnColour = 'success';
+                    }
                     $acceptedRelations++;
-                    $reqText = $relType->getName();
-                    $btnColour = 'success';
                 }
             }
         }
-        // die;
 
         if ($acceptedRelations > 1) {
             $reqText = $acceptedRelations.' connections';
         } elseif ($acceptedRelations == 0 && $pendingRelations > 1) {
             $reqText = $pendingRelations.' connections';
         }
-        if ($acceptedRelations != 0) {
+        if ($acceptedRelations != 0 && !$relationRequest) {
             $btnColour = 'success';
         }
 
         if (!is_null($relationTypePassed)) {
             return new JsonResponse(array(
-                'button' => $this->renderView('CMBundle:Relation:buttonItem.html.twig', array('reqText' => $reqText, 'btnColour' => $btnColour)),
+                'button' => $this->renderView('CMBundle:Relation:buttonItem.html.twig', array('reqText' => $reqText, 'btnColour' => $btnColour, 'tooltipArray' => $tooltipArray)),
                 'item' => $this->renderView('CMBundle:Relation:item.html.twig', array('user' => $user, 'relationType' => $relationTypePassed))
             ));
         }
@@ -134,7 +98,8 @@ class RelationController extends Controller
             'user' => $user,
             'relationTypes' => $relationTypes,
             'reqText' => $reqText,
-            'btnColour' => $btnColour
+            'btnColour' => $btnColour,
+            'tooltipArray' => $tooltipArray
         );
     }
 
@@ -250,5 +215,66 @@ class RelationController extends Controller
 
         return $this->buttonAction($request, $user, null, $relation->getRelationType());
         return $this->forward('CMBundle:Relation:button', array('user' => $user, 'relationTypePassed' => $relation->getRelationType()));
+    }
+
+    /**
+     * @Route("/account/relations", name="relation_user")
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function userAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $relationTypes = $em->getRepository('CMBundle:RelationType')->findBy(array());
+        $suggestions = $em->getRepository('CMBundle:Relation')->getSuggestedUsers($this->getUser()->getId(), 0, 10);
+
+        return array(
+            'relationTypes' => $relationTypes,
+            'suggestions' => $suggestions
+        );
+    }
+
+    /**
+     * @Route("/{slug}/relations", name="relation_show")
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function showAction(Request $request, $slug)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+
+        if ($user->getId() == $this->getUser()->getId()) {
+            $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesPerUser($user->getId(), Relation::ACCEPTED_NO, true);
+            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_NO, true);
+            $pendingRelations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_NO);
+
+            $suggestions = $em->getRepository('CMBundle:Relation')->getSuggestedUsers($this->getUser()->getId(), 0, 10);
+        } else {
+            $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesPerUser($user->getId(), Relation::ACCEPTED_BOTH);
+            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_BOTH);
+        }
+
+        $groupedRelations = array();
+        foreach ($relations as &$relation) {
+            if (!array_key_exists($relation->getRelationTypeId(), $groupedRelations)) {
+                $groupedRelations[$relation->getRelationTypeId()] = array();
+            }
+            $groupedRelations[$relation->getRelationTypeId()][] = $relation;
+        }
+
+        return array(
+            'user' => $user,
+            'pendingRelations' => $pendingRelations,
+            'suggestions' => $suggestions,
+            'relationTypes' => $relationTypes,
+            'relations' => $groupedRelations
+        );
     }
 }

@@ -6,6 +6,10 @@ cm_cmbundle_file_server:
     resource: "CM\\CMBundle\\Controller\\FileServerController"
     type:     annotation
 
+cm_cmbundle_search:
+    resource: "CM\\CMBundle\\Controller\\SearchController"
+    type:     annotation
+
 cm_cmbundle_wall:
     resource: "CM\\CMBundle\\Controller\\WallController"
     type:     annotation

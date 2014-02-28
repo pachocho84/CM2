@@ -1,92 +1,38 @@
-{% extends 'CMBundle:Form:layout.html.twig' %}
-
-{% block bodyHeading %}
-    {{ include('CMBundle:User:top.html.twig', {'inPage': 'profile'}) }}
-{% endblock %}
+{% extends 'CMBundle:User:accountLayout.html.twig' %}
 
 {% block body %}
-    {% if is_granted('ROLE_USER') and app.user == user %}
+    {% if suggestions|length != 0 %}
         <div class="box">
-            <div class="box-heading">
-                <h3>{{ icon('Relation') }} <span>{{ 'Relations'|trans }}</span></h3>
-            </div>
-
             <div class="box-body">
-                <div class="form-group protagonist_typeahead relation-typeahead" typeahead-callback="{{ path('relation_add', {userId: 'USER_ID', relationTypeId: relationTypes[0].id, pending: true}) }}" name="{{ relationTypes[0]|trans }}" typeahead-target="#pending_relations">
+                {% for suggestion in suggestions %}
+                    <div class="">
+                        {{ show_img_box(suggestion.user.img|imagine_filter('small'), {width: 50, offset: suggestion.user.imgOffset, link: path('user_show', {slug: suggestion.user.slug}), box_attributes: {class: 'pull-left'}}) }}
+                        <div class="">
+                            <h4 class="">
+                                <a href="{{ path('user_show', {'slug': suggestion.user.slug}) }}">{{ suggestion.user|trans }}</a>
+                            </h4>
 
-                    <div id="protagonists_finder_container" class="form-group">
-                        <label class="control-label col-lg-3">{{ 'Add new relation'|trans }}</label>
-                        <div class="col-lg-9">
-                            <div class="input-group">
-                                <div class="input-group-btn">
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{ relationTypes[0]|trans }} <span class="caret"></span></button>
-                                    <ul class="dropdown-menu">
-                                        {% for relationType in relationTypes %}
-                                            <li typeahead-callback="{{ path('relation_add', {userId: 'USER_ID', relationTypeId: relationType.id, pending: true}) }}" name="{{ relationType|trans }}">
-                                                <a href="#">{{ relationType|trans }}</a>
+                            <div class="btn-group relations-menu">
+
+                                <button type="button" class="btn btn-danger btn-xs dropdown-toggle relation-button" data-toggle="dropdown"><span>{{ icon('Relation') }} {{ 'Request a relation'|trans }}</span></button>
+                                <ul class="dropdown-menu relation-menu-body">
+                                    {% for relationType in relationTypes %}
+                                        <div class="relation-type">
+                                            <li>
+                                                <a href="{{ path('relation_add', {userId: suggestion.user.id, relationTypeId: relationType.id}) }}">
+                                                    <span class="checkbox" checked="false"><span class="glyphicon"></span></span>
+                                                    {{ relationType|trans }}
+                                                </a>
                                             </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div><!-- /btn-group -->
-                                <input type="text" id="protagonists_finder" class="form-control">
-                                <span class="input-group-btn"><button type="button" class="btn btn-default">{{ 'Add'|trans }}</button></span>
-                            </div><!-- /input-group -->
+                                        </div>
+                                    {% endfor %}
+                                </ul>
+
+                            </div>
                         </div>
                     </div>
-                </div>
-
-        </div>
-    {% endif %}
-
-    {% if pendingRelations is not null %}
-        <div class="box">
-            <div class="box-heading">
-                <h3>{{ icon('Relation') }} <span>{{ 'Pending relation'|trans }}</span></h3>
-            </div>
-
-            <div class="box-body" id="pending_relations">
-                {% for relation in pendingRelations %}
-                    {{ include('CMBundle:Relation:pending.html.twig') }}
                 {% endfor %}
             </div>
-
         </div>
     {% endif %}
-
-    {% for relationType in relationTypes if relationType.id in relations|keys %}
-        {% if loop.index is odd %}<div class="row">{% endif %}
-
-        <div class="col-md-6">
-            <div class="box">
-                <div class="box-heading">
-                    <h2>{{ icon('Relation') }} <span>{{ relationType|trans }}</span> <small>{{ relationType.relations|length }}</small></h2>
-                </div>
-
-                <div class="box-body">
-                    {% for relation in relations[relationType.id] %}
-                        {{ include('CMBundle:Relation:object.html.twig') }}
-                    {% endfor %}
-                </div>
-
-            </div>
-        </div>
-
-        {% if loop.index is even %}</div>{% endif %}
-    {% else %}
-        <div class="box">
-            <div class="box-body">
-                {% if user != app.user %}
-                    <p>{{ '%user% has no relations yet.'|trans({'%user%': user.firstName}) }}</p>
-                {% endif %}
-            </div>
-        </div>
-    {% endfor %}
-
-{% endblock %}
-
-{% block sidebar %}
-
-{#    <div data-ajax-url="{{ path('fan_user_sidebar', {slug: user.slug}) }}"></div>
-
-    <div data-ajax-url="{{ path('event_next_dates', {object: 'user', objectId: user.id, limit: 3}) }}"></div>#}
 {% endblock %}

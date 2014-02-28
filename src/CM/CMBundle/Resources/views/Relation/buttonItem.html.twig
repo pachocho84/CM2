@@ -1,1 +1,1 @@
-<button type="button" class="btn btn-{{ btnColour }} dropdown-toggle" data-toggle="dropdown">{{ icon('Relation') }} <span>{{ reqText|trans }}</span></button>
+<button type="button" class="btn btn-{{ btnColour }} dropdown-toggle relation-button" data-toggle="dropdown"><span {{ tooltip(tooltipArray, {placement: 'top'}) }}>{{ icon('Relation') }} {{ reqText|trans }}</span></button>

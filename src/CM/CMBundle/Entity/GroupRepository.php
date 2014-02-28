@@ -110,6 +110,16 @@ class GroupRepository extends BaseRepository
         return array_map(function ($user) { return $user['id']; }, $query->getQuery()->getResult());
     }
 
+    public function search($q, $limit)
+    {
+        return $this->createQueryBuilder('g')
+            ->select('g')
+            ->orWhere('g.name LIKE :query')
+            ->setParameter('query', $q)
+            ->setMaxResults($limit)
+            ->getQuery()->getResult();
+    }
+
     public function remove($id)
     {
         return $this->createQueryBuilder('g')

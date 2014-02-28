@@ -990,8 +990,9 @@ class CMExtension extends \Twig_Extension
         }
 
         $options = array_merge(array(
-            'placement' => 'bottom auto',
+            'placement' => 'top auto',
             'container' => 'body',
+            'selector' => null,
             'html' => true,
             'separator' => '<br/>',
             'closure' => null,

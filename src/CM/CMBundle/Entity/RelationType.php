@@ -130,10 +130,10 @@ class RelationType
      */
     public function addRelation(Relation $relation)
     {
-        if (!$this->relations->contains($relation)) {
+        // if (!$this->relations->contains($relation)) {
             $this->relations[] = $relation;
             $relation->setRelationType($this);
-        }
+        // }
     
         return $this;
     }

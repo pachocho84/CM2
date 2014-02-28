@@ -77,4 +77,15 @@ class UserRepository extends BaseRepository
             ->orderBy('u.vip', 'DESC')
             ->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
+
+    public function search($q, $limit)
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u')
+            ->orWhere('CONCAT(u.firstName, CONCAT(\' \', u.lastName)) LIKE :query')
+            ->orWhere('CONCAT(u.lastName, CONCAT(\' \', u.firstName)) LIKE :query')
+            ->setParameter('query', $q)
+            ->setMaxResults($limit)
+            ->getQuery()->getResult();
+    }
 }
