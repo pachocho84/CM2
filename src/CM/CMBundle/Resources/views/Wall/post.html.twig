@@ -5,16 +5,16 @@
 
 <div class="media post-heading"{% if updateMore|default(false) and loop is defined and loop.first %} update_more="{{ path(app.request.attributes.get('_route')|replace({'_update': ''})~'_update', app.request.attributes.get('_route_params')|merge({ 'lastUpdated': post.updatedAt.timestamp })) }}"{% endif %}>
     
-    {{ show_img_box(post.publisher.img|imagine_filter('small'), {'width': 50, 'height': 50, 'offset': post.publisher.imgOffset,  'link': path(post.publisherType ~ '_show', {'slug': post.publisher.slug}), 'box_attributes': {'class': 'pull-left'}, 'default': 'user'}) }}
+    {{ show_img_box(post.publisher.img|imagine_filter('small'), {width: 50, height: 50, offset: post.publisher.imgOffset,  link: path(post.publisherType ~ '_show', {slug: post.publisher.slug}), box_attributes: {class: 'pull-left img-rounded'}}) }}
 
     <div class="media-body">
 
-        <h4 class="media-heading">{{ post.publisher }}</h4>
+        <h4 class="media-heading"><a href="{{ path(post.publisherType ~ '_show', {slug: post.publisher.slug}) }}">{{ post.publisher }}</a></h4>
 
-        <p class="text-muted small">
+        <div class="text-muted small">
             {{ icon((post.object|class_name)~'_'~(post.type)) }}
             {{ post.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
-        </p>
+        </div>
 
     </div>
 </div>
@@ -31,7 +31,9 @@
 
 
 
-{{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
+<div class="post-content">
+    {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
+</div>
 
 
 
