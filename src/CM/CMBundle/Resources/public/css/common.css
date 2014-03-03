@@ -313,6 +313,9 @@
 
 
 /* POST */
+.post .post-heading {
+    margin-bottom: 15px;
+}
 .post p.small
 {
    font-size: 13px;
