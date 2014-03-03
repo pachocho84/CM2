@@ -13,18 +13,10 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  */
 class HomepageBox
 {
-    use ORMBehaviors\Sluggable\Sluggable;
     use ORMBehaviors\Timestampable\Timestampable;
 
     const TYPE_PARTNER = 0;
     const TYPE_RUBRIC = 1;
-
-    const WIDTH_FULL = 0;
-    const WIDTH_HALF = 1;
-
-    const SIDE_EVENTS = 0;
-    const SIDE_ARTICLES = 1;
-    const SIDE_NEWS = 2;
 
     /**
      * @var integer
@@ -34,13 +26,6 @@ class HomepageBox
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="width", type="smallint", nullable=false)
-     */
-    private $width;
 
     /**
      * @var integer
@@ -55,6 +40,20 @@ class HomepageBox
      * @ORM\Column(name="name", type="string", length=50, nullable=false)
      */
     private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="logo", type="string", length=50, nullable=true)
+     */
+    private $logo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="colour", type="string", length=50, nullable=true)
+     */
+    private $colour;
 
     /**
      * @ORM\Column(name="category_id", type="integer", nullable=true)
@@ -78,20 +77,6 @@ class HomepageBox
      **/
     private $page;
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="leftSide", type="smallint", nullable=false)
-     */
-    private $leftSide;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="rightSide", type="smallint", nullable=true)
-     */
-    private $rightSide;
-
     public static function className()
     {
         return get_class();
@@ -105,29 +90,6 @@ class HomepageBox
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set width
-     *
-     * @param integer $width
-     * @return HomepageBox
-     */
-    public function setWidth($width)
-    {
-        $this->width = $width;
-    
-        return $this;
-    }
-
-    /**
-     * Get width
-     *
-     * @return integer 
-     */
-    public function getWidth()
-    {
-        return $this->width;
     }
 
     /**
@@ -174,6 +136,52 @@ class HomepageBox
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set logo
+     *
+     * @param string $logo
+     * @return HomepageBox
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+    
+        return $this;
+    }
+
+    /**
+     * Get logo
+     *
+     * @return string 
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * Set colour
+     *
+     * @param string $colour
+     * @return HomepageBox
+     */
+    public function setColour($colour)
+    {
+        $this->colour = $colour;
+    
+        return $this;
+    }
+
+    /**
+     * Get colour
+     *
+     * @return string 
+     */
+    public function getColour()
+    {
+        return $this->colour;
     }
 
     /**
@@ -246,62 +254,5 @@ class HomepageBox
     public function getPage()
     {
         return $this->page;
-    }
-
-    /**
-     * Set leftSide
-     *
-     * @param integer $leftSide
-     * @return HomepageBox
-     */
-    public function setLeftSide($leftSide)
-    {
-        $this->leftSide = $leftSide;
-    
-        return $this;
-    }
-
-    /**
-     * Get leftSide
-     *
-     * @return integer 
-     */
-    public function getLeftSide()
-    {
-        return $this->leftSide;
-    }
-
-    /**
-     * Set rightSide
-     *
-     * @param integer $rightSide
-     * @return HomepageBox
-     */
-    public function setRightSide($rightSide)
-    {
-        $this->rightSide = $rightSide;
-    
-        return $this;
-    }
-
-    /**
-     * Get rightSide
-     *
-     * @return integer 
-     */
-    public function getRightSide()
-    {
-        return $this->rightSide;
-    }
-
-    /**
-     * Get sluggable fields
-     * 
-     * @access public
-     * @return void
-     */
-    public function getSluggableFields()
-    {
-        return ['name'];
     }
 }

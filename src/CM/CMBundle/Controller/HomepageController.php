@@ -35,13 +35,17 @@ class HomepageController extends Controller
             $posts = $em->getRepository('CMBundle:Post')->getLastPosts();
             $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
 
-            $array = array();
-            $array['lastUsers'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(15)));
+            $boxes = array();
+            $boxes['lastUsers'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(15)));
+            $boxes['dates'] = $this->renderView('CMBundle:Event:nextDates.html.twig', array('dates' => $em->getRepository('CMBundle:Event')->getNextDates(array('limit' => 3))));
+            if (!$this->get('security.context')->isGranted('ROLE_USER')) {
+                $boxes['authentication'] = $this->renderView('CMBundle:Homepage:authentication.html.twig');
+            }
             foreach ($pagination as $post) {
-                $array[] = $this->renderView('CMBundle:Homepage:postBox.html.twig', array('post' => $post));
+                $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:postBox.html.twig', array('post' => $post));
             }
             
-            return new JsonResponse($array);
+            return new JsonResponse($boxes);
         }
 
         return array(

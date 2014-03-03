@@ -77,57 +77,11 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
     );
 
     private $boxes = array(
-        array('name' => 'laVerdi', 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 3, 'width' => HomepageBox::WIDTH_HALF, 'leftSide' => HomepageBox::SIDE_EVENTS, 'rightSide' => null),
-        array('name' => 'Orchestre', 'type' => HomepageBox::TYPE_RUBRIC, 'category' => 0, 'page' => null, 'width' => HomepageBox::WIDTH_HALF, 'leftSide' => HomepageBox::SIDE_ARTICLES, 'rightSide' => null),
-        array('name' => 'Accademia Teatro alla Scala', 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 1/*7*/, 'width' => HomepageBox::WIDTH_HALF, 'leftSide' => HomepageBox::SIDE_NEWS, 'rightSide' => null),
-        array('name' => 'Classic Voice', 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 2/*6*/, 'width' => HomepageBox::WIDTH_HALF, 'leftSide' => HomepageBox::SIDE_ARTICLES, 'rightSide' => null),
-    );
-
-    private $rows = array(
-        array('type' => HomepageRow::TYPE_ROW_1, 'order' => 1, 'visible' => true,
-            'columns' => array(
-                array('row' => 0, 'type' => HomepageColumn::TYPE_ARTICLE, 'archive' => 3, 'box' => null, 'user' => 1, 'order' => 1),
-            )
-        ),
-        array('type' => HomepageRow::TYPE_ROW_2, 'order' => 2, 'visible' => true,
-            'columns' => array(
-                array('row' => 1, 'type' => HomepageColumn::TYPE_ARTICLE, 'archive' => 1, 'box' => null, 'user' => 1, 'order' => 2),
-                array('row' => 1, 'type' => HomepageColumn::TYPE_ARTICLE, 'archive' => 0, 'box' => null, 'user' => 1, 'order' => 1),
-            )
-        ),
-        array('type' => HomepageRow::TYPE_PHOTO_GALLERY, 'order' => 6, 'visible' => true, 'columns' => array()),
-        array('type' => HomepageRow::TYPE_ROW_3, 'order' => 8, 'visible' => true,
-            'columns' => array(
-                array('row' => 3, 'type' => HomepageColumn::TYPE_ARTICLE, 'archive' => 5, 'box' => null, 'user' => 1, 'order' => 1),
-                array('row' => 3, 'type' => HomepageColumn::TYPE_ARTICLE, 'archive' => 4, 'box' => null, 'user' => 1, 'order' => 2),
-                array('row' => 3, 'type' => HomepageColumn::TYPE_ARTICLE, 'archive' => 0, 'box' => null, 'user' => 1, 'order' => 3),
-            )
-        ),
-        array('type' => HomepageRow::TYPE_VIDEO_GALLERY, 'order' => 10, 'visible' => true, 'columns' => array()),
-        array('type' => HomepageRow::TYPE_ROW_4, 'order' => 11, 'visible' => true,
-            'columns' => array(
-                array('row' => 5, 'type' => HomepageColumn::TYPE_ARTICLE, 'archive' => 0, 'box' => null, 'user' => 1, 'order' => 1),
-                array('row' => 5, 'type' => HomepageColumn::TYPE_ARTICLE, 'archive' => 2, 'box' => null, 'user' => 1, 'order' => 3),
-                array('row' => 5, 'type' => HomepageColumn::TYPE_ARTICLE, 'archive' => 3, 'box' => null, 'user' => 1, 'order' => 4),
-                array('row' => 5, 'type' => HomepageColumn::TYPE_ARTICLE, 'archive' => 4, 'box' => null, 'user' => 1, 'order' => 2),
-            )
-        ),
-        array('type' => HomepageRow::TYPE_PARTNER_ACCADEMIA_TEATRO_ALLA_SCALA, 'order' => 9, 'visible' => true, 'columns' => array()),
-        array('type' => HomepageRow::TYPE_PARTNER_RADIO_CLASSICA, 'order' => 7, 'visible' => true, 'columns' => array()),
-        array('type' => HomepageRow::TYPE_REVIEWS, 'order' => 5, 'visible' => true, 'columns' => array()),
-        array('type' => HomepageRow::TYPE_BANNER_SUBSCRIBE, 'order' => 8, 'visible' => true, 'columns' => array()),
-        array('type' => HomepageRow::TYPE_ROW_2, 'order' => 4, 'visible' => true,
-            'columns' => array(
-                array('row' => 10, 'type' => HomepageColumn::TYPE_BOX, 'archive' => null, 'box' => 1, 'user' => 1, 'order' => 2),
-                array('row' => 10, 'type' => HomepageColumn::TYPE_BOX, 'archive' => null, 'box' => 0, 'user' => 1, 'order' => 1),
-            )
-        ),
-        array('type' => HomepageRow::TYPE_ROW_2, 'order' => 3, 'visible' => true,
-            'columns' => array(
-                array('row' => 11, 'type' => HomepageColumn::TYPE_BOX, 'archive' => null, 'box' => 2, 'user' => 1, 'order' => 1),
-                array('row' => 11, 'type' => HomepageColumn::TYPE_BOX, 'archive' => null, 'box' => 3, 'user' => 1, 'order' => 1),
-            )
-        ),
+        array('name' => 'laVerdi', 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 3, 'logo' => 'la_verdi-title.png', 'colour' => '#c70036'),
+        array('name' => 'Società del Quartetto di Milano', 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 2, 'logo' => 'quartetto_milano-title.png', 'colour' => '#eb6909'),
+        array('name' => 'Orchestre', 'type' => HomepageBox::TYPE_RUBRIC, 'category' => 0, 'page' => null, 'logo' => null, 'colour' => null),
+        array('name' => 'Accademia Teatro alla Scala', 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 1/*7*/, 'logo' => 'accademia_teatro_alla_scala-title.png', 'colour' => '#c70c27'),
+        array('name' => 'Classic Voice', 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 2/*6*/, 'logo' => 'classic_voice-title.png', 'colour' => '#008fd3'),
     );
 
     /**
@@ -173,9 +127,8 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
             $homepageBox = new HomepageBox;
             $homepageBox->setName($box['name'])
                 ->setType($box['type'])
-                ->setWidth($box['width'])
-                ->setLeftSide($box['leftSide'])
-                ->setRightSide($box['rightSide']);
+                ->setLogo($box['logo'])
+                ->setColour($box['colour']);
             if (!is_null($box['category'])) {
                 $homepageBox->setCategory($manager->merge($this->getReference('homepage_category-'.$box['category'])));
             }
@@ -185,36 +138,7 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
 
             $manager->persist($homepageBox);
             $this->addReference('homepage_box-'.$i, $homepageBox);
-        } 
-
-        foreach ($this->rows as $i => $row) {
-            $homepageRow = new HomepageRow;
-            $homepageRow->setType($row['type'])
-                ->setOrder($row['order'])
-                ->setVisible($row['visible']);
-
-            foreach ($row['columns'] as $j => $column) {
-                $homepageColumn = new HomepageColumn;
-                $homepageColumn->setType($column['type'])
-                    ->setUser($manager->merge($this->getReference('user-'.$column['user'])))
-                    ->setOrder($column['order']);
-                if (!is_null($column['archive'])) {
-                    $homepageColumn->setArchive($manager->merge($this->getReference('homepage_archive-'.$column['archive'])));
-                }
-                if (!is_null($column['box'])) {
-                    $homepageColumn->setBox($manager->merge($this->getReference('homepage_box-'.$column['box'])));
-                }
-
-                $homepageRow->addColumn($homepageColumn);
-                // $this->addReference('homepage_column-'.$j, $homepageColumn);
-            } 
-
-            $manager->persist($homepageRow);
-            $this->addReference('homepage_row-'.$i, $homepageRow);
         }
-
-        $manager->flush();
-
 
         $manager->flush();
     }
