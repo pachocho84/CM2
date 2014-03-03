@@ -101,6 +101,7 @@ class CMExtension extends \Twig_Extension
             'user_box' => new \Twig_Function_Method($this, 'getUserBox', array('is_safe' => array('html'))),
             'show_img_box' => new \Twig_Function_Method($this, 'getShowImgBox', array('is_safe' => array('html'))),
             'request_tag' => new \Twig_Function_Method($this, 'getRequestTag', array('is_safe' => array('html'))),
+            'request_update' => new \Twig_Function_Method($this, 'getRequestUpdate', array('is_safe' => array('html'))),
             'notification_tag' => new \Twig_Function_Method($this, 'getNotificationTag', array('is_safe' => array('html'))),
             'post_text' => new \Twig_Function_Method($this, 'getPostText', array('is_safe' => array('html'))),
             'entity_post_text' => new \Twig_Function_Method($this, 'getEntityPostText', array('is_safe' => array('html'))),
@@ -315,7 +316,8 @@ class CMExtension extends \Twig_Extension
             'default'         => false,
             'link'            => null,
             'box_attributes'  => array(),
-            'img_attributes'  => array()
+            'img_attributes'  => array(),
+            'user_box' => null
         ), $options);
 
         $width  = $options['width'];
@@ -390,6 +392,11 @@ class CMExtension extends \Twig_Extension
         foreach ($options['box_attributes'] as $key => $attr) {
             $boxTag .= ' '.$key.'="'.$attr.'"';
         }
+
+        if (!is_null($options['user_box'])) {
+            $boxTag .= $this->getUserBox($options['user_box']);
+        }
+        
         return $boxTag.'>'.$imgTag.$boxTagEnd;
     }
 
@@ -444,6 +451,8 @@ class CMExtension extends \Twig_Extension
                 $page = $request->getPage();
                 $pageLink = $this->router->generate('page_show', array('slug' => $page->getSlug()));
                 return $this->translator->trans('%user% would like you to join the page %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
+            } elseif ($request->getObject() == 'Relation') {
+                return $this->translator->trans('%user% requested you a relation. TODO: relation type!', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>'));
             }
         } elseif ($user->getId() == $request->getFromUser()->getId()) {
             $userLink = $this->router->generate('user_show', array('slug' => $request->getUser()->getSlug()));
@@ -467,6 +476,25 @@ class CMExtension extends \Twig_Extension
                 return $this->translator->trans('You requested %user% to join the page %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
             }
         }
+    }
+
+    public function getRequestUpdate(Request $request)
+    {
+        $loading = $this->translator->trans('Loading');
+        $accept = $this->translator->trans('Accept');
+        $refuse = $this->translator->trans('Refuse');
+        switch ($request->getObject()) {
+            case 'Relation':
+                $acceptPath = $this->router->generate('relation_update', array('choice' => 'accept', 'id' => $request->getId()));
+                $refusePath = $this->router->generate('relation_update', array('choice' => 'refuse', 'id' => $request->getId()));
+                break;
+            default:
+                $acceptPath = $this->router->generate('request_update', array('choice' => 'accept', 'id' => $request->getId()));
+                $refusePath = $this->router->generate('request_update', array('choice' => 'refuse', 'id' => $request->getId()));
+                break;
+        }
+        return '<a href="'.$acceptPath.'" class="btn btn-primary btn-sm ajax-link" data-loading-text="'.$loading.'">'.$this->getIcon('Ok').' '.$accept.'</a>
+                <a href="'.$refusePath.'" class="btn btn-default btn-sm ajax-link" data-loading-text="'.$loading.'">'.$this->getIcon('Remove').' '.$refuse.'</a>';
     }
 
     public function getNotificationTag(Notification $notification)
@@ -964,6 +992,7 @@ class CMExtension extends \Twig_Extension
             case 'Request_out':
                 return '<span class="glyphicon glyphicon-share-alt"></span>';
             case 'Relation':
+            case 'Relation_'.Post::TYPE_CREATION:
                 return '<span class="glyphicons git_branch"></span>';
             case 'Options':
                 return '<span class="glyphicons cogwheels"></span>';

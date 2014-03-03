@@ -1,7 +1,7 @@
-{% extends 'CMBundle:Form:layout.html.twig' %}
+{% extends 'CMBundle::layout.html.twig' %}
 
 {% block bodyHeading %}
-    {{ include('CMBundle:User:top.html.twig', {'inPage': 'profile'}) }}
+    {{ include('CMBundle:User:top.html.twig') }}
 {% endblock %}
 
 {% block body %}
@@ -26,7 +26,7 @@
         <div class="col-md-6">
             <div class="box">
                 <div class="box-heading">
-                    <h2>{{ icon('Relation') }} <span>{{ relationType|trans }}</span> <small>{{ relationType.relations|length }}</small></h2>
+                    <h2>{{ icon('Relation') }} <span>{{ relationType|trans }}</span> <small><a href="{{ path('relation_type', {slug: user.slug, typeId: relationType.id}) }}">{{ relationType.relations|length }}</a></small></h2>
                 </div>
 
                 <div class="box-body">

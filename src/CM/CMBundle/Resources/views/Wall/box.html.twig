@@ -4,7 +4,7 @@
             {% if simple|default(false) %}
                 {{ icon('Wall') }} {{ 'Wall'|trans }} <small><a href="{{ link }}">{{ 'show all posts'|trans }}</small></a>
                 {% else %}
-                    {{ icon('Wall') | raw }} {{ 'Last posts' | trans }}
+                    {{ icon('Wall') }} {{ 'Last posts'|trans }}
                 {% endif %}
         </h2>
     </div>

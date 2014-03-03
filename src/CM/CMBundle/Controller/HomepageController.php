@@ -3,7 +3,7 @@ namespace CM\CMBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -24,18 +24,28 @@ use CM\CMBundle\Utility\UploadHandler;
 class HomepageController extends Controller
 {
     /**
-     * @Route("/", name = "homepage_index", requirements={"userId" = "\d+"})
+     * @Route("/", name = "homepage_index")
      * @Template
      */
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        // $this->setLayout('layoutNoColumn');
-        $rows = $em->getRepository('CMBundle:HomepageRow')->getRows(array('locale' => $request->getLocale()));
-        // $columns = $em->getRepository('CMBundle:HomepageColumn')->getColumns(array('locale' => $request->getLocale()));
+
+        if ($request->isXmlHttpRequest()) {
+            $posts = $em->getRepository('CMBundle:Post')->getLastPosts();
+            $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
+
+            $array = array();
+            $array['lastUsers'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(15)));
+            foreach ($pagination as $post) {
+                $array[] = $this->renderView('CMBundle:Homepage:postBox.html.twig', array('post' => $post));
+            }
+            
+            return new JsonResponse($array);
+        }
+
         return array(
-            'rows' => $rows,
-            // 'columns' => $columns
+            'lastUsers' => $lastUsers
         );
     }
 

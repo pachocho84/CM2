@@ -325,20 +325,21 @@
 
 
 
+/* IMAGES GRID */
+.square-images-grid > * {
+    display: block;
+    float: left;
+    overflow: hidden;
+}
+
+
+
 /* FANS */
 .fans
 {
     float: left;
     border: none;
     padding: 0px;
-}
-.fans .fan-user
-{
-    width: 40px;
-    height: 40px;
-    display: block;
-    float: left;
-    overflow: hidden;
 }
 .fans .fans-count
 {

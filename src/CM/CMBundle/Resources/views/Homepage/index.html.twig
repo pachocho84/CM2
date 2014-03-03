@@ -1,4 +1,6 @@
-{% extends 'CMBundle:Homepage:layout.html.twig' %}
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% set noColumns = true %}
  
 {% block title %}{{ 'The classical music portal'|trans }}{% endblock %}
 
@@ -12,95 +14,15 @@
     {% endstylesheets %}
 {% endblock %}
 
-{% block body %}                                                               
-    {% if not is_granted('ROLE_USER') %}
-        <div id="registration">{{ render(controller('FOSUserBundle:Registration:register')) }}</div> 
-    {% endif %}
-
-    {{ render(controller('CMBundle:Homepage:tabs', {'categoryPage': category|default(null)})) }}
-    {#<?php include_component('homepage', 'tabs') ?>#}
-
-    {#<?php include_component('homepage', 'lastRegisteredUsers') ?>#}
-
-    <div id="columnMaskHomepage">           
-        <div id="columnMaskCenter">   
-            <div id="columnCenter">
-
-
-                {% for row in rows %}
-
-
-                    {% if row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_ROW_1') or row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_ROW_2') or row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_ROW_3') or row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_ROW_4') %}
-
-                        <div class="row {{ row.typeString }}">
-
-                            {% for column in row.columns %}
-                                
-                                {% if column.type == constant('CM\\CMBundle\\Entity\\HomepageColumn::TYPE_ARTICLE') %}
-                                    
-                                    {{ include('CMBundle:Homepage:object.html.twig') }}
-                                    
-                                {% elseif column.type == constant('CM\\CMBundle\\Entity\\HomepageColumn::TYPE_BOX') %}
-                                    
-                                    {{ render(controller('CMBundle:Homepage:box', {'box': column.box})) }}
-                                         
-                                {% endif %}
-
-                            {% endfor %}
-
-                        </div>
-
-                    {% elseif row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_PHOTO_GALLERY') %}
-
-                        {{ render(controller('CMBundle:Homepage:photoGallery')) }}
-                        {#<?php include_component('homepage', 'photoGallery') ?>#}   
-
-                    {% elseif row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_VIDEO_GALLERY') %}
-
-                        {{ render(controller('CMBundle:Homepage:videoGallery')) }}
-                        {#<?php include_component('homepage', 'videoGallery') ?>#}   
-
-                    {% elseif row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_REVIEWS') %}
-
-                        {{ render(controller('CMBundle:Homepage:reviews')) }}
-
-                    {% elseif row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_PARTNER_ACCADEMIA_TEATRO_ALLA_SCALA') %}             
-
-                        {{ include('CMBundle:Homepage:partnerAccademiaTeatroAllaScala.html.twig') }}                                        
-
-                    {% elseif row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_PARTNER_RADIO_CLASSICA') %}                   
-
-                        {{ render(controller('CMBundle:Homepage:partnerRadioClassica')) }}
-
-                    {% elseif row.type == constant('CM\\CMBundle\\Entity\\HomepageRow::TYPE_BANNER_SUBSCRIBE') %}
-
-                        {% if not is_granted('ROLE_USER') %}
-                            <div class="row"><a href="{{  path('fos_user_registration_register') }}"><img src="{{ asset(banners_dir ~ '/' ~ app.session.get('_locale') ~ '/circuito_musica_subscribe_660x200.jpg') }}" /></a></div> 
-                        {% else %}
-                            <div class="separatore"></div> 
-                        {% endif %}
-                        {#<?php if (!$sf_user->isAuthenticated()): ?>  
-                                    <div class="row"><?php echo link_to(image_tag('/uploads/banner/circuito_musica_iscrizione_660x200.jpg'), '@signup') ?></div> 
-                                <?php else: ?>
-                                    <div class="separatore"></div> 
-                        <?php endif ?>#}
-                             
-                    {% endif %}
-
-                {% endfor %}
-              
-            </div>
-
-          {#<?php include_partial('columnRight') ?>#}
-
-        </div>
+{% block container %}
+    <div class="row" id="wall" style="width: 100%">
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {% javascripts
-        '@CMBundle/Resources/public/js/homepage.js'
+        '@CMBundle/Resources/public/js/wall.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

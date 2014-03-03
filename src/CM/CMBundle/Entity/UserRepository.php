@@ -63,10 +63,23 @@ class UserRepository extends BaseRepository
         return array_map('current', $query);
     }
 
-    public function getFromAutocomplete($fullname, $exclude = array())
+    public function getFromAutocomplete($fullname, $userId, $exclude = array())
     {
+        $relations = $this->getEntityManager()->createQueryBuilder()
+            ->select('partial r.{id, userId}')
+            ->from('CMBundle:Relation', 'r')
+            ->where('r.fromUserId = :user_id')->setParameter('user_id', $userId)
+            ->andWhere('r.accepted = :accepted')->setParameter('accepted', Relation::ACCEPTED_BOTH)
+            ->groupBy('r.userId')
+            ->getQuery()->getArrayResult();
+
+        if (count($relations) == 0) return array();
+
+        $relations = array_map(function($v) { return $v['userId']; }, $relations);
+
         $qb = $this->createQueryBuilder('u');
         return $qb->select('partial u.{id, username, usernameCanonical, firstName, lastName, img, imgOffset}')
+            ->andWhere('u.id IN (:relations)')->setParameter('relations', $relations)
             ->andWhere('u.id NOT IN (:exclude)')->setParameter('exclude', $exclude)
             // ->where('u.IsActive = ?', true)
             ->andWhere('u.enabled = '.true)
@@ -75,7 +88,18 @@ class UserRepository extends BaseRepository
             )->setParameter('fullname', $fullname.'%')
             ->setMaxResults(8)
             ->orderBy('u.vip', 'DESC')
-            ->getQuery()->getResult(Query::HYDRATE_ARRAY);
+            ->getQuery()->getArrayResult();
+    }
+
+    public function getLastRegisteredUsers($limit)
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u')
+            ->andWhere('u.enabled = '.true)
+            ->andWhere('u.img is not null')
+            ->orderBy('u.id', 'desc')
+            ->setMaxResults($limit)
+            ->getQuery()->getResult();
     }
 
     public function search($q, $limit)

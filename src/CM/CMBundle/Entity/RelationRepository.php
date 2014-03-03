@@ -15,7 +15,11 @@ class RelationRepository extends BaseRepository
     static protected function getOptions(array $options = array())
     {
         return array_merge(array(
-            'indexBy' => null
+            'relationTypeId' => null,
+            'indexBy' => null,
+            'groupBy' => null,
+            'paginate'      => true,
+            'limit'         => null,
         ), $options);
     }
     
@@ -64,13 +68,15 @@ class RelationRepository extends BaseRepository
         return $query->getQuery()->getResult();
     }
 
-    public function countBy($options = array())
+    public function countBy($fields = array(), $options = array())
     {
+        $options = self::getOptions($options);
+
         $query = $this->createQueryBuilder('r')
             ->select('count(r.id)');
-        foreach ($options as $field => $option) {
+        foreach ($fields as $field => $value) {
             $query->andWhere('r.'.$field.' = :'.$field)
-                ->setParameter($field, $option);
+                ->setParameter($field, $value);
         }
         return $query->getQuery()->getSingleScalarResult();
     }
@@ -87,17 +93,32 @@ class RelationRepository extends BaseRepository
     //         ->getQuery()->getResult();
     // }
 
-    public function getRelationsPerUser($userId, $accepted, $exclude = false)
+    public function getRelationsPerUser($userId, $accepted, $exclude = false, $options = array())
     {
-        return $this->createQueryBuilder('r')
+        $options = self::getOptions($options);
+
+        $count = $this->createQueryBuilder('r')
+            ->select('count(r.id)')
+            ->leftJoin('r.relationType', 'rt')
+            ->andWhere('r.userId = :user_id')->setParameter('user_id', $userId)
+            ->andWhere('r.accepted '.($exclude ? '!=' : '=').' :accepted')->setParameter('accepted', $accepted);
+
+        $query = $this->createQueryBuilder('r')
             ->select('r, rt, u')
             ->leftJoin('r.relationType', 'rt')
             ->leftJoin('r.fromUser', 'u')
             ->andWhere('r.userId = :user_id')->setParameter('user_id', $userId)
-            ->andWhere('r.accepted '.($exclude ? '!=' : '=').' :accepted')->setParameter('accepted', $accepted)
-            ->orderBy('r.createdAt', 'desc')
-            ->groupBy('r.relationTypeId')
-            ->getQuery()->getResult();
+            ->andWhere('r.accepted '.($exclude ? '!=' : '=').' :accepted')->setParameter('accepted', $accepted);
+
+        if (!is_null($options['relationTypeId'])) {
+            $count->andWhere('rt.id = :relation_type_id')->setParameter('relation_type_id', $options['relationTypeId']);
+            $query->andWhere('rt.id = :relation_type_id')->setParameter('relation_type_id', $options['relationTypeId']);
+        }
+
+        $query->orderBy('r.createdAt', 'desc')
+            ->groupBy('r.relationTypeId');
+
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
     public function getSuggestedUsers($userId, $offset, $limit)

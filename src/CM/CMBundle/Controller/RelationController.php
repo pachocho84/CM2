@@ -236,6 +236,44 @@ class RelationController extends Controller
     }
 
     /**
+     * @Route("/{slug}/relations/{typeId}/{page}", name="relation_type", requirements={"typeId" = "\d+", "page" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function typeAction(Request $request, $slug, $typeId, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
+        
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+
+        $relationType = $em->getRepository('CMBundle:RelationType')->findOneById($typeId);
+
+        if (!$relationType) {
+            throw new NotFoundHttpException('Relation type not found.');
+        }
+
+        if ($user->getId() == $this->getUser()->getId()) {
+            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_NO, true, array('relationTypeId' => $typeId));
+            $pendingRelations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_NO);
+        } else {
+            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_BOTH, false, array('relationTypeId' => $typeId));
+        }
+        
+        $pagination = $this->get('knp_paginator')->paginate($relations, $page, 10);
+
+        return array(
+            'user' => $user,
+            'relationType' => $relationType,
+            'pendingRelations' => $pendingRelations,
+            'relations' => $pagination
+        );
+    }
+
+    /**
      * @Route("/{slug}/relations", name="relation_show")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
@@ -254,8 +292,6 @@ class RelationController extends Controller
             $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesPerUser($user->getId(), Relation::ACCEPTED_NO, true);
             $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_NO, true);
             $pendingRelations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_NO);
-
-            $suggestions = $em->getRepository('CMBundle:Relation')->getSuggestedUsers($this->getUser()->getId(), 0, 10);
         } else {
             $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesPerUser($user->getId(), Relation::ACCEPTED_BOTH);
             $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_BOTH);
@@ -272,7 +308,6 @@ class RelationController extends Controller
         return array(
             'user' => $user,
             'pendingRelations' => $pendingRelations,
-            'suggestions' => $suggestions,
             'relationTypes' => $relationTypes,
             'relations' => $groupedRelations
         );

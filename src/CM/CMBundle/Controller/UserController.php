@@ -38,7 +38,7 @@ class UserController extends Controller
 
         $exclude = $request->query->get('exclude') ? explode(',', $request->query->get('exclude')) : array();
         $exclude[] = $this->getUser()->getId();
-        $users = $em->getRepository('CMBundle:User')->getFromAutocomplete($request->query->get('query'), $exclude);
+        $users = $em->getRepository('CMBundle:User')->getFromAutocomplete($request->query->get('query'), $this->getUser()->getId(), $exclude);
 
         $results = array();
         foreach($users as $user)
