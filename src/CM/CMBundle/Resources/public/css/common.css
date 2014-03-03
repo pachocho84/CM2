@@ -326,7 +326,10 @@
     margin-bottom: 10px;
 }
 .post .post-content {
-    margin: 0 -14px;
+    margin: 0 -14px 10px;
+}
+.post .bottom ul {
+    margin: 0;
 }
 .post p
 {
