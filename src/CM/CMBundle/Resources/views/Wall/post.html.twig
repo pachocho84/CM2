@@ -3,30 +3,37 @@
     {% set relatedObjects = related_object(post.object, post.objectIds) %}
 {% endif %}
 
-<div class="media object post"{% if updateMore|default(false) and loop is defined and loop.first %} update_more="{{ path(app.request.attributes.get('_route')|replace({'_update': ''})~'_update', app.request.attributes.get('_route_params')|merge({ 'lastUpdated': post.updatedAt.timestamp })) }}"{% endif %}>
+<div class="media post-heading"{% if updateMore|default(false) and loop is defined and loop.first %} update_more="{{ path(app.request.attributes.get('_route')|replace({'_update': ''})~'_update', app.request.attributes.get('_route_params')|merge({ 'lastUpdated': post.updatedAt.timestamp })) }}"{% endif %}>
+    
     {{ show_img_box(post.publisher.img|imagine_filter('small'), {'width': 50, 'height': 50, 'offset': post.publisher.imgOffset,  'link': path(post.publisherType ~ '_show', {'slug': post.publisher.slug}), 'box_attributes': {'class': 'pull-left'}, 'default': 'user'}) }}
 
     <div class="media-body">
 
-        <h4 class="media-title">{{ post.publisher }}</h4>
+        <h4 class="media-heading">{{ post.publisher }}</h4>
 
-        <p class="small">
-            {% if not inEntity %}
-                {{ post_text(post, relatedObjects) }}
-            {% else %}
-                {{ entity_post_text(post) }}
-            {% endif %}
+        <p class="text-muted small">
+            {{ icon((post.object|class_name)~'_'~(post.type)) }}
+            {{ post.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
         </p>
 
     </div>
 </div>
 
+
+
+<p class="small">
+    {% if not inEntity %}
+        {{ post_text(post, relatedObjects) }}
+    {% else %}
+        {{ entity_post_text(post) }}
+    {% endif %}
+</p>
+
+
+
 {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
 
-<p class="text-muted small">
-    {{ icon((post.object|class_name)~'_'~(post.type)) }}
-    {{ post.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
-</p>
+
 
 {% if not inEntity %}
     {% if (post.object|class_name == 'Like' or post.object|class_name == 'Comment') and relatedObjects.imageId is not null %}
