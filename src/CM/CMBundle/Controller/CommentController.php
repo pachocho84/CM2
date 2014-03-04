@@ -28,16 +28,18 @@ class CommentController extends Controller
      * @Route("/entity/new/{id}", name="comment_entity_new", requirements={"id" = "\d+"})
      * @Template
      */
-    public function commentsAction(Request $request, $id = null, $commentId = null, $isImage = false)
+    public function commentsAction(Request $request, $post = null, $id = null, $commentId = null, $isImage = false)
     {
         $em = $this->getDoctrine()->getManager();
 
-        if (!$isImage) {
-            $post = $em->getRepository('CMBundle:Post')->getPostWithComments($id);
-            $image = null;
-        } else {
-            $post = null;
-            $image = $em->getRepository('CMBundle:Image')->getImageWithComments($id);
+        if (is_null($post)) {
+            if (!$isImage) {
+                $post = $em->getRepository('CMBundle:Post')->getPostWithComments($id);
+                $image = null;
+            } else {
+                $post = null;
+                $image = $em->getRepository('CMBundle:Image')->getImageWithComments($id);
+            }
         }
 
         $form = null;

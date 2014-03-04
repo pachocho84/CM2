@@ -28,7 +28,7 @@
 
             {# <?php if ($sito->getCommentsEnabled() && $sito->getCommentsDisplay()): ?> #}
                 {% if isImage is not defined %}{% set isImage = false %}{% endif %}
-                {{ render(controller('CMBundle:Comment:comments', {'id': post.id, 'isImage': isImage})) }}
+                {{ render(controller('CMBundle:Comment:comments', {post: post, 'isImage': isImage})) }}
             {# <?php endif ?> #}
 
         </ul>

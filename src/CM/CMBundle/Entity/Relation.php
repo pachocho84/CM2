@@ -8,7 +8,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * Relation
  *
- * @ORM\Entity(repositoryClass="CM\CMBundle\Entity\RelationRepository")
+ * @ORM\Entity(repositoryClass="RelationRepository")
  * @ORM\Table(name="relation")
  */
 class Relation

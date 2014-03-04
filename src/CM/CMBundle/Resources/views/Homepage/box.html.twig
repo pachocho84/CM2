@@ -1,93 +1,12 @@
-<div id="box_{{ box.slug }}" class="column box_home box_home-{{ box.width }} {% if box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_PARTNER') %}partner_box {% endif %}box_home-fade1">
-                
+<div class="box">
+    <div class="box-heading">
+        <h2>{{ 'Box'|trans }}</h2>
+    </div>
 
-
-    <h2>
-        {{ box.name }}
-     
-        {% if box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_RUBRIC') %}
-            <span class="piccolo">{{ 'by %user%'|trans({'%user%': '<a href="' ~ path('user_show', {'slug': box.category.editor.slug}) ~ '">' ~ box.category.editor ~ '</a>'})|raw }}</span>
-        {% endif %}            
-    </h2>  
-    
-
-    
-    <div class="box_home-title">  
-
-        {% if box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_RUBRIC') %}
-            {{ 'Latest Articles'|trans }}
-        {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_PARTNER') and box.leftSide == constant('CM\\CMBundle\\Entity\\HomepageBox::SIDE_EVENTS') %}
-            {{ 'Upcoming Events'|trans }}
-        {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_PARTNER') and box.leftSide == constant('CM\\CMBundle\\Entity\\HomepageBox::SIDE_ARTICLES') %}
-            {{ 'Latest Articles'|trans }}
-        {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_PARTNER') and box.leftSide == constant('CM\\CMBundle\\Entity\\HomepageBox::SIDE_NEWS') %}
-            {{ 'Latest News'|trans }}
-        {% endif %}            
-        
-        <div class="box_home-nav">                                           
-            <a href="#" class="box_home-prev"></a>
-            {% if box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_RUBRIC') %}
-                <a href="{{ path('homepage_category', {'slug': box.category.getSlug}) }}" class="box_home-archive" title="{{ 'Go to rubric archive'|trans }}"></a>
-            {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_PARTNER') and box.leftSide == constant('CM\\CMBundle\\Entity\\HomepageBox::SIDE_EVENTS') %}
-                <a href="{{ path('page_events', {'slug': box.page.slug}) }}" class="box_home-events" title="{{ 'View all events'|trans }}"></a>
-                <a href="{{ path('page_show', {'slug': box.page.slug}) }}" class="box_home-page" title="{{ 'Go to page'|trans }}"></a>
-            {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_PARTNER') and (box.leftSide == constant('CM\\CMBundle\\Entity\\HomepageBox::SIDE_ARTICLES') or box.leftSide == constant('CM\\CMBundle\\Entity\\HomepageBox::SIDE_NEWS')) %}
-                <a href="{{ path('page_articles', {'slug': box.page.slug}) }}" class="box_home-articles" title="{{ 'View all articles'|trans }}"></a>
-                <a href="{{ path('page_show', {'slug': box.page.slug}) }}" class="box_home-page" title="{{ 'Go to page'|trans }}"></a>
-            {% endif %}                                                                                                                                                                                     
-            <a href="#" class="box_home-next"></a> 
-        </div> 
-        
-    </div>        
-    
-
-           
-    {% if articles|length > 0 %}
-        <div class="box_home-oggetti">
-            {% for article in articles %}
-                <div class="box_home-oggetto">
-                    {% if article.img is not null %}
-                        {{ show_img_box(article.img|imagine_filter('medium'), {'width': 300, 'height': 180, 'offset': article.imgOffset, 'link': path('homepage_show', {'id': article.id}), 'link_attributes': {'class': 'image-container'}}) }}
-                    {% endif %}                                                                
-                    <h3><a href="{{ path('homepage_show', {'id': article.id}) }}">{{ article.getTitle }}</a></h3>
-                    <h4>{{ article.getSubtitle }}</h4>
-                </div>    
-            {% endfor %}
-        </div>   
-    {% endif %}
-
-
-
-    {% if news|length > 0 %}
-        <div class="box_home-oggetti">
-            {% for article in news %}
-                <div class="box_home-oggetto">
-                    {% if article.img is not null %}
-                        {{ show_img_box(article.img|imagine_filter('medium'), {'width': 300, 'height': 180, 'offset': article.imgOffset, 'link': path('article_show', {'id': article.id, 'slug': article.slug}), 'link_attributes': {'class': 'image-container'}}) }}
-                    {% endif %}                                                                
-                    <h3><a href="{{ path('article_show', {'id': article.id, 'slug': article.slug}) }}">{{ article.getTitle }}</a></h3>
-                    <h4>{{ article.getSubtitle }}</h4>
-                </div>    
-            {% endfor %} 
-        </div>   
-    {% endif %}
-
-
-
-    {% if events|length > 0 %}
-        <div class="box_home-oggetti">
-            {% for date in events %}
-                <div class="box_home-oggetto">
-                    {% if date.getEvent.img is not null %}
-                        {{ show_img_box(date.event.img|imagine_filter('medium'), {'width': 300, 'height': 180, 'offset': date.event.imgOffset, 'link': path('event_show', {'id': date.event.id, 'slug': date.event.slug}), 'link_attributes': {'class': 'image-container'}}) }}
-                    {% endif %}                                                                
-                    <h3><a href="{{ path('event_show', {'id': date.event.id, 'slug': date.event.getSlug}) }}">{{ date.event.getTitle }}</a></h3>
-                    <h4>{{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }} {{ icon('Map') }} {{ date.location }} <small>({{ date.address }})</small></h4>
-                </div>    
-            {% endfor %} 
-        </div>   
-    {% endif %}                                                                                                                 
-    
-        
-
- </div> 
+    <div class="objects box-body">
+        {{ objects|length }}
+        {% for object in objects %}
+            {{ object|class_name }}
+        {% endfor %}
+    </div>
+</div>

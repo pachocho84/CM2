@@ -14,13 +14,16 @@ class DiscRepository extends BaseRepository
 {
     static protected function getOptions(array $options = array())
     {
+        $options = array_merge(array(
+            'locale'        => 'en'
+        ), $options);
+        
         return array_merge(array(
             'userId'       => null,
             'groupId'      => null,
             'pageId'       => null,
             'paginate'      => true,
             'categoryId' => null,
-            'locale'        => 'en',
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'protagonists'  => false,
             'limit'         => 25,
@@ -39,7 +42,8 @@ class DiscRepository extends BaseRepository
         $query = $this->createQueryBuilder('d')
             ->select('d, dt, t, i, p, l, c, u, lu, cu, pg, gr'.($options['protagonists'] ? ', eu, us' : ''))
             ->leftJoin('d.discTracks','dt')
-            ->leftJoin('d.translations', 't')
+            ->leftJoin('d.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->setParameter('locales', $options['locales'])
             ->leftJoin('d.images', 'i', 'WITH', 'i.main = '.true)
             ->join('d.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
             ->setParameter('object', Disc::className())
@@ -49,8 +53,7 @@ class DiscRepository extends BaseRepository
             ->leftJoin('l.user', 'lu')
             ->leftJoin('c.user', 'cu')
             ->leftJoin('p.page', 'pg')
-            ->leftJoin('p.group', 'gr')
-            ->where('t.locale in (:locales)')->setParameter('locales', $options['locales']);
+            ->leftJoin('p.group', 'gr');
             
         if ($options['protagonists']) {
             $query->leftJoin('d.entityUsers', 'eu', 'eu.userId')

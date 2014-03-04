@@ -183,32 +183,36 @@ class EventRepository extends BaseRepository
     {
         $options = self::getOptions($options);
         
-        $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('d, e, p, i')
+        $count = $this->getEntityManager()->createQueryBuilder()
+            ->select('count(d.id)')
             ->from('CMBundle:EventDate', 'd')
             ->join('d.event', 'e')
+            ->join('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')->setParameter('object', Event::className())
+            ->andWhere('d.start >= :now')->setParameter('now', new \DateTime);
+
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('d, e, t, p, i')
+            ->from('CMBundle:EventDate', 'd')
+            ->join('d.event', 'e')
+            ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->join('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')->setParameter('object', Event::className())
             ->leftJoin('e.images', 'i', 'with', 'i.main = '.true)
             ->andWhere('d.start >= :now')->setParameter('now', new \DateTime)
             ->orderBy('d.start');
         if (!is_null($options['userId'])) {
-            $query->andWhere('p.userId = :user_id')
-                ->setParameter('user_id', $options['userId']);
+            $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
+            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
         }
         if (!is_null($options['pageId'])) {
-            $query->andWhere('p.pageId = :page_id')
-                ->setParameter('page_id', $options['pageId']);
+            $count->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+            $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
         if (!is_null($options['groupId'])) {
-            $query->andWhere('p.groupId = :group_id')
-                ->setParameter('group_id', $options['groupId']);
-        }
-        if (!is_null($options['limit'])) {
-            $query->setMaxResults($options['limit']);
+            $count->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
 
-        return $query->getQuery()
-            ->getResult();
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
     public function countNextDates($options = array())

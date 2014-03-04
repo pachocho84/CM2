@@ -10,7 +10,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * Sponsored
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="SponsoredRepository")
  * @ORM\Table(name="sponsored")
  */
 class Sponsored
@@ -27,12 +27,17 @@ class Sponsored
     private $id;
 
     /**
+     * @ORM\Column(name="entity_id", type="integer", nullable=true)
+     */
+    private $entityId;
+
+    /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="Event")
+     * @ORM\ManyToOne(targetEntity="Entity")
      * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
      */
-    private $event;
+    private $entity;
 
     /**
      * @var integer
@@ -148,26 +153,39 @@ class Sponsored
     }
 
     /**
-     * Set event
+     * Get userId
      *
-     * @param \CM\CMBundle\Entity\Event $event
-     * @return Sponsored
+     * @return integer 
      */
-    public function setEvent(Event $event = null)
+    public function getEntityId()
     {
-        $this->event = $event;
+        return $this->entityId;
+    }
+
+    /**
+     * Set entity
+     *
+     * @param \CM\CMBundle\Entity\Event $entity
+     * @return Post
+     */
+    public function setEntity(Entity $entity)
+    {
+        $this->entity = $entity;
+        if (!is_null($entity)) {
+            $this->entityId = $entity->getId();
+        }
     
         return $this;
     }
 
     /**
-     * Get event
+     * Get entity
      *
      * @return \CM\CMBundle\Entity\Event 
      */
-    public function getEvent()
+    public function getEntity()
     {
-        return $this->event;
+        return $this->entity;
     }
 
     /**

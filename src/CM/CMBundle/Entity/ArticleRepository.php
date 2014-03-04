@@ -14,13 +14,16 @@ class ArticleRepository extends BaseRepository
 {
     static protected function getOptions(array $options = array())
     {
+        $options = array_merge(array(
+            'locale'        => 'en'
+        ), $options);
+
         return array_merge(array(
             'userId'       => null,
             'groupId'      => null,
             'pageId'       => null,
             'paginate'      => true,
             'categoryId' => null,
-            'locale'        => 'en',
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'protagonists'  => false,
             'limit'         => 25,
@@ -33,13 +36,16 @@ class ArticleRepository extends BaseRepository
                  
         $count = $this->createQueryBuilder('a')
             ->select('count(a.id)')
-            ->leftJoin('a.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION);
+            ->leftJoin('a.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
+            ->setParameter('object', Article::className());
 
         $query = $this->createQueryBuilder('a')
             ->select('a, t, i, p, l, c, u, lu, cu, pg, gr'.($options['protagonists'] ? ', eu, us' : ''))
-            ->leftJoin('a.translations', 't')
+            ->leftJoin('a.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->setParameter('locales', $options['locales'])
             ->leftJoin('a.images', 'i', 'WITH', 'i.main = '.true)
-            ->leftJoin('a.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
+            ->leftJoin('a.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
+            ->setParameter('object', Article::className())
             ->leftJoin('p.likes', 'l')
             ->leftJoin('p.comments', 'c')
             ->leftJoin('p.user', 'u')
@@ -76,7 +82,6 @@ class ArticleRepository extends BaseRepository
                 ->setParameter(':category_id', $options['categoryId']);
         }
 
-        $count->orderBy('p.createdAt', 'desc');
         $query->orderBy('p.createdAt', 'desc');
         
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
