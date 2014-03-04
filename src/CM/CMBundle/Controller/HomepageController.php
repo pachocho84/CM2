@@ -32,30 +32,30 @@ class HomepageController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if ($request->isXmlHttpRequest()) {
-            $posts = $em->getRepository('CMBundle:Post')->getLastPosts();
-            $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
-
             $boxes = array();
             $boxes['lastUsers'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(15)));
             $boxes['dates'] = $this->renderView('CMBundle:Event:nextDates.html.twig', array('dates' => $em->getRepository('CMBundle:Event')->getNextDates(array('limit' => 3))));
             if (!$this->get('security.context')->isGranted('ROLE_USER')) {
                 $boxes['authentication'] = $this->renderView('CMBundle:Homepage:authentication.html.twig');
             }
-            $homepageBoxes = $em->getRepository('CMBundle:HomepageBox')->getBoxes(4, array('locale' => $request->getLocale()));
-            foreach ($homepageBoxes as $box) {
-                switch ($box->getType()) {
-                    case HomepageBox::TYPE_EVENT:
-                        $events = $em->getRepository('CMBundle:Event')->getNextDates(array('pageId' => $box->getPageId(), 'limit' => 5));
-                        break;
-                    case HomepageBox::TYPE_DISC:
-                        break;
-                    case HomepageBox::TYPE_ARTICLE:
-                        break;
-                    case HomepageBox::TYPE_RUBRIC:
-                        break;
-                }
-                $boxes['sponsored_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:sponsoredBox.html.twig', array('box' => $box));
-            }
+            // $homepageBoxes = $em->getRepository('CMBundle:HomepageBox')->getBoxes(4, array('locale' => $request->getLocale()));
+            // foreach ($homepageBoxes as $box) {
+            //     switch ($box->getType()) {
+            //         case HomepageBox::TYPE_EVENT:
+            //             $events = $em->getRepository('CMBundle:Event')->getNextDates(array('pageId' => $box->getPageId(), 'limit' => 5));
+            //             break;
+            //         case HomepageBox::TYPE_DISC:
+            //             break;
+            //         case HomepageBox::TYPE_ARTICLE:
+            //             break;
+            //         case HomepageBox::TYPE_RUBRIC:
+            //             break;
+            //     }
+            //     $boxes['sponsored_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:sponsoredBox.html.twig', array('box' => $box));
+            // }
+
+            $posts = $em->getRepository('CMBundle:Post')->getLastPosts();
+            $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
             foreach ($pagination as $post) {
                 $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:postBox.html.twig', array('post' => $post));
             }

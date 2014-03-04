@@ -133,5 +133,7 @@ class Multimedia extends Entity
 
         $this->setTitle($info->title)
             ->setText($info->description);
+
+        var_dump($url, $this->title, $this->text);
     }
 }

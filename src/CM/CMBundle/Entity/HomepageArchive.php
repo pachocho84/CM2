@@ -92,7 +92,7 @@ class HomepageArchive
     public function getArticle()
     {
         return $this->article;
-    }+
+    }
 
     /**
      * Get userId

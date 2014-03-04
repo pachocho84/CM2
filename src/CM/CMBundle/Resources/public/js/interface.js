@@ -28,17 +28,17 @@ $(function() {
         }
     });
     
-    $('#menu').hcSticky({
-        noContainer: true
-    });
+    // $('#menu').hcSticky({
+    //     noContainer: true
+    // });
   
   
   
     /* SIDEBAR */
-    $('[sticky]').hcSticky({
-        top: 50,
-        bottom: 15
-    });
+    // $('[sticky]').hcSticky({
+    //     top: 50,
+    //     bottom: 15
+    // });
     
     
     

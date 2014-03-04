@@ -15,7 +15,7 @@ class FanFixtures extends AbstractFixture implements OrderedFixtureInterface
         for ($i = 1; $i < 9; $i++) {
             $ofUser = $manager->merge($this->getReference('user-'.$i));
 
-            $numbers = range(1, 8);
+            $numbers = range(1, UserFixtures::countPeople());
             unset($numbers[$i - 1]);
             shuffle($numbers);
             for ($j = 0; $j < rand(0, 7); $j++) {
@@ -31,7 +31,7 @@ class FanFixtures extends AbstractFixture implements OrderedFixtureInterface
         for ($i = 1; $i < 21; $i++) {
             $ofGroup = $manager->merge($this->getReference('group-'.$i));
 
-            $numbers = range(1, 8);
+            $numbers = range(1, UserFixtures::countPeople());
             unset($numbers[$i - 1]);
             shuffle($numbers);
             for ($j = 0; $j < rand(0, 7); $j++) {
@@ -47,7 +47,7 @@ class FanFixtures extends AbstractFixture implements OrderedFixtureInterface
         for ($i = 1; $i < 4; $i++) {
             $ofPage = $manager->merge($this->getReference('page-'.$i));
 
-            $numbers = range(1, 8);
+            $numbers = range(1, UserFixtures::countPeople());
             unset($numbers[$i - 1]);
             shuffle($numbers);
             for ($j = 0; $j < rand(0, 7); $j++) {

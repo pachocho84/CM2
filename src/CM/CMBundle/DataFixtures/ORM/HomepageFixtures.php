@@ -77,11 +77,11 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
     );
 
     private $boxes = array(
-        array('name' => null, 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 3, 'logo' => 'la_verdi-title.png', 'colour' => '#c70036'),
-        array('name' => null, 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 2, 'logo' => 'quartetto_milano-title.png', 'colour' => '#eb6909'),
+        array('name' => null, 'type' => HomepageBox::TYPE_EVENT, 'category' => null, 'page' => 3, 'logo' => 'la_verdi-title.png', 'colour' => '#c70036'),
+        array('name' => null, 'type' => HomepageBox::TYPE_DISC, 'category' => null, 'page' => 2, 'logo' => 'quartetto_milano-title.png', 'colour' => '#eb6909'),
         array('name' => 'Orchestre', 'type' => HomepageBox::TYPE_RUBRIC, 'category' => 0, 'page' => null, 'logo' => null, 'colour' => null),
-        array('name' => null, 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 1/*7*/, 'logo' => 'accademia_teatro_alla_scala-title.png', 'colour' => '#c70c27'),
-        array('name' => null, 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 2/*6*/, 'logo' => 'classic_voice-title.png', 'colour' => '#008fd3'),
+        array('name' => null, 'type' => HomepageBox::TYPE_EVENT, 'category' => null, 'page' => 1/*7*/, 'logo' => 'accademia_teatro_alla_scala-title.png', 'colour' => '#c70c27'),
+        array('name' => null, 'type' => HomepageBox::TYPE_ARTICLE, 'category' => null, 'page' => 2/*6*/, 'logo' => 'classic_voice-title.png', 'colour' => '#008fd3'),
     );
 
     /**

@@ -5,23 +5,23 @@
 {% block title %}{{ 'The classical music portal'|trans }}{% endblock %}
 
 {% block stylesheets %}
-   {{ parent() }}
-   {% stylesheets
-   %}
-       <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
-   {% endstylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
 {% endblock %}
 
 {% block container %}
-   <div class="row" id="wall">
-   </div>
+    <div class="row" id="wall">
+    </div>
 {% endblock %}
 
 {% block javascripts %}
-   {{ parent() }}
-   {% javascripts
-       '@CMBundle/Resources/public/js/wall.js'
-   %}
-       <script type="text/javascript" src="{{ asset_url }}"></script>
-   {% endjavascripts %}
+    {{ parent() }}
+    {% javascripts
+         '@CMBundle/Resources/public/js/wall.js'
+    %}
+         <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

@@ -56,7 +56,7 @@ class MultimediaFixtures extends AbstractFixture implements OrderedFixtureInterf
                     break;
             }
 
-            for ($i = 1; $i < 9; $i++) {
+            for ($i = 1; $i < UserFixtures::countPeople(); $i++) {
                 $user = $manager->merge($this->getReference('user-'.$i));
 
                 $multimedia = new Multimedia;
