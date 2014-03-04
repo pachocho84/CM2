@@ -336,6 +336,15 @@
 .post .post-content {
     margin: 0 -14px 10px;
 }
+.post .post-image-container {
+    background: #efefef;
+    border-top: 1px solid #bbbbbb;
+    border-bottom: 1px solid #bbbbbb;
+}
+.post .post-image-container img {
+    margin: 0 auto;
+    max-height: 600px;
+}
 .post .bottom ul {
     margin: 0;
 }
@@ -350,15 +359,15 @@
     font-weight: 500;
     color: #404040;
 }
-.post:hover {
-    border-color: #aa0000;    
+#wall .box:hover {
+    border-color: #aaaaaa;    
     -webkit-transition: border-color 0.3s;
        -moz-transition: border-color 0.3s;
         -ms-transition: border-color 0.3s;
          -o-transition: border-color 0.3s;
             transition: border-color 0.3s;
 }
-.post:hover a {
+#wall .box:hover a {
     color: #aa0000;    
     -webkit-transition: color 0.3s;
        -moz-transition: color 0.3s;
@@ -366,7 +375,7 @@
          -o-transition: color 0.3s;
             transition: color 0.3s;
 }
-.post a:hover {
+#wall .box a:hover {
     text-decoration: underline;
 }
 

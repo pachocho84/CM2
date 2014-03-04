@@ -581,22 +581,6 @@ form .form-tab-content {
 
 
 
-/* Posts */
-.post .object {
-    margin-top: 10px;
-    padding-top: 10px;
-}
-.post .object:first-child {
-    margin-top: 0px;
-    padding-top: 0px;
-}
-.post .media-list,
-.post .media {
-/*     margin-top: 8px; */
-}
-
-
-
 /* USER */
 .profile-header {
     margin-bottom: 20px;

@@ -1,4 +1,10 @@
-<div class="media">
+<div class="post-image-container">
+    <img src="{{ post.entity.images[0].img|imagine_filter('full') }}" class="img-responsive"/>
+</div>
+
+
+
+<div class="media" style="display: none;">
 
     {% if post.entity.images|length > 0 %}
         {{ show_img_box(post.entity.images[0].img|imagine_filter('medium'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #}
