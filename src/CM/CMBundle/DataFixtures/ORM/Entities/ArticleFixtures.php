@@ -1,6 +1,6 @@
 <?php
 
-namespace CM\CMBundle\DataFixtures\ORM;
+namespace CM\CMBundle\DataFixtures\ORM\Entities;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -14,8 +14,9 @@ use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Like;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
+use CM\CMBundle\DataFixtures\ORM;
 
-class ArticleFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+class ArticleFixtures
 {
     /**
      * @var ContainerInterface
@@ -47,118 +48,120 @@ class ArticleFixtures extends AbstractFixture implements OrderedFixtureInterface
     /**
      * {@inheritDoc}
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
 
-    public function load(ObjectManager $manager)
+    public function load(AbstractFixture $fixture, ObjectManager $manager, $i)
     {
-        for ($i = 1; $i < 11; $i++) {
-            $articleNum = rand(0, count($this->articles) - 1);
-            $article = new article;
-            $article->setSource($this->articles[$articleNum]['source'])
-                ->setDate(new \DateTime($this->articles[$articleNum]['date']));
+        $articleNum = rand(0, count($this->articles) - 1);
+        $article = new Article;
+        $article->setSource($this->articles[$articleNum]['source'])
+            ->setDate(new \DateTime($this->articles[$articleNum]['date']));
 
-            $article->setTitle($this->articles[$articleNum]['title'].' (en)')
+        $article->setTitle($this->articles[$articleNum]['title'].' (en)')
+            ->setText($this->articles[$articleNum]['text']);
+
+        if (0 == rand(0, 2)) {
+            $article->translate('it')
+                ->setTitle($this->articles[$articleNum]['title'].' (it)')
                 ->setText($this->articles[$articleNum]['text']);
-    
-            if (0 == rand(0, 2)) {
-                $article->translate('it')
-                    ->setTitle($this->articles[$articleNum]['title'].' (it)')
-                    ->setText($this->articles[$articleNum]['text']);
-            }
-    
-            if (0 == rand(0, 4)) {
-                $article->translate('fr')
-                    ->setTitle($this->articles[$articleNum]['title'].' (fr)')
-                    ->setText($this->articles[$articleNum]['text']);
-            }
+        }
+
+        if (0 == rand(0, 4)) {
+            $article->translate('fr')
+                ->setTitle($this->articles[$articleNum]['title'].' (fr)')
+                ->setText($this->articles[$articleNum]['text']);
+        }
+
+        $manager->persist($article);
+
+        $article->mergeNewTranslations();
+        
+        $userNum = rand(1, ORM\UserFixtures::countPeople());
+        $user = $manager->merge($fixture->getReference('user-'.$userNum));
+
+        if (rand(0, 4) > 0) {
+            $image = new Image;
+            $image->setImg($this->articles[$articleNum]['img'])
+                ->setText('main image for article "'.$article->getTitle().'"')
+                ->setMain(true)
+                ->setUser($user);
+            $article->addImage($image);
 
             $manager->persist($article);
-
-            $article->mergeNewTranslations();
-            
-            $userNum = rand(1, UserFixtures::countPeople());
-            $user = $manager->merge($this->getReference('user-'.$userNum));
-
-            if (rand(0, 4) > 0) {
+            $manager->flush();   
+                
+            for ($j = rand(1, 4); $j > 0; $j--) {
                 $image = new Image;
                 $image->setImg($this->articles[$articleNum]['img'])
-                    ->setText('main image for article "'.$article->getTitle().'"')
-                    ->setMain(true)
+                    ->setText('image number '.$j.' for article "'.$article->getTitle().'"')
+                    ->setMain(false)
                     ->setUser($user);
+                
                 $article->addImage($image);
-
-                $manager->persist($article);
-                $manager->flush();   
-                    
-                for ($j = rand(1, 4); $j > 0; $j--) {
-                    $image = new Image;
-                    $image->setImg($this->articles[$articleNum]['img'])
-                        ->setText('image number '.$j.' for article "'.$article->getTitle().'"')
-                        ->setMain(false)
-                        ->setUser($user);
-                    
-                    $article->addImage($image);
-                }
-
             }
 
-            $category = $manager->merge($this->getReference('article_category-'.rand(1, 6)));
-            $category->addEntity($article);
+        }
 
-            $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+        $category = $manager->merge($fixture->getReference('article_category-'.rand(1, 6)));
+        $category->addEntity($article);
 
-            $article->addPost($post);
+        $page = null;
+        $group = null;
+        $pageOrGroup = rand(0, 100);
+        if ($pageOrGroup < 20) {
+            $page = $manager->merge($fixture->getReference('page-'.rand(1, ORM\PageFixtures::countPages())));
+        } elseif ($pageOrGroup < 40) {
+            $group = $manager->merge($fixture->getReference('group-'.rand(1, ORM\GroupFixtures::countGroups())));
+        }
+
+        $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+        $post->setPage($page);
+        $post->setGroup($group);
+
+        $article->addPost($post);
+        
+        $userTags = array();
+        for ($j = 1; $j < rand(1, 3); $j++) {
+            $userTags[] = $manager->merge($fixture->getReference('user_tag-'.rand(1, 10)));
+        }
+        
+        $article->addUser(
+            $user,
+            true, // admin
+            EntityUser::STATUS_ACTIVE,
+            true, // notification
+            $userTags
+        );
+
+        $numbers = range(1, ORM\UserFixtures::countPeople());
+        unset($numbers[$userNum - 1]);
+        shuffle($numbers);
+        for ($j = 0; $j < rand(0, 6); $j++) {
+            $otherUser = $manager->merge($fixture->getReference('user-'.$numbers[$j]));
             
             $userTags = array();
-            for ($j = 1; $j < rand(1, 3); $j++) {
-                $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)));
+            for ($k = 1; $k < rand(1, 3); $k++) {
+                $userTags[] = $manager->merge($fixture->getReference('user_tag-'.rand(1, 10)));
             }
-            
+
             $article->addUser(
-                $user,
-                true, // admin
-                EntityUser::STATUS_ACTIVE,
+                $otherUser,
+                !rand(0, 3), // admin
+                EntityUser::STATUS_PENDING,
                 true, // notification
                 $userTags
             );
-
-            $numbers = range(1, UserFixtures::countPeople());
-            unset($numbers[$userNum - 1]);
-            shuffle($numbers);
-            for ($j = 0; $j < rand(0, 6); $j++) {
-                $otherUser = $manager->merge($this->getReference('user-'.$numbers[$j]));
-                
-                $userTags = array();
-                for ($k = 1; $k < rand(1, 3); $k++) {
-                    $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)));
-                }
-
-                $article->addUser(
-                    $otherUser,
-                    !rand(0, 3), // admin
-                    EntityUser::STATUS_PENDING,
-                    true, // notification
-                    $userTags
-                );
-            }
-
-            $manager->persist($article);
-            
-            if ($i % 10 == 9) {
-                $manager->flush();
-            }
-
-            $this->addReference('article-'.$i, $article);
         }
-    
-        $manager->flush();
-    }
-    
-    public function getOrder()
-    {
-        return 65;
+
+        $manager->persist($article);
+        
+        if ($i % 10 == 9) {
+            $manager->flush();
+        }
+
+        $fixture->addReference('article-'.$i, $article);
     }
 }

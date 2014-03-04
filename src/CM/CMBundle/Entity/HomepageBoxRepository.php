@@ -35,7 +35,7 @@ class HomepageBoxRepository extends BaseRepository
             ->setParameter('locales', $options['locales'])
             ->andWhere('b.visibleFrom <= :now')
             ->andWhere('b.visibleTo >= :now')
-            ->setParameter(new \DateTime('+1 day'))
+            ->setParameter('now', new \DateTime('+1 day'))
             ->orderBy('b.position')
             ->setMaxResults($limit)
             ->getQuery()->getResult();

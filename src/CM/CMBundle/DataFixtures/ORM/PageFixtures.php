@@ -13,7 +13,7 @@ use CM\CMBundle\Entity\PageUser;
 
 class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
-    private $pages = array(
+    private static $pages = array(
         array('name' => 'Sony Classical Italia',
             'type' => Page::TYPE_ASSOCIATION,
             'creator' => 6,
@@ -42,6 +42,11 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
         ),
     );
 
+    public static function countPages()
+    {
+        return count(PageFixtures::$pages);
+    } 
+
     /**
      * {@inheritDoc}
      */
@@ -52,7 +57,7 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 
     public function load(ObjectManager $manager)
     {
-        foreach ($this->pages as $i => $p) {
+        foreach (PageFixtures::$pages as $i => $p) {
             $user = $manager->merge($this->getReference('user-'.$p['creator']));
             $page = new Page;
             $page->setType($p['type'])

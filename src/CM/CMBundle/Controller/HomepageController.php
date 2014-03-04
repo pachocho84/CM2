@@ -24,41 +24,61 @@ use CM\CMBundle\Utility\UploadHandler;
 class HomepageController extends Controller
 {
     /**
-     * @Route("/", name = "homepage_index")
+     * @Route("/{page}", name = "homepage_index")
      * @Template
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
 
         if ($request->isXmlHttpRequest()) {
             $boxes = array();
+
             $boxes['lastUsers'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(15)));
-            $boxes['dates'] = $this->renderView('CMBundle:Event:nextDates.html.twig', array('dates' => $em->getRepository('CMBundle:Event')->getNextDates(array('limit' => 3))));
+
+            $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('locale' => $request->getLocale())), $page, 3);
+            $boxes['dates'] = $this->renderView('CMBundle:Event:nextDates.html.twig', array('dates' => $dates));
+            
             if (!$this->get('security.context')->isGranted('ROLE_USER')) {
                 $boxes['authentication'] = $this->renderView('CMBundle:Homepage:authentication.html.twig');
             }
-            // $homepageBoxes = $em->getRepository('CMBundle:HomepageBox')->getBoxes(4, array('locale' => $request->getLocale()));
-            // foreach ($homepageBoxes as $box) {
-            //     switch ($box->getType()) {
-            //         case HomepageBox::TYPE_EVENT:
-            //             $events = $em->getRepository('CMBundle:Event')->getNextDates(array('pageId' => $box->getPageId(), 'limit' => 5));
-            //             break;
-            //         case HomepageBox::TYPE_DISC:
-            //             break;
-            //         case HomepageBox::TYPE_ARTICLE:
-            //             break;
-            //         case HomepageBox::TYPE_RUBRIC:
-            //             break;
-            //     }
-            //     $boxes['sponsored_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:sponsoredBox.html.twig', array('box' => $box));
-            // }
+            
+            $sponsoreds = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale())), $page, 3);
+            foreach ($sponsoreds as $sponsored) {
+                $boxes['homepage_'.$sponsored->getId()] = $this->renderView('CMBundle:Homepage:sponsoredBox.html.twig', array('sponsored' => $sponsored));
+            }
+           
+            $homepageBoxes = $em->getRepository('CMBundle:HomepageBox')->getBoxes(4, array('locale' => $request->getLocale()));
+            foreach ($homepageBoxes as $box) {
+                switch ($box->getType()) {
+                    case HomepageBox::TYPE_EVENT:
+                        $objects = $em->getRepository('CMBundle:Event')->getNextDates(array('pageId' => $box->getPageId(), 'locale' => $request->getLocale()));
+                        $limit = 5;
+                        break;
+                    case HomepageBox::TYPE_DISC:
+                        $objects = $em->getRepository('CMBundle:Disc')->getDiscs(array('pageId' => $box->getPageId(), 'locale' => $request->getLocale()));
+                        $limit = 5;
+                        break;
+                    case HomepageBox::TYPE_ARTICLE:
+                        $objects = $em->getRepository('CMBundle:Disc')->getArticles(array('pageId' => $box->getPageId(), 'locale' => $request->getLocale()));
+                        $limit = 5;
+                        break;
+                    case HomepageBox::TYPE_RUBRIC:
+                        $objects = $em->getRepository('CMBundle:HomepageArchive')->getArticles($box->getCategoryId(), array('locale' => $request->getLocale()));
+                        $limit = 3;
+                        break;
+                }
+                $objects = $this->get('knp_paginator')->paginate($objects, $page, $limit);
+                
+                $boxes['homepage_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:box.html.twig', array('box' => $box, 'objects' => $objects));
+            }
 
-            $posts = $em->getRepository('CMBundle:Post')->getLastPosts();
-            $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
-            foreach ($pagination as $post) {
+            $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
+            foreach ($posts as $post) {
                 $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:postBox.html.twig', array('post' => $post));
             }
+
+            $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:boxLoadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
             
             return new JsonResponse($boxes);
         }

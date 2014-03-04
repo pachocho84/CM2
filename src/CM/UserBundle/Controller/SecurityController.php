@@ -22,7 +22,7 @@ class SecurityController extends BaseSecurityController
     public function loginAction(Request $request, $template = null)
     {
         if (!is_null($template)) {
-         $this->template = $template;
+            $this->template = $template;
         }
 
         return parent::loginAction($request);
