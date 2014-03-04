@@ -180,8 +180,8 @@ $(function() {
     
     
     /* TOOLTIP */
-    $('body').on('mouseenter', '[data-toggle=tooltip]', function() {
-        $("[data-toggle=tooltip]").tooltip({
+    $('body').on('mouseenter', '[data-toggle=tooltip]', function(event) {
+        $(event.currentTarget).tooltip({
             delay: { show: 250, hide: 0 }
         }).tooltip('show');
     });
