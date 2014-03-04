@@ -1,6 +1,6 @@
 <?php
 
-namespace CM\CMBundle\DataFixtures\ORM;
+namespace CM\CMBundle\DataFixtures\ORM\Entities;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -15,8 +15,9 @@ use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Like;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
+use CM\CMBundle\DataFixtures\ORM;
 
-class DiscFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+class DiscFixtures
 {
     /**
      * @var ContainerInterface
@@ -109,108 +110,110 @@ class DiscFixtures extends AbstractFixture implements OrderedFixtureInterface, C
     /**
      * {@inheritDoc}
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
 
-    public function load(ObjectManager $manager)
+    public function load(AbstractFixture $fixture, ObjectManager $manager, $i)
     {
-        for ($i = 1; $i < 11; $i++) {
-            $discNum = rand(0, count($this->discs) - 1);
-            $disc = new Disc;
-            $disc->setLabel($this->discs[$discNum]['label'])
-                ->setDate(new \DateTime($this->discs[$discNum]['year']));
-            $disc->setTitle($this->discs[$discNum]['title']);
+        $discNum = rand(0, count($this->discs) - 1);
+        $disc = new Disc;
+        $disc->setLabel($this->discs[$discNum]['label'])
+            ->setDate(new \DateTime($this->discs[$discNum]['year']));
+        $disc->setTitle($this->discs[$discNum]['title']);
+
+        $manager->persist($disc);
+
+        $disc->mergeNewTranslations();
+           
+        for ($j = 0; $j < count($this->discs[$discNum]['discTracks']); $j++) {
+            $discTrack = new DiscTrack;
+            $discTrack->setNumber($j + 1)
+                ->setComposer($this->discs[$discNum]['discTracks'][$j]['composer'])
+                ->setTitle($this->discs[$discNum]['discTracks'][$j]['title'])
+                ->setMovement($this->discs[$discNum]['discTracks'][$j]['movement'])
+                ->setArtists($this->discs[$discNum]['discTracks'][$j]['artists'])
+                ->setDuration(new \DateTime($this->discs[$discNum]['discTracks'][$j]['duration']));
+
+            if (rand(0, 5) == 0) {
+                $discTrack->setAudio('62c3410ef8cc13c3dc7aa40646f9e805.mpga');
+            }
+
+            $disc->addDiscTrack($discTrack);
+        }
+        
+        $userNum = rand(1, ORM\UserFixtures::countPeople());
+        $user = $manager->merge($fixture->getReference('user-'.$userNum));
+
+        if (rand(0, 4) > 0) {
+            $image = new Image;
+            $image->setImg($this->discs[$discNum]['img'])
+                ->setText('main image for disc "'.$disc->getTitle().'"')
+                ->setMain(true)
+                ->setUser($user);
+            $disc->addImage($image);
 
             $manager->persist($disc);
+            $manager->flush();                  
 
-            $disc->mergeNewTranslations();
-               
-            for ($j = 0; $j < count($this->discs[$discNum]['discTracks']); $j++) {
-                $discTrack = new DiscTrack;
-                $discTrack->setNumber($j + 1)
-                    ->setComposer($this->discs[$discNum]['discTracks'][$j]['composer'])
-                    ->setTitle($this->discs[$discNum]['discTracks'][$j]['title'])
-                    ->setMovement($this->discs[$discNum]['discTracks'][$j]['movement'])
-                    ->setArtists($this->discs[$discNum]['discTracks'][$j]['artists'])
-                    ->setDuration(new \DateTime($this->discs[$discNum]['discTracks'][$j]['duration']));
-
-                if (rand(0, 5) == 0) {
-                    $discTrack->setAudio('62c3410ef8cc13c3dc7aa40646f9e805.mpga');
-                }
-
-                $disc->addDiscTrack($discTrack);
-            }
-            
-            $userNum = rand(1, UserFixtures::countPeople());
-            $user = $manager->merge($this->getReference('user-'.$userNum));
-
-            if (rand(0, 4) > 0) {
+            for ($j = rand(1, 4); $j > 0; $j--) {
                 $image = new Image;
                 $image->setImg($this->discs[$discNum]['img'])
-                    ->setText('main image for disc "'.$disc->getTitle().'"')
-                    ->setMain(true)
+                    ->setText('image number '.$j.' for disc "'.$disc->getTitle().'"')
+                    ->setMain(false)
                     ->setUser($user);
+                
                 $disc->addImage($image);
-
-                $manager->persist($disc);
-                $manager->flush();                  
-    
-                for ($j = rand(1, 4); $j > 0; $j--) {
-                    $image = new Image;
-                    $image->setImg($this->discs[$discNum]['img'])
-                        ->setText('image number '.$j.' for disc "'.$disc->getTitle().'"')
-                        ->setMain(false)
-                        ->setUser($user);
-                    
-                    $disc->addImage($image);
-                }
-
             }
 
-            $category = $manager->merge($this->getReference('disc_category-'.rand(1, 2)));
-            $category->addEntity($disc);
+        }
 
-            $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+        $category = $manager->merge($fixture->getReference('disc_category-'.rand(1, 2)));
+        $category->addEntity($disc);
 
-            $disc->addPost($post);
-            
+        $page = null;
+        $group = null;
+        $pageOrGroup = rand(0, 100);
+        if ($pageOrGroup < 20) {
+            $page = $manager->merge($fixture->getReference('page-'.rand(1, ORM\PageFixtures::countPages())));
+        } elseif ($pageOrGroup < 40) {
+            $group = $manager->merge($fixture->getReference('group-'.rand(1, ORM\GroupFixtures::countGroups())));
+        }
+
+        $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+        $post->setPage($page);
+        $post->setGroup($group);
+
+        $disc->addPost($post);
+        
+        $disc->addUser(
+            $user,
+            true, // admin
+            EntityUser::STATUS_ACTIVE,
+            true // notification
+        );
+
+        $numbers = range(1, ORM\UserFixtures::countPeople());
+        unset($numbers[$userNum - 1]);
+        shuffle($numbers);
+        for ($j = 0; $j < rand(0, 6); $j++) {
+            $otherUser = $manager->merge($fixture->getReference('user-'.$numbers[$j]));
+
             $disc->addUser(
-                $user,
-                true, // admin
-                EntityUser::STATUS_ACTIVE,
+                $otherUser,
+                !rand(0, 3), // admin
+                EntityUser::STATUS_PENDING,
                 true // notification
             );
-
-            $numbers = range(1, UserFixtures::countPeople());
-            unset($numbers[$userNum - 1]);
-            shuffle($numbers);
-            for ($j = 0; $j < rand(0, 6); $j++) {
-                $otherUser = $manager->merge($this->getReference('user-'.$numbers[$j]));
-
-                $disc->addUser(
-                    $otherUser,
-                    !rand(0, 3), // admin
-                    EntityUser::STATUS_PENDING,
-                    true // notification
-                );
-            }
-
-            $manager->persist($disc);
-            
-            if ($i % 10 == 9) {
-                $manager->flush();
-            }
-
-            $this->addReference('disc-'.$i, $disc);
         }
-    
-        $manager->flush();
-    }
-    
-    public function getOrder()
-    {
-        return 65;
+
+        $manager->persist($disc);
+        
+        if ($i % 10 == 9) {
+            $manager->flush();
+        }
+
+        $fixture->addReference('disc-'.$i, $disc);
     }
 }

@@ -13,6 +13,11 @@ use CM\CMBundle\Entity\GroupUser;
 
 class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
+    public static function countGroups()
+    {
+        return 20;
+    }
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -23,7 +28,7 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
 
 	public function load(ObjectManager $manager)
 	{
-        for ($i = 1; $i < 21; $i++) {
+        for ($i = 1; $i <= GroupFixtures::countGroups(); $i++) {
             $userNum = rand(1, UserFixtures::countPeople());
             $user = $manager->merge($this->getReference('user-'.$userNum));
             $group = new Group;

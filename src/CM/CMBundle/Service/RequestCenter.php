@@ -51,7 +51,7 @@ class RequestCenter
                 ->setObjectId($objectId);
         }
         if (!is_null($page)) {
-            $request->setFromPage($page);
+            $request->setPage($page);
         } elseif (!is_null($group)) {
             $request->setGroup($group);
         }

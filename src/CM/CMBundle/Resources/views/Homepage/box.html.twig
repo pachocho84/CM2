@@ -4,9 +4,22 @@
     </div>
 
     <div class="objects box-body">
-        {{ objects|length }}
-        {% for object in objects %}
-            {{ object|class_name }}
-        {% endfor %}
+        {% if box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_EVENT') %}
+            {% for object in objects %}
+                {{ object|class_name }}
+            {% endfor %}
+        {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_ARTICLE') %}
+            {% for object in objects %}
+                {{ object|class_name }}
+            {% endfor %}
+        {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_DISC') %}
+            {% for object in objects %}
+                {{ object|class_name }}
+            {% endfor %}
+        {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_RUBRIC') %}
+            {% for object in objects %}
+                {{ object|class_name }}
+            {% endfor %}
+        {% endif %}
     </div>
 </div>

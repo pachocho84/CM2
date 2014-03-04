@@ -36,17 +36,15 @@ class HomepageController extends Controller
 
             $boxes['lastUsers'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(15)));
 
-            $dates = $em->getRepository('CMBundle:Event')->getNextDates(array('locale' => $request->getLocale()));
-            $pagination = $this->get('knp_paginator')->paginate($dates, $page, 3);
-            $boxes['dates'] = $this->renderView('CMBundle:Event:nextDates.html.twig', array('dates' => $pagination));
+            $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('locale' => $request->getLocale())), $page, 3);
+            $boxes['dates'] = $this->renderView('CMBundle:Event:nextDates.html.twig', array('dates' => $dates));
             
             if (!$this->get('security.context')->isGranted('ROLE_USER')) {
                 $boxes['authentication'] = $this->renderView('CMBundle:Homepage:authentication.html.twig');
             }
             
-            $sponsoreds = $em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale()));
-            $pagination = $this->get('knp_paginator')->paginate($sponsoreds, $page, 3);
-            foreach ($pagination as $sponsored) {
+            $sponsoreds = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale())), $page, 3);
+            foreach ($sponsoreds as $sponsored) {
                 $boxes['homepage_'.$sponsored->getId()] = $this->renderView('CMBundle:Homepage:sponsoredBox.html.twig', array('sponsored' => $sponsored));
             }
            
@@ -55,25 +53,30 @@ class HomepageController extends Controller
                 switch ($box->getType()) {
                     case HomepageBox::TYPE_EVENT:
                         $objects = $em->getRepository('CMBundle:Event')->getNextDates(array('pageId' => $box->getPageId(), 'locale' => $request->getLocale()));
+                        $limit = 5;
                         break;
                     case HomepageBox::TYPE_DISC:
                         $objects = $em->getRepository('CMBundle:Disc')->getDiscs(array('pageId' => $box->getPageId(), 'locale' => $request->getLocale()));
+                        $limit = 5;
                         break;
                     case HomepageBox::TYPE_ARTICLE:
                         $objects = $em->getRepository('CMBundle:Disc')->getArticles(array('pageId' => $box->getPageId(), 'locale' => $request->getLocale()));
+                        $limit = 5;
                         break;
                     case HomepageBox::TYPE_RUBRIC:
+                        $objects = $em->getRepository('CMBundle:HomepageArchive')->getArticles($box->getCategoryId(), array('locale' => $request->getLocale()));
+                        $limit = 3;
                         break;
                 }
-                $pagination = $this->get('knp_paginator')->paginate($objects, $page, 5);
-                $boxes['homepage_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:box.html.twig', array('box' => $box, 'objects' => $pagination));
+                $objects = $this->get('knp_paginator')->paginate($objects, $page, $limit);
+                
+                $boxes['homepage_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:box.html.twig', array('box' => $box, 'objects' => $objects));
             }
-         
-            // $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale()));
-            // $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
-            // foreach ($pagination as $post) {
-            //     $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:postBox.html.twig', array('post' => $post));
-            // }
+
+            $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
+            foreach ($posts as $post) {
+                $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:postBox.html.twig', array('post' => $post));
+            }
             
             return new JsonResponse($boxes);
         }

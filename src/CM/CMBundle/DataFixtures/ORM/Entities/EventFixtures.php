@@ -1,6 +1,6 @@
 <?php
 
-namespace CM\CMBundle\DataFixtures\ORM;
+namespace CM\CMBundle\DataFixtures\ORM\Entities;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -16,8 +16,9 @@ use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Like;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
+use CM\CMBundle\DataFixtures\ORM;
 
-class EventFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+class EventFixtures
 {
     /**
      * @var ContainerInterface
@@ -88,185 +89,161 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
     private $images = array('bb01acb97854b24ed23598bd4f055eba.jpeg', 'ff9398d3d47436e2b4f72874a2c766fd.jpeg');
 
-    private $urls = array(
-        'https://youtu.be/yVpbFMhOAwE',
-        'http://vimeo.com/57815442',
-        'https://soundcloud.com/aleksander-vinter/sheep-heavy-metal',
-        
-    );
-
     /**
      * {@inheritDoc}
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
 
-    public function load(ObjectManager $manager)
+    public function load(AbstractFixture $fixture, ObjectManager $manager, $i, $infoes)
     {
-        for ($i = 1; $i < 11; $i++) {
-            $eventNum = rand(0, count($this->events) - 1);
-            $event = new Event;
-            $event->setTitle($this->events[$eventNum]['title'].' (en)')
+        $eventNum = rand(0, count($this->events) - 1);
+        $event = new Event;
+        $event->setTitle($this->events[$eventNum]['title'].' (en)')
+            ->setExtract($this->events[$eventNum]['extract'])
+            ->setText($this->events[$eventNum]['text']);
+
+        $manager->persist($event);
+
+        if (0 == rand(0, 2)) {
+            $event->translate('it')
+                ->setTitle($this->events[$eventNum]['title'].' (it)')
                 ->setExtract($this->events[$eventNum]['extract'])
                 ->setText($this->events[$eventNum]['text']);
+        }
+
+        if (0 == rand(0, 4)) {
+            $event->translate('fr')
+                ->setTitle($this->events[$eventNum]['title'].' (fr)')
+                ->setExtract($this->events[$eventNum]['extract'])
+                ->setText($this->events[$eventNum]['text']);
+        }
+
+/*
+        $event->translate('ru')->setTitle('Печатное (RU) '.$i)
+            ->setSubtitle('Субти́тр (RU) '.$i)
+            ->setExtract('Экстракта (RU) '.$i)
+            ->setText('Текст (RU) '.$i);
+*/
+
+        $event->mergeNewTranslations();
+           
+        for ($j = rand(1, 3); $j > 0; $j--) {
+            $eventDate = new EventDate;
+            $dtz = new \DateTime;
+            $dtz->setTimestamp(rand(time() - 3155692, time() + 31556926));
+            $dtz->setTimeZone(new \DateTimeZone('Europe/Berlin'));
+            $eventDate->setStart($dtz);
+        
+            if (rand(0, 1) == 0) {
+                $dtz->setTimestamp($eventDate->getStart()->getTimestamp() + 7200);
+                $eventDate->setEnd($dtz);
+            }
+        
+            $locNum = rand(0, 4);
+            $eventDate->setLocation($this->locations[$locNum][0]);
+            $eventDate->setAddress($this->locations[$locNum][1]);
+            $eventDate->setCoordinates($this->locations[$locNum][2]);
+            $event->addEventDate($eventDate);
+        }
+        
+        $userNum = rand(1, ORM\UserFixtures::countPeople());
+        $user = $manager->merge($fixture->getReference('user-'.$userNum));
+
+        if (rand(0, 8) > 0) {
+            $image = new Image;
+            $image->setImg($this->events[$eventNum]['img'])
+                ->setText('main image for event "'.$event->getTitle().'"')
+                ->setMain(true)
+                ->setUser($user);
+            $event->addImage($image);
 
             $manager->persist($event);
-    
-            if (0 == rand(0, 2)) {
-                $event->translate('it')
-                    ->setTitle($this->events[$eventNum]['title'].' (it)')
-                    ->setExtract($this->events[$eventNum]['extract'])
-                    ->setText($this->events[$eventNum]['text']);
-            }
-    
-            if (0 == rand(0, 4)) {
-                $event->translate('fr')
-                    ->setTitle($this->events[$eventNum]['title'].' (fr)')
-                    ->setExtract($this->events[$eventNum]['extract'])
-                    ->setText($this->events[$eventNum]['text']);
-            }
-    
-    /*
-            $event->translate('ru')->setTitle('Печатное (RU) '.$i)
-                ->setSubtitle('Субти́тр (RU) '.$i)
-                ->setExtract('Экстракта (RU) '.$i)
-                ->setText('Текст (RU) '.$i);
-    */
+            $manager->flush();               
 
-            $event->mergeNewTranslations();
-               
-            for ($j = rand(1, 3); $j > 0; $j--) {
-                $eventDate = new EventDate;
-                $dtz = new \DateTime;
-                $dtz->setTimestamp(rand(time() - 3155692, time() + 31556926));
-                $dtz->setTimeZone(new \DateTimeZone('Europe/Berlin'));
-                $eventDate->setStart($dtz);
-            
-                if (rand(0, 1) == 0) {
-                    $dtz->setTimestamp($eventDate->getStart()->getTimestamp() + 7200);
-                    $eventDate->setEnd($dtz);
-                }
-            
-                $locNum = rand(0, 4);
-                $eventDate->setLocation($this->locations[$locNum][0]);
-                $eventDate->setAddress($this->locations[$locNum][1]);
-                $eventDate->setCoordinates($this->locations[$locNum][2]);
-                $event->addEventDate($eventDate);
-            }
-            
-            $userNum = rand(1, UserFixtures::countPeople());
-            $user = $manager->merge($this->getReference('user-'.$userNum));
-
-            if (rand(0, 8) > 0) {
+            for ($j = rand(1, 4); $j > 0; $j--) {
                 $image = new Image;
                 $image
                     ->setImg($this->events[$eventNum]['img'])
-                    ->setText('main image for event "'.$event->getTitle().'"')
-                    ->setMain(true)
+                    ->setText('image number '.$j.' for event "'.$event->getTitle().'"')
+                    ->setMain(false)
                     ->setUser($user);
+                
                 $event->addImage($image);
-
-                $manager->persist($event);
-                $manager->flush();               
-    
-                for ($j = rand(1, 4); $j > 0; $j--) {
-                    $image = new Image;
-                    $image
-                        ->setImg($this->events[$eventNum]['img'])
-                        ->setText('image number '.$j.' for event "'.$event->getTitle().'"')
-                        ->setMain(false)
-                        ->setUser($user);
-                    
-                    $event->addImage($image);
-                }
             }
+        }
 
-            for ($j = 0; $j < rand(0, 8); $j++) {
-                $url = $this->urls[rand(0, 2)];
-                switch (substr(preg_split('/(www|m)\./', parse_url($url, PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
-                    case 'yout':
-                        $info = json_decode(file_get_contents('http://www.youtube.com/oembed?format=json&url='.urlencode($url)));
-                        $type = Multimedia::TYPE_YOUTUBE;
-                        $source = preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info->html);
-                        $info = json_decode(file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$source.'?v=2&alt=jsonc'))->data;
-                        break;
-                    case 'vime':
-                        $info = json_decode(file_get_contents('http://vimeo.com/api/oembed.json?url='.urlencode($url)));
-                        $type = Multimedia::TYPE_VIMEO;
-                        $source = $info->video_id;
-                        break;
-                    case 'soun':
-                        $info = json_decode(file_get_contents('http://soundcloud.com/oembed.json?url='.urlencode($url)));
-                        $type = Multimedia::TYPE_SOUNDCLOUD;
-                        $source = preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info->html);
-                        break;
-                }
+        for ($j = 0; $j < rand(0, 8); $j++) {
+            $info = $infoes[rand(0, count($infoes) - 1)];
 
-                $multimedia = new Multimedia;
-                $multimedia->setType($type);
-                $multimedia->setSource($source);
-                $multimedia->setTitle($info->title)
-                    ->setText($info->description);
+            $multimedia = new Multimedia;
+            $multimedia->setType($info['type']);
+            $multimedia->setSource($info['source']);
+            $multimedia->setTitle($info['info']->title)
+                ->setText($info['info']->description);
 
-                $event->addMultimedia($multimedia);
-            }
-            
-            $category = $manager->merge($this->getReference('event_category-'.rand(1, 3)));
-            $category->addEntity($event);
+            $event->addMultimedia($multimedia);
+        }
+        
+        $category = $manager->merge($fixture->getReference('event_category-'.rand(1, 3)));
+        $category->addEntity($event);
 
-            $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+        $page = null;
+        $group = null;
+        $pageOrGroup = rand(0, 100);
+        if ($pageOrGroup < 20) {
+            $page = $manager->merge($fixture->getReference('page-'.rand(1, ORM\PageFixtures::countPages())));
+        } elseif ($pageOrGroup < 40) {
+            $group = $manager->merge($fixture->getReference('group-'.rand(1, ORM\GroupFixtures::countGroups())));
+        }
 
-            $event->addPost($post);
+        $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+        $post->setPage($page);
+        $post->setGroup($group);
+
+        $event->addPost($post);
+        
+        $userTags = array();
+        for ($j = 1; $j < rand(1, 3); $j++) {
+            $userTags[] = $manager->merge($fixture->getReference('user_tag-'.rand(1, 10)));
+        }
+        
+        $event->addUser(
+            $user,
+            true, // admin
+            EntityUser::STATUS_ACTIVE,
+            true, // notification
+            $userTags
+        );
+
+        $numbers = range(1, ORM\UserFixtures::countPeople());
+        unset($numbers[$userNum - 1]);
+        shuffle($numbers);
+        for ($j = 0; $j < rand(0, 6); $j++) {
+            $otherUser = $manager->merge($fixture->getReference('user-'.$numbers[$j]));
             
             $userTags = array();
-            for ($j = 1; $j < rand(1, 3); $j++) {
-                $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)));
+            for ($k = 1; $k < rand(1, 3); $k++) {
+                $userTags[] = $manager->merge($fixture->getReference('user_tag-'.rand(1, 10)));
             }
-            
+
             $event->addUser(
-                $user,
-                true, // admin
-                EntityUser::STATUS_ACTIVE,
+                $otherUser,
+                !rand(0, 3), // admin
+                EntityUser::STATUS_PENDING,
                 true, // notification
                 $userTags
             );
-
-            $numbers = range(1, UserFixtures::countPeople());
-            unset($numbers[$userNum - 1]);
-            shuffle($numbers);
-            for ($j = 0; $j < rand(0, 6); $j++) {
-                $otherUser = $manager->merge($this->getReference('user-'.$numbers[$j]));
-                
-                $userTags = array();
-                for ($k = 1; $k < rand(1, 3); $k++) {
-                    $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)));
-                }
-
-                $event->addUser(
-                    $otherUser,
-                    !rand(0, 3), // admin
-                    EntityUser::STATUS_PENDING,
-                    true, // notification
-                    $userTags
-                );
-            }
-
-            $manager->persist($event);
-            
-            if ($i % 10 == 9) {
-                $manager->flush();
-            }
-
-            $this->addReference('event-'.$i, $event);
         }
-    
-        $manager->flush();
-    }
-    
-    public function getOrder()
-    {
-        return 60;
+
+        $manager->persist($event);
+        
+        if ($i % 10 == 9) {
+            $manager->flush();
+        }
+
+        $fixture->addReference('event-'.$i, $event);
     }
 }
