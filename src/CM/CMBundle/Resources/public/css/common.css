@@ -351,12 +351,7 @@
     color: #404040;
 }
 .post:hover {
-    border-color: #aa0000;    
-    -webkit-transition: border-color 0.3s;
-       -moz-transition: border-color 0.3s;
-        -ms-transition: border-color 0.3s;
-         -o-transition: border-color 0.3s;
-            transition: border-color 0.3s;
+    border-color: #aaaaaa;    
 }
 .post:hover a {
     color: #aa0000;    
