@@ -79,7 +79,7 @@ class ArticleFixtures extends AbstractFixture implements OrderedFixtureInterface
 
             $article->mergeNewTranslations();
             
-            $userNum = rand(1, 8);
+            $userNum = rand(1, UserFixtures::countPeople());
             $user = $manager->merge($this->getReference('user-'.$userNum));
 
             if (rand(0, 4) > 0) {
@@ -125,7 +125,7 @@ class ArticleFixtures extends AbstractFixture implements OrderedFixtureInterface
                 $userTags
             );
 
-            $numbers = range(1, 8);
+            $numbers = range(1, UserFixtures::countPeople());
             unset($numbers[$userNum - 1]);
             shuffle($numbers);
             for ($j = 0; $j < rand(0, 6); $j++) {

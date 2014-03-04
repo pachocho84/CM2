@@ -313,10 +313,18 @@
 
 
 /* POST */
-.post {
+#wall .box {
     -webkit-border-radius: 3px;
        -moz-border-radius: 3px;
             border-radius: 3px;
+}
+#wall .box .box-heading {
+    -webkit-border-top-left-radius: 3px;
+       -moz-border-top-left-radius: 3px;
+            border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+       -moz-border-top-right-radius: 3px;
+            border-top-right-radius: 3px;
 }
 .post .post-heading {
     margin-bottom: 15px;
@@ -341,6 +349,14 @@
 {
     font-weight: 500;
     color: #404040;
+}
+.post:hover {
+    border-color: #aa0000;    
+    -webkit-transition: border-color 0.3s;
+       -moz-transition: border-color 0.3s;
+        -ms-transition: border-color 0.3s;
+         -o-transition: border-color 0.3s;
+            transition: border-color 0.3s;
 }
 .post:hover a {
     color: #aa0000;    

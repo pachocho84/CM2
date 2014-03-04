@@ -12,4 +12,32 @@ use Doctrine\ORM\EntityRepository as BaseRepository;
  */
 class HomepageBoxRepository extends BaseRepository
 {
+    static protected function getOptions(array $options = array())
+    {
+        $options = array_merge(array(
+            'locale'        => 'en'
+        ), $options);
+        
+        return array_merge(array(
+            'categoryId'   => null,
+            'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
+            'limit'         => 25,
+        ), $options);
+    }
+
+    public function getBoxes($limit, $options = array())
+    {
+        return $this->createQueryBuilder('b')
+            ->select('b, c, ct, p')
+            ->leftJoin('b.category', 'c')
+            ->leftJoin('c.translations', 'ct', 'with', 'ct.locale IN (:locales)')
+            ->leftJoin('b.page', 'p')
+            ->setParameter('locales', $options['locales'])
+            ->andWhere('b.visibleFrom <= :now')
+            ->andWhere('b.visibleTo >= :now')
+            ->setParameter(new \DateTime('+1 day'))
+            ->orderBy('b.position')
+            ->setMaxResults($limit)
+            ->getQuery()->getResult();
+    }
 }

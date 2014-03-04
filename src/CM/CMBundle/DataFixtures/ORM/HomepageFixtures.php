@@ -67,21 +67,21 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
     );
 
     private $archives = array(
-        array('user' => 1, 'article' => 1, 'category' => 3),
-        array('user' => 1, 'article' => 4, 'category' => 0),
-        array('user' => 1, 'article' => 2, 'category' => 0),
-        array('user' => 1, 'article' => 8, 'category' => 0),
-        array('user' => 1, 'article' => 5, 'category' => 0),
-        array('user' => 1/*115*/, 'article' => 3, 'category' => 1),
-        array('user' => 1/*115*/, 'article' => 7, 'category' => 3),
+        array('article' => 1, 'category' => 3),
+        array('article' => 4, 'category' => 0),
+        array('article' => 2, 'category' => 0),
+        array('article' => 8, 'category' => 0),
+        array('article' => 5, 'category' => 0),
+        array('article' => 3, 'category' => 1),
+        array('article' => 7, 'category' => 3),
     );
 
     private $boxes = array(
-        array('name' => 'laVerdi', 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 3, 'logo' => 'la_verdi-title.png', 'colour' => '#c70036'),
-        array('name' => 'Società del Quartetto di Milano', 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 2, 'logo' => 'quartetto_milano-title.png', 'colour' => '#eb6909'),
+        array('name' => null, 'type' => HomepageBox::TYPE_EVENT, 'category' => null, 'page' => 3, 'logo' => 'la_verdi-title.png', 'colour' => '#c70036'),
+        array('name' => null, 'type' => HomepageBox::TYPE_DISC, 'category' => null, 'page' => 2, 'logo' => 'quartetto_milano-title.png', 'colour' => '#eb6909'),
         array('name' => 'Orchestre', 'type' => HomepageBox::TYPE_RUBRIC, 'category' => 0, 'page' => null, 'logo' => null, 'colour' => null),
-        array('name' => 'Accademia Teatro alla Scala', 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 1/*7*/, 'logo' => 'accademia_teatro_alla_scala-title.png', 'colour' => '#c70c27'),
-        array('name' => 'Classic Voice', 'type' => HomepageBox::TYPE_PARTNER, 'category' => null, 'page' => 2/*6*/, 'logo' => 'classic_voice-title.png', 'colour' => '#008fd3'),
+        array('name' => null, 'type' => HomepageBox::TYPE_EVENT, 'category' => null, 'page' => 1/*7*/, 'logo' => 'accademia_teatro_alla_scala-title.png', 'colour' => '#c70c27'),
+        array('name' => null, 'type' => HomepageBox::TYPE_ARTICLE, 'category' => null, 'page' => 2/*6*/, 'logo' => 'classic_voice-title.png', 'colour' => '#008fd3'),
     );
 
     /**
@@ -113,8 +113,7 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
 
         foreach ($this->archives as $i => $archive) {
             $homepageArchive = new HomepageArchive;
-            $homepageArchive->setUser($manager->merge($this->getReference('user-'.$archive['user'])))
-                ->setArticle($manager->merge($this->getReference('article-'.$archive['article'])))
+            $homepageArchive->setArticle($manager->merge($this->getReference('article-'.$archive['article'])))
                 ->setCategory($manager->merge($this->getReference('homepage_category-'.$archive['category'])));
 
             $manager->persist($homepageArchive);
@@ -128,7 +127,10 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
             $homepageBox->setName($box['name'])
                 ->setType($box['type'])
                 ->setLogo($box['logo'])
-                ->setColour($box['colour']);
+                ->setColour($box['colour'])
+                ->setPosition($i)
+                ->setVisibleFrom(new \DateTime('-1 year'))
+                ->setVisibleTo(new \DateTime('+1 year'));
             if (!is_null($box['category'])) {
                 $homepageBox->setCategory($manager->merge($this->getReference('homepage_category-'.$box['category'])));
             }

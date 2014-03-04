@@ -24,7 +24,7 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
 	public function load(ObjectManager $manager)
 	{
         for ($i = 1; $i < 21; $i++) {
-            $userNum = rand(1, 8);
+            $userNum = rand(1, UserFixtures::countPeople());
             $user = $manager->merge($this->getReference('user-'.$userNum));
             $group = new Group;
             $group->setType(Group::TYPE_DUO)
@@ -56,7 +56,7 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
                 $userTags
             );
 
-            $numbers = range(1, 8);
+            $numbers = range(1, UserFixtures::countPeople());
             unset($numbers[$userNum - 1]);
             shuffle($numbers);
             for ($j = 0; $j < rand(0, 5); $j++) {

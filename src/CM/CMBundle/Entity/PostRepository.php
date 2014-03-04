@@ -25,6 +25,7 @@ class PostRepository extends BaseRepository
             'userId' => null,
             'pageId' => null,
             'groupId' => null,
+            'exclude' => array(),
             'locales' => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate' => true,
             'limit' => null,
@@ -99,6 +100,10 @@ class PostRepository extends BaseRepository
         } elseif (!is_null($options['userId'])) {
             $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
+        }
+        if (!empty($options['exclude'])) {
+            $count->andWhere('p.id not in (:exclude)')->setParameter('exclude', $options['exclude']);
+            $query->andWhere('p.id not in (:exclude)')->setParameter('exclude', $options['exclude']);
         }
         $query->orderBy('p.updatedAt', 'desc');
         if (!$options['paginate'] && !is_null($options['limit'])) {

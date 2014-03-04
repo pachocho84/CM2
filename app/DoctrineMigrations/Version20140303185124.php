@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20140303181430 extends AbstractMigration
+class Version20140303185124 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -22,7 +22,7 @@ class Version20140303181430 extends AbstractMigration
         $this->addSql("ALTER TABLE homepage_banner ADD CONSTRAINT FK_12CFEF71C4663E4 FOREIGN KEY (page_id) REFERENCES page (id) ON DELETE CASCADE");
         $this->addSql("DROP TABLE homepage_column");
         $this->addSql("DROP TABLE homepage_row");
-        $this->addSql("ALTER TABLE homepage_box ADD logo VARCHAR(50) DEFAULT NULL, ADD colour VARCHAR(50) DEFAULT NULL, DROP width, DROP leftSide, DROP rightSide, DROP slug");
+        $this->addSql("ALTER TABLE homepage_box ADD logo VARCHAR(50) DEFAULT NULL, ADD colour VARCHAR(50) DEFAULT NULL, ADD position SMALLINT NOT NULL, ADD visible_from DATE NOT NULL, ADD visible_to DATE NOT NULL, DROP width, DROP leftSide, DROP rightSide, DROP slug, CHANGE name name VARCHAR(50) DEFAULT NULL");
     }
 
     public function down(Schema $schema)
@@ -37,6 +37,6 @@ class Version20140303181430 extends AbstractMigration
         $this->addSql("ALTER TABLE homepage_column ADD CONSTRAINT FK_1D0E883A269F2 FOREIGN KEY (row_id) REFERENCES homepage_row (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE homepage_column ADD CONSTRAINT FK_1D0E8A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
         $this->addSql("DROP TABLE homepage_banner");
-        $this->addSql("ALTER TABLE homepage_box ADD width SMALLINT NOT NULL, ADD leftSide SMALLINT NOT NULL, ADD rightSide SMALLINT DEFAULT NULL, ADD slug VARCHAR(255) NOT NULL, DROP logo, DROP colour");
+        $this->addSql("ALTER TABLE homepage_box ADD leftSide SMALLINT NOT NULL, ADD rightSide SMALLINT DEFAULT NULL, ADD slug VARCHAR(255) NOT NULL, DROP logo, DROP colour, DROP visible_from, DROP visible_to, CHANGE name name VARCHAR(50) NOT NULL, CHANGE position width SMALLINT NOT NULL");
     }
 }

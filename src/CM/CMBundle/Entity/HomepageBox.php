@@ -15,8 +15,10 @@ class HomepageBox
 {
     use ORMBehaviors\Timestampable\Timestampable;
 
-    const TYPE_PARTNER = 0;
-    const TYPE_RUBRIC = 1;
+    const TYPE_EVENT = 0;
+    const TYPE_ARTICLE = 1;
+    const TYPE_DISC = 2;
+    const TYPE_RUBRIC = 3;
 
     /**
      * @var integer
@@ -37,7 +39,7 @@ class HomepageBox
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=50, nullable=false)
+     * @ORM\Column(name="name", type="string", length=50, nullable=true)
      */
     private $name;
 
@@ -54,6 +56,27 @@ class HomepageBox
      * @ORM\Column(name="colour", type="string", length=50, nullable=true)
      */
     private $colour;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="position", type="smallint", nullable=false)
+     */
+    private $position;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="visible_from", type="date", nullable=false)
+     */
+    private $visibleFrom;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="visible_to", type="date", nullable=false)
+     */
+    private $visibleTo;
 
     /**
      * @ORM\Column(name="category_id", type="integer", nullable=true)
@@ -182,6 +205,75 @@ class HomepageBox
     public function getColour()
     {
         return $this->colour;
+    }
+
+    /**
+     * Set position
+     *
+     * @param integer $position
+     * @return HomepageBanner
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return integer 
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * Set visibleFrom
+     *
+     * @param \DateTime $visibleFrom
+     * @return HomepageBanner
+     */
+    public function setVisibleFrom($visibleFrom)
+    {
+        $this->visibleFrom = $visibleFrom;
+    
+        return $this;
+    }
+
+    /**
+     * Get visibleFrom
+     *
+     * @return \DateTime 
+     */
+    public function getVisibleFrom()
+    {
+        return $this->visibleFrom;
+    }
+
+    /**
+     * Set visibleTo
+     *
+     * @param \DateTime $visibleTo
+     * @return HomepageBanner
+     */
+    public function setVisibleTo($visibleTo)
+    {
+        $this->visibleTo = $visibleTo;
+    
+        return $this;
+    }
+
+    /**
+     * Get visibleTo
+     *
+     * @return \DateTime 
+     */
+    public function getVisibleTo()
+    {
+        return $this->visibleTo;
     }
 
     /**

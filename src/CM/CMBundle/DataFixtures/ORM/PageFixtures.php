@@ -91,7 +91,7 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                 $userTags
             );
 
-            $numbers = range(1, 8);
+            $numbers = range(1, UserFixtures::countPeople());
             unset($numbers[$p['creator'] - 1]);
             shuffle($numbers);
             for ($j = 0; $j < rand(0, 7); $j++) {
