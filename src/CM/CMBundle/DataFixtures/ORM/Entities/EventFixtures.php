@@ -158,7 +158,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                 ->setText('main image for event "'.$event->getTitle().'"')
                 ->setMain(true)
                 ->setUser($user);
-            $event->addImage($image);
+            $event->setImage($image);
 
             $manager->persist($event);
             $manager->flush();               
@@ -200,10 +200,11 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
         }
 
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+        $manager->persist($post);
         $post->setPage($page);
         $post->setGroup($group);
 
-        $event->addPost($post);
+        $event->setPost($post);
         
         $userTags = array();
         for ($j = 1; $j < rand(1, 3); $j++) {

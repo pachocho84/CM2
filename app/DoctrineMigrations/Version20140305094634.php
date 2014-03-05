@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20140123120852 extends AbstractMigration
+class Version20140305094634 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,37 +18,39 @@ class Version20140123120852 extends AbstractMigration
         $this->addSql("CREATE TABLE group_user (id INT AUTO_INCREMENT NOT NULL, group_id INT NOT NULL, user_id INT NOT NULL, admin TINYINT(1) NOT NULL, status SMALLINT NOT NULL, join_event SMALLINT NOT NULL, join_disc SMALLINT NOT NULL, join_article SMALLINT NOT NULL, user_tags LONGTEXT DEFAULT NULL COMMENT '(DC2Type:simple_array)', notification TINYINT(1) NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_A4C98D39FE54D947 (group_id), INDEX IDX_A4C98D39A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE disc_track (id INT AUTO_INCREMENT NOT NULL, disc_id INT NOT NULL, number SMALLINT NOT NULL, title VARCHAR(150) NOT NULL, composer VARCHAR(150) NOT NULL, movement VARCHAR(150) NOT NULL, artists VARCHAR(150) NOT NULL, duration TIME NOT NULL, audio VARCHAR(100) DEFAULT NULL, extract TINYINT(1) NOT NULL, INDEX IDX_BEDE8E11C38F37CA (disc_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE post (id INT AUTO_INCREMENT NOT NULL, creator_id INT NOT NULL, user_id INT NOT NULL, entity_id INT DEFAULT NULL, group_id INT DEFAULT NULL, page_id INT DEFAULT NULL, type SMALLINT NOT NULL, object VARCHAR(50) NOT NULL, object_ids LONGTEXT DEFAULT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_5A8A6C8D61220EA6 (creator_id), INDEX IDX_5A8A6C8DA76ED395 (user_id), INDEX IDX_5A8A6C8D81257D5D (entity_id), INDEX IDX_5A8A6C8DFE54D947 (group_id), INDEX IDX_5A8A6C8DC4663E4 (page_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
-        $this->addSql("CREATE TABLE entity (id INT AUTO_INCREMENT NOT NULL, entity_category_id INT DEFAULT NULL, entity_id INT DEFAULT NULL, type SMALLINT DEFAULT NULL, source VARCHAR(150) DEFAULT NULL, discr VARCHAR(255) NOT NULL, authors VARCHAR(150) DEFAULT NULL, interpreters VARCHAR(150) DEFAULT NULL, `label` VARCHAR(150) DEFAULT NULL, year DATE DEFAULT NULL, homepage TINYINT(1) DEFAULT NULL, date DATE DEFAULT NULL, INDEX IDX_E284468907CC731 (entity_category_id), INDEX IDX_E28446881257D5D (entity_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+        $this->addSql("CREATE TABLE entity (id INT AUTO_INCREMENT NOT NULL, entity_category_id INT DEFAULT NULL, image_id INT DEFAULT NULL, post_id INT DEFAULT NULL, entity_id INT DEFAULT NULL, type SMALLINT DEFAULT NULL, source VARCHAR(150) DEFAULT NULL, date DATE DEFAULT NULL, discr VARCHAR(255) NOT NULL, `label` VARCHAR(150) DEFAULT NULL, INDEX IDX_E284468907CC731 (entity_category_id), INDEX IDX_E2844683DA5256D (image_id), INDEX IDX_E2844684B89032C (post_id), INDEX IDX_E28446881257D5D (entity_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE entity_category_translation (id INT AUTO_INCREMENT NOT NULL, translatable_id INT DEFAULT NULL, name VARCHAR(50) NOT NULL, plural VARCHAR(50) NOT NULL, slug VARCHAR(255) NOT NULL, locale VARCHAR(255) NOT NULL, INDEX IDX_B5F5DA392C2AC5D3 (translatable_id), UNIQUE INDEX UNIQ_B5F5DA392C2AC5D34180C698 (translatable_id, locale), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
-        $this->addSql("CREATE TABLE homepage_box (id INT AUTO_INCREMENT NOT NULL, category_id INT DEFAULT NULL, page_id INT DEFAULT NULL, width SMALLINT NOT NULL, type SMALLINT NOT NULL, name VARCHAR(50) NOT NULL, leftSide SMALLINT NOT NULL, rightSide SMALLINT DEFAULT NULL, slug VARCHAR(255) NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_57E6A8E12469DE2 (category_id), INDEX IDX_57E6A8EC4663E4 (page_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+        $this->addSql("CREATE TABLE homepage_box (id INT AUTO_INCREMENT NOT NULL, category_id INT DEFAULT NULL, page_id INT DEFAULT NULL, type SMALLINT NOT NULL, name VARCHAR(50) DEFAULT NULL, logo VARCHAR(50) DEFAULT NULL, colour VARCHAR(50) DEFAULT NULL, position SMALLINT NOT NULL, visible_from DATE NOT NULL, visible_to DATE NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_57E6A8E12469DE2 (category_id), INDEX IDX_57E6A8EC4663E4 (page_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE sponsored (id INT AUTO_INCREMENT NOT NULL, entity_id INT DEFAULT NULL, user_id INT NOT NULL, start DATE NOT NULL, end DATE NOT NULL, views INT NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_1460D3DF81257D5D (entity_id), INDEX IDX_1460D3DFA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE notification (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, from_user_id INT NOT NULL, from_group_id INT DEFAULT NULL, from_page_id INT DEFAULT NULL, post_id INT DEFAULT NULL, type SMALLINT NOT NULL, status SMALLINT NOT NULL, object VARCHAR(50) DEFAULT NULL, object_id SMALLINT DEFAULT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_BF5476CAA76ED395 (user_id), INDEX IDX_BF5476CA2130303A (from_user_id), INDEX IDX_BF5476CAB8BB39DD (from_group_id), INDEX IDX_BF5476CA8A18804B (from_page_id), INDEX IDX_BF5476CA4B89032C (post_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE `group` (id INT AUTO_INCREMENT NOT NULL, creator_id INT NOT NULL, type SMALLINT NOT NULL, name VARCHAR(150) NOT NULL, description VARCHAR(250) NOT NULL, vip TINYINT(1) NOT NULL, slug VARCHAR(255) NOT NULL, img VARCHAR(100) DEFAULT NULL, img_offset NUMERIC(10, 2) DEFAULT NULL, cover_img VARCHAR(100) DEFAULT NULL, cover_img_offset NUMERIC(10, 2) DEFAULT NULL, INDEX IDX_6DC044C561220EA6 (creator_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE entity_user (id INT AUTO_INCREMENT NOT NULL, entity_id INT NOT NULL, user_id INT NOT NULL, admin TINYINT(1) NOT NULL, status SMALLINT NOT NULL, user_tags LONGTEXT DEFAULT NULL COMMENT '(DC2Type:simple_array)', notification TINYINT(1) NOT NULL, INDEX IDX_C55F6F6281257D5D (entity_id), INDEX IDX_C55F6F62A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
-        $this->addSql("CREATE TABLE homepage_archive (id INT AUTO_INCREMENT NOT NULL, article_id INT NOT NULL, user_id INT NOT NULL, category_id INT NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, UNIQUE INDEX UNIQ_CCED39BA7294869C (article_id), INDEX IDX_CCED39BAA76ED395 (user_id), INDEX IDX_CCED39BA12469DE2 (category_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+        $this->addSql("CREATE TABLE homepage_archive (id INT AUTO_INCREMENT NOT NULL, article_id INT NOT NULL, category_id INT NOT NULL, UNIQUE INDEX UNIQ_CCED39BA7294869C (article_id), INDEX IDX_CCED39BA12469DE2 (category_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE message_thread (id INT AUTO_INCREMENT NOT NULL, creator_id INT NOT NULL, subject VARCHAR(255) NOT NULL, createdAt DATETIME NOT NULL, isSpam TINYINT(1) NOT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_607D18C61220EA6 (creator_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE homepage_category_translation (id INT AUTO_INCREMENT NOT NULL, translatable_id INT DEFAULT NULL, name VARCHAR(50) NOT NULL, singular VARCHAR(50) DEFAULT NULL, slug VARCHAR(255) NOT NULL, locale VARCHAR(255) NOT NULL, INDEX IDX_8FFE75722C2AC5D3 (translatable_id), UNIQUE INDEX UNIQ_8FFE75722C2AC5D34180C698 (translatable_id, locale), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+        $this->addSql("CREATE TABLE homepage_banner (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, group_id INT DEFAULT NULL, page_id INT DEFAULT NULL, img VARCHAR(50) NOT NULL, img_alt VARCHAR(250) NOT NULL, img_href VARCHAR(250) NOT NULL, position SMALLINT NOT NULL, visible_from DATE NOT NULL, visible_to DATE NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_12CFEF71A76ED395 (user_id), INDEX IDX_12CFEF71FE54D947 (group_id), INDEX IDX_12CFEF71C4663E4 (page_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE entity_translation (id INT AUTO_INCREMENT NOT NULL, translatable_id INT DEFAULT NULL, title VARCHAR(150) DEFAULT NULL, subtitle VARCHAR(250) DEFAULT NULL, extract LONGTEXT DEFAULT NULL, text LONGTEXT DEFAULT NULL, slug VARCHAR(255) NOT NULL, locale VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_36531FBC2C2AC5D3 (translatable_id), UNIQUE INDEX UNIQ_36531FBC2C2AC5D34180C698 (translatable_id, locale), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE user_tag (id INT AUTO_INCREMENT NOT NULL, visible TINYINT(1) NOT NULL, is_user TINYINT(1) NOT NULL, is_group TINYINT(1) NOT NULL, is_page TINYINT(1) NOT NULL, is_protagonist TINYINT(1) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE comment (id INT AUTO_INCREMENT NOT NULL, post_id INT DEFAULT NULL, image_id INT DEFAULT NULL, user_id INT NOT NULL, comment LONGTEXT NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_9474526C4B89032C (post_id), INDEX IDX_9474526C3DA5256D (image_id), INDEX IDX_9474526CA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE request (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, from_user_id INT NOT NULL, group_id INT DEFAULT NULL, page_id INT DEFAULT NULL, entity_id INT DEFAULT NULL, status SMALLINT NOT NULL, object VARCHAR(50) DEFAULT NULL, object_id SMALLINT DEFAULT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_3B978F9FA76ED395 (user_id), INDEX IDX_3B978F9F2130303A (from_user_id), INDEX IDX_3B978F9FFE54D947 (group_id), INDEX IDX_3B978F9FC4663E4 (page_id), INDEX IDX_3B978F9F81257D5D (entity_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE page (id INT AUTO_INCREMENT NOT NULL, creator_id INT NOT NULL, type SMALLINT NOT NULL, name VARCHAR(150) NOT NULL, description VARCHAR(250) NOT NULL, website VARCHAR(150) NOT NULL, vip TINYINT(1) NOT NULL, slug VARCHAR(255) NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, img VARCHAR(100) DEFAULT NULL, img_offset NUMERIC(10, 2) DEFAULT NULL, cover_img VARCHAR(100) DEFAULT NULL, cover_img_offset NUMERIC(10, 2) DEFAULT NULL, background_img VARCHAR(100) DEFAULT NULL, INDEX IDX_140AB62061220EA6 (creator_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE page_user (id INT AUTO_INCREMENT NOT NULL, page_id INT NOT NULL, user_id INT NOT NULL, admin TINYINT(1) NOT NULL, status SMALLINT NOT NULL, join_event SMALLINT NOT NULL, join_disc SMALLINT NOT NULL, join_article SMALLINT NOT NULL, user_tags LONGTEXT DEFAULT NULL COMMENT '(DC2Type:simple_array)', notification TINYINT(1) NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_A57CA93C4663E4 (page_id), INDEX IDX_A57CA93A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
-        $this->addSql("CREATE TABLE homepage_column (id INT AUTO_INCREMENT NOT NULL, row_id INT NOT NULL, user_id INT NOT NULL, archive_id INT DEFAULT NULL, box_id INT DEFAULT NULL, type SMALLINT NOT NULL, `order` INT NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_1D0E883A269F2 (row_id), INDEX IDX_1D0E8A76ED395 (user_id), INDEX IDX_1D0E82956195F (archive_id), INDEX IDX_1D0E8D8177B3F (box_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE `like` (id INT AUTO_INCREMENT NOT NULL, post_id INT DEFAULT NULL, image_id INT DEFAULT NULL, user_id INT NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_AC6340B34B89032C (post_id), INDEX IDX_AC6340B33DA5256D (image_id), INDEX IDX_AC6340B3A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE message (id INT AUTO_INCREMENT NOT NULL, thread_id INT NOT NULL, sender_id INT NOT NULL, body LONGTEXT NOT NULL, created_at DATETIME NOT NULL, INDEX IDX_B6BD307FE2904019 (thread_id), INDEX IDX_B6BD307FF624B39D (sender_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
-        $this->addSql("CREATE TABLE relation (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, from_user_id INT NOT NULL, type SMALLINT NOT NULL, accepted TINYINT(1) NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_62894749A76ED395 (user_id), INDEX IDX_628947492130303A (from_user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+        $this->addSql("CREATE TABLE relation (id INT AUTO_INCREMENT NOT NULL, relation_type INT NOT NULL, user_id INT NOT NULL, from_user_id INT NOT NULL, accepted SMALLINT NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_628947493BF454A4 (relation_type), INDEX IDX_62894749A76ED395 (user_id), INDEX IDX_628947492130303A (from_user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+        $this->addSql("CREATE TABLE education (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, school VARCHAR(150) NOT NULL, course VARCHAR(150) DEFAULT NULL, teacher VARCHAR(100) DEFAULT NULL, date_from DATE DEFAULT NULL, date_to DATE DEFAULT NULL, mark SMALLINT DEFAULT NULL, mark_scale SMALLINT DEFAULT NULL, laude TINYINT(1) DEFAULT NULL, honour TINYINT(1) DEFAULT NULL, course_type SMALLINT DEFAULT NULL, degree_type SMALLINT DEFAULT NULL, description LONGTEXT DEFAULT NULL, INDEX IDX_DB0A5ED2A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE user_tag_translation (id INT AUTO_INCREMENT NOT NULL, translatable_id INT DEFAULT NULL, name VARCHAR(50) NOT NULL, slug VARCHAR(255) NOT NULL, locale VARCHAR(255) NOT NULL, INDEX IDX_BA7C53002C2AC5D3 (translatable_id), UNIQUE INDEX UNIQ_BA7C53002C2AC5D34180C698 (translatable_id, locale), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE image (id INT AUTO_INCREMENT NOT NULL, entity_id INT DEFAULT NULL, user_id INT NOT NULL, group_id INT DEFAULT NULL, page_id INT DEFAULT NULL, main TINYINT(1) DEFAULT NULL, sequence SMALLINT DEFAULT NULL, text LONGTEXT DEFAULT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, img VARCHAR(100) DEFAULT NULL, img_offset NUMERIC(10, 2) DEFAULT NULL, INDEX IDX_C53D045F81257D5D (entity_id), INDEX IDX_C53D045FA76ED395 (user_id), INDEX IDX_C53D045FFE54D947 (group_id), INDEX IDX_C53D045FC4663E4 (page_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE event_date (id INT AUTO_INCREMENT NOT NULL, event_id INT NOT NULL, start DATETIME NOT NULL, end DATETIME DEFAULT NULL, location VARCHAR(150) NOT NULL, address VARCHAR(150) NOT NULL, coordinates VARCHAR(150) NOT NULL, INDEX IDX_B5557BD171F7E88B (event_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE user_user_tag (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, user_tag_id INT NOT NULL, `order` SMALLINT DEFAULT NULL, INDEX IDX_8123208A76ED395 (user_id), INDEX IDX_8123208DF80782C (user_tag_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+        $this->addSql("CREATE TABLE work (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, employer VARCHAR(150) DEFAULT NULL, position VARCHAR(150) NOT NULL, company VARCHAR(150) DEFAULT NULL, date_from DATE DEFAULT NULL, date_to DATE DEFAULT NULL, description LONGTEXT DEFAULT NULL, INDEX IDX_534E6880A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE message_thread_metadata (id INT AUTO_INCREMENT NOT NULL, thread_id INT NOT NULL, participant_id INT NOT NULL, is_deleted TINYINT(1) NOT NULL, last_participant_message_date DATETIME DEFAULT NULL, last_message_date DATETIME DEFAULT NULL, INDEX IDX_38FC293EE2904019 (thread_id), INDEX IDX_38FC293E9D1C3019 (participant_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE homepage_category (id INT AUTO_INCREMENT NOT NULL, editor_id INT NOT NULL, rubric TINYINT(1) NOT NULL, `update` VARCHAR(150) DEFAULT NULL, INDEX IDX_D4588D586995AC4C (editor_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE message_metadata (id INT AUTO_INCREMENT NOT NULL, message_id INT NOT NULL, participant_id INT NOT NULL, is_read TINYINT(1) NOT NULL, status SMALLINT NOT NULL, INDEX IDX_4632F005537A1329 (message_id), INDEX IDX_4632F0059D1C3019 (participant_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE fan (id INT AUTO_INCREMENT NOT NULL, from_user_id INT NOT NULL, user_id INT DEFAULT NULL, group_id INT DEFAULT NULL, page_id INT DEFAULT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, INDEX IDX_65F778392130303A (from_user_id), INDEX IDX_65F77839A76ED395 (user_id), INDEX IDX_65F77839FE54D947 (group_id), INDEX IDX_65F77839C4663E4 (page_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
-        $this->addSql("CREATE TABLE user (id INT AUTO_INCREMENT NOT NULL, username VARCHAR(255) NOT NULL, username_canonical VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, email_canonical VARCHAR(255) NOT NULL, enabled TINYINT(1) NOT NULL, salt VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, last_login DATETIME DEFAULT NULL, locked TINYINT(1) NOT NULL, expired TINYINT(1) NOT NULL, expires_at DATETIME DEFAULT NULL, confirmation_token VARCHAR(255) DEFAULT NULL, password_requested_at DATETIME DEFAULT NULL, roles LONGTEXT NOT NULL COMMENT '(DC2Type:array)', credentials_expired TINYINT(1) NOT NULL, credentials_expire_at DATETIME DEFAULT NULL, first_name VARCHAR(50) NOT NULL, last_name VARCHAR(50) NOT NULL, sex TINYINT(1) NOT NULL, birth_date DATE NOT NULL, birth_date_visible SMALLINT NOT NULL, city_birth VARCHAR(50) NOT NULL, city_current VARCHAR(50) NOT NULL, newsletter TINYINT(1) NOT NULL, vip TINYINT(1) NOT NULL, notify_email TINYINT(1) NOT NULL, request_email TINYINT(1) NOT NULL, message_email TINYINT(1) NOT NULL, notes LONGTEXT DEFAULT NULL, img VARCHAR(100) DEFAULT NULL, img_offset NUMERIC(10, 2) DEFAULT NULL, cover_img VARCHAR(100) DEFAULT NULL, cover_img_offset NUMERIC(10, 2) DEFAULT NULL, UNIQUE INDEX UNIQ_8D93D64992FC23A8 (username_canonical), UNIQUE INDEX UNIQ_8D93D649A0D96FBF (email_canonical), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+        $this->addSql("CREATE TABLE user (id INT AUTO_INCREMENT NOT NULL, username VARCHAR(255) NOT NULL, username_canonical VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, email_canonical VARCHAR(255) NOT NULL, enabled TINYINT(1) NOT NULL, salt VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, last_login DATETIME DEFAULT NULL, locked TINYINT(1) NOT NULL, expired TINYINT(1) NOT NULL, expires_at DATETIME DEFAULT NULL, confirmation_token VARCHAR(255) DEFAULT NULL, password_requested_at DATETIME DEFAULT NULL, roles LONGTEXT NOT NULL COMMENT '(DC2Type:array)', credentials_expired TINYINT(1) NOT NULL, credentials_expire_at DATETIME DEFAULT NULL, first_name VARCHAR(50) NOT NULL, last_name VARCHAR(50) NOT NULL, sex TINYINT(1) NOT NULL, birth_date DATE NOT NULL, birth_date_visible SMALLINT NOT NULL, city_birth VARCHAR(50) NOT NULL, city_current VARCHAR(50) NOT NULL, newsletter TINYINT(1) NOT NULL, notify_email TINYINT(1) NOT NULL, request_email TINYINT(1) NOT NULL, message_email TINYINT(1) NOT NULL, notes LONGTEXT DEFAULT NULL, img VARCHAR(100) DEFAULT NULL, img_offset NUMERIC(10, 2) DEFAULT NULL, cover_img VARCHAR(100) DEFAULT NULL, cover_img_offset NUMERIC(10, 2) DEFAULT NULL, UNIQUE INDEX UNIQ_8D93D64992FC23A8 (username_canonical), UNIQUE INDEX UNIQ_8D93D649A0D96FBF (email_canonical), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+        $this->addSql("CREATE TABLE relation_type (id INT AUTO_INCREMENT NOT NULL, inverse_type INT DEFAULT NULL, name VARCHAR(50) NOT NULL, UNIQUE INDEX UNIQ_3BF454A45D3A0E61 (inverse_type), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("CREATE TABLE entity_category (id INT AUTO_INCREMENT NOT NULL, entity_type SMALLINT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
-        $this->addSql("CREATE TABLE homepage_row (id INT AUTO_INCREMENT NOT NULL, type SMALLINT NOT NULL, `order` INT NOT NULL, visible TINYINT(1) NOT NULL, createdAt DATETIME DEFAULT NULL, updatedAt DATETIME DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this->addSql("ALTER TABLE group_user ADD CONSTRAINT FK_A4C98D39FE54D947 FOREIGN KEY (group_id) REFERENCES `group` (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE group_user ADD CONSTRAINT FK_A4C98D39A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE disc_track ADD CONSTRAINT FK_BEDE8E11C38F37CA FOREIGN KEY (disc_id) REFERENCES entity (id) ON DELETE CASCADE");
@@ -58,6 +60,8 @@ class Version20140123120852 extends AbstractMigration
         $this->addSql("ALTER TABLE post ADD CONSTRAINT FK_5A8A6C8DFE54D947 FOREIGN KEY (group_id) REFERENCES `group` (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE post ADD CONSTRAINT FK_5A8A6C8DC4663E4 FOREIGN KEY (page_id) REFERENCES page (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE entity ADD CONSTRAINT FK_E284468907CC731 FOREIGN KEY (entity_category_id) REFERENCES entity_category (id)");
+        $this->addSql("ALTER TABLE entity ADD CONSTRAINT FK_E2844683DA5256D FOREIGN KEY (image_id) REFERENCES image (id) ON DELETE CASCADE");
+        $this->addSql("ALTER TABLE entity ADD CONSTRAINT FK_E2844684B89032C FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE entity ADD CONSTRAINT FK_E28446881257D5D FOREIGN KEY (entity_id) REFERENCES entity (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE entity_category_translation ADD CONSTRAINT FK_B5F5DA392C2AC5D3 FOREIGN KEY (translatable_id) REFERENCES entity_category (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE homepage_box ADD CONSTRAINT FK_57E6A8E12469DE2 FOREIGN KEY (category_id) REFERENCES homepage_category (id) ON DELETE CASCADE");
@@ -73,10 +77,12 @@ class Version20140123120852 extends AbstractMigration
         $this->addSql("ALTER TABLE entity_user ADD CONSTRAINT FK_C55F6F6281257D5D FOREIGN KEY (entity_id) REFERENCES entity (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE entity_user ADD CONSTRAINT FK_C55F6F62A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE homepage_archive ADD CONSTRAINT FK_CCED39BA7294869C FOREIGN KEY (article_id) REFERENCES entity (id) ON DELETE CASCADE");
-        $this->addSql("ALTER TABLE homepage_archive ADD CONSTRAINT FK_CCED39BAA76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE homepage_archive ADD CONSTRAINT FK_CCED39BA12469DE2 FOREIGN KEY (category_id) REFERENCES homepage_category (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE message_thread ADD CONSTRAINT FK_607D18C61220EA6 FOREIGN KEY (creator_id) REFERENCES user (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE homepage_category_translation ADD CONSTRAINT FK_8FFE75722C2AC5D3 FOREIGN KEY (translatable_id) REFERENCES homepage_category (id) ON DELETE CASCADE");
+        $this->addSql("ALTER TABLE homepage_banner ADD CONSTRAINT FK_12CFEF71A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
+        $this->addSql("ALTER TABLE homepage_banner ADD CONSTRAINT FK_12CFEF71FE54D947 FOREIGN KEY (group_id) REFERENCES `group` (id) ON DELETE CASCADE");
+        $this->addSql("ALTER TABLE homepage_banner ADD CONSTRAINT FK_12CFEF71C4663E4 FOREIGN KEY (page_id) REFERENCES page (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE entity_translation ADD CONSTRAINT FK_36531FBC2C2AC5D3 FOREIGN KEY (translatable_id) REFERENCES entity (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE comment ADD CONSTRAINT FK_9474526C4B89032C FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE comment ADD CONSTRAINT FK_9474526C3DA5256D FOREIGN KEY (image_id) REFERENCES image (id) ON DELETE CASCADE");
@@ -89,17 +95,15 @@ class Version20140123120852 extends AbstractMigration
         $this->addSql("ALTER TABLE page ADD CONSTRAINT FK_140AB62061220EA6 FOREIGN KEY (creator_id) REFERENCES user (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE page_user ADD CONSTRAINT FK_A57CA93C4663E4 FOREIGN KEY (page_id) REFERENCES page (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE page_user ADD CONSTRAINT FK_A57CA93A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
-        $this->addSql("ALTER TABLE homepage_column ADD CONSTRAINT FK_1D0E883A269F2 FOREIGN KEY (row_id) REFERENCES homepage_row (id) ON DELETE CASCADE");
-        $this->addSql("ALTER TABLE homepage_column ADD CONSTRAINT FK_1D0E8A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
-        $this->addSql("ALTER TABLE homepage_column ADD CONSTRAINT FK_1D0E82956195F FOREIGN KEY (archive_id) REFERENCES homepage_archive (id) ON DELETE SET NULL");
-        $this->addSql("ALTER TABLE homepage_column ADD CONSTRAINT FK_1D0E8D8177B3F FOREIGN KEY (box_id) REFERENCES homepage_box (id) ON DELETE SET NULL");
         $this->addSql("ALTER TABLE `like` ADD CONSTRAINT FK_AC6340B34B89032C FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE `like` ADD CONSTRAINT FK_AC6340B33DA5256D FOREIGN KEY (image_id) REFERENCES image (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE `like` ADD CONSTRAINT FK_AC6340B3A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE message ADD CONSTRAINT FK_B6BD307FE2904019 FOREIGN KEY (thread_id) REFERENCES message_thread (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE message ADD CONSTRAINT FK_B6BD307FF624B39D FOREIGN KEY (sender_id) REFERENCES user (id) ON DELETE CASCADE");
+        $this->addSql("ALTER TABLE relation ADD CONSTRAINT FK_628947493BF454A4 FOREIGN KEY (relation_type) REFERENCES relation_type (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE relation ADD CONSTRAINT FK_62894749A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE relation ADD CONSTRAINT FK_628947492130303A FOREIGN KEY (from_user_id) REFERENCES user (id) ON DELETE CASCADE");
+        $this->addSql("ALTER TABLE education ADD CONSTRAINT FK_DB0A5ED2A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE user_tag_translation ADD CONSTRAINT FK_BA7C53002C2AC5D3 FOREIGN KEY (translatable_id) REFERENCES user_tag (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE image ADD CONSTRAINT FK_C53D045F81257D5D FOREIGN KEY (entity_id) REFERENCES entity (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE image ADD CONSTRAINT FK_C53D045FA76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
@@ -108,6 +112,7 @@ class Version20140123120852 extends AbstractMigration
         $this->addSql("ALTER TABLE event_date ADD CONSTRAINT FK_B5557BD171F7E88B FOREIGN KEY (event_id) REFERENCES entity (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE user_user_tag ADD CONSTRAINT FK_8123208A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE user_user_tag ADD CONSTRAINT FK_8123208DF80782C FOREIGN KEY (user_tag_id) REFERENCES user_tag (id) ON DELETE CASCADE");
+        $this->addSql("ALTER TABLE work ADD CONSTRAINT FK_534E6880A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE message_thread_metadata ADD CONSTRAINT FK_38FC293EE2904019 FOREIGN KEY (thread_id) REFERENCES message_thread (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE message_thread_metadata ADD CONSTRAINT FK_38FC293E9D1C3019 FOREIGN KEY (participant_id) REFERENCES user (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE homepage_category ADD CONSTRAINT FK_D4588D586995AC4C FOREIGN KEY (editor_id) REFERENCES user (id) ON DELETE CASCADE");
@@ -117,6 +122,7 @@ class Version20140123120852 extends AbstractMigration
         $this->addSql("ALTER TABLE fan ADD CONSTRAINT FK_65F77839A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE fan ADD CONSTRAINT FK_65F77839FE54D947 FOREIGN KEY (group_id) REFERENCES `group` (id) ON DELETE CASCADE");
         $this->addSql("ALTER TABLE fan ADD CONSTRAINT FK_65F77839C4663E4 FOREIGN KEY (page_id) REFERENCES page (id) ON DELETE CASCADE");
+        $this->addSql("ALTER TABLE relation_type ADD CONSTRAINT FK_3BF454A45D3A0E61 FOREIGN KEY (inverse_type) REFERENCES relation_type (id) ON DELETE SET NULL");
     }
 
     public function down(Schema $schema)
@@ -124,6 +130,7 @@ class Version20140123120852 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql", "Migration can only be executed safely on 'mysql'.");
         
+        $this->addSql("ALTER TABLE entity DROP FOREIGN KEY FK_E2844684B89032C");
         $this->addSql("ALTER TABLE notification DROP FOREIGN KEY FK_BF5476CA4B89032C");
         $this->addSql("ALTER TABLE comment DROP FOREIGN KEY FK_9474526C4B89032C");
         $this->addSql("ALTER TABLE like DROP FOREIGN KEY FK_AC6340B34B89032C");
@@ -137,8 +144,6 @@ class Version20140123120852 extends AbstractMigration
         $this->addSql("ALTER TABLE request DROP FOREIGN KEY FK_3B978F9F81257D5D");
         $this->addSql("ALTER TABLE image DROP FOREIGN KEY FK_C53D045F81257D5D");
         $this->addSql("ALTER TABLE event_date DROP FOREIGN KEY FK_B5557BD171F7E88B");
-        $this->addSql("ALTER TABLE homepage_column DROP FOREIGN KEY FK_1D0E8D8177B3F");
-        $this->addSql("ALTER TABLE homepage_column DROP FOREIGN KEY FK_1D0E82956195F");
         $this->addSql("ALTER TABLE message DROP FOREIGN KEY FK_B6BD307FE2904019");
         $this->addSql("ALTER TABLE message_thread_metadata DROP FOREIGN KEY FK_38FC293EE2904019");
         $this->addSql("ALTER TABLE user_tag_translation DROP FOREIGN KEY FK_BA7C53002C2AC5D3");
@@ -146,11 +151,13 @@ class Version20140123120852 extends AbstractMigration
         $this->addSql("ALTER TABLE post DROP FOREIGN KEY FK_5A8A6C8DC4663E4");
         $this->addSql("ALTER TABLE homepage_box DROP FOREIGN KEY FK_57E6A8EC4663E4");
         $this->addSql("ALTER TABLE notification DROP FOREIGN KEY FK_BF5476CA8A18804B");
+        $this->addSql("ALTER TABLE homepage_banner DROP FOREIGN KEY FK_12CFEF71C4663E4");
         $this->addSql("ALTER TABLE request DROP FOREIGN KEY FK_3B978F9FC4663E4");
         $this->addSql("ALTER TABLE page_user DROP FOREIGN KEY FK_A57CA93C4663E4");
         $this->addSql("ALTER TABLE image DROP FOREIGN KEY FK_C53D045FC4663E4");
         $this->addSql("ALTER TABLE fan DROP FOREIGN KEY FK_65F77839C4663E4");
         $this->addSql("ALTER TABLE message_metadata DROP FOREIGN KEY FK_4632F005537A1329");
+        $this->addSql("ALTER TABLE entity DROP FOREIGN KEY FK_E2844683DA5256D");
         $this->addSql("ALTER TABLE comment DROP FOREIGN KEY FK_9474526C3DA5256D");
         $this->addSql("ALTER TABLE like DROP FOREIGN KEY FK_AC6340B33DA5256D");
         $this->addSql("ALTER TABLE homepage_box DROP FOREIGN KEY FK_57E6A8E12469DE2");
@@ -164,28 +171,30 @@ class Version20140123120852 extends AbstractMigration
         $this->addSql("ALTER TABLE notification DROP FOREIGN KEY FK_BF5476CA2130303A");
         $this->addSql("ALTER TABLE group DROP FOREIGN KEY FK_6DC044C561220EA6");
         $this->addSql("ALTER TABLE entity_user DROP FOREIGN KEY FK_C55F6F62A76ED395");
-        $this->addSql("ALTER TABLE homepage_archive DROP FOREIGN KEY FK_CCED39BAA76ED395");
         $this->addSql("ALTER TABLE message_thread DROP FOREIGN KEY FK_607D18C61220EA6");
+        $this->addSql("ALTER TABLE homepage_banner DROP FOREIGN KEY FK_12CFEF71A76ED395");
         $this->addSql("ALTER TABLE comment DROP FOREIGN KEY FK_9474526CA76ED395");
         $this->addSql("ALTER TABLE request DROP FOREIGN KEY FK_3B978F9FA76ED395");
         $this->addSql("ALTER TABLE request DROP FOREIGN KEY FK_3B978F9F2130303A");
         $this->addSql("ALTER TABLE page DROP FOREIGN KEY FK_140AB62061220EA6");
         $this->addSql("ALTER TABLE page_user DROP FOREIGN KEY FK_A57CA93A76ED395");
-        $this->addSql("ALTER TABLE homepage_column DROP FOREIGN KEY FK_1D0E8A76ED395");
         $this->addSql("ALTER TABLE like DROP FOREIGN KEY FK_AC6340B3A76ED395");
         $this->addSql("ALTER TABLE message DROP FOREIGN KEY FK_B6BD307FF624B39D");
         $this->addSql("ALTER TABLE relation DROP FOREIGN KEY FK_62894749A76ED395");
         $this->addSql("ALTER TABLE relation DROP FOREIGN KEY FK_628947492130303A");
+        $this->addSql("ALTER TABLE education DROP FOREIGN KEY FK_DB0A5ED2A76ED395");
         $this->addSql("ALTER TABLE image DROP FOREIGN KEY FK_C53D045FA76ED395");
         $this->addSql("ALTER TABLE user_user_tag DROP FOREIGN KEY FK_8123208A76ED395");
+        $this->addSql("ALTER TABLE work DROP FOREIGN KEY FK_534E6880A76ED395");
         $this->addSql("ALTER TABLE message_thread_metadata DROP FOREIGN KEY FK_38FC293E9D1C3019");
         $this->addSql("ALTER TABLE homepage_category DROP FOREIGN KEY FK_D4588D586995AC4C");
         $this->addSql("ALTER TABLE message_metadata DROP FOREIGN KEY FK_4632F0059D1C3019");
         $this->addSql("ALTER TABLE fan DROP FOREIGN KEY FK_65F778392130303A");
         $this->addSql("ALTER TABLE fan DROP FOREIGN KEY FK_65F77839A76ED395");
+        $this->addSql("ALTER TABLE relation DROP FOREIGN KEY FK_628947493BF454A4");
+        $this->addSql("ALTER TABLE relation_type DROP FOREIGN KEY FK_3BF454A45D3A0E61");
         $this->addSql("ALTER TABLE entity DROP FOREIGN KEY FK_E284468907CC731");
         $this->addSql("ALTER TABLE entity_category_translation DROP FOREIGN KEY FK_B5F5DA392C2AC5D3");
-        $this->addSql("ALTER TABLE homepage_column DROP FOREIGN KEY FK_1D0E883A269F2");
         $this->addSql("DROP TABLE group_user");
         $this->addSql("DROP TABLE disc_track");
         $this->addSql("DROP TABLE post");
@@ -199,26 +208,28 @@ class Version20140123120852 extends AbstractMigration
         $this->addSql("DROP TABLE homepage_archive");
         $this->addSql("DROP TABLE message_thread");
         $this->addSql("DROP TABLE homepage_category_translation");
+        $this->addSql("DROP TABLE homepage_banner");
         $this->addSql("DROP TABLE entity_translation");
         $this->addSql("DROP TABLE user_tag");
         $this->addSql("DROP TABLE comment");
         $this->addSql("DROP TABLE request");
         $this->addSql("DROP TABLE page");
         $this->addSql("DROP TABLE page_user");
-        $this->addSql("DROP TABLE homepage_column");
         $this->addSql("DROP TABLE `like`");
         $this->addSql("DROP TABLE message");
         $this->addSql("DROP TABLE relation");
+        $this->addSql("DROP TABLE education");
         $this->addSql("DROP TABLE user_tag_translation");
         $this->addSql("DROP TABLE image");
         $this->addSql("DROP TABLE event_date");
         $this->addSql("DROP TABLE user_user_tag");
+        $this->addSql("DROP TABLE work");
         $this->addSql("DROP TABLE message_thread_metadata");
         $this->addSql("DROP TABLE homepage_category");
         $this->addSql("DROP TABLE message_metadata");
         $this->addSql("DROP TABLE fan");
         $this->addSql("DROP TABLE user");
+        $this->addSql("DROP TABLE relation_type");
         $this->addSql("DROP TABLE entity_category");
-        $this->addSql("DROP TABLE homepage_row");
     }
 }

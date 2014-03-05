@@ -65,12 +65,19 @@ abstract class Entity
      * @Assert\NotNull(groups="Event")
      */
     private $entityCategory;
-    
+
     /**
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="entity", cascade={"persist", "remove"})
-     * @Assert\Valid
+     * @var integer
+     *
+     * @ORM\Column(name="image_id", type="integer", nullable=true)
      */
-    private $posts;
+    private $imageId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Image")
+     * @ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     **/
+    private $image;
     
     /**
      * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"})
@@ -83,6 +90,25 @@ abstract class Entity
      * @Assert\Valid
      */
     private $multimedia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="post_id", type="integer", nullable=false)
+     */
+    private $postId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Post")
+     * @ORM\JoinColumn(name="post_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     **/
+    private $post;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="entity", cascade={"persist", "remove"})
+     * @Assert\Valid
+     */
+    private $posts;
 
     /**
      * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity", cascade={"persist", "remove"})
@@ -218,20 +244,41 @@ abstract class Entity
         return $this->entityCategory;
     }
 
+    /**
+     * Get userId
+     *
+     * @return integer 
+     */
+    public function getImageId()
+    {
+        return $this->imageId;
+    }
+
+    /**
+     * Set image
+     *
+     * @param Image $image
+     * @return Request
+     */
+    public function setImage(Image $image)
+    {
+        $this->image = $image;
+        $this->addImage($image);
+        if (!is_null($image)) {
+            $this->imageId = $image->getId();
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return Image 
+     */
     public function getImage()
     {
-        if (count($this->images) <= 0) {
-            $emptyImage = new Image;
-            $name = new \ReflectionClass($this->className());
-            $emptyImage->setImg(strtolower($name->getShortName()).'_'.Image::defaultImg());
-            return $emptyImage;
-        }
-        foreach ($this->images as $image) {
-            if ($image->getMain()) {
-                return $image;
-            }
-        }
-        return $this->images[0];
+        return $this->image;
     }
 
     /**
@@ -294,13 +341,41 @@ abstract class Entity
         return $this->multimedia;
     }
 
+    /**
+     * Get userId
+     *
+     * @return integer 
+     */
+    public function getPostId()
+    {
+        return $this->postId;
+    }
+
+    /**
+     * Set post
+     *
+     * @param Post $post
+     * @return Request
+     */
+    public function setPost(Post $post)
+    {
+        $this->post = $post;
+        $this->addPost($post);
+        if (!is_null($post)) {
+            $this->postId = $post->getId();
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Get post
+     *
+     * @return Post 
+     */
     public function getPost()
     {
-        foreach ($this->posts as $post) {
-            if ($post->getType() == Post::TYPE_CREATION && $post->getObject() == $this->className()) {
-                return $post;
-            }
-        }
+        return $this->post;
     }
 
     public function getLastPost()

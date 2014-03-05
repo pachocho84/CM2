@@ -66,7 +66,7 @@ trait ImageTrait
      */
     public function getImg()
     {
-        return empty($this->img) ? $this->defaultImg() : $this->img;
+        return /*empty($this->img) ? $this->defaultImg() :*/ $this->img;
     }
 
     /**

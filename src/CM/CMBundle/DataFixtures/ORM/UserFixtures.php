@@ -319,7 +319,6 @@ Con L’etichetta  Limen Music  ha registrato cd e dvd dei quintetti per clarine
                 $user->setCoverImg($person['cover']);
             }
 
-            
             $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
 
             $user->addPost($post);
@@ -330,7 +329,8 @@ Con L’etichetta  Limen Music  ha registrato cd e dvd dei quintetti per clarine
                     ->setText($person['biography']);
 
                 $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
-                $biography->addPost($post);
+                $manager->persist($post);
+                $biography->setPost($post);
 
                 $manager->persist($biography);
             }

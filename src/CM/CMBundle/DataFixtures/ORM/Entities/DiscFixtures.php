@@ -152,7 +152,7 @@ class DiscFixtures
                 ->setText('main image for disc "'.$disc->getTitle().'"')
                 ->setMain(true)
                 ->setUser($user);
-            $disc->addImage($image);
+            $disc->setImage($image);
 
             $manager->persist($disc);
             $manager->flush();                  
@@ -182,10 +182,11 @@ class DiscFixtures
         }
 
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+        $manager->persist($post);
         $post->setPage($page);
         $post->setGroup($group);
 
-        $disc->addPost($post);
+        $disc->setPost($post);
         
         $disc->addUser(
             $user,
