@@ -1,16 +1,21 @@
 function calculateColumns() {
     var pageWidth = $(window).width();
 
+    var columns;
     if (pageWidth > 900) { // three columns
-        $('#wall').append('<div class="col-xs-4"></div><div class="col-xs-4"></div><div class="col-xs-4"></div>');
+        columns = '<div class="col-xs-4"></div><div class="col-xs-4"></div><div class="col-xs-4"></div>';
     } else if (pageWidth > 600) { // two columns 
-        $('#wall').append('<div class="col-xs-6"></div><div class="col-xs-6"></div>');
+        columns = '<div class="col-xs-6"></div><div class="col-xs-6"></div>';
     } else { // one column
-        $('#wall').append('<div class="col-xs-12"></div>');
+        columns = '<div class="col-xs-12"></div>';
     }
+
+    return columns;
 }
 
 function wallLoad(data) {
+    var loadMore = loadMore || true;
+
     var columns = [];
     $.each($('#wall > div'), function(i, col) {
         columns[i] = [$(col), $(col).outerHeight()];
@@ -20,6 +25,8 @@ function wallLoad(data) {
         if (i == 'loadMore') return;
 
         $box = $(box);
+        $box.attr('wall-order', wallOrder);
+        wallOrder++;
 
         columns.sort(function(a, b) { return a[1] > b[1]; });
 
@@ -35,12 +42,32 @@ function wallLoad(data) {
     $('#wall').after($(data.loadMore));
 }
 
+var wallOrder = 0;
+
 $(function() {
-    calculateColumns();
+    $('#wall').append(calculateColumns());
 
     $.get(document.URL, function(data) {
         wallLoad(data);
         $('.cycle-slideshow').cycle();
     });
 
+    $(window).resize(function(event) {
+        var pageWidth = $(window).width();
+        var num = $('#wall > div').length;
+
+        if ((pageWidth > 900 && num != 3) || (pageWidth <= 900 && pageWidth > 600 && num != 2) || (pageWidth <= 600 && num != 1)) {
+            var $loadMore = $('#wall ~ .load_more').detach();            
+
+            var data = {};
+            $.each($('#wall > div > *'), function(i, elem) {
+                data[$(elem).attr('wall-order')] = $(elem).detach();
+            });
+            data['loadMore'] = $loadMore;
+
+            $('#wall').empty().append(calculateColumns());
+            wallOrder = 0;
+            wallLoad(data);
+        }
+    });
 });
