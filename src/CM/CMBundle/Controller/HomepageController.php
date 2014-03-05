@@ -40,7 +40,7 @@ class HomepageController extends Controller
             $boxes['lastUsers'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(15)));
 
             $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('locale' => $request->getLocale())), $page, 3);
-            $boxes['dates'] = $this->renderView('CMBundle:Event:nextDates.html.twig', array('dates' => $dates));
+            $boxes['dates'] = $this->renderView('CMBundle:Homepage:events.html.twig', array('dates' => $dates));
             
             if (!$this->get('security.context')->isGranted('ROLE_USER')) {
                 $boxes['authentication'] = $thi->get('fragment.handler')->render(new ControllerReference('FOSUserBundle:Security:login', array('template' => 'CMBundle:Homepage:authentication.html.twig')));
