@@ -1,40 +1,24 @@
-<div id="events_box" class="box">
-    <h2>{{ 'Upcoming Events'|trans }}</h2>
-    
-    <p class="destra">                                                                                           
-        {#<?php echo link_to(image_tag(sfConfig::get('app_icone_add').'-small').__('Crea'), '@eventi_new', array('class' => 'piccolo')) ?>
-        &middot;#}
-        <a class="piccolo" href="{{ path('event_index') }}">{{ icon('Calendar') }} {{ 'Show all'|trans }}</a>
-    </p>   
+<div class="box box-system">
+    <div class="box-heading">
+        <h2>
+            {{ icon('Event') }} {{ 'Next events'|trans }}{% if count is defined %}
+            <small><a href="{{ path(dates[0].event.post.publisherType ~ '_events', {'slug': dates[0].event.post.publisher.slug}) }}" class="pull-right">{{ 'Show all (%count%)'|trans({'%count%': count}) }}</a></small>{% endif %}
+        </h2>
+    </div>
 
-                                 
-    <div class="events_box-events-container">
-        <div class="events_box-events">
-            {% for date in events %}
-                {% if loop.index % 4 == 0 %}        
-                    </div><div class="events_box-events"> 
-                {% endif %}
-    
-                <div class="events_box-event">
-                    {% if date.getEvent.getImages|length > 0 %}
-                        {{ show_img_box(date.getEvent.getImages[0].img|imagine_filter('medium'), {'width': 100, 'height': 60, 'box_attributes': {'class': 'event-photo'}}) }}
-                    {% else %}
-                        <a href="<?php echo url_for($oggetti[$i]->getRawValue()->getLinkShow()) ?>"><img class="event-photo" src="/images/layout/default_eventi_homepage.jpg" /></a> 
-                    {% endif %}
-
-                    <h5>{{ date.start|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</h5>
-                    <h3><a href="{{ path('event_show', {'id': date.event.id, 'slug': date.event.getSlug}) }}">{{ date.event.getTitle }}</a></h3> 
-                    <h4 title="{{ date.location }}, {{ date.address }}">{{ date.location }}</h4>
-              </div>
-    
-            {% endfor %}
-        </div>        
-    </div> 
-    
-    
-    
-    <a href="#" id="events_box-prev"></a><a href="#" id="events_box-next"></a>  
-    
-    
-
+    <div class="box-body objects">
+        {% for date in dates %}
+            <div class="media object">
+                {{ show_img_box(date.event.image|imagine_filter('medium'), {width: 100, height: 66, box_attributes: {class: 'pull-left'}}) }}
+                <div class="media-body">
+                    <h4>{{ date.event }}</h4>
+                    <p>
+                        {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
+                        {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}<br/>
+                        <span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span>
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>

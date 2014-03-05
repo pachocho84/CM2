@@ -922,6 +922,7 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-bank"></span>';
             case 'Group':
             case 'Group_'.Post::TYPE_CREATION:
+            case 'Users':
                 return '<span class="glyphicons group"></span>';
             case 'Fan':
             case 'Fan_'.Post::TYPE_FAN_USER:
@@ -969,8 +970,6 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicons crown"></span>';
             case 'Ok':
                 return '<span class="glyphicon glyphicon-ok"></span>';
-            case 'List':
-                return '<span class="glyphicon glyphicon-list"></span>';
             case 'Archive':
                 return '<span class="glyphicon glyphicon-folder-close"></span>';
             case 'Time':
@@ -1007,6 +1006,8 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicons pushpin"></span>';
             case 'Fullscreen':
                 return '<span class="glyphicon glyphicon-fullscreen"></span>';
+            case 'Login':
+                return '<span class="glyphicons lock"></span>';
             default:
                 return '<span style="color:red;">missing glyphicon for '.$object.'</span>';
         }
