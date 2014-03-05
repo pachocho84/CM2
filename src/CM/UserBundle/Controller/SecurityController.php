@@ -11,7 +11,6 @@
 
 namespace CM\UserBundle\Controller;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\UserBundle\Controller\SecurityController as BaseSecurityController;
 

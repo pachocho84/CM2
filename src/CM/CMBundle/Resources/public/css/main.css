@@ -135,6 +135,9 @@ a:hover {
 .btn.btn-default.active span.glyphicons {
     color: #990000;
 }
+.form-group {
+    margin-bottom: 10px;
+}
 
 
 

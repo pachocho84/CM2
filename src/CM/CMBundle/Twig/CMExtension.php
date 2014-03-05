@@ -394,7 +394,8 @@ class CMExtension extends \Twig_Extension
         }
 
         if (!is_null($options['user_box'])) {
-            $boxTag .= $this->getUserBox($options['user_box']);
+            $boxTag = '<div '.$this->getUserBox($options['user_box']).'>'.$boxTag;
+            $boxTagEnd = '</div>'.$boxTagEnd;
         }
         
         return $boxTag.'>'.$imgTag.$boxTagEnd;
