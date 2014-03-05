@@ -21,6 +21,9 @@ use CM\CMBundle\Form\ArticleType;
 use CM\CMBundle\Form\ImageCollectionType;
 use CM\CMBundle\Utility\UploadHandler;
 
+
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
+
 class HomepageController extends Controller
 {
     /**
@@ -40,7 +43,7 @@ class HomepageController extends Controller
             $boxes['dates'] = $this->renderView('CMBundle:Event:nextDates.html.twig', array('dates' => $dates));
             
             if (!$this->get('security.context')->isGranted('ROLE_USER')) {
-                $boxes['authentication'] = $this->renderView('CMBundle:Homepage:authentication.html.twig');
+                $boxes['authentication'] = $thi->get('fragment.handler')->render(new ControllerReference('FOSUserBundle:Security:login', array('template' => 'CMBundle:Homepage:authentication.html.twig')));
             }
             
             $sponsoreds = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale())), $page, 3);
