@@ -1,3 +1,5 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
 <div class="box box-system">
     <div class="box-heading">
         <h2>{{ icon('Login') }} {{ what|default('Login')|trans }}</h2>
@@ -5,7 +7,7 @@
 
     <div class="box-body">
         {% if error %}<div>{{ error|trans }}</div>{% endif %}
-        
+
         <form action="{{ path("fos_user_security_check") }}" method="post" role="form">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
 
