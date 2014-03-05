@@ -1,10 +1,9 @@
 /* UTILITY */
-.round
-{
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 100px white inset;
 }
+
+
 
 /* LAYOUT */
 .load_more_container {
