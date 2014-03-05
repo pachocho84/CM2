@@ -20,17 +20,24 @@ var UserActive = {
 };
 
 infiniteScrollOffset = 300;
-function infiniteScroll(target, container, condition, loop) {
+function infiniteScroll(target, container, condition, loop, callback) {
     if (!target.attr('load_more_loading') && condition(target, container)) {
         target.attr('load_more_loading', 'load');
         target.children('a').html('<img src="/bundles/cm/images/layout/loader.gif" />');
         $.get(target.children('a').attr('href'), function(data) {
-            parent = target.parent();
-            target.replaceWith(data);
+            var parent = target.parent();
+            if (callback) {
+                callback = callback.substring(1);
+                var func = callback.split('(')[0];
+                var args = callback.split('(').slice(1).join('(').slice(0, -1);
+                window[func](data, target, container);
+            } else {
+                target.replaceWith(data);
+            }
             target = parent.find('.load_more');
         }).success(function() {
             if (loop) {
-                infiniteScroll(target, container, condition, loop);
+                infiniteScroll(target, container, condition, loop, callback);
             }
         });
     }
@@ -75,7 +82,7 @@ $(function() {
     /* INFINITE SCROLL */
     $('body').ready(function() {
         $('.load_more').each(function() {
-            container = $(this).closest('[load_more_container]').length > 0 ? $(this).closest('[load_more_container]') : $(window);
+            var container = $(this).closest('[load_more_container]').length > 0 ? $(this).closest('[load_more_container]') : $(window);
             infiniteScroll($(this), container, function(target, container) {
                 return target.is(':visible') && target.offset().top - container.height() < container.scrollTop();
             }, true);
@@ -83,23 +90,26 @@ $(function() {
     });
 
     $('body').on('click', '.load_more a', function(event) {
-        event.preventDefault(); 
-        infiniteScroll($(event.target).closest('.load_more'), null, function() { return true; }, false); 
+        event.preventDefault();
+        var target = $(event.target).closest('.load_more');
+        infiniteScroll(target, null, function() { return true; }, false, target.attr('load_more-callback')); 
     });
 
     $('[load_more_container]').on('scroll', function(event) {
         event.stopImmediatePropagation();
-        infiniteScroll($(this).find('.load_more'), $(this), function(target, container) {
-            return target.length > 0 && target.is(':visible') && target.first().position().top - infiniteScrollOffset < container.height();
-        }, true);
+        var target = $(this).find('.load_more');
+        infiniteScroll(target, $(this), function(t, c) {
+            return t.length > 0 && t.is(':visible') && t.first().position().top - infiniteScrollOffset < c.height();
+        }, true, target.attr('load_more-callback'));
         return false;
     });
     $(document).on('scroll', function(event) {
         $('.load_more').each(function() {
-            container = $(this).closest('[load_more_container]').length > 0 ? $(this).closest('[load_more_container]') : $(window);
-            infiniteScroll($(this), container, function(target, container) {
-                return target.is(':visible') && target.offset().top - container.height() - infiniteScrollOffset < container.scrollTop();
-            }, true);
+            var target = $(this);
+            var container = $(this).closest('[load_more_container]').length > 0 ? $(this).closest('[load_more_container]') : $(window);
+            infiniteScroll(target, container, function(t, c) {
+                return t.is(':visible') && t.offset().top - c.height() - infiniteScrollOffset < c.scrollTop();
+            }, true, target.attr('load_more-callback'));
         });
     });
 
@@ -180,8 +190,8 @@ $(function() {
     
     
     /* TOOLTIP */
-    $('body').on('mouseenter', '[data-toggle=tooltip]', function() {
-        $("[data-toggle=tooltip]").tooltip({
+    $('body').on('mouseenter', '[data-toggle=tooltip]', function(event) {
+        $(event.currentTarget).tooltip({
             delay: { show: 250, hide: 0 }
         }).tooltip('show');
     });

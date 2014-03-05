@@ -77,6 +77,8 @@ class HomepageController extends Controller
             foreach ($posts as $post) {
                 $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:postBox.html.twig', array('post' => $post));
             }
+
+            $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:boxLoadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
             
             return new JsonResponse($boxes);
         }
