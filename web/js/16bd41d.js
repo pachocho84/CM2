@@ -40,7 +40,6 @@ $(function() {
 
     $.get(document.URL, function(data) {
         wallLoad(data);
-        $('.cycle-slideshow').cycle();
     });
 
 });

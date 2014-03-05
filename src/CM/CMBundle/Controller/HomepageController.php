@@ -73,12 +73,14 @@ class HomepageController extends Controller
                 $boxes['homepage_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:box.html.twig', array('box' => $box, 'objects' => $objects));
             }
 
+/*
             $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
             foreach ($posts as $post) {
                 $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:postBox.html.twig', array('post' => $post));
             }
 
             $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:boxLoadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
+*/
             
             return new JsonResponse($boxes);
         }
