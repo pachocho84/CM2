@@ -43,7 +43,7 @@ class HomepageController extends Controller
             $boxes['dates'] = $this->renderView('CMBundle:Homepage:events.html.twig', array('dates' => $dates));
             
             if (!$this->get('security.context')->isGranted('ROLE_USER')) {
-                $boxes['authentication'] = $thi->get('fragment.handler')->render(new ControllerReference('FOSUserBundle:Security:login', array('template' => 'CMBundle:Homepage:authentication.html.twig')));
+                $boxes['authentication'] = $this->get('fragment.handler')->render(new ControllerReference('FOSUserBundle:Security:login', array('template' => 'CMBundle:Homepage:boxLogin.html.twig')));
             }
             
             $sponsoreds = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale())), $page, 3);
