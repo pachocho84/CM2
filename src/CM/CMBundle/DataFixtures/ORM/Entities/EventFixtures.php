@@ -85,7 +85,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             'subtitle'  => '', 
             'extract'   => 'I bambini poteranno ascoltare e suonare tutti gli strumenti dell\'Accademia! A cura dell\'Accademia musicale STABAT MATER di Rho', 
             'text'      => 'I bambini poteranno ascoltare e suonare tutti gli strumenti dell\'Accademia! A cura dell\'Accademia musicale STABAT MATER di Rho', 
-            'img'       => '1b7e2be2de282f6cd99a91874f2f5134dd76cdd9.jpg',
+            'img'       => 'quartetto_cremona.jpg',
             'page'      => 1
         )
     );
