@@ -1,10 +1,15 @@
+var wallColW3 = 1150;
+var wallColW2 = 750;
+var wallOrder = 0;
+var wallTimer;
+
 function calculateColumns() {
     var pageWidth = $(window).width();
 
     var columns;
-    if (pageWidth > 900) { // three columns
+    if (pageWidth > wallColW3) { // three columns
         columns = '<div class="col-xs-4" col="1"></div><div class="col-xs-4" col="2"></div><div class="col-xs-4" col="3"></div>';
-    } else if (pageWidth > 600) { // two columns 
+    } else if (pageWidth > wallColW2) { // two columns 
         columns = '<div class="col-xs-6" col="1"></div><div class="col-xs-6" col="2"></div>';
     } else { // one column
         columns = '<div class="col-xs-12" col="1"></div>';
@@ -54,9 +59,6 @@ function wallLoad(data, t, c, reload) {
     $('#wall').after($(data.loadMore));
 }
 
-var wallOrder = 0;
-var wallTimer;
-
 $(function() {
     $('#wall').append(calculateColumns());
 
@@ -68,7 +70,7 @@ $(function() {
         var pageWidth = $(window).width();
         var num = $('#wall > div').length;
 
-        if ((pageWidth > 900 && num != 3) || (pageWidth <= 900 && pageWidth > 600 && num != 2) || (pageWidth <= 600 && num != 1)) {
+        if ((pageWidth > wallColW3 && num != 3) || (pageWidth <= wallColW3 && pageWidth > wallColW2 && num != 2) || (pageWidth <= wallColW2 && num != 1)) {
             clearTimeout(wallTimer);
             wallTimer = setTimeout(function() {
                 var $loadMore = $('#wall ~ .load_more').detach();            

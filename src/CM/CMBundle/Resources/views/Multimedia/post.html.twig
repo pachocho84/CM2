@@ -13,9 +13,19 @@
             <div class="video-title-shadow"></div>
             <h3 class="video-title"><a href="http://www.youtube.com/watch?v={{ post.entity.source }}" target="_blank">{{ post.entity }}</a></h3>
         </div>
-        <img width="110px" height="110px" src="{{ vimeoImage(multimedia.source) }}" />
+        <img width="100%" src="{{ vimeoImage(post.entity.source) }}" />
         <div class="video-button"></div>
     </div>
 {% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_SOUNDCLOUD') %}
+    {##}
+    <div class="video-container" soundcloud-sound-source="{{ post.entity.source }}">
+        <div class="video-title-container">
+            <div class="video-title-shadow"></div>
+            <h3 class="video-title"><a href="http://www.youtube.com/watch?v={{ post.entity.source }}" target="_blank">{{ post.entity }}</a></h3>
+        </div>
+        <img width="100%" src="{{ vimeoImage(post.entity.source) }}" />
+    </div>
+    {#}
     <iframe width="100%" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{{ post.entity.source }}&amp;color=000000&amp;auto_play=false&amp;show_artwork=true"></iframe>
+    {##}
 {% endif %}

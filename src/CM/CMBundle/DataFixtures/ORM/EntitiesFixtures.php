@@ -19,10 +19,9 @@ class EntitiesFixtures extends AbstractFixture implements OrderedFixtureInterfac
     private $container;
 
     private $urls = array(
-        'https://youtu.be/yVpbFMhOAwE',
-        'http://vimeo.com/57815442',
-        'https://soundcloud.com/aleksander-vinter/sheep-heavy-metal',
-        
+        array('source' => 'https://youtu.be/yVpbFMhOAwE'),
+        array('source' => 'http://vimeo.com/57815442'),
+        array('source' => 'https://soundcloud.com/aleksander-vinter/sheep-heavy-metal'),
     );
 
     /**
@@ -38,20 +37,20 @@ class EntitiesFixtures extends AbstractFixture implements OrderedFixtureInterfac
         $infoes = array();
         foreach ($this->urls as $url) {
             $info = array();
-            switch (substr(preg_split('/(www|m)\./', parse_url($url, PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
+            switch (substr(preg_split('/(www|m)\./', parse_url($url['source'], PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
                 case 'yout':
-                    $info['info'] = json_decode(file_get_contents('http://www.youtube.com/oembed?format=json&url='.urlencode($url)));
+                    $info['info'] = json_decode(file_get_contents('http://www.youtube.com/oembed?format=json&url='.urlencode($url['source'])));
                     $info['type'] = Multimedia::TYPE_YOUTUBE;
                     $info['source'] = preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info['info']->html);
                     $info['info'] = json_decode(file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$info['source'].'?v=2&alt=jsonc'))->data;
                     break;
                 case 'vime':
-                    $info['info'] = json_decode(file_get_contents('http://vimeo.com/api/oembed.json?url='.urlencode($url)));
+                    $info['info'] = json_decode(file_get_contents('http://vimeo.com/api/oembed.json?url='.urlencode($url['source'])));
                     $info['type'] = Multimedia::TYPE_VIMEO;
                     $info['source'] = $info['info']->video_id;
                     break;
                 case 'soun':
-                    $info['info'] = json_decode(file_get_contents('http://soundcloud.com/oembed.json?url='.urlencode($url)));
+                    $info['info'] = json_decode(file_get_contents('http://soundcloud.com/oembed.json?url='.urlencode($url['source'])));
                     $info['type'] = Multimedia::TYPE_SOUNDCLOUD;
                     $info['source'] = preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info['info']->html);
                     break;
