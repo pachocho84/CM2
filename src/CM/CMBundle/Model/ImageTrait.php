@@ -41,6 +41,11 @@ trait ImageTrait
      */
     private $imgFile;
 
+    public function __toString()
+    {
+        return $this->img;
+    }
+
     public static function defaultImg()
     {
         return 'default.png';

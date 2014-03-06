@@ -19,6 +19,7 @@ class PostRepository extends BaseRepository
         ), $options);
         
         return array_merge(array(
+            'entityCreation' => false,
             'entityId' => null,
             'object' => null,
             'after' => null,
@@ -26,6 +27,7 @@ class PostRepository extends BaseRepository
             'pageId' => null,
             'groupId' => null,
             'exclude' => array(),
+            'vip' => false,
             'locales' => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate' => true,
             'limit' => null,
@@ -62,18 +64,33 @@ class PostRepository extends BaseRepository
             ->select('count(p)');
             
         $query = $this->createQueryBuilder('p')
-            ->select('p, e, t, c, ct, i, ep, epl, epc, eplu, epcu')
+            ->select('p, u, e, t, c, ct, i, ep, epl, epc, eplu, epcu')
+            ->join('p.user', 'u')
             ->join('p.entity', 'e')
             ->leftJoin('e.translations', 't', 'with', 't.locale in (:locales)')->setParameter('locales', $options['locales'])
             ->leftJoin('e.entityCategory', 'c')
             ->leftJoin('c.translations', 'ct', 'with', 'ct.locale = :locale')->setParameter('locale', $options['locale'])
             ->leftJoin('e.images', 'i', 'with', 'i.main = '.true)
-            ->join('e.posts', 'ep', 'with', 'ep.type = '.Post::TYPE_CREATION.' AND ep.object in (:objects)')
-            ->setParameter('objects', array(Event::className(), Disc::className(), Biography::className(), ImageAlbum::className(), Multimedia::className(), Article::className(), Link::className()))
+            ->join('e.post', 'ep')
             ->leftJoin('ep.likes', 'epl')
             ->leftJoin('ep.comments', 'epc', '', '', 'epc.id')
             ->leftJoin('epl.user', 'eplu')
             ->leftJoin('epc.user', 'epcu');
+        if ($options['vip']) {
+            $count->join('p.user', 'u')->andWhere('u.roles like :vip')->setParameter('vip', '%ROLE_VIP%');
+            $query->andWhere('p.groupId is null')->andWhere('p.pageId is null')
+                ->andWhere('u.roles like :vip')->setParameter('vip', '%s:8:"ROLE_VIP";%');
+        } else {
+            $query->addSelect('pg, pp')
+                ->leftJoin('p.group', 'pg')
+                ->leftJoin('p.page', 'pp');
+        }
+        if ($options['entityCreation']) {
+            $count->andWhere('p.type = '.Post::TYPE_CREATION.' AND p.object in (:objects)')
+                ->setParameter('objects', array(Event::className(), Disc::className(), Biography::className(), ImageAlbum::className(), Multimedia::className(), Article::className(), Link::className()));
+            $query->andWhere('p.type = '.Post::TYPE_CREATION.' AND p.object in (:objects)')
+                ->setParameter('objects', array(Event::className(), Disc::className(), Biography::className(), ImageAlbum::className(), Multimedia::className(), Article::className(), Link::className()));
+        }
         if (!is_null($options['entityId'])) {
             $count->leftJoin('p.entity', 'e')
                 ->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId'])

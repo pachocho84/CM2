@@ -1,0 +1,19 @@
+<div class="box">
+    <div class="box-heading">
+        <h2>{{ icon('Review') }} {{ 'Last reviews'|trans }}</h2>
+    </div>
+
+    <div class="box-body">
+        <div class="objects cycle-slideshow">
+            {% for review in reviews %}
+                <div class="object">
+                    {{ show_img_box(review.image.img|imagine_filter('medium'), {width: 350, height: 210,  link: path('event_show', {id: review.id, slug: review.getSlug})}) }}
+                    <h3><a href="{{ path('article_show', {id: review.id, slug: review.getSlug}) }}">{{ review }}</a></h3>
+                    <h4>
+                    </h4>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+</div>

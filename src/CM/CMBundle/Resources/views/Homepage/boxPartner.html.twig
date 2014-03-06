@@ -13,7 +13,7 @@
             {% if box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_EVENT') %}
                 {% for date in objects %}
                     <div class="object">
-                        {{ show_img_box(date.event.images[0].img|imagine_filter('medium'), {width: 350, height: 210,  link: path('event_show', {id: date.event.id, slug: date.event.getSlug})}) }}
+                        {{ show_img_box(date.event.image.img|imagine_filter('medium'), {width: 350, height: 210,  link: path('event_show', {id: date.event.id, slug: date.event.getSlug})}) }}
                         <h3><a href="{{ path('event_show', {id: date.event.id, slug: date.event.getSlug}) }}">{{ date.event }}</a></h3>
                         <h4>
                             {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }} 
@@ -25,7 +25,7 @@
             {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_ARTICLE') %}
                 {% for object in objects %}
                     <div class="object">
-                        {{ show_img_box(object.images[0].img|imagine_filter('medium'), {width: 350, height: 210,  link: path('event_show', {id: object.id, slug: object.getSlug})}) }}
+                        {{ show_img_box(object.image.img|imagine_filter('medium'), {width: 350, height: 210,  link: path('event_show', {id: object.id, slug: object.getSlug})}) }}
                         <h3><a href="{{ path('article_show', {id: object.id, slug: object.getSlug}) }}">{{ object }}</a></h3>
                         <h4>
                         </h4>
@@ -38,7 +38,7 @@
             {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_RUBRIC') %}
                 {% for object in objects %}
                     <div class="object">
-                        {{ show_img_box(object.images[0].img|imagine_filter('medium'), {width: 350, height: 210,  link: path('event_show', {id: object.id, slug: object.getSlug})}) }}
+                        {{ show_img_box(object.image.img|imagine_filter('medium'), {width: 350, height: 210,  link: path('event_show', {id: object.id, slug: object.getSlug})}) }}
                         <h3><a href="{{ path('article_show', {id: object.id, slug: object.getSlug}) }}">{{ object }}</a></h3>
                         <h4>
                         </h4>

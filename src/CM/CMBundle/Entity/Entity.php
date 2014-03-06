@@ -133,7 +133,7 @@ abstract class Entity
      */
     public function __toString()
     {
-        return $this->getTitle();
+        return $this->proxyCurrentLocaleTranslation('__toString');
     }
 
     public function __call($method, $arguments)

@@ -13,7 +13,9 @@ function calculateColumns() {
     return columns;
 }
 
-function wallLoad(data) {
+function wallLoad(data, t, c, reload) {
+    var reload = reload || false;
+
     var columns = [];
     $.each($('#wall > div'), function(i, col) {
         columns[i] = [$(col), $(col).outerHeight()];
@@ -30,6 +32,18 @@ function wallLoad(data) {
 
         $box.hide();
         columns[0][0].append($box);
+
+        if (!reload) {
+            $box.find('.cycle-slideshow').cycle({
+                loader: true,
+                log: false,
+                next: '.box-partner-nav-next',
+                pauseOnHover: true,
+                prev: '.box-partner-nav-prev',
+                slides: '> div',
+                swipe: true
+            });
+        }
 
         $box.fadeIn('fast');
 
@@ -48,7 +62,6 @@ $(function() {
 
     $.get(document.URL, function(data) {
         wallLoad(data);
-        $('.cycle-slideshow').cycle();
     });
 
     $(window).resize(function(event) {
@@ -60,7 +73,6 @@ $(function() {
             wallTimer = setTimeout(function() {
                 var $loadMore = $('#wall ~ .load_more').detach();            
 
-                console.log(42);
                 var data = {};
                 $.each($('#wall > div > *'), function(i, elem) {
                     $(elem).attr('old-order', $(elem).attr('wall-order'));
@@ -70,7 +82,7 @@ $(function() {
 
                 $('#wall').empty().append(calculateColumns());
                 wallOrder = 0;
-                wallLoad(data);
+                wallLoad(data, null, null, true);
             }, 200);
         }
     });

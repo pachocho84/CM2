@@ -33,18 +33,47 @@ class HomepageArchiveRepository extends BaseRepository
         $count = $this->getEntityManager()->createQueryBuilder()
             ->select('count(a.id)')
             ->from('CMBundle:Article', 'a')
-            ->join('a.homepageArchive', 'h', 'with', 'h.categoryId = :category_id')->setParameter(':category_id', $categoryId)
-            ->join('a.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
-            ->setParameter('object', Article::className());
+            ->join('a.homepageArchive', 'h', 'with', 'h.categoryId = :category_id')->setParameter(':category_id', $categoryId);
 
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('a, t, i, p, l, c, u, lu, cu, pg, gr')
+            ->select('a, t, h, hc, hct, i, p, l, c, u, lu, cu, pg, gr')
             ->from('CMBundle:Article', 'a')
             ->leftJoin('a.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->join('a.homepageArchive', 'h', 'with', 'h.categoryId = :category_id')->setParameter(':category_id', $categoryId)
-            ->leftJoin('a.images', 'i', 'WITH', 'i.main = '.true)
-            ->join('a.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
-            ->setParameter('object', Article::className())
+            ->join('h.category', 'hc')
+            ->leftJoin('hc.translations', 'hct', 'with', 'hct.locale = :locale')->setParameter('locale', $options['locale'])
+            ->leftJoin('a.images', 'i')
+            ->join('a.post', 'p')
+            ->leftJoin('p.likes', 'l')
+            ->leftJoin('p.comments', 'c')
+            ->leftJoin('p.user', 'u')
+            ->leftJoin('l.user', 'lu')
+            ->leftJoin('c.user', 'cu')
+            ->leftJoin('p.page', 'pg')
+            ->leftJoin('p.group', 'gr')
+            ->orderBy('a.id', 'desc');
+
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+
+    public function getLastReviews($options = array())
+    {
+        $options = self::getOptions($options);
+        
+        $count = $this->getEntityManager()->createQueryBuilder()
+            ->select('count(a.id)')
+            ->from('CMBundle:Article', 'a')
+            ->join('a.homepageArchive', 'h', 'with', 'h.categoryId = :category_id')->setParameter(':category_id', $categoryId);
+
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('a, t, h, hc, hct, i, p, l, c, u, lu, cu, pg, gr')
+            ->from('CMBundle:Article', 'a')
+            ->leftJoin('a.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->join('a.homepageArchive', 'h', 'with', 'h.categoryId = :category_id')->setParameter(':category_id', $categoryId)
+            ->join('h.category', 'hc')
+            ->leftJoin('hc.translations', 'hct', 'with', 'hct.locale = \'en\' and htc.slug = \'reviews\'')->setParameter('locale', $options['locale'])
+            ->leftJoin('a.images', 'i')
+            ->join('a.post', 'p')
             ->leftJoin('p.likes', 'l')
             ->leftJoin('p.comments', 'c')
             ->leftJoin('p.user', 'u')

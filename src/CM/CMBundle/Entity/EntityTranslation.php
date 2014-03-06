@@ -97,7 +97,12 @@ class EntityTranslation
 
     public function __construct()
     {
-        $this->locale = 'en';
+        // $this->locale = 'en';
+    }
+    
+    public function __toString()
+    {
+        return $this->getTitle();
     }
 
     public static function className()

@@ -12,4 +12,14 @@ use Doctrine\ORM\EntityRepository as BaseRepository;
  */
 class HomepageBannerRepository extends BaseRepository
 {
+    public function getBanners($offset, $limit)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('b')
+            ->orderBy('b.position')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }

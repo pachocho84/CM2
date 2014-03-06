@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use CM\CMBundle\Entity\HomepageCategory;
 use CM\CMBundle\Entity\HomepageArchive;
+use CM\CMBundle\Entity\HomepageBanner;
 use CM\CMBundle\Entity\HomepageBox;
 use CM\CMBundle\Entity\HomepageRow;
 use CM\CMBundle\Entity\HomepageColumn;
@@ -22,46 +23,46 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
     private $container;
 
     private $categories = array(
-        array('rubric' => 0, 'editor' => 1, 'update' => null,
+        array('rubric' => false, 'editor' => 1, 'update' => null,
             'translations' => array(
-                'en' => array('name' => 'Recensioni'),
-                'it' => array('name' => 'Recensioni')
+                'en' => array('name' => 'Reviews', 'singular' => 'Review'),
+                'it' => array('name' => 'Recensioni', 'singular' => 'Recensione')
             )
         ),
-        array('rubric' => 0, 'editor' => 1, 'update' => null,
+        array('rubric' => false, 'editor' => 1, 'update' => null,
             'translations' => array(
-                'en' => array('name' => 'Dove & Quando'),
-                'it' => array('name' => 'Dove & Quando')
+                'en' => array('name' => 'Where & when'),
+                'it' => array('name' => 'Dove & quando')
             )
         ),
-        array('rubric' => 0, 'editor' => 1, 'update' => null,
+        array('rubric' => false, 'editor' => 1, 'update' => null,
             'translations' => array(
-                'en' => array('name' => 'Dicono di Noi'),
-                'it' => array('name' => 'Dicono di Noi')
+                'en' => array('name' => 'They say about us'),
+                'it' => array('name' => 'Dicono di noi')
             )
         ),
-        array('rubric' => 0, 'editor' => 1, 'update' => null,
+        array('rubric' => false, 'editor' => 1, 'update' => null,
             'translations' => array(
-                'en' => array('name' => 'Attualità'),
+                'en' => array('name' => 'Actualities', 'singular' => 'Actuality'),
                 'it' => array('name' => 'Attualità')
             )
         ),
-        array('rubric' => 0, 'editor' => 1, 'update' => null,
+        array('rubric' => false, 'editor' => 1, 'update' => null,
             'translations' => array(
-                'en' => array('name' => 'Interviste'),
-                'it' => array('name' => 'Interviste')
+                'en' => array('name' => 'Interviews', 'singular' => 'Interview'),
+                'it' => array('name' => 'Interviste', 'singular' => 'Intervista')
             )
         ),
-        array('rubric' => 0, 'editor' => 1, 'update' => null,
+        array('rubric' => false, 'editor' => 1, 'update' => null,
             'translations' => array(
-                'en' => array('name' => 'Approfondimenti'),
-                'it' => array('name' => 'Approfondimenti')
+                'en' => array('name' => 'In-depths', 'singular' => 'In-depth'),
+                'it' => array('name' => 'Approfondimenti', 'singular' => 'Approfondimento')
             )
         ),
-        array('rubric' => 1, 'editor' => 1/*41*/, 'update' => 'Ogni venerdì',
+        array('rubric' => true, 'editor' => 1/*41*/, 'update' => 'Ogni venerdì',
             'translations' => array(
-                'en' => array('name' => 'Orchestre'),
-                'it' => array('name' => 'Orchestre')
+                'en' => array('name' => 'Orchestras', 'singular' => 'Orchestra'),
+                'it' => array('name' => 'Orchestre', 'singular' => 'Orchestra')
         )
         )
     );
@@ -84,6 +85,13 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
         array('name' => null, 'type' => HomepageBox::TYPE_ARTICLE, 'category' => null, 'page' => 2/*6*/, 'logo' => 'classic_voice-title.png', 'colour' => '#008fd3'),
     );
 
+    private $banners = array(
+        array('img' => 'sipario_musicale.jpg', 'alt' => 'il Sipario Musicale', 'href' => 'http://www.ilsipariomusicale.com'),
+        array('img' => 'ideamus.jpg', 'alt' => 'ideamus.tv', 'href' => 'http://www.ideamus.tv'),
+        array('img' => 'circuitomusica.jpg', 'alt' => 'Circuito Musica', 'href' => 'http://www.circuitomusica.it'),
+        array('img' => 'societa_quartetto.jpg', 'alt' => 'Società del Quartetto di Milano', 'href' => 'http://www.quartettomilano.it'),
+    );
+
     /**
      * {@inheritDoc}
      */
@@ -102,6 +110,9 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
             foreach ($category['translations'] as $lang => $trans) {
                 $homepageCategory->translate($lang)
                     ->setName($trans['name']);
+                if (array_key_exists('singular', $trans)) {
+                    $homepageCategory->setSingular($trans['singular']);
+                }
             }
             $homepageCategory->mergeNewTranslations();
 
@@ -140,6 +151,22 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
 
             $manager->persist($homepageBox);
             $this->addReference('homepage_box-'.$i, $homepageBox);
+        }
+
+        $manager->flush();
+
+        foreach ($this->banners as $i => $banner) {
+            $homepageBanner = new HomepageBanner;
+            $homepageBanner->setUser($manager->merge($this->getReference('user-'.rand(1, UserFixtures::countPeople()))))
+                ->setImg($banner['img'])
+                ->setImgAlt($banner['alt'])
+                ->setImgHref($banner['href'])
+                ->setPosition($i)
+                ->setVisibleFrom(new \DateTime('-1 year'))
+                ->setVisibleTo(new \DateTime('+1 year'));
+
+            $manager->persist($homepageBanner);
+            $this->addReference('homepage_banner-'.$i, $homepageBanner);
         }
 
         $manager->flush();

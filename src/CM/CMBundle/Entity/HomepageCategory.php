@@ -54,8 +54,8 @@ class HomepageCategory
      */
     public function __construct()
     {
-        $this->translate('en');
-        $this->mergeNewTranslations();
+        // $this->translate('en');
+        // $this->mergeNewTranslations();
     }
 
     public function __call($method, $arguments)

@@ -42,7 +42,7 @@ class HomepageController extends Controller
 
             /* Next eìvents */
             $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('locale' => $request->getLocale())), $page, 3);
-            $boxes['dates'] = $this->renderView('CMBundle:Homepage:events.html.twig', array('dates' => $dates));
+            $boxes['dates'] = $this->renderView('CMBundle:Homepage:boxEvents.html.twig', array('dates' => $dates));
             
             /* Login box */
             if (!$this->get('security.context')->isGranted('ROLE_USER')) {
@@ -54,7 +54,7 @@ class HomepageController extends Controller
             foreach ($sponsoreds as $sponsored) {
                 $boxes['homepage_'.$sponsored->getId()] = $this->renderView('CMBundle:Homepage:boxSponsored.html.twig', array('sponsored' => $sponsored));
             }
-           
+
             /* Box partners */
             $homepageBoxes = $em->getRepository('CMBundle:HomepageBox')->getBoxes(4, array('locale' => $request->getLocale()));
             foreach ($homepageBoxes as $box) {
@@ -77,19 +77,33 @@ class HomepageController extends Controller
                         break;
                 }
                 $objects = $this->get('knp_paginator')->paginate($objects, $page, $limit);
-                
+
                 $boxes['homepage_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:boxPartner.html.twig', array('box' => $box, 'objects' => $objects));
             }
-            
-            /* Posts */
-/*
-            $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
-            foreach ($posts as $post) {
-                $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:postBox.html.twig', array('post' => $post));
+
+            /* Vips */
+            $vips = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('vip' => true, 'entityCreation' => true, 'locale' => $request->getLocale())), $page, 2);
+            foreach ($vips as $post) {
+                $boxes['vip_'.$post->getId()] = $this->renderView('CMBundle:Homepage:boxVip.html.twig', array('post' => $post));
             }
 
-            $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:loadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
-*/
+            /* Reviews */
+            $reviews = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:HomepageArchive')->getLastReviews(array('locale' => $request->getLocale())), $page, 3);
+            $boxes['reviews_'.$post->getId()] = $this->renderView('CMBundle:Homepage:boxReviews.html.twig', array('reviews' => $reviews));
+
+            /* Banners */
+            $banners = $em->getRepository('CMBundle:HomepageBanner')->getBanners($page * 2, 2);
+            foreach ($banners as $banner) {
+                $boxes['banner_'.$post->getId()] = $this->renderView('CMBundle:Homepage:boxBanner.html.twig', array('banner' => $banner));
+            }
+
+            /* Posts */
+            // $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
+            // foreach ($posts as $post) {
+            //     $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:boxPost.html.twig', array('post' => $post));
+            // }
+
+            // $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:loadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
             
             return new JsonResponse($boxes);
         }
