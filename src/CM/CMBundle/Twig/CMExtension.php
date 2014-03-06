@@ -894,8 +894,11 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-chevron-up"></span>';
             case 'Down':
                 return '<span class="glyphicon glyphicon-chevron-down"></span>';
+            case 'Prev':
             case 'Back':
                 return '<span class="glyphicon glyphicon-chevron-left"></span>';
+            case 'Next':
+                return '<span class="glyphicon glyphicon-chevron-right"></span>';
             case 'Remove':
                 return '<span class="glyphicon glyphicon-remove"></span>';
                 break;
@@ -920,7 +923,7 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-film"></span>';
             case 'Page':
             case 'Page_'.Post::TYPE_CREATION:
-                return '<span class="glyphicon glyphicon-bank"></span>';
+                return '<span class="glyphicon glyphicon-list-alt"></span>';
             case 'Group':
             case 'Group_'.Post::TYPE_CREATION:
             case 'Users':

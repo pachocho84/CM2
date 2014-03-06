@@ -1,9 +1,12 @@
 /* Bootstrap Fixes */
 a {
-    color: #990000;
+    color: #aa0000;
 }
 a:hover {
     color: #333333;
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    line-height: 1.4;
 }
 .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
     background-color: #660000;
