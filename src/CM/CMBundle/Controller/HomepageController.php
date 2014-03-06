@@ -98,10 +98,10 @@ class HomepageController extends Controller
             }
 
             /* Posts */
-            // $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
-            // foreach ($posts as $post) {
-            //     $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:boxPost.html.twig', array('post' => $post));
-            // }
+            $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
+            foreach ($posts as $post) {
+                $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:boxPost.html.twig', array('post' => $post));
+            }
 
             // $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:loadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
             

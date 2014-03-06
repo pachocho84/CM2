@@ -84,12 +84,14 @@ $(function() {
 
     // YouTube preview
     $(document).on('click', '[youtube-video-source]', function(event) {
-        videoId = $(event.currentTarget).attr('youtube-video-source');
-        $(event.currentTarget).replaceWith('<iframe width="100%" src="//www.youtube.com/embed/' + videoId + '?autoplay=1" frameborder="0" allowfullscreen></iframe>');
+        var height = $(event.currentTarget).height();
+        var videoId = $(event.currentTarget).attr('youtube-video-source');
+        $(event.currentTarget).replaceWith('<iframe width="100%" height="' + height + '" src="//www.youtube.com/embed/' + videoId + '?autoplay=1" frameborder="0" allowfullscreen></iframe>');
     });
     $(document).on('click', '[vimeo-video-source]', function(event) {
-        videoId = $(event.currentTarget).attr('vimeo-video-source');
-        $(event.currentTarget).replaceWith('<iframe src="//player.vimeo.com/video/' + videoId + '?color=040505" width="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
+        var height = $(event.currentTarget).height();
+        var videoId = $(event.currentTarget).attr('vimeo-video-source');
+        $(event.currentTarget).replaceWith('<iframe width="100%" height="' + height + '" src="//player.vimeo.com/video/' + videoId + '?color=040505" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
     });
 
 
