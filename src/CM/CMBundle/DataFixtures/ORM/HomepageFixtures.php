@@ -69,12 +69,12 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
 
     private $archives = array(
         array('article' => 1, 'category' => 3),
-        array('article' => 4, 'category' => 0),
-        array('article' => 2, 'category' => 0),
-        array('article' => 8, 'category' => 0),
-        array('article' => 5, 'category' => 0),
+        // array('article' => 4, 'category' => 0),
+        // array('article' => 7, 'category' => 0),
+        // array('article' => 8, 'category' => 0),
+        // array('article' => 5, 'category' => 0),
         array('article' => 3, 'category' => 1),
-        array('article' => 7, 'category' => 3),
+        array('article' => 2, 'category' => 3),
     );
 
     private $boxes = array(
@@ -157,7 +157,7 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
 
         foreach ($this->banners as $i => $banner) {
             $homepageBanner = new HomepageBanner;
-            $homepageBanner->setUser($manager->merge($this->getReference('user-'.rand(1, UserFixtures::countPeople()))))
+            $homepageBanner->setUser($manager->merge($this->getReference('user-'.rand(1, UserFixtures::count()))))
                 ->setImg($banner['img'])
                 ->setImgAlt($banner['alt'])
                 ->setImgHref($banner['href'])

@@ -63,24 +63,23 @@ class ArticleFixtures
 
     public function load(AbstractFixture $fixture, ObjectManager $manager, $i)
     {
-        $articleNum = rand(0, count(ArticleFixtures::$articles) - 1);
         $article = new Article;
-        $article->setSource(ArticleFixtures::$articles[$articleNum]['source'])
-            ->setDate(new \DateTime(ArticleFixtures::$articles[$articleNum]['date']));
+        $article->setSource(ArticleFixtures::$articles[$i]['source'])
+            ->setDate(new \DateTime(ArticleFixtures::$articles[$i]['date']));
 
-        $article->setTitle(ArticleFixtures::$articles[$articleNum]['title'].' (en)')
-            ->setText(ArticleFixtures::$articles[$articleNum]['text']);
+        $article->setTitle(ArticleFixtures::$articles[$i]['title'].' (en)')
+            ->setText(ArticleFixtures::$articles[$i]['text']);
 
         if (0 == rand(0, 2)) {
             $article->translate('it')
-                ->setTitle(ArticleFixtures::$articles[$articleNum]['title'].' (it)')
-                ->setText(ArticleFixtures::$articles[$articleNum]['text']);
+                ->setTitle(ArticleFixtures::$articles[$i]['title'].' (it)')
+                ->setText(ArticleFixtures::$articles[$i]['text']);
         }
 
         if (0 == rand(0, 4)) {
             $article->translate('fr')
-                ->setTitle(ArticleFixtures::$articles[$articleNum]['title'].' (fr)')
-                ->setText(ArticleFixtures::$articles[$articleNum]['text']);
+                ->setTitle(ArticleFixtures::$articles[$i]['title'].' (fr)')
+                ->setText(ArticleFixtures::$articles[$i]['text']);
         }
 
         $manager->persist($article);
@@ -89,20 +88,20 @@ class ArticleFixtures
         
         $page = null;
         $group = null;
-        if (array_key_exists('page', $this->events[$eventNum]['page'])) {
-            $page = $manager->merge($fixture->getReference('page-'.$this->events[$eventNum]['page']));
+        if (array_key_exists('page', ArticleFixtures::$articles[$i])) {
+            $page = $manager->merge($fixture->getReference('page-'.ArticleFixtures::$articles[$i]['page']));
             $user = $page->getCreator();
-        } elseif (array_key_exists('group', $this->events[$eventNum]['user'])) {
-            $group = $manager->merge($fixture->getReference('page-'.$this->events[$eventNum]['group']));
+        } elseif (array_key_exists('group', ArticleFixtures::$articles[$i])) {
+            $group = $manager->merge($fixture->getReference('page-'.ArticleFixtures::$articles[$i]['group']));
             $user = $group->getCreator();
         }
-        if (array_key_exists('user', $this->events[$eventNum]['user'])) {
-            $user = $manager->merge($fixture->getReference('user-'.$this->events[$eventNum]['user']));
+        if (array_key_exists('user', ArticleFixtures::$articles[$i])) {
+            $user = $manager->merge($fixture->getReference('user-'.ArticleFixtures::$articles[$i]['user']));
         }
 
         if (rand(0, 4) > 0) {
             $image = new Image;
-            $image->setImg(ArticleFixtures::$articles[$articleNum]['img'])
+            $image->setImg(ArticleFixtures::$articles[$i]['img'])
                 ->setText('main image for article "'.$article->getTitle().'"')
                 ->setMain(true)
                 ->setUser($user);
@@ -113,7 +112,7 @@ class ArticleFixtures
                 
             for ($j = rand(1, 4); $j > 0; $j--) {
                 $image = new Image;
-                $image->setImg(ArticleFixtures::$articles[$articleNum]['img'])
+                $image->setImg(ArticleFixtures::$articles[$i]['img'])
                     ->setText('image number '.$j.' for article "'.$article->getTitle().'"')
                     ->setMain(false)
                     ->setUser($user);
@@ -146,11 +145,11 @@ class ArticleFixtures
             $userTags
         );
 
-        $numbers = range(1, ORM\UserFixtures::countPeople());
-        unset($numbers[$userNum - 1]);
+        $numbers = range(1, ORM\UserFixtures::count());
         shuffle($numbers);
         for ($j = 0; $j < rand(0, 6); $j++) {
             $otherUser = $manager->merge($fixture->getReference('user-'.$numbers[$j]));
+            if ($otherUser == $user) continue;
             
             $userTags = array();
             for ($k = 1; $k < rand(1, 3); $k++) {
@@ -172,6 +171,6 @@ class ArticleFixtures
             $manager->flush();
         }
 
-        $fixture->addReference('article-'.$i, $article);
+        $fixture->addReference('article-'.($i + 1), $article);
     }
 }

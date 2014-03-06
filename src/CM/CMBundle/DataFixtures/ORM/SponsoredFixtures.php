@@ -7,12 +7,13 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use CM\CMBundle\Entity\Sponsored;
+use CM\CMBundle\DataFixtures\ORM\Entities;
 
 class SponsoredFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        for ($i = 1; $i < 21; $i++) {
+        for ($i = 1; $i < Entities\EventFixtures::count(); $i++) {
         
             $sponsored = new Sponsored;
             $event = $manager->merge($this->getReference('event-'.rand(1, 10)));
