@@ -79,8 +79,18 @@ class ArticleFixtures
 
         $article->mergeNewTranslations();
         
-        $userNum = rand(1, ORM\UserFixtures::countPeople());
-        $user = $manager->merge($fixture->getReference('user-'.$userNum));
+        $page = null;
+        $group = null;
+        if (array_key_exists('page', $this->events[$eventNum]['page'])) {
+            $page = $manager->merge($fixture->getReference('page-'.$this->events[$eventNum]['page']));
+            $user = $page->getCreator();
+        } elseif (array_key_exists('group', $this->events[$eventNum]['user'])) {
+            $group = $manager->merge($fixture->getReference('page-'.$this->events[$eventNum]['group']));
+            $user = $group->getCreator();
+        }
+        if (array_key_exists('user', $this->events[$eventNum]['user'])) {
+            $user = $manager->merge($fixture->getReference('user-'.$this->events[$eventNum]['user']));
+        }
 
         if (rand(0, 4) > 0) {
             $image = new Image;
@@ -107,15 +117,6 @@ class ArticleFixtures
 
         $category = $manager->merge($fixture->getReference('article_category-'.rand(1, 6)));
         $category->addEntity($article);
-
-        $page = null;
-        $group = null;
-        $pageOrGroup = rand(0, 100);
-        if ($pageOrGroup < 20) {
-            $page = $manager->merge($fixture->getReference('page-'.rand(1, ORM\PageFixtures::countPages())));
-        } elseif ($pageOrGroup < 40) {
-            $group = $manager->merge($fixture->getReference('group-'.rand(1, ORM\GroupFixtures::countGroups())));
-        }
 
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
         $manager->persist($post);
