@@ -36,7 +36,7 @@ class Article extends Entity
 
     public function __toString()
     {
-        return is_null($this->getText()) ? '' : $this->getText();
+        return is_null($this->getTitle()) ? '' : $this->getTitle();
     }
 
     public static function className()

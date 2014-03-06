@@ -145,6 +145,7 @@ a:hover {
 body {
     background-color: #e5e5e5;
     font: normal 13px Roboto,arial,sans-serif;
+    line-height: 1.4;
 }
 #header {
     background: url(../images/layout/header_bg.jpg) repeat-x;

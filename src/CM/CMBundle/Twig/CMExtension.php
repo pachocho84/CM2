@@ -1009,6 +1009,10 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-fullscreen"></span>';
             case 'Login':
                 return '<span class="glyphicons lock"></span>';
+            case 'Sponsored':
+                return '<span class="glyphicon glyphicon-bullhorn"></span>';
+            case 'Vip':
+                return '<span class="glyphicon glyphicon-fire"></span>';
             default:
                 return '<span style="color:red;">missing glyphicon for '.$object.'</span>';
         }
