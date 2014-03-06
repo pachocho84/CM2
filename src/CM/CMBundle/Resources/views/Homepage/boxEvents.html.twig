@@ -1,8 +1,8 @@
 <div class="box box-system">
     <div class="box-heading">
         <h2>
-            {{ icon('Event') }} {{ 'Next events'|trans }}{% if count is defined %}
-            <small><a href="{{ path(dates[0].event.post.publisherType ~ '_events', {'slug': dates[0].event.post.publisher.slug}) }}" class="pull-right">{{ 'Show all (%count%)'|trans({'%count%': count}) }}</a></small>{% endif %}
+            {{ icon('Event') }} {{ 'Next events'|trans }}
+            <small><a href="{{ path('event_index') }}" class="pull-right">{{ 'Show all'|trans }}</a></small>
         </h2>
     </div>
 

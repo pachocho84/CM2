@@ -34,7 +34,7 @@ function wallLoad(data, t, c, reload) {
         columns[0][0].append($box);
 
         if (!reload) {
-            $box.find('.cycle-slideshow').cycle({
+            $box.find('.cycle-slideshowX').cycle({
                 loader: true,
                 log: false,
                 next: '.box-partner-nav-next',

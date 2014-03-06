@@ -1,6 +1,11 @@
 {% if post.entity.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_YOUTUBE') %}
-    <img width="100%" height="300px" src="http://img.youtube.com/vi/{{ post.entity.source }}/0.jpg" youtube-video-source="{{ post.entity.source }}" />
-    {#<iframe width="100%" src="//www.youtube.com/embed/{{ post.entity.source }}" frameborder="0" allowfullscreen></iframe>#}
+    <div class="video-container">
+        <div class="video-title-container">
+            <div class="video-title-shadow"></div>
+            <h3 class="video-title"><a href="http://www.youtube.com/watch?v={{ post.entity.source }}" target="_blank">{{ post.entity }}</a></h3>
+        </div>
+        <img width="100%" src="http://img.youtube.com/vi/{{ post.entity.source }}/0.jpg" youtube-video-source="{{ post.entity.source }}" />
+    </div>
 {% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_VIMEO') %}
     <iframe src="//player.vimeo.com/video/{{ post.entity.source }}?color=040505" width="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 {% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_SOUNDCLOUD') %}
