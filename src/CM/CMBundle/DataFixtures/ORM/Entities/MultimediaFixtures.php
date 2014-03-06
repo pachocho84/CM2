@@ -15,9 +15,9 @@ use CM\CMBundle\DataFixtures\ORM;
 class MultimediaFixtures
 {
     public static $urls = array(
-        array('source' => 'https://youtu.be/yVpbFMhOAwE'),
-        array('source' => 'http://vimeo.com/57815442'),
-        array('source' => 'https://soundcloud.com/aleksander-vinter/sheep-heavy-metal'),
+        array('source' => 'https://youtu.be/yVpbFMhOAwE', 'user' => 1),
+        array('source' => 'http://vimeo.com/57815442', 'user' => 1),
+        array('source' => 'https://soundcloud.com/aleksander-vinter/sheep-heavy-metal', 'user' => 1),
     );
 
     public static function count()

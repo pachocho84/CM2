@@ -29,19 +29,22 @@ class ArticleFixtures
             A fare la straordinaria scoperta un gruppo di scienziati durante la lavorazione della serie Tv \'Dolphins: Spy in the Pod\' , trasmessa dall\'emittente britannica Bbc. In una delle scene si vedono, infatti, alcuni esemplari che sembrano ottenere effetti \'stupefacenti\' aspirando l\'aria di una particolare razza di pesce palla. I delfini vengono ripresi dalle telecamere mentre si passano delicatamente il pesce tra di loro. L\'aria rilasciata dal pesce palla, in realtà contiene delle sostanze tossiche usate come meccanismo di  difesa e deterrente per gli altri pesci predatori.',
             'source' => 'http://www.repubblica.it/scienze/2014/01/02/news/delfini_si_drogano_aria_pesce_palla_tossico-74999432/',
             'date' => '2014-1-2',
-            'img' => 'bb01acb97854b24ed23598bd4f055eba.jpeg'
+            'img' => 'bb01acb97854b24ed23598bd4f055eba.jpeg',
+            'user' => 1
         ),
         array('title' => 'Il tatto è più sensibile che mai: con le dita "sentiamo" molecole grandi',
             'text' => 'Percepire, solo toccandole, molecole delle dimensioni di pochi nanometri (milionesimi di millimetro). Non servono strumenti di misura, ma soltanto il nostro dito indice. Lo ha provato, oggi, un gruppo di ricerca dell\'Istituto Reale di Tecnologia di Stoccolma, insieme ad altri istituti: il gruppo è arrivato al limite massimo del tatto umano, dimostrando come questo senso sia molto più fino di quello che si pensava. Fino ad ora, infatti, la sensibilità del dito era stata stimata intorno al micrometro (millesimo di millimetro), cioè circa 100 volte meno acuta rispetto a quella misurata oggi. Lo studio,  recentemente pubblicato sulla rivista di Nature, Scientific Reports, fa intravedere suggestive applicazioni per touch screen che daranno la sensazione di una superficie ruvida o di un bosco.',
             'source' => 'http://www.repubblica.it/scienze/2013/11/07/news/tatto_dita_molecole-70426606/#gallery-slider=70442015',
             'date' => '2013-11-7',
-            'img' => 'ff9398d3d47436e2b4f72874a2c766fd.jpeg'
+            'img' => 'ff9398d3d47436e2b4f72874a2c766fd.jpeg',
+            'user' => 1
         ),
         array('title' => 'Elisabeth Jacquet de la Guerre - Pieces de clavecin',
             'text' => '',
             'source' => 'http://javanese.imslp.info/files/imglnks/usimg/3/31/IMSLP18522-LaGuerre_PiecesDeClavecin_Complete.pdf',
             'date' => '2014-1-1',
-            'img' => 'bb01acb97854b24ed23598bd4f055eba.jpeg'
+            'img' => 'bb01acb97854b24ed23598bd4f055eba.jpeg',
+            'user' => 1
         ),
     );
 

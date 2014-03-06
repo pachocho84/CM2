@@ -48,7 +48,8 @@ class DiscFixtures
                     'duration' => '0:7:25'
                 ),
             ),
-            'img' => 'xb7e2be2de282f6cd99a91874f2f5134dd76cdd8.jpg'
+            'img' => 'xb7e2be2de282f6cd99a91874f2f5134dd76cdd8.jpg',
+            'user' => 1
         ),
         array('title' => 'La Folia',
             'label' => 'AliaVox',
@@ -103,7 +104,8 @@ class DiscFixtures
                     'duration' => '0:18:07'
                 ),
             ),
-            'img' => 'q834dc0cc993aa4397bdb860cea2e4ac970a65f5.jpg'
+            'img' => 'q834dc0cc993aa4397bdb860cea2e4ac970a65f5.jpg',
+            'user' => 1
         ),
     );
 

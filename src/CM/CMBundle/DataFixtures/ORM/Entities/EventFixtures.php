@@ -25,7 +25,7 @@ class EventFixtures
      */
     private $container;
 
-    private static $events = array(
+    private static $eventsX = array(
         array('title' => 'C\'è in gioco la musica! Laboratorio musicale', 'subtitle' => '', 'extract' => 'I bambini poteranno ascoltare e suonare tutti gli strumenti dell\'Accademia! A cura dell\'Accademia musicale STABAT MATER di Rho', 'text' => 'I bambini poteranno ascoltare e suonare tutti gli strumenti dell\'Accademia! A cura dell\'Accademia musicale STABAT MATER di Rho', 'img' => '1b7e2be2de282f6cd99a91874f2f5134dd76cdd9.jpg'),
         array('title' => 'Haydn, "Stabat Mater"', 'subtitle' => '', 'extract' => 'Lurago d\'Erba si prepara a celebrare il centenario della propria chiesa prepositurale, che per l\'occasione aprirà le porte alla grande musica sacra. L\'appuntamento è per la serata di sabato prossimo, 5 ottobre.', 'text' => 'Lurago d\'Erba si prepara a celebrare il centenario della propria chiesa prepositurale, che per l\'occasione aprirà le porte alla grande musica sacra. L\'appuntamento è per la serata di sabato prossimo, 5 ottobre.', 'img' => '892eda50c9566f74859fb54a7f7912225deed5f1.jpg'),
         array('title' => 'Stagione Sinfonica: Rachmaninov & Dvořák', 'subtitle' => '', 'extract' => 'Rachmaninov - Vocalise Rachmaninov - Concerto per pianoforte e orchestra n. 2 in Do min. op. 18 Dvořák - Sinfonia n. 3 in Mi bemolle maggiore op. 10Pianoforte - Simone Pedroni 
@@ -77,6 +77,17 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 <br />Prenotazioni tel. 0586 401308 - Orario: 8 / 12 - 15 / 19 
 <br />Informazioni concertarti@gmail.com</p><p>Ringraziamo la Fondazione Cassa di Risparmi di Livorno per il contributo concesso ed 
 <br />il Comitato Soci Livorno UNICOOP Tirreno per il buffet offerto.</p><p>Organizzato da Cral Eni Livorno in collaborazione con Associazione Culturale ConcertArti, Dir. Artistica Renata Sfriso', 'img' => 'f2d3a3af3c6cdc40aab224f59e99d2ea1ec85afa.jpg'),
+    );
+
+    private static $events = array(
+        array(
+            'title'     => 'C\'è in gioco la musica! Laboratorio musicale', 
+            'subtitle'  => '', 
+            'extract'   => 'I bambini poteranno ascoltare e suonare tutti gli strumenti dell\'Accademia! A cura dell\'Accademia musicale STABAT MATER di Rho', 
+            'text'      => 'I bambini poteranno ascoltare e suonare tutti gli strumenti dell\'Accademia! A cura dell\'Accademia musicale STABAT MATER di Rho', 
+            'img'       => '1b7e2be2de282f6cd99a91874f2f5134dd76cdd9.jpg',
+            'page'      => 1
+        )
     );
     
     private $locations = array(
