@@ -16,9 +16,9 @@ use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\Disc;
 use CM\CMBundle\Entity\ImageAlbum;
+use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Multimedia;
 use CM\CMBundle\Entity\EntityUser;
-use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Request;
 use CM\CMBundle\Entity\Notification;
 use CM\CMBundle\Entity\Post;
@@ -84,6 +84,7 @@ class CMExtension extends \Twig_Extension
             'class_name' => new \Twig_Filter_Method($this, 'getClassName'),
             'simple_format_text' => new \Twig_Filter_Method($this, 'getSimpleFormatText'),
             'show_text' => new \Twig_Filter_Method($this, 'getShowText'),
+            'default_img' => new \Twig_Filter_Method($this, 'getDefaultImg'),
         );
     }
 
@@ -160,6 +161,20 @@ class CMExtension extends \Twig_Extension
         } else {
             return $this->getSimpleFormatText($text);
         }
+    }
+
+    function getDefaultImg($image, $options = array())
+    {
+        $options = array_merge(array(
+            'default' => 'default.png',
+            'path' => ''
+        ), $options);
+
+        if (is_null($image) || empty($image)) {
+            $image = $options['default'];
+        }
+
+        return $options['path'].$image;
     }
     
     /**
@@ -894,8 +909,11 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-chevron-up"></span>';
             case 'Down':
                 return '<span class="glyphicon glyphicon-chevron-down"></span>';
+            case 'Prev':
             case 'Back':
                 return '<span class="glyphicon glyphicon-chevron-left"></span>';
+            case 'Next':
+                return '<span class="glyphicon glyphicon-chevron-right"></span>';
             case 'Remove':
                 return '<span class="glyphicon glyphicon-remove"></span>';
                 break;
@@ -907,6 +925,7 @@ class CMExtension extends \Twig_Extension
             case 'Disc_'.Post::TYPE_CREATION:
                 return '<span class="glyphicon glyphicon-headphones"></span>';
             case 'Article':
+            case 'Review':
             case 'Article_'.Post::TYPE_CREATION:
                 return '<span class="glyphicon glyphicon-print"></span>';
             case 'Link':
@@ -920,7 +939,7 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-film"></span>';
             case 'Page':
             case 'Page_'.Post::TYPE_CREATION:
-                return '<span class="glyphicon glyphicon-bank"></span>';
+                return '<span class="glyphicon glyphicon-list-alt"></span>';
             case 'Group':
             case 'Group_'.Post::TYPE_CREATION:
             case 'Users':
