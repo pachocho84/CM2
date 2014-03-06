@@ -40,14 +40,13 @@ class EventRepository extends BaseRepository
 
         $parameters = array(
             'now' => new \DateTime,
-            'object' => Event::className()
         );
         
         $count = $this->getEntityManager()->createQueryBuilder()
             ->select('count(d.id)')
             ->from('CMBundle:EventDate','d')
             ->join('d.event', 'e')
-            ->join('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object');
+            ->join('e.post', 'p');
                     
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('d, e, t, ec, ect, i, p, l, c, u, lu, cu, pg, gr')
@@ -56,8 +55,8 @@ class EventRepository extends BaseRepository
             ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')
             ->leftJoin('e.entityCategory', 'ec')
             ->leftJoin('ec.translations', 'ect', 'with', 'ect.locale = :locale')
-            ->leftJoin('e.images', 'i', 'with', 'i.main = '.true)
-            ->innerJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
+            ->leftJoin('e.image', 'i')
+            ->innerJoin('e.post', 'p')
             ->leftJoin('e.entityUsers', 'eu', '', '', 'eu.userId')
             ->leftJoin('eu.user', 'us')
             ->leftJoin('p.likes', 'l')
@@ -140,11 +139,11 @@ class EventRepository extends BaseRepository
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.entityCategory', 'ec')
             ->leftJoin('ec.translations', 'ect')
-            ->leftJoin('e.images', 'i');
+            ->leftJoin('e.image', 'i');
         if ($options['mainImageOnly']) {
             $query->andHaving('i.main = '.true);
         }
-        return $query->leftJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
+        return $query->leftJoin('e.post', 'p')
             ->leftJoin('p.likes', 'l')
             ->leftJoin('p.comments', 'c')
             ->leftJoin('p.user', 'u')
@@ -170,8 +169,8 @@ class EventRepository extends BaseRepository
             ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->leftJoin('e.entityCategory', 'ec')
             ->leftJoin('ec.translations', 'ect', 'with', 'ect.locale = :locale')->setParameter('locale', $options['locale'])
-            ->leftJoin('e.images', 'i', 'with', 'i.main = '.true)
-            ->leftJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
+            ->leftJoin('e.image', 'i')
+            ->leftJoin('e.post', 'p')
             ->leftJoin('p.user', 'u')
             ->leftJoin('p.page', 'pg')
             ->leftJoin('p.group', 'gr')
@@ -187,7 +186,7 @@ class EventRepository extends BaseRepository
             ->select('count(d.id)')
             ->from('CMBundle:EventDate', 'd')
             ->join('d.event', 'e')
-            ->join('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')->setParameter('object', Event::className())
+            ->join('e.post', 'p')
             ->andWhere('d.start >= :now')->setParameter('now', new \DateTime);
 
         $query = $this->getEntityManager()->createQueryBuilder()
@@ -195,8 +194,8 @@ class EventRepository extends BaseRepository
             ->from('CMBundle:EventDate', 'd')
             ->join('d.event', 'e')
             ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
-            ->join('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')->setParameter('object', Event::className())
-            ->leftJoin('e.images', 'i', 'with', 'i.main = '.true)
+            ->join('e.post', 'p')
+            ->leftJoin('e.image', 'i')
             ->andWhere('d.start >= :now')->setParameter('now', new \DateTime)
             ->orderBy('d.start');
         if (!is_null($options['userId'])) {
@@ -223,7 +222,7 @@ class EventRepository extends BaseRepository
             ->select('count(d.id)')
             ->from('CMBundle:EventDate', 'd')
             ->join('d.event', 'e')
-            ->join('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')->setParameter('object', Event::className())
+            ->join('e.post', 'p')
             ->andWhere('d.start >= :now')->setParameter('now', new \DateTime)
             ->orderBy('d.start');
         if (!is_null($options['userId'])) {
@@ -273,7 +272,7 @@ class EventRepository extends BaseRepository
             ->join('s.event', 'e')
             ->leftJoin('e.eventDates', 'd')
             ->leftJoin('e.translations', 't')
-            ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
+            ->leftJoin('e.image', 'i')
             ->andWhere('s.start <= :now')
             ->andWhere('s.end >= :now')
             ->andWhere('d.start >= :now')
@@ -297,9 +296,8 @@ class EventRepository extends BaseRepository
             ->from('CMBundle:EventDate','d')
             ->join('d.event', 'e')
             ->leftJoin('e.translations', 't')
-            ->leftJoin('e.images', 'i', 'WITH', 'i.main = '.true)
-            ->innerJoin('e.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
-            ->setParameter('object', Event::className())
+            ->leftJoin('e.image', 'i')
+            ->innerJoin('e.post', 'p')
             ->leftJoin('e.entityUsers', 'eu', '', '', 'eu.userId')
             ->leftJoin('eu.user', 'us')
             ->leftJoin('p.likes', 'l')
