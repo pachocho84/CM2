@@ -83,9 +83,9 @@ $(function() {
     
 
     // YouTube preview
-    $(document).on('click', 'img[youtube-video-link]', function(event) {
-        videoId = $(event.currentTarget).attr('video-link');
-        $(event.currentTarget).replaceWith('<iframe width="100%" height="450px" src="//www.youtube.com/embed/' + videoId + '?autoplay=1" frameborder="0" allowfullscreen></iframe>');
+    $(document).on('click', 'img[youtube-video-source]', function(event) {
+        videoId = $(event.currentTarget).attr('youtube-video-source');
+        $(event.currentTarget).replaceWith('<iframe width="100%" src="//www.youtube.com/embed/' + videoId + '?autoplay=1" frameborder="0" allowfullscreen></iframe>');
     });
 
 

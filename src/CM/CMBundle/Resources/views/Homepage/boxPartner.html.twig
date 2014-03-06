@@ -19,10 +19,10 @@
         			<span class="box-partner-nav-tab box-partner-nav-next">{{ icon('Next') }}</span> 
         		</div>
             </div>
-            <div class="objects cycle-slideshow" data-cycle-slides="> div" data-cycle-log="false">
+            <div class="objects cycle-slideshow">
                 {% for object in objects %}
                     <div class="object">
-                        {{ show_img_box(object.event.image|default_img|imagine_filter('medium'), {width: 350, height: 210,  link: path('event_show', {id: object.event.id, slug: object.event.getSlug})}) }}
+                        {{ show_img_box(object.event.image|default_img|imagine_filter('medium'), {ratio: 1.6,  link: path('event_show', {id: object.event.id, slug: object.event.getSlug})}) }}
                         <h3><a href="{{ path('event_show', {id: object.event.id, slug: object.event.getSlug}) }}">{{ object.event }}</a></h3>
                         <h4>
                             <span>{{ icon('Calendar') }} {{ object.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</span> 
@@ -42,10 +42,10 @@
         			<span class="box-partner-nav-tab box-partner-nav-next">{{ icon('Next') }}</span> 
         		</div>
             </div>
-            <div class="objects cycle-slideshow" data-cycle-slides="> div" data-cycle-log="false">
+            <div class="objects cycle-slideshow">
                 {% for object in objects %}
                     <div class="object">
-                        {{ show_img_box(object.image|default_img|imagine_filter('medium'), {width: 350, height: 210,  link: path('article_show', {id: object.id, slug: object.getSlug})}) }}
+                        {{ show_img_box(object.image|default_img|imagine_filter('medium'), {ratio: 0.6,  link: path('article_show', {id: object.id, slug: object.getSlug})}) }}
                         <h3><a href="{{ path('article_show', {id: object.id, slug: object.getSlug}) }}">{{ object }}</a></h3>
                         <h4>
                         </h4>
@@ -62,7 +62,7 @@
         			<span class="box-partner-nav-tab box-partner-nav-next">{{ icon('Next') }}</span> 
         		</div>
             </div>
-            <div class="objects cycle-slideshow" data-cycle-slides="> div" data-cycle-log="false">
+            <div class="objects cycle-slideshow">
                 {% for object in objects %}
                     {{ object|class_name }}
                 {% endfor %}
@@ -79,10 +79,10 @@
         			<span class="box-partner-nav-tab box-partner-nav-next">{{ icon('Next') }}</span> 
         		</div>
             </div>
-            <div class="objects cycle-slideshow" data-cycle-slides="> div" data-cycle-log="false">
+            <div class="objects cycle-slideshow">
                 {% for object in objects %}
                     <div class="object">
-                        {{ show_img_box(object.image|default_img|imagine_filter('medium'), {width: 350, height: 210,  link: path('article_show', {id: object.id, slug: object.getSlug})}) }}
+                        {{ show_img_box(object.image|default_img|imagine_filter('medium'), {ratio: 0.6,  link: path('article_show', {id: object.id, slug: object.getSlug})}) }}
                         <h3><a href="{{ path('article_show', {id: object.id, slug: object.getSlug}) }}">{{ object }}</a></h3>
                         <h4>
                         </h4>

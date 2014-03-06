@@ -13,6 +13,42 @@
 {% endblock %}
 
 {% block container %}
+{#
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="box">
+                <div class="box-body">
+                    <div class="objects">
+                        <div class="object">
+                            <p>ratio: 1</p>
+                            {{ show_img_box('/bundles/cm/uploads/images/medium/892eda50c9566f74859fb54a7f7912225deed5f1.jpg', {ratio: 1.508}) }}
+                            <p>ratio: 0.1</p>
+                            {{ show_img_box('/bundles/cm/uploads/images/medium/892eda50c9566f74859fb54a7f7912225deed5f1.jpg', {ratio: 10}) }}
+                            <p>ratio: 3</p>
+                            {{ show_img_box('/bundles/cm/uploads/images/medium/892eda50c9566f74859fb54a7f7912225deed5f1.jpg', {ratio: 0.333}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="box">
+                <div class="box-body">
+                    <div class="objects">
+                        <div class="object">
+                            <p>width: 270, height: 179 (ratio: {{ 270 / 179 }}</p>
+                            {{ show_img_box('/bundles/cm/uploads/images/medium/892eda50c9566f74859fb54a7f7912225deed5f1.jpg', {width: 270, height: 179}) }}
+                            <p>width: 270, height: 27 (ratio: {{ 270 / 27 }}</p>
+                            {{ show_img_box('/bundles/cm/uploads/images/medium/892eda50c9566f74859fb54a7f7912225deed5f1.jpg', {width: 270, height: 27}) }}
+                            <p>width: 270, height: 180 (ratio: {{ 60 / 180 }}</p>
+                            {{ show_img_box('/bundles/cm/uploads/images/medium/892eda50c9566f74859fb54a7f7912225deed5f1.jpg', {width: 60, height: 180}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+#}
     <div class="row" id="wall"></div>
 {% endblock %}
 
