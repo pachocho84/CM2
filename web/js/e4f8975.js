@@ -19,11 +19,11 @@ $(function() {
         var next = $(this).find('.box_home-next');
         var prev = $(this).find('.box_home-prev');
         $(this).find('.box_home-oggetti-container').cycle({
-            fx:             'scrollHorz', 
-        speed:      500, 
-        timeout:    0, 
-        next:       next, 
-        prev:       prev 
+            fx:         'scrollHorz', 
+            speed:      500, 
+            timeout:    0, 
+            next:       next, 
+            prev:       prev 
         }); 
     });    
     
@@ -32,12 +32,12 @@ $(function() {
         var next = $(this).find('.box_home-next');
         var prev = $(this).find('.box_home-prev');
         $(this).find('.box_home-oggetti').cycle({
-            fx:             'fade', 
-        speed:      500, 
-        timeout:    4000,  
-        next:       next, 
+            fx:         'fade', 
+            speed:      500, 
+            timeout:    4000,  
+            next:       next, 
             pause:      true,                    
-        prev:       prev 
+            prev:       prev 
         }); 
     });    
                           
