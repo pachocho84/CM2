@@ -88,7 +88,7 @@ class ArticleFixtures
                 ->setText('main image for article "'.$article->getTitle().'"')
                 ->setMain(true)
                 ->setUser($user);
-            $article->addImage($image);
+            $article->setImage($image);
 
             $manager->persist($article);
             $manager->flush();   
@@ -118,10 +118,11 @@ class ArticleFixtures
         }
 
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+        $manager->persist($post);
         $post->setPage($page);
         $post->setGroup($group);
 
-        $article->addPost($post);
+        $article->setPost($post);
         
         $userTags = array();
         for ($j = 1; $j < rand(1, 3); $j++) {

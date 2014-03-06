@@ -50,9 +50,10 @@ class MultimediaFixtures
         }
 
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+        $manager->persist($post);
         $post->setPage($page);
         $post->setGroup($group);
 
-        $multimedia->addPost($post);
+        $multimedia->setPost($post);
     }
 }

@@ -46,7 +46,7 @@ class HomepageController extends Controller
             
             /* Login box */
             if (!$this->get('security.context')->isGranted('ROLE_USER')) {
-                $boxes['authentication'] = $this->get('fragment.handler')->render(new ControllerReference('FOSUserBundle:Security:login', array('template' => 'CMBundle:Homepage:boxLogin.html.twig')));
+                $boxes['authentication'] = $this->get('fragment.handler')->render(new ControllerReference('FOSUserBundle:Security:login', array('template' => 'CMBundle:Homepage:boxLogin.html.twig', 'templateArgs' => array('what' => 'Suck'))));
             }
             
             /* Sponsored */
