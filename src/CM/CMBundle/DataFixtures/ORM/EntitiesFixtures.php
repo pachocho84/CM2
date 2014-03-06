@@ -18,12 +18,6 @@ class EntitiesFixtures extends AbstractFixture implements OrderedFixtureInterfac
      */
     private $container;
 
-    private $urls = array(
-        array('source' => 'https://youtu.be/yVpbFMhOAwE'),
-        array('source' => 'http://vimeo.com/57815442'),
-        array('source' => 'https://soundcloud.com/aleksander-vinter/sheep-heavy-metal'),
-    );
-
     /**
      * {@inheritDoc}
      */
@@ -35,7 +29,7 @@ class EntitiesFixtures extends AbstractFixture implements OrderedFixtureInterfac
     public function load(ObjectManager $manager)
     {
         $infoes = array();
-        foreach ($this->urls as $url) {
+        foreach (Entities\MultimediaFixtures::$urls as $url) {
             $info = array();
             switch (substr(preg_split('/(www|m)\./', parse_url($url['source'], PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
                 case 'yout':
@@ -64,10 +58,16 @@ class EntitiesFixtures extends AbstractFixture implements OrderedFixtureInterfac
         $multimediaFixtures = new Entities\MultimediaFixtures($this->container);
 
         $entities = array();
-        foreach (range(0, 10) as $i) {
+        foreach (range(0, Entities\ArticleFixtures::count()) as $i) {
             $entities[] = array('key' => $i, 'entity' => 'article');
+        }
+        foreach (range(0, Entities\DiscFixtures::count()) as $i) {
             $entities[] = array('key' => $i, 'entity' => 'disc');
+        }
+        foreach (range(0, Entities\EventFixtures::count()) as $i) {
             $entities[] = array('key' => $i, 'entity' => 'event');
+        }
+        foreach (range(0, Entities\ArticleFixtures::count()) as $i) {
             $entities[] = array('key' => $i, 'entity' => 'multimedia');
         }
         shuffle($entities);

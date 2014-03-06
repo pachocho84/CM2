@@ -24,7 +24,7 @@ class DiscFixtures
      */
     private $container;
 
-    private $discs = array(
+    private static $discs = array(
         array('title' => 'Concerto per pianoforte e orchestra n.I in si bemolle minore',
             'label' => 'EMI',
             'year' => '1962-1-1',
@@ -107,6 +107,11 @@ class DiscFixtures
         ),
     );
 
+    public static function count()
+    {
+        return count(DiscFixtures::$discs);
+    } 
+
     /**
      * {@inheritDoc}
      */
@@ -117,24 +122,24 @@ class DiscFixtures
 
     public function load(AbstractFixture $fixture, ObjectManager $manager, $i)
     {
-        $discNum = rand(0, count($this->discs) - 1);
+        $discNum = rand(0, count(DiscFixtures::$discs) - 1);
         $disc = new Disc;
-        $disc->setLabel($this->discs[$discNum]['label'])
-            ->setDate(new \DateTime($this->discs[$discNum]['year']));
-        $disc->setTitle($this->discs[$discNum]['title']);
+        $disc->setLabel(DiscFixtures::$discs[$discNum]['label'])
+            ->setDate(new \DateTime(DiscFixtures::$discs[$discNum]['year']));
+        $disc->setTitle(DiscFixtures::$discs[$discNum]['title']);
 
         $manager->persist($disc);
 
         $disc->mergeNewTranslations();
            
-        for ($j = 0; $j < count($this->discs[$discNum]['discTracks']); $j++) {
+        for ($j = 0; $j < count(DiscFixtures::$discs[$discNum]['discTracks']); $j++) {
             $discTrack = new DiscTrack;
             $discTrack->setNumber($j + 1)
-                ->setComposer($this->discs[$discNum]['discTracks'][$j]['composer'])
-                ->setTitle($this->discs[$discNum]['discTracks'][$j]['title'])
-                ->setMovement($this->discs[$discNum]['discTracks'][$j]['movement'])
-                ->setArtists($this->discs[$discNum]['discTracks'][$j]['artists'])
-                ->setDuration(new \DateTime($this->discs[$discNum]['discTracks'][$j]['duration']));
+                ->setComposer(DiscFixtures::$discs[$discNum]['discTracks'][$j]['composer'])
+                ->setTitle(DiscFixtures::$discs[$discNum]['discTracks'][$j]['title'])
+                ->setMovement(DiscFixtures::$discs[$discNum]['discTracks'][$j]['movement'])
+                ->setArtists(DiscFixtures::$discs[$discNum]['discTracks'][$j]['artists'])
+                ->setDuration(new \DateTime(DiscFixtures::$discs[$discNum]['discTracks'][$j]['duration']));
 
             if (rand(0, 5) == 0) {
                 $discTrack->setAudio('62c3410ef8cc13c3dc7aa40646f9e805.mpga');
@@ -158,7 +163,7 @@ class DiscFixtures
 
         if (rand(0, 4) > 0) {
             $image = new Image;
-            $image->setImg($this->discs[$discNum]['img'])
+            $image->setImg(DiscFixtures::$discs[$discNum]['img'])
                 ->setText('main image for disc "'.$disc->getTitle().'"')
                 ->setMain(true)
                 ->setUser($user);
@@ -169,7 +174,7 @@ class DiscFixtures
 
             for ($j = rand(1, 4); $j > 0; $j--) {
                 $image = new Image;
-                $image->setImg($this->discs[$discNum]['img'])
+                $image->setImg(DiscFixtures::$discs[$discNum]['img'])
                     ->setText('image number '.$j.' for disc "'.$disc->getTitle().'"')
                     ->setMain(false)
                     ->setUser($user);

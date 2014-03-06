@@ -42,7 +42,7 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
         ),
     );
 
-    public static function countPages()
+    public static function count()
     {
         return count(PageFixtures::$pages);
     } 
@@ -96,7 +96,7 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                 $userTags
             );
 
-            $numbers = range(1, UserFixtures::countPeople());
+            $numbers = range(1, UserFixtures::count());
             unset($numbers[$p['creator'] - 1]);
             shuffle($numbers);
             for ($j = 0; $j < rand(0, 7); $j++) {

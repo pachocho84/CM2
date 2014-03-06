@@ -274,7 +274,7 @@ Con L’etichetta  Limen Music  ha registrato cd e dvd dei quintetti per clarine
         ),
     );
 
-    public static function countPeople()
+    public static function count()
     {
         return count(UserFixtures::$people);
     } 

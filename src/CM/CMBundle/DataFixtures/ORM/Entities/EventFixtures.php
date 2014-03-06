@@ -25,7 +25,7 @@ class EventFixtures
      */
     private $container;
 
-    private $events = array(
+    private static $events = array(
         array('title' => 'C\'è in gioco la musica! Laboratorio musicale', 'subtitle' => '', 'extract' => 'I bambini poteranno ascoltare e suonare tutti gli strumenti dell\'Accademia! A cura dell\'Accademia musicale STABAT MATER di Rho', 'text' => 'I bambini poteranno ascoltare e suonare tutti gli strumenti dell\'Accademia! A cura dell\'Accademia musicale STABAT MATER di Rho', 'img' => '1b7e2be2de282f6cd99a91874f2f5134dd76cdd9.jpg'),
         array('title' => 'Haydn, "Stabat Mater"', 'subtitle' => '', 'extract' => 'Lurago d\'Erba si prepara a celebrare il centenario della propria chiesa prepositurale, che per l\'occasione aprirà le porte alla grande musica sacra. L\'appuntamento è per la serata di sabato prossimo, 5 ottobre.', 'text' => 'Lurago d\'Erba si prepara a celebrare il centenario della propria chiesa prepositurale, che per l\'occasione aprirà le porte alla grande musica sacra. L\'appuntamento è per la serata di sabato prossimo, 5 ottobre.', 'img' => '892eda50c9566f74859fb54a7f7912225deed5f1.jpg'),
         array('title' => 'Stagione Sinfonica: Rachmaninov & Dvořák', 'subtitle' => '', 'extract' => 'Rachmaninov - Vocalise Rachmaninov - Concerto per pianoforte e orchestra n. 2 in Do min. op. 18 Dvořák - Sinfonia n. 3 in Mi bemolle maggiore op. 10Pianoforte - Simone Pedroni 
@@ -89,6 +89,11 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
     private $images = array('bb01acb97854b24ed23598bd4f055eba.jpeg', 'ff9398d3d47436e2b4f72874a2c766fd.jpeg');
 
+    public static function count()
+    {
+        return count(EventFixtures::$events);
+    } 
+
     /**
      * {@inheritDoc}
      */
@@ -99,26 +104,26 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
     public function load(AbstractFixture $fixture, ObjectManager $manager, $i, $infoes)
     {
-        $eventNum = rand(0, count($this->events) - 1);
+        $eventNum = rand(0, count(EventFixtures::$events) - 1);
         $event = new Event;
-        $event->setTitle($this->events[$eventNum]['title'].' (en)')
-            ->setExtract($this->events[$eventNum]['extract'])
-            ->setText($this->events[$eventNum]['text']);
+        $event->setTitle(EventFixtures::$events[$eventNum]['title'].' (en)')
+            ->setExtract(EventFixtures::$events[$eventNum]['extract'])
+            ->setText(EventFixtures::$events[$eventNum]['text']);
 
         $manager->persist($event);
 
         if (0 == rand(0, 2)) {
             $event->translate('it')
-                ->setTitle($this->events[$eventNum]['title'].' (it)')
-                ->setExtract($this->events[$eventNum]['extract'])
-                ->setText($this->events[$eventNum]['text']);
+                ->setTitle(EventFixtures::$events[$eventNum]['title'].' (it)')
+                ->setExtract(EventFixtures::$events[$eventNum]['extract'])
+                ->setText(EventFixtures::$events[$eventNum]['text']);
         }
 
         if (0 == rand(0, 4)) {
             $event->translate('fr')
-                ->setTitle($this->events[$eventNum]['title'].' (fr)')
-                ->setExtract($this->events[$eventNum]['extract'])
-                ->setText($this->events[$eventNum]['text']);
+                ->setTitle(EventFixtures::$events[$eventNum]['title'].' (fr)')
+                ->setExtract(EventFixtures::$events[$eventNum]['extract'])
+                ->setText(EventFixtures::$events[$eventNum]['text']);
         }
 
 /*
@@ -151,20 +156,20 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
         $page = null;
         $group = null;
-        if (array_key_exists('page', $this->events[$eventNum]['page'])) {
-            $page = $manager->merge($fixture->getReference('page-'.$this->events[$eventNum]['page']));
+        if (array_key_exists('page', EventFixtures::$events[$eventNum]['page'])) {
+            $page = $manager->merge($fixture->getReference('page-'.EventFixtures::$events[$eventNum]['page']));
             $user = $page->getCreator();
-        } elseif (array_key_exists('group', $this->events[$eventNum]['user'])) {
-            $group = $manager->merge($fixture->getReference('page-'.$this->events[$eventNum]['group']));
+        } elseif (array_key_exists('group', EventFixtures::$events[$eventNum]['user'])) {
+            $group = $manager->merge($fixture->getReference('page-'.EventFixtures::$events[$eventNum]['group']));
             $user = $group->getCreator();
         }
-        if (array_key_exists('user', $this->events[$eventNum]['user'])) {
-            $user = $manager->merge($fixture->getReference('user-'.$this->events[$eventNum]['user']));
+        if (array_key_exists('user', EventFixtures::$events[$eventNum]['user'])) {
+            $user = $manager->merge($fixture->getReference('user-'.EventFixtures::$events[$eventNum]['user']));
         }
 
         if (rand(0, 8) > 0) {
             $image = new Image;
-            $image->setImg($this->events[$eventNum]['img'])
+            $image->setImg(EventFixtures::$events[$eventNum]['img'])
                 ->setText('main image for event "'.$event->getTitle().'"')
                 ->setMain(true)
                 ->setUser($user);
@@ -176,7 +181,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             for ($j = rand(1, 4); $j > 0; $j--) {
                 $image = new Image;
                 $image
-                    ->setImg($this->events[$eventNum]['img'])
+                    ->setImg(EventFixtures::$events[$eventNum]['img'])
                     ->setText('image number '.$j.' for event "'.$event->getTitle().'"')
                     ->setMain(false)
                     ->setUser($user);

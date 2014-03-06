@@ -14,6 +14,17 @@ use CM\CMBundle\DataFixtures\ORM;
 
 class MultimediaFixtures
 {
+    public static $urls = array(
+        array('source' => 'https://youtu.be/yVpbFMhOAwE'),
+        array('source' => 'http://vimeo.com/57815442'),
+        array('source' => 'https://soundcloud.com/aleksander-vinter/sheep-heavy-metal'),
+    );
+
+    public static function count()
+    {
+        return count(MultimediaFixtures::$discs);
+    } 
+
     /**
      * @var ContainerInterface
      */
