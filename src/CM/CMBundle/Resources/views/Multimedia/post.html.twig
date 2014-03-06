@@ -5,6 +5,7 @@
             <h3 class="video-title"><a href="http://www.youtube.com/watch?v={{ post.entity.source }}" target="_blank">{{ post.entity }}</a></h3>
         </div>
         <img width="100%" src="http://img.youtube.com/vi/{{ post.entity.source }}/0.jpg" />
+        <div class="video-button"></div>
     </div>
 {% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_VIMEO') %}
     <div class="video-container" vimeo-video-source="{{ post.entity.source }}">
@@ -13,6 +14,7 @@
             <h3 class="video-title"><a href="http://www.youtube.com/watch?v={{ post.entity.source }}" target="_blank">{{ post.entity }}</a></h3>
         </div>
         <img width="110px" height="110px" src="{{ vimeoImage(multimedia.source) }}" />
+        <div class="video-button"></div>
     </div>
 {% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\Multimedia::TYPE_SOUNDCLOUD') %}
     <iframe width="100%" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{{ post.entity.source }}&amp;color=000000&amp;auto_play=false&amp;show_artwork=true"></iframe>

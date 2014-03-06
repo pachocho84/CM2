@@ -507,6 +507,17 @@ input:-webkit-autofill {
     white-space: nowrap;
     margin: 0;
 }
+.post .video-button {
+    background: no-repeat url(//ssl.gstatic.com/s2/oz/images/sprites/stream-c232dce6708c15a206f95e6a941a0409.png) -49px 0;
+    cursor: pointer;
+    height: 72px;
+    left: 50%;
+    margin-left: -36px;
+    margin-top: -36px;
+    position: absolute;
+    top: 50%;
+    width: 72px;
+}
 .post .video-title a,
 .post .video-title a:hover,
 #wall .box:hover .video-title a {
