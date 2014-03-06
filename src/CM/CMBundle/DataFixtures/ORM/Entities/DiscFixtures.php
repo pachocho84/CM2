@@ -124,24 +124,23 @@ class DiscFixtures
 
     public function load(AbstractFixture $fixture, ObjectManager $manager, $i)
     {
-        $discNum = rand(0, count(DiscFixtures::$discs) - 1);
         $disc = new Disc;
-        $disc->setLabel(DiscFixtures::$discs[$discNum]['label'])
-            ->setDate(new \DateTime(DiscFixtures::$discs[$discNum]['year']));
-        $disc->setTitle(DiscFixtures::$discs[$discNum]['title']);
+        $disc->setLabel(DiscFixtures::$discs[$i]['label'])
+            ->setDate(new \DateTime(DiscFixtures::$discs[$i]['year']));
+        $disc->setTitle(DiscFixtures::$discs[$i]['title']);
 
         $manager->persist($disc);
 
         $disc->mergeNewTranslations();
            
-        for ($j = 0; $j < count(DiscFixtures::$discs[$discNum]['discTracks']); $j++) {
+        for ($j = 0; $j < count(DiscFixtures::$discs[$i]['discTracks']); $j++) {
             $discTrack = new DiscTrack;
             $discTrack->setNumber($j + 1)
-                ->setComposer(DiscFixtures::$discs[$discNum]['discTracks'][$j]['composer'])
-                ->setTitle(DiscFixtures::$discs[$discNum]['discTracks'][$j]['title'])
-                ->setMovement(DiscFixtures::$discs[$discNum]['discTracks'][$j]['movement'])
-                ->setArtists(DiscFixtures::$discs[$discNum]['discTracks'][$j]['artists'])
-                ->setDuration(new \DateTime(DiscFixtures::$discs[$discNum]['discTracks'][$j]['duration']));
+                ->setComposer(DiscFixtures::$discs[$i]['discTracks'][$j]['composer'])
+                ->setTitle(DiscFixtures::$discs[$i]['discTracks'][$j]['title'])
+                ->setMovement(DiscFixtures::$discs[$i]['discTracks'][$j]['movement'])
+                ->setArtists(DiscFixtures::$discs[$i]['discTracks'][$j]['artists'])
+                ->setDuration(new \DateTime(DiscFixtures::$discs[$i]['discTracks'][$j]['duration']));
 
             if (rand(0, 5) == 0) {
                 $discTrack->setAudio('62c3410ef8cc13c3dc7aa40646f9e805.mpga');
@@ -152,20 +151,20 @@ class DiscFixtures
         
         $page = null;
         $group = null;
-        if (array_key_exists('page', $this->events[$eventNum]['page'])) {
-            $page = $manager->merge($fixture->getReference('page-'.$this->events[$eventNum]['page']));
+        if (array_key_exists('page', DiscFixtures::$discs[$i])) {
+            $page = $manager->merge($fixture->getReference('page-'.DiscFixtures::$discs[$i]['page']));
             $user = $page->getCreator();
-        } elseif (array_key_exists('group', $this->events[$eventNum]['user'])) {
-            $group = $manager->merge($fixture->getReference('page-'.$this->events[$eventNum]['group']));
+        } elseif (array_key_exists('group', DiscFixtures::$discs[$i])) {
+            $group = $manager->merge($fixture->getReference('page-'.DiscFixtures::$discs[$i]['group']));
             $user = $group->getCreator();
         }
-        if (array_key_exists('user', $this->events[$eventNum]['user'])) {
-            $user = $manager->merge($fixture->getReference('user-'.$this->events[$eventNum]['user']));
+        if (array_key_exists('user', DiscFixtures::$discs[$i])) {
+            $user = $manager->merge($fixture->getReference('user-'.DiscFixtures::$discs[$i]['user']));
         }
 
         if (rand(0, 4) > 0) {
             $image = new Image;
-            $image->setImg(DiscFixtures::$discs[$discNum]['img'])
+            $image->setImg(DiscFixtures::$discs[$i]['img'])
                 ->setText('main image for disc "'.$disc->getTitle().'"')
                 ->setMain(true)
                 ->setUser($user);
@@ -176,7 +175,7 @@ class DiscFixtures
 
             for ($j = rand(1, 4); $j > 0; $j--) {
                 $image = new Image;
-                $image->setImg(DiscFixtures::$discs[$discNum]['img'])
+                $image->setImg(DiscFixtures::$discs[$i]['img'])
                     ->setText('image number '.$j.' for disc "'.$disc->getTitle().'"')
                     ->setMain(false)
                     ->setUser($user);
@@ -203,11 +202,11 @@ class DiscFixtures
             true // notification
         );
 
-        $numbers = range(1, ORM\UserFixtures::countPeople());
-        unset($numbers[$userNum - 1]);
+        $numbers = range(1, ORM\UserFixtures::count());
         shuffle($numbers);
         for ($j = 0; $j < rand(0, 6); $j++) {
             $otherUser = $manager->merge($fixture->getReference('user-'.$numbers[$j]));
+            if ($otherUser == $user) continue;
 
             $disc->addUser(
                 $otherUser,
@@ -223,6 +222,6 @@ class DiscFixtures
             $manager->flush();
         }
 
-        $fixture->addReference('disc-'.$i, $disc);
+        $fixture->addReference('disc-'.($i + 1), $disc);
     }
 }

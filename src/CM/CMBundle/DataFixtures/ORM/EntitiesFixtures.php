@@ -58,16 +58,16 @@ class EntitiesFixtures extends AbstractFixture implements OrderedFixtureInterfac
         $multimediaFixtures = new Entities\MultimediaFixtures($this->container);
 
         $entities = array();
-        foreach (range(0, Entities\ArticleFixtures::count()) as $i) {
+        foreach (range(0, Entities\ArticleFixtures::count() - 1) as $i) {
             $entities[] = array('key' => $i, 'entity' => 'article');
         }
-        foreach (range(0, Entities\DiscFixtures::count()) as $i) {
+        foreach (range(0, Entities\DiscFixtures::count() - 1) as $i) {
             $entities[] = array('key' => $i, 'entity' => 'disc');
         }
-        foreach (range(0, Entities\EventFixtures::count()) as $i) {
+        foreach (range(0, Entities\EventFixtures::count() - 1) as $i) {
             $entities[] = array('key' => $i, 'entity' => 'event');
         }
-        foreach (range(0, Entities\ArticleFixtures::count()) as $i) {
+        foreach (range(0, Entities\ArticleFixtures::count() - 1) as $i) {
             $entities[] = array('key' => $i, 'entity' => 'multimedia');
         }
         shuffle($entities);

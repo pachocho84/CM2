@@ -50,15 +50,15 @@ class MultimediaFixtures
 
         $page = null;
         $group = null;
-        if (array_key_exists('page', $this->events[$eventNum]['page'])) {
-            $page = $manager->merge($fixture->getReference('page-'.$this->events[$eventNum]['page']));
+        if (array_key_exists('page', MultimediaFixtures::$urls[$i])) {
+            $page = $manager->merge($fixture->getReference('page-'.MultimediaFixtures::$urls[$i]['page']));
             $user = $page->getCreator();
-        } elseif (array_key_exists('group', $this->events[$eventNum]['user'])) {
-            $group = $manager->merge($fixture->getReference('page-'.$this->events[$eventNum]['group']));
+        } elseif (array_key_exists('group', MultimediaFixtures::$urls[$i])) {
+            $group = $manager->merge($fixture->getReference('page-'.MultimediaFixtures::$urls[$i]['group']));
             $user = $group->getCreator();
         }
-        if (array_key_exists('user', $this->events[$eventNum]['user'])) {
-            $user = $manager->merge($fixture->getReference('user-'.$this->events[$eventNum]['user']));
+        if (array_key_exists('user', MultimediaFixtures::$urls[$i])) {
+            $user = $manager->merge($fixture->getReference('user-'.MultimediaFixtures::$urls[$i]['user']));
         }
 
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);

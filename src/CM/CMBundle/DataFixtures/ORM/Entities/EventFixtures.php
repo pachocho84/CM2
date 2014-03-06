@@ -115,26 +115,26 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
     public function load(AbstractFixture $fixture, ObjectManager $manager, $i, $infoes)
     {
-        $eventNum = rand(0, count(EventFixtures::$events) - 1);
+        $i = rand(0, count(EventFixtures::$events) - 1);
         $event = new Event;
-        $event->setTitle(EventFixtures::$events[$eventNum]['title'].' (en)')
-            ->setExtract(EventFixtures::$events[$eventNum]['extract'])
-            ->setText(EventFixtures::$events[$eventNum]['text']);
+        $event->setTitle(EventFixtures::$events[$i]['title'].' (en)')
+            ->setExtract(EventFixtures::$events[$i]['extract'])
+            ->setText(EventFixtures::$events[$i]['text']);
 
         $manager->persist($event);
 
         if (0 == rand(0, 2)) {
             $event->translate('it')
-                ->setTitle(EventFixtures::$events[$eventNum]['title'].' (it)')
-                ->setExtract(EventFixtures::$events[$eventNum]['extract'])
-                ->setText(EventFixtures::$events[$eventNum]['text']);
+                ->setTitle(EventFixtures::$events[$i]['title'].' (it)')
+                ->setExtract(EventFixtures::$events[$i]['extract'])
+                ->setText(EventFixtures::$events[$i]['text']);
         }
 
         if (0 == rand(0, 4)) {
             $event->translate('fr')
-                ->setTitle(EventFixtures::$events[$eventNum]['title'].' (fr)')
-                ->setExtract(EventFixtures::$events[$eventNum]['extract'])
-                ->setText(EventFixtures::$events[$eventNum]['text']);
+                ->setTitle(EventFixtures::$events[$i]['title'].' (fr)')
+                ->setExtract(EventFixtures::$events[$i]['extract'])
+                ->setText(EventFixtures::$events[$i]['text']);
         }
 
 /*
@@ -167,20 +167,20 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
         $page = null;
         $group = null;
-        if (array_key_exists('page', EventFixtures::$events[$eventNum]['page'])) {
-            $page = $manager->merge($fixture->getReference('page-'.EventFixtures::$events[$eventNum]['page']));
+        if (array_key_exists('page', EventFixtures::$events[$i])) {
+            $page = $manager->merge($fixture->getReference('page-'.EventFixtures::$events[$i]['page']));
             $user = $page->getCreator();
-        } elseif (array_key_exists('group', EventFixtures::$events[$eventNum]['user'])) {
-            $group = $manager->merge($fixture->getReference('page-'.EventFixtures::$events[$eventNum]['group']));
+        } elseif (array_key_exists('group', EventFixtures::$events[$i])) {
+            $group = $manager->merge($fixture->getReference('page-'.EventFixtures::$events[$i]['group']));
             $user = $group->getCreator();
         }
-        if (array_key_exists('user', EventFixtures::$events[$eventNum]['user'])) {
-            $user = $manager->merge($fixture->getReference('user-'.EventFixtures::$events[$eventNum]['user']));
+        if (array_key_exists('user', EventFixtures::$events[$i])) {
+            $user = $manager->merge($fixture->getReference('user-'.EventFixtures::$events[$i]['user']));
         }
 
         if (rand(0, 8) > 0) {
             $image = new Image;
-            $image->setImg(EventFixtures::$events[$eventNum]['img'])
+            $image->setImg(EventFixtures::$events[$i]['img'])
                 ->setText('main image for event "'.$event->getTitle().'"')
                 ->setMain(true)
                 ->setUser($user);
@@ -192,7 +192,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             for ($j = rand(1, 4); $j > 0; $j--) {
                 $image = new Image;
                 $image
-                    ->setImg(EventFixtures::$events[$eventNum]['img'])
+                    ->setImg(EventFixtures::$events[$i]['img'])
                     ->setText('image number '.$j.' for event "'.$event->getTitle().'"')
                     ->setMain(false)
                     ->setUser($user);
@@ -236,11 +236,11 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             $userTags
         );
 
-        $numbers = range(1, ORM\UserFixtures::countPeople());
-        unset($numbers[$userNum - 1]);
+        $numbers = range(1, ORM\UserFixtures::count());
         shuffle($numbers);
         for ($j = 0; $j < rand(0, 6); $j++) {
             $otherUser = $manager->merge($fixture->getReference('user-'.$numbers[$j]));
+            if ($otherUser == $user) continue;
             
             $userTags = array();
             for ($k = 1; $k < rand(1, 3); $k++) {
@@ -262,6 +262,6 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             $manager->flush();
         }
 
-        $fixture->addReference('event-'.$i, $event);
+        $fixture->addReference('event-'.($i + 1), $event);
     }
 }
