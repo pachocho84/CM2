@@ -23,7 +23,7 @@ class ArticleFixtures
      */
     private $container;
 
-    private $articles = array(
+    private static $articles = array(
         array('title' => 'Anche i delfini si sballano. La loro droga è l\'aria di un pesce palla',
             'text' => 'Non è una novità che i delfini siano animali caratterialmente molto simili agli uomini. Noto il loro coraggio, l\'intelligenza, la loro gelosia e la naturale inclinazione a fare scherzi. Ma anche una spiccata sensibilità che li rende particolarmente amati da grandi e piccoli. Le somiglianze tra noi e questi simpatici mammiferi, però, non fiscono qui. Perché, a quanto pare, possiedono anche alcuni dei nostri vizi. Come quello di sballarsi.
             A fare la straordinaria scoperta un gruppo di scienziati durante la lavorazione della serie Tv \'Dolphins: Spy in the Pod\' , trasmessa dall\'emittente britannica Bbc. In una delle scene si vedono, infatti, alcuni esemplari che sembrano ottenere effetti \'stupefacenti\' aspirando l\'aria di una particolare razza di pesce palla. I delfini vengono ripresi dalle telecamere mentre si passano delicatamente il pesce tra di loro. L\'aria rilasciata dal pesce palla, in realtà contiene delle sostanze tossiche usate come meccanismo di  difesa e deterrente per gli altri pesci predatori.',
@@ -45,6 +45,11 @@ class ArticleFixtures
         ),
     );
 
+    public static function count()
+    {
+        return count(ArticleFixtures::$articles);
+    } 
+
     /**
      * {@inheritDoc}
      */
@@ -55,24 +60,24 @@ class ArticleFixtures
 
     public function load(AbstractFixture $fixture, ObjectManager $manager, $i)
     {
-        $articleNum = rand(0, count($this->articles) - 1);
+        $articleNum = rand(0, count(ArticleFixtures::$articles) - 1);
         $article = new Article;
-        $article->setSource($this->articles[$articleNum]['source'])
-            ->setDate(new \DateTime($this->articles[$articleNum]['date']));
+        $article->setSource(ArticleFixtures::$articles[$articleNum]['source'])
+            ->setDate(new \DateTime(ArticleFixtures::$articles[$articleNum]['date']));
 
-        $article->setTitle($this->articles[$articleNum]['title'].' (en)')
-            ->setText($this->articles[$articleNum]['text']);
+        $article->setTitle(ArticleFixtures::$articles[$articleNum]['title'].' (en)')
+            ->setText(ArticleFixtures::$articles[$articleNum]['text']);
 
         if (0 == rand(0, 2)) {
             $article->translate('it')
-                ->setTitle($this->articles[$articleNum]['title'].' (it)')
-                ->setText($this->articles[$articleNum]['text']);
+                ->setTitle(ArticleFixtures::$articles[$articleNum]['title'].' (it)')
+                ->setText(ArticleFixtures::$articles[$articleNum]['text']);
         }
 
         if (0 == rand(0, 4)) {
             $article->translate('fr')
-                ->setTitle($this->articles[$articleNum]['title'].' (fr)')
-                ->setText($this->articles[$articleNum]['text']);
+                ->setTitle(ArticleFixtures::$articles[$articleNum]['title'].' (fr)')
+                ->setText(ArticleFixtures::$articles[$articleNum]['text']);
         }
 
         $manager->persist($article);
@@ -94,7 +99,7 @@ class ArticleFixtures
 
         if (rand(0, 4) > 0) {
             $image = new Image;
-            $image->setImg($this->articles[$articleNum]['img'])
+            $image->setImg(ArticleFixtures::$articles[$articleNum]['img'])
                 ->setText('main image for article "'.$article->getTitle().'"')
                 ->setMain(true)
                 ->setUser($user);
@@ -105,7 +110,7 @@ class ArticleFixtures
                 
             for ($j = rand(1, 4); $j > 0; $j--) {
                 $image = new Image;
-                $image->setImg($this->articles[$articleNum]['img'])
+                $image->setImg(ArticleFixtures::$articles[$articleNum]['img'])
                     ->setText('image number '.$j.' for article "'.$article->getTitle().'"')
                     ->setMain(false)
                     ->setUser($user);
