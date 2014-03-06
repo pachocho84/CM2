@@ -36,21 +36,26 @@ class HomepageController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             $boxes = array();
+            
+            /* Last registered users */
+            $boxes['lastUsers'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(28)));
 
-            $boxes['lastUsers'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(15)));
-
+            /* Next eìvents */
             $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('locale' => $request->getLocale())), $page, 3);
             $boxes['dates'] = $this->renderView('CMBundle:Homepage:events.html.twig', array('dates' => $dates));
             
+            /* Login box */
             if (!$this->get('security.context')->isGranted('ROLE_USER')) {
                 $boxes['authentication'] = $this->get('fragment.handler')->render(new ControllerReference('FOSUserBundle:Security:login', array('template' => 'CMBundle:Homepage:boxLogin.html.twig', 'templateArgs' => array('what' => 'Suck'))));
             }
             
-            $sponsoreds = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale())), $page, 3);
+            /* Sponsored */
+            $sponsoreds = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale())), $page, 2);
             foreach ($sponsoreds as $sponsored) {
-                $boxes['homepage_'.$sponsored->getId()] = $this->renderView('CMBundle:Homepage:sponsoredBox.html.twig', array('sponsored' => $sponsored));
+                $boxes['homepage_'.$sponsored->getId()] = $this->renderView('CMBundle:Homepage:boxSponsored.html.twig', array('sponsored' => $sponsored));
             }
            
+            /* Box partners */
             $homepageBoxes = $em->getRepository('CMBundle:HomepageBox')->getBoxes(4, array('locale' => $request->getLocale()));
             foreach ($homepageBoxes as $box) {
                 switch ($box->getType()) {
@@ -73,16 +78,17 @@ class HomepageController extends Controller
                 }
                 $objects = $this->get('knp_paginator')->paginate($objects, $page, $limit);
                 
-                $boxes['homepage_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:box.html.twig', array('box' => $box, 'objects' => $objects));
+                $boxes['homepage_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:boxPartner.html.twig', array('box' => $box, 'objects' => $objects));
             }
-
+            
+            /* Posts */
 /*
             $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
             foreach ($posts as $post) {
                 $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:postBox.html.twig', array('post' => $post));
             }
 
-            $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:boxLoadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
+            $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:loadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
 */
             
             return new JsonResponse($boxes);

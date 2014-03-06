@@ -28,8 +28,9 @@ class HomepageBoxRepository extends BaseRepository
     public function getBoxes($limit, $options = array())
     {
         return $this->createQueryBuilder('b')
-            ->select('b, c, ct, p')
+            ->select('b, c, ct, u, p')
             ->leftJoin('b.category', 'c')
+            ->leftJoin('c.editor', 'u')
             ->leftJoin('c.translations', 'ct', 'with', 'ct.locale IN (:locales)')
             ->leftJoin('b.page', 'p')
             ->setParameter('locales', $options['locales'])

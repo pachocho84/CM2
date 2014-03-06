@@ -1,0 +1,51 @@
+<div class="box box-partner" style="border: 2px solid {{ box.colour }}">
+    
+    <h2 {% if (box.logo) %}style="background-image: url({{ asset('/bundles/cm/uploads/boxes/' ~ box.logo) }});" class="box-partner-logo"{% endif %}>
+        {% if (box.type != 3) %}
+            {{ box.page }}
+        {% else %}
+            {{ box.name }} <small>{{ 'edited by %user%'|trans({'%user%': '<a href="' ~ path('user_show', {slug: box.category.editor.slug}) ~ '">' ~ box.category.editor ~ '</a>'})|raw }}
+        {% endif %}
+    </h2>
+
+    <div class="box-body">
+        <div class="objects cycle-slideshow" data-cycle-slides="> div" data-cycle-log="false">
+            {% if box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_EVENT') %}
+                {% for date in objects %}
+                    <div class="object">
+                        {{ show_img_box(date.event.images[0].img|imagine_filter('medium'), {width: 350, height: 210,  link: path('event_show', {id: date.event.id, slug: date.event.getSlug})}) }}
+                        <h3><a href="{{ path('event_show', {id: date.event.id, slug: date.event.getSlug}) }}">{{ date.event }}</a></h3>
+                        <h4>
+                            {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }} 
+                            {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }} 
+                            <span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span>
+                        </h4>
+                    </div>
+                {% endfor %}
+            {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_ARTICLE') %}
+                {% for object in objects %}
+                    <div class="object">
+                        {{ show_img_box(object.images[0].img|imagine_filter('medium'), {width: 350, height: 210,  link: path('event_show', {id: object.id, slug: object.getSlug})}) }}
+                        <h3><a href="{{ path('article_show', {id: object.id, slug: object.getSlug}) }}">{{ object }}</a></h3>
+                        <h4>
+                        </h4>
+                    </div>
+                {% endfor %}
+            {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_DISC') %}
+                {% for object in objects %}
+                    {{ object|class_name }}
+                {% endfor %}
+            {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_RUBRIC') %}
+                {% for object in objects %}
+                    <div class="object">
+                        {{ show_img_box(object.images[0].img|imagine_filter('medium'), {width: 350, height: 210,  link: path('event_show', {id: object.id, slug: object.getSlug})}) }}
+                        <h3><a href="{{ path('article_show', {id: object.id, slug: object.getSlug}) }}">{{ object }}</a></h3>
+                        <h4>
+                        </h4>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    
+</div>
