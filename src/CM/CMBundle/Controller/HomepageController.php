@@ -89,12 +89,12 @@ class HomepageController extends Controller
 
             /* Reviews */
             $reviews = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:HomepageArchive')->getLastReviews(array('locale' => $request->getLocale())), $page, 3);
-            $boxes['reviews_'.$post->getId()] = $this->renderView('CMBundle:Homepage:boxReviews.html.twig', array('reviews' => $reviews));
+            $boxes['reviews'] = $this->renderView('CMBundle:Homepage:boxReviews.html.twig', array('reviews' => $reviews));
 
             /* Banners */
-            $banners = $em->getRepository('CMBundle:HomepageBanner')->getBanners($page * 2, 2);
+            $banners = $em->getRepository('CMBundle:HomepageBanner')->getBanners(($page -1) * 2, 3);
             foreach ($banners as $banner) {
-                $boxes['banner_'.$post->getId()] = $this->renderView('CMBundle:Homepage:boxBanner.html.twig', array('banner' => $banner));
+                $boxes['banner_'.$banner->getId()] = $this->renderView('CMBundle:Homepage:boxBanner.html.twig', array('banner' => $banner));
             }
 
             /* Posts */

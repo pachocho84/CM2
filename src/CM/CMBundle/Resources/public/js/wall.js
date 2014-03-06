@@ -34,7 +34,7 @@ function wallLoad(data, t, c, reload) {
         columns[0][0].append($box);
 
         if (!reload) {
-            $box.find('.cycle-slideshowX').cycle({
+            $box.find('.cycle-slideshow').cycle({
                 loader: true,
                 log: false,
                 next: '.box-partner-nav-next',
@@ -86,4 +86,8 @@ $(function() {
             }, 200);
         }
     });
+    
+    $('#wall > .col-xs-4').sortable({
+      connectWith: '.col-xs-4'
+    }).disableSelection();
 });

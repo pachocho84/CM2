@@ -1,8 +1,7 @@
 <div class="box box-partner" style="border: 2px solid {{ box.colour }}">
     
-    <h2 {% if (box.logo) == 2 %}style="background-image: url({{ asset('/bundles/cm/uploads/boxes/' ~ box.logo) }});" class="box-partner-logo"{% endif %}>
+    <h2>
         {% if (box.type != 3) %}
-{#             {{ box.page }} #}
             <img src="{{ asset('/bundles/cm/uploads/boxes/' ~ box.logo) }}" class="img-responsive" />
         {% else %}
             {{ box.name }} <small>{{ 'edited by %user%'|trans({'%user%': '<a href="' ~ path('user_show', {slug: box.category.editor.slug}) ~ '">' ~ box.category.editor ~ '</a>'})|raw }}
