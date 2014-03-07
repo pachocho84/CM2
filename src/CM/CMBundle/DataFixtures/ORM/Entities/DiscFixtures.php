@@ -222,6 +222,7 @@ class DiscFixtures
             $manager->flush();
         }
 
+        var_dump('disc-'.($i + 1));
         $fixture->addReference('disc-'.($i + 1), $disc);
     }
 }

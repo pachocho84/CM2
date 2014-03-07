@@ -171,6 +171,7 @@ class ArticleFixtures
             $manager->flush();
         }
 
+        var_dump('article-'.($i + 1));
         $fixture->addReference('article-'.($i + 1), $article);
     }
 }

@@ -155,7 +155,6 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
     public function load(AbstractFixture $fixture, ObjectManager $manager, $i, $infoes)
     {
-        $i = rand(0, count(EventFixtures::$events) - 1);
         $event = new Event;
         $event->setTitle(EventFixtures::$events[$i]['title'])
             ->setExtract(EventFixtures::$events[$i]['extract'])
@@ -304,6 +303,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             $manager->flush();
         }
 
+        var_dump('event-'.($i + 1));
         $fixture->addReference('event-'.($i + 1), $event);
     }
 }

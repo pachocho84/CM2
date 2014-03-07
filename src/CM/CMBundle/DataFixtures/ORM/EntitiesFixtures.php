@@ -72,8 +72,8 @@ class EntitiesFixtures extends AbstractFixture implements OrderedFixtureInterfac
         }
         shuffle($entities);
 
-
         foreach ($entities as $entity) {
+            var_dump($entity['entity'].' '.$entity['key']);
             switch ($entity['entity']) {
                 case 'article':
                     $articleFixtures->load($this, $manager, $entity['key']);

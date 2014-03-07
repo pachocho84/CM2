@@ -50,6 +50,14 @@ function wallLoad(data, t, c, reload) {
             });
         }
 
+        
+        
+        $box.find('img').load(function() {
+            console.log($(this));
+            loading = false;
+        });
+            
+
         $box.fadeIn('fast');
 
         columns[0][1] += $box.outerHeight();
