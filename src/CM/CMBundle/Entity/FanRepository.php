@@ -19,7 +19,7 @@ class FanRepository extends BaseRepository
             ->select('u')
             ->from('CMBundle:User', 'u')
             ->leftJoin('u.fanOf', 'f')
-            ->where('identity(f.user) = :user_id')->setParameter('user_id', $userId); // TODO: integrate with clients
+            ->where('f.userId = :user_id')->setParameter('user_id', $userId); // TODO: integrate with clients
         // return UserQuery::create()->
         //  useFanRelatedByFromUserIdQuery()->
         //      filterByUserId($user_id)->
@@ -77,11 +77,11 @@ class FanRepository extends BaseRepository
                 $query->from('CMBundle:Page', 'o');
                 break;
             case 'Group':
-                $query->from('CMBundle:User', 'o');
+                $query->from('CMBundle:Group', 'o');
                 break;
         }
         return $query->leftJoin('o.fans', 'f')
-            ->where('identity(f.fromUser) = :user_id')->setParameter('user_id', $userId)
+            ->where('f.fromUserId = :user_id')->setParameter('user_id', $userId)
             ->getQuery()->getResult();
     }
 
@@ -104,14 +104,18 @@ class FanRepository extends BaseRepository
         return $query->setParameter('fan_id', $fanId)->getQuery()->getSingleScalarResult() > 0;
     }
 
-    public function getFans($ids)
+    public function getFans($ids, $fromUser = false)
     {
-        return $this->createQueryBuilder('f')
+        $query = $this->createQueryBuilder('f')
             ->select('f')
             ->leftJoin('f.user', 'u')
             ->leftJoin('f.page', 'p')
-            ->leftJoin('f.group', 'g')
-            ->where('f.id in (:ids)')->setParameter('ids', $ids)
-            ->getQuery()->getResult();
+            ->leftJoin('f.group', 'g');
+        if ($fromUser) {
+            $query->where('f.fromUserId = :ids');
+        } else {
+            $query->where('f.id in (:ids)');
+        }
+        return $query->setParameter('ids', $ids)->getQuery()->getResult();
     }
 }

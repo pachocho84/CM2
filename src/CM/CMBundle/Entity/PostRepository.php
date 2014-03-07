@@ -26,6 +26,10 @@ class PostRepository extends BaseRepository
             'userId' => null,
             'pageId' => null,
             'groupId' => null,
+            'inUsers' => array(),
+            'inPages' => array(),
+            'inGroups' => array(),
+            'in' => array(),
             'exclude' => array(),
             'vip' => false,
             'locales' => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
@@ -118,6 +122,30 @@ class PostRepository extends BaseRepository
         } elseif (!is_null($options['userId'])) {
             $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
+        }
+        if (!empty($options['inUsers'])) {
+            $count->andWhere('p.userId in (:in_users)')->setParameter('in_users', $options['inUsers']);
+            $query->andWhere('p.userId in (:in_users)')->setParameter('in_users', $options['inUsers']);
+        } elseif (!empty($options['inPages'])) {
+            $count->andWhere('p.pageId in (:in_pages)')->setParameter('in_pages', $options['inPages']);
+            $query->andWhere('p.pageId in (:in_pages)')->setParameter('in_pages', $options['inPages']);
+        } elseif (!empty($options['inGroups'])) {
+            $count->andWhere('p.groupId in (:in_groups)')->setParameter('in_groups', $options['inGroups']);
+            $query->andWhere('p.groupId in (:in_groups)')->setParameter('in_groups', $options['inGroups']);
+        }
+        if (!empty($options['in'])) {
+            if (!empty($options['in']['inUsers'])) {
+                $count->orWhere('p.userId in (:in_in_users)')->setParameter('in_in_users', $options['in']['inUsers']);
+                $query->orWhere('p.userId in (:in_in_users)')->setParameter('in_in_users', $options['in']['inUsers']);
+            }
+            if (!empty($options['in']['inPages'])) {
+                $count->orWhere('p.pageId in (:in_in_pages)')->setParameter('in_in_pages', $options['in']['inPages']);
+                $query->orWhere('p.pageId in (:in_in_pages)')->setParameter('in_in_pages', $options['in']['inPages']);
+            }
+            if (!empty($options['in']['inGroups'])) {
+                $count->orWhere('p.groupId in (:in_in_groups)')->setParameter('in_in_groups', $options['in']['inGroups']);
+                $query->orWhere('p.groupId in (:in_in_groups)')->setParameter('in_in_groups', $options['in']['inGroups']);
+            }
         }
         if (!empty($options['exclude'])) {
             $count->andWhere('p.id not in (:exclude)')->setParameter('exclude', $options['exclude']);

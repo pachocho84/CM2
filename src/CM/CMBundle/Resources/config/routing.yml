@@ -122,10 +122,10 @@ _imagine:
     resource: .
     type: imagine
 
-cm_cmbundle_user:
-    resource: "CM\\CMBundle\\Controller\\UserController"
-    type:     annotation
-
 cm_cmbundle_homepage:
     resource: "CM\\CMBundle\\Controller\\HomepageController"
+    type:     annotation
+
+cm_cmbundle_user:
+    resource: "CM\\CMBundle\\Controller\\UserController"
     type:     annotation

@@ -1,0 +1,7 @@
+<ul class="nav nav-tabs">
+    <li{% if app.request.get('_route') == 'homepage_index' %} class="active"{% endif %}><a href="{{ path('homepage_index') }}">All</a></li>
+    <li{% if app.request.get('_route') == 'homepage_vips' %} class="active"{% endif %}><a href="{{ path('homepage_vips') }}">VIP</a></li>
+    <li{% if app.request.get('_route') == 'homepage_fans' %} class="active"{% endif %}><a href="{{ path('homepage_fans') }}">Fan</a></li>
+    <li{% if app.request.get('_route') == 'homepage_connections' %} class="active"{% endif %}><a href="{{ path('homepage_connections') }}">Connections</a></li>
+    <li{% if app.request.get('_route') == 'homepage_editorial' %} class="active"{% endif %}><a href="{{ path('homepage_editorial') }}">Editorial</a></li>
+</ul>

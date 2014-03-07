@@ -1,5 +1,5 @@
 <div class="box box-partner" style="border: 2px solid {{ box.colour }}">
-    
+
     <h2>
         {% if (box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_RUBRIC')) %}
             {{ box.name }} <small>{{ 'edited by %user%'|trans({'%user%': '<a href="' ~ path('user_show', {slug: box.category.editor.slug}) ~ '">' ~ box.category.editor ~ '</a>'})|raw }}
@@ -9,15 +9,48 @@
     </h2>
 
     <div class="box-body">
-        {% if box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_EVENT') %}
-            <div class="box-partner-heading">  
-                {{ 'Next events'|trans }}         
-                <div class="box-partner-nav">     
-        			<span class="box-partner-nav-tab box-partner-nav-prev">{{ icon('Prev') }}</span>
-                    <a href="{{ path('page_events', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'View all events'|trans }}">{{ icon('Event') }}</a>   
-        			<a href="{{ path('page_show', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'Visit %page%&#39;s page'|trans({'%page%': box.page}) }}">{{ icon('Page') }}</a>                                                                                                                                                                                      
-        			<span class="box-partner-nav-tab box-partner-nav-next">{{ icon('Next') }}</span> 
-        		</div>
+        {% if box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_RUBRIC') %}
+            <div class="box-partner-heading">
+                {{ 'Latest articles'|trans }}
+                {% if objects is not empty %}
+                    <div class="box-partner-nav">
+                        <span class="box-partner-nav-tab box-partner-nav-prev">{{ icon('Prev') }}</span>
+{#
+                        <a href="{{ path('page_articles', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'View all articles'|trans }}">{{ icon('Article') }}</a>
+                        <a href="{{ path('page_show', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'Visit %page%\'s page'|trans({'%page%': box.page}) }}">{{ icon('Page') }}</a>
+#}
+                        <span class="box-partner-nav-tab box-partner-nav-next">{{ icon('Next') }}</span>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="objects cycle-slideshow">
+                {% for object in objects %}
+                    <div class="object">
+                        {{ show_img_box(object.image|default_img|imagine_filter('medium'), {width: 350, height: 210,  link: path('article_show', {id: object.id, slug: object.getSlug})}) }}
+                        <h3><a href="{{ path('article_show', {id: object.id, slug: object.getSlug}) }}">{{ object }}</a></h3>
+                        <h4>
+                        </h4>
+                    </div>
+                {% else %}
+                    <p>{{ 'There are no new articles published'|trans }}</p>
+                {% endfor %}
+            </div>
+        {% elseif objects is empty %}
+            <div class="box-partner-heading">
+                {{ box.page }}
+            </div>
+            <div class="objects">
+                FIXME: come prendere la biografia??
+            </div>
+        {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_EVENT') %}
+            <div class="box-partner-heading">
+                {{ 'Next events'|trans }}
+                <div class="box-partner-nav">
+                    <span class="box-partner-nav-tab box-partner-nav-prev">{{ icon('Prev') }}</span>
+                    <a href="{{ path('page_events', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'View all events'|trans }}">{{ icon('Event') }}</a>
+                    <a href="{{ path('page_show', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'Visit %page%&#39;s page'|trans({'%page%': box.page}) }}">{{ icon('Page') }}</a>
+                    <span class="box-partner-nav-tab box-partner-nav-next">{{ icon('Next') }}</span>
+                </div>
             </div>
             <div class="objects cycle-slideshow">
                 {% for object in objects %}
@@ -25,22 +58,22 @@
                         {{ show_img_box(object.event.image|default_img|imagine_filter('medium'), {width: 350, height: 210,  link: path('event_show', {id: object.event.id, slug: object.event.getSlug})}) }}
                         <h3><a href="{{ path('event_show', {id: object.event.id, slug: object.event.getSlug}) }}">{{ object.event }}</a></h3>
                         <h4>
-                            <span>{{ icon('Calendar') }} {{ object.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</span> 
-                            <span>{{ icon('Time') }} {{ object.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}</span> 
+                            <span>{{ icon('Calendar') }} {{ object.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</span>
+                            <span>{{ icon('Time') }} {{ object.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}</span>
                             <span {{ tooltip(object.address) }}>{{ icon('Map') }} {{ object.location }}</span>
                         </h4>
                     </div>
                 {% endfor %}
             </div>
         {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_ARTICLE') %}
-            <div class="box-partner-heading">  
-                {{ 'Latest articles'|trans }}         
-                <div class="box-partner-nav">                                           
-        			<span class="box-partner-nav-tab box-partner-nav-prev">{{ icon('Prev') }}</span>
-                    <a href="{{ path('page_articles', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'View all articles'|trans }}">{{ icon('Article') }}</a>   
-        			<a href="{{ path('page_show', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'Visit %page%&#39;s page'|trans({'%page%': box.page}) }}">{{ icon('Page') }}</a>                                                                                                                                                                                      
-        			<span class="box-partner-nav-tab box-partner-nav-next">{{ icon('Next') }}</span> 
-        		</div>
+            <div class="box-partner-heading">
+                {{ 'Latest articles'|trans }}
+                <div class="box-partner-nav">
+                    <span class="box-partner-nav-tab box-partner-nav-prev">{{ icon('Prev') }}</span>
+                    <a href="{{ path('page_articles', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'View all articles'|trans }}">{{ icon('Article') }}</a>
+                    <a href="{{ path('page_show', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'Visit %page%&#39;s page'|trans({'%page%': box.page}) }}">{{ icon('Page') }}</a>
+                    <span class="box-partner-nav-tab box-partner-nav-next">{{ icon('Next') }}</span>
+                </div>
             </div>
             <div class="objects cycle-slideshow">
                 {% for object in objects %}
@@ -53,43 +86,21 @@
                 {% endfor %}
             </div>
         {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_DISC') %}
-            <div class="box-partner-heading">  
-                {{ 'Latest discs'|trans }}         
-                <div class="box-partner-nav">                                           
-        			<span class="box-partner-nav-tab box-partner-nav-prev">{{ icon('Prev') }}</span>
-                    <a href="{{ path('page_discs', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'View all discs'|trans }}">{{ icon('Disc') }}</a>   
-        			<a href="{{ path('page_show', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'Visit %page%&#39;s page'|trans({'%page%': box.page}) }}">{{ icon('Page') }}</a>                                                                                                                                                                                      
-        			<span class="box-partner-nav-tab box-partner-nav-next">{{ icon('Next') }}</span> 
-        		</div>
+            <div class="box-partner-heading">
+                {{ 'Latest discs'|trans }}
+                <div class="box-partner-nav">
+                    <span class="box-partner-nav-tab box-partner-nav-prev">{{ icon('Prev') }}</span>
+                    <a href="{{ path('page_discs', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'View all discs'|trans }}">{{ icon('Disc') }}</a>
+                    <a href="{{ path('page_show', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'Visit %page%&#39;s page'|trans({'%page%': box.page}) }}">{{ icon('Page') }}</a>
+                    <span class="box-partner-nav-tab box-partner-nav-next">{{ icon('Next') }}</span>
+                </div>
             </div>
             <div class="objects cycle-slideshow">
                 {% for object in objects %}
                     {{ object|class_name }}
                 {% endfor %}
             </div>
-        {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_RUBRIC') %}
-            <div class="box-partner-heading">  
-                {{ 'Latest articles'|trans }}         
-                <div class="box-partner-nav">                                           
-        			<span class="box-partner-nav-tab box-partner-nav-prev">{{ icon('Prev') }}</span>
-{#
-                    <a href="{{ path('page_articles', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'View all articles'|trans }}">{{ icon('Article') }}</a>   
-        			<a href="{{ path('page_show', {slug: box.page.slug}) }}" class="box-partner-nav-tab" title="{{ 'Visit %page%\'s page'|trans({'%page%': box.page}) }}">{{ icon('Page') }}</a>    
-#}                                                                                                                                                                                  
-        			<span class="box-partner-nav-tab box-partner-nav-next">{{ icon('Next') }}</span> 
-        		</div>
-            </div>
-            <div class="objects cycle-slideshow">
-                {% for object in objects %}
-                    <div class="object">
-                        {{ show_img_box(object.image|default_img|imagine_filter('medium'), {width: 350, height: 210,  link: path('article_show', {id: object.id, slug: object.getSlug})}) }}
-                        <h3><a href="{{ path('article_show', {id: object.id, slug: object.getSlug}) }}">{{ object }}</a></h3>
-                        <h4>
-                        </h4>
-                    </div>
-                {% endfor %}
-            </div>
         {% endif %}
     </div>
-    
+
 </div>

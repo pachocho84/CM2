@@ -100,4 +100,12 @@ $(function() {
     $('#wall > .col-xs-4').sortable({
       connectWith: '.col-xs-4'
     }).disableSelection();
+
+
+
+    // nav tabs
+    $('body').on('click', '.box .nav.nav-tabs a', function (event) {
+        event.preventDefault();
+        $(this).tab('show');
+    })
 });

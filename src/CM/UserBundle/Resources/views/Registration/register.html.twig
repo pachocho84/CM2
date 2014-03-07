@@ -1,0 +1,8 @@
+<div>
+    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+        {{ form_widget(form) }}
+        <div class="clearfix">
+            <input type="submit" value="{{ 'Register'|trans }}" class="btn btn-primary pull-right" />
+        </div>
+    </form>
+</div>
