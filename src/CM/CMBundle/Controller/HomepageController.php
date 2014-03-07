@@ -42,17 +42,17 @@ class HomepageController extends Controller
             $boxes = array();
 
             /* Last registered users */
-            $boxes['lastUsers'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(28)));
+            $boxes['lastUsers;left'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(28)));
+
+            /* Login/Register box */
+            if (!$this->get('security.context')->isGranted('ROLE_USER')) {
+                $boxes['login_register;right'] = $this->renderView('CMBundle:Homepage:boxAuthentication.html.twig');
+            }
 
             /* Next eìvents */
             if ($request->get('_route') == 'homepage_index') {
                 $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('locale' => $request->getLocale())), $page, 3);
-                $boxes['dates'] = $this->renderView('CMBundle:Homepage:boxEvents.html.twig', array('dates' => $dates));
-            }
-
-            /* Login/Register box */
-            if (!$this->get('security.context')->isGranted('ROLE_USER')) {
-                $boxes['login_register'] = $this->renderView('CMBundle:Homepage:boxAuthentication.html.twig');
+                $boxes['dates;right'] = $this->renderView('CMBundle:Homepage:boxEvents.html.twig', array('dates' => $dates));
             }
 
             /* Sponsored */

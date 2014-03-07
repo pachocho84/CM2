@@ -23,20 +23,33 @@ function wallLoad(data, t, c, reload) {
 
     var columns = [];
     $.each($('#wall > div'), function(i, col) {
-        columns[i] = [$(col), $(col).outerHeight()];
+        columns[i] = $(col);
     });
 
     $.each(data, function(i, box) {
         if (i == 'loadMore') return;
 
+        var position = i.split(';')[1];
+
         $box = $(box);
+        
+        var column;
+        if (position == 'left') {
+            $box.attr('wall-col', 'left');
+            column = $('#wall > div:first');
+        } else if (position == 'right') {
+            $box.attr('wall-col', 'right');
+            column = $('#wall > div:last');
+        } else {
+            columns.sort(function(a, b) { return a.outerHeight() > b.outerHeight(); });
+            column = columns[0];
+        }
+
         $box.attr('wall-order', wallOrder);
         wallOrder++;
 
-        columns.sort(function(a, b) { return a[1] > b[1]; });
-
         $box.hide();
-        columns[0][0].append($box);
+        column.append($box);
 
         if (!reload) {
             $box.find('.cycle-slideshow').cycle({
@@ -50,17 +63,12 @@ function wallLoad(data, t, c, reload) {
             });
         }
 
-        
-        
-        $box.find('img').load(function() {
-            console.log($(this));
-            loading = false;
-        });
-            
+        // $box.find('img').load(function() {
+        //     console.log($(this));
+        //     loading = false;
+        // });
 
         $box.fadeIn('fast');
-
-        columns[0][1] += $box.outerHeight();
     });
 
     $('#wall ~ .load_more').remove();
@@ -68,6 +76,9 @@ function wallLoad(data, t, c, reload) {
 }
 
 $(function() {
+    var a = 'r0';
+    console.log(a[0]);
+
     $('#wall').append(calculateColumns());
 
     $.get(document.URL, function(data) {
@@ -84,9 +95,14 @@ $(function() {
                 var $loadMore = $('#wall ~ .load_more').detach();            
 
                 var data = {};
-                $.each($('#wall > div > *'), function(i, elem) {
-                    $(elem).attr('old-order', $(elem).attr('wall-order'));
-                    data[$(elem).attr('wall-order')] = $(elem).detach();
+                $.each($('#wall > div > [wall-col=left'), function(i, elem) {
+                    data[$(elem).attr('wall-order') + ';left'] = $(elem).detach();
+                });
+                $.each($('#wall > div > [wall-col=right'), function(i, elem) {
+                    data[$(elem).attr('wall-order') + ';right'] = $(elem).detach();
+                });
+                $.each($('#wall > div > *:not([wall-col])'), function(i, elem) {
+                    data['order' + $(elem).attr('wall-order')] = $(elem).detach();
                 });
                 data['loadMore'] = $loadMore;
 
