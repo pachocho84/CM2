@@ -13,6 +13,7 @@ class SponsoredFixtures extends AbstractFixture implements OrderedFixtureInterfa
 {
     public function load(ObjectManager $manager)
     {
+/*
         for ($i = 1; $i < Entities\EventFixtures::count(); $i++) {
         
             $sponsored = new Sponsored;
@@ -31,6 +32,7 @@ class SponsoredFixtures extends AbstractFixture implements OrderedFixtureInterfa
         }
     
         $manager->flush();
+*/
     }
     
     public function getOrder()
