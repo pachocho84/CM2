@@ -81,12 +81,52 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
     private static $events = array(
         array(
-            'title'     => 'C\'è in gioco la musica! Laboratorio musicale', 
+            'title'     => 'Quartetto di Cremona - Esecuzione integrale dei Quartetti per archi di Beethoven - V', 
             'subtitle'  => '', 
-            'extract'   => 'I bambini poteranno ascoltare e suonare tutti gli strumenti dell\'Accademia! A cura dell\'Accademia musicale STABAT MATER di Rho', 
-            'text'      => 'I bambini poteranno ascoltare e suonare tutti gli strumenti dell\'Accademia! A cura dell\'Accademia musicale STABAT MATER di Rho', 
+            'extract'   => '', 
+            'text'      => 'Esecuzione integrale dei Quartetti per archi di Beethoven - VL. van Beethoven ‐ Quartetto n. 1 in fa maggiore op. 18 n. 1<br/>L. van Beethoven ‐ Grande Fuga in si bemolle maggiore op. 133<br/>L. van Beethoven ‐ Quartetto n. 2 in sol maggiore op. 18 n.', 
             'img'       => 'quartetto_cremona.jpg',
-            'page'      => 1
+            'page'      => 2
+        ),
+        array(
+            'title'     => 'F.J. Haydn ‐ "La Creazione", Orchestre des Champs-Elysées - Collegium Vocale Gent - Philippe Herreweghe', 
+            'subtitle'  => '', 
+            'extract'   => '', 
+            'text'      => 'Orchestre des Champs-ElyséesCollegium Vocale GentPhilippe Herreweghe direttoreChristina Landshamer soprano<br/>Maximilian Schmitt tenore<br/>Rudolf Rosen bassoF.J. Haydn ‐ Die Schöpfung Hob.XXI.', 
+            'img'       => 'herreweghe.jpg',
+            'page'      => 2
+        ),
+        array(
+            'title'     => 'Andrea Lucchesini, pianoforte', 
+            'subtitle'  => '', 
+            'extract'   => '', 
+            'text'      => 'Andrea Lucchesini, pianoforteW.A. Mozart ‐ Sonata in sol maggiore K 283<br/>F. Schubert ‐ 3 Klavierstücke D 946<br/>J. Brahms ‐ 3 Intermezzi op. 117<br/>R. Strauss ‐ Sonata in si minore op. 5Vocazione europea, radici italiane: questo potrebbe essere considerato da sempre il motto del Quartetto.', 
+            'img'       => 'andrea_lucchesini.jpg',
+            'page'      => 2
+        ),
+        array(
+            'title'     => '24. Stagione Sinfonica: una prima assoluta e Mahler', 
+            'subtitle'  => '', 
+            'extract'   => '', 
+            'text'      => 'Vacchi - Veronica Franco, per soprano, voce recitante e orchestra ( commissione de laVerdi )<br/>Mahler - Sinfonia n. 10 in Fa diesis maggiore ( versione Barshai )Direttore - Claire Gibault', 
+            'img'       => 'laverdi_xian_zhang.jpg',
+            'page'      => 3
+        ),
+        array(
+            'title'     => '4. Domenica mattina con laVerdi: Luigi Dallapiccola (1904-1975)', 
+            'subtitle'  => '', 
+            'extract'   => '', 
+            'text'      => 'Luigi Dallapiccola (1904-1975)Bartók - Sonata per due pianoforti e percussioni<br/>Dallapiccola - Piccola musica notturna<br/>Copland - Appalachian SpringDirettore - Giuseppe Grazioli', 
+            'img'       => 'laverdi_dallapiccola.jpg',
+            'page'      => 3
+        ),
+        array(
+            'title'     => '5. LaBarocca: Locatelli & Vivaldi', 
+            'subtitle'  => '', 
+            'extract'   => '', 
+            'text'      => 'Locatelli - Concerto Grosso n. 2 in Do minore op. 1<br/>Locatelli - Concerto n. 2 per violino, archi e basso continuo in Do minore op. 3 “L’arte del violino”<br/>Locatelli - Concerto Grosso n. 5 in Re maggiore op. 1<br/>Vivaldi - Concerto per violoncello in Re minore RV 406<br/>Locatelli - Concerto Grosso n. 12 in Sol minore op.', 
+            'img'       => 'laverdi_locatelli_vivaldi.jpg',
+            'page'      => 3
         )
     );
     
@@ -117,7 +157,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
     {
         $i = rand(0, count(EventFixtures::$events) - 1);
         $event = new Event;
-        $event->setTitle(EventFixtures::$events[$i]['title'].' (en)')
+        $event->setTitle(EventFixtures::$events[$i]['title'])
             ->setExtract(EventFixtures::$events[$i]['extract'])
             ->setText(EventFixtures::$events[$i]['text']);
 
@@ -125,17 +165,19 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
         if (0 == rand(0, 2)) {
             $event->translate('it')
-                ->setTitle(EventFixtures::$events[$i]['title'].' (it)')
+                ->setTitle(EventFixtures::$events[$i]['title'])
                 ->setExtract(EventFixtures::$events[$i]['extract'])
                 ->setText(EventFixtures::$events[$i]['text']);
         }
 
+/*
         if (0 == rand(0, 4)) {
             $event->translate('fr')
                 ->setTitle(EventFixtures::$events[$i]['title'].' (fr)')
                 ->setExtract(EventFixtures::$events[$i]['extract'])
                 ->setText(EventFixtures::$events[$i]['text']);
         }
+*/
 
 /*
         $event->translate('ru')->setTitle('Печатное (RU) '.$i)
