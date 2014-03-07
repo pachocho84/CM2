@@ -16,7 +16,7 @@ class SponsoredFixtures extends AbstractFixture implements OrderedFixtureInterfa
         for ($i = 1; $i < Entities\EventFixtures::count(); $i++) {
         
             $sponsored = new Sponsored;
-            $event = $manager->merge($this->getReference('event-'.rand(1, 10)));
+            $event = $manager->merge($this->getReference('event-'.$i));
             $sponsored->setEntity($event)
                 ->setUser($event->getPost()->getUser())
                 ->setViews(rand(0, 100));
