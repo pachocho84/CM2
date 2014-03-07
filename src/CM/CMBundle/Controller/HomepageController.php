@@ -88,8 +88,10 @@ class HomepageController extends Controller
             }
 
             /* Reviews */
-            $reviews = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:HomepageArchive')->getLastReviews(array('locale' => $request->getLocale())), $page, 4);
-            $boxes['reviews'] = $this->renderView('CMBundle:Homepage:boxReviews.html.twig', array('reviews' => $reviews));
+            if ($page == 1) {
+                $reviews = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:HomepageArchive')->getLastReviews(array('locale' => $request->getLocale())), $page, 4);
+                $boxes['reviews'] = $this->renderView('CMBundle:Homepage:boxReviews.html.twig', array('reviews' => $reviews));
+            }
 
             /* Banners */
             $banners = $em->getRepository('CMBundle:HomepageBanner')->getBanners(($page -1) * 2, 3);
@@ -98,10 +100,12 @@ class HomepageController extends Controller
             }
 
             /* Posts */
+/*
             $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
             foreach ($posts as $post) {
                 $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:boxPost.html.twig', array('post' => $post));
             }
+*/
 
             // $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:loadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
             
