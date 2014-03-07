@@ -16,6 +16,7 @@ use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Like;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
+use CM\CMBundle\Entity\Sponsored;
 use CM\CMBundle\DataFixtures\ORM;
 
 class EventFixtures
@@ -86,7 +87,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             'extract'   => '', 
             'text'      => 'Esecuzione integrale dei Quartetti per archi di Beethoven - VL. van Beethoven ‐ Quartetto n. 1 in fa maggiore op. 18 n. 1<br/>L. van Beethoven ‐ Grande Fuga in si bemolle maggiore op. 133<br/>L. van Beethoven ‐ Quartetto n. 2 in sol maggiore op. 18 n.', 
             'img'       => 'quartetto_cremona.jpg',
-            'page'      => 2
+            'page'      => 2,
+            'sponsored' => true
         ),
         array(
             'title'     => 'F.J. Haydn ‐ "La Creazione", Orchestre des Champs-Elysées - Collegium Vocale Gent - Philippe Herreweghe', 
@@ -126,7 +128,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             'extract'   => '', 
             'text'      => 'Locatelli - Concerto Grosso n. 2 in Do minore op. 1<br/>Locatelli - Concerto n. 2 per violino, archi e basso continuo in Do minore op. 3 “L’arte del violino”<br/>Locatelli - Concerto Grosso n. 5 in Re maggiore op. 1<br/>Vivaldi - Concerto per violoncello in Re minore RV 406<br/>Locatelli - Concerto Grosso n. 12 in Sol minore op.', 
             'img'       => 'laverdi_locatelli_vivaldi.jpg',
-            'page'      => 3
+            'page'      => 3,
+            'sponsored' => true
         )
     );
     
@@ -298,6 +301,25 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
         }
 
         $manager->persist($event);
+        
+        /* Sponsored */
+        if (isset(EventFixtures::$events[$i]['sponsored']) && EventFixtures::$events[$i]['sponsored'] == true) {
+            echo 'ccccc';
+            $sponsored = new Sponsored;
+            $sponsored->setEntity($event)
+                ->setUser($event->getPost()->getUser())
+                ->setViews(rand(0, 100));
+            $dateStart = new \DateTime;
+            $dateStart->setTimestamp(time() - 604800);
+            $sponsored->setStart($dateStart);
+            $dateEnd = new \DateTime;
+            $dateEnd->setTimestamp(time() + 604800);
+            $sponsored->setEnd($dateEnd);
+            
+            $manager->persist($sponsored);
+        } else { 
+            echo 'no'.$i;
+        }
         
         if ($i % 10 == 9) {
             $manager->flush();
