@@ -13,36 +13,74 @@ use Doctrine\ORM\Query;
  */
 class BiographyRepository extends BaseRepository
 {
-    public function getUserBiography($userId)
+    static protected function getOptions(array $options = array())
     {
-        return $this->createQueryBuilder('b')
-            ->select('b')
-            ->leftJoin('b.posts', 'p')
-            ->leftJoin('p.user', 'u')
-            ->where('u.id = :user_id')->setParameter('user_id', $userId)
-            ->setMaxResults(1)
-            ->getQuery()->getResult();
+        $options = array_merge(array(
+            'locale'        => 'en'
+        ), $options);
+        
+        return array_merge(array(
+            'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale'])))
+        ), $options);
     }
 
-    public function getGroupBiography($groupId)
+    public function getUserBiography($userId, $options = array())
     {
-        return $this->createQueryBuilder('b')
-            ->select('b')
-            ->leftJoin('b.posts', 'p')
-            ->leftJoin('p.group', 'g')
-            ->where('g.id = :group_id')->setParameter('group_id', $groupId)
-            ->setMaxResults(1)
-            ->getQuery()->getResult();
+        $options = self::getOptions($options);
+
+        try {
+            $biography = $this->createQueryBuilder('b')
+                ->select('b, t')
+                ->leftJoin('b.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
+                ->leftJoin('b.post', 'p')
+                ->leftJoin('p.user', 'u')
+                ->where('u.id = :user_id')->setParameter('user_id', $userId)
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getSingleResult();
+        } catch (\Exception $e) {
+            $biography = null;
+        }
+        return $biography;
     }
 
-    public function getPageBiography($pageId)
+    public function getGroupBiography($groupId, $options = array())
     {
-        return $this->createQueryBuilder('b')
-            ->select('b')
-            ->leftJoin('b.posts', 'p')
-            ->leftJoin('p.page', 'pg')
-            ->where('pg.id = :page_id')->setParameter('page_id', $pageId)
-            ->setMaxResults(1)
-            ->getQuery()->getResult();
+        $options = self::getOptions($options);
+
+        try {
+            $biography = $this->createQueryBuilder('b')
+                ->select('b, t')
+                ->leftJoin('b.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
+                ->leftJoin('b.post', 'p')
+                ->leftJoin('p.group', 'g')
+                ->where('g.id = :group_id')->setParameter('group_id', $groupId)
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getSingleResult();
+        } catch (\Exception $e) {
+            $biography = null;
+        }
+        return $biography;
+    }
+
+    public function getPageBiography($pageId, $options = array())
+    {
+        $options = self::getOptions($options);
+
+        try {
+            $biography = $this->createQueryBuilder('b')
+                ->select('b, t')
+                ->leftJoin('b.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
+                ->leftJoin('b.posts', 'p')
+                ->leftJoin('p.page', 'pg')
+                ->where('pg.id = :page_id')->setParameter('page_id', $pageId)
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getSingleResult();
+        } catch (\Exception $e) {
+            $biography = null;
+        }
+        return $biography;
     }
 }

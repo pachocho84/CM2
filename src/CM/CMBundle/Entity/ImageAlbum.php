@@ -41,13 +41,13 @@ class ImageAlbum extends Entity
     {
         switch ($this->type) {
             case self::TYPE_PROFILE:
-                return 'profile pictures';
+                return 'profile picture';
                 break;
             case self::TYPE_COVER:
-                return 'cover pictures';
+                return 'cover picture';
                 break;
             case self::TYPE_BACKGROUND:
-                return 'background pictures';
+                return 'background picture';
                 break;
             case self::TYPE_ALBUM:
                 return $this->getTitle();

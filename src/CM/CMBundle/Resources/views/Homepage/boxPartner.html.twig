@@ -40,7 +40,9 @@
                 {{ box.page }}
             </div>
             <div class="objects">
-                FIXME: come prendere la biografia??
+                {% if biography is not null %}
+                    {{ entity_short_text(biography, {stripped: true}) }}
+                {% endif %}
             </div>
         {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_EVENT') %}
             <div class="box-partner-heading">
