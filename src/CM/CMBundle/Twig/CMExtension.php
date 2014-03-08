@@ -293,7 +293,6 @@ class CMExtension extends \Twig_Extension
                 }
             }
         }
-
         $text = $options['stripped'] ? $this->getSimpleFormatText($text) : $this->getShowText($text);
 
         if ($options['more']) {

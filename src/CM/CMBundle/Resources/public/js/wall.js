@@ -76,9 +76,6 @@ function wallLoad(data, t, c, reload) {
 }
 
 $(function() {
-    var a = 'r0';
-    console.log(a[0]);
-
     $('#wall').append(calculateColumns());
 
     $.get(document.URL, function(data) {
@@ -119,7 +116,7 @@ $(function() {
 
 
 
-    // nav tabs
+    // NAV TABS
     $('body').on('click', '.box .nav.nav-tabs a', function (event) {
         event.preventDefault();
         $(this).tab('show');
