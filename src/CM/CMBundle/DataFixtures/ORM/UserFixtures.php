@@ -10,7 +10,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\Biography;
-use CM\CMBundle\Entity\EntityCategory;
 
 class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {

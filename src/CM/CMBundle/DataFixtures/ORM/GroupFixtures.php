@@ -49,7 +49,6 @@ class GroupFixtures extends AbstractFixture implements OrderedFixtureInterface, 
             for ($j = 1; $j < rand(1, 3); $j++) {
                 $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
             }
-            
             $group->addUser(
                 $user,
                 true, // admin

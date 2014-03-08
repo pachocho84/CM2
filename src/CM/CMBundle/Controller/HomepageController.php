@@ -85,7 +85,11 @@ class HomepageController extends Controller
                     }
                     $objects = $this->get('knp_paginator')->paginate($objects, $page, $limit);
 
-                    $boxes['homepage_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:boxPartner.html.twig', array('box' => $box, 'objects' => $objects));
+                    if (empty($objects->getItems()) && $box->getType() != HomepageBox::TYPE_RUBRIC) {
+                        $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($box->getPageId(), array('locale' => $request->getLocale()));
+                    }
+
+                    $boxes['homepage_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:boxPartner.html.twig', array('box' => $box, 'objects' => $objects, 'biography' => $biography));
                 }
             }
 

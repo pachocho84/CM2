@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use CM\CMBundle\Entity\Page;
 use CM\CMBundle\Entity\PageUser;
+use CM\CMBundle\Entity\Biography;
 
 class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
@@ -20,7 +21,15 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'description' => 'Sony Classical in Italia',
             'website' => 'www.sony.it',
             'img' => '650e5c4e916d35d9c4dd12f070f8c39f07ef26c9.jpg',
-            'vip' => false
+            'vip' => false,
+            'biography' => 'Ernesto Casareto, flautista, si è diplomato col massimo dei voti al Conservatorio “Giuseppe Verdi” di Milano.
+Si è poi perfezionato con Emilio Vapi prima all’Accademia G. Marziali di Seveso e poi all’Accademia Internazionale della Musica di Milano.
+Dopo aver conseguito la maturità presso il liceo musicale annesso al Conservatorio ha studiato Scienze e Tecnologie della Comunicazione Musicale presso l’Università degli Studi di Milano e si è poi laureato in Psicologia con indirizzo Comunicazione & Marketing presso l’Università Cattolica del Sacro Cuore di Milano.
+Sin dai primi anni ha partecipato con successo a numerosi concorsi, tra cui primo premio assoluto al concorso Rotary International e la borsa di studio al concorso "Severino Gazzelloni".
+È uno dei pochissimi flautisti italiani finalisti per l’orchestra EUYO.
+Alla grande passione per l’attività cameristica e didattica affianca la collaborazione con diverse orchestre che negli anni lo hanno portato ad esibirsi in alcune delle più prestigiose sale da concerto europee, americane e asiatiche.
+Suona un flauto Yamaha 18 carati all gold.
+È fondatore e Project Manager di Circuito Musica, il più moderno ed efficiente portale dedicato alla musica classica che affianca ad uno strumento di promozione per gli artisti un rivoluzionario polo di diffusione culturale.'
         ),
         array('name' => 'Società del Quartetto di Milano',
             'type' => Page::TYPE_ASSOCIATION,
@@ -30,7 +39,15 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'img' => '22bd92a5ada9b1d8184c980ea1e226f9ee7c5130.jpg',
             'cover' => '2ce34d578aefc1b266fdd608b2c30090.jpeg',
             'background' => 'aaa8c7e3cae78c8861e2549942537a34.jpeg',
-            'vip' => false
+            'vip' => false,
+            'biography' => 'Ernesto Casareto, flautista, si è diplomato col massimo dei voti al Conservatorio “Giuseppe Verdi” di Milano.
+Si è poi perfezionato con Emilio Vapi prima all’Accademia G. Marziali di Seveso e poi all’Accademia Internazionale della Musica di Milano.
+Dopo aver conseguito la maturità presso il liceo musicale annesso al Conservatorio ha studiato Scienze e Tecnologie della Comunicazione Musicale presso l’Università degli Studi di Milano e si è poi laureato in Psicologia con indirizzo Comunicazione & Marketing presso l’Università Cattolica del Sacro Cuore di Milano.
+Sin dai primi anni ha partecipato con successo a numerosi concorsi, tra cui primo premio assoluto al concorso Rotary International e la borsa di studio al concorso "Severino Gazzelloni".
+È uno dei pochissimi flautisti italiani finalisti per l’orchestra EUYO.
+Alla grande passione per l’attività cameristica e didattica affianca la collaborazione con diverse orchestre che negli anni lo hanno portato ad esibirsi in alcune delle più prestigiose sale da concerto europee, americane e asiatiche.
+Suona un flauto Yamaha 18 carati all gold.
+È fondatore e Project Manager di Circuito Musica, il più moderno ed efficiente portale dedicato alla musica classica che affianca ad uno strumento di promozione per gli artisti un rivoluzionario polo di diffusione culturale.'
         ),
         array('name' => 'laVerdi',
             'type' => Page::TYPE_ASSOCIATION,
@@ -38,7 +55,15 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'description' => 'Fondazione Orchestra Sinfonica e Coro Sinfonico di Milano Giuseppe Verdi',
             'website' => 'www.laverdi.org',
             'img' => '9834dc0cc993aa4397bdb860cea2e4ac970a65f5.jpg',
-            'vip' => false
+            'vip' => false,
+            'biography' => 'Ernesto Casareto, flautista, si è diplomato col massimo dei voti al Conservatorio “Giuseppe Verdi” di Milano.
+Si è poi perfezionato con Emilio Vapi prima all’Accademia G. Marziali di Seveso e poi all’Accademia Internazionale della Musica di Milano.
+Dopo aver conseguito la maturità presso il liceo musicale annesso al Conservatorio ha studiato Scienze e Tecnologie della Comunicazione Musicale presso l’Università degli Studi di Milano e si è poi laureato in Psicologia con indirizzo Comunicazione & Marketing presso l’Università Cattolica del Sacro Cuore di Milano.
+Sin dai primi anni ha partecipato con successo a numerosi concorsi, tra cui primo premio assoluto al concorso Rotary International e la borsa di studio al concorso "Severino Gazzelloni".
+È uno dei pochissimi flautisti italiani finalisti per l’orchestra EUYO.
+Alla grande passione per l’attività cameristica e didattica affianca la collaborazione con diverse orchestre che negli anni lo hanno portato ad esibirsi in alcune delle più prestigiose sale da concerto europee, americane e asiatiche.
+Suona un flauto Yamaha 18 carati all gold.
+È fondatore e Project Manager di Circuito Musica, il più moderno ed efficiente portale dedicato alla musica classica che affianca ad uno strumento di promozione per gli artisti un rivoluzionario polo di diffusione culturale.'
         ),
     );
 
@@ -77,14 +102,23 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             $manager->persist($page);
 
             $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
-
             $page->addPost($post);
+
+            $biography = new Biography;
+            $biography->setTitle('b')
+                ->setText($p['biography']);
+
+            $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+            $page->addPost($post);
+            $manager->persist($post);
+            $biography->setPost($post);
+
+            $manager->persist($biography);
                         
             $userTags = array();
             for ($j = 1; $j < rand(1, 3); $j++) {
                 $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
             }
-            
             $page->addUser(
                 $user,
                 true, // admin
