@@ -262,8 +262,8 @@ class CMExtension extends \Twig_Extension
             'max' => 400,
             'stripped' => false,
             'more' => false,
-            'moreText' => 'show more',
-            'moreTextAlt' => 'show less'
+            'moreText' => $this->translator->trans('show more'),
+            'moreTextAlt' => $this->translator->trans('show less')
         ), $options);
 
         if (!$options['more'] && $entity->getExtract() && ($this->securityContext->isGranted('ROLE_ADMIN') || $this->securityContext->isGranted('ROLE_CLIENT'))) {
@@ -274,7 +274,7 @@ class CMExtension extends \Twig_Extension
 
         $text_stripped = strip_tags($text);
 
-        if ($stripped) {
+        if ($options['stripped']) {
             $text = $text_stripped;
         }
 
@@ -282,19 +282,19 @@ class CMExtension extends \Twig_Extension
             return false;
         }
 
-        if (strlen($text_stripped) > $max) {
-            preg_match("#^.{1,".$max."}(\.|\:|\!|\?)#s", $text_stripped, $matches);
+        if (strlen($text_stripped) > $options['max']) {
+            preg_match("#^.{1,".$options['max']."}(\.|\:|\!|\?)#s", $text_stripped, $matches);
             if (array_key_exists(0, $matches)) {
                 $text = rtrim($matches[0], '.:').'.';
             } else {
-                $text = rtrim(Helper::truncate_text($text_stripped, $max, '', true), ',.;!?:');
+                $text = rtrim(Helper::truncate_text($text_stripped, $options['max'], '', true), ',.;!?:');
                 if (!$options['more']) {
                     $text .= '...';
                 }
             }
         }
 
-        $text = $stripped ? $this->getSimpleFormatText($text) : $this->getShowText($text);
+        $text = $options['stripped'] ? $this->getSimpleFormatText($text) : $this->getShowText($text);
 
         if ($options['more']) {
             $text .= ' <div id="show_more-entity_'.$entity->getId().'">'.substr($entity->getText(), strlen($text)).'</div>';
