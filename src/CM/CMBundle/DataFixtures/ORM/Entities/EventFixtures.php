@@ -251,8 +251,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             $multimedia = new Multimedia;
             $multimedia->setType($info['type']);
             $multimedia->setSource($info['source']);
-            $multimedia->setTitle($info['info']->title)
-                ->setText($info['info']->description);
+            $multimedia->setTitle($info['info']['title'])
+                ->setText($info['info']['description']);
 
             $event->addMultimedia($multimedia);
         }
@@ -325,7 +325,6 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             $manager->flush();
         }
 
-        var_dump('event-'.($i + 1));
         $fixture->addReference('event-'.($i + 1), $event);
     }
 }

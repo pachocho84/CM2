@@ -399,12 +399,7 @@ class UserController extends Controller
             throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
         }
 
-        $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
-        if (count($biography) == 0) {
-            $biography = null;
-        } else {
-            $biography = $biography[0];
-        }
+        $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId(), array('locale' => $request->getLocale()));
 
         return array('user' => $user, 'biography' => $biography);
     }

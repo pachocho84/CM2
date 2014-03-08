@@ -685,7 +685,7 @@ class CMExtension extends \Twig_Extension
                 if ($post->getEntity()->getType() == ImageAlbum::TYPE_ALBUM) {
                     $action = 'created the album';
                 } else {
-                    $action = 'updated '.$post->getPublisherSex('his');
+                    $action = 'changed '.$post->getPublisherSex('his');
                 }
                 $objectLink = $this->router->generate($post->getPublisherType().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
                 return $this->translator->trans('%user% '.$action.' %object%.', array(

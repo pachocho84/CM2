@@ -33,20 +33,19 @@ class EntitiesFixtures extends AbstractFixture implements OrderedFixtureInterfac
             $info = array();
             switch (substr(preg_split('/(www|m)\./', parse_url($url['source'], PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
                 case 'yout':
-                    $info['info'] = json_decode(file_get_contents('http://www.youtube.com/oembed?format=json&url='.urlencode($url['source'])));
+                    $info['info'] = array('title' => 'How Linux is Built', 'description' => 'While Linux is running our phones, friend requests, tweets, financial trades, ATMs and more, most of us don\'t know how it\'s actually built. This short video takes you inside the process by which the largest collaborative development project in the history of computing is organized. Based on the annual report "Who Writes Linux," this is a powerful and inspiring story of how Linux has become a community-driven phenomenon. More information about Linux and The Linux Foundation can be found at http://www.linuxfoundation.org and http://www.linux.com');
                     $info['type'] = Multimedia::TYPE_YOUTUBE;
-                    $info['source'] = preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info['info']->html);
-                    $info['info'] = json_decode(file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$info['source'].'?v=2&alt=jsonc'))->data;
+                    $info['source'] = 'yVpbFMhOAwE';
                     break;
                 case 'vime':
-                    $info['info'] = json_decode(file_get_contents('http://vimeo.com/api/oembed.json?url='.urlencode($url['source'])));
+                    $info['info'] = array('title' => 'Pig Box', 'description' => '《Pig Box》is a story about a shivering blue bird wants to get some heat from a sleepy porcupine. Directors: Ta-Wei Chao, Tsai-Chun Han Animation: Ta-Wei Chao Art Design: Tsai-Chun Han Music: Lily Chou Sound Design: Yin He Color: Shu-Yi Chiou 3D Effects: Yu-Tai Tsai Technical Support: Yeh-Chuan Yao');
                     $info['type'] = Multimedia::TYPE_VIMEO;
-                    $info['source'] = $info['info']->video_id;
+                    $info['source'] = '57815442';
                     break;
                 case 'soun':
-                    $info['info'] = json_decode(file_get_contents('http://soundcloud.com/oembed.json?url='.urlencode($url['source'])));
+                    $info['info'] = array('title' => 'Sheep (heavy metal) by Aleksander Vinter', 'description' => 'A metal track I made a while ago. I spent some time programming the drums. ');
                     $info['type'] = Multimedia::TYPE_SOUNDCLOUD;
-                    $info['source'] = preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info['info']->html);
+                    $info['source'] = '122834079';
                     break;
             }
             $infoes[] = $info;

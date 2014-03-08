@@ -535,12 +535,7 @@ class PageController extends Controller
             $req = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('pageId' => $page->getId()));
         }
 
-        $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($page->getId());
-        if (count($biography) == 0) {
-            $biography = null;
-        } else {
-            $biography = $biography[0];
-        }
+        $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($page->getId(), array('locale' => $request->getLocale()));
 
         $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('pageId' => $page->getId()));
         $pagination = $this->get('knp_paginator')->paginate($posts, $pageNum, 15);
