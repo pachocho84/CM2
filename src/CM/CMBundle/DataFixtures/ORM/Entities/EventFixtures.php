@@ -87,8 +87,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             'extract'   => '', 
             'text'      => 'Esecuzione integrale dei Quartetti per archi di Beethoven - VL. van Beethoven ‐ Quartetto n. 1 in fa maggiore op. 18 n. 1<br/>L. van Beethoven ‐ Grande Fuga in si bemolle maggiore op. 133<br/>L. van Beethoven ‐ Quartetto n. 2 in sol maggiore op. 18 n.', 
             'img'       => 'quartetto_cremona.jpg',
+            'dates'     => 1,
             'page'      => 2,
-            'sponsored' => true
         ),
         array(
             'title'     => 'F.J. Haydn ‐ "La Creazione", Orchestre des Champs-Elysées - Collegium Vocale Gent - Philippe Herreweghe', 
@@ -96,7 +96,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             'extract'   => '', 
             'text'      => 'Orchestre des Champs-ElyséesCollegium Vocale GentPhilippe Herreweghe direttoreChristina Landshamer soprano<br/>Maximilian Schmitt tenore<br/>Rudolf Rosen bassoF.J. Haydn ‐ Die Schöpfung Hob.XXI.', 
             'img'       => 'herreweghe.jpg',
-            'page'      => 2
+            'dates'     => 1,
+            'page'      => 2,
         ),
         array(
             'title'     => 'Andrea Lucchesini, pianoforte', 
@@ -104,7 +105,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             'extract'   => '', 
             'text'      => 'Andrea Lucchesini, pianoforteW.A. Mozart ‐ Sonata in sol maggiore K 283<br/>F. Schubert ‐ 3 Klavierstücke D 946<br/>J. Brahms ‐ 3 Intermezzi op. 117<br/>R. Strauss ‐ Sonata in si minore op. 5Vocazione europea, radici italiane: questo potrebbe essere considerato da sempre il motto del Quartetto.', 
             'img'       => 'andrea_lucchesini.jpg',
-            'page'      => 2
+            'dates'     => 1,
+            'page'      => 2,
         ),
         array(
             'title'     => '24. Stagione Sinfonica: una prima assoluta e Mahler', 
@@ -112,7 +114,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             'extract'   => '', 
             'text'      => 'Vacchi - Veronica Franco, per soprano, voce recitante e orchestra ( commissione de laVerdi )<br/>Mahler - Sinfonia n. 10 in Fa diesis maggiore ( versione Barshai )Direttore - Claire Gibault', 
             'img'       => 'laverdi_xian_zhang.jpg',
-            'page'      => 3
+            'dates'     => 1,
+            'page'      => 3,
         ),
         array(
             'title'     => '4. Domenica mattina con laVerdi: Luigi Dallapiccola (1904-1975)', 
@@ -120,7 +123,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             'extract'   => '', 
             'text'      => 'Luigi Dallapiccola (1904-1975)Bartók - Sonata per due pianoforti e percussioni<br/>Dallapiccola - Piccola musica notturna<br/>Copland - Appalachian SpringDirettore - Giuseppe Grazioli', 
             'img'       => 'laverdi_dallapiccola.jpg',
-            'page'      => 3
+            'dates'     => 1,
+            'page'      => 3,
         ),
         array(
             'title'     => '5. LaBarocca: Locatelli & Vivaldi', 
@@ -128,8 +132,19 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             'extract'   => '', 
             'text'      => 'Locatelli - Concerto Grosso n. 2 in Do minore op. 1<br/>Locatelli - Concerto n. 2 per violino, archi e basso continuo in Do minore op. 3 “L’arte del violino”<br/>Locatelli - Concerto Grosso n. 5 in Re maggiore op. 1<br/>Vivaldi - Concerto per violoncello in Re minore RV 406<br/>Locatelli - Concerto Grosso n. 12 in Sol minore op.', 
             'img'       => 'laverdi_locatelli_vivaldi.jpg',
+            'dates'     => 1,
             'page'      => 3,
-            'sponsored' => true
+        ),
+        array(
+            'title'     => 'Presentazione disco di Sol Gabetta', 
+            'subtitle'  => '', 
+            'extract'   => '', 
+            'text'      => 'Locatelli - Concerto Grosso n. 2 in Do minore op. 1<br/>Locatelli - Concerto n. 2 per violino, archi e basso continuo in Do minore op. 3 “L’arte del violino”<br/>Locatelli - Concerto Grosso n. 5 in Re maggiore op. 1<br/>Vivaldi - Concerto per violoncello in Re minore RV 406<br/>Locatelli - Concerto Grosso n. 12 in Sol minore op.', 
+            'img'       => 'sol_gabetta.jpg',
+            'user'      => 5,
+            'dates'     => 1,
+            'sponsored' => true,
+            
         )
     );
     
@@ -165,6 +180,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
         $manager->persist($event);
 
+        /* Translations */
         if (0 == rand(0, 2)) {
             $event->translate('it')
                 ->setTitle(EventFixtures::$events[$i]['title'])
@@ -181,16 +197,10 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
         }
 */
 
-/*
-        $event->translate('ru')->setTitle('Печатное (RU) '.$i)
-            ->setSubtitle('Субти́тр (RU) '.$i)
-            ->setExtract('Экстракта (RU) '.$i)
-            ->setText('Текст (RU) '.$i);
-*/
-
         $event->mergeNewTranslations();
            
-        for ($j = rand(1, 3); $j > 0; $j--) {
+        /* Dates */
+        for ($j = EventFixtures::$events[$i]['dates']; $j > 0; $j--) {
             $eventDate = new EventDate;
             $dtz = new \DateTime;
             $dtz->setTimestamp(rand(time() - 3155692, time() + 31556926));
@@ -222,6 +232,8 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             $user = $manager->merge($fixture->getReference('user-'.EventFixtures::$events[$i]['user']));
         }
 
+        /* Image */
+/*
         if (rand(0, 8) > 0) {
             $image = new Image;
             $image->setImg(EventFixtures::$events[$i]['img'])
@@ -244,7 +256,10 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                 $event->addImage($image);
             }
         }
+*/
 
+        /* Multimedia */
+/*
         for ($j = 0; $j < rand(0, 8); $j++) {
             $info = $infoes[rand(0, count($infoes) - 1)];
 
@@ -256,7 +271,9 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 
             $event->addMultimedia($multimedia);
         }
+*/
         
+        /* Category */
         $category = $manager->merge($fixture->getReference('event_category-'.rand(1, 3)));
         $category->addEntity($event);
 
@@ -299,12 +316,19 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
                 $userTags
             );
         }
+        
+        /* Main Image */
+        $image = new Image;
+        $image->setImg(EventFixtures::$events[$i]['img'])
+            ->setText('main image for event "'.$event->getTitle().'"')
+            ->setMain(true)
+            ->setUser($user);
+        $event->setImage($image);
 
-        $manager->persist($event);
+        $manager->persist($image);
         
         /* Sponsored */
-        if (isset(EventFixtures::$events[$i]['sponsored']) && EventFixtures::$events[$i]['sponsored'] == true) {
-            echo 'ccccc';
+        if (array_key_exists('sponsored', EventFixtures::$events[$i])&& EventFixtures::$events[$i]['sponsored'] == true) {
             $sponsored = new Sponsored;
             $sponsored->setEntity($event)
                 ->setUser($event->getPost()->getUser())
@@ -317,9 +341,9 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             $sponsored->setEnd($dateEnd);
             
             $manager->persist($sponsored);
-        } else { 
-            echo 'no'.$i;
         }
+
+        $manager->persist($event);
         
         if ($i % 10 == 9) {
             $manager->flush();

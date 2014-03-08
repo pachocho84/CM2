@@ -3390,6 +3390,54 @@ input:-webkit-autofill {
 /*     font-weight: 500; */
     color: #404040;
 }
+/* Post Multimedia */
+.post .video-container {   
+    position: relative;
+}
+.post .video-title-container {
+    cursor: pointer;
+    height: 120px;
+    width: 100%;
+    position: absolute;
+}
+.post .video-title-shadow {
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: -webkit-linear-gradient(top,rgba(0, 0, 0, 0.65) 0,rgba(0, 0, 0, 0));
+    background-image:    -moz-linear-gradient(top,rgba(0, 0, 0, 0.65) 0,rgba(0, 0, 0, 0));
+    background-image:         linear-gradient(top,rgba(0,0,0,.65) 0,transparent);
+}
+.post .video-title {
+    position: absolute;
+    z-index: 3;
+    width: 100%;
+    font-size: 16px;
+    padding: 16px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+}
+.post .video-button {
+    background: no-repeat url(//ssl.gstatic.com/s2/oz/images/sprites/stream-c232dce6708c15a206f95e6a941a0409.png) -49px 0;
+    cursor: pointer;
+    height: 72px;
+    left: 50%;
+    margin-left: -36px;
+    margin-top: -36px;
+    position: absolute;
+    top: 50%;
+    width: 72px;
+}
+.post .video-title a,
+.post .video-title a:hover,
+#wall .box:hover .video-title a {
+    color: #ffffff;
+}
 #wall .box:hover {
     border-color: #aaaaaa;    
     -webkit-transition: border-color 0.3s;
@@ -3435,14 +3483,27 @@ input:-webkit-autofill {
             border-radius: 0px;
 }
 #wall .box-partner h2 {
+    top: -18px;
+    font-size: 15px;
     position: absolute;
     height: 40px;
     width: 100%;
-    top: -26px;
-    left: 15px;
-    font-size: 20px;
     text-shadow: none;
     text-transform: uppercase;
+    padding: 0 15px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    line-height: normal;
+}
+#wall .box-partner h2 img.img-responsive {
+    display: inline;
+}
+@media (min-width: 1200px) {
+#wall .box-partner h2 {
+    top: -23px;
+    font-size: 20px;
+}
 }
 #wall .box-partner h2 small {
     text-transform: none;
@@ -3453,9 +3514,11 @@ input:-webkit-autofill {
     color: #404040;
 }
 #wall .box-partner h2.box-partner-logo {
+    height: 40px;
     background-repeat: no-repeat;
     text-indent: -90000px;
     top: -22px;
+    background-position: 15px top;
 }
 #wall .box-partner h3 {
     height: 50px;
@@ -3723,6 +3786,9 @@ a:hover {
 }
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     line-height: 1.4;
+}
+.text-danger {
+    color: #aa0000;
 }
 .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
     background-color: #660000;
