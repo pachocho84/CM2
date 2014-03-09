@@ -189,7 +189,6 @@ input:-webkit-autofill {
 /* Bottom */
 .object .bottom
 {
-    font-family: "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
     margin: 10px 0 0 0;
     position: relative;
     font-size: 11px;
@@ -355,11 +354,9 @@ input:-webkit-autofill {
     font-size: 26px;
 }
 .box .box-heading h2 {
-    line-height: 38px;
+    max-width: 100%;
     margin: 0;
     font-size: 20px;
-    font-weight: 300;
-    line-height: normal;
 }
 .box .box-heading h2 a, 
 .box .box-heading h3 a {
@@ -369,6 +366,11 @@ input:-webkit-autofill {
 .box .box-heading h2 span.glyphicons {
     vertical-align: 1px;
     font-size: 15px;
+}
+.box .box-heading h2 small {
+    font-size: 12px;
+    margin-top: 10px;
+    float: right;
 }
 .box .box-heading h2 small span.glyphicon,
 .box .box-heading h2 small span.glyphicons {
@@ -386,11 +388,6 @@ input:-webkit-autofill {
 .box .box-heading h3 span.glyphicons {
     vertical-align: baseline;
     font-size: 12px;
-}
-.box .box-heading h2 small {
-    font-size: 12px;
-    line-height: 40px;
-    float: right;
 }
 .box .box-heading .nav li {
     float: left;
@@ -606,11 +603,11 @@ input:-webkit-autofill {
     background-position: 15px top;
 }
 #wall .box-partner h3 {
-    height: 50px;
+    max-height: 50px;
     overflow: hidden;
 }
 #wall .box-partner h4 {
-    height: 40px;
+    max-height: 40px;
     overflow: hidden;
 }
 #wall .box-partner .box-partner-heading {

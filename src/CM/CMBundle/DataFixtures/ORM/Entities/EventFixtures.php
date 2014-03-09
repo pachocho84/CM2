@@ -141,7 +141,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             'extract'   => '', 
             'text'      => 'Locatelli - Concerto Grosso n. 2 in Do minore op. 1<br/>Locatelli - Concerto n. 2 per violino, archi e basso continuo in Do minore op. 3 “L’arte del violino”<br/>Locatelli - Concerto Grosso n. 5 in Re maggiore op. 1<br/>Vivaldi - Concerto per violoncello in Re minore RV 406<br/>Locatelli - Concerto Grosso n. 12 in Sol minore op.', 
             'img'       => 'sol_gabetta.jpg',
-            'user'      => 5,
+            'user'      => 6,
             'dates'     => 1,
             'sponsored' => true,
             
@@ -231,47 +231,6 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
         if (array_key_exists('user', EventFixtures::$events[$i])) {
             $user = $manager->merge($fixture->getReference('user-'.EventFixtures::$events[$i]['user']));
         }
-
-        /* Image */
-/*
-        if (rand(0, 8) > 0) {
-            $image = new Image;
-            $image->setImg(EventFixtures::$events[$i]['img'])
-                ->setText('main image for event "'.$event->getTitle().'"')
-                ->setMain(true)
-                ->setUser($user);
-            $event->setImage($image);
-
-            $manager->persist($event);
-            $manager->flush();               
-
-            for ($j = rand(1, 4); $j > 0; $j--) {
-                $image = new Image;
-                $image
-                    ->setImg(EventFixtures::$events[$i]['img'])
-                    ->setText('image number '.$j.' for event "'.$event->getTitle().'"')
-                    ->setMain(false)
-                    ->setUser($user);
-                
-                $event->addImage($image);
-            }
-        }
-*/
-
-        /* Multimedia */
-/*
-        for ($j = 0; $j < rand(0, 8); $j++) {
-            $info = $infoes[rand(0, count($infoes) - 1)];
-
-            $multimedia = new Multimedia;
-            $multimedia->setType($info['type']);
-            $multimedia->setSource($info['source']);
-            $multimedia->setTitle($info['info']->title)
-                ->setText($info['info']->description);
-
-            $event->addMultimedia($multimedia);
-        }
-*/
         
         /* Category */
         $category = $manager->merge($fixture->getReference('event_category-'.rand(1, 3)));
@@ -326,6 +285,47 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
         $event->setImage($image);
 
         $manager->persist($image);
+
+        /* Images */
+/*
+        if (rand(0, 8) > 0) {
+            $image = new Image;
+            $image->setImg(EventFixtures::$events[$i]['img'])
+                ->setText('main image for event "'.$event->getTitle().'"')
+                ->setMain(true)
+                ->setUser($user);
+            $event->setImage($image);
+
+            $manager->persist($event);
+            $manager->flush();               
+
+            for ($j = rand(1, 4); $j > 0; $j--) {
+                $image = new Image;
+                $image
+                    ->setImg(EventFixtures::$events[$i]['img'])
+                    ->setText('image number '.$j.' for event "'.$event->getTitle().'"')
+                    ->setMain(false)
+                    ->setUser($user);
+                
+                $event->addImage($image);
+            }
+        }
+*/
+
+        /* Multimedia */
+/*
+        for ($j = 0; $j < rand(0, 8); $j++) {
+            $info = $infoes[rand(0, count($infoes) - 1)];
+
+            $multimedia = new Multimedia;
+            $multimedia->setType($info['type']);
+            $multimedia->setSource($info['source']);
+            $multimedia->setTitle($info['info']->title)
+                ->setText($info['info']->description);
+
+            $event->addMultimedia($multimedia);
+        }
+*/
         
         /* Sponsored */
         if (array_key_exists('sponsored', EventFixtures::$events[$i])&& EventFixtures::$events[$i]['sponsored'] == true) {

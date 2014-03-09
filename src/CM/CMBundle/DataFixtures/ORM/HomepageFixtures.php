@@ -83,7 +83,7 @@ class HomepageFixtures extends AbstractFixture implements OrderedFixtureInterfac
 /*         array('name' => 'Orchestre', 'type' => HomepageBox::TYPE_RUBRIC, 'category' => 0, 'page' => null, 'logo' => null, 'colour' => null), */
 /*         array('name' => null, 'type' => HomepageBox::TYPE_ARTICLE, 'category' => null, 'page' => 1, 'logo' => 'accademia_teatro_alla_scala-title.png', 'colour' => '#c70c27'), */
 /*         array('name' => null, 'type' => HomepageBox::TYPE_ARTICLE, 'category' => null, 'page' => 2, 'logo' => 'classic_voice-title.png', 'colour' => '#008fd3'), */
-        array('name' => null, 'type' => HomepageBox::TYPE_DISC, 'category' => null, 'page' => 1, 'logo' => 'sony_classical-title.png', 'colour' => '#008fd3'),
+        array('name' => null, 'type' => HomepageBox::TYPE_DISC, 'category' => null, 'page' => 1, 'logo' => 'sony_classical.png', 'colour' => '#df2027'),
     );
 
     private $banners = array(

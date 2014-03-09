@@ -14,7 +14,7 @@ use CM\CMBundle\Entity\Biography;
 class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
     private static $people = array(
-        array('firstname' => 'Er Nesto',
+        array('firstname' => 'Er Nesto', /* 1 */
             'lastname' => 'Casareto',
             'username' => 'pachocho',
             'password' => 'pacho',
@@ -38,7 +38,7 @@ Alla grande passione per l’attività cameristica e didattica affianca la colla
 Suona un flauto Yamaha 18 carati all gold.
 È fondatore e Project Manager di Circuito Musica, il più moderno ed efficiente portale dedicato alla musica classica che affianca ad uno strumento di promozione per gli artisti un rivoluzionario polo di diffusione culturale.'
         ),
-        array('firstname' => 'Fabrizio', 
+        array('firstname' => 'Fabrizio',  /* 2 */
             'lastname' => 'Castellarin',
             'username' => 'EnoahNetzach',
             'password' => 'pacho',
@@ -55,7 +55,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'user_tags' => array(4),
             'biography' => null
         ),
-        array('firstname' => 'Federica',
+        array('firstname' => 'Federica', /* 3 */
             'lastname' => 'Fontana',
             'username' => 'fede_pucci_pucci',
             'password' => 'pacho',
@@ -72,7 +72,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'user_tags' => array(1),
             'biography' => null
         ),
-        array('firstname' => 'Luca',
+        array('firstname' => 'Luca', /* 4 */
             'lastname' => 'Casareto',
             'username' => 'ghey',
             'password' => 'pacho',
@@ -89,7 +89,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'user_tags' => array(),
             'biography' => null
         ),
-        array('firstname' => 'Virginia Alexandra',
+        array('firstname' => 'Virginia Alexandra', /* 5 */
             'lastname' => 'Nolte',
             'username' => 'cinnamoon',
             'password' => 'pacho',
@@ -106,7 +106,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'user_tags' => array(),
             'biography' => null
         ),
-        array('firstname' => 'Mario',
+        array('firstname' => 'Mario', /* 6 */
             'lastname' => 'Marcarini',
             'username' => 'mariomarcarini',
             'password' => 'pacho',
@@ -123,7 +123,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'user_tags' => array(9, 8, 10),
             'biography' => null
         ),
-        array('firstname' => 'Dora',
+        array('firstname' => 'Dora', /* 7 */
             'lastname' => 'Alberti',
             'username' => 'doralberti',
             'password' => 'pacho',
@@ -140,7 +140,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'user_tags' => array(),
             'biography' => null
         ),
-        array('firstname' => 'Francesca',
+        array('firstname' => 'Francesca', /* 8 */
             'lastname' => 'Cremonini',
             'username' => 'fracremonini',
             'password' => 'pacho',
@@ -157,7 +157,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'user_tags' => array(),
             'biography' => null
         ),
-        array('firstname' => 'Luca',
+        array('firstname' => 'Luca', /* 9 */
             'lastname' => 'Di Giulio',
             'username' => 'luca_digiulio',
             'password' => 'luca',
@@ -175,7 +175,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'user_tags' => array(),
             'biography' => null
         ),
-        array('firstname' => 'Fabio',
+        array('firstname' => 'Fabio', /* 10 */
             'lastname' => 'Rizzi',
             'username' => 'fabio_rizzi',
             'password' => 'fabio',
@@ -203,7 +203,7 @@ Finalista idoneo in numerosi concorsi internazionali, ha collaborato con prestig
 Esibitosi come solista in Italia e all’estero, è stato più volte invitato negli USA alle Conference della International Double Reed Society, come testimonial dell’atelier Lorée De Gourdon.
 È socio fondatore di Circuito Musica.'
         ),
-        array('firstname' => 'Davide',
+        array('firstname' => 'Davide', /* 11 */
             'lastname' => 'Formisano',
             'username' => 'davide_formisano',
             'password' => 'pacho',
@@ -241,7 +241,7 @@ Ha già inciso l’integrale dei Quartetti di Mozart per flauto ed archi con il 
 Davide Formisano tiene regolarmente delle Master Class presso l\'Academie d\'Etè di Nizza e presso l\'Hamamatsu Music Festival in Giappone.
 Davide Formisano suona con un flauto Muramatsu 24k All Gold'
         ),
-        array('firstname' => 'Fabrizio',
+        array('firstname' => 'Fabrizio', /* 12 */
             'lastname' => 'Meloni',
             'username' => 'fabrizio_meloni',
             'password' => 'pacho',
