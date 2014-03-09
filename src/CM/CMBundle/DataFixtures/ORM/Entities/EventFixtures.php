@@ -26,60 +26,6 @@ class EventFixtures
      */
     private $container;
 
-    private static $eventsX = array(
-        array('title' => 'C\'è in gioco la musica! Laboratorio musicale', 'subtitle' => '', 'extract' => 'I bambini poteranno ascoltare e suonare tutti gli strumenti dell\'Accademia! A cura dell\'Accademia musicale STABAT MATER di Rho', 'text' => 'I bambini poteranno ascoltare e suonare tutti gli strumenti dell\'Accademia! A cura dell\'Accademia musicale STABAT MATER di Rho', 'img' => '1b7e2be2de282f6cd99a91874f2f5134dd76cdd9.jpg'),
-        array('title' => 'Haydn, "Stabat Mater"', 'subtitle' => '', 'extract' => 'Lurago d\'Erba si prepara a celebrare il centenario della propria chiesa prepositurale, che per l\'occasione aprirà le porte alla grande musica sacra. L\'appuntamento è per la serata di sabato prossimo, 5 ottobre.', 'text' => 'Lurago d\'Erba si prepara a celebrare il centenario della propria chiesa prepositurale, che per l\'occasione aprirà le porte alla grande musica sacra. L\'appuntamento è per la serata di sabato prossimo, 5 ottobre.', 'img' => '892eda50c9566f74859fb54a7f7912225deed5f1.jpg'),
-        array('title' => 'Stagione Sinfonica: Rachmaninov & Dvořák', 'subtitle' => '', 'extract' => 'Rachmaninov - Vocalise Rachmaninov - Concerto per pianoforte e orchestra n. 2 in Do min. op. 18 Dvořák - Sinfonia n. 3 in Mi bemolle maggiore op. 10Pianoforte - Simone Pedroni 
-Direttore - Aldo Ceccato', 'text' => 'Rachmaninov - Vocalise Rachmaninov - Concerto per pianoforte e orchestra n. 2 in Do min. op. 18 Dvořák - Sinfonia n. 3 in Mi bemolle maggiore op. 10Pianoforte - Simone Pedroni 
-Direttore - Aldo Ceccato', 'img' => 'a702f79522d2b77a9df4f973c6997fe7379ed360.jpg'),
-        array('title' => 'Concerto Straordinario: Festeggiamo Verdi!', 'subtitle' => '', 'extract' => 'Coro Sinfonico di Milano Giuseppe Verdi Maestro del Coro - Erina Gambarini Direttore - Jader Bignamini', 'text' => 'Coro Sinfonico di Milano Giuseppe Verdi Maestro del Coro - Erina Gambarini Direttore - Jader Bignamini', 'img' => 'dd6534799af0c15d82f31c29009b743c1d8515d3.jpg'),
-        array('title' => 'VII Stagione di Musica da Camera', 'subtitle' => '', 'extract' => 'Giovedì 10 ottobre, ore 19 
-INAUGURAZIONE DELLA VII STAGIONE DI MUSICA DA CAMERA 
-UNA SERATA NON STOP CON MUSICA, TEATRO, LETTURE E FANTASIA 
-A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario Atzori, Giovanni Bacchelli, Giacomo Brunini, Alessio Cercignani, Alessandra Dezzi, Manuela Evangelista, Roberto Fiorini, Daniele Fredianelli, Elisabetta', 'text' => 'Giovedì 10 ottobre, ore 19 
-<br />INAUGURAZIONE DELLA VII STAGIONE DI MUSICA DA CAMERA 
-<br />UNA SERATA NON STOP CON MUSICA, TEATRO, LETTURE E FANTASIA
-<br />A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario Atzori, Giovanni Bacchelli, Giacomo Brunini, Alessio Cercignani, Alessandra Dezzi, Manuela Evangelista, Roberto Fiorini, Daniele Fredianelli, Elisabetta Furini, Laura Lorenzi, Riccardo Masi, Riccardo Mazzoni, Lucia Neri, Maila Nosiglia, Daniela Panicucci, Marco Rodi, Sonia Salvini, Eleonora Stefanini, Danila Talamo, Milena Vox
-<br />Musiche di: 
-<br />J. S. Bach, M. Castelnuovo – Tedesco, G. Fauré,  R. Gnattali, A. Glazunov,  E. Granados, J. Macmillan, D. Milhaud, G. Rossini, N. Rota, C. Saint-Saens, F. Schubert, O. Singer
-<br />Testi di: 
-<br />Franca Rame, Marco Rodi, Sonia Salvini e Elisabetta Furini, Danila Talamo, Milena Vox
-<br />Ingresso: offerta a favore dell\'attività culturale di ConcertArti</p><p>Sabato 9 novembre, ore 18
-<br />LA TRIO SONATA NELLA GERMANIA DEL XVIII SECOLO
-<br />Ensemble Il fabbro armonioso 
-<br />Gian Marco Solarolo oboe barocco, Elisa Bestetti violino barocco, Cristina Monti spinetta
-<br />Musiche di: G. Finger, A. Vivaldi, F. Gasparini, G. Ph. Telemann, G. F. Haendel  </p><p>Giovedì 12 dicembre, ore 21
-<br />ALLEGRO CANTABILE – Divertimenti armonici per una sera d\'inverno
-<br />Coro R. Del Corona 
-<br />Luca Stornello direttore
-<br />Dal Rinascimento al \'900: le diverse espressioni della musica vocale </p><p>Sabato 21 dicembre, ore 21 - Chiesa di San Benedetto, piazza XX Settembre, Livorno
-<br />CONCERTO DI NATALE per soli, coro e archi
-<br />Accademia Vocale città di Livorno 
-<br />Daniela Contessi direttore, Claire Briant soprano, Open Ensemble
-<br />Musiche di: A. Vivaldi, G. Ph. Telemann, W. A. Mozart, F. Schubert, G. Fauré
-<br />Ingresso libero</p><p>Sabato 1 febbraio, ore 10.30 e ore 18
-<br />TI PARLERÒ D\'AMOR - Le canzoni italiane degli anni \'40
-<br />Ensemble Phalèse 
-<br />Nadia De Sanctis voce, Franco Barbucci violino, Lucia Goretti viola, 
-<br />Laura Goretti violoncello, Marco Gammanossi Chitarra
-<br />Arrangiamenti musicali: Marco Gammanossi </p><p>Giovedì 6 marzo, ore 10.30 e ore 21
-<br />CLASSICA E POP: UN DIALOGO POSSIBILE - Stili, linguaggi, tecniche a confronto
-<br />A cura di Marco Lenzi. Alla tastiera Claudio Laucci</p><p>Sabato 12 aprile, ore 18
-<br />L\'ARTE DEL MANDOLINO - Musica per quartetto a plettro tra Ottocento e Novecento
-<br />Quartetto Estudiantina Bergamo 
-<br />Marina Ferrari e Chiara Perini mandolino, Mario Rota mandola, 
-<br />Michele Guadalupi chitarra e mandoloncello
-<br />Musiche di: C. Munier, A. Amadei, G. Sartori, R. Calace</p><p>Abbonamento per 5 concerti: 
-<br />Soci Cral Eni, Coop e ConcertArti € 25; intero € 35 – Dal 1° ottobre. 
-<br />Ingresso: 
-<br />Studenti € 3 – Docenti accompagnatori, gratuito ogni 8 studenti - 
-<br />Soci Cral Eni, Coop e ConcertArti € 6 - Intero € 8 - 
-<br />Prevendita a partire da 7 giorni prima del concerto presso Teatro Cral Eni Livorno Viale Ippolito Nievo 38
-<br />Prenotazioni tel. 0586 401308 - Orario: 8 / 12 - 15 / 19 
-<br />Informazioni concertarti@gmail.com</p><p>Ringraziamo la Fondazione Cassa di Risparmi di Livorno per il contributo concesso ed 
-<br />il Comitato Soci Livorno UNICOOP Tirreno per il buffet offerto.</p><p>Organizzato da Cral Eni Livorno in collaborazione con Associazione Culturale ConcertArti, Dir. Artistica Renata Sfriso', 'img' => 'f2d3a3af3c6cdc40aab224f59e99d2ea1ec85afa.jpg'),
-    );
-
     private static $events = array(
         array(
             'title'     => 'Quartetto di Cremona - Esecuzione integrale dei Quartetti per archi di Beethoven - V', 
@@ -141,11 +87,23 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             'extract'   => '', 
             'text'      => 'Locatelli - Concerto Grosso n. 2 in Do minore op. 1<br/>Locatelli - Concerto n. 2 per violino, archi e basso continuo in Do minore op. 3 “L’arte del violino”<br/>Locatelli - Concerto Grosso n. 5 in Re maggiore op. 1<br/>Vivaldi - Concerto per violoncello in Re minore RV 406<br/>Locatelli - Concerto Grosso n. 12 in Sol minore op.', 
             'img'       => 'sol_gabetta.jpg',
-            'user'      => 6,
             'dates'     => 1,
-            'sponsored' => true,
-            
-        )
+            'sponsored' => true, 
+            'page'      => 1,
+        ),
+        array(
+            'title'     => 'Madesimo Music Festival', 
+            'subtitle'  => '', 
+            'extract'   => '', 
+            'text'      => 'Quattordici emozionanti appuntamenti all’insegna della musica classica riempiranno il paese di cultura e vivacità: dalla musica barocca con l’oboe d’avorio di Simone Toni e l’ensemble “Silete Venti!” alla celebrazione del duecentesimo anniversario di Wagner e Verdi con i due workshop di Orazio Sciortino e Alessio Bidoli.
+Il tema di questa prima edizione è “Costruire il talento” e si inserisce in una serie di iniziative che il Comune di Madesimo sta portando avanti in una prospettiva di crescita sociale che abbraccia tutti gli ambiti. Un Festival insomma che volge il suo sguardo al territorio e al futuro.
+Apre il Festival la consegna del “Premio Madesimo” a Mario Marcarini, label manager di Sony Classical Italia e direttore artistico di questa prima edizione. Motivazione: la letteratura applicata alla storia della musica. Marcarini in questa occasione propone un workshop dedicato a grandi e piccini: “Wolfgang e Leopold”, Mozart figlio e padre, la nascita di un talento.
+Madesimo Music Festival 2013 è realizzato con il sostegno e la collaborazione del Comune di Madesimo, Sony Classical Italia, Opificio Italiano dei Classici, Fazioli, Swing, Ricola, Rivista Musica, Radio Classica e Circuito Musica.', 
+            'img'       => 'madesimo.jpg',
+            'dates'     => 1,
+            'sponsored' => true, 
+            'page'      => 1,
+        ),
     );
     
     private $locations = array(
@@ -155,8 +113,6 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
         array('Piccolo Teatro', 'Largo Antonio Greppi, 1, 10121 Milano', '45.472337,9.182449'),
         array('Teatro degli Arcimboldi', 'Viale dell\'Innovazione, 20, 10125 Milano', '45.51170,9.21109'),
     );
-
-    private $images = array('bb01acb97854b24ed23598bd4f055eba.jpeg', 'ff9398d3d47436e2b4f72874a2c766fd.jpeg');
 
     public static function count()
     {
@@ -198,6 +154,10 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
 */
 
         $event->mergeNewTranslations();
+        
+        /* Category */
+        $category = $manager->merge($fixture->getReference('event_category-'.rand(1, 3)));
+        $event->setEntityCategory($category);
            
         /* Dates */
         for ($j = EventFixtures::$events[$i]['dates']; $j > 0; $j--) {
@@ -219,30 +179,27 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             $event->addEventDate($eventDate);
         }
 
-        $page = null;
-        $group = null;
+        /* Post */
+        $post = new Post;
+        
         if (array_key_exists('page', EventFixtures::$events[$i])) {
             $page = $manager->merge($fixture->getReference('page-'.EventFixtures::$events[$i]['page']));
             $user = $page->getCreator();
+            $post->setPage($page);
         } elseif (array_key_exists('group', EventFixtures::$events[$i])) {
             $group = $manager->merge($fixture->getReference('page-'.EventFixtures::$events[$i]['group']));
             $user = $group->getCreator();
-        }
-        if (array_key_exists('user', EventFixtures::$events[$i])) {
+            $post->setGroup($group);
+        } elseif (array_key_exists('user', EventFixtures::$events[$i])) {
             $user = $manager->merge($fixture->getReference('user-'.EventFixtures::$events[$i]['user']));
         }
-        
-        /* Category */
-        $category = $manager->merge($fixture->getReference('event_category-'.rand(1, 3)));
-        $category->addEntity($event);
-
-        $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
-        $manager->persist($post);
-        $post->setPage($page);
-        $post->setGroup($group);
+        $post->setUser($user);
+        $post->setCreator($user);
+        $post->setType(Post::TYPE_CREATION);
 
         $event->setPost($post);
         
+        /* Protagonists */
         $userTags = array();
         for ($j = 1; $j < rand(1, 3); $j++) {
             $userTags[] = $manager->merge($fixture->getReference('user_tag-'.rand(1, 10)));
@@ -270,7 +227,7 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             $event->addUser(
                 $otherUser,
                 !rand(0, 3), // admin
-                EntityUser::STATUS_PENDING,
+                EntityUser::STATUS_ACTIVE,
                 true, // notification
                 $userTags
             );
@@ -283,8 +240,6 @@ A cura degli artisti dell\'Associazione Culturale ConcertArti e loro amici Dario
             ->setMain(true)
             ->setUser($user);
         $event->setImage($image);
-
-        $manager->persist($image);
 
         /* Images */
 /*

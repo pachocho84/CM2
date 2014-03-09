@@ -89,7 +89,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'user_tags' => array(),
             'biography' => null
         ),
-        array('firstname' => 'Virginia Alexandra', /* 5 */
+        array('firstname' => 'Virginia', /* 5 */
             'lastname' => 'Nolte',
             'username' => 'cinnamoon',
             'password' => 'pacho',

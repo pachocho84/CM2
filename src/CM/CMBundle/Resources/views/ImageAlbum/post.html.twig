@@ -1,17 +1,12 @@
-<div class="media">
-
-    <div class="media-body">
-
-        {% if post.entity.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_PROFILE') %}
-            {{ show_img_box(post.publisher.getImg | imagine_filter('medium'), {'width': 150, 'height': 150, 'offset': post.publisher.imgOffset, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
-        {% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_COVER') %}
-            {{ show_img_box(post.publisher.getCoverImg | imagine_filter('medium'), {'width': 150, 'height': 150, 'offset': post.publisher.coverImgOffset, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
-        {% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_BACKGROUND') %}
-            {{ show_img_box(post.publisher.getBackgroundImg | imagine_filter('medium'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }}
-        {% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_ALBUM') %}
-            {{ post.entity }}
-        {% endif %}
-
-    </div><!-- END Media Body -->
-
-</div><!-- END Object -->
+{% if post.entity.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_PROFILE') %}
+    <div class="post-image-container">
+{#                 {{ show_img_box(post.publisher.getImg|imagine_filter('medium'), {'width': 150, 'height': 150, 'offset': post.publisher.imgOffset, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}}) }} #}
+        <img src="{{ post.publisher.getImg|imagine_filter('medium') }}" class="img-responsive"/>
+    </div>
+{% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_COVER') %}
+    {{ show_img_box(post.publisher.getCoverImg | imagine_filter('medium'), {'width': 150, 'height': 150, 'offset': post.publisher.coverImgOffset, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}}) }}
+{% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_BACKGROUND') %}
+    {{ show_img_box(post.publisher.getBackgroundImg | imagine_filter('medium'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}}) }}
+{% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_ALBUM') %}
+    {{ post.entity }}
+{% endif %}

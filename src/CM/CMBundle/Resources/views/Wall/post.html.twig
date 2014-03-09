@@ -3,49 +3,70 @@
     {% set relatedObjects = related_object(post.object, post.objectIds) %}
 {% endif %}
 
-<div class="media post-heading"{% if updateMore|default(false) and loop is defined and loop.first %} update_more="{{ path(app.request.attributes.get('_route')|replace({'_update': ''})~'_update', app.request.attributes.get('_route_params')|merge({ 'lastUpdated': post.updatedAt.timestamp })) }}"{% endif %}>
-    
-    {{ show_img_box(post.publisher.img|imagine_filter('small'), {width: 50, height: 50, offset: post.publisher.imgOffset,  link: path(post.publisherType ~ '_show', {slug: post.publisher.slug}), box_attributes: {class: 'pull-left img-rounded'}}) }}
 
-    <div class="media-body">
+<div class="box post">
 
-        <h4 class="media-heading"><a href="{{ path(post.publisherType ~ '_show', {slug: post.publisher.slug}) }}">{{ post.publisher }}</a></h4>
-
-        <div class="text-muted small">
-            {{ icon((post.object|class_name)~'_'~(post.type)) }}
-            {{ post.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
+    {% if postType is defined %}
+        <div class="box-heading">
+            {% if postType == 'sponsored' %}
+                <h2>{{ icon('Sponsored') }} {{ 'Sponsored'|trans }}</h2>
+            {% elseif postType == 'vip' %}
+                <h2><span class="text-danger">{{ icon('Vip') }}</span> {{ 'Vip'|trans }}</h2>
+            {% endif %}
         </div>
-
+    {% endif %}
+    
+    
+    
+    <div class="box-body">
+        <div class="media post-heading"{% if updateMore|default(false) and loop is defined and loop.first %} update_more="{{ path(app.request.attributes.get('_route')|replace({'_update': ''})~'_update', app.request.attributes.get('_route_params')|merge({ 'lastUpdated': post.updatedAt.timestamp })) }}"{% endif %}>
+            
+            {{ show_img_box(post.publisher.img|imagine_filter('small'), {width: 50, height: 50, offset: post.publisher.imgOffset,  link: path(post.publisherType ~ '_show', {slug: post.publisher.slug}), box_attributes: {class: 'pull-left img-rounded'}}) }}
+        
+            <div class="media-body">
+        
+                <h4 class="media-heading"><a href="{{ path(post.publisherType ~ '_show', {slug: post.publisher.slug}) }}">{{ post.publisher }}</a></h4>
+        
+                <div class="text-muted small">
+                    {{ icon((post.object|class_name)~'_'~(post.type)) }}
+                    {{ post.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
+                </div>
+        
+            </div>
+        </div>
+        
+        
+        
+        <p>
+            {% if not inEntity %}
+                {{ post_text(post, relatedObjects) }}
+            {% else %}
+                {{ entity_post_text(post) }}
+            {% endif %}
+        </p>
+        
+        
+        
+        <div class="object">
+            {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
+        </div>
     </div>
+    
+    
+    
+    <div class="box-footer">
+        {% if not inEntity %}
+            {% if (post.object|class_name == 'Like' or post.object|class_name == 'Comment') and relatedObjects.imageId is not null %}
+                {{ include('CMBundle::social.html.twig', {'post': relatedObjects.image, 'isImage': true}) }}
+            {% elseif (post.object|class_name == 'Like' or post.object|class_name == 'Comment') %}
+                {{ include('CMBundle::social.html.twig', {'post': relatedObjects.post}) }}
+            {% elseif post.object|class_name == 'Biography' %}
+                {{ include('CMBundle::social.html.twig', {'post': post.entity.post}) }}
+            {% elseif (post.object|class_name) == 'Fan' %}
+            {% else  %}
+                {{ include('CMBundle::social.html.twig') }}
+            {% endif %}
+        {% endif %}
+    </div>
+
 </div>
-
-
-
-<p>
-    {% if not inEntity %}
-        {{ post_text(post, relatedObjects) }}
-    {% else %}
-        {{ entity_post_text(post) }}
-    {% endif %}
-</p>
-
-
-
-<div class="post-content">
-    {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
-</div>
-
-
-
-{% if not inEntity %}
-    {% if (post.object|class_name == 'Like' or post.object|class_name == 'Comment') and relatedObjects.imageId is not null %}
-        {{ include('CMBundle::social.html.twig', {'post': relatedObjects.image, 'isImage': true}) }}
-    {% elseif (post.object|class_name == 'Like' or post.object|class_name == 'Comment') %}
-        {{ include('CMBundle::social.html.twig', {'post': relatedObjects.post}) }}
-    {% elseif post.object|class_name == 'Biography' %}
-        {{ include('CMBundle::social.html.twig', {'post': post.entity.post}) }}
-    {% elseif (post.object|class_name) == 'Fan' %}
-    {% else  %}
-        {{ include('CMBundle::social.html.twig') }}
-    {% endif %}
-{% endif %}
