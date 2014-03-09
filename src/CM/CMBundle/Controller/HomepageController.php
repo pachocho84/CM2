@@ -51,7 +51,7 @@ class HomepageController extends Controller
             }
 */
 
-            /* Next eìvents */
+            /* Next events */
             if ($request->get('_route') == 'homepage_index') {
                 $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('locale' => $request->getLocale())), $page, 3);
                 $boxes['dates;right'] = $this->renderView('CMBundle:Homepage:boxEvents.html.twig', array('dates' => $dates));

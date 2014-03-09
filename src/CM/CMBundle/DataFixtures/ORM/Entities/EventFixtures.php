@@ -193,9 +193,9 @@ Madesimo Music Festival 2013 è realizzato con il sostegno e la collaborazione d
         }
 
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+        $manager->persist($post);
         $post->setPage($page)
             ->setGroup($group);
-        $manager->persist($post);
 
         $event->setPost($post);
         
