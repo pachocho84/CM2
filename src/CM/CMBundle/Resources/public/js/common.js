@@ -350,7 +350,8 @@ $(function() {
     
     /* COMMENTS */
     // Show comment form
-    $('body').on('click', '.object .comment_new-show', function(event) {
+    $('body').on('click', '.comment_new-show', function(event) {
+        console.log(42);
         event.preventDefault();
         event.stopPropagation();
         $(this).closest('.bottom').find('ul').fadeIn('fast');
