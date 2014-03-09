@@ -134,8 +134,6 @@ Madesimo Music Festival 2013 è realizzato con il sostegno e la collaborazione d
             ->setExtract(EventFixtures::$events[$i]['extract'])
             ->setText(EventFixtures::$events[$i]['text']);
 
-        $manager->persist($event);
-
         /* Translations */
         if (0 == rand(0, 2)) {
             $event->translate('it')

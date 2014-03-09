@@ -64,7 +64,6 @@ class HomepageController extends Controller
             }
 
             /* Box partners */
-/*
             if ($request->get('_route') == 'homepage_index') {
                 $homepageBoxes = $em->getRepository('CMBundle:HomepageBox')->getBoxes(4, array('locale' => $request->getLocale()));
                 foreach ($homepageBoxes as $box) {
@@ -95,7 +94,6 @@ class HomepageController extends Controller
                     $boxes['homepage_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:boxPartner.html.twig', array('box' => $box, 'objects' => $objects, 'biography' => $biography));
                 }
             }
-*/
 
             /* Vips */
             if (in_array($request->get('_route'), array('homepage_index', 'homepage_vips'))) {

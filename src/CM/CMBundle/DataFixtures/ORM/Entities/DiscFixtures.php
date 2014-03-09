@@ -25,87 +25,32 @@ class DiscFixtures
     private $container;
 
     private static $discs = array(
-        array('title' => 'Concerto per pianoforte e orchestra n.I in si bemolle minore',
-            'label' => 'EMI',
-            'year' => '1962-1-1',
+        array('title' => 'Vittorio Grigolo: Ave Maria',
+            'label' => 'Sony Classical Italia',
+            'year' => '2013-1-1',
             'discTracks' => array(
-                array('composer' => 'Pyotr Ilyich Tchaikovsky',
-                    'title' => 'Allegro non troppo e molto maestoso - Allegro con spirito',
-                    'movement' => 'I',
-                    'artists' => 'Svjatolav Richter, pianoforte; Wiener Symphoniker; Herbert von Karajan, direttore',
-                    'duration' => '0:23:05'
+                array('composer'    => 'Giovanni Maria Catena',
+                    'title'         => 'Ave Maria',
+                    'movement'      => 'I',
+                    'artists'       => 'Vittorio Grigolo, tenore; Orchestra Roma Sinfonietta; Pueri Cantores della Cappella Musicale Pontificia detta Sistina; Fabio Cerroni, conductor; Fabio Cerroni, organ',
+                    'duration'      => '0:03:20'
                 ),
-                array('composer' => 'Pyotr Ilyich Tchaikovsky',
-                    'title' => 'Andantino semplice - Prestissimo',
-                    'movement' => 'II',
-                    'artists' => 'Svjatolav Richter, pianoforte; Wiener Symphoniker; Herbert von Karajan, direttore',
-                    'duration' => '0:7:11'
+                array('composer'    => 'Giovanni Maria Catena',
+                    'title'         => 'Fermarono i cieli (antica melodia napoletana)',
+                    'movement'      => 'I',
+                    'artists'       => 'Vittorio Grigolo, tenore; Orchestra Roma Sinfonietta; Pueri Cantores della Cappella Musicale Pontificia detta Sistina; Fabio Cerroni, conductor; Fabio Cerroni, organ',
+                    'duration'      => '0:03:44'
                 ),
-                array('composer' => 'Pyotr Ilyich Tchaikovsky',
-                    'title' => 'Allegro con fuoco',
-                    'movement' => 'III',
-                    'artists' => 'Svjatolav Richter, pianoforte; Wiener Symphoniker; Herbert von Karajan, direttore',
-                    'duration' => '0:7:25'
+                array('composer'    => 'Campetti',
+                    'title'         => 'Maria, che dolce nome',
+                    'movement'      => 'I',
+                    'artists'       => 'Vittorio Grigolo, tenore; Orchestra Roma Sinfonietta; Pueri Cantores della Cappella Musicale Pontificia detta Sistina; Fabio Cerroni, conductor; Fabio Cerroni, organ',
+                    'duration'      => '0:03:43'
                 ),
             ),
-            'img' => 'xb7e2be2de282f6cd99a91874f2f5134dd76cdd8.jpg',
-            'user' => 1
-        ),
-        array('title' => 'La Folia',
-            'label' => 'AliaVox',
-            'year' => '1998-1-1',
-            'discTracks' => array(
-                array('composer' => 'Anonyme',
-                    'title' => 'Folia: Rodrigo Martinez - 1490',
-                    'movement' => 'I Folias Antiguas',
-                    'artists' => 'Jordi Savall, Rolf Lislevand, Michael Behringer, Arianna Savall, Bruno Cocset, Pedro Estevan, Adela Gonzalez-Campa',
-                    'duration' => '0:5:10'
-                ),
-                array('composer' => 'Diego Ortiz',
-                    'title' => 'Recercada Quarta sobre la Folia - 1553',
-                    'movement' => 'I Folias Antiguas',
-                    'artists' => 'Jordi Savall, Rolf Lislevand, Michael Behringer, Arianna Savall, Bruno Cocset, Pedro Estevan, Adela Gonzalez-Campa',
-                    'duration' => '0:1:31'
-                ),
-                array('composer' => 'Antonio de Cabezón',
-                    'title' => 'Folia: Para quien crié yo cabellos - 1557',
-                    'movement' => 'I Folias Antiguas',
-                    'artists' => 'Jordi Savall, Rolf Lislevand, Michael Behringer, Arianna Savall, Bruno Cocset, Pedro Estevan, Adela Gonzalez-Campa',
-                    'duration' => '0:2:10'
-                ),
-                array('composer' => 'Diego Ortiz',
-                    'title' => 'Recercada Ottava sobre la Folia - 1553',
-                    'movement' => 'I Folias Antiguas',
-                    'artists' => 'Jordi Savall, Rolf Lislevand, Michael Behringer, Arianna Savall, Bruno Cocset, Pedro Estevan, Adela Gonzalez-Campa',
-                    'duration' => '0:1:47'
-                ),
-                array('composer' => 'Juan Del Enzina',
-                    'title' => 'Folia: Hoy comamos y bebamos - vers 1520',
-                    'movement' => 'I Folias Antiguas',
-                    'artists' => 'Jordi Savall, Rolf Lislevand, Michael Behringer, Arianna Savall, Bruno Cocset, Pedro Estevan, Adela Gonzalez-Campa',
-                    'duration' => '0:3:12'
-                ),
-                array('composer' => 'Antonio Martín y Coll',
-                    'title' => 'Deferencias sobre las folias - 1706-09',
-                    'movement' => 'II Deferencias Sobre Las Folias',
-                    'artists' => 'Jordi Savall, Rolf Lislevand, Michael Behringer, Arianna Savall, Bruno Cocset, Pedro Estevan, Adela Gonzalez-Campa',
-                    'duration' => '0:10:48'
-                ),
-                array('composer' => 'Arcangelo Corelli',
-                    'title' => 'Follias, op.5 - 1700',
-                    'movement' => 'III Follias',
-                    'artists' => 'Jordi Savall, Rolf Lislevand, Michael Behringer, Arianna Savall, Bruno Cocset, Pedro Estevan, Adela Gonzalez-Campa',
-                    'duration' => '0:11:08'
-                ),
-                array('composer' => 'Marin Marais',
-                    'title' => 'Couplets de folies, second livre de Pièces de viole - 1701',
-                    'movement' => 'IV Couplets De Folies',
-                    'artists' => 'Jordi Savall, Rolf Lislevand, Michael Behringer, Arianna Savall, Bruno Cocset, Pedro Estevan, Adela Gonzalez-Campa',
-                    'duration' => '0:18:07'
-                ),
-            ),
-            'img' => 'q834dc0cc993aa4397bdb860cea2e4ac970a65f5.jpg',
-            'user' => 1
+            'text'  => 'Noto in tutto il mondo per la sua sublime voce tenorile e una passionale presenza di palcoscenico, Vittorio Grigòlo ha imparato il suo mestiere come cantore nel leggendario coro della Cappella Sistina in Vaticano, la culla della musica sacra occidentale. Ispirandosi all’epoca contemporanea, con quello stesso coro che foggiò i suoi esordi musicali, egli presenta ora un’intima collezione di canti spirituali splendidi e celestiali.',
+            'img'   => 'grigolo_ave_maria.jpg',
+            'page'  => 1
         ),
     );
 
@@ -126,13 +71,17 @@ class DiscFixtures
     {
         $disc = new Disc;
         $disc->setLabel(DiscFixtures::$discs[$i]['label'])
-            ->setDate(new \DateTime(DiscFixtures::$discs[$i]['year']));
-        $disc->setTitle(DiscFixtures::$discs[$i]['title']);
-
-        $manager->persist($disc);
+            ->setDate(new \DateTime(DiscFixtures::$discs[$i]['year']))
+            ->setTitle(DiscFixtures::$discs[$i]['title'])
+            ->setText(DiscFixtures::$discs[$i]['text']);
 
         $disc->mergeNewTranslations();
+        
+        /* Category */
+        $category = $manager->merge($fixture->getReference('disc_category-1'));
+        $disc->setEntityCategory($category);
            
+        /* Tracks */
         for ($j = 0; $j < count(DiscFixtures::$discs[$i]['discTracks']); $j++) {
             $discTrack = new DiscTrack;
             $discTrack->setNumber($j + 1)
@@ -148,7 +97,8 @@ class DiscFixtures
 
             $disc->addDiscTrack($discTrack);
         }
-        
+
+        /* Post */
         $page = null;
         $group = null;
         if (array_key_exists('page', DiscFixtures::$discs[$i])) {
@@ -157,49 +107,29 @@ class DiscFixtures
         } elseif (array_key_exists('group', DiscFixtures::$discs[$i])) {
             $group = $manager->merge($fixture->getReference('page-'.DiscFixtures::$discs[$i]['group']));
             $user = $group->getCreator();
-        }
-        if (array_key_exists('user', DiscFixtures::$discs[$i])) {
+        } elseif (array_key_exists('user', DiscFixtures::$discs[$i])) {
             $user = $manager->merge($fixture->getReference('user-'.DiscFixtures::$discs[$i]['user']));
         }
 
-        if (rand(0, 4) > 0) {
-            $image = new Image;
-            $image->setImg(DiscFixtures::$discs[$i]['img'])
-                ->setText('main image for disc "'.$disc->getTitle().'"')
-                ->setMain(true)
-                ->setUser($user);
-            $disc->setImage($image);
-
-            $manager->persist($disc);
-            $manager->flush();                  
-
-            for ($j = rand(1, 4); $j > 0; $j--) {
-                $image = new Image;
-                $image->setImg(DiscFixtures::$discs[$i]['img'])
-                    ->setText('image number '.$j.' for disc "'.$disc->getTitle().'"')
-                    ->setMain(false)
-                    ->setUser($user);
-                
-                $disc->addImage($image);
-            }
-
-        }
-
-        $category = $manager->merge($fixture->getReference('disc_category-'.rand(1, 2)));
-        $category->addEntity($disc);
-
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
-        $manager->persist($post);
-        $post->setPage($page);
-        $post->setGroup($group);
+        $manager->persist($post); // SE TOLGO QUESTO IN POST.OBJECT_IDS INVECE DI CHANGED METTE ,,
+        $post->setPage($page)
+            ->setGroup($group);
 
         $disc->setPost($post);
+        
+        /* Protagonists */
+        $userTags = array();
+        for ($j = 1; $j < rand(1, 3); $j++) {
+            $userTags[] = $manager->merge($fixture->getReference('user_tag-'.rand(1, 10)));
+        }
         
         $disc->addUser(
             $user,
             true, // admin
             EntityUser::STATUS_ACTIVE,
-            true // notification
+            true, // notification
+            $userTags
         );
 
         $numbers = range(1, ORM\UserFixtures::count());
@@ -207,14 +137,28 @@ class DiscFixtures
         for ($j = 0; $j < rand(0, 6); $j++) {
             $otherUser = $manager->merge($fixture->getReference('user-'.$numbers[$j]));
             if ($otherUser == $user) continue;
+            
+            $userTags = array();
+            for ($k = 1; $k < rand(1, 3); $k++) {
+                $userTags[] = $manager->merge($fixture->getReference('user_tag-'.rand(1, 10)));
+            }
 
             $disc->addUser(
                 $otherUser,
                 !rand(0, 3), // admin
-                EntityUser::STATUS_PENDING,
-                true // notification
+                EntityUser::STATUS_ACTIVE,
+                true, // notification
+                $userTags
             );
         }
+        
+        /* Main Image */
+        $image = new Image;
+        $image->setImg(DiscFixtures::$discs[$i]['img'])
+            ->setText('main image for disc "'.$disc->getTitle().'"')
+            ->setMain(true)
+            ->setUser($user);
+        $disc->setImage($image);
 
         $manager->persist($disc);
         
