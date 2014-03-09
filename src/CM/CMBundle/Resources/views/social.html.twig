@@ -1,38 +1,13 @@
-{# <?php $sito = $sf_context->getSito() ?> #}
+<div class="bottom{# <?php $sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == false and print ' well well-small' ?> #}">
 
-{# <?php if (($sito->getCommentsEnabled() && $sito->getCommentsDisplay()) || ($sito->getLikesEnabled() && $sito->getLikesDisplay())): ?> #}
+    {% include('CMBundle::socialActions.html.twig') %}
 
-    <div class="media-list bottom{# <?php $sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == false and print ' well well-small' ?> #}">
+    <span class="pull-right">
+        {% include('CMBundle:Like:likeCount.html.twig') %}
+        {% include('CMBundle:Comment:commentCount.html.twig') %}
+    </span>
 
-        {% include('CMBundle::socialActions.html.twig') %}
+    {% if isImage is not defined %}{% set isImage = false %}{% endif %}
+    {{ render(controller('CMBundle:Comment:comments', {post: post, 'isImage': isImage})) }}
 
-
-        {# <?php if ($sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == false): ?> #}
-            <span class="pull-right">
-                {# <?php if ($sito->getLikesEnabled() && $sito->getLikesDisplay()): ?> #}
-                    {% include('CMBundle:Like:likeCount.html.twig') %}
-                {# <?php endif ?> #}
-                {# <?php if ($sito->getCommentsEnabled() && $sito->getCommentsDisplay()): ?> #}
-                    {% include('CMBundle:Comment:commentCount.html.twig') %}
-                {# <?php endif ?> #}
-            </span>
-        {# <?php endif ?> #}
-
-
-
-        <ul class="media-list{# <?php $sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == false and print ' hide' ?><?php $sf_request->getParameter('action') != 'show' && $sito->getLikesCommentsExpanded() == true && ($post->getComments()->count() > 0 || $post->getWhoLikesIt() + $post->getILikeIt() > 0) and print ' triangle' ?> #}">
-
-            {# <?php if ($sito->getLikesEnabled() && $sito->getLikesDisplay() && ($sito->getLikesCommentsExpanded() == true || $sf_request->getParameter('action') == 'show')): ?> #}
-                {% include('CMBundle:Like:like.html.twig') %}
-            {# <?php endif ?> #}
-
-            {# <?php if ($sito->getCommentsEnabled() && $sito->getCommentsDisplay()): ?> #}
-                {% if isImage is not defined %}{% set isImage = false %}{% endif %}
-                {{ render(controller('CMBundle:Comment:comments', {post: post, 'isImage': isImage})) }}
-            {# <?php endif ?> #}
-
-        </ul>
-
-    </div>
-
-{# <?php endif ?> #}
+</div>

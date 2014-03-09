@@ -1,4 +1,4 @@
-<li class="media comment{{ (hide is defined and hide) ? ' hidden' : '' }}"{% if can_manage(comment) %} data-toggle-hover{% endif %}>
+<div class="media comment{{ (hide is defined and hide) ? ' hidden' : '' }}"{% if can_manage(comment) %} data-toggle-hover{% endif %}>
 
     {% if can_manage(comment) %}
         <a href="{{ path('comment_delete', {id: comment.id}) }}" class="close invisible" data-placement="left" data-toggle="popover" data-content="<p>{{ 'Are you sure you want to delete this comment?'|trans }}</p><a href='{{ path('comment_delete', {'id': comment.id}) }}' class='btn btn-primary'>{{ 'Delete'|trans }}</a> <span class='btn popover-close'>{{ 'Cancel'|trans }}</span>">{{ icon('Remove') }}</a>
@@ -13,4 +13,4 @@
         <div class="comment-body">{{ comment.comment }}</div>
     </div>
     
-</li>
+</div>

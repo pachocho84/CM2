@@ -42,12 +42,14 @@ class HomepageController extends Controller
             $boxes = array();
 
             /* Last registered users */
-            $boxes['lastUsers;left'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(28)));
+/*             $boxes['lastUsers;left'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(28))); */
 
             /* Login/Register box */
+/*
             if (!$this->get('security.context')->isGranted('ROLE_USER')) {
                 $boxes['login_register;right'] = $this->renderView('CMBundle:Homepage:boxAuthentication.html.twig');
             }
+*/
 
             /* Next eìvents */
             if ($request->get('_route') == 'homepage_index') {
@@ -58,10 +60,11 @@ class HomepageController extends Controller
             /* Sponsored */
             $sponsoreds = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale())), $page, 2);
             foreach ($sponsoreds as $sponsored) {
-                $boxes['homepage_'.$sponsored->getId()] = $this->renderView('CMBundle:Homepage:boxSponsored.html.twig', array('sponsored' => $sponsored));
+                $boxes['sponsored_'.$sponsored->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $sponsored->getEntity()->getPost(), 'postType' => 'sponsored'));
             }
 
             /* Box partners */
+/*
             if ($request->get('_route') == 'homepage_index') {
                 $homepageBoxes = $em->getRepository('CMBundle:HomepageBox')->getBoxes(4, array('locale' => $request->getLocale()));
                 foreach ($homepageBoxes as $box) {
@@ -92,28 +95,33 @@ class HomepageController extends Controller
                     $boxes['homepage_'.$box->getPosition()] = $this->renderView('CMBundle:Homepage:boxPartner.html.twig', array('box' => $box, 'objects' => $objects, 'biography' => $biography));
                 }
             }
+*/
 
             /* Vips */
             if (in_array($request->get('_route'), array('homepage_index', 'homepage_vips'))) {
                 $vips = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('vip' => true, 'entityCreation' => true, 'locale' => $request->getLocale())), $page, 2);
                 foreach ($vips as $post) {
-                    $boxes['vip_'.$post->getId()] = $this->renderView('CMBundle:Homepage:boxVip.html.twig', array('post' => $post));
+                    $boxes['vip_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post, 'postType' => 'vip'));
                 }
             }
 
             /* Reviews */
+/*
             if (in_array($request->get('_route'), array('homepage_index', 'homepage_newspaper'))) {
                 if ($page == 1) {
                     $reviews = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:HomepageArchive')->getLastReviews(array('locale' => $request->getLocale())), $page, 4);
                     $boxes['reviews'] = $this->renderView('CMBundle:Homepage:boxReviews.html.twig', array('reviews' => $reviews));
                 }
             }
+*/
 
             /* Banners */
+/*
             $banners = $em->getRepository('CMBundle:HomepageBanner')->getBanners(($page -1) * 2, 3);
             foreach ($banners as $banner) {
                 $boxes['banner_'.$banner->getId()] = $this->renderView('CMBundle:Homepage:boxBanner.html.twig', array('banner' => $banner));
             }
+*/
 
             /* Box fans */
             if ($this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'homepage_fans') {
@@ -152,7 +160,7 @@ class HomepageController extends Controller
 /*
             $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
             foreach ($posts as $post) {
-                $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Homepage:boxPost.html.twig', array('post' => $post));
+                $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
             }
 */
 

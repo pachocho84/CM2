@@ -7,7 +7,7 @@
 <div class="media" style="display: none;">
 
     {% if post.entity.images|length > 0 %}
-        {{ show_img_box(post.entity.image|default_img|imagine_filter('medium'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #}
+{#         {{ show_img_box(post.entity.image|default_img|imagine_filter('medium'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #} #}
     {% endif %}
 
     <div class="media-body">

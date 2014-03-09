@@ -1,10 +1,15 @@
+var wallColW3 = 1150;
+var wallColW2 = 750;
+var wallOrder = 0;
+var wallTimer;
+
 function calculateColumns() {
     var pageWidth = $(window).width();
 
     var columns;
-    if (pageWidth > 900) { // three columns
+    if (pageWidth > wallColW3) { // three columns
         columns = '<div class="col-xs-4" col="1"></div><div class="col-xs-4" col="2"></div><div class="col-xs-4" col="3"></div>';
-    } else if (pageWidth > 600) { // two columns 
+    } else if (pageWidth > wallColW2) { // two columns 
         columns = '<div class="col-xs-6" col="1"></div><div class="col-xs-6" col="2"></div>';
     } else { // one column
         columns = '<div class="col-xs-12" col="1"></div>';
@@ -18,23 +23,36 @@ function wallLoad(data, t, c, reload) {
 
     var columns = [];
     $.each($('#wall > div'), function(i, col) {
-        columns[i] = [$(col), $(col).outerHeight()];
+        columns[i] = $(col);
     });
 
     $.each(data, function(i, box) {
         if (i == 'loadMore') return;
 
+        var position = i.split(';')[1];
+
         $box = $(box);
+        
+        var column;
+        if (position == 'left') {
+            $box.attr('wall-col', 'left');
+            column = $('#wall > div:first');
+        } else if (position == 'right') {
+            $box.attr('wall-col', 'right');
+            column = $('#wall > div:last');
+        } else {
+            columns.sort(function(a, b) { return a.outerHeight() > b.outerHeight(); });
+            column = columns[0];
+        }
+
         $box.attr('wall-order', wallOrder);
         wallOrder++;
 
-        columns.sort(function(a, b) { return a[1] > b[1]; });
-
         $box.hide();
-        columns[0][0].append($box);
+        column.append($box);
 
         if (!reload) {
-            $box.find('.cycle-slideshowX').cycle({
+            $box.find('.cycle-slideshow').cycle({
                 loader: true,
                 log: false,
                 next: '.box-partner-nav-next',
@@ -45,19 +63,22 @@ function wallLoad(data, t, c, reload) {
             });
         }
 
-        $box.fadeIn('fast');
+        // $box.find('img').load(function() {
+        //     console.log($(this));
+        //     loading = false;
+        // });
 
-        columns[0][1] += $box.outerHeight();
+        $box.fadeIn('fast');
     });
 
     $('#wall ~ .load_more').remove();
     $('#wall').after($(data.loadMore));
 }
 
-var wallOrder = 0;
-var wallTimer;
-
 $(function() {
+    var a = 'r0';
+    console.log(a[0]);
+
     $('#wall').append(calculateColumns());
 
     $.get(document.URL, function(data) {
@@ -68,15 +89,20 @@ $(function() {
         var pageWidth = $(window).width();
         var num = $('#wall > div').length;
 
-        if ((pageWidth > 900 && num != 3) || (pageWidth <= 900 && pageWidth > 600 && num != 2) || (pageWidth <= 600 && num != 1)) {
+        if ((pageWidth > wallColW3 && num != 3) || (pageWidth <= wallColW3 && pageWidth > wallColW2 && num != 2) || (pageWidth <= wallColW2 && num != 1)) {
             clearTimeout(wallTimer);
             wallTimer = setTimeout(function() {
                 var $loadMore = $('#wall ~ .load_more').detach();            
 
                 var data = {};
-                $.each($('#wall > div > *'), function(i, elem) {
-                    $(elem).attr('old-order', $(elem).attr('wall-order'));
-                    data[$(elem).attr('wall-order')] = $(elem).detach();
+                $.each($('#wall > div > [wall-col=left'), function(i, elem) {
+                    data[$(elem).attr('wall-order') + ';left'] = $(elem).detach();
+                });
+                $.each($('#wall > div > [wall-col=right'), function(i, elem) {
+                    data[$(elem).attr('wall-order') + ';right'] = $(elem).detach();
+                });
+                $.each($('#wall > div > *:not([wall-col])'), function(i, elem) {
+                    data['order' + $(elem).attr('wall-order')] = $(elem).detach();
                 });
                 data['loadMore'] = $loadMore;
 
@@ -86,4 +112,16 @@ $(function() {
             }, 200);
         }
     });
+    
+    $('#wall > .col-xs-4').sortable({
+      connectWith: '.col-xs-4'
+    }).disableSelection();
+
+
+
+    // nav tabs
+    $('body').on('click', '.box .nav.nav-tabs a', function (event) {
+        event.preventDefault();
+        $(this).tab('show');
+    })
 });

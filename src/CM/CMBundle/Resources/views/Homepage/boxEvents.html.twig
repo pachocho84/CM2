@@ -9,12 +9,12 @@
     <div class="box-body objects">
         {% for date in dates %}
             <div class="media object">
-                {% if date.event.image is not null %}{{ show_img_box(date.event.image|imagine_filter('medium'), {width: 100, height: 66, box_attributes: {class: 'pull-left'}}) }}{% endif %}
+                {% if date.event.image is not null %}{{ show_img_box(date.event.image|imagine_filter('medium'), {width: 100, height: 66, link: path('event_show', {id: date.event.id, slug: date.event.getSlug}), box_attributes: {class: 'pull-left'}}) }}{% endif %}
                 <div class="media-body">
-                    <h4>{{ date.event }}</h4>
+                    <h4><a href="{{ path('event_show', {id: date.event.id, slug: date.event.getSlug}) }}" title="{{ date.event }}">{{ date.event }}</a></h4>
                     <small>
                         {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
-                        {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}<br/>
+                        {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
                         <span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span>
                     </small>
                 </div>
