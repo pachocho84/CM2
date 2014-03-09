@@ -94,13 +94,13 @@ abstract class Entity
     /**
      * @var integer
      *
-     * @ORM\Column(name="post_id", type="integer", nullable=false)
+     * @ORM\Column(name="post_id", type="integer", nullable=true)
      */
     private $postId;
 
     /**
      * @ORM\ManyToOne(targetEntity="Post")
-     * @ORM\JoinColumn(name="post_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="post_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $post;
 

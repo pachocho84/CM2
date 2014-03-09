@@ -20,12 +20,6 @@ class EntityTranslation
     use ORMBehaviors\Translatable\Translation;
 
     /**
-     * @ORM\OneToOne(targetEntity="Entity")
-     * @ORM\JoinColumn(name="translatable_id", referencedColumnName="id")
-     */
-    private $entity;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=150, nullable=true)
@@ -117,7 +111,7 @@ class EntityTranslation
      */
     public function getEntity()
     {
-        return $this->entity;
+        return $this->translatable;
     }
 
     /**
