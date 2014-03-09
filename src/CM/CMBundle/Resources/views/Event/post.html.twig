@@ -1,13 +1,17 @@
+{#
 <div class="post-image-container">
-    <img src="{{ post.entity.image|default_img|imagine_filter('full') }}" class="img-responsive"/>
+    <img src="{{ post.entity.image|default_img|imagine_filter('medium') }}" class="img-responsive" />
 </div>
+#}
 
 
 
-<div class="media" style="display: none;">
+<div class="media post-content">
 
-    {% if post.entity.images|length > 0 %}
-{#         {{ show_img_box(post.entity.image|default_img|imagine_filter('medium'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #} #}
+    {% if post.entity.image is not null %}
+        <a href="{{ path('event_show', {id: post.entity.id, slug: post.entity.getSlug}) }}" class="pull-left">
+            <img src="{{ post.entity.image|default_img|imagine_filter('medium') }}" />
+        </a>
     {% endif %}
 
     <div class="media-body">

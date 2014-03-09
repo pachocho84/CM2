@@ -112,15 +112,15 @@ liip_imagine:
     cache_clearer: false
     filter_sets:
         small:
-            quality: 100
+            quality: 90
             filters:
                 thumbnail_min: { size: 50, mode: inset }
         medium:
-            quality: 100
+            quality: 90
             filters:
-                thumbnail_min: { size: 400, mode: inset }
+                thumbnail_min: { size: 500, mode: inset }
         large:
-            quality: 100
+            quality: 90
             filters:
                 thumbnail_min: { size: 800, mode: inset }
         full:

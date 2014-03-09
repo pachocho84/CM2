@@ -1,4 +1,4 @@
-<li class="media comment comment_new {# <?php $comments->count() == 0 && $sf_request->getParameter('action') != 'show' and print ' hidden' ?> #}">
+<div class="media comment comment_new">
     {{ show_img_box(app.user.img|imagine_filter('small'), {width: 32, offset: app.user.imgOffset,  link: path('user_show', {slug: app.user.slug}), box_attributes: {class: 'pull-left'}}) }}
     <div class="media-body">      
         {{ form_start(form) }}
@@ -6,4 +6,4 @@
             <input type="submit" name="commit" value="{{ 'Send'|trans }}" class="pull-right btn btn-mini hidden" />
         {{ form_end(form) }}
     </div>
-</li>
+</div>
