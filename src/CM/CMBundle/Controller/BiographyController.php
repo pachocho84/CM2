@@ -88,12 +88,7 @@ class BiographyController extends Controller
             throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
         }
 
-        $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId());
-        if (count($biography) == 0) {
-            $biography = null;
-        } else {
-            $biography = $biography[0];
-        }
+        $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId(), array('locale' => $request->getLocale()));
 
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:Biography:box.html.twig', array(
@@ -171,12 +166,7 @@ class BiographyController extends Controller
             throw new NotFoundHttpException('Page not found.');
         }
 
-        $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($page->getId());
-        if (count($biography) == 0) {
-            $biography = null;
-        } else {
-            $biography = $biography[0];
-        }
+        $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($page->getId(), array('locale' => $request->getLocale()));
 
         return array('page' => $page, 'biography' => $biography);
     }
@@ -247,12 +237,7 @@ class BiographyController extends Controller
             throw new NotFoundHttpException('Group not found.');
         }
 
-        $biography = $em->getRepository('CMBundle:Biography')->getGroupBiography($group->getId());
-        if (count($biography) == 0) {
-            $biography = null;
-        } else {
-            $biography = $biography[0];
-        }
+        $biography = $em->getRepository('CMBundle:Biography')->getGroupBiography($group->getId(), array('locale' => $request->getLocale()));
 
         return array('group' => $group, 'biography' => $biography);
     }

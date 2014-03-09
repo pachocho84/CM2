@@ -131,10 +131,10 @@ abstract class Entity
      * @access public
      * @return void
      */
-    public function __toString()
-    {
-        return $this->proxyCurrentLocaleTranslation('__toString');
-    }
+    // public function __toString()
+    // {
+    //     return $this->proxyCurrentLocaleTranslation('__toString');
+    // }
 
     public function __call($method, $arguments)
     {

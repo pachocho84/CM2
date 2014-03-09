@@ -25,7 +25,7 @@
             <div class="media object">
                 <a href="{{ path('page_biography', {'slug': page.slug}) }}" class="pull-left img-thumbnail"><img src='{{ asset(page.img|imagine_filter('medium')) }}' width=200 class="media-object" /></a>
                 <div>
-                    <div class="text-justify">{{ biography }}</div>                
+                    <div class="text-justify">{{ biography|raw }}</div>                
                 
                     {% if is_granted('ROLE_USER') and biography is not null and biography.post is not null %}
                         {{ include('CMBundle::social.html.twig', {'post': biography.post}) }}
