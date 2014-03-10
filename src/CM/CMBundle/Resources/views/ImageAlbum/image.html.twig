@@ -72,7 +72,7 @@
 
                 <div class="col-lg-7">
                     <div class="media">
-                        {{ show_img_box(image.entity.post.publisher.img|imagine_filter('small'), {width: 32, height: 32, offset: image.entity.post.publisher.imgOffset, link: path(image.entity.post.publisherType ~ '_show', {slug: image.entity.post.publisher.slug}), box_attributes: {class: 'pull-left'}}) }}
+                        {{ show_img_box(image.entity.post.publisher.img|imagine_filter('avatar'), {width: 32, height: 32, offset: image.entity.post.publisher.imgOffset, link: path(image.entity.post.publisherType ~ '_show', {slug: image.entity.post.publisher.slug}), box_attributes: {class: 'pull-left'}}) }}
                         <div class="media-body">
                             <h4><a href="{{ path(image.entity.post.publisherType ~ '_show', {'slug': image.entity.post.publisher.slug}) }}">{{ image.entity.post.publisher }}</a></h4>
                             

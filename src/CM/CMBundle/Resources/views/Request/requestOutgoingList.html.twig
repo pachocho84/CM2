@@ -4,9 +4,9 @@
     {% for request in requests %}
         <li class="media object">
             {% if request.entity is not null %}
-                {{ show_img_box(request.entity.image.img|imagine_filter('small'), {width: 50, offset: request.entity.image.imgOffset, link: request.entity.image.id is not null ? path('image_show', {id: request.entity.image.id}) : null, box_attributes: {class: 'pull-left'}}) }}
+                {{ show_img_box(request.entity.image.img|imagine_filter('avatar'), {width: 50, offset: request.entity.image.imgOffset, link: request.entity.image.id is not null ? path('image_show', {id: request.entity.image.id}) : null, box_attributes: {class: 'pull-left'}}) }}
             {% else %}
-                {{ show_img_box(request.fromUser.img|imagine_filter('small'), {width: 50, offset: request.fromUser.imgOffset, link: path('user_show', {slug: request.fromUser.slug}), default: 'user', box_attributes: {class: 'pull-left'}}) }}
+                {{ show_img_box(request.fromUser.img|imagine_filter('avatar'), {width: 50, offset: request.fromUser.imgOffset, link: path('user_show', {slug: request.fromUser.slug}), default: 'user', box_attributes: {class: 'pull-left'}}) }}
             {% endif %}
 
             <div class="media-body ajax-link-target">

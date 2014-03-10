@@ -5,7 +5,7 @@
         <a href="{{ path('comment_edit', {id: comment.postId, commentId: comment.id}) }}" class="close invisible comment_edit-btn" data-placement="left" data-toggle>{{ icon('Edit') }}</a>
     {% endif %}
 
-    {{ show_img_box(comment.user.img|imagine_filter('small'), {'width': 32, 'height': 32, 'offset': comment.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+    {{ show_img_box(comment.user.img|imagine_filter('avatar'), {'width': 32, 'height': 32, 'offset': comment.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
 
     <div class="media-body">
         <a href="{{ path('user_show', {'slug': comment.user.slug}) }}" {{ user_box(comment.user) }} >{{ comment.user }}</a>

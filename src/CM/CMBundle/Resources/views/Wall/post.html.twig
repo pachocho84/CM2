@@ -21,7 +21,7 @@
     <div class="box-body">
         <div class="media post-heading"{% if updateMore|default(false) and loop is defined and loop.first %} update_more="{{ path(app.request.attributes.get('_route')|replace({'_update': ''})~'_update', app.request.attributes.get('_route_params')|merge({ 'lastUpdated': post.updatedAt.timestamp })) }}"{% endif %}>
             
-            {{ show_img_box(post.publisher.img|imagine_filter('small'), {width: 50, height: 50, offset: post.publisher.imgOffset,  link: path(post.publisherType ~ '_show', {slug: post.publisher.slug}), box_attributes: {class: 'pull-left img-rounded'}}) }}
+            {{ show_img_box(post.publisher.img|imagine_filter('avatar'), {width: 50, height: 50, offset: post.publisher.imgOffset,  link: path(post.publisherType ~ '_show', {slug: post.publisher.slug}), box_attributes: {class: 'pull-left img-rounded'}}) }}
         
             <div class="media-body">
         

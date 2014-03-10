@@ -28,13 +28,13 @@ abstract class EntityAdmin extends Admin;
                     'slug' => array('display' => false)
                 )
             ))
-            ->add('entityCategory', 'entity', array(
+            ->add('category', 'entity', array(
                 'class' => 'CMBundle:EntityCategory',
-                'query_builder' => function(EntityCategoryRepository $er) use ($options) {
+                'query_builder' => function(CategoryRepository $er) use ($options) {
                     // get Entity child class name, to retrieve the EntityCategoty type associated
                     $entityChild = strtoupper(preg_replace('/^[\w\d_\\\]*\\\/', '', rtrim(get_class($this), 'Type')));
-                    $entityCategory = constant('CM\CMBundle\Entity\EntityCategory::'.$entityChild);
-                    return $er->filterEntityCategoriesByEntityType($entityCategory, $options);
+                    $category = constant('CM\CMBundle\Entity\EntityEntityCategory::'.$entityChild);
+                    return $er->filterEntityCategoriesByEntityType($category, $options);
                 }
             ))
             ->add('entityUsers', 'collection', array(
@@ -75,13 +75,13 @@ abstract class EntityAdmin extends Admin;
                     'slug' => array('display' => false)
                 )
             ))
-            ->add('entityCategory', 'entity', array(
+            ->add('category', 'entity', array(
                 'class' => 'CMBundle:EntityCategory',
-                'query_builder' => function(EntityCategoryRepository $er) use ($options) {
+                'query_builder' => function(CategoryRepository $er) use ($options) {
                     // get Entity child class name, to retrieve the EntityCategoty type associated
                     $entityChild = strtoupper(preg_replace('/^[\w\d_\\\]*\\\/', '', rtrim(get_class($this), 'Admin')));
-                    $entityCategory = constant('CM\CMBundle\Entity\EntityCategory::'.$entityChild);
-                    return $er->filterEntityCategoriesByEntityType($entityCategory, $options);
+                    $category = constant('CM\CMBundle\Entity\EntityEntityCategory::'.$entityChild);
+                    return $er->filterEntityCategoriesByEntityType($category, $options);
                 }
             ))
             ->add('visible');
@@ -104,13 +104,13 @@ abstract class EntityAdmin extends Admin;
                     'slug' => array('display' => false)
                 )
             ))
-            ->add('entityCategory', 'entity', array(
+            ->add('category', 'entity', array(
                 'class' => 'CMBundle:EntityCategory',
-                'query_builder' => function(EntityCategoryRepository $er) use ($options) {
+                'query_builder' => function(CategoryRepository $er) use ($options) {
                     // get Entity child class name, to retrieve the EntityCategoty type associated
                     $entityChild = strtoupper(preg_replace('/^[\w\d_\\\]*\\\/', '', rtrim(get_class($this), 'Type')));
-                    $entityCategory = constant('CM\CMBundle\Entity\EntityCategory::'.$entityChild);
-                    return $er->filterEntityCategoriesByEntityType($entityCategory, $options);
+                    $category = constant('CM\CMBundle\Entity\EntityEntityCategory::'.$entityChild);
+                    return $er->filterEntityCategoriesByEntityType($category, $options);
                 }
             ))
             ->add('entityUsers', 'collection', array(

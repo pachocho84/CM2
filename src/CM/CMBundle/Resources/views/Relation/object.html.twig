@@ -1,5 +1,5 @@
 <div class="collection-item">
-    {{ show_img_box(relation.fromUser.img|imagine_filter('small'), {width: 50, offset: relation.fromUser.imgOffset, link: path('user_show', {slug: relation.fromUser.slug}), box_attributes: {class: 'pull-left'}}) }}
+    {{ show_img_box(relation.fromUser.img|imagine_filter('avatar'), {width: 50, offset: relation.fromUser.imgOffset, link: path('user_show', {slug: relation.fromUser.slug}), box_attributes: {class: 'pull-left'}}) }}
     <div class="">
         <h4 class="">
             <a href="{{ path('user_show', {'slug': relation.user.slug}) }}">{{ relation.fromUser|trans }}</a>

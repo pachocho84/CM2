@@ -27,9 +27,9 @@ class ThumbnailMinFilterLoader implements LoaderInterface
 
         if ($origWidth / $origHeight < 1) {
         	$width = $size;
-        	$height = (int)(($size / $origWidth) * $origHeight);
+        	$height = ceil(($size / $origWidth) * $origHeight);
         } else {
-        	$width = (int)(($size / $origHeight) * $origWidth);
+        	$width = ceil(($size / $origHeight) * $origWidth);
         	$height = $size;
         }
 

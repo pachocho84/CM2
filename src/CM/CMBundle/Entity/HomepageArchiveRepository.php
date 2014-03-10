@@ -33,13 +33,13 @@ class HomepageArchiveRepository extends BaseRepository
         $count = $this->getEntityManager()->createQueryBuilder()
             ->select('count(a.id)')
             ->from('CMBundle:Article', 'a')
-            ->join('a.homepageArchive', 'h', 'with', 'h.categoryId = :category_id')->setParameter(':category_id', $categoryId);
+            ->join('CMBundle:HomepageArchive', 'h', 'with', 'h.articleId = a.id and h.categoryId = :category_id')->setParameter(':category_id', $categoryId);
 
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('a, t, h, hc, hct, i, p, l, c, u, lu, cu, pg, gr')
             ->from('CMBundle:Article', 'a')
             ->leftJoin('a.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
-            ->join('a.homepageArchive', 'h', 'with', 'h.categoryId = :category_id')->setParameter(':category_id', $categoryId)
+            ->join('CMBundle:HomepageArchive', 'h', 'with', 'h.articleId = a.id and h.categoryId = :category_id')->setParameter(':category_id', $categoryId)
             ->join('h.category', 'hc')
             ->leftJoin('hc.translations', 'hct', 'with', 'hct.locale = :locale')->setParameter('locale', $options['locale'])
             ->leftJoin('a.images', 'i')
@@ -63,13 +63,13 @@ class HomepageArchiveRepository extends BaseRepository
         $count = $this->getEntityManager()->createQueryBuilder()
             ->select('count(a.id)')
             ->from('CMBundle:Article', 'a')
-            ->join('a.homepageArchive', 'h', 'with', 'h.categoryId = :category_id')->setParameter(':category_id', $categoryId);
+            ->join('CMBundle:HomepageArchive', 'h', 'with', 'h.articleId = a.id and h.categoryId = :category_id')->setParameter(':category_id', $categoryId);
 
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('a, t, h, hc, hct, i, p, l, c, u, lu, cu, pg, gr')
             ->from('CMBundle:Article', 'a')
             ->leftJoin('a.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
-            ->join('a.homepageArchive', 'h', 'with', 'h.categoryId = :category_id')->setParameter(':category_id', $categoryId)
+            ->join('CMBundle:HomepageArchive', 'h', 'with', 'h.articleId = a.id and h.categoryId = :category_id')->setParameter(':category_id', $categoryId)
             ->join('h.category', 'hc')
             ->leftJoin('hc.translations', 'hct', 'with', 'hct.locale = \'en\' and htc.slug = \'reviews\'')->setParameter('locale', $options['locale'])
             ->leftJoin('a.images', 'i')
@@ -96,7 +96,7 @@ class HomepageArchiveRepository extends BaseRepository
     //     }
 
     //     $query->from('CMBundle:Article', 'a')
-    //         ->leftJoin('a.entityCategory', 'ac')
+    //         ->leftJoin('a.category', 'ac')
     //         ->leftJoin('a.translations', 'at')
     //         ->andWhere('at.locale in (:locales)')
     //         ->innerJoin('a.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)

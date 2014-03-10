@@ -24,12 +24,6 @@ class Event extends Entity
     protected $id;
     
     /**
-     * @ORM\OneToMany(targetEntity="EventDate", mappedBy="event", cascade={"persist", "remove"})
-     * @Assert\Valid
-     */
-    private $eventDates;
-    
-    /**
      * Get id
      *
      * @return integer 

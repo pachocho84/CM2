@@ -3,7 +3,7 @@
 {% else %}
     {% for notification in notifications %}
         <li class="media object">
-            {{ show_img_box(notification.fromUser.img|imagine_filter('small'), {'width': 50, 'height': 50, 'offset': notification.fromUser.imgOffset,  'link': path('user_show', {'slug': notification.fromUser.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) }}
+            {{ show_img_box(notification.fromUser.img|imagine_filter('avatar'), {'width': 50, 'height': 50, 'offset': notification.fromUser.imgOffset,  'link': path('user_show', {'slug': notification.fromUser.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) }}
             
             <div class="media-body ajax-link-target">
                 {{ notification_tag(notification) }}

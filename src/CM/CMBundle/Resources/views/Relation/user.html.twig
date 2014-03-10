@@ -6,7 +6,7 @@
             <div class="box-body">
                 {% for suggestion in suggestions %}
                     <div class="">
-                        {{ show_img_box(suggestion.user.img|imagine_filter('small'), {width: 50, offset: suggestion.user.imgOffset, link: path('user_show', {slug: suggestion.user.slug}), box_attributes: {class: 'pull-left'}}) }}
+                        {{ show_img_box(suggestion.user.img|imagine_filter('avatar'), {width: 50, offset: suggestion.user.imgOffset, link: path('user_show', {slug: suggestion.user.slug}), box_attributes: {class: 'pull-left'}}) }}
                         <div class="">
                             <h4 class="">
                                 <a href="{{ path('user_show', {'slug': suggestion.user.slug}) }}">{{ suggestion.user|trans }}</a>

@@ -285,10 +285,10 @@ class PageController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $page = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
         
         if (!$page) {
-            throw new NotFoundHttpException('Group not found.');
+            throw new NotFoundHttpException('Page not found.');
         }
             
         if (!$request->isXmlHttpRequest()) {

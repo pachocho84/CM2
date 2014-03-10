@@ -57,7 +57,7 @@ class EntityCategoryTranslation
      * Set name
      *
      * @param string $name
-     * @return EntityCategoryTranslation
+     * @return CategoryTranslation
      */
     public function setName($name)
     {
@@ -80,7 +80,7 @@ class EntityCategoryTranslation
      * Set plural
      *
      * @param string $plural
-     * @return EntityCategoryTranslation
+     * @return CategoryTranslation
      */
     public function setPlural($plural)
     {
@@ -103,7 +103,7 @@ class EntityCategoryTranslation
      * Set slug
      *
      * @param string $slug
-     * @return EntityCategoryTranslation
+     * @return CategoryTranslation
      */
     public function setSlug($slug)
     {

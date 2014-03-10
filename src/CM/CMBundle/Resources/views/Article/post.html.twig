@@ -1,14 +1,17 @@
-<div class="media">
+<div class="media object post-content">
 
-    {% if post.entity.images|length > 0 %}
-        {{ show_img_box(post.entity.images[0].img|imagine_filter('medium'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #}
+    {% if post.entity.image is not null %}
+        <a href="{{ path('article_show', {id: post.entity.id, slug: post.entity.getSlug}) }}" class="pull-left">
+            <img src="{{ post.entity.image|default_img|imagine_filter('medium') }}" />
+        </a>
     {% endif %}
 
     <div class="media-body">
     
-        <h4><a href="{{ path('article_show', {'id': post.entity.id, 'slug': post.entity.getSlug}) }}">{{ post.entity }}</a></h4>
-        
-        {{ entity_short_text(post.entity) }}
+        <h4><a href="{{ path('event_show', {id: post.entity.id, slug: post.entity.getSlug}) }}">{{ post.entity }}</a></h4>
+        {% if post.entity.getSubtitle is not null %}<h5>{{ post.entity.getSubtitle }}</h5>{% endif %}
+
+        {{ entity_short_text(post.entity, {more: true}) }}
 
     </div><!-- END Media Body -->
 

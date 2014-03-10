@@ -32,14 +32,14 @@ class EntityType extends BaseEntityType
     {
         parent::buildForm($builder, $options);
         
-        $builder->add('entityCategory', 'entity', array(
+        $builder->add('category', 'entity', array(
                 'label' => 'Category',
                 'class' => 'CMBundle:EntityCategory',
-                'query_builder' => function(EntityCategoryRepository $er) use ($options) {
+                'query_builder' => function(CategoryRepository $er) use ($options) {
                     // get Entity child class name, to retrieve the EntityCategoty type associated
                     $entityChild = strtoupper(preg_replace('/^[\w\d_\\\]*\\\/', '', preg_replace('/Type$/', '', get_class($this))));
-                    $entityCategory = constant('CM\CMBundle\Entity\EntityCategory::'.$entityChild);
-                    return $er->filterEntityCategoriesByEntityType($entityCategory, $options);
+                    $category = constant('CM\CMBundle\Entity\EntityEntityCategory::'.$entityChild);
+                    return $er->filterEntityCategoriesByEntityType($category, $options);
                 }
             ))->add('images', 'collection', array(
                 'type' => new ImageType,

@@ -640,4 +640,25 @@ $(function() {
     $(document).on('click', '.relation-typeahead .dropdown-menu li', function (event) {
         $(event.currentTarget).closest('.relation-typeahead').attr('typeahead-callback', $(event.currentTarget).attr('typeahead-callback'));
     });
+
+
+
+    /* SHOW MORE TEXT */
+    $('body').on('click', '[show-more-trigger]', function(event) {
+        event.preventDefault();
+
+        $(event.currentTarget).parent().slideToggle(300, function() {
+            $(event.currentTarget).parent().parent().find('[show-more]').slideToggle(300);
+        });
+    });
+    $('body').on('click', '[show-less-trigger]', function(event) {
+        event.preventDefault();
+
+        $(event.currentTarget).parent().slideToggle(300, function() {
+            $('html, body').animate({
+                scrollTop: $(event.currentTarget).parent().parent().offset().top - 20
+            }, 300);
+            $(event.currentTarget).parent().parent().find('[show-less]').slideToggle(300);
+        });
+    });
 });

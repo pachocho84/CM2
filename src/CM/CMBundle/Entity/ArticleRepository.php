@@ -76,9 +76,9 @@ class ArticleRepository extends BaseRepository
         }
         
         if ($options['categoryId']) {
-            $count->andWhere('a.entityCategory = :category_id')
+            $count->andWhere('a.category = :category_id')
                 ->setParameter(':category_id', $options['categoryId']);
-            $query->andWhere('a.entityCategory = :category_id')
+            $query->andWhere('a.category = :category_id')
                 ->setParameter(':category_id', $options['categoryId']);
         }
 

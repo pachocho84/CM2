@@ -1,5 +1,5 @@
 <div class="media comment comment_new">
-    {{ show_img_box(app.user.img|imagine_filter('small'), {width: 32, offset: app.user.imgOffset,  link: path('user_show', {slug: app.user.slug}), box_attributes: {class: 'pull-left'}}) }}
+    {{ show_img_box(app.user.img|imagine_filter('avatar'), {width: 32, offset: app.user.imgOffset,  link: path('user_show', {slug: app.user.slug}), box_attributes: {class: 'pull-left'}}) }}
     <div class="media-body">      
         {{ form_start(form) }}
             {{ form_widget(form.comment, {no_container_class: true, attr: {comment_new: ''}}) }}

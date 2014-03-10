@@ -1,26 +1,70 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
-{% block title %}{{ 'wall' | trans | capitalize }}{% endblock %}
+{% set noColumns = true %}
 
-{% block body %}
-    <h2>{{ block('title') }}</h2>
-    
-    {#<ul class="breadcrumb">
-      <li><?php echo link_to('Home', '@homepage') ?></li>
-      <li class="active">{{ block('title') }}</li>
-    </ul>#}
+{% block title %}{{ 'The classical music portal'|trans }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+    %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block container %}
+{#
     <div class="row">
-        <div class="col-md-9 col-md-offset-3">
+        <div class="col-xs-4">
             <div class="box">
-                <div class="box-heading">
-                    <h3>{{ icon('Wall') | raw }} <span>{{ 'Last posts' | trans }}</span></h3>
-                </div>
                 <div class="box-body">
-                    {{ include('CMBundle:Wall:posts.html.twig') }}
+                    <div class="objects">
+                        <div class="object">
+                            <p>ratio: 1</p>
+                            {{ show_img_box('/bundles/cm/uploads/images/medium/892eda50c9566f74859fb54a7f7912225deed5f1.jpg', {ratio: 1.508}) }}
+                            <p>ratio: 0.1</p>
+                            {{ show_img_box('/bundles/cm/uploads/images/medium/892eda50c9566f74859fb54a7f7912225deed5f1.jpg', {ratio: 10}) }}
+                            <p>ratio: 3</p>
+                            {{ show_img_box('/bundles/cm/uploads/images/medium/892eda50c9566f74859fb54a7f7912225deed5f1.jpg', {ratio: 0.333}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="box">
+                <div class="box-body">
+                    <div class="objects">
+                        <div class="object">
+                            <p>width: 270, height: 179 (ratio: {{ 270 / 179 }}</p>
+                            {{ show_img_box('/bundles/cm/uploads/images/medium/892eda50c9566f74859fb54a7f7912225deed5f1.jpg', {width: 270, height: 179}) }}
+                            <p>width: 270, height: 27 (ratio: {{ 270 / 27 }}</p>
+                            {{ show_img_box('/bundles/cm/uploads/images/medium/892eda50c9566f74859fb54a7f7912225deed5f1.jpg', {width: 270, height: 27}) }}
+                            <p>width: 270, height: 180 (ratio: {{ 60 / 180 }}</p>
+                            {{ show_img_box('/bundles/cm/uploads/images/medium/892eda50c9566f74859fb54a7f7912225deed5f1.jpg', {width: 60, height: 180}) }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+#}
+    <ul class="nav nav-tabs">
+        <li{% if app.request.get('_route') == 'wall_index' %} class="active"{% endif %}><a href="{{ path('wall_index') }}">All</a></li>
+        <li{% if app.request.get('_route') == 'wall_vips' %} class="active"{% endif %}><a href="{{ path('wall_vips') }}">VIP</a></li>
+        <li{% if app.request.get('_route') == 'wall_fans' %} class="active"{% endif %}><a href="{{ path('wall_fans') }}">Fan</a></li>
+        <li{% if app.request.get('_route') == 'wall_connections' %} class="active"{% endif %}><a href="{{ path('wall_connections') }}">Connections</a></li>
+        <li{% if app.request.get('_route') == 'wall_editorial' %} class="active"{% endif %}><a href="{{ path('wall_editorial') }}">Editorial</a></li>
+    </ul>
 
+    <div class="row" id="wall"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+         '@CMBundle/Resources/public/js/wall.js'
+    %}
+         <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

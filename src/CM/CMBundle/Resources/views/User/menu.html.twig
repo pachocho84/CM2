@@ -82,7 +82,7 @@
 
 	<ul class="dropdown-menu dropdown-menu-right media-list">
         <li class="media dropdown-menu-header">
-            {{ show_img_box(app.getUser.img|imagine_filter('small'), {width: 50, offset: app.getUser.imgOffset, box_attributes: {class: 'pull-left'}}) }}
+            {{ show_img_box(app.getUser.img|imagine_filter('avatar'), {width: 50, offset: app.getUser.imgOffset, box_attributes: {class: 'pull-left'}}) }}
             <div class="media-body">
                 <h4 class="media-heading">{{ app.getUser }}</h4>
             </div>

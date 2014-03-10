@@ -32,6 +32,7 @@ class PostRepository extends BaseRepository
             'in' => array(),
             'exclude' => array(),
             'vip' => false,
+            'protagonists' => true,
             'locales' => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate' => true,
             'limit' => null,
@@ -68,14 +69,22 @@ class PostRepository extends BaseRepository
             ->select('count(p)');
             
         $query = $this->createQueryBuilder('p')
-            ->select('p, u, e, t, c, ct, i, ep, epl, epc, eplu, epcu')
+            ->select('p, u, pl, pc, plu, pcu, e, t, c, ct, i, d, ep, epu, epp, epg, epl, epc, eplu, epcu')
             ->join('p.user', 'u')
+            ->leftJoin('p.likes', 'pl')
+            ->leftJoin('p.comments', 'pc', '', '', 'pc.id')
+            ->leftJoin('pl.user', 'plu')
+            ->leftJoin('pc.user', 'pcu')
             ->join('p.entity', 'e')
             ->leftJoin('e.translations', 't', 'with', 't.locale in (:locales)')->setParameter('locales', $options['locales'])
-            ->leftJoin('e.entityCategory', 'c')
+            ->leftJoin('e.category', 'c')
             ->leftJoin('c.translations', 'ct', 'with', 'ct.locale = :locale')->setParameter('locale', $options['locale'])
-            ->leftJoin('e.images', 'i', 'with', 'i.main = '.true)
+            ->leftJoin('e.image', 'i')
+            ->leftJoin('e.eventDates', 'd')
             ->join('e.post', 'ep')
+            ->leftJoin('ep.user', 'epu')
+            ->leftJoin('ep.page', 'epp')
+            ->leftJoin('ep.group', 'epg')
             ->leftJoin('ep.likes', 'epl')
             ->leftJoin('ep.comments', 'epc', '', '', 'epc.id')
             ->leftJoin('epl.user', 'eplu')
@@ -88,6 +97,11 @@ class PostRepository extends BaseRepository
             $query->addSelect('pg, pp')
                 ->leftJoin('p.group', 'pg')
                 ->leftJoin('p.page', 'pp');
+        }
+        if ($options['protagonists']) {
+            $query->addSelect('eu, euu')
+                ->leftJoin('e.entityUsers', 'eu', 'with', 'eu.status = '.EntityUser::STATUS_ACTIVE, 'eu.userId')
+                ->leftJoin('eu.user', 'euu');
         }
         if ($options['entityCreation']) {
             $count->andWhere('p.type = '.Post::TYPE_CREATION.' AND p.object in (:objects)')
