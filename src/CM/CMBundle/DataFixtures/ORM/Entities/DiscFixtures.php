@@ -145,7 +145,7 @@ Angelo Formenti',
                 ),
             ),
             'text'  => 'This release is a delight from beginning to end...I greatly enjoy the character Bacchetti gives to [Capriccio sulla lontanaza del suo fratello diletissimo]...I like the sense of urbane bonhomie which Bacchetti find in these [Italian] variations, keeping our spirits up with sparks of wit amongst the sensitive regret and nostalgia elsewhere.',
-            'img'   => 'andaloro_cruel_beauty.jpg',
+            'img'   => 'bacchetti_the_italian_bach.jpg',
             'page'  => 1
         ),
     );
