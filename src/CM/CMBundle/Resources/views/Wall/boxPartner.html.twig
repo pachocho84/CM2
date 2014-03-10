@@ -26,7 +26,7 @@
             <div class="objects cycle-slideshow">
                 {% for object in objects %}
                     <div class="object">
-                        {{ show_img_box(object.image|default_img|imagine_filter('medium'), {width: 350, height: 210,  link: path('article_show', {id: object.id, slug: object.getSlug})}) }}
+                        {{ show_img_box(object.image|default_img|imagine_filter('medium'), {ratio: 1.6, link: path('article_show', {id: object.id, slug: object.getSlug})}) }}
                         <h3><a href="{{ path('article_show', {id: object.id, slug: object.getSlug}) }}">{{ object }}</a></h3>
                         <h4>
                         </h4>
@@ -57,7 +57,7 @@
             <div class="objects cycle-slideshow">
                 {% for object in objects %}
                     <div class="object">
-                        {{ show_img_box(object.event.image|default_img|imagine_filter('medium'), {width: 350, height: 210,  link: path('event_show', {id: object.event.id, slug: object.event.getSlug})}) }}
+                        {{ show_img_box(object.event.image|default_img|imagine_filter('medium'), {ratio: 1.6, link: path('event_show', {id: object.event.id, slug: object.event.getSlug})}) }}
                         <h3><a href="{{ path('event_show', {id: object.event.id, slug: object.event.getSlug}) }}">{{ object.event }}</a></h3>
                         <h4>
                             <span>{{ icon('Calendar') }} {{ object.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}</span>
@@ -80,7 +80,7 @@
             <div class="objects cycle-slideshow">
                 {% for object in objects %}
                     <div class="object">
-                        {{ show_img_box(object.image|default_img|imagine_filter('medium'), {width: 350, height: 210,  link: path('article_show', {id: object.id, slug: object.getSlug})}) }}
+                        {{ show_img_box(object.image|default_img|imagine_filter('medium'), {ratio: 1.6, link: path('article_show', {id: object.id, slug: object.getSlug})}) }}
                         <h3><a href="{{ path('article_show', {id: object.id, slug: object.getSlug}) }}">{{ object }}</a></h3>
                         <h4>
                         </h4>
@@ -102,7 +102,7 @@
                     {% if loop.index is odd %}
                         <div class="row object">
                     {% endif %}
-{#                         {{ show_img_box(object.image|default_img|imagine_filter('medium'), {width: 350, height: 210,  link: path('disc_show', {id: object.id, slug: object.getSlug})}) }} #}
+{#                         {{ show_img_box(object.image|default_img|imagine_filter('medium'), {ratio: 1.6, link: path('disc_show', {id: object.id, slug: object.getSlug})}) }} #}
                             <div class="col-md-6">
                                 <div class="">
                                     <img src="{{ object.image|default_img|imagine_filter('small') }}" class="img-responsive" />

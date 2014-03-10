@@ -40,30 +40,30 @@ class WallController extends Controller
             $boxes = array();
 
             /* Last registered users */
-/*             $boxes['lastUsers;left'] = $this->renderView('CMBundle:Wall:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(28))); */
+            $boxes['lastUsers;left'] = $this->renderView('CMBundle:Wall:boxLastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(28)));
+
+            /* Suggested users */
+            if ($this->get('security.context')->isGranted('ROLE_USER')) {
+                $relationTypes = $em->getRepository('CMBundle:RelationType')->findBy(array());
+                $boxes['suggestedUsers;left'] = $this->renderView('CMBundle:Wall:boxSuggested.html.twig', array('suggestions' => $em->getRepository('CMBundle:Relation')->getSuggestedUsers($this->getUser()->getId(), 0, 5, true), 'relationTypes' => $relationTypes));
+            }
 
             /* Login/Register box */
-/*
             if (!$this->get('security.context')->isGranted('ROLE_USER')) {
                 $boxes['login_register;right'] = $this->renderView('CMBundle:Wall:boxAuthentication.html.twig');
             }
-*/
 
             /* Next events */
-/*
             if ($request->get('_route') == 'wall_index') {
                 $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('locale' => $request->getLocale())), $page, 3);
                 $boxes['dates;right'] = $this->renderView('CMBundle:Wall:boxEvents.html.twig', array('dates' => $dates));
             }
-*/
 
             /* Sponsored */
-/*
             $sponsoreds = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale())), $page, 2);
             foreach ($sponsoreds as $sponsored) {
                 $boxes['sponsored_'.$sponsored->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $sponsored->getEntity()->getPost(), 'postType' => 'sponsored'));
             }
-*/
 
             /* Box partners */
             if ($request->get('_route') == 'wall_index') {
@@ -98,32 +98,26 @@ class WallController extends Controller
             }
 
             /* Vips */
-/*
             if (in_array($request->get('_route'), array('wall_index', 'wall_vips'))) {
                 $vips = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('vip' => true, 'entityCreation' => true, 'locale' => $request->getLocale())), $page, 2);
                 foreach ($vips as $post) {
                     $boxes['vip_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post, 'postType' => 'vip'));
                 }
             }
-*/
 
             /* Reviews */
-/*
             if (in_array($request->get('_route'), array('wall_index', 'wall_newspaper'))) {
                 if ($page == 1) {
                     $reviews = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:HomepageArchive')->getLastReviews(array('locale' => $request->getLocale())), $page, 4);
                     $boxes['reviews'] = $this->renderView('CMBundle:Wall:boxReviews.html.twig', array('reviews' => $reviews));
                 }
             }
-*/
 
             /* Banners */
-/*
             $banners = $em->getRepository('CMBundle:HomepageBanner')->getBanners(($page -1) * 2, 3);
             foreach ($banners as $banner) {
                 $boxes['banner_'.$banner->getId()] = $this->renderView('CMBundle:Wall:boxBanner.html.twig', array('banner' => $banner));
             }
-*/
 
             /* Box fans */
             if ($this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'wall_fans') {
@@ -147,7 +141,7 @@ class WallController extends Controller
             }
 
             /* Box connections */
-            if ($this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'wall_connections') {
+            if ($this->get('security.context')->isGranted('ROLE_USER') && in_array($request->get('_route'), array('wall_index', 'wall_connections'))) {
                 $relationsIds = $em->getRepository('CMBundle:Relation')->getRelationsIdsPerUser($this->getUser()->getId());
                 if (!empty($relationsIds)) {
                     $relationsIds = array_map(function($v) { return $v['fromUserId']; }, $relationsIds);
@@ -159,14 +153,12 @@ class WallController extends Controller
             }
 
             /* Posts */
-/*
-            if ($request->get('_route') == 'wall_index') {
+            if (!$this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'wall_index') {
                 $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
                 foreach ($posts as $post) {
                     $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
                 }
             }
-*/
 
             // $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:loadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
 

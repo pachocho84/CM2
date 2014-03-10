@@ -3,6 +3,7 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\EntityRepository as BaseRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * RelationRepository
@@ -140,7 +141,7 @@ class RelationRepository extends BaseRepository
             ->getArrayResult();
     }
 
-    public function getSuggestedUsers($userId, $offset, $limit)
+    public function getSuggestedUsers($userId, $offset, $limit, $rand = false)
     {
         $closest = $this->createQueryBuilder('r')
             ->select('partial r.{id, userId}')
@@ -150,7 +151,18 @@ class RelationRepository extends BaseRepository
             ->getQuery()->getArrayResult();
 
         if (count($closest) == 0) {
-            return;
+            $randIds = $this->getEntityManager()->getConnection()
+                ->executeQuery('SELECT id FROM user WHERE id != '.$userId.' ORDER BY RAND() LIMIT '.$limit)
+                ->fetchAll();
+            return $this->getEntityManager()->createQueryBuilder()
+                ->select('u, uut, ut, utt')
+                ->from('CMBundle:User', 'u')
+                ->leftJoin('u.userUserTags', 'uut')
+                ->leftJoin('uut.userTag', 'ut')
+                ->leftJoin('ut.translations', 'utt')
+                ->where('u.id in (:ids)')->setParameter('ids', $randIds)
+                ->getQuery()
+                ->getResult();
         }
 
         $closest = array_map(function($v) { return $v['userId']; }, $closest);
@@ -169,27 +181,37 @@ class RelationRepository extends BaseRepository
             ->leftJoin('r.fromUser', 'u')
             ->andWhere('r.fromUserId in (:user_ids_in)')->setParameter('user_ids_in', $closest)
             ->andWhere('r.userId not in (:user_ids_not_in)')->setParameter('user_ids_not_in', array_merge($closest, array_merge($pending, array($userId))))
-            ->andWhere('r.accepted = :accepted')->setParameter('accepted', Relation::ACCEPTED_BOTH)
-            ->getQuery()->getResult();
+            ->andWhere('r.accepted = :accepted')->setParameter('accepted', Relation::ACCEPTED_BOTH);
+        if ($rand) {
+            $relations->orderBy('rand()');
+        }
+        $relations = $relations->getQuery()->getResult();
 
         if (count($relations) == 0) {
             return;
         }
 
         $suggestions = array();
-        foreach ($relations as $relation) {
-            if (!array_key_exists($relation->getUserId(), $suggestions)) {
-                $suggestions[$relation->getUserId()]['count'] = 0;
-                $suggestions[$relation->getUserId()]['userId'] = $relation->getUserId();
-                $suggestions[$relation->getUserId()]['references'] = array();
+        if (!$rand) {
+            foreach ($relations as $relation) {
+                if (!isset($suggestions[$relation->getUserId()])) {
+                    $suggestions[$relation->getUserId()]['count'] = 0;
+                    // $suggestions[$relation->getUserId()]['userId'] = $relation->getUserId();
+                    $suggestions[$relation->getUserId()]['references'] = array();
+                }
+                $suggestions[$relation->getUserId()]['count']++;
+                if (!isset($suggestions[$relation->getUserId()]['references'][$relation->getFromUserId()])) {
+                    $suggestions[$relation->getUserId()]['references'][$relation->getFromUserId()] = $relation->getFromUser();
+                }
             }
-            $suggestions[$relation->getUserId()]['count']++;
-            if (!array_key_exists($relation->getFromUserId(), $suggestions[$relation->getUserId()]['references'])) {
-                $suggestions[$relation->getUserId()]['references'][$relation->getFromUserId()] = $relation->getFromUser();
+            uasort($suggestions, function($a, $b) { return $a['count'] < $b['count']; });
+        } else {
+            foreach ($relations as $relation) {
+                if (!isset($suggestions[$relation->getUserId()])) {
+                    $suggestions[$relation->getUserId()] = $relation->getUserId();
+                }
             }
         }
-
-        uasort($suggestions, function($a, $b) { return $a['count'] < $b['count']; });
         $suggestions = array_slice($suggestions, $offset, $limit, true);
 
         $users = $this->getEntityManager()->createQueryBuilder()
