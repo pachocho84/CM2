@@ -340,40 +340,42 @@ class CMExtension extends \Twig_Extension
 
         // Ratio
         $imageRatio = $imageFileSize[0] / $imageFileSize[1];
-        $boxRatio = $width / $height;
-        $ratio = $imageRatio / $boxRatio;
-
-        // Image format
-        if ($ratio == 1) {
-            $imageResizedWidth = $width;
-            $imageResizedHeight = $height;
-        } elseif ($ratio > 1) {
-            $imageResizedHeight = $height;
-            $imageResizedWidth = $height * $imageRatio;
-        } elseif ($ratio < 1) {
-            $imageResizedHeight = $width / $imageRatio;
-            $imageResizedWidth = $width;
+        if (!is_null($options['ratio'])) {
+            $boxRatio = $options['ratio'];
+        } else {
+            $boxRatio = $width / $height;
         }
+        $ratio = $imageRatio / $boxRatio;
 
         // Offset
         $imgStyle = array();
-        if (is_null($options['offset'])) {
-            if ($ratio > 1) { // landscape
-                $imgStyle[] = 'left: -'.(($imageResizedWidth - $width) / 2).'px';
-            } elseif ($ratio < 1) { // portrait
-                $imgStyle[] = 'top: -'.(min($imageResizedHeight - $height, $imageResizedHeight / 10)).'px';
-            }
+        if (!is_null($options['offset'])) {
+            $imgStyle[] = 'margin-'.($ratio > 1 ? 'left' : 'top').': -'.$options['offset'].'%';
         } else {
-            $imgStyle[] = ($ratio > 1 ? 'left' : 'top').': -'.$options['offset'].'%';
+            if ($ratio > 1) { // landscape
+                $imgStyle[] = 'left: -'.abs(($imageRatio / $boxRatio - 1) / 2 * 100).'%';
+            } elseif ($ratio < 1 && is_null($options['ratio'])) { // portrait
+                $imgStyle[] = 'top: -'.ceil(min($width / $imageRatio - $height, $width / $imageRatio / 10)).'px';
+            }
         }
 
         // Attributes
-        $options['box_attributes']['style'] = 'width: '.$width.'px;  height: '.$height.'px;'.(array_key_exists('style', $options['box_attributes']) ? ' '.$options['box_attributes']['style'] : '');
-        $options['box_attributes']['class'] = 'image_box'.(array_key_exists('class', $options['box_attributes']) ? ' '.$options['box_attributes']['class'] : '');
+        if (!is_null($options['ratio'])) {
+            $options['box_attributes']['style'] = 'width: 100%;  padding-top: '.(1 / $boxRatio * 100).'%;'.(isset($options['box_attributes']['style']) ? ' '.$options['box_attributes']['style'] : '');
+        } else {
+            $options['box_attributes']['style'] = 'width: '.$width.'px;  height: '.$height.'px;'.(isset($options['box_attributes']['style']) ? ' '.$options['box_attributes']['style'] : '');
+        }
+        $options['box_attributes']['class'] = 'image_box'.(isset($options['box_attributes']['class']) ? ' '.$options['box_attributes']['class'] : '');
 
-        $imgStyle[] = 'width: '.$imageResizedWidth.'px';
-        $imgStyle[] = 'height: '.$imageResizedHeight.'px';
-        if (array_key_exists('style', $options['img_attributes'])) {
+        if ($ratio == 1) {
+            $imgStyle[] = 'height: 100%';
+        } elseif (($ratio > 1 && is_null($options['ratio'])) || ($ratio > 1 && !is_null($options['ratio']))) {
+            $imgStyle[] = 'height: 100%';
+        } else {
+            $imgStyle[] = 'width: 100%';
+        }
+
+        if (isset($options['img_attributes']['style'])) {
             $imgStyle[] = $options['img_attributes']['style'];
             unset($options['img_attributes']['style']);
         }
