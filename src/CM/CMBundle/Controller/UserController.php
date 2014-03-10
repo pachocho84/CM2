@@ -393,7 +393,7 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         
-        $user = $em->getRepository('CMBundle:User')->getUserBySlug(array('usernameCanonical' => $slug));
+        $user = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
         
         if (!$user) {
             throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));

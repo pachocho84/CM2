@@ -16,11 +16,11 @@ class BiographyRepository extends BaseRepository
     static protected function getOptions(array $options = array())
     {
         $options = array_merge(array(
-            'locale'        => 'en'
+            'locale' => 'en'
         ), $options);
         
         return array_merge(array(
-            'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale'])))
+            'locales' => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale'])))
         ), $options);
     }
 
@@ -32,9 +32,7 @@ class BiographyRepository extends BaseRepository
             $biography = $this->createQueryBuilder('b')
                 ->select('b, t')
                 ->leftJoin('b.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
-                ->leftJoin('b.post', 'p')
-                ->leftJoin('p.user', 'u')
-                ->where('u.id = :user_id')->setParameter('user_id', $userId)
+                ->join('b.post', 'p', 'with', 'p.userId = :user_id')->setParameter('user_id', $userId)
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getSingleResult();
@@ -52,9 +50,7 @@ class BiographyRepository extends BaseRepository
             $biography = $this->createQueryBuilder('b')
                 ->select('b, t')
                 ->leftJoin('b.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
-                ->leftJoin('b.post', 'p')
-                ->leftJoin('p.group', 'g')
-                ->where('g.id = :group_id')->setParameter('group_id', $groupId)
+                ->join('b.post', 'p', 'with', 'p.groupId = :user_id')->setParameter('user_id', $userId)
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getSingleResult();
@@ -72,9 +68,7 @@ class BiographyRepository extends BaseRepository
             $biography = $this->createQueryBuilder('b')
                 ->select('b, t')
                 ->leftJoin('b.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
-                ->leftJoin('b.posts', 'p')
-                ->leftJoin('p.page', 'pg')
-                ->where('pg.id = :page_id')->setParameter('page_id', $pageId)
+                ->join('b.post', 'p', 'with', 'p.pageId = :user_id')->setParameter('user_id', $userId)
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getSingleResult();
