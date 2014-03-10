@@ -62,7 +62,7 @@ class DiscTrack
     /**
      * @var string
      *
-     * @ORM\Column(name="movement", type="string", length=150)
+     * @ORM\Column(name="movement", type="string", length=150, nullable=true)
      */
     private $movement;
 

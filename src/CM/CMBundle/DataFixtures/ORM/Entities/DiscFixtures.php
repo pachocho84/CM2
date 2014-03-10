@@ -52,6 +52,102 @@ class DiscFixtures
             'img'   => 'grigolo_ave_maria.jpg',
             'page'  => 1
         ),
+        array('title' => 'Cruel Beauty - Trascrizioni per pianoforte da musiche antiche',
+            'label' => 'Sony Classical Italia',
+            'year' => '2013-1-1',
+            'discTracks' => array(
+                array('composer'    => 'Bernardo Pasquini',
+                    'title'         => 'Toccata del secondo tono',
+                    'movement'      => null,
+                    'artists'       => 'Giuseppe Andaloro, pianoforte',
+                    'duration'      => '0:01:37'
+                ),
+                array('composer'    => 'Girolamo Frescobaldi',
+                    'title'         => 'Toccata seconda',
+                    'movement'      => null,
+                    'artists'       => 'Giuseppe Andaloro, pianoforte',
+                    'duration'      => '0:03:23'
+                ),
+                array('composer'    => 'Giovanni Pierluigi Da Palestrina',
+                    'title'         => 'Ricercare dei primi toni',
+                    'movement'      => null,
+                    'artists'       => 'Giuseppe Andaloro, pianoforte',
+                    'duration'      => '0:05:01'
+                ),
+                array('composer'    => 'Tarquinio Merula',
+                    'title'         => 'Sonata cromatica',
+                    'movement'      => null,
+                    'artists'       => 'Giuseppe Andaloro, pianoforte',
+                    'duration'      => '0:04:47'
+                ),
+            ),
+            'text'  => 'Secondo alcuni la musica non ha spazio, non ha tempo, espressione profondissima dell\'animo umano e proprio per questo fruibile addirittura in modo astratto, senza strumenti e senza parole, con la sola partitura: in altri termini, leggendo la musica sullo spartito, la si può far risuonare, pur se muta, dentro di noi, fruendo così dei valori assoluti in essa contenuti.
+Secondo altri non è affatto così e la musica è invece ben radicata nel tempo e nello spazio di chi la crea ed in cui è nata: non sarebbe cioè pienamente fruibile senza avere ben presente il momento storico, la società dalla quale e per la quale venne scritta.
+E in fondo queste riflessioni si ripropongono nel momento stesso in cui facciamo scivolare questo CD nel lettore: un pianoforte gran coda Fazioli è lo strumento utilizzato dal talentuosissimo Giuseppe Andaloro per proporci un programma di musiche italiane, vocali e
+strumentali, cinque-seicentesche.
+Frescobaldi e Pasquini, Gabrieli e Merula, Palestrina e Valente vengono letti e proposti con un pianoforte contemporaneo, rendendo forse così ragione al titolo "bellezza crudele" del CD e col quale gli ascoltatori sono chiamati a misurarsi.
+ 
+Angelo Formenti',
+            'img'   => 'andaloro_cruel_beauty.jpg',
+            'page'  => 1
+        ),
+        array('title' => 'The Italian Bach',
+            'label' => 'Sony Classical Italia',
+            'year' => '2013-1-1',
+            'discTracks' => array(
+                array('composer'    => 'Johann Sebastian Bach',
+                    'title'         => 'Capriccio sulla lontananza del suo fratello dilettissimo, BWV: Arioso - Adagio',
+                    'movement'      => null,
+                    'artists'       => 'Andrea Bacchetti',
+                    'duration'      => '0:02:22'
+                ),
+                array('composer'    => 'Johann Sebastian Bach',
+                    'title'         => 'Capriccio sulla lontananza del suo fratello dilettissimo, BWV: Andante',
+                    'movement'      => null,
+                    'artists'       => 'Andrea Bacchetti',
+                    'duration'      => '0:02:22'
+                ),
+                array('composer'    => 'Johann Sebastian Bach',
+                    'title'         => 'Capriccio sulla lontananza del suo fratello dilettissimo, BWV: Adagiosissimo',
+                    'movement'      => null,
+                    'artists'       => 'Andrea Bacchetti',
+                    'duration'      => '0:02:22'
+                ),
+                array('composer'    => 'Johann Sebastian Bach',
+                    'title'         => 'Capriccio sulla lontananza del suo fratello dilettissimo, BWV: Recitativo',
+                    'movement'      => null,
+                    'artists'       => 'Andrea Bacchetti',
+                    'duration'      => '0:02:22'
+                ),
+                array('composer'    => 'Johann Sebastian Bach',
+                    'title'         => 'Capriccio sulla lontananza del suo fratello dilettissimo, BWV: Aria di Postiglione',
+                    'movement'      => null,
+                    'artists'       => 'Andrea Bacchetti',
+                    'duration'      => '0:02:22'
+                ),
+                array('composer'    => 'Johann Sebastian Bach',
+                    'title'         => 'Capriccio sulla lontananza del suo fratello dilettissimo, BWV: Fuga all\'imitazione della cornetta di Potiglione',
+                    'movement'      => null,
+                    'artists'       => 'Andrea Bacchetti',
+                    'duration'      => '0:02:22'
+                ),
+                array('composer'    => 'Johann Sebastian Bach',
+                    'title'         => 'Aria Variata alla maniera italiana: Aria',
+                    'movement'      => null,
+                    'artists'       => 'Andrea Bacchetti',
+                    'duration'      => '0:02:22'
+                ),
+                array('composer'    => 'Johann Sebastian Bach',
+                    'title'         => 'Aria Variata alla maniera italiana: Variazione I (largo)',
+                    'movement'      => null,
+                    'artists'       => 'Andrea Bacchetti',
+                    'duration'      => '0:02:22'
+                ),
+            ),
+            'text'  => 'This release is a delight from beginning to end...I greatly enjoy the character Bacchetti gives to [Capriccio sulla lontanaza del suo fratello diletissimo]...I like the sense of urbane bonhomie which Bacchetti find in these [Italian] variations, keeping our spirits up with sparks of wit amongst the sensitive regret and nostalgia elsewhere.',
+            'img'   => 'andaloro_cruel_beauty.jpg',
+            'page'  => 1
+        ),
     );
 
     public static function count()
