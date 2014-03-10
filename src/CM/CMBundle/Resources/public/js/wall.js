@@ -59,7 +59,8 @@ function wallLoad(data, t, c, reload) {
                 pauseOnHover: true,
                 prev: '.box-partner-nav-prev',
                 slides: '> div',
-                swipe: true
+                swipe: true,
+                fx: 'scrollHorz'
             });
         }
 

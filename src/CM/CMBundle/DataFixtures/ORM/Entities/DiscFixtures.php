@@ -91,6 +91,45 @@ Angelo Formenti',
             'img'   => 'andaloro_cruel_beauty.jpg',
             'page'  => 1
         ),
+        array('title' => 'Bruckner: Symphony No. 7 In E Major',
+            'label' => 'Sony Classical Italia',
+            'year' => '2013-1-1',
+            'discTracks' => array(
+                array('composer'    => 'Anton Bruckner',
+                    'title'         => 'Symphony No. 7 In E Major: I. Allegro Moderato',
+                    'movement'      => '1',
+                    'artists'       => 'Kent Nagano',
+                    'duration'      => '0:20:26'
+                ),
+                array('composer'    => 'Anton Bruckner',
+                    'title'         => 'Symphony No. 7 In E Major: II. Adagio. Sehr Feierlich Und Sehr Langsam',
+                    'movement'      => '2',
+                    'artists'       => 'Kent Nagano',
+                    'duration'      => '0:22:07'
+                ),
+                array('composer'    => 'Anton Bruckner',
+                    'title'         => 'Symphony No. 7 In E Major: III. Scherzo. Sehr Schnell - Trio. Etwas Langsamer',
+                    'movement'      => '3',
+                    'artists'       => 'Kent Nagano',
+                    'duration'      => '0:09:53'
+                ),
+                array('composer'    => 'Anton Bruckner',
+                    'title'         => 'Symphony No. 7 In E Major: IV. Finale. Bewegt, Doch Nicht Schnell',
+                    'movement'      => '4',
+                    'artists'       => 'Kent Nagano',
+                    'duration'      => '0:12:29'
+                ),
+            ),
+            'text'  => 'Secondo alcuni la musica non ha spazio, non ha tempo, espressione profondissima dell\'animo umano e proprio per questo fruibile addirittura in modo astratto, senza strumenti e senza parole, con la sola partitura: in altri termini, leggendo la musica sullo spartito, la si può far risuonare, pur se muta, dentro di noi, fruendo così dei valori assoluti in essa contenuti.
+Secondo altri non è affatto così e la musica è invece ben radicata nel tempo e nello spazio di chi la crea ed in cui è nata: non sarebbe cioè pienamente fruibile senza avere ben presente il momento storico, la società dalla quale e per la quale venne scritta.
+E in fondo queste riflessioni si ripropongono nel momento stesso in cui facciamo scivolare questo CD nel lettore: un pianoforte gran coda Fazioli è lo strumento utilizzato dal talentuosissimo Giuseppe Andaloro per proporci un programma di musiche italiane, vocali e
+strumentali, cinque-seicentesche.
+Frescobaldi e Pasquini, Gabrieli e Merula, Palestrina e Valente vengono letti e proposti con un pianoforte contemporaneo, rendendo forse così ragione al titolo "bellezza crudele" del CD e col quale gli ascoltatori sono chiamati a misurarsi.
+ 
+Angelo Formenti',
+            'img'   => 'nagano_bruckner.jpg',
+            'page'  => 1
+        ),
         array('title' => 'The Italian Bach',
             'label' => 'Sony Classical Italia',
             'year' => '2013-1-1',

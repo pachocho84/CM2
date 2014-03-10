@@ -99,7 +99,19 @@
             </div>
             <div class="objects cycle-slideshow">
                 {% for object in objects %}
-                    {{ object|class_name }}
+                    {% if loop.index is odd %}
+                        <div class="row object">
+                    {% endif %}
+{#                         {{ show_img_box(object.image|default_img|imagine_filter('medium'), {width: 350, height: 210,  link: path('disc_show', {id: object.id, slug: object.getSlug})}) }} #}
+                            <div class="col-md-6">
+                                <div class="">
+                                    <img src="{{ object.image|default_img|imagine_filter('small') }}" class="img-responsive" />
+                                    <h4>clakj lsakja lksjl aksj lkjs</h4>  
+                                </div>
+                            </div>
+                    {% if loop.index is even %}
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         {% endif %}
