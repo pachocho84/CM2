@@ -18,7 +18,7 @@
             {% for member in members %}
                 <div class="leftColumnListUser">
                     <a href="{{ path('user_show', {'slug': member.user.slug}) }}" class="leftColumnListUser-img">
-                        {{ show_img_box(member.user.img|imagine_filter('small'), {'width': 32, 'height': 32, 'offset': member.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+                        {{ show_img_box(member.user.img|imagine_filter('avatar'), {'width': 32, 'height': 32, 'offset': member.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
                     </a>  
                     <div class="leftColumnListUser-content">                                                                          
                         <span class="leftColumnListUser-name"><a href="{{ path('user_show', {'slug': member.user.slug}) }}" class="leftColumnListUser-img">{{ member.user.firstName }}</span>   

@@ -26,14 +26,6 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 class HomepageController extends Controller
 {
-    /**
-     * @Route("/{page}", name="homepage_index", requirements={"page"="\d+"})
-     * @Route("/vips/{page}", name="homepage_vips")
-     * @Route("/fans/{page}", name="homepage_fans")
-     * @Route("/connections/{page}", name="homepage_connections")
-     * @Route("/editorial/{page}", name="homepage_editorial")
-     * @Template
-     */
     public function indexAction(Request $request, $page = 1)
     {
         if ($request->isXmlHttpRequest()) {
@@ -42,14 +34,12 @@ class HomepageController extends Controller
             $boxes = array();
 
             /* Last registered users */
-/*             $boxes['lastUsers;left'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(28))); */
+            $boxes['lastUsers;left'] = $this->renderView('CMBundle:Homepage:lastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(28)));
 
             /* Login/Register box */
-/*
             if (!$this->get('security.context')->isGranted('ROLE_USER')) {
                 $boxes['login_register;right'] = $this->renderView('CMBundle:Homepage:boxAuthentication.html.twig');
             }
-*/
 
             /* Next events */
             if ($request->get('_route') == 'homepage_index') {
@@ -104,22 +94,18 @@ class HomepageController extends Controller
             }
 
             /* Reviews */
-/*
             if (in_array($request->get('_route'), array('homepage_index', 'homepage_newspaper'))) {
                 if ($page == 1) {
                     $reviews = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:HomepageArchive')->getLastReviews(array('locale' => $request->getLocale())), $page, 4);
                     $boxes['reviews'] = $this->renderView('CMBundle:Homepage:boxReviews.html.twig', array('reviews' => $reviews));
                 }
             }
-*/
 
             /* Banners */
-/*
             $banners = $em->getRepository('CMBundle:HomepageBanner')->getBanners(($page -1) * 2, 3);
             foreach ($banners as $banner) {
                 $boxes['banner_'.$banner->getId()] = $this->renderView('CMBundle:Homepage:boxBanner.html.twig', array('banner' => $banner));
             }
-*/
 
             /* Box fans */
             if ($this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'homepage_fans') {
@@ -137,7 +123,7 @@ class HomepageController extends Controller
                     }
                     $fans = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('in' => $in, 'locale' => $request->getLocale())), $page, 30);
                     foreach ($fans as $post) {
-                        $boxes['connection_'.$post->getId()] = $this->renderView('CMBundle:Homepage:boxPost.html.twig', array('post' => $post));
+                        $boxes['fan_'.$post->getId()] = $this->renderView('CMBundle:Homepage:boxPost.html.twig', array('post' => $post));
                     }
                 }
             }
@@ -155,12 +141,12 @@ class HomepageController extends Controller
             }
 
             /* Posts */
-/*
-            $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
-            foreach ($posts as $post) {
-                $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
+            if ($request->get('_route') == 'homepage_index') {
+                $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
+                foreach ($posts as $post) {
+                    $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
+                }
             }
-*/
 
             // $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:loadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
 

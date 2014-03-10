@@ -5,7 +5,7 @@
 
     <div class="objects box-body square-images-grid clearfix">
         {% for user in lastUsers %}
-            {{ show_img_box(user.img|imagine_filter('small'), {width: 50, offset: user.imgOffset, link: path('user_show', {'slug': user.slug}), user_box: user}) }}
+            {{ show_img_box(user.img|imagine_filter('avatar'), {width: 50, offset: user.imgOffset, link: path('user_show', {'slug': user.slug}), user_box: user}) }}
         {% endfor %}
     </div>
 </div>

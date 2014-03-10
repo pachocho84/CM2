@@ -266,38 +266,32 @@ class CMExtension extends \Twig_Extension
             'moreTextAlt' => $this->translator->trans('show less')
         ), $options);
 
-        if (!$options['more'] && $entity->getExtract() && ($this->securityContext->isGranted('ROLE_ADMIN') || $this->securityContext->isGranted('ROLE_CLIENT'))) {
+        if (!empty($entity->getExtract())) {
             $text = $entity->getExtract();
         } else {
-            $text = $entity->getText();
-        }
-
-        $text_stripped = strip_tags($text);
-
-        if ($options['stripped']) {
-            $text = $text_stripped;
+            $text = strip_tags($entity->getText());
         }
 
         if ($text == '') {
-            return false;
+            return null;
         }
 
-        if (strlen($text_stripped) > $options['max']) {
-            preg_match("#^.{1,".$options['max']."}(\.|\:|\!|\?)#s", $text_stripped, $matches);
+        if (empty($entity->getExtract()) && strlen($text) > $options['max']) {
+            preg_match('/^.{'.($options['max'] * 0.75).','.$options['max'].'}(\.|\:|\!|\?)/s', $text, $matches);
             if (array_key_exists(0, $matches)) {
                 $text = rtrim($matches[0], '.:').'.';
             } else {
-                $text = rtrim(Helper::truncate_text($text_stripped, $options['max'], '', true), ',.;!?:');
+                $text = rtrim(Helper::truncate_text($text, $options['max'], '', true), ',.;!?:');
                 if (!$options['more']) {
                     $text .= '...';
                 }
             }
+            $text = $this->getSimpleFormatText($text);
         }
-        $text = $options['stripped'] ? $this->getSimpleFormatText($text) : $this->getShowText($text);
 
-        if ($options['more']) {
-            $text .= ' <div id="show_more-entity_'.$entity->getId().'">'.substr($entity->getText(), strlen($text)).'</div>';
-            // $text .= '<a href="show_more-entity_'.$entity->getId().'" class="box-collapser collapsed" data-toggle="collapse"'.' text-alt="'+ $this->translator->trans($options['moreTextAlt']).'">'.$this->translator->trans($options['moreText']).'</a>';
+        if ($options['more'] && strlen($text) < strlen($entity->getText())) {
+            $text = '<div show-less>'.$text.' <a href="#" class="small" show-more-trigger>'.$this->translator->trans('Show more').'</a></div>
+                     <div style="display: none;" show-more>'.$entity->getText().' <a href="#" class="small" show-less-trigger>'.$this->translator->trans('Show less').'</a></div>';
         }
 
         return $text;
@@ -559,19 +553,19 @@ class CMExtension extends \Twig_Extension
         switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Event_'.Post::TYPE_CREATION:
                 $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                $categoryLink  = $this->router->generate('event_category', array('category_slug' => $post->getEntity()->getEntityCategory()->getSlug()));
+                $categoryLink  = $this->router->generate('event_category', array('category_slug' => $post->getEntity()->getCategory()->getSlug()));
                 return $this->translator->trans('%user% published the event %object% in %category%.', array(
                     '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                     '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>',
-                    '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getEntityCategory()->getPlural()).'</a>'
+                    '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getCategory()->getPlural()).'</a>'
                 ));
             case 'Disc_'.Post::TYPE_CREATION:
                 $objectLink = $this->router->generate('disc_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                $categoryLink  = $this->router->generate('disc_category', array('category_slug' => $post->getEntity()->getEntityCategory()->getSlug()));
+                $categoryLink  = $this->router->generate('disc_category', array('category_slug' => $post->getEntity()->getCategory()->getSlug()));
                 return $this->translator->trans('%user% published the dics %object% in %category%.', array(
                     '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                     '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>',
-                    '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getEntityCategory()->getPlural()).'</a>'
+                    '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getCategory()->getPlural()).'</a>'
                 ));
             case 'Comment_'.Post::TYPE_CREATION:
                 $likeOrComment = 'commented on';

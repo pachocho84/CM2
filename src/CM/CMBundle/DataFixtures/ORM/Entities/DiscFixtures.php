@@ -175,7 +175,7 @@ Angelo Formenti',
         
         /* Category */
         $category = $manager->merge($fixture->getReference('disc_category-1'));
-        $disc->setEntityCategory($category);
+        $disc->setCategory($category);
            
         /* Tracks */
         for ($j = 0; $j < count(DiscFixtures::$discs[$i]['discTracks']); $j++) {
@@ -208,7 +208,7 @@ Angelo Formenti',
         }
 
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
-        $manager->persist($post); // SE TOLGO QUESTO IN POST.OBJECT_IDS INVECE DI CHANGED METTE ,,
+        $manager->persist($post);
         $post->setPage($page)
             ->setGroup($group);
 

@@ -27,7 +27,7 @@ class HomepageArchive
     private $articleId;
 
     /**
-     * @ORM\OneToOne(targetEntity="Article", inversedBy="homepageArchive")
+     * @ORM\OneToOne(targetEntity="Article")
      * @ORM\JoinColumn(name="article_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $article;

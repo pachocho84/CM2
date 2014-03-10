@@ -57,6 +57,12 @@ abstract class Entity
      * @ORM\Column(name="date", type="date", nullable=true)
      */
     private $date;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="EventDate", mappedBy="event", cascade={"persist", "remove"})
+     * @Assert\Valid
+     */
+    private $eventDates;
 
     /**
      * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")
@@ -64,7 +70,7 @@ abstract class Entity
      * @Assert\Valid
      * @Assert\NotNull(groups="Event")
      */
-    private $entityCategory;
+    private $category;
 
     /**
      * @var integer
@@ -229,9 +235,9 @@ abstract class Entity
      * @param boolean $visible
      * @return Entity
      */
-    public function setEntityCategory($entityCategory)
+    public function setCategory($category)
     {
-        $this->entityCategory = $entityCategory;
+        $this->category = $category;
     
         return $this;
     }
@@ -239,9 +245,9 @@ abstract class Entity
     /**
      * @return boolean 
      */
-    public function getEntityCategory()
+    public function getCategory()
     {
-        return $this->entityCategory;
+        return $this->category;
     }
 
     /**

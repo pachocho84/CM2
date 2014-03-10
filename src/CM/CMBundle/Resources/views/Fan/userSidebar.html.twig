@@ -10,7 +10,7 @@
         <div class="objects box-body square-images-grid">
             {% for i in 0..(fans|length - 1) if i < 7 or i < fans|length - (fans|length % 7) %}
                 {% set fan = fans[i] %}
-                    {{ show_img_box(fan.img|imagine_filter('small'), {width: 50, offset: fan.imgOffset, link: path('user_show', {'slug': fan.slug})}) }}
+                    {{ show_img_box(fan.img|imagine_filter('avatar'), {width: 50, offset: fan.imgOffset, link: path('user_show', {'slug': fan.slug})}) }}
             {% endfor %}
         </div>
         

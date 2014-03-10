@@ -21,11 +21,6 @@ class Article extends Entity
      */
     protected $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity="HomepageArchive", mappedBy="article", cascade={"persist", "remove"})
-     **/
-    private $homepageArchive = null;
-
     public function __construct()
     {
         parent::__construct();
@@ -49,31 +44,5 @@ class Article extends Entity
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set homepageArchive
-     *
-     * @param string $homepageArchive
-     * @return Article
-     */
-    public function setHomepageArchive($homepageArchive)
-    {
-        $this->homepageArchive = $homepageArchive;
-        if (!is_null($homepageArchive)) {
-            $homepageArchive->setArticle($this);
-        }
-    
-        return $this;
-    }
-
-    /**
-     * Get homepageArchive
-     *
-     * @return string 
-     */
-    public function getHomepageArchive()
-    {
-        return $this->homepageArchive;
     }
 }

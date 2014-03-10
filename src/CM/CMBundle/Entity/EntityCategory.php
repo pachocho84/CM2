@@ -41,7 +41,7 @@ class EntityCategory
     private $entityType;
      
     /**
-     * @ORM\OneToMany(targetEntity="Entity", mappedBy="entityCategory")
+     * @ORM\OneToMany(targetEntity="Entity", mappedBy="category")
      */
     private $entities;
     
@@ -79,7 +79,7 @@ class EntityCategory
      * Set entityType
      *
      * @param array $entityType
-     * @return EntityCategory
+     * @return Category
      */
     public function setEntityType($entityType)
     {
@@ -108,7 +108,7 @@ class EntityCategory
     {
         if (!$this->entities->contains($entity)) {
             $this->entities[] = $entity;
-            $entity->setEntityCategory($this);
+            $entity->setCategory($this);
         }
     
         return $this;

@@ -111,10 +111,14 @@ liip_imagine:
     cache_prefix: %images.dir%
     cache_clearer: false
     filter_sets:
-        small:
+        avatar:
             quality: 90
             filters:
                 thumbnail_min: { size: 50, mode: inset }
+        small:
+            quality: 90
+            filters:
+                thumbnail_min: { size: 250, mode: inset }
         medium:
             quality: 90
             filters:

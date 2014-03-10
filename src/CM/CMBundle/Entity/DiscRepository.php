@@ -76,9 +76,9 @@ class DiscRepository extends BaseRepository
         }
         
         if ($options['categoryId']) {
-            $count->andWhere('d.entityCategory = :category_id')
+            $count->andWhere('d.category = :category_id')
                 ->setParameter(':category_id', $options['categoryId']);
-            $query->andWhere('d.entityCategory = :category_id')
+            $query->andWhere('d.category = :category_id')
                 ->setParameter(':category_id', $options['categoryId']);
         }
 
@@ -94,7 +94,7 @@ class DiscRepository extends BaseRepository
         return $this->createQueryBuilder('d')
             ->select('d, t, ec, ect, dt, i, p, u, pg, gr')
             ->leftJoin('d.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
-            ->leftJoin('d.entityCategory', 'ec')
+            ->leftJoin('d.category', 'ec')
             ->leftJoin('ec.translations', 'ect', 'with', 'ect.locale = :locale')->setParameter('locale', $options['locale'])
             ->leftJoin('d.discTracks', 'dt')
             ->leftJoin('d.images', 'i', 'with', 'i.main = '.true)

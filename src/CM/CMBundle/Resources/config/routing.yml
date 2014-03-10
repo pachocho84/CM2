@@ -10,10 +10,6 @@ cm_cmbundle_search:
     resource: "CM\\CMBundle\\Controller\\SearchController"
     type:     annotation
 
-cm_cmbundle_wall:
-    resource: "CM\\CMBundle\\Controller\\WallController"
-    type:     annotation
-
 cm_cmbundle_fan:
     resource: "CM\\CMBundle\\Controller\\FanController"
     type:     annotation
@@ -122,8 +118,8 @@ _imagine:
     resource: .
     type: imagine
 
-cm_cmbundle_homepage:
-    resource: "CM\\CMBundle\\Controller\\HomepageController"
+cm_cmbundle_wall:
+    resource: "CM\\CMBundle\\Controller\\WallController"
     type:     annotation
 
 cm_cmbundle_user:

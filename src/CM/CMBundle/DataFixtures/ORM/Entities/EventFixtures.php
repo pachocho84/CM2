@@ -30,17 +30,21 @@ class EventFixtures
         array(
             'title'     => 'Quartetto di Cremona - Esecuzione integrale dei Quartetti per archi di Beethoven - V', 
             'subtitle'  => '', 
-            'extract'   => '', 
-            'text'      => 'Esecuzione integrale dei Quartetti per archi di Beethoven - VL. van Beethoven ‐ Quartetto n. 1 in fa maggiore op. 18 n. 1<br/>L. van Beethoven ‐ Grande Fuga in si bemolle maggiore op. 133<br/>L. van Beethoven ‐ Quartetto n. 2 in sol maggiore op. 18 n.', 
+            'extract'   => null, 
+            'text'      => 'Esecuzione integrale dei Quartetti per archi di Beethoven - VL. van Beethoven ‐ Quartetto n. 1 in fa maggiore op. 18 n. 1
+L. van Beethoven ‐ Grande Fuga in si bemolle maggiore op. 133
+L. van Beethoven ‐ Quartetto n. 2 in sol maggiore op. 18 n.', 
             'img'       => 'quartetto_cremona.jpg',
             'dates'     => 1,
             'page'      => 2,
         ),
         array(
-            'title'     => 'F.J. Haydn ‐ "La Creazione", Orchestre des Champs-Elysées - Collegium Vocale Gent - Philippe Herreweghe', 
+            'title'     => 'F.J. Haydn ‐ \"La Creazione\", Orchestre des Champs-Elysées - Collegium Vocale Gent - Philippe Herreweghe', 
             'subtitle'  => '', 
-            'extract'   => '', 
-            'text'      => 'Orchestre des Champs-ElyséesCollegium Vocale GentPhilippe Herreweghe direttoreChristina Landshamer soprano<br/>Maximilian Schmitt tenore<br/>Rudolf Rosen bassoF.J. Haydn ‐ Die Schöpfung Hob.XXI.', 
+            'extract'   => null, 
+            'text'      => 'Orchestre des Champs-ElyséesCollegium Vocale GentPhilippe Herreweghe direttoreChristina Landshamer soprano
+Maximilian Schmitt tenore
+Rudolf Rosen bassoF.J. Haydn ‐ Die Schöpfung Hob.XXI.', 
             'img'       => 'herreweghe.jpg',
             'dates'     => 1,
             'page'      => 2,
@@ -48,8 +52,11 @@ class EventFixtures
         array(
             'title'     => 'Andrea Lucchesini, pianoforte', 
             'subtitle'  => '', 
-            'extract'   => '', 
-            'text'      => 'Andrea Lucchesini, pianoforteW.A. Mozart ‐ Sonata in sol maggiore K 283<br/>F. Schubert ‐ 3 Klavierstücke D 946<br/>J. Brahms ‐ 3 Intermezzi op. 117<br/>R. Strauss ‐ Sonata in si minore op. 5Vocazione europea, radici italiane: questo potrebbe essere considerato da sempre il motto del Quartetto.', 
+            'extract'   => null, 
+            'text'      => 'Andrea Lucchesini, pianoforteW.A. Mozart ‐ Sonata in sol maggiore K 283
+F. Schubert ‐ 3 Klavierstücke D 946
+J. Brahms ‐ 3 Intermezzi op. 117
+R. Strauss ‐ Sonata in si minore op. 5Vocazione europea, radici italiane: questo potrebbe essere considerato da sempre il motto del Quartetto.', 
             'img'       => 'andrea_lucchesini.jpg',
             'dates'     => 1,
             'page'      => 2,
@@ -57,8 +64,9 @@ class EventFixtures
         array(
             'title'     => '24. Stagione Sinfonica: una prima assoluta e Mahler', 
             'subtitle'  => '', 
-            'extract'   => '', 
-            'text'      => 'Vacchi - Veronica Franco, per soprano, voce recitante e orchestra ( commissione de laVerdi )<br/>Mahler - Sinfonia n. 10 in Fa diesis maggiore ( versione Barshai )Direttore - Claire Gibault', 
+            'extract'   => null,
+            'text'      => 'Vacchi - Veronica Franco, per soprano, voce recitante e orchestra ( commissione de laVerdi )
+Mahler - Sinfonia n. 10 in Fa diesis maggiore ( versione Barshai )Direttore - Claire Gibault', 
             'img'       => 'laverdi_xian_zhang.jpg',
             'dates'     => 1,
             'page'      => 3,
@@ -66,8 +74,10 @@ class EventFixtures
         array(
             'title'     => '4. Domenica mattina con laVerdi: Luigi Dallapiccola (1904-1975)', 
             'subtitle'  => '', 
-            'extract'   => '', 
-            'text'      => 'Luigi Dallapiccola (1904-1975)Bartók - Sonata per due pianoforti e percussioni<br/>Dallapiccola - Piccola musica notturna<br/>Copland - Appalachian SpringDirettore - Giuseppe Grazioli', 
+            'extract'   => null, 
+            'text'      => 'Luigi Dallapiccola (1904-1975)Bartók - Sonata per due pianoforti e percussioni
+Dallapiccola - Piccola musica notturna
+Copland - Appalachian SpringDirettore - Giuseppe Grazioli', 
             'img'       => 'laverdi_dallapiccola.jpg',
             'dates'     => 1,
             'page'      => 3,
@@ -75,8 +85,12 @@ class EventFixtures
         array(
             'title'     => '5. LaBarocca: Locatelli & Vivaldi', 
             'subtitle'  => '', 
-            'extract'   => '', 
-            'text'      => 'Locatelli - Concerto Grosso n. 2 in Do minore op. 1<br/>Locatelli - Concerto n. 2 per violino, archi e basso continuo in Do minore op. 3 “L’arte del violino”<br/>Locatelli - Concerto Grosso n. 5 in Re maggiore op. 1<br/>Vivaldi - Concerto per violoncello in Re minore RV 406<br/>Locatelli - Concerto Grosso n. 12 in Sol minore op.', 
+            'extract'   => null, 
+            'text'      => 'Locatelli - Concerto Grosso n. 2 in Do minore op. 1
+Locatelli - Concerto n. 2 per violino, archi e basso continuo in Do minore op. 3 “L’arte del violino”
+Locatelli - Concerto Grosso n. 5 in Re maggiore op. 1
+Vivaldi - Concerto per violoncello in Re minore RV 406
+Locatelli - Concerto Grosso n. 12 in Sol minore op.', 
             'img'       => 'laverdi_locatelli_vivaldi.jpg',
             'dates'     => 1,
             'page'      => 3,
@@ -84,8 +98,12 @@ class EventFixtures
         array(
             'title'     => 'Presentazione disco di Sol Gabetta', 
             'subtitle'  => '', 
-            'extract'   => '', 
-            'text'      => 'Locatelli - Concerto Grosso n. 2 in Do minore op. 1<br/>Locatelli - Concerto n. 2 per violino, archi e basso continuo in Do minore op. 3 “L’arte del violino”<br/>Locatelli - Concerto Grosso n. 5 in Re maggiore op. 1<br/>Vivaldi - Concerto per violoncello in Re minore RV 406<br/>Locatelli - Concerto Grosso n. 12 in Sol minore op.', 
+            'extract'   => null, 
+            'text'      => 'Locatelli - Concerto Grosso n. 2 in Do minore op. 1
+Locatelli - Concerto n. 2 per violino, archi e basso continuo in Do minore op. 3 “L’arte del violino”
+Locatelli - Concerto Grosso n. 5 in Re maggiore op. 1
+Vivaldi - Concerto per violoncello in Re minore RV 406
+Locatelli - Concerto Grosso n. 12 in Sol minore op.', 
             'img'       => 'sol_gabetta.jpg',
             'dates'     => 1,
             'sponsored' => true, 
@@ -94,11 +112,24 @@ class EventFixtures
         array(
             'title'     => 'Madesimo Music Festival', 
             'subtitle'  => '', 
-            'extract'   => '', 
-            'text'      => 'Quattordici emozionanti appuntamenti all’insegna della musica classica riempiranno il paese di cultura e vivacità: dalla musica barocca con l’oboe d’avorio di Simone Toni e l’ensemble “Silete Venti!” alla celebrazione del duecentesimo anniversario di Wagner e Verdi con i due workshop di Orazio Sciortino e Alessio Bidoli.
-Il tema di questa prima edizione è “Costruire il talento” e si inserisce in una serie di iniziative che il Comune di Madesimo sta portando avanti in una prospettiva di crescita sociale che abbraccia tutti gli ambiti. Un Festival insomma che volge il suo sguardo al territorio e al futuro.
-Apre il Festival la consegna del “Premio Madesimo” a Mario Marcarini, label manager di Sony Classical Italia e direttore artistico di questa prima edizione. Motivazione: la letteratura applicata alla storia della musica. Marcarini in questa occasione propone un workshop dedicato a grandi e piccini: “Wolfgang e Leopold”, Mozart figlio e padre, la nascita di un talento.
-Madesimo Music Festival 2013 è realizzato con il sostegno e la collaborazione del Comune di Madesimo, Sony Classical Italia, Opificio Italiano dei Classici, Fazioli, Swing, Ricola, Rivista Musica, Radio Classica e Circuito Musica.', 
+            'extract'   => '<p><strong>Quattordici emozionanti appuntamenti</strong> all’insegna della musica classica riempiranno il paese di cultura e vivacità: dalla musica barocca con l’oboe d’avorio di Simone Toni e l’ensemble “Silete Venti!” alla celebrazione del duecentesimo anniversario di Wagner e Verdi con i due workshop di Orazio Sciortino e Alessio Bidoli.</p>', 
+            'text'      => '<p>12 Luglio 2013 
+ore 10:00 - 
+Comune di Madesimo  
+<span class=\"piccolo\">(Madesimo SO, Italia)</span>
+</p>
+
+<p>Debutta quest’anno il <strong>Madesimo Music Festival</strong>, nato dalla collaborazione tra Sony Classical Italia e il Comune di Madesimo. Il Festival si svolgerà nei luoghi caratteristici di Madesimo <strong>dal 12 al 31 luglio</strong> e vedrà esibirsi artisti di fama internazionale.</p>
+<p><strong><br></strong></p>
+<p><strong>Quattordici emozionanti appuntamenti</strong> all’insegna della musica classica riempiranno il paese di cultura e vivacità: dalla musica barocca con l’oboe d’avorio di Simone Toni e l’ensemble “Silete Venti!” alla celebrazione del duecentesimo anniversario di Wagner e Verdi con i due workshop di Orazio Sciortino e Alessio Bidoli.</p>
+<p>Il tema di questa prima edizione è <strong>“Costruire il talento”</strong> e si inserisce in una serie di iniziative che il Comune di Madesimo sta portando avanti in una prospettiva di crescita sociale che abbraccia tutti gli ambiti. Un Festival insomma che volge il suo sguardo al territorio e al futuro.</p>
+<p>Apre il Festival la consegna del “Premio Madesimo” a Mario Marcarini, label manager di Sony Classical Italia e direttore artistico di questa prima edizione. Motivazione: la letteratura applicata alla storia della musica. Marcarini in questa occasione propone un workshop dedicato a grandi e piccini: “Wolfgang e Leopold”, Mozart figlio e padre, la nascita di un talento.</p>
+<p>Madesimo Music Festival 2013 è realizzato con il sostegno e la collaborazione del Comune di Madesimo, Sony Classical Italia, Opificio Italiano dei Classici, Fazioli, Swing, Ricola, Rivista Musica, Radio Classica e Circuito Musica.</p>
+<p><strong><br></strong></p>
+<p><strong>INFO STAMPA:</strong></p>
+<p><strong><br></strong></p>
+<p><strong>Ufficio Informazioni Madesimo</strong></p>
+<p>Via alle Scuole - Madesimo (SO) Telefono +39 0343 53015</p>', 
             'img'       => 'madesimo.jpg',
             'dates'     => 1,
             'sponsored' => true, 
@@ -155,7 +186,7 @@ Madesimo Music Festival 2013 è realizzato con il sostegno e la collaborazione d
         
         /* Category */
         $category = $manager->merge($fixture->getReference('event_category-'.rand(1, 3)));
-        $event->setEntityCategory($category);
+        $event->setCategory($category);
            
         /* Dates */
         for ($j = EventFixtures::$events[$i]['dates']; $j > 0; $j--) {
@@ -234,7 +265,7 @@ Madesimo Music Festival 2013 è realizzato con il sostegno e la collaborazione d
         /* Main Image */
         $image = new Image;
         $image->setImg(EventFixtures::$events[$i]['img'])
-            ->setText('main image for event "'.$event->getTitle().'"')
+            ->setText('main image for event \"'.$event->getTitle().'\"')
             ->setMain(true)
             ->setUser($user);
         $event->setImage($image);
@@ -244,7 +275,7 @@ Madesimo Music Festival 2013 è realizzato con il sostegno e la collaborazione d
         if (rand(0, 8) > 0) {
             $image = new Image;
             $image->setImg(EventFixtures::$events[$i]['img'])
-                ->setText('main image for event "'.$event->getTitle().'"')
+                ->setText('main image for event \"'.$event->getTitle().'\"')
                 ->setMain(true)
                 ->setUser($user);
             $event->setImage($image);
@@ -256,7 +287,7 @@ Madesimo Music Festival 2013 è realizzato con il sostegno e la collaborazione d
                 $image = new Image;
                 $image
                     ->setImg(EventFixtures::$events[$i]['img'])
-                    ->setText('image number '.$j.' for event "'.$event->getTitle().'"')
+                    ->setText('image number '.$j.' for event \"'.$event->getTitle().'\"')
                     ->setMain(false)
                     ->setUser($user);
                 

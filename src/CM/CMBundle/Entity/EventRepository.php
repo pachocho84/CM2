@@ -53,7 +53,7 @@ class EventRepository extends BaseRepository
             ->from('CMBundle:EventDate','d')
             ->join('d.event', 'e')
             ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')
-            ->leftJoin('e.entityCategory', 'ec')
+            ->leftJoin('e.category', 'ec')
             ->leftJoin('ec.translations', 'ect', 'with', 'ect.locale = :locale')
             ->leftJoin('e.image', 'i')
             ->innerJoin('e.post', 'p')
@@ -90,8 +90,8 @@ class EventRepository extends BaseRepository
         }
         
         if ($options['categoryId']) {
-            $count->andWhere('e.entityCategory = :category_id');
-            $query->andWhere('e.entityCategory = :category_id');
+            $count->andWhere('e.category = :category_id');
+            $query->andWhere('e.category = :category_id');
             $parameters['category_id'] = $options['categoryId'];
         }
         
@@ -137,7 +137,7 @@ class EventRepository extends BaseRepository
         $query = $this->createQueryBuilder('e')->select('e, t, ec, ect, d, i, p, l, c, u, lu, cu, pg, gr, eu, us')
             ->leftJoin('e.eventDates', 'd')
             ->leftJoin('e.translations', 't')
-            ->leftJoin('e.entityCategory', 'ec')
+            ->leftJoin('e.category', 'ec')
             ->leftJoin('ec.translations', 'ect')
             ->leftJoin('e.image', 'i');
         if ($options['mainImageOnly']) {
@@ -167,7 +167,7 @@ class EventRepository extends BaseRepository
         
         return $this->createQueryBuilder('e')->select('e, t, ec, ect, i, p, u, pg, gr')
             ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
-            ->leftJoin('e.entityCategory', 'ec')
+            ->leftJoin('e.category', 'ec')
             ->leftJoin('ec.translations', 'ect', 'with', 'ect.locale = :locale')->setParameter('locale', $options['locale'])
             ->leftJoin('e.image', 'i')
             ->leftJoin('e.post', 'p')
