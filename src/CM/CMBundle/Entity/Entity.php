@@ -57,12 +57,6 @@ abstract class Entity
      * @ORM\Column(name="date", type="date", nullable=true)
      */
     private $date;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="EventDate", mappedBy="event", cascade={"persist", "remove"})
-     * @Assert\Valid
-     */
-    private $eventDates;
 
     /**
      * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")

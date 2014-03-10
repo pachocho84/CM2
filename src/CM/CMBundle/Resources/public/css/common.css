@@ -560,6 +560,9 @@ input:-webkit-autofill {
 #wall .box-partner .object h4 > span {
     margin-right: 5px;
 }
+.cycle-slide {
+    width: 100%;
+}
 /* Banner */
 #wall .banner {
     margin-top: 20px;

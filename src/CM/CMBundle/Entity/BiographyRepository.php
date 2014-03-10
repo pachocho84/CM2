@@ -50,7 +50,7 @@ class BiographyRepository extends BaseRepository
             $biography = $this->createQueryBuilder('b')
                 ->select('b, t')
                 ->leftJoin('b.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
-                ->join('b.post', 'p', 'with', 'p.groupId = :user_id')->setParameter('user_id', $userId)
+                ->join('b.post', 'p', 'with', 'p.groupId = :group_id')->setParameter('group_id', $groupId)
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getSingleResult();
@@ -68,7 +68,7 @@ class BiographyRepository extends BaseRepository
             $biography = $this->createQueryBuilder('b')
                 ->select('b, t')
                 ->leftJoin('b.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
-                ->join('b.post', 'p', 'with', 'p.pageId = :user_id')->setParameter('user_id', $userId)
+                ->join('b.post', 'p', 'with', 'p.pageId = :page_id')->setParameter('page_id', $pageId)
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getSingleResult();

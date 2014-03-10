@@ -69,7 +69,7 @@ class PostRepository extends BaseRepository
             ->select('count(p)');
             
         $query = $this->createQueryBuilder('p')
-            ->select('p, u, pl, pc, plu, pcu, e, t, c, ct, i, d, ep, epu, epp, epg, epl, epc, eplu, epcu')
+            ->select('p, u, pl, pc, plu, pcu, e, t, c, ct, i,  ep, epu, epp, epg, epl, epc, eplu, epcu')
             ->join('p.user', 'u')
             ->leftJoin('p.likes', 'pl')
             ->leftJoin('p.comments', 'pc', '', '', 'pc.id')
@@ -80,7 +80,6 @@ class PostRepository extends BaseRepository
             ->leftJoin('e.category', 'c')
             ->leftJoin('c.translations', 'ct', 'with', 'ct.locale = :locale')->setParameter('locale', $options['locale'])
             ->leftJoin('e.image', 'i')
-            ->leftJoin('e.eventDates', 'd')
             ->join('e.post', 'ep')
             ->leftJoin('ep.user', 'epu')
             ->leftJoin('ep.page', 'epp')
