@@ -1,4 +1,4 @@
-var wallColW3 = 1150;
+var wallColW3 = 1200;
 var wallColW2 = 750;
 var wallOrder = 0;
 var wallTimer;

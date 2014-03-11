@@ -485,14 +485,6 @@ input:-webkit-autofill {
     top: -22px;
     background-position: 15px top;
 }
-#wall .box-partner h3 {
-    max-height: 50px;
-    overflow: hidden;
-}
-#wall .box-partner h4 {
-    max-height: 40px;
-    overflow: hidden;
-}
 #wall .box-partner .box-partner-heading {
     font-size: 16px;
     padding-bottom: 3px;
@@ -540,6 +532,11 @@ input:-webkit-autofill {
     padding: 0;
     overflow: hidden;
 }
+@media (min-width: 1500px) {
+    #wall .box-partner .object {
+        height: 360px;
+    }
+}
 #wall .box-partner .object a.image_box {
     max-width: 100%;
     margin-bottom: 5px;
@@ -547,15 +544,21 @@ input:-webkit-autofill {
 #wall .box-partner .object h3 {
     font-family: Georgia;
     font-size: 18px;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    max-height: 50px;
+    overflow: hidden;
 }
 #wall .box-partner .object h3 a {
     color: #333;
 }
 #wall .box-partner .object h4 {
     font-size: 13px;
-    margin-bottom: 3px;
-    color: #999999
+    color: #999999;
+    max-height: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 #wall .box-partner .object h4 > span {
     margin-right: 5px;

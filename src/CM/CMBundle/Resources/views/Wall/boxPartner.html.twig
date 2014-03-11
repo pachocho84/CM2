@@ -105,7 +105,8 @@
 {#                         {{ show_img_box(object.image|default_img|imagine_filter('medium'), {ratio: 1.6, link: path('disc_show', {id: object.id, slug: object.getSlug})}) }} #}
                             <div class="col-md-6">
                                 <div class="">
-                                    <img src="{{ object.image|default_img|imagine_filter('small') }}" class="img-responsive" />
+                                    {{ show_img_box(object.image|default_img|imagine_filter('small'), {ratio: 1, link: path('disc_show', {id: object.id, slug: object.getSlug})}) }}
+{#                                     <img src="{{ object.image|default_img|imagine_filter('small') }}" class="img-responsive" /> #}
                                     <h4>clakj lsakja lksjl aksj lkjs</h4>  
                                 </div>
                             </div>

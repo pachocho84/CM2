@@ -1,14 +1,15 @@
-<div class="box">
-    <div class="box-body">
-        <div class="pull-left">{% if user.coverImg is not null %}<img src='{{ user.coverImg|imagine_filter('small') }}' class="media-object" />{% endif %}</div>
-        <div class="pull-left"><img src='{{ user.img|imagine_filter('avatar') }}' width="50px" class="media-object" /></div>
-        <h2>{{ user }}</h2>
-        <h3><small>{{ user.userTags|join(', ')|trim }}</small></h3>
-        {% if biography is not null %}{{ entity_short_text(biography, {max: 150}) }}{% endif %}
-        {% if is_granted('ROLE_USER') and user.id != app.user.id %}
-            {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
-            {{ render(controller('CMBundle:Relation:button', {user: user})) }}
-            <a href="{{ path('message_new', {'userId': user.id}) }}" class="btn btn-default">{{ icon('Message') }} {{ 'Send a message'|trans }}</a>
-        {% endif %}
-    </div>
-</div>
+{% if user.coverImg is not null %}<img src='{{ user.coverImg|imagine_filter('small') }}' class="media-object" />{% endif %}</div>
+
+<img src='{{ user.img|imagine_filter('avatar') }}' width="50px" class="media-object" />
+
+<h2>{{ user }}</h2>
+
+<h3><small>{{ user.userTags|join(', ')|trim }}</small></h3>
+
+{% if biography is not null %}{{ entity_short_text(biography, {max: 150}) }}{% endif %}
+
+{% if is_granted('ROLE_USER') and user.id != app.user.id %}
+    {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
+    {{ render(controller('CMBundle:Relation:button', {user: user})) }}
+    <a href="{{ path('message_new', {'userId': user.id}) }}" class="btn btn-default">{{ icon('Message') }} {{ 'Send a message'|trans }}</a>
+{% endif %}
