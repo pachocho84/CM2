@@ -39,7 +39,7 @@ L. van Beethoven ‐ Quartetto n. 2 in sol maggiore op. 18 n.',
             'page'      => 2,
         ),
         array(
-            'title'     => 'F.J. Haydn ‐ \"La Creazione\", Orchestre des Champs-Elysées - Collegium Vocale Gent - Philippe Herreweghe', 
+            'title'     => 'F.J. Haydn ‐ "La Creazione", Orchestre des Champs-Elysées - Collegium Vocale Gent - Philippe Herreweghe', 
             'subtitle'  => '', 
             'extract'   => null, 
             'text'      => 'Orchestre des Champs-ElyséesCollegium Vocale GentPhilippe Herreweghe direttoreChristina Landshamer soprano
@@ -65,7 +65,7 @@ R. Strauss ‐ Sonata in si minore op. 5Vocazione europea, radici italiane: ques
             'title'     => '24. Stagione Sinfonica: una prima assoluta e Mahler', 
             'subtitle'  => '', 
             'extract'   => null,
-            'text'      => 'Vacchi - Veronica Franco, per soprano, voce recitante e orchestra ( commissione de laVerdi )
+            'text'      => 'Vacchi - Veronica Franco, per soprano, voce recitante e orchestra (commissione de laVerdi)
 Mahler - Sinfonia n. 10 in Fa diesis maggiore ( versione Barshai )Direttore - Claire Gibault', 
             'img'       => 'laverdi_xian_zhang.jpg',
             'dates'     => 1,

@@ -97,10 +97,10 @@
                     <span class="box-partner-nav-tab box-partner-nav-next">{{ icon('Next') }}</span>
                 </div>
             </div>
-            <div class="objects cycle-slideshow">
+            <div class="row objects cycle-slideshow">
                 {% for object in objects %}
                     {% if loop.index is odd %}
-                        <div class="row object">
+                        <div class="object">
                     {% endif %}
 {#                         {{ show_img_box(object.image|default_img|imagine_filter('medium'), {ratio: 1.6, link: path('disc_show', {id: object.id, slug: object.getSlug})}) }} #}
                             <div class="col-md-6">
