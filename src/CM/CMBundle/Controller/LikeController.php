@@ -20,7 +20,7 @@ class LikeController extends Controller
     /**
      * @Route("/like/{type}/{id}", name="like", requirements={"type" = "post|image"})
      */
-    public function likeAction(Request $request, $type, $id)
+    public function likeAction(Request $request, $type = 'post', $id)
     {
         if (!$this->get('security.context')->isGranted('ROLE_USER')) {
 	          throw new HttpException(401, 'Unauthorized access.'); 
@@ -29,7 +29,7 @@ class LikeController extends Controller
         $em = $this->getDoctrine()->getManager();
   
         if (!$em->getRepository('CMBundle:Like')->checkIfUserLikesIt($this->getUser(), $type, $id)) {        
-            $like = new Like();
+            $like = new Like;
             $like->setUser($this->getUser());
             if ($type == 'post') {
                 $post = $em->getRepository('CMBundle:Post')->findOneById($id);
@@ -43,6 +43,8 @@ class LikeController extends Controller
         } else {
             throw new RuntimeException('Already liked');
         }
+
+        $this->get('logger')->info('flushed '.$post->getObject());
         
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse(array(

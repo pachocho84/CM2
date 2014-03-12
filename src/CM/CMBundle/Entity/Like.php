@@ -88,6 +88,7 @@ class Like
         $this->post = $post;
         if (!is_null($post)) {
             $this->postId = $post->getId();
+            $post->addLike($this);
         }
     
         return $this;
@@ -124,6 +125,7 @@ class Like
         $this->image = $image;
         if (!is_null($image)) {
             $this->imageId = $image->getId();
+            $image->addLike($this);
         }
     
         return $this;

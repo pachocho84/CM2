@@ -331,7 +331,8 @@ $(function() {
     /* LIKE */
     $('body').on('click', '.iLikeIt', function(event) {
         event.preventDefault();
-        $.getJSON(event.currentTarget.href, function(data) {          
+        $.getJSON(event.currentTarget.href, function(data) { 
+            console.log(data)         
             if ($(event.currentTarget).is('[social-selector]')) {
                 social = $($(event.currentTarget).attr('social-selector'));
                 $(event.currentTarget).replaceWith(data.likeActionsButton);
@@ -351,7 +352,6 @@ $(function() {
     /* COMMENTS */
     // Show comment form
     $('body').on('click', '.comment_new-show', function(event) {
-        console.log(42);
         event.preventDefault();
         event.stopPropagation();
         $(this).closest('.bottom').find('ul').fadeIn('fast');
