@@ -7,7 +7,7 @@
         {% include('CMBundle:Comment:commentCount.html.twig') %}
     </span>
 
-    {% if isImage is not defined %}{% set isImage = false %}{% endif %}
+    {% set isImage = isImage|default(false) %}
     {{ render(controller('CMBundle:Comment:comments', {post: post, 'isImage': isImage})) }}
 
 </div>

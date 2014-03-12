@@ -27,7 +27,7 @@ class RelationController extends Controller
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function buttonAction(Request $request, User $user = null, $userId = null, RelationType $relationTypePassed = null)
+    public function buttonAction(Request $request, User $user = null, $userId = null, RelationType $relationTypePassed = null, $reqText = null)
     {
         $em = $this->getDoctrine()->getManager();
         
@@ -48,12 +48,14 @@ class RelationController extends Controller
         $relationRequest = false;
         $acceptedRelations = 0;
         $pendingRelations = 0;
-        $reqText = 'Request a relation';
+        $reqText = is_null($reqText) ? 'Request a relation' : $reqText;
         $btnColour = 'danger';
         $tooltipArray = array();
         foreach ($relationTypes as $relType) {
             foreach ($relType->getRelations() as $relation) {
-                if ($relation->getAccepted() == Relation::ACCEPTED_NO) {
+                if ($relation->getUserId() == $this->getUser()->getId()) {
+                    continue;
+                } elseif ($relation->getAccepted() == Relation::ACCEPTED_NO) {
                     $tooltipArray[] = $relType->getName().' (pending)';
                     if (!$relationRequest) {
                         $reqText = 'Respond to a relation request';

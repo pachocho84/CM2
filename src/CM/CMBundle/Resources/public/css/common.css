@@ -45,6 +45,47 @@ input:-webkit-autofill {
 {
     margin-right: 10px;
 }
+#blueimp-gallery .info {
+    text-align: center;
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    margin-right: 250px;
+    font-size: 17px;
+}
+#blueimp-gallery .title {
+    max-width: 40%;
+    text-overflow: ellipsis;
+}
+#blueimp-gallery .slide-content {
+    padding: 35px !important;
+    padding-right: 285px !important;
+}
+#blueimp-gallery .sidebar {
+    display: none;
+    position: fixed;
+    width: 250px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    background: #fff;
+    z-index: 100100;
+    padding: 10px;
+    font-size: 16px;
+}
+#blueimp-gallery .prev,
+#blueimp-gallery .next {
+    line-height: 34px !important;
+    font-size: 20px;
+}
+#blueimp-gallery .next {
+    right: 265px !important;
+}
+#blueimp-gallery .close {
+    left: 15px !important;
+    right: auto !important;
+}
 
 
 

@@ -152,7 +152,7 @@ class RelationRepository extends BaseRepository
 
         if (count($closest) == 0) {
             $randIds = $this->getEntityManager()->getConnection()
-                ->executeQuery('SELECT id FROM user WHERE id != '.$userId.' ORDER BY RAND() LIMIT '.$limit)
+                ->executeQuery('SELECT u.id FROM user u LEFT JOIN relation r ON (r.from_user_id = '.$userId.' AND r.user_id = u.id) WHERE u.id != '.$userId.' AND r.id IS NULL ORDER BY RAND() LIMIT '.$limit)
                 ->fetchAll();
             return $this->getEntityManager()->createQueryBuilder()
                 ->select('u, uut, ut, utt')

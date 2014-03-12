@@ -40,6 +40,8 @@ class CommentController extends Controller
                 $post = null;
                 $image = $em->getRepository('CMBundle:Image')->getImageWithComments($id);
             }
+        } else {
+            $id = $post->getId();
         }
 
         $form = null;

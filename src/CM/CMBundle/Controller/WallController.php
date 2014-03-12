@@ -59,12 +59,10 @@ class WallController extends Controller
 */
 
             /* Sponsored */
-/*
             $sponsoreds = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale())), $page, 2);
             foreach ($sponsoreds as $sponsored) {
                 $boxes['sponsored_'.$sponsored->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $sponsored->getEntity()->getPost(), 'postType' => 'sponsored'));
             }
-*/
 
             /* Box partners */
             if ($request->get('_route') == 'wall_index') {
@@ -99,14 +97,12 @@ class WallController extends Controller
             }
 
             /* Vips */
-/*
             if (in_array($request->get('_route'), array('wall_index', 'wall_vips'))) {
                 $vips = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('vip' => true, 'entityCreation' => true, 'locale' => $request->getLocale())), $page, 2);
                 foreach ($vips as $post) {
                     $boxes['vip_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post, 'postType' => 'vip'));
                 }
             }
-*/
 
             /* Reviews */
 /*
@@ -160,14 +156,12 @@ class WallController extends Controller
             }
 
             /* Posts */
-/*
             if (!$this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'wall_index') {
                 $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
                 foreach ($posts as $post) {
                     $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
                 }
             }
-*/
 
             // $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:loadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
 

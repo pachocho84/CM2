@@ -240,7 +240,6 @@ $(function() {
                 href: href,
                 thumbnail: href
             }], {
-
                 event: event,
                 transitionSpeed: 0,
                 slideshowTransitionSpeed: 0,
@@ -332,14 +331,14 @@ $(function() {
     $('body').on('click', '.iLikeIt', function(event) {
         event.preventDefault();
         $.getJSON(event.currentTarget.href, function(data) { 
-            console.log(data)         
             if ($(event.currentTarget).is('[social-selector]')) {
                 social = $($(event.currentTarget).attr('social-selector'));
                 $(event.currentTarget).replaceWith(data.likeActionsButton);
             } else {
-                social = $(event.target).closest('.object');
+                social = $(event.target).closest('.object, .bottom');
                 $('[social-selector="#' + social.attr('id') + '"]').replaceWith(data.likeActionsButton);
             }
+            console.log(data, social);         
             social.find('.bottom-like-count').replaceWith(data.likeCount);
             social.find('.bottom-likes').replaceWith(data.likes);
 /*             fix_triangle(social); */
@@ -355,7 +354,7 @@ $(function() {
         event.preventDefault();
         event.stopPropagation();
         $(this).closest('.bottom').find('ul').fadeIn('fast');
-        $(this).closest('.object').find('.comment_new').removeClass('hide').find('textarea').focus();
+        $(this).closest('.object, .bottom').find('.comment_new').removeClass('hide').find('textarea').focus();
         fix_triangle($(this));
     });
     // Hide comment form on blur
