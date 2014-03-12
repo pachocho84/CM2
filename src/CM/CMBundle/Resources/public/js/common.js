@@ -244,6 +244,8 @@ $(function() {
                 transitionSpeed: 0,
                 slideshowTransitionSpeed: 0,
                 onopened: function() {
+                    $('#body').addClass('fixed');
+
                     $.get($target.attr('lightbox-json'), function(data) {
                         json = data;
 
@@ -266,7 +268,7 @@ $(function() {
                         if (index == -1) {
                             return;
                         }
-                        $sequence.html(index + ' / ' + json.images.length);
+                        $sequence.html((index + 1) + ' / ' + json.images.length);
 
                         for (var i = 0; i < json.images.length; i++) {
                             var image = json.images[i];
@@ -302,17 +304,22 @@ $(function() {
                     }
 
                     sidebarReq = $.get(url, function(data) {
-                        history.pushState('', '', url);
+                        // history.pushState('', '', url);
                         
                         $title.html(data.albumTitle);
-                        $sidebar.html(data.sidebar);
+                        var asd = '';
+                        for (var i = 1000; i >= 0; i--) {
+                            asd += i + '</br>';
+                        };
+                        $sidebar.html(data.sidebar + asd);
                     });
                     if (json != null) {
-                        $sequence.html(json[i].index  + ' / ' + json.length);
+                        $sequence.html((json[i].index + 1)  + ' / ' + json.length);
                     }
                 },
                 onclose: function() {
                     $sidebar.hide();
+                    $('#body').removeClass('fixed');
                 }
         });
     });

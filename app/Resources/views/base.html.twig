@@ -15,39 +15,40 @@
     </head>
     
     <body>
-        <div id="header">
-            {% block header %}{% endblock %}
-        </div>
+        <div id="body">
+            <div id="header">
+                {% block header %}{% endblock %}
+            </div>
 
-        <div id="menu-container">
-            {% block menu %}{% endblock %}
-        </div>
-      
-        <div class="container">
-            {% block container %}{% endblock %}
-        </div> 
+            <div id="menu-container">
+                {% block menu %}{% endblock %}
+            </div>
+          
+            <div class="container">
+                {% block container %}{% endblock %}
+            </div> 
 
-        <div class="container"> 
-            <div id="footer">
-                {% block footer %}{% endblock %}
+            <div class="container"> 
+                <div id="footer">
+                    {% block footer %}{% endblock %}
+                </div>
+            </div>
+
+            {% block javascripts %}{% endblock %}
+
+            <div id="blueimp-gallery" class="blueimp-gallery">
+                <div class="slides"></div>
+                <div class="info">
+                    <span class="title"></span>
+                    <a class="prev">‹</a>
+                    <a class="next">›</a>
+                    <span class="sequence"></span>
+                </div>
+                <div class="sidebar"></div>
+                
+                <a class="close">×</a>
+                <ol class="indicator"></ol>
             </div>
         </div>
-
-        {% block javascripts %}{% endblock %}
-
-        <div id="blueimp-gallery" class="blueimp-gallery">
-            <div class="slides"></div>
-            <div class="info">
-                <span class="title"></span>
-                <a class="prev">‹</a>
-                <a class="next">›</a>
-                <span class="sequence"></span>
-            </div>
-            <div class="sidebar"></div>
-            
-            <a class="close">×</a>
-            <ol class="indicator"></ol>
-        </div>
-
     </body>
 </html>

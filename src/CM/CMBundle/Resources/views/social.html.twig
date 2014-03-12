@@ -8,6 +8,5 @@
     </span>
 
     {% set isImage = isImage|default(false) %}
-    {{ render(controller('CMBundle:Comment:comments', {post: post, 'isImage': isImage})) }}
 
 </div>
