@@ -4,11 +4,11 @@
     </div>
 {% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_COVER') %}
     <div class="post-image-container">
-        {{ show_img_box(post.publisher.getCoverImg | imagine_filter('medium'), {'width': 150, 'height': 150, 'offset': post.publisher.coverImgOffset, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}}) }}
+        {{ show_img_box(post.publisher.getCoverImg | imagine_filter('medium'), {width: 150, offset: post.publisher.coverImgOffset, link: '', box_attributes: {class: 'pull-left img-thumbnail'}}) }}
     </div>
 {% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_BACKGROUND') %}
     <div class="post-image-container">
-        {{ show_img_box(post.publisher.getBackgroundImg | imagine_filter('medium'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}}) }}
+        {{ show_img_box(post.publisher.getBackgroundImg | imagine_filter('medium'), {width: 150, link: '', box_attributes: {'class': 'pull-left img-thumbnail'}}) }}
     </div>
 {% elseif post.entity.type == constant('CM\\CMBundle\\Entity\\ImageAlbum::TYPE_ALBUM') %}
     {{ post.entity }}

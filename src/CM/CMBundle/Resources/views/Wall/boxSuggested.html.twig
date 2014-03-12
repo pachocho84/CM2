@@ -1,27 +1,34 @@
 <div class="box box-system">
     <div class="box-heading">
-        <h2>{{ icon('Users') }} {{ 'Suggested users'|trans }}</h2>
+        <h2>{{ icon('Relation') }} {{ 'Suggested users'|trans }}</h2>
     </div>
 
     <div class="objects box-body clearfix">
         {% for user in suggestions %}
-            {{ show_img_box(user.img|imagine_filter('avatar'), {width: 50, offset: user.imgOffset, link: path('user_show', {'slug': user.slug}), user_box: user}) }}
-            <div class="btn-group relations-menu">
-
-                <button type="button" class="btn btn-danger btn-xs dropdown-toggle relation-button" data-toggle="dropdown"><span>{{ icon('Relation') }} {{ 'Request a relation'|trans }}</span></button>
-                <ul class="dropdown-menu relation-menu-body">
-                    {% for relationType in relationTypes %}
-                        <div class="relation-type">
-                            <li>
-                                <a href="{{ path('relation_add', {userId: user.id, relationTypeId: relationType.id}) }}">
-                                    <span class="checkbox" checked="false"><span class="glyphicon"></span></span>
-                                    {{ relationType|trans }}
-                                </a>
-                            </li>
+            <div class="media">
+                {{ show_img_box(user.img|imagine_filter('avatar'), {width: 50, offset: user.imgOffset, link: path('user_show', {'slug': user.slug}), box_attributes: {class: 'pull-left img-rounded'}, user_box: user}) }}
+            
+                <div class="media-body">
+                    <h4 class="media-heading">{{ user }}</h4>
+                    <small>{{ user.userTags|join(', ')|trim }}</small>
+                    <div class="pull-right">
+                        <div class="btn-group relations-menu">
+                            <button type="button" class="btn btn-danger btn-sm dropdown-toggle relation-button" data-toggle="dropdown"><span>{{ icon('Relation') }} {{ 'Request a relation'|trans }}</span></button>
+                            <ul class="dropdown-menu relation-menu-body">
+                                {% for relationType in relationTypes %}
+                                    <div class="relation-type">
+                                        <li>
+                                            <a href="{{ path('relation_add', {userId: user.id, relationTypeId: relationType.id}) }}">
+                                                <span class="checkbox" checked="false"><span class="glyphicon"></span></span>
+                                                {{ relationType|trans }}
+                                            </a>
+                                        </li>
+                                    </div>
+                                {% endfor %}
+                            </ul>
                         </div>
-                    {% endfor %}
-                </ul>
-
+                    </div>
+                </div>
             </div>
         {% endfor %}
     </div>
