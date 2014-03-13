@@ -8,5 +8,6 @@
     </span>
 
     {% set isImage = isImage|default(false) %}
+    {{ render(controller('CMBundle:Comment:comments', {'id': post.id, 'isImage': isImage})) }}
 
 </div>

@@ -251,8 +251,6 @@ $(function() {
                     $.get($target.attr('lightbox-json'), function(data) {
                         json = data;
 
-                        console.log(data);
-
                         var index = -1;
                         for (var i = 0; i < json.images.length; i++) {
                             var image = json.images[i];
@@ -291,7 +289,7 @@ $(function() {
                         json = json.images.slice(index).concat(json.images.slice(0, index));
                     });
 
-                    $sidebar.show().html('');
+                    $sidebar.show();
                 },
                 onslide: function(i, slide) {
                     if (sidebarReq != null) {
