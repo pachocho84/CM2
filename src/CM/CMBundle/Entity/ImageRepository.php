@@ -84,7 +84,8 @@ class ImageRepository extends BaseRepository
             $count->andWhere('i.groupId = :group_id')->setParameter('group_id', $options['groupId']);
             $query->andWhere('i.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
-        $query->addOrderBy('i.createdAt', 'desc');
+        $query->addOrderBy('i.createdAt', 'desc')
+            ->addOrderBy('i.id', 'desc');
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
