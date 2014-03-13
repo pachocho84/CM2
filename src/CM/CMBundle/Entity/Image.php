@@ -408,8 +408,10 @@ class Image
      */
     public function addLike(Like $like)
     {
-        $this->likes[] = $like;
-        $like->setPost($this);
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setImage($this);            
+        }
     
         return $this;
     }

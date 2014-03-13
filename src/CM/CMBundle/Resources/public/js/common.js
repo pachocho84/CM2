@@ -244,10 +244,14 @@ $(function() {
                 transitionSpeed: 0,
                 slideshowTransitionSpeed: 0,
                 onopened: function() {
-                    $('#body').addClass('fixed');
+                    var top = $('#body').scrollTop();
+                    console.log(top);
+                    // $('#body').addClass('fixed');
 
                     $.get($target.attr('lightbox-json'), function(data) {
                         json = data;
+
+                        console.log(data);
 
                         var index = -1;
                         for (var i = 0; i < json.images.length; i++) {
@@ -307,11 +311,7 @@ $(function() {
                         // history.pushState('', '', url);
                         
                         $title.html(data.albumTitle);
-                        var asd = '';
-                        for (var i = 1000; i >= 0; i--) {
-                            asd += i + '</br>';
-                        };
-                        $sidebar.html(data.sidebar + asd);
+                        $sidebar.html(data.sidebar);
                     });
                     if (json != null) {
                         $sequence.html((json[i].index + 1)  + ' / ' + json.length);
@@ -344,8 +344,7 @@ $(function() {
             } else {
                 social = $(event.target).closest('.object, .bottom');
                 $('[social-selector="#' + social.attr('id') + '"]').replaceWith(data.likeActionsButton);
-            }
-            console.log(data, social);         
+            }     
             social.find('.bottom-like-count').replaceWith(data.likeCount);
             social.find('.bottom-likes').replaceWith(data.likes);
 /*             fix_triangle(social); */
@@ -408,8 +407,6 @@ $(function() {
             success: function(data, statusText, xhr, form) {
                 var commentType = form.find('[comment-type]').attr('comment-type').split(' ');
                 var media = form.closest('.media');
-
-                console.log(commentType);
 
                 if (commentType == 'upward') {
                     media.before(data.comment);

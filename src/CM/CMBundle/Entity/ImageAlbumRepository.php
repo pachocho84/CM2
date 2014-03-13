@@ -121,8 +121,7 @@ class ImageAlbumRepository extends BaseRepository
             ->select('partial i.{'.$data.'}')
             ->from('CMBundle:Image', 'i')
             ->where('i.'.$type.'Id = :type_id')->setParameter('type_id', $id)
-            ->orderBy('i.sequence')
-            ->addOrderBy('i.createdAt')
+            ->addOrderBy('i.createdAt', 'desc')
             ->getQuery()->getArrayResult();
     }
 

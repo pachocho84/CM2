@@ -20,7 +20,7 @@
     {% endif %}
     
     <div class="image-container">
-        <a href="{{ path('image_show', {id: image.id}) }}">
+        <a href="{{ path('image_show', {id: image.id}) }}" lightbox="image" lightbox-src="{{image|imagine_filter('full') }}" lightbox-json="{{ path('image_data_publisher', {id: image.id, type: image.publisherType, publisherId: image.publisherId}) }}">
             {{ show_img_box(image.getImg|imagine_filter('medium'), {width: 185}) }}
             <div class="image-overlay"></div>
         </a>
@@ -41,7 +41,6 @@
                 </div>
             </div>#}
         </div>
-        <a href="{{ path('image_show', {id: image.id}) }}" lightbox="image" lightbox-src="{{image|imagine_filter('full') }}" lightbox-json="{{ path('image_data_publisher', {id: image.id, type: image.publisherType, publisherId: image.publisherId}) }}">{{ icon('Fullscreen') }}</a>
     </div>
     <input type="hidden" name="{{ image.id }}" />
 </div>

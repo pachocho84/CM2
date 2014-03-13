@@ -62,25 +62,31 @@ class ImageRepository extends BaseRepository
     {
         $options = self::getOptions($options);
 
+        $count = $this->createQueryBuilder('i')
+            ->select('count(i.id)');
+
         $query = $this->createQueryBuilder('i')
             ->select('i');
         if (!is_null($options['albumId'])) {
-            $query->andWhere('i.entityId = :album_id')->setParameter('album_id', $options['albumId']);
+            $count->andWhere('i.entityId = :album_id')->setParameter('album_id', $options['albumId']);
+            $query->andWhere('i.entityId = :album_id')->setParameter('album_id', $options['albumId'])
+                ->orderBy('i.sequence');
         }
         if (!is_null($options['userId'])) {
-            $query->andWhere('i.userId = :user_id')->setParameter('user_id', $options['userId'])
-                ->andWhere('i.pageId is NULL')
-                ->andWhere('i.groupId is NULL');
+            $count->andWhere('i.userId = :user_id')->setParameter('user_id', $options['userId']);
+            $query->andWhere('i.userId = :user_id')->setParameter('user_id', $options['userId']);
         }
         if (!is_null($options['pageId'])) {
+            $count->andWhere('i.pageId = :page_id')->setParameter('page_id', $options['pageId']);
             $query->andWhere('i.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
         if (!is_null($options['groupId'])) {
+            $count->andWhere('i.groupId = :group_id')->setParameter('group_id', $options['groupId']);
             $query->andWhere('i.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
-        $query->addOrderBy('i.sequence');
+        $query->addOrderBy('i.createdAt', 'desc');
 
-        return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
     public function getEntityImages($options = array())

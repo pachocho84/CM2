@@ -31,20 +31,15 @@ class LikeController extends Controller
         if (!$em->getRepository('CMBundle:Like')->checkIfUserLikesIt($this->getUser(), $type, $id)) {        
             $like = new Like;
             $like->setUser($this->getUser());
-            if ($type == 'post') {
-                $post = $em->getRepository('CMBundle:Post')->findOneById($id);
-                $like->setPost($post);
-            } elseif ($type == 'image') {
-                $post = $em->getRepository('CMBundle:Image')->findOneById($id);
-                $like->setImage($post);
-            }
+
+            $post = $em->getRepository('CMBundle:'.ucfirst($type).'')->findOneById($id);
+            $post->addLike($like);
+
             $em->persist($like);
             $em->flush();
         } else {
             throw new RuntimeException('Already liked');
         }
-
-        $this->get('logger')->info('flushed '.$post->getObject());
         
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse(array(

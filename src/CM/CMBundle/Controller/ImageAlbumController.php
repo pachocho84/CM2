@@ -387,7 +387,20 @@ class ImageAlbumController extends Controller
             }
             $imagesDataInAlbum = $em->getRepository('CMBundle:ImageAlbum')->getImagesDataInAlbum($image->getEntityId(), 'id, img, imgOffset');
         } else {
+            $imagesDataInAlbum = $em->getRepository('CMBundle:Image')->getImages(array($type.'Id' => $publisherId));
+            $imagesDataInAlbum = $this->get('knp_paginator')->paginate($imagesDataInAlbum, 1, 40);
+            $imagesDataInAlbum = $imagesDataInAlbum->getItems();
+
+        foreach ($imagesDataInAlbum as $image) {
+            $this->get('logger')->info($image->getId().' '.$image->getImg());
+        }
+
             $imagesDataInAlbum = $em->getRepository('CMBundle:ImageAlbum')->getImagesDataPerPublisher($type, $publisherId, 'id, img, imgOffset');
+
+        foreach ($imagesDataInAlbum as $image) {
+            $this->get('logger')->info($image['id'].' '.$image['img']);
+        }
+
         }
 
         return new JsonResponse(array(
