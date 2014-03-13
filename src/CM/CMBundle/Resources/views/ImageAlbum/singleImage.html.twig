@@ -41,6 +41,7 @@
                 </div>
             </div>#}
         </div>
+        <a href="{{ path('image_show', {id: image.id}) }}" lightbox="image" lightbox-src="{{image|imagine_filter('full') }}" lightbox-json="{{ path('image_data_publisher', {id: image.id, type: image.publisherType, publisherId: image.publisherId}) }}">{{ icon('Fullscreen') }}</a>
     </div>
     <input type="hidden" name="{{ image.id }}" />
 </div>

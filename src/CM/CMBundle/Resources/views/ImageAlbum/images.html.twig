@@ -42,7 +42,7 @@
                 <h2>{{ icon('Image')|raw }} {{ 'Images'|trans }}</h2>
             </div>
         </div>
-        {{ include('CMBundle:ImageAlbum:menu.html.twig', {'inImagesPage': true}) }}
+        {#{{ include('CMBundle:ImageAlbum:menu.html.twig', {'inImagesPage': true}) }}#}
     </div>
 
     <ul class="list-unstyled objects images{% if album is defined %} images-sortable{% endif %} clearfix">
@@ -54,7 +54,7 @@
                 </div>
         {% endif %}
         
-        {{ include('CMBundle:ImageAlbum:imageList.html.twig', {'link': publisherType ~ '_image'}) }}
+        {{ include('CMBundle:ImageAlbum:imageList.html.twig', {'link': publisherType ~ '_image', gallery: 'image_data_' ~ publisherType}) }}
 
         {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %}
             </form>

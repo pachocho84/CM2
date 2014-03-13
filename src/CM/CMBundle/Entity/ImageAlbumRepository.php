@@ -115,6 +115,17 @@ class ImageAlbumRepository extends BaseRepository
             ->getQuery()->getArrayResult();
     }
 
+    public function getImagesDataPerPublisher($type, $id, $data = 'id')
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('partial i.{'.$data.'}')
+            ->from('CMBundle:Image', 'i')
+            ->where('i.'.$type.'Id = :type_id')->setParameter('type_id', $id)
+            ->orderBy('i.sequence')
+            ->addOrderBy('i.createdAt')
+            ->getQuery()->getArrayResult();
+    }
+
     public function getLastPost($id, $options = array())
     {
         $options = self::getOptions($options);

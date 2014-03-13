@@ -372,19 +372,23 @@ class ImageAlbumController extends Controller
     }
 
     /**
-     * @Route("/images/data/{id}", name="images_data", requirements={"id" = "\d+", "entityId" = "\d+"})
+     * @Route("/images/data/{id}", name="images_data", requirements={"id" = "\d+"})
+     * @Route("/images/data/{type}/{publisherId}/{id}", name="image_data_publisher", requirements={"id" = "\d+", "publisherId" = "\d+"})
      */
-    public function imagesDataAction(Request $request, $id, $slug = null, $type = null, $entityId = null)
+    public function imagesDataAction(Request $request, $id, $slug = null, $type = null, $publisherId = null)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $image = $em->getRepository('CMBundle:Image')->findOneById($id);
-        
-        if (is_null($image)) {
-            throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));
+        if ($request->get('_route') == 'images_data') {
+            $image = $em->getRepository('CMBundle:Image')->findOneById($id);
+            
+            if (is_null($image)) {
+                throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));
+            }
+            $imagesDataInAlbum = $em->getRepository('CMBundle:ImageAlbum')->getImagesDataInAlbum($image->getEntityId(), 'id, img, imgOffset');
+        } else {
+            $imagesDataInAlbum = $em->getRepository('CMBundle:ImageAlbum')->getImagesDataPerPublisher($type, $publisherId, 'id, img, imgOffset');
         }
-
-        $imagesDataInAlbum = $em->getRepository('CMBundle:ImageAlbum')->getImagesDataInAlbum($image->getEntityId(), 'id, img, imgOffset');
 
         return new JsonResponse(array(
             'id' => $id,
