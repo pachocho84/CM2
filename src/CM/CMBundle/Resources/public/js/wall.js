@@ -64,10 +64,12 @@ function wallLoad(data, t, c, reload) {
             });
         }
 
-        // $box.find('img').load(function() {
-        //     console.log($(this));
-        //     loading = false;
-        // });
+        $box.find('img').each(function() {
+            // $('<img/>')[0].src = this.src;
+            (new Image()).src = this.src;
+
+            console.log(this.src);
+        });
 
         $box.fadeIn('fast');
     });

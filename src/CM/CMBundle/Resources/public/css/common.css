@@ -52,9 +52,6 @@ body {
 {
     margin-right: 10px;
 }
-#blueimp-gallery .slide {
-    padding-right: 250px;
-}
 #blueimp-gallery .info {
     text-align: center;
     position: fixed;
@@ -69,13 +66,13 @@ body {
     text-overflow: ellipsis;
 }
 #blueimp-gallery .slide-content {
-    position: static !important;
+    right: 300px;
     padding: 35px !important;
 }
 #blueimp-gallery .sidebar {
     display: none;
     position: fixed;
-    width: 250px;
+    width: 300px;
     top: 0px;
     bottom: 0px;
     right: 0px;

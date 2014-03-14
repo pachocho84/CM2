@@ -244,9 +244,8 @@ $(function() {
                 transitionSpeed: 0,
                 slideshowTransitionSpeed: 0,
                 onopened: function() {
-                    var top = $('#body').scrollTop();
-                    console.log(top);
-                    // $('#body').addClass('fixed');
+                    var top = $(document).scrollTop();
+                    $('#body').css('top', -top).addClass('fixed');
 
                     $.get($target.attr('lightbox-json'), function(data) {
                         json = data;

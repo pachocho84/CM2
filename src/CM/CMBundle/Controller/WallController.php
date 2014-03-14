@@ -51,23 +51,18 @@ class WallController extends Controller
             }
 
             /* Next events */
-/*
             if ($request->get('_route') == 'wall_index') {
                 $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('locale' => $request->getLocale())), $page, 3);
                 $boxes['dates;right'] = $this->renderView('CMBundle:Wall:boxEvents.html.twig', array('dates' => $dates));
             }
-*/
 
             /* Sponsored */
-            $sponsoreds = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale())), $page, 2);
             foreach ($sponsoreds as $sponsored) {
                 $boxes['sponsored_'.$sponsored->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $sponsored->getEntity()->getPost(), 'postType' => 'sponsored'));
-            }
 
             /* Box partners */
             if ($request->get('_route') == 'wall_index') {
                 $wallBoxes = $em->getRepository('CMBundle:HomepageBox')->getBoxes(4, array('locale' => $request->getLocale()));
-                foreach ($wallBoxes as $box) {
                     switch ($box->getType()) {
                         case HomepageBox::TYPE_EVENT:
                             $objects = $em->getRepository('CMBundle:Event')->getNextDates(array('pageId' => $box->getPageId(), 'locale' => $request->getLocale()));
@@ -105,22 +100,18 @@ class WallController extends Controller
             }
 
             /* Reviews */
-/*
             if (in_array($request->get('_route'), array('wall_index', 'wall_newspaper'))) {
                 if ($page == 1) {
                     $reviews = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:HomepageArchive')->getLastReviews(array('locale' => $request->getLocale())), $page, 4);
                     $boxes['reviews'] = $this->renderView('CMBundle:Wall:boxReviews.html.twig', array('reviews' => $reviews));
                 }
             }
-*/
 
             /* Banners */
-/*
             $banners = $em->getRepository('CMBundle:HomepageBanner')->getBanners(($page -1) * 2, 3);
             foreach ($banners as $banner) {
                 $boxes['banner_'.$banner->getId()] = $this->renderView('CMBundle:Wall:boxBanner.html.twig', array('banner' => $banner));
             }
-*/
 
             /* Box fans */
             if ($this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'wall_fans') {

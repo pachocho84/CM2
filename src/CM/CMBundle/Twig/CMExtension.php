@@ -101,6 +101,7 @@ class CMExtension extends \Twig_Extension
             'entity_short_text' => new \Twig_Function_Method($this, 'getEntityShortText', array('is_safe' => array('html'))),
             'user_box' => new \Twig_Function_Method($this, 'getUserBox', array('is_safe' => array('html'))),
             'show_img_box' => new \Twig_Function_Method($this, 'getShowImgBox', array('is_safe' => array('html'))),
+            'lightbox' => new \Twig_Function_Method($this, 'getLightbox', array('is_safe' => array('html'))),
             'request_tag' => new \Twig_Function_Method($this, 'getRequestTag', array('is_safe' => array('html'))),
             'request_update' => new \Twig_Function_Method($this, 'getRequestUpdate', array('is_safe' => array('html'))),
             'notification_tag' => new \Twig_Function_Method($this, 'getNotificationTag', array('is_safe' => array('html'))),
@@ -408,6 +409,11 @@ class CMExtension extends \Twig_Extension
         }
         
         return $boxTag.'>'.$imgTag.$boxTagEnd;
+    }
+
+    public function getLightbox($object)
+    {
+        
     }
 
     public function getRequestTag(Request $request)
