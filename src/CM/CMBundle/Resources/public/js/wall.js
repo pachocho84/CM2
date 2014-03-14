@@ -65,13 +65,22 @@ function wallLoad(data, t, c, reload) {
         }
 
         $box.find('img').each(function() {
-            // $('<img/>')[0].src = this.src;
-            (new Image()).src = this.src;
+            console.log('loading ' + this.src + ' ?');
 
-            console.log(this.src);
+            if (!this.src.match(/\/(banner|medium|full)\//)) return;
+
+            console.log('loaded');
+
+            $.ajax(this.src, {async: false});
+
+            $('<img/>')[0].src = this.src;
+            // (new Image()).src = this.src;
+
         });
 
-        $box.fadeIn('fast');
+        console.log('box added');
+
+        $box.show();//.fadeIn('fast');
     });
 
     $('#wall ~ .load_more').remove();
