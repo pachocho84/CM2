@@ -10,8 +10,11 @@
         <div>
     {% elseif type == 'file' %}
         {% set required = false %}
-        <div class="clearfix" btn-file-container>
-            <div class="col-lg-9 input-group"><span class="btn btn-default btn-file input-group-addon">{{ 'Browse'|trans({}, translation_domain) }}
+        <div class="col-lg-9 fileinput fileinput-new" data-provides="fileinput">
+            <div class="input-group">
+                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                <span class="input-group-addon btn btn-default btn-file">
+                    <span class="fileinput-new">{{ 'Browse'|trans({}, translation_domain) }}</span> <span class="fileinput-exists">{{ 'Change'|trans({}, translation_domain) }}</span>
     {% else %}
         <div class="col-lg-9">
     {% endif %}
@@ -24,7 +27,9 @@
     {% endif %}
         <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     {% if type == 'file' %}
-        </span><input type="text" class="form-control col-lg-4" readonly /></div>
+                </span>
+                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">{{ 'Remove'|trans({}, translation_domain) }}</a>
+            </div>
     {% endif %}
     </div>
 {% endspaceless %}

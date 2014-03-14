@@ -362,22 +362,22 @@ $(function() {
         fix_triangle($(this));
     });
     // Hide comment form on blur
-    $('.object').on('blur', '.comment_new:not(.object-detail .comment_new) form textarea, .comment_new:not(.object-detail .comment_new) form input[type="submit"]', function() {
+    $('body').on('blur', '.comment_new:not(.object-detail .comment_new) form textarea, .comment_new:not(.object-detail .comment_new) form input[type="submit"]', function() {
         if ($(this).closest('.bottom').find('li.comment').length == 1) {
             $(this).closest('li.comment').addClass('hide');
             fix_triangle($(this));
         }
     });
     // Show comments on likes_comments_expanded == false
-    $('.object').on('click', '.bottom-comment-count', function(event) {
+    $('body').on('click', '.bottom-comment-count', function(event) {
         event.preventDefault();
         $(this).closest('.bottom').find('ul').fadeToggle('fast');
     });
     // Show all comments
-    $('.object').on('click', '.comments-show_all', function(event) {
+    $('body').on('click', '.comments-show_all', function(event) {
         event.preventDefault();
-        $(this).closest('.bottom').find('li').removeClass('hide'); // TODO: .fadeIn() not working anymore
-        $(this).parent('li').remove();
+        $(event.currentTarget).closest('.bottom').find('.comment').removeClass('hidden'); // TODO: .fadeIn() not working anymore
+        $(event.currentTarget).parent().remove();
     });
     
 

@@ -1,4 +1,4 @@
-var wallColW3 = 1150;
+var wallColW3 = 1200;
 var wallColW2 = 750;
 var wallOrder = 0;
 var wallTimer;
@@ -59,7 +59,8 @@ function wallLoad(data, t, c, reload) {
                 pauseOnHover: true,
                 prev: '.box-partner-nav-prev',
                 slides: '> div',
-                swipe: true
+                swipe: true,
+                fx: 'scrollHorz'
             });
         }
 
@@ -76,9 +77,6 @@ function wallLoad(data, t, c, reload) {
 }
 
 $(function() {
-    var a = 'r0';
-    console.log(a[0]);
-
     $('#wall').append(calculateColumns());
 
     $.get(document.URL, function(data) {
@@ -119,7 +117,7 @@ $(function() {
 
 
 
-    // nav tabs
+    // NAV TABS
     $('body').on('click', '.box .nav.nav-tabs a', function (event) {
         event.preventDefault();
         $(this).tab('show');

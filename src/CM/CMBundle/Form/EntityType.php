@@ -35,10 +35,10 @@ class EntityType extends BaseEntityType
         $builder->add('category', 'entity', array(
                 'label' => 'Category',
                 'class' => 'CMBundle:EntityCategory',
-                'query_builder' => function(CategoryRepository $er) use ($options) {
+                'query_builder' => function(EntityCategoryRepository $er) use ($options) {
                     // get Entity child class name, to retrieve the EntityCategoty type associated
                     $entityChild = strtoupper(preg_replace('/^[\w\d_\\\]*\\\/', '', preg_replace('/Type$/', '', get_class($this))));
-                    $category = constant('CM\CMBundle\Entity\EntityEntityCategory::'.$entityChild);
+                    $category = constant('CM\CMBundle\Entity\EntityCategory::'.$entityChild);
                     return $er->filterEntityCategoriesByEntityType($category, $options);
                 }
             ))->add('images', 'collection', array(

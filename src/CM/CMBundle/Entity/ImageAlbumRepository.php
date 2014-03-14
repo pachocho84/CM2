@@ -111,7 +111,7 @@ class ImageAlbumRepository extends BaseRepository
             ->from('CMBundle:Image', 'i')
             ->where('i.entityId = :album_id')->setParameter('album_id', $id)
             ->orderBy('i.sequence')
-            ->addOrderBy('i.createdAt')
+            ->addOrderBy('i.id', 'desc')
             ->getQuery()->getArrayResult();
     }
 
@@ -121,7 +121,6 @@ class ImageAlbumRepository extends BaseRepository
             ->select('partial i.{'.$data.'}')
             ->from('CMBundle:Image', 'i')
             ->where('i.'.$type.'Id = :type_id')->setParameter('type_id', $id)
-            ->addOrderBy('i.createdAt', 'desc')
             ->addOrderBy('i.id', 'desc')
             ->getQuery()->getArrayResult();
     }
@@ -149,7 +148,7 @@ class ImageAlbumRepository extends BaseRepository
             $query->andWhere('p.updatedAt > :time')->setParameter('time', $options['after']);
         }
         $query->andWhere('a.type = :type')->setParameter('type', $options['type'])
-            ->orderBy('p.updatedAt', 'desc');
+            ->orderBy('p.id', 'desc');
         $post = $query->setMaxResults(1)->getQuery()->getResult();
         if (is_array($post) && count($post) > 0) {
             $post = $post[0];
@@ -193,7 +192,7 @@ class ImageAlbumRepository extends BaseRepository
         if (!is_null($options['groupId'])) {
             $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
-        $query->orderBy('i.updatedAt', 'desc')
+        $query->orderBy('i.id', 'desc')
             ->addOrderBy('a.type');
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
