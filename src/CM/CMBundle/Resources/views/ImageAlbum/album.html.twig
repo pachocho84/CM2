@@ -5,7 +5,7 @@
         <div class="media">
             <div class="pull-right">
                 {% if album is defined and can_manage(album) %}
-                    <span class="btn btn-default btn-sm fileinput-button" data-redirect="<?php echo url_for('@image_album_edit?id='.$album->getEntityId()) ?>">
+                    <span class="btn btn-default btn-sm fileinput-button">
                         {{ icon('Plus') }} {{ 'Add photos'|trans }}
                         <form action="{{ path('imagealbum_add_image', {'id': album.id}) }}" method="post" enctype="multipart/form-data">
                             <input id="images" type="file" name="images" multiple />

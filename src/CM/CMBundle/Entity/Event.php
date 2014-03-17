@@ -47,6 +47,9 @@ class Event extends Entity
     {
         parent::__construct();
         
+        $this->translate('en');
+        $this->mergeNewTranslations();
+        
         $this->eventDates = new ArrayCollection();
     }
 

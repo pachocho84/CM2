@@ -639,6 +639,8 @@ class DoctrineEventsListener
             $entity->addPost($post, false);
         }
 
+        $em->persist($post);
+
         $this->flushNeeded = true;
     }
 

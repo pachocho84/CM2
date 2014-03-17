@@ -4,7 +4,6 @@
         <a href="{{ path('event_show', {id: post.entity.id, slug: post.entity.getSlug}) }}" class="pull-left">
             <img src="{{ post.entity.image|default_img|imagine_filter('medium') }}" />
         </a>
-        <a href="{{ path('image_show', {id: post.entity.image.id}) }}" lightbox="image" lightbox-src="{{ post.entity.image|imagine_filter('full') }}" lightbox-json="{{ path('images_data', {id: post.entity.image.id}) }}">{{ icon('Fullscreen') }}</a>
     {% endif %}
 
     <div class="media-body">

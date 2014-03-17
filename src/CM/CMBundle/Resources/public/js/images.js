@@ -97,7 +97,6 @@ $(function() {
     });
     
     
-    
     // Add images
     if ($('.fileinput-button').length > 0) {
         $('.fileinput-button').fileupload({
@@ -137,6 +136,4 @@ $(function() {
             }  
         });
     }
-  
-  
 });

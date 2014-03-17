@@ -25,9 +25,6 @@ class Biography extends Entity
     public function __construct()
     {
         parent::__construct();
-        
-        $this->translate('en');
-        $this->mergeNewTranslations();
     }
 
     public function __toString()

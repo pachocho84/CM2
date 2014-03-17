@@ -224,6 +224,7 @@ $(function() {
 
 
     $('body').on('click', '[lightbox="image"]', function(event){
+        var originalUrl = document.URL;
         var $sidebar = $('#blueimp-gallery .sidebar');
         var $title = $('#blueimp-gallery .title');
         var $sequence = $('#blueimp-gallery .sequence');
@@ -291,6 +292,7 @@ $(function() {
                     $sidebar.show();
                 },
                 onslide: function(i, slide) {
+                    console.log(i);
                     if (sidebarReq != null) {
                         sidebarReq.abort();
                     }
@@ -305,7 +307,7 @@ $(function() {
                     }
 
                     sidebarReq = $.get(url, function(data) {
-                        // history.pushState('', '', url);
+                        history.pushState('', '', url);
                         
                         $title.html(data.albumTitle);
                         $sidebar.html(data.sidebar);
@@ -317,6 +319,8 @@ $(function() {
                 onclose: function() {
                     $sidebar.hide();
                     $('#body').removeClass('fixed');
+
+                    history.pushState('', '', originalUrl);
                 }
         });
     });

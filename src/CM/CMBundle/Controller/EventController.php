@@ -225,14 +225,14 @@ class EventController extends Controller
             $image = new Image;
             $image->setMain(true)
                 ->setUser($user);
-            $event->addImage($image);
+            $event->setImage($image);
 
             // $event->addMultimedia(new Multimedia);
 
             $event->addEventDate(new EventDate);
 
             $post = $this->get('cm.post_center')->getNewPost($user, $user);
-            $event->addPost($post);
+            $event->setPost($post);
         } else {
             $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale(), 'protagonists' => true, 'mainImageOnly' => true));
             if (!$this->get('cm.user_authentication')->canManage($event)) {

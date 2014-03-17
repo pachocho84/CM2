@@ -18,6 +18,26 @@ function calculateColumns() {
     return columns;
 }
 
+function recalculateWall() {
+    var $loadMore = $('#wall ~ .load_more').detach();
+
+    var data = {};
+    $.each($('#wall > div > [wall-col=left'), function(i, elem) {
+        data[$(elem).attr('wall-order') + ';left'] = $(elem).detach();
+    });
+    $.each($('#wall > div > [wall-col=right'), function(i, elem) {
+        data[$(elem).attr('wall-order') + ';right'] = $(elem).detach();
+    });
+    $.each($('#wall > div > *:not([wall-col])'), function(i, elem) {
+        data['order' + $(elem).attr('wall-order')] = $(elem).detach();
+    });
+    data['loadMore'] = $loadMore;
+
+    $('#wall').empty().append(calculateColumns());
+    wallOrder = 0;
+    wallLoad(data, null, null, true);
+}
+
 function wallLoad(data, t, c, reload) {
     var reload = reload || false;
 
@@ -25,6 +45,8 @@ function wallLoad(data, t, c, reload) {
     $.each($('#wall > div'), function(i, col) {
         columns[i] = $(col);
     });
+
+    $('#wall ~ .load_more').remove();
 
     $.each(data, function(i, box) {
         if (i == 'loadMore') return;
@@ -64,31 +86,36 @@ function wallLoad(data, t, c, reload) {
             });
         }
 
-        $box.find('img').each(function() {
-            console.log('loading ' + this.src + ' ?');
+        // $box.find('img').each(function() {
+        //     console.log('loading ' + this.src + ' ?');
 
-            if (!this.src.match(/\/(banner|medium|full)\//)) return;
+        //     if (!this.src.match(/\/(banner|medium|full)\//)) return;
 
-            console.log('loaded');
+        //     console.log('loaded');
 
-            $.ajax(this.src, {async: false});
+        //     $.ajax(this.src, {async: false});
 
-            $('<img/>')[0].src = this.src;
-            // (new Image()).src = this.src;
+        //     $('<img/>')[0].src = this.src;
+        //     // (new Image()).src = this.src;
 
-        });
+        // });
 
-        console.log('box added');
+        // console.log('box added');
 
-        $box.show();//.fadeIn('fast');
+        $box.fadeIn('fast');
     });
 
-    $('#wall ~ .load_more').remove();
     $('#wall').after($(data.loadMore));
+
+    $('#wall').trigger('boxLoaded');
 }
 
 $(function() {
     $('#wall').append(calculateColumns());
+
+    // $('body').one('boxLoaded', function() {
+    //     recalculateWall();
+    // });
 
     $.get(document.URL, function(data) {
         wallLoad(data);
@@ -101,23 +128,7 @@ $(function() {
         if ((pageWidth > wallColW3 && num != 3) || (pageWidth <= wallColW3 && pageWidth > wallColW2 && num != 2) || (pageWidth <= wallColW2 && num != 1)) {
             clearTimeout(wallTimer);
             wallTimer = setTimeout(function() {
-                var $loadMore = $('#wall ~ .load_more').detach();            
-
-                var data = {};
-                $.each($('#wall > div > [wall-col=left'), function(i, elem) {
-                    data[$(elem).attr('wall-order') + ';left'] = $(elem).detach();
-                });
-                $.each($('#wall > div > [wall-col=right'), function(i, elem) {
-                    data[$(elem).attr('wall-order') + ';right'] = $(elem).detach();
-                });
-                $.each($('#wall > div > *:not([wall-col])'), function(i, elem) {
-                    data['order' + $(elem).attr('wall-order')] = $(elem).detach();
-                });
-                data['loadMore'] = $loadMore;
-
-                $('#wall').empty().append(calculateColumns());
-                wallOrder = 0;
-                wallLoad(data, null, null, true);
+                recalculateWall();
             }, 200);
         }
     });

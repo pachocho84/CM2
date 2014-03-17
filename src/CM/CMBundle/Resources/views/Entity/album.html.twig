@@ -8,7 +8,6 @@
 
     <div class="box">
 
-
         <div class="box-heading">
             <div class="media">
                 <div class="pull-right">
@@ -63,7 +62,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% if is_granted('ROLE_USER') and album is defined and can_manage(album) and images|length > 1 %}
+    {% if is_granted('ROLE_USER') and album is defined and can_manage(album) %}
         {% javascripts
             'lib/fileupload/js/jquery.fileupload.js'
             'lib/fileupload/js/jquery.fileupload-ui.js'

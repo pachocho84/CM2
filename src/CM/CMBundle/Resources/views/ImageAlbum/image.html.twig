@@ -11,7 +11,7 @@
 
 
             <div class="object">
-                <img src="{{ image.getImg|imagine_filter('full') }}" class="img-responsive"/>
+                <a href="{{ path('image_show', {id: image.id}) }}" {{ lightbox(image) }}><img src="{{ image.getImg|imagine_filter('full') }}" class="img-responsive"/></a>
                 {#<?php echo image_tag('/uploads/images/770/'.$image, array('id' => 'image', 'style' => 'max-height: 740px;')) ?>
                 <?php $images->count() > 1 and print link_to('‹', !isset($album) ? '@image_show?id=img_'.$prev : '@image_show?id=img_'.$prev.'&album_id='.$album->getId(), array('class' => 'left carousel-control ajax-link')) ?>
                 <?php $images->count() > 1 and print link_to('›', !isset($album) ? '@image_show?id=img_'.$next : '@image_show?id=img_'.$next.'&album_id='.$album->getId(), array('class' => 'right carousel-control ajax-link')) ?>#}
@@ -40,7 +40,7 @@
                     <ul class="nav nav-list">
                         {#<li><?php echo link_to('<i class="glyphicon glyphicon-picture"></i> '.__('Album').': '.__($image->getEntity()), $image->getRawValue()->getEntity()->getLinkShow('image_album')) ?></li>
                         <li><a href="/uploads/images/full/<?php echo $image->getImg() ?>" target="_blank"><i class="glyphicon glyphicon-fullscreen"></i> <?php echo __('High resolution') ?></a></li>#}
-                        <li><a href="{{ path('image_show', {id: image.id}) }}" lightbox="image" lightbox-src="{{ image.getImg|imagine_filter('full') }}" lightbox-json="{{ path('images_data', {id: image.id}) }}">{{ icon('Fullscreen') }}</a></li>
+                        <li><a href="{{ path('image_show', {id: image.id}) }}" {{ lightbox(image) }}>{{ icon('Fullscreen') }}</a></li>
                         <li><a href="{{ path('image_show', {id: nextId}) }}">{{ 'Next image'|trans }}</a></li>
                         <li><a href="{{ path('image_show', {id: prevId}) }}">{{ 'Previoous image'|trans }}</a></li>
                         

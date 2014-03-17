@@ -326,7 +326,8 @@ class CMExtension extends \Twig_Extension
             'link'            => null,
             'box_attributes'  => array(),
             'img_attributes'  => array(),
-            'user_box' => null
+            'user_box' => null,
+            'lightbox' => null
         ), $options);
 
         $width  = $options['width'];
@@ -393,13 +394,18 @@ class CMExtension extends \Twig_Extension
         $imgTag .= ' />';
 
         // Write box tag
-        if (!is_null($options['link'])) {
+        if (!is_null($options['lightbox'])) {
+            $opt = array_merge(array('image' => null, 'publisher' => false), $options['lightbox']);
+            $boxTag = '<a '.$this->getLightbox($opt['image'], $opt['publisher']);
+            $boxTagEnd = '</a>';
+        } elseif (!is_null($options['link'])) {
             $boxTag = '<a href="'.$options['link'].'"';
             $boxTagEnd = '</a>';
         } else {
             $boxTag = '<div';
             $boxTagEnd = '</div>';
         }
+
         foreach ($options['box_attributes'] as $key => $attr) {
             $boxTag .= ' '.$key.'="'.$attr.'"';
         }
@@ -411,9 +417,15 @@ class CMExtension extends \Twig_Extension
         return $boxTag.'>'.$imgTag.$boxTagEnd;
     }
 
-    public function getLightbox($object)
+    public function getLightbox($image, $publisher = false)
     {
-        
+        $img = $this->imagineFilter->getBrowserPath($image, 'full');
+        if ($publisher) {
+            $link = $this->router->generate('image_data_publisher', array('id' => $image->getId(), 'type' => $image->getPublisherType(), 'publisherId' => $image->getPublisherId()));
+        } else {
+            $link = $this->router->generate('images_data', array('id' => $image->getId()));
+        }
+        return 'lightbox="image" lightbox-src="'.$img.'" lightbox-json="'.$link.'"';
     }
 
     public function getRequestTag(Request $request)
