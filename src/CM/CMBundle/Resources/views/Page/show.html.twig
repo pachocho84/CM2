@@ -25,7 +25,7 @@
                 <h4>
                     {{ page }}
                 </h4>
-                {% if biography is not null %}{{ entity_short_text(biography) }}{% endif %}
+                {% if biography is not null %}{{ biography|short_text }}{% endif %}
             </div>
         </div>
     </div>

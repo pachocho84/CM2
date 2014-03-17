@@ -8,7 +8,7 @@
         {% endif %}
 
         <div class="media-body">
-            {{ entity_short_text(article) }}
+            {{ article|short_text }}
 
             {{ include('CMBundle::social.html.twig', {'post': article.post}) }}
         </div>

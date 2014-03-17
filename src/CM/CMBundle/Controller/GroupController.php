@@ -516,6 +516,29 @@ class GroupController extends Controller
     }
 
     /**
+     * @Route("/popover/{slug}", name="group_popover")
+     * @Template
+     */
+    public function popoverAction(Request $request, $slug)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            throw new NotFoundHttpException($this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        
+        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        
+        if (!$group) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Group not found.', array(), 'http-errors'));
+        }
+
+        $biography = $em->getRepository('CMBundle:Biography')->getGroupBiography($group->getId(), array('locale' => $request->getLocale()));
+
+        return array('group' => $group, 'biography' => $biography);
+    }
+
+    /**
      * @Route("/{slug}/{page}", name="group_show", requirements={"page" = "\d+"})
      * @Template
      */

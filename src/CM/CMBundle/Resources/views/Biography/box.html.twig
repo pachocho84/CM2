@@ -13,7 +13,7 @@
         <div class="box-body">
             <div class="object">
                 {% if simple|default(false) %}
-                    {{ entity_short_text(biography) }}
+                    {{ biography|short_text }}
                 {% else %}
                     <img src='{{ asset(user.img|imagine_filter('medium')) }}' width=200 class="img-thumbnail pull-left" />
                     <h3>

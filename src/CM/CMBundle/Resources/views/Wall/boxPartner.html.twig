@@ -36,12 +36,12 @@
                 {% endfor %}
             </div>
         {% elseif objects is empty %}
-            <div class="box-partner-heading">
+            <div class="box-partner-heading" {{ publisher_box(box.page) }}>
                 {{ box.page }}
             </div>
             <div class="objects">
                 {% if biography is not null %}
-                    {{ entity_short_text(biography, {stripped: true}) }}
+                    {{ biography|short_text({stripped: true}) }}
                 {% endif %}
             </div>
         {% elseif box.type == constant('CM\\CMBundle\\Entity\\HomepageBox::TYPE_EVENT') %}

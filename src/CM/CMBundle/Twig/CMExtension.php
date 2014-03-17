@@ -85,21 +85,21 @@ class CMExtension extends \Twig_Extension
             'simple_format_text' => new \Twig_Filter_Method($this, 'getSimpleFormatText'),
             'show_text' => new \Twig_Filter_Method($this, 'getShowText'),
             'default_img' => new \Twig_Filter_Method($this, 'getDefaultImg'),
+            'short_text' => new \Twig_Filter_Method($this, 'getShortText', array('is_safe' => array('html'))),
         );
     }
 
     public function getFunctions()
     {
         return array(
-	        'controller_name' => new \Twig_Function_Method($this, 'getControllerName'),
+            'controller_name' => new \Twig_Function_Method($this, 'getControllerName'),
             'action_name' => new \Twig_Function_Method($this, 'getActionName'),
             'datetime_format' => new \Twig_Function_Method($this, 'getDateTimeFormat', array('is_safe' => array('html'))),
             'can_manage' => new \Twig_Function_Method($this, 'getCanManage'),
             'is_admin' => new \Twig_Function_Method($this, 'getIsAdmin'),
             'related_object' => new \Twig_Function_Method($this, 'getRelatedObject'),
             'delete_link' => new \Twig_Function_Method($this, 'getDeleteLink', array('is_safe' => array('html'))),
-            'entity_short_text' => new \Twig_Function_Method($this, 'getEntityShortText', array('is_safe' => array('html'))),
-            'user_box' => new \Twig_Function_Method($this, 'getUserBox', array('is_safe' => array('html'))),
+            'publisher_box' => new \Twig_Function_Method($this, 'getPublisherBox', array('is_safe' => array('html'))),
             'show_img_box' => new \Twig_Function_Method($this, 'getShowImgBox', array('is_safe' => array('html'))),
             'lightbox' => new \Twig_Function_Method($this, 'getLightbox', array('is_safe' => array('html'))),
             'request_tag' => new \Twig_Function_Method($this, 'getRequestTag', array('is_safe' => array('html'))),
@@ -176,6 +176,47 @@ class CMExtension extends \Twig_Extension
         }
 
         return $options['path'].$image;
+    }
+
+    public function getShortText(Entity $entity, $options = array())
+    {
+        $options = array_merge(array(
+            'max' => 400,
+            'stripped' => false,
+            'more' => false,
+            'moreText' => $this->translator->trans('show more'),
+            'moreTextAlt' => $this->translator->trans('show less')
+        ), $options);
+
+        if (!empty($entity->getExtract())) {
+            $text = $entity->getExtract();
+        } else {
+            $text = strip_tags($entity->getText());
+        }
+
+        if ($text == '') {
+            return null;
+        }
+
+        if (empty($entity->getExtract()) && strlen($text) > $options['max']) {
+            preg_match('/^.{'.($options['max'] * 0.75).','.$options['max'].'}(\.|\:|\!|\?)/s', $text, $matches);
+            if (array_key_exists(0, $matches)) {
+                $text = rtrim($matches[0], '.:').'.';
+            } else {
+                $text = rtrim(Helper::truncate_text($text, $options['max'], '', true), ',.;!?:');
+                if (!$options['more']) {
+                    $text .= '...';
+                }
+            }
+            $text = $this->getSimpleFormatText($text);
+        }
+
+        if ($options['more'] && strlen($text) < strlen($entity->getText())) {
+            $text = '<div show-less>'.$text.' <a href="#" class="small" show-more-trigger>'.$this->translator->trans('Show more').'</a></div>
+                     <div style="display: none;" show-more>'.$entity->getText().' <a href="#" class="small" show-less-trigger>'.$this->translator->trans('Show less').'</a></div>';
+        }
+
+        return $text;
     }
     
     /**
@@ -257,63 +298,12 @@ class CMExtension extends \Twig_Extension
         // echo link_to($text, $link, $options);
     }
 
-    public function getEntityShortText(Entity $entity, $options = array())
+    public function getPublisherBox($publisher, $options = array())
     {
-        $options = array_merge(array(
-            'max' => 400,
-            'stripped' => false,
-            'more' => false,
-            'moreText' => $this->translator->trans('show more'),
-            'moreTextAlt' => $this->translator->trans('show less')
-        ), $options);
-
-        if (!empty($entity->getExtract())) {
-            $text = $entity->getExtract();
-        } else {
-            $text = strip_tags($entity->getText());
-        }
-
-        if ($text == '') {
-            return null;
-        }
-
-        if (empty($entity->getExtract()) && strlen($text) > $options['max']) {
-            preg_match('/^.{'.($options['max'] * 0.75).','.$options['max'].'}(\.|\:|\!|\?)/s', $text, $matches);
-            if (array_key_exists(0, $matches)) {
-                $text = rtrim($matches[0], '.:').'.';
-            } else {
-                $text = rtrim(Helper::truncate_text($text, $options['max'], '', true), ',.;!?:');
-                if (!$options['more']) {
-                    $text .= '...';
-                }
-            }
-            $text = $this->getSimpleFormatText($text);
-        }
-
-        if ($options['more'] && strlen($text) < strlen($entity->getText())) {
-            $text = '<div show-less>'.$text.' <a href="#" class="small" show-more-trigger>'.$this->translator->trans('Show more').'</a></div>
-                     <div style="display: none;" show-more>'.$entity->getText().' <a href="#" class="small" show-less-trigger>'.$this->translator->trans('Show less').'</a></div>';
-        }
-
-        return $text;
-    }
-
-    public function getUserBox($publisher, $options = array())
-    {
-        if (!$publisher instanceof User) {
-            return '';
-        }
-
         $options = array_merge(array(
         ), $options);
 
-        // var_dump($this->twig->getFilter('e')());die;
-
-        // $img = $this->imagineFilter->getBrowserPath($publisher->getImg(), 50, false);
-        // $imgBox = $this->getShowImgBox($img, array('width' => 35, 'height' => 35, 'offset' => $publisher->getImgOffset(), 'box_attributes' => array('class' => 'pull-left')));
-
-        return 'user-popover data-title="'.$publisher.'" data-href="'.$this->router->generate('user_popover', array('slug' => $publisher->getSlug())).'"';
-        // $this->getShowImgBox($img, array('width' => 35, 'height' => 35, 'offset' => $publisher->getImgOffset(), 'box_attributes' => array('class' => 'pull-left')))
+        return 'publisher-popover data-title="'.$publisher.'" data-href="'.$this->router->generate(strtolower($this->getClassName($publisher)).'_popover', array('slug' => $publisher->getSlug())).'"';
     }
 
     public function getShowImgBox($img, $options = array())
@@ -326,7 +316,7 @@ class CMExtension extends \Twig_Extension
             'link'            => null,
             'box_attributes'  => array(),
             'img_attributes'  => array(),
-            'user_box' => null,
+            'publisher_box' => null,
             'lightbox' => null
         ), $options);
 
@@ -410,8 +400,8 @@ class CMExtension extends \Twig_Extension
             $boxTag .= ' '.$key.'="'.$attr.'"';
         }
 
-        if (!is_null($options['user_box'])) {
-            $boxTag .= $this->getUserBox($options['user_box']);
+        if (!is_null($options['publisher_box'])) {
+            $boxTag .= $this->getPublisherBox($options['publisher_box']);
         }
         
         return $boxTag.'>'.$imgTag.$boxTagEnd;
@@ -434,7 +424,7 @@ class CMExtension extends \Twig_Extension
 
         if ($user->getId() == $request->getUser()->getId()) {
             $userLink = $this->router->generate('user_show', array('slug' => $request->getFromUser()->getSlug()));
-            $userBox = $this->getUserBox($request->getFromUser());
+            $userBox = $this->getPublisherBox($request->getFromUser());
             if (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
                 $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
                 return $this->translator->trans('%user% would like to be added as protagonist to your event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
@@ -484,7 +474,7 @@ class CMExtension extends \Twig_Extension
             }
         } elseif ($user->getId() == $request->getFromUser()->getId()) {
             $userLink = $this->router->generate('user_show', array('slug' => $request->getUser()->getSlug()));
-            $userBox = $this->getUserBox($request->getUser());
+            $userBox = $this->getPublisherBox($request->getUser());
             if (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event') {
                 $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
                 return $this->translator->trans('You requested %user% to be added as protagonist to the event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
@@ -528,7 +518,7 @@ class CMExtension extends \Twig_Extension
     public function getNotificationTag(Notification $notification)
     {
         $userLink = $this->router->generate('user_show', array('slug' => $notification->getFromUser()->getSlug()));
-        $userBox = $this->getUserBox($notification->getFromUser());
+        $userBox = $this->getPublisherBox($notification->getFromUser());
         switch ($this->getClassName($notification->getPost()->getObject()).'_'.$notification->getType()) {
             case 'Event_'.Notification::TYPE_REQUEST_ACCEPTED:
                 $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
@@ -568,7 +558,7 @@ class CMExtension extends \Twig_Extension
     {
         // $object_page = '@'.$post->getObject().'_index';
         $userLink = $this->router->generate($post->getPublisherType().'_show', array('slug' => $post->getPublisher()->getSlug()));
-        $userBox = $this->getUserBox($post->getPublisher());
+        $userBox = $this->getPublisherBox($post->getPublisher());
         switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Event_'.Post::TYPE_CREATION:
                 $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
@@ -593,7 +583,7 @@ class CMExtension extends \Twig_Extension
                     $likeOrComment = 'likes';
                 }
                 $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherType().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
-                $publisherBox = $this->getUserBox($post->getEntity()->getPost()->getPublisher());
+                $publisherBox = $this->getPublisherBox($post->getEntity()->getPost()->getPublisher());
                 if (is_null($post->getEntity())) {
                     return $this->getClassName($post->getObject()).'_'.$post->getType().' no entity';
                 } elseif ($post->getEntity() instanceof Biography) {
@@ -768,13 +758,13 @@ class CMExtension extends \Twig_Extension
                     default:
                     case 3:
                         $fan3Link = $this->router->generate('user_show', array('slug' => $relatedObjects[2]->getUser()->getSlug()));
-                        $fan3Box = $this->getUserBox($relatedObjects[2]->getUser());
+                        $fan3Box = $this->getPublisherBox($relatedObjects[2]->getUser());
                     case 2:
                         $fan2Link = $this->router->generate('user_show', array('slug' => $relatedObjects[1]->getUser()->getSlug()));
-                        $fan2Box = $this->getUserBox($relatedObjects[1]->getUser());
+                        $fan2Box = $this->getPublisherBox($relatedObjects[1]->getUser());
                     case 1:
                         $fan1Link = $this->router->generate('user_show', array('slug' => $relatedObjects[0]->getUser()->getSlug()));
-                        $fan1Box = $this->getUserBox($relatedObjects[0]->getUser());
+                        $fan1Box = $this->getPublisherBox($relatedObjects[0]->getUser());
                     case 0:
                         break;
                 }
@@ -900,7 +890,7 @@ class CMExtension extends \Twig_Extension
     public function getEntityPostText(Post $post)
     {
         $userLink = $this->router->generate($post->getPublisherType().'_show', array('slug' => $post->getPublisher()->getSlug()));
-        $userBox = $this->getUserBox($post->getPublisher());
+        $userBox = $this->getPublisherBox($post->getPublisher());
         switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Comment_'.Post::TYPE_CREATION:
                 return '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>';
@@ -1237,7 +1227,7 @@ class CMExtension extends \Twig_Extension
         }
 
         if (!is_null($options['user_box'])) {
-            $boxTag = '<div '.$this->getUserBox($options['user_box']).'>'.$boxTag;
+            $boxTag = '<div '.$this->getPublisherBox($options['user_box']).'>'.$boxTag;
             $boxTagEnd = '</div>'.$boxTagEnd;
         }
         

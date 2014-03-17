@@ -4,12 +4,11 @@
     {{ user }}
 {% endblock %}
 
+{% block bodyHeading %}
+    {{ include('CMBundle:User:top.html.twig') }}
+{% endblock %}
+
 {% block body %}
-
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:button', {'userId': user.id})) }}{% endif %}  
-
-    {{ include('CMBundle:User:top.html.twig', {'inPage': 'event'}) }}
-
 
     <div class='box'>
         {{ include('CMBundle:Event:objects.html.twig') }}

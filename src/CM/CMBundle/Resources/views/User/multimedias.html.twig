@@ -1,29 +1,14 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+{% block bodyHeading %}
+    {{ include('CMBundle:User:top.html.twig') }}
+{% endblock %}
+
 {% block body %}
-
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:fanButton', {'userId': user.id})) }}{% endif %}  
-
-    {{ include('CMBundle:User:top.html.twig', {'inPage': 'multimedia'}) }}
-
-
-    {#<ul class="breadcrumb">
-      <li><?php echo link_to('Home', '@homeuser') ?></li>
-      <li><?php echo link_to(__('Users'), '@user_list') ?></li>
-      <li class="active"><?php echo $user ?></li>
-    </ul>#}
-
-
     <div class="box">
 
         {% if is_granted('ROLE_CLIENT') and app.user.id == user.id %}<a href="{{ path('imagealbum_new') }}">{{ 'Add a new multimidia'|trans }}</a>{% endif %}
 
         {{ include('CMBundle:Multimedia:objects.html.twig') }}
     </div>
-    
-
-    {#<?php slot('sidebar_slot3') ?>  
-        <?php include_component('fan', 'userFans', array('user' => $user)) ?>
-    <?php end_slot() ?>#}
-  
 {% endblock %}

@@ -6,7 +6,7 @@
 
                 <div class="col-lg-4 disc-content">
                     {% if disc.getImages|length > 0 %}
-                        <img src='{{ asset(uploaded_images_full_dir ~ '/' ~ disc.images[0].img) }}' width="200px" />
+                        <img src='{{ asset(uploaded_images_full_dir ~ '/' ~ disc.image.img) }}' width="200px" />
                     {% endif %}
                 </div>
 
@@ -22,7 +22,7 @@
                         {% if disc.year is not null %}<dt>Year</dt><dd>{{ disc.year|date('Y') }}</dd>{% endif %}
                     </dl>
     
-                    {{ entity_short_text(disc) }}
+                    {{ disc|short_text }}
                 </div>
 
                 <div class="disc-likeComment clearfix">

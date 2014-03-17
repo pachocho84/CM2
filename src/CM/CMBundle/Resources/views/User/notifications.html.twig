@@ -1,21 +1,14 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+{% block bodyHeading %}
+    {{ include('CMBundle:User:top.html.twig') }}
+{% endblock %}
+
 {% block body %}
     <h2>
         {{ icon('Notification') }}
-        {#<?php echo image_tag('/images/glyphicons/globe') ?>
-        <?php echo $sf_response->getTitle() ?>#}
     </h2>                                                                    
-    
-    
-     
-    <ul class="breadcrumb">
-      {#<li><?php echo link_to('Home', '@homepage') ?></li>
-      <li class="active"><?php echo __($sf_response->getTitle()) ?></li>#}
-    </ul>
-    
-    
-    
+
     <div class="objects-container">
         <div class="objects">
             <ul class="media-list">

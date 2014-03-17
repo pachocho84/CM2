@@ -1,5 +1,5 @@
 {% if false and is_granted('ROLE_USER') %}
-    {{ render(controller('CMBundle:Fan:fanButton', {'userId': page.id, 'object': page|class_name})) }}
+    {{ render(controller('CMBundle:Fan:button', {'userId': page.id, 'object': page|class_name})) }}
 {% endif %}
 
 {% if not page.coverImg or page.coverImg == '' %}

@@ -1,0 +1,11 @@
+{% if page.coverImg is not null %}<img src='{{ page.coverImg|imagine_filter('small') }}' class="media-object" />{% endif %}</div>
+
+<img src='{{ page.img|imagine_filter('avatar') }}' width="50px" class="media-object" />
+
+<h2>{{ page }}</h2>
+
+{% if biography is not null %}{{ biography|short_text({max: 150}) }}{% endif %}
+
+{% if is_granted('ROLE_USER') %}
+    {{ render(controller('CMBundle:Fan:button', {'userId': page.id, 'object': page|class_name})) }}
+{% endif %}

@@ -516,6 +516,29 @@ class PageController extends Controller
     }
 
     /**
+     * @Route("/popover/{slug}", name="page_popover")
+     * @Template
+     */
+    public function popoverAction(Request $request, $slug)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            throw new NotFoundHttpException($this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+        
+        if (!$page) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Page not found.', array(), 'http-errors'));
+        }
+
+        $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($page->getId(), array('locale' => $request->getLocale()));
+
+        return array('page' => $page, 'biography' => $biography);
+    }
+
+    /**
      * @Route("/{slug}/{pageNum}", name="page_show", requirements={"pageNum" = "\d+"})
      * @Template
      */

@@ -13,7 +13,7 @@
                 <div class="pull-right">
                     {% if can_manage(album) %}
                         <span class="btn btn-default btn-sm fileinput-button" data-redirect="{{ path('imagealbum_edit', {'id': album.id, 'slug': album.getSlug, 'publisher': album|class_name}) }}">
-                            {{ icon('Plus')|raw }} {{ 'Add photos'|trans }}
+                            {{ icon('Plus') }} {{ 'Add photos'|trans }}
                             <form action="{{ path('imagealbum_add_image', {'id': album.id}) }}" method="post" enctype="multipart/form-data">
                                 <input id="images" type="file" name="images" multiple />
                             </form>
@@ -31,8 +31,10 @@
 
         {% if can_manage(album) %}
             <div class="objects hidden">
-                <div class="progress progress-striped active" style="margin-bottom: 0;">
-                    <div class="bar bar-success" style="width: 0%;"></div>
+                <div class="progress progress-striped">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        <span class="sr-only">0%</span>
+                    </div>
                 </div>
             </div>
         {% endif %}

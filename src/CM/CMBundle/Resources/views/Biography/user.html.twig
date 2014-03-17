@@ -2,26 +2,10 @@
 
 {% block title %}{{ '%user%&#39;s biography'|trans({'%user%': user})|raw }}{% endblock %}
 
+{% block bodyHeading %}
+    {{ include('CMBundle:User:top.html.twig') }}
+{% endblock %}
+
 {% block body %}
-
-    {{ include('CMBundle:User:top.html.twig', {'inPage': 'biography'}) }}                                                          
-
-
- 
-    {#<ul class="breadcrumb">
-      <li><?php echo link_to('Home', '@homepage') ?></li>
-      <li><?php echo link_to(__('Users'), '@user_list') ?></li>
-      <li><?php echo link_to($user, $user->getRawValue()->getLinkShow()) ?></li>
-      <li class="active"><?php echo __('Biography') ?></li>
-    </ul>#}
-
-
-
     <div data-ajax-url="{{ path('user_biography', {slug: user.slug}) }}"></div>
-
-
-
-    {#<?php slot('sidebar_slot3') ?>  
-        <?php include_component('fan', 'userFans', array('user' => $user)) ?>
-    <?php end_slot() ?>#}
 {% endblock %}

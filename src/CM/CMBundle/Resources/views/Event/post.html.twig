@@ -11,7 +11,7 @@
         <h4><a href="{{ path('event_show', {id: post.entity.id, slug: post.entity.getSlug}) }}">{{ post.entity }}</a></h4>
         {% if post.entity.getSubtitle is not null %}<h5>{{ post.entity.getSubtitle }}</h5>{% endif %}
 
-        {{ entity_short_text(post.entity, {more: true}) }}
+        {{ post.entity|short_text({more: true}) }}
 
     </div><!-- END Media Body -->
 

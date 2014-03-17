@@ -6,7 +6,7 @@
 
 <h3><small>{{ user.userTags|join(', ')|trim }}</small></h3>
 
-{% if biography is not null %}{{ entity_short_text(biography, {max: 150}) }}{% endif %}
+{% if biography is not null %}{{ biography|short_text({max: 150}) }}{% endif %}
 
 {% if is_granted('ROLE_USER') and user.id != app.user.id %}
     {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}

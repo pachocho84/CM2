@@ -34,7 +34,7 @@
         <div class="box-body">
             <div class="object">
                 <p>
-                    {{ "Created by %publisher%"|trans({'%publisher%': '<a ' ~ user_box(event.post.publisher) ~ ' href="' ~ path(event.post.publisherType ~ '_show', {'slug': event.post.publisher.slug}) ~ '">' ~ event.post.publisher~'</a>'})|raw }}
+                    {{ "Created by %publisher%"|trans({'%publisher%': '<a ' ~ publisher_box(event.post.publisher) ~ ' href="' ~ path(event.post.publisherType ~ '_show', {'slug': event.post.publisher.slug}) ~ '">' ~ event.post.publisher~'</a>'})|raw }}
                     &middot;
                     <a href="{{ path('event_category', { 'categorySlug': event.category.getSlug }) }}">{{ event.category|capitalize }}</a>
                 </p>

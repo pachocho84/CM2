@@ -45,8 +45,6 @@ class BiographyController extends Controller
             $post = $this->get('cm.post_center')->getNewPost($user, $user);
 
             $biography->addPost($post);
-        } else {
-            $biography = $biography[0];
         }
  
         $form = $this->createForm(new BiographyType, $biography, array(

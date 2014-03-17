@@ -1,22 +1,10 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+{% block bodyHeading %}
+    {{ include('CMBundle:User:top.html.twig') }}
+{% endblock %}
+
 {% block body %}
-
-    {{ include('CMBundle:User:top.html.twig', {'inPage': 'fan'}) }}                                                    
-
-
-     
-    {#
-    <ul class="breadcrumb">
-      <li><?php echo link_to('Home', '@homepage') ?></li>
-      <li><?php echo link_to(__('Users'), '@user_list') ?></li>
-      <li><?php echo link_to($user, $user->getRawValue()->getLinkShow()) ?></li>
-      <li class="active"><?php echo __($sf_response->getRawValue()->getTitle()) ?></li>
-    </ul>
-    #}
-
-
-
     <div class="box">
         <div class="box-heading">
             <h2>{{ icon('Fan') }} <span>{{ 'Fans'|trans }}</span></h2>
@@ -49,5 +37,4 @@
         </ul>
         
     </div>
-
 {% endblock %}

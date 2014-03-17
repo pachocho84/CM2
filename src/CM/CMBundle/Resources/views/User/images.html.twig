@@ -1,25 +1,13 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+{% block bodyHeading %}
+    {{ include('CMBundle:User:top.html.twig') }}
+{% endblock %}
+
 {% block body %}
 
-    {% if is_granted('ROLE_USER') %}{{ render(controller('CMBundle:Fan:button', {'userId': user.id})) }}{% endif %}  
-
-    {{ include('CMBundle:User:top.html.twig', {'inPage': 'image'}) }}
-
-
-    {#<ul class="breadcrumb">
-      <li><?php echo link_to('Home', '@homeuser') ?></li>
-      <li><?php echo link_to(__('Users'), '@user_list') ?></li>
-      <li class="active"><?php echo $user ?></li>
-    </ul>#}
-
-    
     {{ include('CMBundle:ImageAlbum:images.html.twig', {'publisher': user, 'publisherType': 'user'}) }}
 
-    {#<?php slot('sidebar_slot3') ?>  
-        <?php include_component('fan', 'userFans', array('user' => $user)) ?>
-    <?php end_slot() ?>#}
-  
 {% endblock %}
 
 {% block javascripts %}

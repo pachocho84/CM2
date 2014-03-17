@@ -53,7 +53,6 @@ class DoctrineEventsListener
     {
         $object = $args->getEntity();
         $em = $args->getEntityManager();
-        $uow = $em->getUnitOfWork();
 
         if ($object instanceof EntityUser) {
             $this->entityUserPersistedRoutine($object, $em);
@@ -78,7 +77,7 @@ class DoctrineEventsListener
         }
         if (($object instanceof User || $object instanceof Page || $object instanceof Group)
             && ($object->getImg() || $object->getCoverImg() || (property_exists($object, 'backgroundImg') && $object->getBackgroundImg()))) {
-            $this->imgPersistedRoutine($object, $em, $uow);
+            $this->imgPersistedRoutine($object, $em);
         }
         if ($object instanceof Relation && $object->getAccepted() == Relation::ACCEPTED_UNI) {
             $this->relationOutPersistedRoutine($object, $em);
@@ -639,8 +638,6 @@ class DoctrineEventsListener
             $entity->addPost($post, false);
         }
 
-        $em->persist($post);
-
         $this->flushNeeded = true;
     }
 
@@ -671,8 +668,10 @@ class DoctrineEventsListener
         $this->flushNeeded = true;
     }
 
-    private function imgPersistedRoutine($publisher, EntityManager $em, $uow)
+    private function imgPersistedRoutine($publisher, EntityManager $em)
     {
+        $uow = $em->getUnitOfWork();
+
         $user = null;
         if ($publisher instanceof User) {
             $user = $publisher;
@@ -729,6 +728,8 @@ class DoctrineEventsListener
 
     private function imgUpdatedRoutine($publisher, EntityManager $em)
     {
+        $uow = $em->getUnitOfWork();
+     
         $user = null;
         if ($publisher instanceof User) {
             $user = $publisher;

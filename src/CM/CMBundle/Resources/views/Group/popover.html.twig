@@ -1,0 +1,11 @@
+{% if group.coverImg is not null %}<img src='{{ group.coverImg|imagine_filter('small') }}' class="media-object" />{% endif %}</div>
+
+<img src='{{ group.img|imagine_filter('avatar') }}' width="50px" class="media-object" />
+
+<h2>{{ group }}</h2>
+
+{% if biography is not null %}{{ biography|short_text({max: 150}) }}{% endif %}
+
+{% if is_granted('ROLE_USER') %}
+    {{ render(controller('CMBundle:Fan:button', {'userId': group.id, 'object': group|class_name})) }}
+{% endif %}

@@ -59,9 +59,9 @@ function insertRelationItem(c, d, a) {
 $(function() {
     UserActive.begin();
 
-    /* USER POPOVER */
+    /* PUBLISHER POPOVER */
     $(document).popover({
-        selector: '[user-popover]',
+        selector: '[publisher-popover]',
         trigger: 'hover',
         placement: 'auto top',
         delay: {show: 1000, hide: 100},
@@ -292,7 +292,6 @@ $(function() {
                     $sidebar.show();
                 },
                 onslide: function(i, slide) {
-                    console.log(i);
                     if (sidebarReq != null) {
                         sidebarReq.abort();
                     }
