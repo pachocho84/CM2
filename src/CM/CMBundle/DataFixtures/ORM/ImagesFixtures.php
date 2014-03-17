@@ -10,17 +10,6 @@ use CM\CMBundle\Entity\Image;
 
 class ImagesFixtures extends AbstractFixture implements OrderedFixtureInterface
 {
-    private $relationTypes = array(
-        array('name' => 'Students', 'inverse' => 1),
-        array('name' => 'Teachers', 'inverse' => 0),
-        array('name' => 'Class mates', 'inverse' => 2),
-        array('name' => 'Colleagues', 'inverse' => 3),
-        array('name' => 'Friends', 'inverse' => 4),
-        array('name' => 'Family', 'inverse' => 5),
-        array('name' => 'Aquitances', 'inverse' => 6),
-        array('name' => 'Following', 'inverse' => 7),
-    );
-
     public function load(ObjectManager $manager)
     {
         for ($i = 1; $i < Entities\EventFixtures::count(); $i++) {
