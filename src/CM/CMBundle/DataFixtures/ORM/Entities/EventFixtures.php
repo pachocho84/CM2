@@ -270,30 +270,6 @@ Comune di Madesimo
             ->setUser($user);
         $event->setImage($image);
 
-        /* Images */
-        // if (rand(0, 8) > 0) {
-            // $image = new Image;
-            // $image->setImg(EventFixtures::$events[$i]['img'])
-            //     ->setText('main image for event \"'.$event->getTitle().'\"')
-            //     ->setMain(true)
-            //     ->setUser($user);
-            // $event->setImage($image);
-
-            // $manager->persist($event);
-            // $manager->flush();               
-
-            for ($j = rand(1, 4); $j > 0; $j--) {
-                $image = new Image;
-                $image
-                    ->setImg(EventFixtures::$events[$i]['img'])
-                    ->setText('image number '.$j.' for event \"'.$event->getTitle().'\"')
-                    ->setMain(false)
-                    ->setUser($user);
-                
-                $event->addImage($image);
-            }
-        // }
-
         /* Multimedia */
 /*
         for ($j = 0; $j < rand(0, 8); $j++) {
