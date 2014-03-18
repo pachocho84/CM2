@@ -1,0 +1,38 @@
+{% extends 'CMBundle:User:accountLayout.html.twig' %}
+
+{% block body %}
+
+    <div class="box">
+        <div class="box-heading">
+            <h3>{{ icon('Work') }} <span>{{ 'Work'|trans }}</span></h3>
+        </div>
+
+        <div class="box-body">
+            {{ form(form) }}
+        </div>
+    </div>
+
+
+    {% for work in works %}
+        {{ include('CMBundle:Work:object.html.twig') }}
+    {% endfor %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function(){
+            /* EDUCATION */
+            $(document).on('submit', 'form', function(event) {
+                event.preventDefault();
+
+                $(event.currentTarget).ajaxSubmit({
+                    success: function(data, statusText, xhr, form) {
+                        $('.work:first').before(data);
+                        form[0].reset();
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

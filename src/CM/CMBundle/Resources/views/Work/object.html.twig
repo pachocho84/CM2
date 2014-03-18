@@ -1,0 +1,17 @@
+<div class="box work">
+    <div class="box-heading">
+        <h3>{{ icon('Work') }} <span>{{ work.position }}</span></h3>
+    </div>
+
+    <div class="box-body">
+        <ul>
+            <li>{{ 'Position'|trans }}: {{ work.position }}</li>
+            {% if work.employer is not null %}<li>{{ 'Course'|trans }}: {{ work.employer }}</li>{% endif %}
+            {% if work.company is not null %}<li>{{ 'Teacher'|trans }}: {{ work.company }}</li>{% endif %}
+            {% if work.dateFrom is not null %}<li>{{ 'From'|trans }}: {{ work.dateFrom|date('Y') }}</li>{% endif %}
+            <li>{% if work.dateFrom is not null %}{{ 'To'|trans }}: {{ work.dateFrom|date('Y') }}{% else %}{{ 'current'|trans }}{% endif %}</li>
+            {% if work.description is not null %}<li>{{ 'Description'|trans }}: {{ work.description }}</li>{% endif %}
+        </ul>
+    </div>
+
+</div>

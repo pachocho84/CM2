@@ -52,13 +52,11 @@ class FileServerController extends Controller
                 $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($publisher->getId());
                 break;
         }
-
-        if (count($biography) == 0) {
-            $biography = null;
-        } else {
-            $biography = $biography[0];
-        }
         
+        if (is_null($publisher)) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Publisher not found.', array(), 'http-errors'));
+        }
+
         if (is_null($publisher)) {
             throw new NotFoundHttpException($this->get('translator')->trans('Publisher not found.', array(), 'http-errors'));
         }
@@ -68,6 +66,5 @@ class FileServerController extends Controller
         $this->get('knp_snappy.pdf')->generateFromHtml($html, $fileName, array(), true);
 
         return new BinaryFileResponse($fileName);
-        return new Response($html);
     }
 }

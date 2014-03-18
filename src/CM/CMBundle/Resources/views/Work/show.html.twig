@@ -1,0 +1,11 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+{% block bodyHeading %}
+    {{ include('CMBundle:User:top.html.twig') }}
+{% endblock %}
+
+{% block body %}
+    {% for work in works %}
+        {{ include('CMBundle:Work:object.html.twig') }}
+    {% endfor %}
+{% endblock %}

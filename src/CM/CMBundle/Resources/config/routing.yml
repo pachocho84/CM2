@@ -78,6 +78,10 @@ cm_cmbundle_education:
     resource: "CM\\CMBundle\\Controller\\EducationController"
     type:     annotation
 
+cm_cmbundle_work:
+    resource: "CM\\CMBundle\\Controller\\WorkController"
+    type:     annotation
+
 cm_cmbundle_page:
     resource: "CM\\CMBundle\\Controller\\PageController"
     type:     annotation
