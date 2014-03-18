@@ -46,7 +46,7 @@ class MessageThreadRepository extends BaseRepository
             ->join('t.metadata', 'tm', 'with', 'tm.participantId = :user_id')
             ->leftJoin('t.metadata', 'tm_')
             ->join('tm_.participant', 'tp')
-            ->where('m.createdAt = (select max(m1.createdAt) from CMBundle:Message m1 join m1.metadata mm1 with mm1.participantId = :user_id join m1.thread t1 join t1.metadata tm1 with tm1.participantId = :user_id where t1.id = m.threadId order by m1.id desc)')
+            ->where('m.createdAt = (SELECT max(m1.createdAt) from CMBundle:Message m1 join m1.metadata mm1 with mm1.participantId = :user_id join m1.thread t1 join t1.metadata tm1 with tm1.participantId = :user_id where t1.id = m.threadId order by m1.id desc)')
             ->setParameter('user_id', $options['userId']);
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->getQuery()->getResult();
@@ -78,7 +78,8 @@ class MessageThreadRepository extends BaseRepository
             ->join('tm_.participant', 'tp')
             ->orderBy('m.createdAt', 'desc')
             ->setParameter('user_id', $options['userId'])
-            ->setParameter('thread_id', $threadId);
+            ->setParameter('thread_id', $threadId)
+            ->orderBy('t.createdAt', 'desc');
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->getQuery()->getResult();
     }
