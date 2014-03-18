@@ -58,10 +58,12 @@ class UserController extends Controller
      */
     public function menuAction(Request $request)
     {
+        $newMessages = $this->getDoctrine()->getManager()->getRepository('CMBundle:MessageThread')->countNew($this->getUser()->getId());
         $newRequests = $this->get('cm.request_center')->getNewRequestsNumber($this->getUser()->getId());
         $newNotifications = $this->get('cm.notification_center')->getNewNotificationsNumber($this->getUser()->getId());
 
         return array(
+            'newMessages' => $newMessages,
             'newRequests' => $newRequests,
             'newNotifications' => $newNotifications
         );

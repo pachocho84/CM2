@@ -18,6 +18,7 @@ class MessageThreadRepository extends BaseRepository
             'userId' => null,
             'pageId' => null,
             'groupId' => null,
+            'threadIds' => array(),
             'paginate' => true,
             'limit' => null
         ), $options);
@@ -30,29 +31,23 @@ class MessageThreadRepository extends BaseRepository
         $count = $this->getEntityManager()->createQueryBuilder()
             ->select('count(m.id)')
             ->from('CMBundle:Message', 'm')
-            ->innerJoin('m.metadata', 'mm', 'with', 'mm.participantId = :user_id')
-            ->innerJoin('m.thread', 't')
-            ->leftJoin('t.metadata', 'tm')
-            ->leftJoin('tm.participant', 'tp')
-            ->where('tm.participantId = :user_id')
-            ->andWhere('mm.participantId = :user_id')
+            ->join('m.metadata', 'mm', 'with', 'mm.participantId = :user_id')
+            ->join('m.thread', 't')
+            ->join('t.metadata', 'tm', 'with', 'tm.participantId = :user_id')
             ->setParameter('user_id', $options['userId']);
 
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('m, mm, ms, mp, t, tm, tm1, tp')
+            ->select('m, mm, ms, mp, t, tm_, tp')
             ->from('CMBundle:Message', 'm')
-            ->innerJoin('m.metadata', 'mm')
-            ->leftJoin('m.sender', 'ms')
-            ->leftJoin('mm.participant', 'mp', 'with', 'mm.participantId = :user_id')
+            ->join('m.metadata', 'mm', 'with', 'mm.participantId = :user_id')
+            ->join('m.sender', 'ms')
+            ->join('mm.participant', 'mp')
             ->join('m.thread', 't')
-            ->innerJoin('t.metadata', 'tm', 'with', 'tm.participantId = :user_id')
-            ->innerJoin('t.metadata', 'tm1')
-            ->leftJoin('tm1.participant', 'tp')
-            ->orderBy('m.createdAt', 'desc')
-            ->groupBy('t.id')
+            ->join('t.metadata', 'tm', 'with', 'tm.participantId = :user_id')
+            ->leftJoin('t.metadata', 'tm_')
+            ->join('tm_.participant', 'tp')
+            ->where('m.createdAt = (select max(m1.createdAt) from CMBundle:Message m1 join m1.metadata mm1 with mm1.participantId = :user_id join m1.thread t1 join t1.metadata tm1 with tm1.participantId = :user_id where t1.id = m.threadId order by m1.id desc)')
             ->setParameter('user_id', $options['userId']);
-
-        $query->orderBy('t.createdAt', 'desc');
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->getQuery()->getResult();
     }
@@ -64,65 +59,97 @@ class MessageThreadRepository extends BaseRepository
         $count = $this->getEntityManager()->createQueryBuilder()
             ->select('count(m.id)')
             ->from('CMBundle:Message', 'm')
-            ->innerJoin('m.metadata', 'mm', 'with', 'mm.participantId = :user_id')
-            ->innerJoin('m.thread', 't', 'with', 't.id = :thread_id')
-            ->leftJoin('t.metadata', 'tm')
-            ->leftJoin('tm.participant', 'tp')
-            ->where('tm.participantId = :user_id')
-            ->andWhere('mm.participantId = :user_id')
+            ->join('m.metadata', 'mm', 'with', 'mm.participantId = :user_id')
+            ->join('m.thread', 't', 'with', 't.id = :thread_id')
+            ->join('t.metadata', 'tm', 'with', 'tm.participantId = :user_id')
+            ->join('tm.participant', 'tp')
             ->setParameter('user_id', $options['userId'])
             ->setParameter('thread_id', $threadId);
 
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('m, mm, ms, mp, t, tm1, tp')
+            ->select('m, mm, ms, mp, t, tm_, tp')
             ->from('CMBundle:Message', 'm')
-            ->innerJoin('m.metadata', 'mm')
-            ->leftJoin('m.sender', 'ms')
-            ->leftJoin('mm.participant', 'mp', 'with', 'mm.participantId = :user_id')
+            ->join('m.metadata', 'mm')
+            ->join('m.sender', 'ms')
+            ->join('mm.participant', 'mp', 'with', 'mm.participantId = :user_id')
             ->join('m.thread', 't', 'with', 't.id = :thread_id')
-            ->innerJoin('t.metadata', 'tm', 'with', 'tm.participantId = :user_id')
-            ->innerJoin('t.metadata', 'tm1')
-            ->leftJoin('tm1.participant', 'tp')
+            ->join('t.metadata', 'tm', 'with', 'tm.participantId = :user_id')
+            ->leftJoin('t.metadata', 'tm_')
+            ->join('tm_.participant', 'tp')
             ->orderBy('m.createdAt', 'desc')
             ->setParameter('user_id', $options['userId'])
             ->setParameter('thread_id', $threadId);
 
-        $query->orderBy('t.createdAt', 'desc');
-
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->getQuery()->getResult();
     }
 
-    public function getLink($id, $options = array())
+    public function countNew($userId)
     {
-        $options = self::getOptions($options);
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('count(m.id)')
+            ->from('CMBundle:Message', 'm')
+            ->join('m.metadata', 'mm', 'with', 'mm.participantId = :user_id and mm.status = '.MessageMetadata::STATUS_NEW)
+            ->andWhere('m.senderId != :user_id')
+            ->setParameter('user_id', $userId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
-        $query = $this->createQueryBuilder('m')
-            ->select('m, p, c, cu, l, lu')
-            ->leftJoin('m.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
-            ->leftJoin('p.comments', 'c')
-            ->leftJoin('c.user', 'cu')
-            ->leftJoin('p.likes', 'l')
-            ->leftJoin('l.user', 'lu')
-            ->where('m.id = :id')->setParameter('id', $id);
+    public function setUnread($userId)
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->update('CMBundle:MessageMetadata', 'mm')
+            ->where('mm.participantId = :user_id')
+            ->setParameter('user_id', $userId)
+            ->andWhere('mm.status = '.MessageMetadata::STATUS_NEW)
+            ->set('mm.status', MessageMetadata::STATUS_UNREAD)
+            ->getQuery()
+            ->execute();
+    }
 
-        if (!is_null($options['userId'])) {
-            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
-                ->andWhere('p.pageId is NULL')
-                ->andWhere('p.groupId is NULL');
-        }
-        if (!is_null($options['pageId'])) {
-            $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
-        }
-        if (!is_null($options['groupId'])) {
-            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
-        }
+    public function setRead($threadId, $userId)
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->update('CMBundle:MessageMetadata', 'mm')
+            ->where('mm.participantId = :user_id')
+            ->andWhere('mm.messageId in (select m.id from CMBundle:Message m where m.threadId = :thread_id)')
+            ->setParameter('thread_id', $threadId)
+            ->setParameter('user_id', $userId)
+            ->set('mm.status', MessageMetadata::STATUS_ACTIVE)
+            ->getQuery()
+            ->execute();
+    }
 
-        $link = $query->setMaxResults(1)->getQuery()->getResult();
-        if (is_array($link) && count($link) > 0) {
-            $link = $link[0];
-        } else {
-            $link = null;
-        }
-        return $link;
+    public function deleteFromMessage($messageId, $userId)
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->delete('CMBundle:MessageMetadata', 'mm')
+            ->where('mm.participantId = :user_id')
+            ->andWhere('mm.messageId = :message_id')
+            ->setParameter('message_id', $messageId)
+            ->setParameter('user_id', $userId)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function deleteFromThread($threadId, $userId)
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->delete('CMBundle:MessageMetadata', 'mm')
+            ->where('mm.participantId = :user_id')
+            ->andWhere('mm.messageId = (select m.id from CMBundle:Message m where m.threadId = :thread_id)')
+            ->setParameter('thread_id', $threadId)
+            ->setParameter('user_id', $userId)
+            ->getQuery()
+            ->execute();
+
+        $this->getEntityManager()->createQueryBuilder()
+            ->delete('CMBundle:MessageThreadMetadata', 'mt')
+            ->where('mt.participantId = :user_id')
+            ->andWhere('mt.threadId = :thread_id')
+            ->setParameter('thread_id', $threadId)
+            ->setParameter('user_id', $userId)
+            ->getQuery()
+            ->execute();
     }
 }

@@ -13,10 +13,10 @@ use FOS\MessageBundle\Model\ParticipantInterface;
  */
 class MessageMetadata extends BaseMessageMetadata
 {
-    const STATE_NEW = 0;
-    const STATE_UNREAD = 1;
-    const STATE_ACTIVE = 2;
-    const STATE_DELETED = 3;
+    const STATUS_NEW = 0;
+    const STATUS_UNREAD = 1;
+    const STATUS_ACTIVE = 2;
+    const STATUS_DELETED = 3;
 
     /**
      * @ORM\Column(name="id", type="integer")
@@ -52,7 +52,7 @@ class MessageMetadata extends BaseMessageMetadata
     /**
      * @ORM\Column(name="status", type="smallint")
      */
-    protected $state = self::STATE_NEW;
+    protected $status = self::STATUS_NEW;
 
     public function getMessageId()
     {
@@ -88,15 +88,15 @@ class MessageMetadata extends BaseMessageMetadata
         return $this;
     }
 
-    public function getState()
+    public function getStatus()
     {
-        return $this->state;
+        return $this->status;
     }
 
-    public function setState($state)
+    public function setStatus($status)
     {
-        $this->state = $state;
-        $this->isRead = $this->state != self::STATE_UNREAD;
+        $this->status = $status;
+        $this->isRead = $this->status != self::STATUS_UNREAD;
 
         return $this;
     }
@@ -108,10 +108,10 @@ class MessageMetadata extends BaseMessageMetadata
     public function setIsRead($isRead)
     {
         $this->isRead = (boolean)$isRead;
-        if ($this->state == self::STATE_UNREAD && $this->isRead) {
-            $this->state = self::STATE_ACTIVE;
-        } elseif ($this->state == self::STATE_ACTIVE && !$this->isRead) {
-            $this->state = self::STATE_UNREAD;
+        if ($this->status == self::STATUS_UNREAD && $this->isRead) {
+            $this->status = self::STATUS_ACTIVE;
+        } elseif ($this->status == self::STATUS_ACTIVE && !$this->isRead) {
+            $this->status = self::STATUS_UNREAD;
         }
     }
 

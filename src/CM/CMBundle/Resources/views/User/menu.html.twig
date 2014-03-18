@@ -2,7 +2,7 @@
     
     <a href="{{ path('message_index') }}" id="menu-messages" class="dropdown-toggle" data-toggle="dropdown">
         {{ icon('Message') }}
-        <span class="countNew" id="requestsCounter">{% if fos_message_nb_unread() > 0 %}{{ fos_message_nb_unread() }}{% endif %}</span>
+        <span class="countNew" id="messagesCounter">{% if newMessages > 0 %}{{ newMessages }}{% endif %}</span>
     </a>
     
 	<div class="dropdown-menu dropdown-menu-right">

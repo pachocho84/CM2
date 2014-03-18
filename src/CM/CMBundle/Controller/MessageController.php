@@ -18,6 +18,7 @@ use JMS\SecurityExtraBundle\Annotation as JMS;
 use CM\CMBundle\Entity\Multimedia;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\MessageThread;
+use CM\CMBundle\Entity\MessageMetadata;
 use FOS\MessageBundle\FormType\NewThreadMultipleMessageFormType;
 
 /**
@@ -25,6 +26,11 @@ use FOS\MessageBundle\FormType\NewThreadMultipleMessageFormType;
  */
 class MessageController extends Controller
 {
+    protected function getProvider()
+    {
+        return $this->container->get('fos_message.provider');
+    }
+
     /**
      * @Route("/inbox/{page}", name = "message_index", requirements={"page" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
@@ -35,8 +41,9 @@ class MessageController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $messages = $em->getRepository('CMBundle:MessageThread')->getActiveThreads(array('userId' => $this->getUser()->getId()));
-        
         $pagination = $this->get('knp_paginator')->paginate($messages, $page, 12);
+
+        $em->getRepository('CMBundle:MessageThread')->setUnread($this->getUser()->getId());
 
         if ($request->isXmlHttpRequest() && !$request->get('outgoing')) {
             return $this->render('CMBundle:Message:messageList.html.twig', array('messages' => $pagination));
@@ -84,6 +91,38 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route("/{threadId}/{messageId}/remove", name="message_delete_message", requirements={"threadId" = "\d+", "messageId" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function deleteMessageAction($threadId, $messageId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $em->getRepository('CMBundle:MessageThread')->deleteFromMessage($messageId, $this->getUser()->getId());
+
+        return $this->forward('CMBundle:Message:show', array('threadId' => $threadId));
+    }
+
+    /**
+     * @Route("/{threadId}/delete", name="message_delete_thread", requirements={"threadId" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function deleteThreadAction($threadId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $em->getRepository('CMBundle:MessageThread')->deleteFromThread($threadId, $this->getUser()->getId());
+
+        if ($this->isXmlHttpRequest()) {
+            return new Response;
+        }
+
+        return $this->forward('CMBundle:Message:index');
+    }
+
+    /**
      * @Route("/{threadId}/{page}", name="message_show", requirements={"threadId" = "\d+", "page" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
@@ -91,6 +130,8 @@ class MessageController extends Controller
     public function showAction($threadId, $page = 1)
     {
         $em = $this->getDoctrine()->getManager();
+
+        $em->getRepository('CMBundle:MessageThread')->setRead($threadId, $this->getUser()->getId());
 
         $messages = $em->getRepository('CMBundle:MessageThread')->getThread($threadId, array('userId' => $this->getUser()->getId()));
         $pagination = $this->get('knp_paginator')->paginate($messages, $page, 15);
@@ -117,10 +158,5 @@ class MessageController extends Controller
             'messages' => $pagination,
             'form' => $form->createView(),
         );
-    }
-
-    protected function getProvider()
-    {
-        return $this->container->get('fos_message.provider');
     }
 }

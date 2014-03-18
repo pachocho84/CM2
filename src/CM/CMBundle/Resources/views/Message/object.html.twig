@@ -1,4 +1,5 @@
 <div class="row" id="message_{{ message.id }}">
+    <a href="{{ path('message_delete_message', {threadId: message.threadId, messageId: message.id}) }}">{{ 'Remove message'|trans }}</a>
     {% if message.senderId == app.user.id %}
         <div class="col-lg-3 col-lg-offset-9" style="text-align: right;">{{ 'you'|trans }}</div>
         <div class="col-lg-9 col-lg-offset-3 well" style="text-align: right;">

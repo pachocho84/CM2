@@ -1,4 +1,4 @@
-{% extends 'CMBundle::layout.html.twig' %}
+{% extends 'CMBundle:Form:layout.html.twig' %}
 
 {% block body %}
 
@@ -12,19 +12,22 @@
             {% endif %}
             {% set user = '%user' ~ loop.index ~ '%'%}
             {% set text = text ~ ' ' ~ user %}
-            {% set users = users|merge({(user): '<a href="' ~ path('user_show', {'slug': metadata.participant.slug}) ~ '">' ~ metadata.participant ~ '</a>'}) %}
+            {% set users = users|merge({(user): '<a href="' ~ path('user_show', {slug: metadata.participant.slug}) ~ '">' ~ metadata.participant ~ '</a>'}) %}
         {% endfor %}
 
         {{ text|trans(users)|raw }}
     </small></h2>
+    <a href="{{ path('message_delete_thread', {threadId: thread.id}) }}">{{ 'Quit conversation'|trans }}</a>
 
     {{ include('CMBundle:Message:objects.html.twig') }}
 
     <h3>{{ 'reply'|trans }}</h3>
 
-    {{ form_start(form) }}
-        <div class="form-group">{{ form_widget(form.body, {'no_container_class': true, 'attr': {'class': 'input-lg', 'comment_new': ''}}) }}</div>
-        <input type="submit" name="commit" value="{{ 'Send'|trans }}" class="pull-right btn btn-mini hidden" />
-    {{ form_end(form) }}
+    <div class="comment comment_new">
+        {{ form_start(form) }}
+            <div class="form-group">{{ form_widget(form.body, {no_container_class: true, attr: {class: 'input-lg'}}) }}</div>
+            <input type="submit" name="commit" value="{{ 'Send'|trans }}" class="pull-right btn btn-mini hidden" />
+        {{ form_end(form) }}
+    </div>
 
 {% endblock %}

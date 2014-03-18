@@ -32,7 +32,7 @@ class MessageThread extends BaseThread
     protected $createdBy;
 
     /**
-     * @ORM\OneToMany( targetEntity="Message", mappedBy="thread")
+     * @ORM\OneToMany(targetEntity="Message", mappedBy="thread")
      * @var Message[]|\Doctrine\Common\Collections\Collection
      */
     protected $messages;

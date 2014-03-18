@@ -1,24 +1,33 @@
 {% for message in messages %}
     <li class="media object">
         <div class="media-body ajax-link-target">
-            <a href="{{ path('message_show', {'threadId': message.thread.id}) }}"><p>
-                <b>{{ message.thread.subject }}</b> 
-                {{ message.thread.metadata|length }}
-                {#{% if message.thread.metadata|length == 1 %}
-                    {{ 'with %name%'|trans({'%name%', message.thread.metadata[0].partecipant}) }}
-                {% elseif message.thread.metadata|length == 2 %}
-                    {{ 'You and %name% like this.' | trans({'%name%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>'}) | raw }}
-                {% elseif message.thread.metadata|length == 3 %}
-                    {{ 'You, %name1% and %name2% like this.' | trans({'%name1%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>', '%name2%': '<a href="'~path('user_show', {'slug': likesWithoutUser[1].user.slug})~'">'~likesWithoutUser[1].user~'</a>'}) | raw }}
-                {% else %}
-                    {{ 'You, %name% and %link%%count% others %endlink% like this.' | trans({'%name%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>', '%count%': whoLikesIt - 2, '%link%': '<a href="'~path('who_likes_it', {'type': post | class_name | lower, 'id': post.id})~'" class="modal-trigger">', '%endlink%': '</a>'}) | raw }}
-                {% endif %}#}
-            </p></a>
+            <a href="{{ path('message_show', {'threadId': message.thread.id}) }}">
+                <p>
+                    <b>{{ message.thread.subject }}</b> 
+                    {{ '%count% participants'|trans({'%count%': message.thread.metadata|length}) }}
+                    {#{% if message.thread.metadata|length == 1 %}
+                        {{ 'with %name%'|trans({'%name%', message.thread.metadata[0].partecipant}) }}
+                    {% elseif message.thread.metadata|length == 2 %}
+                        {{ 'You and %name% like this.' | trans({'%name%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>'}) | raw }}
+                    {% elseif message.thread.metadata|length == 3 %}
+                        {{ 'You, %name1% and %name2% like this.' | trans({'%name1%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>', '%name2%': '<a href="'~path('user_show', {'slug': likesWithoutUser[1].user.slug})~'">'~likesWithoutUser[1].user~'</a>'}) | raw }}
+                    {% else %}
+                        {{ 'You, %name% and %link%%count% others %endlink% like this.' | trans({'%name%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>', '%count%': whoLikesIt - 2, '%link%': '<a href="'~path('who_likes_it', {'type': post | class_name | lower, 'id': post.id})~'" class="modal-trigger">', '%endlink%': '</a>'}) | raw }}
+                    {% endif %}#}
+                </p>
+            </a>
+            <p>
+                {% if message.metadata[0].status == constant('CM\\CMBundle\\Entity\\MessageMetadata::STATUS_NEW') %}
+                    {{ 'new'|trans }}
+                {% elseif message.metadata[0].status == constant('CM\\CMBundle\\Entity\\MessageMetadata::STATUS_UNREAD') %}
+                    {{ 'unread'|trans }}
+                {% endif %}
+            </p>
             
             <div class="media-body">
                 {{ show_img_box(message.thread.creator.img|imagine_filter('avatar'), {'width': 50, 'height': 50, 'offset': message.thread.creator.imgOffset,  'link': path('user_show', {'slug': message.thread.creator.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
-                <a href="{{ path('message_show', {'threadId': message.thread.id}) }}">{{ message.thread.lastMessage.body|length > 50 ? message.thread.lastMessage.body|slice(0, 47) ~ '...' : message.thread.lastMessage.body }}</a>
-                <p class="text-muted"><small>{{ message.thread.lastMessage.createdAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</small></p>
+                <a href="{{ path('message_show', {'threadId': message.thread.id}) }}">{{ message.body|length > 50 ? message.body|slice(0, 47) ~ '...' : message.body }}</a>
+                <p class="text-muted"><small>{{ message.createdAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</small></p>
             </div>
         </div>
     </li>

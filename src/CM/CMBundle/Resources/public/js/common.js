@@ -392,6 +392,7 @@ $(function() {
     });
     // Enter key press submit
     $('body').on('keydown', '.comment_new form textarea, .comment_new form input, .comment_edit form textarea', function(event) {
+        console.log(666);
         if (event.keyCode == '13' && event.shiftKey === false) {
             event.preventDefault();
             if ($(this).val().length > 1) {
