@@ -41,7 +41,8 @@
                 <a href="#"{% if controller_name() in ['relation', 'education'] %} class="active"{% endif %} data-toggle="dropdown">{{ 'Other'|trans }} <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="{{ path('relation_show', {slug: user.slug}) }}">{{ icon('Relation') }} {{ 'Relations'|trans }}</a></li>
-                    <li><a href="{{ path('user_education', {slug: user.slug}) }}">{{ icon('Education') }} {{ 'Education'|trans }}</a></li>
+                    <li><a href="{{ path('education_show', {slug: user.slug}) }}">{{ icon('Education') }} {{ 'Education'|trans }}</a></li>
+                    <li><a href="{{ path('work_show', {slug: user.slug}) }}">{{ icon('Work') }} {{ 'Work'|trans }}</a></li>
                 </ul>
             </span>
         {% endspaceless %}
