@@ -168,7 +168,8 @@ body {
        -moz-box-shadow: 0 100px 200px rgba(0, 0, 0, 0.2);
             box-shadow: 0 100px 200px rgba(0, 0, 0, 0.2);
 */
-}   
+}  
+/*
 #logo {
     display:block; 
     width:450px;
@@ -179,6 +180,7 @@ body {
     text-indent: -999999px;
     margin: 0px;
 }
+*/
 #footer {
     clear: both;
     border-top: 1px solid #dddddd;
@@ -295,21 +297,21 @@ img {
 #menu ul.nav > li a > span.countNew 
 { 
     font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
-    display:block;
-    background:#cc0000;
-    position:absolute;
-    top:3px;
-    right:6px;
-    padding:1px 1.5px 0;
-    color:#ffffff;
-    -webkit-border-radius:3px;
-         -moz-border-radius:3px;
-                     border-radius:3px;
-    line-height:12px;
-    font-size:9px;
-    font-weight:bold;
-    border:1px solid #cc0000;
-    border-top:0;
+    display: block;
+    background: #cc0000;
+    position: absolute;
+    top: 3px;
+    right: 6px;
+    padding: 1px 1.5px 0;
+    color: #ffffff;
+    -webkit-border-radius: 3px;
+         -moz-border-radius: 3px;
+                     border-radius: 3px;
+    line-height: 12px;
+    font-size: 9px;
+    font-weight: bold;
+    border: 1px solid #cc0000;
+    border-top: 0;
 } 
 #menu ul.nav > li a > span.countNew:empty  { 
     display: none;
@@ -332,7 +334,7 @@ img {
 
 /* Menu Tabs */ 
 #menu, #menu li.dropdown {
-    z-index: 1001;
+/*     z-index: 1001; */
 } 
 #menu li.dropdown .dropdown-menu {
     border-top: none;
@@ -1028,12 +1030,27 @@ span.checkbox[checked="true"] > span:before {
     padding: 0px !important;
     white-space: nowrap;
 }
-.relations-menu li>a:hover,
-.relations-menu li>a:focus {
+.relations-menu li > a:hover,
+.relations-menu li > a:focus {
     background: none;
     color: #990000;
 }
-.relations-menu li>a:hover span.checkbox,
-.relations-menu li>a:focus span.checkbox {
+.relations-menu li > a:hover span.checkbox,
+.relations-menu li > a:focus span.checkbox {
     border-color: #333333;
+}
+
+
+
+/* iPhone fixies */
+@media (max-width: 320px) {
+    #header {
+        height: 46px;
+    } 
+}
+/* iPad fixies */
+@media (max-width: 768px) {
+    #menu.navbar {
+        min-height: 50px;
+    }
 }
