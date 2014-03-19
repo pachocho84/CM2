@@ -2,6 +2,12 @@
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 100px white inset;
 }
+body {
+    overflow-y: scroll !important;
+}
+.fixed {
+    position: fixed !important;
+}
 
 
 
@@ -18,6 +24,18 @@ input:-webkit-autofill {
 .load_more a {
     display: block;
 }
+#body.fixed {
+    width: 100%;
+}
+#menu.fixed {
+    left: 0;
+    right: 0;
+    top: 0;
+    margin: auto;
+    -webkit-transform: translateZ(0); /* Opera, Chrome, and Safari */
+        -ms-transform: translateZ(0); /* IE 9 */
+            transform: translateZ(0);
+}
 
 
 
@@ -30,13 +48,6 @@ input:-webkit-autofill {
 
 
 /* IMAGE BOX */
-body {
-    overflow-y: scroll !important;
-}
-.fixed {
-    position: fixed !important;
-    width: 100%;
-}
 .image_box {
     display: block;
     position: relative;

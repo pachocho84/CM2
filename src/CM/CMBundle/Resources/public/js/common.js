@@ -225,6 +225,7 @@ $(function() {
 
     $('body').on('click', '[lightbox="image"]', function(event){
         var originalUrl = document.URL;
+        var originalTitle = document.title;
         var $sidebar = $('#blueimp-gallery .sidebar');
         var $title = $('#blueimp-gallery .title');
         var $sequence = $('#blueimp-gallery .sequence');
@@ -244,10 +245,14 @@ $(function() {
                 event: event,
                 transitionSpeed: 0,
                 slideshowTransitionSpeed: 0,
-                onopened: function() {
+                onopen: function() {
+                    $('#body').addClass('fixing');
                     var top = $(document).scrollTop();
                     $('#body').css('top', -top).addClass('fixed');
 
+                    $sidebar.show();
+                },
+                onopened: function() {
                     $.get($target.attr('lightbox-json'), function(data) {
                         json = data;
 
@@ -288,8 +293,6 @@ $(function() {
 
                         json = json.images.slice(index).concat(json.images.slice(0, index));
                     });
-
-                    $sidebar.show();
                 },
                 onslide: function(i, slide) {
                     if (sidebarReq != null) {
@@ -306,7 +309,8 @@ $(function() {
                     }
 
                     sidebarReq = $.get(url, function(data) {
-                        history.pushState('', '', url);
+                        history.pushState({}, '', url);
+                        document.title = data.albumTitle;
                         
                         $title.html(data.albumTitle);
                         $sidebar.html(data.sidebar);
@@ -317,9 +321,16 @@ $(function() {
                 },
                 onclose: function() {
                     $sidebar.hide();
-                    $('#body').removeClass('fixed');
 
-                    history.pushState('', '', originalUrl);
+                    history.pushState({}, '', originalUrl);
+                    document.title = originalTitle;
+                },
+                onclosed: function() {
+                    var top = $('#body').position().top;
+                    
+                    $('#body').css('top', '').removeClass('fixed');
+                    $(document).scrollTop(-top);
+                    $('#body').removeClass('fixing');
                 }
         });
     });

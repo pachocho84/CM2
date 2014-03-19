@@ -172,4 +172,28 @@ $(function() {
         });
     });
     
+    
+
+    /* SCROLL FIXED */
+    var initialTop = $('#menu').position().top;
+    var oldTop = $(window).scrollTop();
+
+    if (oldTop > initialTop) {
+        $('#menu').addClass('fixed');
+    }
+
+    $(window).scroll(function(event) {
+        if ($('#body').hasClass('fixing')) return;
+
+        var currentTop = $(window).scrollTop();
+
+        if (oldTop < initialTop && currentTop > initialTop) {
+            $('#menu').addClass('fixed');
+        }
+        if (oldTop > initialTop && currentTop <= initialTop) {
+            $('#menu').removeClass('fixed');
+        }
+
+        oldTop = currentTop;
+    });
 });
