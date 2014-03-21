@@ -5,6 +5,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
         <title>{% block title %}{% endblock %}</title>
 
+        <script>
+            // Object.defineProperty(console, '_commandLineAPI', { get : function() { throw 'We disabled it, Chrome user!' } });
+
+            var documentURL = document.URL;
+            window.onpopstate = function() {
+                if (typeof history.state === 'string' && documentURL.indexOf(history.state) != documentURL.length - history.state.length) {
+                    window.location.reload(true);
+                }
+            };
+        </script>
+
         {% block stylesheets %}{% endblock %}
         
         <link rel="icon" type="image/x-icon" href="{% block icon %}{% endblock %}" />

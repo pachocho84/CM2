@@ -1,3 +1,9 @@
+// this has to be the first jquery script
+$(document).ready(function() {
+    $.ajaxSetup({ cache: false });
+});
+
+
 /* USER ACTIVE */
 var UserActive = {
     timeout: null,
@@ -226,6 +232,7 @@ $(function() {
     $('body').on('click', '[lightbox="image"]', function(event){
         var originalUrl = document.URL;
         var originalTitle = document.title;
+        var historyCount = 0;
         var $sidebar = $('#blueimp-gallery .sidebar');
         var $title = $('#blueimp-gallery .title');
         var $sequence = $('#blueimp-gallery .sequence');
@@ -293,6 +300,8 @@ $(function() {
 
                         json = json.images.slice(index).concat(json.images.slice(0, index));
                     });
+
+                    history.replaceState(originalUrl, originalTitle, originalUrl);
                 },
                 onslide: function(i, slide) {
                     if (sidebarReq != null) {
@@ -309,7 +318,8 @@ $(function() {
                     }
 
                     sidebarReq = $.get(url, function(data) {
-                        history.pushState({}, '', url);
+                        history.pushState(url, data.albumTitle, url);
+                        historyCount++;
                         document.title = data.albumTitle;
                         
                         $title.html(data.albumTitle);
@@ -322,7 +332,7 @@ $(function() {
                 onclose: function() {
                     $sidebar.hide();
 
-                    history.pushState({}, '', originalUrl);
+                    history.go(-historyCount);
                     document.title = originalTitle;
                 },
                 onclosed: function() {
