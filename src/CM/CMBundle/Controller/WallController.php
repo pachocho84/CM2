@@ -154,7 +154,7 @@ class WallController extends Controller
                 }
             }
 
-            // $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:loadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
+            $boxes['loadMore'] = $this->renderView('CMBundle:Homepage:loadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
 
             return new JsonResponse($boxes);
         }
