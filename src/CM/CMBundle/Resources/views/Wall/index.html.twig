@@ -17,7 +17,7 @@
         <li{% if app.request.get('_route') == 'wall_index' %} class="active"{% endif %}><a href="{{ path('wall_index') }}">{{ 'All'|trans }}</a></li>
         <li{% if app.request.get('_route') == 'wall_vips' %} class="active"{% endif %}><a href="{{ path('wall_vips') }}">{{ 'VIP'|trans }}</a></li>
         <li{% if app.request.get('_route') == 'wall_fans' %} class="active"{% endif %}><a href="{{ path('wall_fans') }}">{{ 'Fan'|trans }}</a></li>
-        <li{% if app.request.get('_route') == 'wall_connections' %} class="active"{% endif %}><a href="{{ path('wall_connections') }}">{{ 'Connections'|trans }}</a></li>
+        {% if is_granted('ROLE_USER') %}<li{% if app.request.get('_route') == 'wall_connections' %} class="active"{% endif %}><a href="{{ path('wall_connections') }}">{{ 'Connections'|trans }}</a></li>{% endif %}
         <li{% if app.request.get('_route') == 'wall_editorial' %} class="active"{% endif %}><a href="{{ path('wall_editorial') }}">{{ 'Editorial'|trans }}</a></li>
     </ul>
 
