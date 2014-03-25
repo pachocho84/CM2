@@ -11,6 +11,118 @@ body {
 
 
 
+/* Bootstrap Fixes */
+@media (min-width: 1500px) {
+.container {
+    width: 1500px;
+}
+}
+a {
+    color: #aa0000;
+}
+a:hover {
+    color: #333333;
+}
+/*
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    line-height: 1.4;
+}
+*/
+.text-danger {
+    color: #aa0000;
+}
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+    background-color: #660000;
+}
+.nav-tabs>.active>a,
+.nav-tabs>.active>a:hover,
+.nav-tabs>.active>a:focus,
+.nav-tabs>li>a:hover, 
+.nav-tabs>li>a:focus {
+    border: 1px solid #bbbbbb;
+    border-bottom-color: transparent;
+    background: #ffffff;
+}
+.dropdown-menu .disabled > span {
+    color:#999999;
+}
+.typeahead li {
+    margin: 0px;
+}
+.typeahead li > a {
+    padding: 3px 8px;
+}
+#protagonists .typeahead li > a
+{
+    float: left;
+    width: 100%;
+}
+.typeahead img {
+    margin-right: 10px;
+    width: 32px;
+}
+.typeahead h3 {
+    color: #333333;
+    line-height: 20px;
+}
+.typeahead li.active h3,
+.typeahead li a:hover h3 {
+    color: #ffffff;
+}
+.popover {
+    -webkit-border-radius: 0px;
+         -moz-border-radius: 0px;
+                     border-radius: 0px;
+}
+.popover .popover-content {
+    color: #333333;
+    font-size: 14px;
+    text-shadow: none;
+}
+.dropdown-menu li a.btn {
+    display: inline;
+}
+.popover h3.popover-title {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-variant: normal;
+}
+.glyphicons { 
+    padding: 0 2px 0 0; 
+    top: -3px;
+    line-height: 1;
+    font-style: normal;
+    font-weight: normal;
+    color: inherit;
+}
+.glyphicons:before { 
+    position: relative;
+    font-family: 'Glyphicons Regular';
+    font-size: inherit; 
+    margin: 0;
+    color: inherit;
+}
+.media h2 {
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+.btn.btn-default.active span.glyphicon,
+.btn.btn-default.active span.glyphicons {
+    color: #990000;
+}
+.form-group {
+    margin-bottom: 10px;
+}
+.modal .modal-footer {
+    margin-top: 0;
+}
+.modal .modal-header,
+.modal .modal-body,
+.modal .modal-footer {
+    padding: 15px;
+}
+
+
+
 /* LAYOUT */
 .load_more_container {
     overflow-y: scroll;
@@ -786,14 +898,13 @@ body {
 
 
 /* MESSAGES */
-#recipients {
+/*#recipients {
     padding: 2px;
     height: auto;
     min-height: 34px;
     overflow: hidden;
     vertical-align: top;
 }
-
 .recipient {
     background-color: #fcf3e9;
     border: 1px #d0d3c9 solid;
@@ -806,7 +917,31 @@ body {
     margin: 2px 2px;
     vertical-align: top;
 }
-
 .recipient .close {
     float: none;
+}*/
+form .bootstrap-tagsinput {
+    border-radius: 0;
+    cursor: text;
+    font-size: 14px;
+    height: 34px;
+    line-height: inherit;
+    margin: 0;
+    padding: 6px 12px;
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+       -moz-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+.recipients_typeahead .twitter-typeahead .tt-query,
+.recipients_typeahead .twitter-typeahead .tt-hint {
+    height: 100%;
+}
+.recipients_typeahead .twitter-typeahead .tt-hint {
+    padding: 0 !important;
+}
+.recipients_typeahead .twitter-typeahead {
+    width: auto;
+}
+.recipients_typeahead .bootstrap-tagsinput {
+    width: 100%;
 }

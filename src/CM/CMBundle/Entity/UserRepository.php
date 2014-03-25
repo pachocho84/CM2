@@ -87,7 +87,6 @@ class UserRepository extends BaseRepository
                 $qb->expr()->orX('CONCAT(u.firstName, CONCAT(\' \', u.lastName)) LIKE :fullname', 'CONCAT(u.lastName, CONCAT(\' \', u.firstName)) LIKE :fullname')
             )->setParameter('fullname', $fullname.'%')
             ->setMaxResults(8)
-            ->orderBy('u.vip', 'DESC')
             ->getQuery()->getArrayResult();
     }
 

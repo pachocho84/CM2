@@ -24,7 +24,7 @@
                 <div id="userTags" class="row tag-list">
                     {% for userTag in app.user.userTagsIds %}
                         <div class="span2">
-                            <label class="img-thumbnail round tag" title=" {{ tags[userTag] }}"><input type="hidden" name="tag_{{ userTag }}" value="{{ userTag }}">{{ icon('Tag') }} {{ tags[userTag] }}</label>
+                            <label class="round tag" title=" {{ tags[userTag] }}"><input type="hidden" name="tag_{{ userTag }}" value="{{ userTag }}">{{ icon('Tag') }} {{ tags[userTag] }}</label>
                         </div>
                     {% endfor %}
                 </div>
@@ -37,7 +37,7 @@
                 <div id="tags" class="row tag-list">
                     {% for tag in availableTags %}
                         <div class="span2">
-                            <label class="img-thumbnail round tag" title="{{ tag }}"><input type="hidden" name="tag_{{ tag.id }}" value="{{ tag.id }}">{{ icon('Tag') }} {{ tag }}</label>
+                            <label class="round tag" title="{{ tag }}"><input type="hidden" name="tag_{{ tag.id }}" value="{{ tag.id }}">{{ icon('Tag') }} {{ tag }}</label>
                         </div>
                     {% endfor %}
                 </div>

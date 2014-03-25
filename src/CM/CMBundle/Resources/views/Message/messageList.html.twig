@@ -39,6 +39,4 @@
     <div class="well well-small load_more">
         <a href="{{ path('thread_index', {'page': messages.getPaginationData.next}) }}">{{ 'Load more'|trans }}</a>
     </div>
-{% else %}
-    <div class="well well-small"><span>{{ 'There are no more messages.'|trans }}</span></div>
 {% endif %}

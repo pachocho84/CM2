@@ -40,7 +40,6 @@
     {% if label is empty %}
         {% set label = name|humanize %}
     {% endif %}
-    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' btn btn-primary')|trim}) %}
     <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ label|trans({}, translation_domain) }}</button>
 {% endspaceless %}
 {% endblock button_widget %}
@@ -120,7 +119,7 @@
         {% if form.parent is empty %}
             {{ form_errors(form) }}
         {% endif %}
-	    <div class="clearfix">
+        <div class="clearfix">
             {{ block('form_rows_compound') }}
         </div>
         {{ form_rest(form) }}
@@ -407,6 +406,21 @@
 {% endspaceless %}
 {% endblock %}
 
+{% block recipients_selector_row %}
+{% spaceless %}
+    {{ form_errors(form) }}
+    <div class="form-group recipients_typeahead">
+        <div class="cm_cmbundle_message_recipients_control_group">
+            <div id="recipients_finder_container">
+                <label class="control-label col-lg-3 required">{{ 'To'|trans }}</label>
+                <div class="col-lg-9"><input type="text" id="recipients_finder" class="form-control" /></div>
+            </div>
+            {{ form_widget(form, {type: 'hidden', value: user.slug|default('')}) }}
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
 {% block _cm_cmbundle_event_entityUsers_row %}
 {% spaceless %}
     {{ block('cm_cmbundle_entityuser_collection_row') }}
@@ -562,7 +576,9 @@
 {% block button_attributes %}
 {% spaceless %}
     id="{{ id }}" name="{{ full_name }}"{% if disabled %} disabled="disabled"{% endif %}
-    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' btn btn-default')|trim}) %}
+    {% if attr.class is not defined or 'btn' not in attr.class|split(' ') %}
+        {% set attr = attr|merge({'class': (attr.class|default('') ~ ' btn btn-default')|trim}) %}
+    {% endif %}
     {% for attrname, attrvalue in attr %}{{ attrname }}="{{ attrvalue }}" {% endfor %}
 {% endspaceless %}
 {% endblock button_attributes %}

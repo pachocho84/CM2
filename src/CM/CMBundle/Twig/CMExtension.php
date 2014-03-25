@@ -1092,9 +1092,10 @@ class CMExtension extends \Twig_Extension
             'btn2' => null,
             'btn1Class' => null,
             'btn2Class' => null,
+            'remote' => null
         ), $options);
 
-        $tag = 'confirm';
+        $tag = 'data-toggle="confirm"';
         foreach ($options as $attr => $value) {
             if (!is_null($value)) {
                 $tag .=' data-confirm-'.$attr.'="'.$value.'"';

@@ -1,0 +1,549 @@
+{% use 'A2lixTranslationFormBundle::default.html.twig' %}
+
+{# Widgets #}
+
+{% block form_widget_simple %}
+{% spaceless %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
+    {% set type = type|default('text') %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
+    {% if type == 'file' %}
+        {% set required = false %}
+        <div class="fileinput fileinput-new" data-provides="fileinput">
+            <div class="input-group">
+                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                <span class="input-group-addon btn btn-default btn-file">
+                    <span class="fileinput-new">{{ 'Browse'|trans({}, translation_domain) }}</span> <span class="fileinput-exists">{{ 'Change'|trans({}, translation_domain) }}</span>
+    {% endif %}
+    {% if type == 'text' and form.vars.attr.datetimepicker is defined %}
+        <div class="input-group input-append date" datetimepicker-container datetimepicker-format="{{ datetime_format('js') }}" datetimepicker-format-php="{{ datetime_format('php') }}">
+            <input type="text" class="form-control" readonly {% if value is not empty %}value="{{ value|format_datetime(datetime_format('php')) }}" {% endif %} />
+            <span class="input-group-addon">{{ icon('Calendar') }}</span>
+        </div>
+        {% set type = 'hidden' %}
+    {% endif %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} placeholder="{{ label }}"/>
+    {% if type == 'file' %}
+                </span>
+                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">{{ 'Remove'|trans({}, translation_domain) }}</a>
+            </div>
+        </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock form_widget_simple %}
+
+{% block button_widget %}
+{% spaceless %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ label|trans({}, translation_domain) }}</button>
+{% endspaceless %}
+{% endblock button_widget %}
+
+{% block datetime_widget %}
+{% spaceless %}
+    {% if widget == 'single_text' %}
+        {{ block('form_widget_simple') }}
+    {% else %}
+        <div class="col-lg-9">
+            <div {{ block('widget_container_attributes') }} class="row">
+                <div class="col-lg-6">
+                    {{ form_errors(form.date) }}
+                    {{ form_widget(form.date) }}
+                </div>
+                <div class="col-lg-6">
+                    {{ form_errors(form.time) }}
+                    {{ form_widget(form.time) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock datetime_widget %}
+
+{% block date_widget %}
+{% spaceless %}
+    {% if widget == 'single_text' %}
+        <div>{{ block('form_widget_simple') }}</div>
+    {% else %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ date_pattern|replace({
+                '{{ year }}':  form_widget(form.year),
+                '{{ month }}': form_widget(form.month),
+                '{{ day }}':   form_widget(form.day),
+            })|raw }}
+        </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock date_widget %}
+
+{% block time_widget %}
+{% spaceless %}
+    {% if widget == 'single_text' %}
+        <div time>{{ block('form_widget_simple') }}</div>
+    {% else %}
+        {% set vars = widget == 'text' ? { 'attr': { 'size': 1 }} : {} %}
+        {% set vars = vars|merge({'type': 'time'}) %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_widget(form.hour, vars|merge({'prefix': 'h'})) }}
+            {% if with_minutes %}{{ form_widget(form.minute, vars|merge({'prefix': 'm'})) }}{% endif %}
+            {% if with_seconds %}{{ form_widget(form.second, vars|merge({'prefix': 's'})) }}{% endif %}
+        </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock time_widget %}
+
+{% block hidden_widget %}
+{% spaceless %}
+    {% set type = type|default('hidden') %}
+    {{ block('form_widget_simple') }}
+{% endspaceless %}
+{% endblock hidden_widget %}
+
+{% block textarea_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
+    <textarea {{ block('widget_attributes') }} placeholder="{{ label }}">{{ value }}</textarea>
+{% endspaceless %}
+{% endblock textarea_widget %}
+
+{% block form_widget_compound %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+        {% if form.parent is empty %}
+            {{ form_errors(form) }}
+        {% endif %}
+	    <div class="clearfix">
+            {{ block('form_rows_compound') }}
+        </div>
+        {{ form_rest(form) }}
+    </div>
+{% endspaceless %}
+{% endblock form_widget_compound %}
+
+{% block collection_widget %}
+{% spaceless %}
+    <div>
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+        {% endif %}
+        {{ block('form_widget') }}
+    </div>
+{% endspaceless %}
+{% endblock collection_widget %}
+
+{% block choice_widget_collapsed %}
+{% spaceless %}
+    {% set type = type|default('text') %}
+    {% if required and empty_value is none and not empty_value_in_choices %}
+        {% set required = false %}
+    {% endif %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
+    <div class="col-lg-{% if type == 'time' %}3{% else %}9{% endif %}">
+        {% if type == 'time' %}<div class="input-group"><span class="input-group-addon">{{ prefix }}</span>{% endif %}
+        <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+            {% if empty_value is not none %}
+                {% if empty_value is not null %}{% set empty_value = empty_value[:1]|upper ~ empty_value[1:] %}{% endif %}
+                <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+            {% endif %}
+            {% if preferred_choices|length > 0 %}
+                {% set options = preferred_choices %}
+                {{ block('choice_widget_options') }}
+                {% if choices|length > 0 and separator is not none %}
+                    <option disabled="disabled">{{ separator }}</option>
+                {% endif %}
+            {% endif %}
+            {% set options = choices %}
+            {{ block('choice_widget_options') }}
+        </select>
+        {% if type == 'time' %}</div>{% endif %}
+    </div>
+{% endspaceless %}
+{% endblock choice_widget_collapsed %}
+
+{% block choice_widget_options %}
+{% spaceless %}
+    {% for group_label, choice in options %}
+        {% if choice is iterable %}
+            <optgroup label="{{ group_label|trans({}, translation_domain) }}">
+                {% set options = choice %}
+                {{ block('choice_widget_options') }}
+            </optgroup>
+        {% else %}
+            {% if choice.label is not null %}{% set empty_value = choice.label[:1]|upper ~ choice.label[1:] %}{% endif %}
+            <option value="{{ choice.value }}"{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+        {% endif %}
+    {% endfor %}
+{% endspaceless %}
+{% endblock choice_widget_options %}
+
+{% block choice_widget_expanded %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}><div class="col-lg-9">
+    {% for child in form %}<div class="{{ multiple ? 'checkbox' : 'radio' }}">
+        <label>
+            {{ form_widget(child) }}
+            {{ child.vars.label|humanize|trans({}, translation_domain) }}
+        </label>
+        </div>
+    {% endfor %}
+    </div></div>
+{% endspaceless %}
+{% endblock choice_widget_expanded %}
+
+{% block _cm_cmbundle_disc_year_widget %}
+{% spaceless %}
+    {% if widget == 'single_text' %}
+        {{ block('form_widget_simple') }}
+    {% else %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ date_pattern|replace({
+                '{{ year }}':  form_widget(form.year),
+                '{{ month }}': form_widget(form.month, { 'attr' : { 'class': 'hidden' }}), 
+                '{{ day }}':  form_widget(form.day, { 'attr' : { 'class': 'hidden' }}),
+            })|raw }}
+            {#{{ date_pattern|replace({
+                '{{ year }}':  form_widget(form.year),
+                '{{ month }}': form_widget(form.month),
+                '{{ day }}':   form_widget(form.day),
+            })|raw }}#}
+        </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock  %}
+
+{% block _cm_cmbundle_comment_comment_widget %}
+{% spaceless %}
+    {% if downward|default(false) %}
+        {% set attr = {placeholder: 'write a comment...'|trans, class: 'input-lg comment form-control'} %}
+        <div class="col-xs-12">
+            <input autocomplete="off" comment-type="downward" type="text" {{ block('widget_attributes') }} />
+        </div>
+    {% else %}
+        {% set attr = attr|merge({placeholder: 'write a comment...'|trans, 'comment-type': 'upward', autocomplete: 'off'}) %}
+        {{ block('textarea_widget') }}
+    {% endif %}
+{% endspaceless %}
+{% endblock  %}
+
+{% block _cm_cmbundle_relationtype_name_widget %}
+{% spaceless %}
+    {% set attr = {class: 'input-sm form-control'} %}
+    <div class="col-xs-9">
+        <input autocomplete="off" type="text" {{ block('widget_attributes') }} />
+    </div>
+{% endspaceless %}
+{% endblock  %}
+
+{# Labels #}
+
+{% block form_label %}
+{% spaceless %}
+{% endspaceless %}
+{% endblock form_label %}
+
+{# Rows #}
+
+{% block form_row %}
+{% spaceless %}
+    {% if compound %}
+        {{ block('form_row_compound') }}
+    {% else %}
+        {{ block('form_row_simple') }}
+    {% endif %}
+{% endspaceless %}
+{% endblock form_row %}
+
+{% block form_row_compound %}
+{% spaceless %}
+    <div>
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock form_row_compound %}
+
+{% block form_row_simple %}
+{% spaceless %}
+    <div class="form-group">
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock form_row_simple %}
+
+{% block datetime_row %}
+{% spaceless %}
+    {{ block('form_row_simple') }}
+{% endspaceless %}
+{% endblock %}
+
+{% block time_row %}
+{% spaceless %}
+    {{ block('form_row_simple') }}
+{% endspaceless %}
+{% endblock %}
+
+{% block choice_row %}
+    <div class="form-group">
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
+
+{% block button_row %}
+    {{ form_widget(form) }}
+{% endblock %}
+
+{% block checkbox_row %}
+{% spaceless %}
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+      <div class="checkbox">
+        <label>
+            {{ form_widget(form) }} {{ form.vars.label|default(form.vars.name|humanize)|trans({}, translation_domain) }}
+        </label>
+        {{ form_errors(form) }}
+      </div>
+    </div>
+  </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block radio_row %}
+{% spaceless %}
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+      <div class="radio">
+        <label>
+            {{ form_widget(form) }} {{ form.vars.label|default(form.vars.name|humanize)|trans({}, translation_domain) }}
+        </label>
+        {{ form_errors(form) }}
+      </div>
+    </div>
+  </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block a2lix_translations_row %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}> 
+        {{ form_widget(form) }}
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_biography_translations_title_row %}
+{% endblock %}
+
+{% block cm_cmbundle_entityuser_collection_row %}
+{% spaceless %}
+    <div class="panel-group" id="accordion-protagonists">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion-protagonists" href="#collapse-protagonists">
+                        {{ 'Protagonists'|trans }} <small>{{ 'click to expand'|trans }}</small>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse-protagonists" class="panel-collapse collapse">
+                <div class="panel-body" {{ block('widget_container_attributes') }}>            
+                    <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('entityuser_add', {'object': form.parent.vars.data.className|class_name, 'user_id': 'USER_ID', 'protagonist_new_id': 'NEW_ID', 'entity_type': 'ENTITY_TYPE'}) }}">
+                        <div class="col-lg-12 collection-items">
+                            <div class="{{ form.vars.id }}_control_group">
+                                <div id="protagonists_finder_container" class="form-group">
+                                    <label class="control-label col-lg-3">{{ 'Add protagonists'|trans }}</label>
+                                    <div class="col-lg-9"><input type="text" id="protagonists_finder" class="form-control" /></div>
+                                </div>
+                                {{ include('CMBundle:EntityUser:addEntityUsers.html.twig', {'entityUsers': form, 'entity': form.parent.vars.data, 'newEntry': form.parent.vars.data == null}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block recipients_selector_row %}
+{% spaceless %}
+    {{ form_errors(form) }}
+    <div class="form-group recipients_typeahead">
+        <div class="cm_cmbundle_message_recipients_control_group">
+            <div id="recipients_finder_container">
+                <input type="text" id="recipients_finder" class="form-control" placeholder="{{ 'To'|trans }}" />
+            </div>
+            {{ form_widget(form, {type: 'hidden', value: user.slug|default('')}) }}
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_event_entityUsers_row %}
+{% spaceless %}
+    {{ block('cm_cmbundle_entityuser_collection_row') }}
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_disc_entityUsers_row %}
+{% spaceless %}
+    {{ block('cm_cmbundle_entityuser_collection_row') }}
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_article_entityUsers_row %}
+{% spaceless %}
+    {{ block('cm_cmbundle_entityuser_collection_row') }}
+{% endspaceless %}
+{% endblock %}
+
+{% block cm_cmbundle_eventdate_row %}
+{% spaceless %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {{ form_label(form) }}
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+        </div>
+        <div class="panel-footer">
+            <div class="btn-group">
+                <a class="btn btn-default copy_date_link" href="#cm_cmbundle_event_eventDates"><span class="glyphicons more_items"></span> {{ 'Copy'|trans }}</a>
+            </div>
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_event_eventDates_row %}
+{% spaceless %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    <div class="panel-group" id="accordion-eventDates">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion-eventDates" href="#collapse-eventDates">
+                        {# <span class="glyphicons glyphicon-collapse-top"></span> #} {{ 'Event Dates'|trans }}
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse-eventDates" class="panel-collapse collapse">
+                <div class="panel-body" {{ block('widget_container_attributes') }}>
+                    {{ block('form_rows') }}
+                    <a href="#" class="btn btn-default add_date_link" delete_date-text="{{ 'Delete this date'|trans }}">{{ icon('Plus')|raw }} {{ 'Add a date'|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_event_eventDates_entry_location_row %}
+{% spaceless %}
+    <div class="form-group">
+        {{ form_label(form) }}
+        {{ form_widget(form, {'attr': {'placeholder': 'Search'|trans}}) }}
+        {{ form_errors(form) }}
+    </div>
+    
+    <div class="form-group">
+        <div class="col-lg-12"><div gmap-canvas></div></div>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_event_eventDates_entry_address_row %}
+{% spaceless %}
+    <div class="form-group">
+        {{ form_label(form) }}
+        {{ form_widget(form, {'attr': {'placeholder': 'Search'|trans}}) }}
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block cm_cmbundle_disctrack_row %}
+{% spaceless %}
+    <div class="well well-sm">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_disc_discTracks_row %}
+{% spaceless %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">{{ 'Disc Tracks'|trans }}</h3></div>
+        <div class="panel-body" {{ block('widget_container_attributes') }}>
+            {{ block('form_rows') }}
+            <a href="#" class="btn btn-default add_track_link" delete_track-text="{{ 'Delete this track'|trans }}">{{ icon('Plus')|raw }} {{ 'Add a track'|trans }}</a>
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_disc_year_row %}
+{% spaceless %}
+    <div class="form-group">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock  %}
+
+{# Misc #}
+
+{% block form_start %}
+{% spaceless %}
+    {% set method = method|upper %}
+    {% if method in ["GET", "POST"] %}
+        {% set form_method = method %}
+    {% else %}
+        {% set form_method = "POST" %}
+    {% endif %}
+    {% if app.environment == 'dev' %}
+        {% set attr = attr|merge({novalidate: 'novalidate'}) %}
+    {% endif %}
+    <form method="{{ form_method|lower }}" action="{{ action }}"{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+    {% if form_method != method %}
+        <input type="hidden" name="_method" value="{{ method }}" />
+    {% endif %}
+{% endspaceless %}
+{% endblock form_start %}
+
+{% block form_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+    <ul class="col-lg-push-3 col-lg-6 red">
+        {% for error in errors %}
+            <li class="text-danger">{{ error.message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endspaceless %}
+{% endblock form_errors %}
+
+{% block button_attributes %}
+{% spaceless %}
+    id="{{ id }}" name="{{ full_name }}"{% if disabled %} disabled="disabled"{% endif %}
+    {% if attr.class is not defined or 'btn' not in attr.class|split(' ') %}
+        {% set attr = attr|merge({'class': (attr.class|default('') ~ ' btn btn-default')|trim}) %}
+    {% endif %}
+    {% for attrname, attrvalue in attr %}{{ attrname }}="{{ attrvalue }}" {% endfor %}
+{% endspaceless %}
+{% endblock button_attributes %}

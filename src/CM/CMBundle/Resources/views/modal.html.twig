@@ -1,0 +1,13 @@
+{% form_theme form 'CMBundle:Form:compact.html.twig' %}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">{{ modalTitle|default('Confirm')|trans }}</h4>
+</div>
+<div class="modal-body">
+    {{ include(modalView) }}
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-{{ modalBtn1Class|default('primary') }}">{{ modalBtn1|default('Confirm')|trans }}</button>
+    <button type="button" class="btn btn-{{ modalBtn2Class|default('default') }}" data-dismiss="modal">{{ modalBtn1|default('Cancel')|trans }}</button>
+</div>

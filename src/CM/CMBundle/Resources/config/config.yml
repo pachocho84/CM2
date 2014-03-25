@@ -61,7 +61,7 @@ twig:
         uploaded_audio_dir: %audio.dir%
     form:
         resources:
-            - 'CMBundle:Form:bootstrap.html.twig'
+            - 'CMBundle:Form:horizontal.html.twig'
 
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'

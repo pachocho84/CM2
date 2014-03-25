@@ -21,7 +21,7 @@
                 {% if is_granted('ROLE_USER') and user.id != app.user.id %}
                     {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
                     {{ render(controller('CMBundle:Relation:button', {user: user})) }}
-                    <a href="{{ path('message_new', {'userId': user.id}) }}" class="btn btn-default">{{ icon('Message') }} {{ 'Send a message'|trans }}</a>
+                    <a href="{{ path('message_new', {'userId': user.id}) }}" class="btn btn-default" {{ modal({remote: path('message_new', {'userId': user.id})}) }}>{{ icon('Message') }} {{ 'Send a message'|trans }}</a>
                 {% endif %}
             </div>
             

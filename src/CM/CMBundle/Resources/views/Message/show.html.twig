@@ -1,33 +1,27 @@
-{% extends 'CMBundle:Form:layout.html.twig' %}
+<h2>{{ thread.subject }} <small>
+    {% set text = '' %}{% set users = {} %}
+    {% for metadata in thread.metadata[:5] %}
+        {% if loop.index == thread.metadata|length or loop.index == 5 %}
+            {% set text = text ~ ' and' %}
+        {% elseif loop.index > 1 %}
+            {% set text = text ~ ',' %}
+        {% endif %}
+        {% set user = '%user' ~ loop.index ~ '%'%}
+        {% set text = text ~ ' ' ~ user %}
+        {% set users = users|merge({(user): '<a href="' ~ path('user_show', {slug: metadata.participant.slug}) ~ '">' ~ metadata.participant ~ '</a>'}) %}
+    {% endfor %}
 
-{% block body %}
+    {{ text|trans(users)|raw }}
+</small></h2>
+<a href="{{ path('message_delete_thread', {threadId: thread.id}) }}">{{ 'Quit conversation'|trans }}</a>
 
-    <h2>{{ thread.subject }} <small>
-        {% set text = '' %}{% set users = {} %}
-        {% for metadata in thread.metadata[:5] %}
-            {% if loop.index == thread.metadata|length or loop.index == 5 %}
-                {% set text = text ~ ' and' %}
-            {% elseif loop.index > 1 %}
-                {% set text = text ~ ',' %}
-            {% endif %}
-            {% set user = '%user' ~ loop.index ~ '%'%}
-            {% set text = text ~ ' ' ~ user %}
-            {% set users = users|merge({(user): '<a href="' ~ path('user_show', {slug: metadata.participant.slug}) ~ '">' ~ metadata.participant ~ '</a>'}) %}
-        {% endfor %}
+{{ include('CMBundle:Message:objects.html.twig') }}
 
-        {{ text|trans(users)|raw }}
-    </small></h2>
-    <a href="{{ path('message_delete_thread', {threadId: thread.id}) }}">{{ 'Quit conversation'|trans }}</a>
+<h3>{{ 'reply'|trans }}</h3>
 
-    {{ include('CMBundle:Message:objects.html.twig') }}
-
-    <h3>{{ 'reply'|trans }}</h3>
-
-    <div class="comment comment_new">
-        {{ form_start(form) }}
-            <div class="form-group">{{ form_widget(form.body, {no_container_class: true, attr: {class: 'input-lg'}}) }}</div>
-            <input type="submit" name="commit" value="{{ 'Send'|trans }}" class="pull-right btn btn-mini hidden" />
-        {{ form_end(form) }}
-    </div>
-
-{% endblock %}
+<div class="comment comment_new">
+    {{ form_start(form) }}
+        <div class="form-group">{{ form_widget(form.body, {no_container_class: true, attr: {class: 'input-lg'}}) }}</div>
+        <input type="submit" name="commit" value="{{ 'Send'|trans }}" class="pull-right btn btn-mini hidden" />
+    {{ form_end(form) }}
+</div>

@@ -2,7 +2,21 @@
 
 {% block title %}Circuito Musica{% endblock %}
 
+{% block initialJavascript %}
+    <script>
+        // Object.defineProperty(console, '_commandLineAPI', { get : function() { throw 'We disabled it, Chrome user!' } });
+
+        var documentURL = document.URL;
+        window.onpopstate = function() {
+            if (typeof history.state === 'string' && documentURL.indexOf(history.state) != documentURL.length - history.state.length) {
+                window.location.reload(true);
+            }
+        };
+    </script>
+{% endblock %}
+
 {% block stylesheets %}
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700,400italic' rel='stylesheet' type='text/css'>
     {% stylesheets filter='cssrewrite'
         'css/jquery-ui.min.css'
         'lib/bootstrap/css/bootstrap.min.css'
@@ -13,7 +27,6 @@
         'bundles/cm/css/main.css'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
-        <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700,400italic' rel='stylesheet' type='text/css'>
     {% endstylesheets %}
 {% endblock %}
 
@@ -125,10 +138,16 @@
 {% endblock %}
 
 {% block footer %}
-    Circuito Musica &copy; 2006-{{ "now"|date("Y") }}
-    <div class="pull-right">
-        Contatti
-    </div>
+    {% if not noFooter|default(false) %}
+        <div class="container"> 
+            <div id="footer">
+                Circuito Musica &copy; 2006-{{ "now"|date("Y") }}
+                <div class="pull-right">
+                    {{ "Contacts"|trans }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}

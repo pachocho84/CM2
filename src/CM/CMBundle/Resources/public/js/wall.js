@@ -25,6 +25,9 @@ function recalculateWall() {
     $.each($('#wall > div > [wall-col=left'), function(i, elem) {
         data[$(elem).attr('wall-order') + ';left'] = $(elem).detach();
     });
+    $.each($('#wall > div > [wall-col=center'), function(i, elem) {
+        data[$(elem).attr('wall-order') + ';center'] = $(elem).detach();
+    });
     $.each($('#wall > div > [wall-col=right'), function(i, elem) {
         data[$(elem).attr('wall-order') + ';right'] = $(elem).detach();
     });
@@ -62,16 +65,13 @@ function wallLoad(data, t, c, reload) {
         } else if (position == 'right') {
             $box.attr('wall-col', 'right');
             column = $('#wall > div:last');
+        } else if (position == 'center') {
+            $box.attr('wall-col', 'center');
+            column = $('#wall > div:last');
         } else {
             columns.sort(function(a, b) { return a.outerHeight() > b.outerHeight(); });
             column = columns[0];
         }
-
-        $box.attr('wall-order', wallOrder);
-        wallOrder++;
-
-        $box.hide();
-        column.append($box);
 
         if (!reload) {
             $box.find('.cycle-slideshow').cycle({
@@ -86,23 +86,21 @@ function wallLoad(data, t, c, reload) {
             });
         }
 
-        // $box.find('img').each(function() {
-        //     console.log('loading ' + this.src + ' ?');
+        $box.find('img').each(function() {
+            if (!this.src.match(/\/(banner|medium|full)\//)) return;
+            $.ajax(this.src, {async: false});
+        });
 
-        //     if (!this.src.match(/\/(banner|medium|full)\//)) return;
 
-        //     console.log('loaded');
+        $box.attr('wall-order', wallOrder);
+        wallOrder++;
 
-        //     $.ajax(this.src, {async: false});
+        $box.hide();
+        column.append($box);
 
-        //     $('<img/>')[0].src = this.src;
-        //     // (new Image()).src = this.src;
+        $box.show();
 
-        // });
-
-        // console.log('box added');
-
-        $box.fadeIn('fast');
+        console.log(i, $box.height());
     });
 
     $('#wall').after($(data.loadMore));

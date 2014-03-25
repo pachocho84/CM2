@@ -75,13 +75,20 @@ class MessageController extends Controller
             }
         }
 
-        $form = $this->get('fos_message.new_thread_form.factory')->create()->add('save', 'submit');
+        $form = $this->get('fos_message.new_thread_form.factory')->create()->add('send', 'submit', array('attr' => array('class' => 'btn btn-primary')));
         $formHandler = $this->get('fos_message.new_thread_form.handler');
 
         if ($message = $formHandler->process($form)) {
             return new RedirectResponse($this->container->get('router')->generate('message_show', array(
                 'threadId' => $message->getThread()->getId()
             )));
+        }
+
+        if ($request->isXmlHttpRequest() && !$request->get('outgoing')) {
+            return $this->render('CMBundle:Message:newForm.html.twig', array(
+                'form' => $form->createView(),
+                'user' => $user
+            ));
         }
 
         return array(

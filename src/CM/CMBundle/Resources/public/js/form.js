@@ -1,11 +1,11 @@
-function addRecipient(c, d, a)
-{
-    recipients = $(c).find('#recipients');
-    messageRecipients = $(c).find('#message_recipients');
-    r = recipients.attr('prototype').replace("__id__", d['id']).replace("__username__", d['username']).replace("__fullname__", d['fullname']);
-    recipients.html(recipients.html() + r);
-    messageRecipients.val(messageRecipients.val() + (messageRecipients.val() ? ',' : '') + d['username']);
-}
+// function addRecipient(c, d, a)
+// {
+//     var recipients = $(c).find('#recipients');
+//     var messageRecipients = $(c).find('#message_recipients');
+//     var r = recipients.attr('prototype').replace("__id__", d['id']).replace("__username__", d['username']).replace("__fullname__", d['fullname']);
+//     recipients.html(recipients.html() + r);
+//     messageRecipients.val(messageRecipients.val() + (messageRecipients.val() ? ',' : '') + d['username']);
+// }
 
 $(function() {
     /* PROTAGONIST */
@@ -31,7 +31,9 @@ $(function() {
         } else {
             callback = $(event.currentTarget).find('li[typeahead-callback]').attr('typeahead-callback');
         }
-        if (callback.substring(0, 1) == '$') {
+        if (typeof callback === 'undefined') {
+            // do nothing
+        } else if (callback.substring(0, 1) == '$') {
             callback = callback.substring(1);
             func = callback.split('(')[0];
             args = callback.split('(').slice(1).join('(').slice(0, -1);
@@ -89,16 +91,29 @@ $(function() {
         $(event.currentTarget).parent().siblings('button').html($(event.currentTarget).attr('name') + ' <span class="caret"></span>');
     });
     // recipient
-    $(document).on('click', '.recipient .close', function(event) {
-        val = $(event.currentTarget).closest('.protagonist_typeahead').find('#message_recipients').val().split(',');
-        i = val.indexOf($(event.currentTarget).parent().attr('recipient'));
-        if (i >= 0) {
-            val.splice(i, 1);
-        }
-        $(event.currentTarget).closest('.protagonist_typeahead').find('#message_recipients').val(val.join(','));
-        $(event.currentTarget).parent().remove();
-    });
-
+    if ($('#recipients_finder').length) {
+        $('#recipients_finder').tagsinput({
+            itemValue: 'id',
+            itemText: 'fullname',
+            tagClass: ''
+        });
+        $('#recipients_finder').tagsinput('input').typeahead({
+            name: 'recipients',
+            valueKey: 'fullname',
+            template: '{{{ view }}}',
+            engine: Hogan,
+            remote:  {
+                url: typeaheadHintRoute + '?query=%QUERY',
+                replace: function (url, uriEncodedQuery) {
+                    return url.replace('%QUERY', uriEncodedQuery) + '&exclude=' + $('#recipients_finder').val();
+                },
+                cache: false
+            },
+        }).bind('typeahead:selected', $('#recipients_finder'), $.proxy(function (obj, datum) {  
+            this.tagsinput('add', datum);
+            this.tagsinput('input').typeahead('setQuery', '');
+        }, $('#recipients_finder')));
+    }
 
 
 

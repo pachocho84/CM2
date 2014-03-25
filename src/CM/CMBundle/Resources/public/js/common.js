@@ -589,7 +589,7 @@ $(function() {
 
 
     /* MODAL */
-    $('body').on('click', 'a[confirm]', function(event) {
+    $('body').on('click', 'a[data-toggle="confirm"]', function(event) {
         event.preventDefault();
         event.stopPropagation();
         event.stopImmediatePropagation();
@@ -601,29 +601,30 @@ $(function() {
         var btn2 = $link.attr('data-confirm-btn2') || 'Cancel';
         var btn1Class = $link.attr('data-confirm-btn1-class') || 'primary';
         var btn2Class = $link.attr('data-confirm-btn2-class') || 'default';
-
-        var href = $link.attr('href');
+        var size = $link.attr('data-confirm-size') || false;
+        var remote = $link.attr('data-confirm-remote') || false;
 
         var html = '\
             <div class="modal fade" tabindex="-1" role="dialog">\
-                <div class="modal-dialog modal-sm">\
+                <div class="modal-dialog ' + (size ? 'modal-' + size : '') + '">\
                     <div class="modal-content">';
-        if (title != 'false') {
-        html += '\
+        if (!remote) {
+            if (title != 'false') {
+                html += '\
                         <div class="modal-header">\
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\
                             <h4 class="modal-title">' + title + '</h4>\
-                        </div>';
-        }
-        html += '\
+                        </div>\
                         <div class="modal-body">\
                             <p>' + text + '</p>\
                         </div>\
                         <div class="modal-footer">\
                             <button type="button" class="btn btn-' + btn1Class + '">' + btn1 + '</button>\
                             <button type="button" class="btn btn-' + btn2Class + '" data-dismiss="modal">' + btn2 + '</button>\
-                        </div>\
-                    </div>\
+                        </div>';
+            }
+        }
+        html += '   </div>\
                 </div>\
             </div>';
 
@@ -631,10 +632,12 @@ $(function() {
 
         $('body').append($modal);
 
-        $modal.modal();
+        $modal.modal({
+            remote: remote
+        });
 
         $modal.find('.modal-footer button:first').on('click', function(event) {
-            $link.removeAttr('confirm').trigger('click', $link).attr('confirm', '');
+            $link.removeAttr('data-toggle').trigger('click', $link).attr('data-toggle', 'confirm');
             $modal.modal('hide');
         });
 
