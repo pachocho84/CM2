@@ -24,7 +24,7 @@
         </div>
         {% set type = 'hidden' %}
     {% endif %}
-    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} placeholder="{{ label }}"/>
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} placeholder="{{ label|trans({}, translation_domain) }}"/>
     {% if type == 'file' %}
                 </span>
                 <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">{{ 'Remove'|trans({}, translation_domain) }}</a>
@@ -109,7 +109,7 @@
     {% if label is empty %}
         {% set label = name|humanize %}
     {% endif %}
-    <textarea {{ block('widget_attributes') }} placeholder="{{ label }}">{{ value }}</textarea>
+    <textarea {{ block('widget_attributes') }} placeholder="{{ label|trans({}, translation_domain) }}">{{ value }}</textarea>
 {% endspaceless %}
 {% endblock textarea_widget %}
 
@@ -185,15 +185,17 @@
 
 {% block choice_widget_expanded %}
 {% spaceless %}
-    <div {{ block('widget_container_attributes') }}><div class="col-lg-9">
-    {% for child in form %}<div class="{{ multiple ? 'checkbox' : 'radio' }}">
-        <label>
-            {{ form_widget(child) }}
-            {{ child.vars.label|humanize|trans({}, translation_domain) }}
+    <div {{ block('widget_container_attributes') }}>
+        <label class="radio-inline control-label">
+            {{ form.vars.label|default(form.vars.name|humanize)|trans({}, translation_domain) }}
         </label>
-        </div>
-    {% endfor %}
-    </div></div>
+        {% for child in form %}
+            <label class="{{ multiple ? 'checkbox' : 'radio' }}-inline">
+                {{ form_widget(child) }}
+                {{ child.vars.label|humanize|trans({}, translation_domain) }}
+            </label>
+        {% endfor %}
+    </div>
 {% endspaceless %}
 {% endblock choice_widget_expanded %}
 

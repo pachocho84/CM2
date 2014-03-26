@@ -550,7 +550,7 @@
     {% else %}
         {% set form_method = "POST" %}
     {% endif %}
-    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-horizontal')|trim}) %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-horizontal')|trim}) %}
     {% if app.environment == 'dev' %}
         {% set attr = attr|merge({novalidate: 'novalidate'}) %}
     {% endif %}

@@ -24,15 +24,6 @@ class RegistrationType extends BaseType
                 'choices' => array(User::SEX_M => 'Male', User::SEX_F => 'Female'),
                 'expanded' => true
             ))
-            ->add('cityBirth', 'text', array('label' => 'City of birth'))
-            ->add('cityCurrent', 'text', array('label' => 'Current city'))
-            ->add('birthDate', 'date', array(
-                'widget' => 'single_text'
-            ))
-            ->add('birthDateVisible', 'choice', array(
-                'choices' => array(true => 'Visible', false => 'Not visible'),
-                'expanded' => true
-            ))
             ->add('imgFile');
     }
     

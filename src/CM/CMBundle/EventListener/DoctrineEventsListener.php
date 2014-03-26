@@ -376,14 +376,27 @@ class DoctrineEventsListener
             $toCreator = $object->getUser();
         }
 
-        $this->get('cm.post_center')->newPost(
-            $comment->getUser(),
-            $comment->getUser(),
-            Post::TYPE_CREATION,
-            get_class($comment),
-            array($comment->getId()),
-            $entity
-        );
+
+        $lastPost = $em->getRepository('CMBundle:Post')->getLastPosts(array(
+            'entityId' => $entity->getId(),
+            'object' => get_class($comment),
+            'after' => new \DateTime('-1 week'),
+            'paginate' => false,
+            'limit' => 1
+        ));
+
+        if (count($lastPost) >= 1) {
+            $lastPost[0]->addObjectId($comment->getId());
+        } else {
+            $this->get('cm.post_center')->newPost(
+                $comment->getUser(),
+                $comment->getUser(),
+                Post::TYPE_CREATION,
+                get_class($comment),
+                array($comment->getId()),
+                $entity
+            );
+        }
 
         $notifiedUserIds = array($comment->getUser()->getID());
 
@@ -428,12 +441,20 @@ class DoctrineEventsListener
 
     private function commentRemovedRoutine(Comment $comment, EntityManager $em)
     {
-        $this->get('cm.post_center')->removePost(
-            $comment->getUser(),
-            $comment->getUser(),
-            get_class($comment),
-            array($comment->getId())
-        );
+        $post = $em->getRepository('CMBundle:Post')->getLastPosts(array(
+            'object' => get_class($comment),
+            'objectId' => $comment->getId(),
+            'paginate' => false,
+            'limit' => 1
+        ));
+
+        if (count($post) >= 1) {
+            $post[0]->removeObjectId($like->getId());
+
+            if (count($post[0]->getObjectIds()) == 0) {
+                $em->remove($post[0]);
+            }
+        }
 
         $this->get('cm.notification_center')->removeNotifications($comment->getUser()->getId(), get_class($comment), $comment->getId(), Notification::TYPE_COMMENT);
     }
@@ -454,14 +475,27 @@ class DoctrineEventsListener
             $toCreator = $object->getUser();
         }
 
-        $this->get('cm.post_center')->newPost(
-            $like->getUser(),
-            $like->getUser(),
-            Post::TYPE_CREATION,
-            get_class($like),
-            array($like->getId()),
-            $entity
-        );
+        $lastPost = $em->getRepository('CMBundle:Post')->getLastPosts(array(
+            'entityId' => $entity->getId(),
+            'like' => true,
+            'object' => get_class($like),
+            'after' => new \DateTime('-1 week'),
+            'paginate' => false,
+            'limit' => 1
+        ));
+
+        if (count($lastPost) >= 1) {
+            $lastPost[0]->addObjectId($like->getId());
+        } else {
+            $this->get('cm.post_center')->newPost(
+                $like->getUser(),
+                $like->getUser(),
+                Post::TYPE_CREATION,
+                get_class($like),
+                array($like->getId()),
+                $entity
+            );
+        }
 
         $this->get('cm.notification_center')->newNotification(
             Notification::TYPE_LIKE,
@@ -486,12 +520,21 @@ class DoctrineEventsListener
 
     private function likeRemovedRoutine(Like $like, EntityManager $em)
     {
-        $this->get('cm.post_center')->removePost(
-            $like->getUser(),
-            $like->getUser(),
-            get_class($like),
-            array($like->getId())
-        );
+        $post = $em->getRepository('CMBundle:Post')->getLastPosts(array(
+            'like' => true,
+            'object' => get_class($like),
+            'objectId' => $like->getId(),
+            'paginate' => false,
+            'limit' => 1
+        ));
+
+        if (count($post) >= 1) {
+            $post[0]->removeObjectId($like->getId());
+
+            if (count($post[0]->getObjectIds()) == 0) {
+                $em->remove($post[0]);
+            }
+        }
 
         $this->get('cm.notification_center')->removeNotifications($like->getUser()->getId(), get_class($like), $like->getId(), Notification::TYPE_LIKE);
     }
@@ -624,8 +667,6 @@ class DoctrineEventsListener
             'paginate' => false,
             'limit' => 1
         ));
-
-        var_dump(count($post));
 
         if (count($post) >= 1) {
             $post = $post[0];

@@ -182,9 +182,9 @@ class RelationRepository extends BaseRepository
             ->andWhere('r.fromUserId in (:user_ids_in)')->setParameter('user_ids_in', $closest)
             ->andWhere('r.userId not in (:user_ids_not_in)')->setParameter('user_ids_not_in', array_merge($closest, array_merge($pending, array($userId))))
             ->andWhere('r.accepted = :accepted')->setParameter('accepted', Relation::ACCEPTED_BOTH);
-        if ($rand) {
-            $relations->orderBy('rand()');
-        }
+        // if ($rand) {
+        //     $relations->orderBy('rand()');
+        // }
         $relations = $relations->getQuery()->getResult();
 
         if (count($relations) == 0) {

@@ -120,7 +120,12 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 .modal .modal-footer {
     padding: 15px;
 }
-
+label.control-label {
+    font-weight: bold;
+}
+label.radio-inline.control-label {
+    padding-left: 0;
+}
 
 
 /* LAYOUT */

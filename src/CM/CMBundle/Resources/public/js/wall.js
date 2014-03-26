@@ -91,14 +91,12 @@ function wallLoad(data, t, c, reload) {
             });
         }
 
-        $box.find('img').each(function() {
-            if (!this.src.match(/\/(banner|medium|full)\//)) return;
-            $.ajax(this.src, {async: false});
-        });
+        // $box.find('img').each(function() {
+        //     if (!this.src.match(/\/(banner|medium|full)\//)) return;
+        //     $.ajax(this.src, {async: false});
+        // });
 
         $box.show();
-
-        console.log(i, $box.height());
     });
 
     $('#wall').after($(data.loadMore));

@@ -21,6 +21,7 @@ class PostRepository extends BaseRepository
         return array_merge(array(
             'entityCreation' => false,
             'entityId' => null,
+            'like' => false,
             'object' => null,
             'after' => null,
             'userId' => null,
@@ -110,10 +111,12 @@ class PostRepository extends BaseRepository
         }
         if (!is_null($options['entityId'])) {
             $count->leftJoin('p.entity', 'e')
-                ->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId'])
-                ->andWhere('p.object != :like')->setParameter('like', Like::className());
-            $query->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId'])
-                ->andWhere('p.object != :like')->setParameter('like', Like::className());;
+                ->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId']);
+            $query->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId']);
+            if (!$options['like']) {
+                $count->andWhere('p.object != :like')->setParameter('like', Like::className());
+                $query->andWhere('p.object != :like')->setParameter('like', Like::className());
+            }
         }
         if (!is_null($options['object'])) {
             $count->andWhere('p.object = :object')->setParameter('object', $options['object']);
@@ -121,6 +124,10 @@ class PostRepository extends BaseRepository
         } elseif (count($options['objects'])) {
             $count->andWhere('p.object IN (:objects)')->setParameter('objects', $options['objects']);
             $query->andWhere('p.object IN (:objects)')->setParameter('objects', $options['objects']);
+        }
+        if (!is_null($options['objectId'])) {
+            $count->andWhere('p.objectIds LIKE :object_id')->setParameter('object_id', '%,'.$options['objectId'].',%');
+            $query->andWhere('p.objectIds LIKE :object_id')->setParameter('object_id', '%,'.$options['objectId'].',%');
         }
         if (!is_null($options['after'])) {
             $count->andWhere('p.updatedAt > :after')->setParameter('after', $options['after']);
