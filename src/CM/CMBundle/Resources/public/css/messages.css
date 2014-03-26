@@ -16,7 +16,25 @@ body,
 }
 #conversations {
     height: 100%;
+    overflow: hidden;
 }
 #conversation {
-    height: 100%;
+    overflow: hidden;
+}
+#messages {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+/*#message-new {
+    position: absolute;
+    bottom: 0px;
+}*/
+#message-new h3 {
+    margin-top: 0;
+}
+#message-new textarea {
+    resize: none;
+}
+#message-new .form-group {
+    margin-bottom: 0;
 }

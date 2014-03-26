@@ -50,7 +50,8 @@ class MessageController extends Controller
         }
 
         return array(
-            'messages' => $pagination
+            'messages' => $pagination,
+            'threadId' => $request->get('threadId')
         );
     }
 
@@ -79,7 +80,7 @@ class MessageController extends Controller
         $formHandler = $this->get('fos_message.new_thread_form.handler');
 
         if ($message = $formHandler->process($form)) {
-            return new RedirectResponse($this->container->get('router')->generate('message_show', array(
+            return new RedirectResponse($this->container->get('router')->generate('message_index', array(
                 'threadId' => $message->getThread()->getId()
             )));
         }
@@ -87,6 +88,7 @@ class MessageController extends Controller
         if ($request->isXmlHttpRequest() && !$request->get('outgoing')) {
             return $this->render('CMBundle:Message:newForm.html.twig', array(
                 'form' => $form->createView(),
+                'formAction' => $this->generateUrl('message_new', array('userId' => $userId)),
                 'user' => $user
             ));
         }
@@ -95,6 +97,33 @@ class MessageController extends Controller
             'form' => $form->createView(),
             'user' => $user
         );
+    }
+
+    /**
+     * @Route("/{threadId}/respond", name="message_respond", requirements={"threadId" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function respondAction($threadId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $em->getRepository('CMBundle:MessageThread')->setRead($threadId, $this->getUser()->getId());
+
+        $thread = $em->getRepository('CMBundle:MessageThread')->getThread($threadId, $this->getUser()->getId());
+
+        if (is_null($thread)) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Thread not found.', array(), 'http-errors'));
+        }
+
+        $form = $this->container->get('fos_message.reply_form.factory')->create($thread);
+        $formHandler = $this->container->get('fos_message.reply_form.handler');
+
+        if ($message = $formHandler->process($form)) {
+            return $this->render('CMBundle:Message:object.html.twig', array('message' => $message));
+        }
+
+        throw new NotFoundHttpException($this->get('translator')->trans('Error.', array(), 'http-errors'));
     }
 
     /**
@@ -129,18 +158,24 @@ class MessageController extends Controller
         return $this->forward('CMBundle:Message:index');
     }
 
+
+
     /**
      * @Route("/{threadId}/{page}", name="message_show", requirements={"threadId" = "\d+", "page" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function showAction($threadId, $page = 1)
+    public function showAction(Request $request, $threadId, $page = 1, $force = false)
     {
+        if (!$force && !$request->isXmlHttpRequest()) {
+            return $this->forward('CMBundle:Message:index', array('threadId' => $threadId));
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $em->getRepository('CMBundle:MessageThread')->setRead($threadId, $this->getUser()->getId());
 
-        $messages = $em->getRepository('CMBundle:MessageThread')->getThread($threadId, array('userId' => $this->getUser()->getId()));
+        $messages = $em->getRepository('CMBundle:MessageThread')->getMessages($threadId, array('userId' => $this->getUser()->getId()));
         $pagination = $this->get('knp_paginator')->paginate($messages, $page, 15);
 
         // var_dump($messages, $pagination[0]->getThread());die;
@@ -153,12 +188,6 @@ class MessageController extends Controller
 
         $form = $this->container->get('fos_message.reply_form.factory')->create($thread);
         $formHandler = $this->container->get('fos_message.reply_form.handler');
-
-        if ($message = $formHandler->process($form)) {
-            return new RedirectResponse($this->container->get('router')->generate('message_show', array(
-                'threadId' => $threadId
-            )));
-        }
 
         return array(
             'thread' => $thread,

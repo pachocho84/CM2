@@ -2,4 +2,5 @@
 
 {% block body %}
     {{ form(form) }}
+    {% if user is defined and user is not null %}<div class="hidden" data-recipient="{{ user }}" data-recipient-id="{{ user.id }}" data-recipient-username="{{ user.slug }}"></div>{% endif %}
 {% endblock %}

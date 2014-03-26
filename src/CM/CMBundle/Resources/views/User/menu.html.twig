@@ -53,7 +53,7 @@
 <li class="dropdown menu-tab{% if controller_name() == 'notification' %} active{% endif %}">
 	
 	<a href="{{ path('user_notifications') }}" id="menu-notifications" class="dropdown-toggle" data-toggle="dropdown">
-	    {{ icon('Notification') }}</span>
+	    {{ icon('Notification') }}
 		<span class="countNew" id="notificationsCounter">{% if newNotifications > 0 %}{{ newNotifications }}{% endif %}</span>
 	</a>
 	
@@ -78,7 +78,7 @@
 
 <li class="dropdown menu-tab">
 
-    <a href="{{ path('user_show', {"slug": app.getUser.slug}) }}"  id="menu-notifications" class="dropdown-toggle" data-toggle="dropdown">{{ icon('User') }}</a>
+    <a href="{{ path('user_show', {"slug": app.getUser.slug}) }}"  id="menu-user" class="dropdown-toggle" data-toggle="dropdown">{{ icon('User') }}</a>
 
 	<ul class="dropdown-menu dropdown-menu-right media-list">
         <li class="media dropdown-menu-header">

@@ -19,7 +19,6 @@
 
             <div class="col-md-12">
                 <h2>
-                    {{ icon('Message') }}
                     {{ block('title') }}
                 </h2>
             </div>
@@ -42,6 +41,9 @@
 
             </div>
             <div id="conversation" class="col-md-8">
+                {% if threadId is not null %}
+                    {{ render(controller('CMBundle:Message:show', {threadId: threadId, force: true})) }}
+                {% endif %}
             </div>
         </div>
     </div>
@@ -49,19 +51,32 @@
 
 {% block javascripts %}
     <script>
-        function getPosition(element) {
-            var xPosition = 0;
-            var yPosition = 0;
-          
+        function getPositionTop(element) {
+            var top = 0;
+
             do {
-                xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
-                yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+                top += (element.offsetTop + element.clientTop);
             } while (element = element.offsetParent)
 
-            return {left: xPosition, top: yPosition};
+            return top;
         }
-        var messageHeight = document.getElementById('body').clientHeight - getPosition(document.getElementById('message-interface')).top - 1;
-        document.getElementById('message-interface').style.height = messageHeight + 'px';
+        function resizeMessages() {
+            var messages = document.getElementById('messages');
+            var conversation = document.getElementById('conversation');
+            var height = 0;
+            if (messages) {
+                conversation.style.height = '';
+                height = document.getElementById('body').clientHeight - getPositionTop(messages) - document.getElementById('message-new').clientHeight;
+            } else {
+                height = document.getElementById('body').clientHeight - getPositionTop(conversation) - 1;
+            }
+            (messages || conversation).style.height = height + 'px';
+            if (messages) {
+                messages.scrollTop = messages.scrollHeight;
+            }
+        }
+
+        resizeMessages();
     </script>
     {{ parent() }}
     {% javascripts

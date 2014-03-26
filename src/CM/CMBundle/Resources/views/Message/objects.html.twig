@@ -1,9 +1,9 @@
-{% for message in messages %}
-    {{ include('CMBundle:Message:object.html.twig') }}
-{% endfor %}
-
 {% if messages.paginationData.current < messages.paginationData.last %}
-    <div class="well well-small load_more">
+    <div class="well well-small load_more-reverse">
         <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': messages.getPaginationData.next })) }}">{{ 'Load more' | trans }}</a>
     </div>
 {% endif %}
+
+{% for message in messages|reverse %}
+    {{ include('CMBundle:Message:object.html.twig') }}
+{% endfor %}

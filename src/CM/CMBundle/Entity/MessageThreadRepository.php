@@ -52,7 +52,18 @@ class MessageThreadRepository extends BaseRepository
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->getQuery()->getResult();
     }
 
-    public function getThread($threadId, $options = array())
+    public function getThread($threadId, $userId)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t')
+            ->join('t.metadata', 'tm', 'with', 'tm.participantId = :user_id')->setParameter('user_id', $userId)
+            ->where('t.id = :thread_id')->setParameter('thread_id', $threadId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleResult();
+    }
+
+    public function getMessages($threadId, $options = array())
     {
         $options = self::getOptions($options);
 
@@ -79,7 +90,7 @@ class MessageThreadRepository extends BaseRepository
             ->orderBy('m.createdAt', 'desc')
             ->setParameter('user_id', $options['userId'])
             ->setParameter('thread_id', $threadId)
-            ->orderBy('t.createdAt', 'desc');
+            ->orderBy('m.id', 'desc');
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->getQuery()->getResult();
     }

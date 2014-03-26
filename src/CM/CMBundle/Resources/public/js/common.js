@@ -4,6 +4,7 @@ $(document).ready(function() {
 });
 
 
+
 /* USER ACTIVE */
 var UserActive = {
     timeout: null,
@@ -36,7 +37,7 @@ function infiniteScroll(target, container, condition, loop, callback) {
                 callback = callback.substring(1);
                 var func = callback.split('(')[0];
                 var args = callback.split('(').slice(1).join('(').slice(0, -1);
-                window[func](data, target, container);
+                window[func](data, target, container, args);
             } else {
                 target.replaceWith(data);
             }
@@ -413,7 +414,6 @@ $(function() {
     });
     // Enter key press submit
     $('body').on('keydown', '.comment_new form textarea, .comment_new form input, .comment_edit form textarea', function(event) {
-        console.log(666);
         if (event.keyCode == '13' && event.shiftKey === false) {
             event.preventDefault();
             if ($(this).val().length > 1) {
@@ -603,6 +603,7 @@ $(function() {
         var btn2Class = $link.attr('data-confirm-btn2-class') || 'default';
         var size = $link.attr('data-confirm-size') || false;
         var remote = $link.attr('data-confirm-remote') || false;
+        var callback = $link.attr('data-confirm-callback') || false;
 
         var html = '\
             <div class="modal fade" tabindex="-1" role="dialog">\
@@ -641,6 +642,15 @@ $(function() {
             $modal.modal('hide');
         });
 
+        if (callback) {
+            $modal.on(remote ? 'loaded.bs.modal' : 'shown.bs.modal', function(event) {
+                callback = callback.substring(1);
+                var func = callback.split('(')[0];
+                var args = callback.split('(').slice(1).join('(').slice(0, -1);
+                window[func]($modal, args);
+            });
+        }
+        
         $modal.on('hidden.bs.modal', function(event) {
             $modal.remove();
         });

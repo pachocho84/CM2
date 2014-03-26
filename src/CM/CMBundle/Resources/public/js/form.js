@@ -1,12 +1,3 @@
-// function addRecipient(c, d, a)
-// {
-//     var recipients = $(c).find('#recipients');
-//     var messageRecipients = $(c).find('#message_recipients');
-//     var r = recipients.attr('prototype').replace("__id__", d['id']).replace("__username__", d['username']).replace("__fullname__", d['fullname']);
-//     recipients.html(recipients.html() + r);
-//     messageRecipients.val(messageRecipients.val() + (messageRecipients.val() ? ',' : '') + d['username']);
-// }
-
 $(function() {
     /* PROTAGONIST */
     var protagonist_new_id = parseInt(1 + $('.protagonists_user:last').attr('protagonist_new_id')) + 5;
@@ -90,30 +81,6 @@ $(function() {
         $(event.currentTarget).attr('active', 'active');
         $(event.currentTarget).parent().siblings('button').html($(event.currentTarget).attr('name') + ' <span class="caret"></span>');
     });
-    // recipient
-    if ($('#recipients_finder').length) {
-        $('#recipients_finder').tagsinput({
-            itemValue: 'id',
-            itemText: 'fullname',
-            tagClass: ''
-        });
-        $('#recipients_finder').tagsinput('input').typeahead({
-            name: 'recipients',
-            valueKey: 'fullname',
-            template: '{{{ view }}}',
-            engine: Hogan,
-            remote:  {
-                url: typeaheadHintRoute + '?query=%QUERY',
-                replace: function (url, uriEncodedQuery) {
-                    return url.replace('%QUERY', uriEncodedQuery) + '&exclude=' + $('#recipients_finder').val();
-                },
-                cache: false
-            },
-        }).bind('typeahead:selected', $('#recipients_finder'), $.proxy(function (obj, datum) {  
-            this.tagsinput('add', datum);
-            this.tagsinput('input').typeahead('setQuery', '');
-        }, $('#recipients_finder')));
-    }
 
 
 

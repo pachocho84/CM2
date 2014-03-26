@@ -1,35 +1,33 @@
 {% for message in messages %}
-    <li class="media object">
-        <div class="media-body ajax-link-target">
-            <a href="{{ path('message_show', {'threadId': message.thread.id}) }}">
-                <p>
-                    <b>{{ message.thread.subject }}</b> 
-                    {{ '%count% participants'|trans({'%count%': message.thread.metadata|length}) }}
-                    {#{% if message.thread.metadata|length == 1 %}
-                        {{ 'with %name%'|trans({'%name%', message.thread.metadata[0].partecipant}) }}
-                    {% elseif message.thread.metadata|length == 2 %}
-                        {{ 'You and %name% like this.' | trans({'%name%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>'}) | raw }}
-                    {% elseif message.thread.metadata|length == 3 %}
-                        {{ 'You, %name1% and %name2% like this.' | trans({'%name1%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>', '%name2%': '<a href="'~path('user_show', {'slug': likesWithoutUser[1].user.slug})~'">'~likesWithoutUser[1].user~'</a>'}) | raw }}
-                    {% else %}
-                        {{ 'You, %name% and %link%%count% others %endlink% like this.' | trans({'%name%': '<a href="'~path('user_show', {'slug': likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>', '%count%': whoLikesIt - 2, '%link%': '<a href="'~path('who_likes_it', {'type': post | class_name | lower, 'id': post.id})~'" class="modal-trigger">', '%endlink%': '</a>'}) | raw }}
-                    {% endif %}#}
-                </p>
-            </a>
+    <li class="media object thread">
+        <a href="{{ path('message_show', {threadId: message.thread.id}) }}">
             <p>
-                {% if message.metadata[0].status == constant('CM\\CMBundle\\Entity\\MessageMetadata::STATUS_NEW') %}
-                    {{ 'new'|trans }}
-                {% elseif message.metadata[0].status == constant('CM\\CMBundle\\Entity\\MessageMetadata::STATUS_UNREAD') %}
-                    {{ 'unread'|trans }}
-                {% endif %}
+                <b>{{ message.thread.subject }}</b> 
+                {{ '%count% participants'|trans({'%count%': message.thread.metadata|length}) }}
+                {#{% if message.thread.metadata|length == 1 %}
+                    {{ 'with %name%'|trans({'%name%', message.thread.metadata[0].partecipant}) }}
+                {% elseif message.thread.metadata|length == 2 %}
+                    {{ 'You and %name% like this.' | trans({'%name%': '<a href="'~path('user_show', {slug: likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>'}) | raw }}
+                {% elseif message.thread.metadata|length == 3 %}
+                    {{ 'You, %name1% and %name2% like this.' | trans({'%name1%': '<a href="'~path('user_show', {slug: likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>', '%name2%': '<a href="'~path('user_show', {slug: likesWithoutUser[1].user.slug})~'">'~likesWithoutUser[1].user~'</a>'}) | raw }}
+                {% else %}
+                    {{ 'You, %name% and %link%%count% others %endlink% like this.' | trans({'%name%': '<a href="'~path('user_show', {slug: likesWithoutUser[0].user.slug})~'">'~likesWithoutUser[0].user~'</a>', '%count%': whoLikesIt - 2, '%link%': '<a href="'~path('who_likes_it', {type: post | class_name | lower, id: post.id})~'" class="modal-trigger">', '%endlink%': '</a>'}) | raw }}
+                {% endif %}#}
             </p>
             
+            {% if message.metadata[0].status == constant('CM\\CMBundle\\Entity\\MessageMetadata::STATUS_NEW') %}
+                <p>{{ 'new'|trans }}</p>
+            {% elseif message.metadata[0].status == constant('CM\\CMBundle\\Entity\\MessageMetadata::STATUS_UNREAD') %}
+                <p>{{ 'unread'|trans }}</p>
+            {% endif %}
+            
+            
             <div class="media-body">
-                {{ show_img_box(message.thread.creator.img|imagine_filter('avatar'), {'width': 50, 'height': 50, 'offset': message.thread.creator.imgOffset,  'link': path('user_show', {'slug': message.thread.creator.slug}), 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
-                <a href="{{ path('message_show', {'threadId': message.thread.id}) }}">{{ message.body|length > 50 ? message.body|slice(0, 47) ~ '...' : message.body }}</a>
+                {{ show_img_box(message.thread.creator.img|imagine_filter('avatar'), {width: 50, height: 50, offset: message.thread.creator.imgOffset, box_attributes: {class: 'pull-left'}}) }}
+                {{ message.body|length > 50 ? message.body|slice(0, 47) ~ '...' : message.body }}
                 <p class="text-muted"><small>{{ message.createdAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</small></p>
             </div>
-        </div>
+        </a>
     </li>
 {% else %}
     {{ 'There are no messages.'|trans }}
@@ -37,6 +35,6 @@
 
 {% if messages.paginationData.current < messages.paginationData.last %}
     <div class="well well-small load_more">
-        <a href="{{ path('thread_index', {'page': messages.getPaginationData.next}) }}">{{ 'Load more'|trans }}</a>
+        <a href="{{ path('message_index', {page: messages.getPaginationData.next}) }}">{{ 'Load more'|trans }}</a>
     </div>
 {% endif %}

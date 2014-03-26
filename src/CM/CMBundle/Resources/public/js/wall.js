@@ -56,7 +56,9 @@ function wallLoad(data, t, c, reload) {
 
         var position = i.split(';')[1];
 
-        $box = $(box);
+        var $box = $(box);
+        $box.attr('wall-order', wallOrder);
+        wallOrder++;
         
         var column;
         if (position == 'left') {
@@ -72,6 +74,9 @@ function wallLoad(data, t, c, reload) {
             columns.sort(function(a, b) { return a.outerHeight() > b.outerHeight(); });
             column = columns[0];
         }
+
+        // $box.hide();
+        column.append($box);
 
         if (!reload) {
             $box.find('.cycle-slideshow').cycle({
@@ -91,13 +96,6 @@ function wallLoad(data, t, c, reload) {
             $.ajax(this.src, {async: false});
         });
 
-
-        $box.attr('wall-order', wallOrder);
-        wallOrder++;
-
-        $box.hide();
-        column.append($box);
-
         $box.show();
 
         console.log(i, $box.height());
@@ -110,10 +108,6 @@ function wallLoad(data, t, c, reload) {
 
 $(function() {
     $('#wall').append(calculateColumns());
-
-    // $('body').one('boxLoaded', function() {
-    //     recalculateWall();
-    // });
 
     $.get(document.URL, function(data) {
         wallLoad(data);
@@ -130,10 +124,6 @@ $(function() {
             }, 200);
         }
     });
-    
-    $('#wall > .col-xs-4').sortable({
-      connectWith: '.col-xs-4'
-    }).disableSelection();
 
 
 

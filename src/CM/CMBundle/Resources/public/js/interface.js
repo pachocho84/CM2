@@ -1,3 +1,37 @@
+function initRecipients() {
+    $('#recipients_finder').tagsinput({
+        itemValue: 'id',
+        itemText: 'fullname',
+        tagClass: ''
+    });
+    $('#recipients_finder').tagsinput('input').typeahead({
+        name: 'recipients',
+        valueKey: 'fullname',
+        template: '{{{ view }}}',
+        engine: Hogan,
+        remote:  {
+            url: typeaheadHintRoute + '?query=%QUERY',
+            replace: function (url, uriEncodedQuery) {
+                return url.replace('%QUERY', uriEncodedQuery) + '&exclude=' + $('#recipients_finder').val();
+            },
+            cache: false
+        },
+    });
+    $('[data-recipient]').each(function(i, elem) {
+        $('#recipients_finder').tagsinput('add', 
+            {id: $(elem).attr('data-recipient-id'), fullname: $(elem).attr('data-recipient'), username: $(elem).attr('data-recipient-username')}
+        );
+
+        $('#message_recipients').val($('#message_recipients').val() + ',' + $(elem).attr('data-recipient-username'));
+    });
+    $('#recipients_finder').tagsinput('input').on('typeahead:selected', $('#recipients_finder'), $.proxy(function (obj, datum) {  
+        this.tagsinput('add', datum);
+        this.tagsinput('input').typeahead('setQuery', '');
+
+        $('#message_recipients').val($('#message_recipients').val() + ',' + datum.username);
+    }, $('#recipients_finder')));
+}
+
 $(function() {
     /* MENU */
     $('#menu ul.pull-right li.menu-tab a').on('click', function(event) {
@@ -196,4 +230,11 @@ $(function() {
 
         oldTop = currentTop;
     });
+
+
+
+    /* RECIPIENT */
+    if ($('#recipients_finder').length) {
+        initRecipients();
+    }
 });

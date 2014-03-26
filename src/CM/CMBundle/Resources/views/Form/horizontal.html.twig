@@ -415,7 +415,7 @@
                 <label class="control-label col-lg-3 required">{{ 'To'|trans }}</label>
                 <div class="col-lg-9"><input type="text" id="recipients_finder" class="form-control" /></div>
             </div>
-            {{ form_widget(form, {type: 'hidden', value: user.slug|default('')}) }}
+            {{ form_widget(form, {type: 'hidden'}) }}
         </div>
     </div>
 {% endspaceless %}

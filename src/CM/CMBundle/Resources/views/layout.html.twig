@@ -7,6 +7,7 @@
         // Object.defineProperty(console, '_commandLineAPI', { get : function() { throw 'We disabled it, Chrome user!' } });
 
         var documentURL = document.URL;
+        history.replaceState(documentURL, document.title, documentURL);
         window.onpopstate = function() {
             if (typeof history.state === 'string' && documentURL.indexOf(history.state) != documentURL.length - history.state.length) {
                 window.location.reload(true);
@@ -23,6 +24,8 @@
         'lib/bootstrap/css/bootstrap-theme.min.css'
         'lib/blueimp-gallery/css/blueimp-gallery.min.css'
         'lib/glyphicons/css/glyphicons.css'
+        '@CMBundle/Resources/public/css/typeahead.js-bootstrap.css'
+        'lib/tags-input/bootstrap-tagsinput.css'
         'bundles/cm/css/common.css'
         'bundles/cm/css/main.css'
     %}
@@ -154,6 +157,7 @@
     <script>
         var script  = "{{ app.request.scriptname }}";
         var culture = "{{ app.request.locale }}";
+        var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
         //i18n.init({lng: culture});
     </script>
     {% javascripts
@@ -163,6 +167,9 @@
         'lib/bootstrap/js/bootstrap.min.js'
         'lib/blueimp-gallery/js/jquery.blueimp-gallery.min.js'
         'lib/i18next/i18next-1.7.2.min.js'
+        '@CMBundle/Resources/public/js/hogan-2.0.0.min.js'
+        '@CMBundle/Resources/public/js/typeahead.min.js'
+        'lib/tags-input/bootstrap-tagsinput.min.js'
         'js/jquery.hcsticky-min.js'
         'js/jquery.cycle2.min.js'
         'js/jquery.cycle2.scrollVert.min.js'

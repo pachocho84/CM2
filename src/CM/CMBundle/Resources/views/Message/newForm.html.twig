@@ -1,6 +1,6 @@
 {% form_theme form 'CMBundle:Form:compact.html.twig' %}
 
-{{ form_start(form) }}
+{{ form_start(form, {action: formAction}) }}
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title">{{ 'Send a message to %user%'|trans({'%user%': user}) }}</h4>
@@ -15,3 +15,4 @@
         <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans }}</button>
     </div>
 {{ form_end(form) }}
+{% if user is defined and user is not null %}<div class="hidden" data-recipient="{{ user }}" data-recipient-id="{{ user.id }}" data-recipient-username="{{ user.slug }}"></div>{% endif %}
