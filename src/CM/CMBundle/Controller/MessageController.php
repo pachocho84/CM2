@@ -36,7 +36,7 @@ class MessageController extends Controller
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function indexAction(Request $request, $page = 1)
+    public function indexAction(Request $request, $page = 1, $threadId = null)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -51,7 +51,7 @@ class MessageController extends Controller
 
         return array(
             'messages' => $pagination,
-            'threadId' => $request->get('threadId')
+            'threadId' => $threadId
         );
     }
 
@@ -80,12 +80,10 @@ class MessageController extends Controller
         $formHandler = $this->get('fos_message.new_thread_form.handler');
 
         if ($message = $formHandler->process($form)) {
-            return new RedirectResponse($this->container->get('router')->generate('message_index', array(
-                'threadId' => $message->getThread()->getId()
-            )));
+            return new RedirectResponse($this->container->get('router')->generate('message_show', array('threadId' => $message->getThread()->getId())));
         }
 
-        if ($request->isXmlHttpRequest() && !$request->get('outgoing')) {
+        if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:Message:newForm.html.twig', array(
                 'form' => $form->createView(),
                 'formAction' => $this->generateUrl('message_new', array('userId' => $userId)),
@@ -168,6 +166,7 @@ class MessageController extends Controller
     public function showAction(Request $request, $threadId, $page = 1, $force = false)
     {
         if (!$force && !$request->isXmlHttpRequest()) {
+            return $this->indexAction($request, 1, $threadId);
             return $this->forward('CMBundle:Message:index', array('threadId' => $threadId));
         }
 

@@ -18,6 +18,10 @@ function initRecipients() {
         },
     });
     $('[data-recipient]').each(function(i, elem) {
+        if (i == 0) {
+            $('#recipients_finder_container input.tt-query').attr('placeholder', '');
+        }
+
         $('#recipients_finder').tagsinput('add', 
             {id: $(elem).attr('data-recipient-id'), fullname: $(elem).attr('data-recipient'), username: $(elem).attr('data-recipient-username')}
         );
