@@ -1,3 +1,7 @@
+function test(t, d) {
+    console.log(t, d, a);
+}
+
 $(function() {
     /* PROTAGONIST */
     var protagonist_new_id = parseInt(1 + $('.protagonists_user:last').attr('protagonist_new_id')) + 5;
@@ -6,7 +10,7 @@ $(function() {
         name: 'protagonists',
         valueKey: 'fullname',
         template: '{{{ view }}}',
-        engine: Hogan,
+        engine: Handlebars,
         remote:  {
             url: typeaheadHintRoute + '?query=%QUERY',
             replace: function (url, uriEncodedQuery) {
@@ -193,7 +197,7 @@ $(function() {
         // minLength: 3,
         valueKey: 'val',
         template: '<div>{{ val }}</div>',
-        engine: Hogan,
+        engine: Handlebars,
         remote: {
             url: 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&culture=' + culture + '&address=%QUERY',
             replace: function (url, uriEncodedQuery) {
@@ -220,7 +224,7 @@ $(function() {
         name: 'cities',
         minLength: 3,
         template: '<div>{{ value }}</div>',
-        engine: Hogan,
+        engine: Handlebars,
         remote: {
             url: 'http://api.geonames.org/searchJSON?formatted=true&style=full&username=circuitomusica&maxRows=8&lang=' + culture + '&q=%QUERY&type=json',
             filter: function(data) {
@@ -371,7 +375,6 @@ $(function() {
 
 
     /* TINY-MCE */
-
     if (typeof tinymce == undefined) {
         tinymce.baseURL = '/lib/tinymce';
         tinymce.suffix = '.min';
@@ -400,8 +403,44 @@ $(function() {
 
 
     /* TAGS */
-    $('[select2]').select2();
-    $('body').on('protagonist-added', '.protagonists_user', function(event) {
-        $(event.currentTarget).find('[select2]').select2();
+    $(document).on('protagonist-added', function(event) {
+        console.log(event); 
+    });
+
+    $(document).on('tokenfield:preparetoken', 'input[tags]', function(event) {
+        $(event.currentTarget).closest('.form-group').find('select[tags] option[value="' + event.token.value + '"]').attr('selected', 'selected');
+
+        if ($(event.currentTarget).tokenfield('getTokens').length == 0) {
+            $(event.currentTarget).closest('.form-group').find('input.ui-autocomplete-input').attr('placeholder', '');
+        }
+    }).on('tokenfield:removetoken', 'input[tags]', function(event) {
+        $(event.currentTarget).closest('.form-group').find('select[tags] option[value="' + event.token.value + '"]').removeAttr('selected');
+
+        if ($(event.currentTarget).tokenfield('getTokens').length == 0) {
+            $(event.currentTarget).closest('.form-group').find('input.ui-autocomplete-input').attr('placeholder', $(event.currentTarget).attr('placeholder'));
+        }
+    });
+
+    $('input[tags]').delay(1000).each(function(i, elem) {
+        var source = $.map($(elem).closest('.form-group').find('select[tags] option'), function(e) { return {label: $(e).html(), value: $(e).attr('value')}; } );
+        $(elem).tokenfield({
+            autocomplete: {
+                source: source,
+                focus: function() {
+                  // prevent value inserted on focus
+                  return false;
+                },
+                select: function(event, ui) {
+                    event.preventDefault();
+
+                    $('.ui-autocomplete-input').autocomplete('close');
+                }
+            },
+            showAutocompleteOnFocus: true
+        });
+
+        $(elem).closest('.form-group').find('select[tags] option[selected]').each(function(i, e) {
+            $(elem).tokenfield('createToken', {label: $(e).html(), value: $(e).attr('value')});
+        });
     });
 });

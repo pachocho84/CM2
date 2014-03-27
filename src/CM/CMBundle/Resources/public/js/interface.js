@@ -1,39 +1,57 @@
 function initRecipients() {
-    $('#recipients_finder').tagsinput({
-        itemValue: 'id',
-        itemText: 'fullname',
-        tagClass: ''
-    });
-    $('#recipients_finder').tagsinput('input').typeahead({
-        name: 'recipients',
-        valueKey: 'fullname',
-        template: '{{{ view }}}',
-        engine: Hogan,
-        remote:  {
-            url: typeaheadHintRoute + '?query=%QUERY',
-            replace: function (url, uriEncodedQuery) {
-                return url.replace('%QUERY', uriEncodedQuery) + '&exclude=' + $('#recipients_finder').val();
-            },
-            cache: false
-        },
-    });
-    $('[data-recipient]').each(function(i, elem) {
-        if (i == 0) {
-            $('#recipients_finder_container input.tt-query').attr('placeholder', '');
+    $('#recipients_finder').bind('keydown', function(event) {
+        if (event.keyCode === $.ui.keyCode.TAB && $('.ui-autocomplete-input').data('ui-autocomplete').menu.active) {
+            event.preventDefault();
         }
+    }).tokenfield({
+        autocomplete: {
+            minLength: 1,
+            source: function(request, response) {
+                var url = typeaheadHintRoute + '?query=' + request.term + '&exclude=' + $.map($('#recipients_finder').tokenfield('getTokens'), function(elem) { return elem.value; }).join(',');
+                $.ajax(url, {
+                    success: function(data) {
+                        response(data);
+                    }
+                });
+            },
+            focus: function() {
+              // prevent value inserted on focus
+              return false;
+            },
+            select: function(event, ui) {
+                event.preventDefault();
 
-        $('#recipients_finder').tagsinput('add', 
-            {id: $(elem).attr('data-recipient-id'), fullname: $(elem).attr('data-recipient'), username: $(elem).attr('data-recipient-username')}
-        );
+                $('.ui-autocomplete-input').autocomplete('close');
 
-        $('#message_recipients').val($('#message_recipients').val() + ',' + $(elem).attr('data-recipient-username'));
+                $('#message_recipients').val($('#message_recipients').val() + ',' + ui.item.value);
+            }
+        },
+        showAutocompleteOnFocus: true
     });
-    $('#recipients_finder').tagsinput('input').on('typeahead:selected', $('#recipients_finder'), $.proxy(function (obj, datum) {  
-        this.tagsinput('add', datum);
-        this.tagsinput('input').typeahead('setQuery', '');
+    $('.ui-autocomplete-input').data('ui-autocomplete')._renderItem = function(ul, item) {
+        return $('<li><a>' + item.view + '</a></li>').appendTo(ul);
+    };
 
-        $('#message_recipients').val($('#message_recipients').val() + ',' + datum.username);
-    }, $('#recipients_finder')));
+    var placeholder = $('#recipients_finder_container input.ui-autocomplete-input').attr('placeholder');
+
+    $(document).on('tokenfield:preparetoken', '#recipients_finder', function(event) {
+        if ($('#recipients_finder').tokenfield('getTokens').length == 0) {
+            $('#recipients_finder_container input.ui-autocomplete-input').attr('placeholder', '');
+        }
+    }).on('tokenfield:removetoken', '#recipients_finder', function(event) {
+        var values = $('#message_recipients').val().split(',');
+        $('#message_recipients').val($('#message_recipients').val().replace(new RegExp(',?' + event.token.value), ''));
+
+        if ($('#recipients_finder').tokenfield('getTokens').length == 0) {
+            $('#recipients_finder_container input.ui-autocomplete-input').attr('placeholder', placeholder);
+        }
+    });
+
+    $('[data-recipient]').each(function(i, elem) {
+        $('#recipients_finder').tokenfield('createToken', {label: $(elem).attr('data-recipient'), value: $(elem).attr('data-recipient-username')});
+
+        $('#message_recipients').val($('#message_recipients').val() + (i == 0 ? '' : ',') + $(elem).attr('data-recipient-username'));
+    }).remove();
 }
 
 $(function() {

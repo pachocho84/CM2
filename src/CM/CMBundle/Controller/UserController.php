@@ -44,8 +44,8 @@ class UserController extends Controller
         foreach($users as $user)
         {
             $view['id'] = $user['id'];
-            $view['username'] = $user['usernameCanonical'];
-            $view['fullname'] = $user['firstName'].' '.$user['lastName'];
+            $view['value'] = $user['usernameCanonical'];
+            $view['label'] = $user['firstName'].' '.$user['lastName'];
             $view['view'] = $this->renderView('CMBundle:User:typeaheadHint.html.twig', array('user' => $user));
             $results[] = $view;
         }

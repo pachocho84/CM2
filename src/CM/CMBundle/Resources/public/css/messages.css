@@ -9,8 +9,8 @@ body,
 }
 #message-interface {
     background-color: #ffffff;
-    border: 1px solid #bbbbbb;
-    border-bottom: 0;
+    border-left: 1px solid #bbbbbb;
+    border-right: 1px solid #bbbbbb;
     height: 100%;
     min-height: 200px;
 }

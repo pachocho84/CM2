@@ -46,7 +46,7 @@ class EntityUserType extends AbstractType
                 ));
         }
         $builder->add('userTags', 'choice', array(
-                'attr' => array('select2' => ''),
+                'attr' => array('tags' => ''),
                 'choices' => $options['tags'],
                 'multiple' => true,
                 'by_reference' => false,

@@ -25,7 +25,7 @@
         </div>
         {% set type = 'hidden' %}
     {% endif %}
-        <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+        <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty and value is not iterable %}value="{{ value }}" {% endif %}/>
     {% if type == 'file' %}
                 </span>
                 <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">{{ 'Remove'|trans({}, translation_domain) }}</a>
@@ -232,7 +232,7 @@
 {% endspaceless %}
 {% endblock  %}
 
-{% block _cm_cmbundle_relationtype_name_widget %}
+{% block _cm_cmbundle_relation_name_widget %}
 {% spaceless %}
     {% set attr = {class: 'input-sm form-control'} %}
     <div class="col-xs-9">
@@ -386,7 +386,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="collapse-protagonists" class="panel-collapse collapse">
+            <div id="collapse-protagonists" class="panel-collapse collapse in">
                 <div class="panel-body" {{ block('widget_container_attributes') }}>            
                     <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('entityuser_add', {'object': form.parent.vars.data.className|class_name, 'user_id': 'USER_ID', 'protagonist_new_id': 'NEW_ID', 'entity_type': 'ENTITY_TYPE'}) }}">
                         <div class="col-lg-12 collection-items">
@@ -413,7 +413,7 @@
         <div class="cm_cmbundle_message_recipients_control_group">
             <div id="recipients_finder_container">
                 <label class="control-label col-lg-3 required">{{ 'To'|trans }}</label>
-                <div class="col-lg-9"><input type="text" id="recipients_finder" class="form-control" /></div>
+                <div class="col-lg-9"><input type="text" id="recipients_finder" /></div>
             </div>
             {{ form_widget(form, {type: 'hidden'}) }}
         </div>
@@ -470,7 +470,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="collapse-eventDates" class="panel-collapse collapse">
+            <div id="collapse-eventDates" class="panel-collapse collapse in">
                 <div class="panel-body" {{ block('widget_container_attributes') }}>
                     {{ block('form_rows') }}
                     <a href="#" class="btn btn-default add_date_link" delete_date-text="{{ 'Delete this date'|trans }}">{{ icon('Plus')|raw }} {{ 'Add a date'|trans }}</a>

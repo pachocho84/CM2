@@ -166,7 +166,6 @@ class MessageController extends Controller
     public function showAction(Request $request, $threadId, $page = 1, $force = false)
     {
         if (!$force && !$request->isXmlHttpRequest()) {
-            return $this->indexAction($request, 1, $threadId);
             return $this->forward('CMBundle:Message:index', array('threadId' => $threadId));
         }
 

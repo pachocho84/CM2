@@ -33,6 +33,6 @@ class RelationTypeType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_relationtype';
+        return 'cm_cmbundle_relation';
     }
 }
