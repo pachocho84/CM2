@@ -128,6 +128,22 @@ label.radio-inline.control-label {
 }
 
 
+
+/* jQuery UI fixies */
+.ui-corner-all {
+  -webkit-border-radius: 0px;
+     -moz-border-radius: 0px;
+          border-radius: 0px;
+}
+.ui-menu {
+    padding: 0;
+}
+.ui-menu .ui-menu-item a:hover {
+    background: #efefef;
+    border: 1px solid #bbbbbb;
+}
+
+
 /* LAYOUT */
 .load_more_container {
     overflow-y: scroll;
