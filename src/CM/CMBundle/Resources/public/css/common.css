@@ -130,6 +130,7 @@ label.radio-inline.control-label {
 
 
 /* jQuery UI fixies */
+.ciccia,
 .ui-corner-all {
   -webkit-border-radius: 0px;
      -moz-border-radius: 0px;
