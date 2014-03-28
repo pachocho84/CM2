@@ -51,7 +51,8 @@ class BaseEntityType extends AbstractType
                             // 'type' => 'textarea',
                             'attr' => array(
                                 'class' => 'tinymce-advanced',
-                            )
+                            ),
+                            'label' => 'description'
                         ),
                         'slug' => array('display' => false)
                     )

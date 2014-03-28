@@ -33,7 +33,7 @@ class EntityType extends BaseEntityType
         parent::buildForm($builder, $options);
         
         $builder->add('category', 'entity', array(
-                'label' => 'Category',
+                'label' => 'Select a category',
                 'class' => 'CMBundle:EntityCategory',
                 'query_builder' => function(EntityCategoryRepository $er) use ($options) {
                     // get Entity child class name, to retrieve the EntityCategoty type associated

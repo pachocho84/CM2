@@ -1,26 +1,52 @@
-function test(t, d) {
-    console.log(t, d, a);
-}
-
 $(function() {
     /* PROTAGONIST */
     var protagonist_new_id = parseInt(1 + $('.protagonists_user:last').attr('protagonist_new_id')) + 5;
     var collection = $('.protagonist_typeahead').children('.collection-items');
-    $('#protagonists_finder').typeahead({
-        name: 'protagonists',
-        valueKey: 'fullname',
-        template: '{{{ view }}}',
-        engine: Handlebars,
-        remote:  {
-            url: typeaheadHintRoute + '?query=%QUERY',
-            replace: function (url, uriEncodedQuery) {
-                return url.replace('%QUERY', uriEncodedQuery) + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',');
-            },
-            cache: false
+    $('#protagonists_finder').on('keydown', function(event) {
+        if (event.keyCode === $.ui.keyCode.TAB && $(event.currentTarget).data('ui-autocomplete').menu.active) {
+            event.preventDefault();
+        }
+    }).autocomplete({
+        minLength: 1,
+        source: function(request, response) {
+            var url = typeaheadHintRoute + '?query=' + request.term + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user'); }).get().join(',');
+            $.ajax(url, {
+                success: function(data) {
+                    console.log(data);
+                    response(data);
+                }
+            });
         },
-    });
-    $(document).on('typeahead:autocompleted typeahead:selected', '.protagonist_typeahead', function (event, datum) {
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function(event, ui) {
+            event.preventDefault();
+
+            $('.ui-autocomplete-input').autocomplete('close');
+
+            $('#message_recipients').val($('#message_recipients').val() + ',' + ui.item.value);
+        }
+    }).data('ui-autocomplete')._renderItem = function(ul, item) {
+        return $('<li><a>' + item.view + '</a></li>').appendTo(ul);
+    };
+    // $('#protagonists_finder').typeahead({
+    //     name: 'protagonists',
+    //     valueKey: 'fullname',
+    //     template: '{{{ view }}}',
+    //     engine: Handlebars,
+    //     remote:  {
+    //         url: typeaheadHintRoute + '?query=%QUERY',
+    //         replace: function (url, uriEncodedQuery) {
+    //             return url.replace('%QUERY', uriEncodedQuery) + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',');
+    //         },
+    //         cache: false
+    //     },
+    // });
+    $(document).on('autocompleteselect', '.protagonist_typeahead', function (event, ui) {
         protagonist_new_id += 1;
+        var callback = null;
         if ($(event.currentTarget).is('[typeahead-callback]')) {
             callback = $(event.currentTarget).attr('typeahead-callback');
         } else {
@@ -30,18 +56,15 @@ $(function() {
             // do nothing
         } else if (callback.substring(0, 1) == '$') {
             callback = callback.substring(1);
-            func = callback.split('(')[0];
-            args = callback.split('(').slice(1).join('(').slice(0, -1);
-            window[func](event.currentTarget, datum, args);
+            window[callback.split('(')[0]](event.currentTarget, ui.item, callback.split('(').slice(1).join('(').slice(0, -1));
         } else {
-            url = callback.replace(/USER_ID/, datum.id).replace(/NEW_ID/, protagonist_new_id).replace(/ENTITY_TYPE/, $('#protagonists').attr('object'));
+            var url = callback.replace(/USER_ID/, ui.item.id).replace(/NEW_ID/, protagonist_new_id).replace(/ENTITY_TYPE/, $('#protagonists').attr('object'));
 
             $.get(url, function (data) {
                 $('.protagonists_user:last').after(data);
                 $('.protagonists_user:last').trigger('protagonist-added');
             });
         }
-        $('#protagonists_finder').typeahead('setQuery', '');
     });
 
     $(document).on('click', '.protagonists_remove', function (event) {
@@ -403,44 +426,49 @@ $(function() {
 
 
     /* TAGS */
-    $(document).on('protagonist-added', function(event) {
-        console.log(event); 
+    function initTags($protagonist) {
+        $protagonist.find('input[tags]').each(function(i, elem) {
+            var source = $.map($(elem).closest('.row').find('select[tags] option'), function(e) { return {label: $(e).html(), value: $(e).attr('value')}; } );
+            $(elem).tokenfield({
+                autocomplete: {
+                    source: source,
+                    focus: function() {
+                      // prevent value inserted on focus
+                      return false;
+                    },
+                    select: function(event, ui) {
+                        event.preventDefault();
+
+                        $('.ui-autocomplete-input').autocomplete('close');
+                    }
+                },
+                showAutocompleteOnFocus: true
+            });
+
+            $(elem).closest('.row').find('select[tags] option[selected]').each(function(i, e) {
+                $(elem).tokenfield('createToken', {label: $(e).html(), value: $(e).attr('value')});
+            });
+        });
+    }
+    $(document).on('protagonist-added', '.protagonists_user', function(event) {
+        initTags($(event.currentTarget));
     });
 
     $(document).on('tokenfield:preparetoken', 'input[tags]', function(event) {
-        $(event.currentTarget).closest('.form-group').find('select[tags] option[value="' + event.token.value + '"]').attr('selected', 'selected');
+        $(event.currentTarget).closest('.row').find('select[tags] option[value="' + event.token.value + '"]').attr('selected', 'selected');
 
         if ($(event.currentTarget).tokenfield('getTokens').length == 0) {
-            $(event.currentTarget).closest('.form-group').find('input.ui-autocomplete-input').attr('placeholder', '');
+            $(event.currentTarget).closest('.row').find('input.ui-autocomplete-input').attr('placeholder', '');
         }
     }).on('tokenfield:removetoken', 'input[tags]', function(event) {
-        $(event.currentTarget).closest('.form-group').find('select[tags] option[value="' + event.token.value + '"]').removeAttr('selected');
+        $(event.currentTarget).closest('.row').find('select[tags] option[value="' + event.token.value + '"]').removeAttr('selected');
 
         if ($(event.currentTarget).tokenfield('getTokens').length == 0) {
-            $(event.currentTarget).closest('.form-group').find('input.ui-autocomplete-input').attr('placeholder', $(event.currentTarget).attr('placeholder'));
+            $(event.currentTarget).closest('.row').find('input.ui-autocomplete-input').attr('placeholder', $(event.currentTarget).attr('placeholder'));
         }
     });
 
-    $('input[tags]').delay(1000).each(function(i, elem) {
-        var source = $.map($(elem).closest('.form-group').find('select[tags] option'), function(e) { return {label: $(e).html(), value: $(e).attr('value')}; } );
-        $(elem).tokenfield({
-            autocomplete: {
-                source: source,
-                focus: function() {
-                  // prevent value inserted on focus
-                  return false;
-                },
-                select: function(event, ui) {
-                    event.preventDefault();
-
-                    $('.ui-autocomplete-input').autocomplete('close');
-                }
-            },
-            showAutocompleteOnFocus: true
-        });
-
-        $(elem).closest('.form-group').find('select[tags] option[selected]').each(function(i, e) {
-            $(elem).tokenfield('createToken', {label: $(e).html(), value: $(e).attr('value')});
-        });
+    $('.protagonists_user').each(function(i, elem) {
+        initTags($(elem));
     });
 });

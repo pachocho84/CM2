@@ -57,9 +57,10 @@ class EntityUserController extends Controller
      */
     public function addEntityUsersAction(Request $request, $object)
     {
-        // if (!$request->isXmlHttpRequest() || !$this->get('cm.user_authentication')->isAuthenticated()) {
-        //     throw new HttpException(401, 'Unauthorized access.');
-        // }
+        if (!$request->isXmlHttpRequest() || !$this->get('cm.user_authentication')->isAuthenticated()) {
+            throw new HttpException(401, 'Unauthorized access.');
+        }
+        
         $em = $this->getDoctrine()->getManager();
 
         if (!is_null($request->query->get('user_id'))) {
@@ -86,7 +87,7 @@ class EntityUserController extends Controller
 
             $target = array('page_id', $page_id);
         } else {
-            // throw exception
+            throw new HttpException(401, 'Unauthorized access.');
         }
 
         switch ($object) {

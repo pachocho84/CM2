@@ -1,6 +1,6 @@
 function initRecipients() {
-    $('#recipients_finder').bind('keydown', function(event) {
-        if (event.keyCode === $.ui.keyCode.TAB && $('.ui-autocomplete-input').data('ui-autocomplete').menu.active) {
+    $('#recipients_finder').on('keydown', function(event) {
+        if (event.keyCode === $.ui.keyCode.TAB && $(event.currentTarget).data('ui-autocomplete').menu.active) {
             event.preventDefault();
         }
     }).tokenfield({

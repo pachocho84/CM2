@@ -50,7 +50,7 @@ class EntityUserType extends AbstractType
                 'choices' => $options['tags'],
                 'multiple' => true,
                 'by_reference' => false,
-                'label' => 'Role'
+                'label' => 'Roles'
             ));
         if ($options['is_admin']) {
             $builder->add('notification');

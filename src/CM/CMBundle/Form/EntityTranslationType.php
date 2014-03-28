@@ -17,7 +17,11 @@ class EntityTranslationType extends AbstractType
         if ($options['title']) {
             $builder->add('title', 'text', array('error_bubbling' => false));
         }
-        $builder->add('text', 'textarea', array('error_bubbling' => false, 'attr' => array('class' => $options['articleWriter'] ? 'tinymce-advanced' : '')));
+        $builder->add('text', 'textarea', array(
+            'error_bubbling' => false,
+            'attr' => array('class' => $options['articleWriter'] ? 'tinymce-advanced' : ''),
+            'label' => 'Description'
+        ));
         if ($options['articleWriter']) {
             $builder->add('extract', 'textarea', array('error_bubbling' => false, 'attr' => array('class' => 'tinymce')));
         }

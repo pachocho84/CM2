@@ -19,7 +19,7 @@
     {% endif %}
     {% if type == 'text' and form.vars.attr.datetimepicker is defined %}
         <div class="input-group input-append date" datetimepicker-container datetimepicker-format="{{ datetime_format('js') }}" datetimepicker-format-php="{{ datetime_format('php') }}">
-            <input type="text" class="form-control" readonly {% if value is not empty %}value="{{ value|format_datetime(datetime_format('php')) }}" {% endif %} />
+            <input type="text" class="form-control" readonly {% if value is not empty %}value="{{ value|format_datetime(datetime_format('php')) }}" {% endif %} placeholder="{{ label|trans({}, translation_domain) }}" />
             <span class="input-group-addon">{{ icon('Calendar') }}</span>
         </div>
         {% set type = 'hidden' %}
@@ -140,30 +140,33 @@
 
 {% block choice_widget_collapsed %}
 {% spaceless %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
     {% set type = type|default('text') %}
     {% if required and empty_value is none and not empty_value_in_choices %}
         {% set required = false %}
     {% endif %}
     {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
-    <div class="col-lg-{% if type == 'time' %}3{% else %}9{% endif %}">
-        {% if type == 'time' %}<div class="input-group"><span class="input-group-addon">{{ prefix }}</span>{% endif %}
-        <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
-            {% if empty_value is not none %}
-                {% if empty_value is not null %}{% set empty_value = empty_value[:1]|upper ~ empty_value[1:] %}{% endif %}
-                <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
-            {% endif %}
-            {% if preferred_choices|length > 0 %}
-                {% set options = preferred_choices %}
-                {{ block('choice_widget_options') }}
-                {% if choices|length > 0 and separator is not none %}
-                    <option disabled="disabled">{{ separator }}</option>
-                {% endif %}
-            {% endif %}
-            {% set options = choices %}
+    {% if type == 'time' %}<div class="input-group"><span class="input-group-addon">{{ prefix }}</span>{% endif %}
+    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+        {% if empty_value is not none %}
+            {% if empty_value is not null %}{% set empty_value = empty_value[:1]|upper ~ empty_value[1:] %}{% endif %}
+            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+        {% elseif empty_value is none or empty_value is null %}
+            <option value="" selected="selected" disabled="disabled">{{ label|trans({}, translation_domain) }}</option>
+        {% endif %}
+        {% if preferred_choices|length > 0 %}
+            {% set options = preferred_choices %}
             {{ block('choice_widget_options') }}
-        </select>
-        {% if type == 'time' %}</div>{% endif %}
-    </div>
+            {% if choices|length > 0 and separator is not none %}
+                <option disabled="disabled">{{ separator }}</option>
+            {% endif %}
+        {% endif %}
+        {% set options = choices %}
+        {{ block('choice_widget_options') }}
+    </select>
+    {% if type == 'time' %}</div>{% endif %}
 {% endspaceless %}
 {% endblock choice_widget_collapsed %}
 
@@ -385,18 +388,17 @@
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion-protagonists" href="#collapse-protagonists">
-                        {{ 'Protagonists'|trans }} <small>{{ 'click to expand'|trans }}</small>
+                        {{ 'Protagonists'|trans }} <small>{{ 'click to shrink'|trans }}</small>
                     </a>
                 </h4>
             </div>
-            <div id="collapse-protagonists" class="panel-collapse collapse">
+            <div id="collapse-protagonists" class="panel-collapse collapse in">
                 <div class="panel-body" {{ block('widget_container_attributes') }}>            
                     <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('entityuser_add', {'object': form.parent.vars.data.className|class_name, 'user_id': 'USER_ID', 'protagonist_new_id': 'NEW_ID', 'entity_type': 'ENTITY_TYPE'}) }}">
-                        <div class="col-lg-12 collection-items">
+                        <div class="collection-items">
                             <div class="{{ form.vars.id }}_control_group">
                                 <div id="protagonists_finder_container" class="form-group">
-                                    <label class="control-label col-lg-3">{{ 'Add protagonists'|trans }}</label>
-                                    <div class="col-lg-9"><input type="text" id="protagonists_finder" class="form-control" /></div>
+                                    <input type="text" id="protagonists_finder" class="form-control" placeholder="{{ 'Add protagonists'|trans }}" />
                                 </div>
                                 {{ include('CMBundle:EntityUser:addEntityUsers.html.twig', {'entityUsers': form, 'entity': form.parent.vars.data, 'newEntry': form.parent.vars.data == null}) }}
                             </div>
@@ -449,11 +451,11 @@
             {{ form_widget(form) }}
             {{ form_errors(form) }}
         </div>
-        <div class="panel-footer">
+        {#<div class="panel-footer">
             <div class="btn-group">
                 <a class="btn btn-default copy_date_link" href="#cm_cmbundle_event_eventDates"><span class="glyphicons more_items"></span> {{ 'Copy'|trans }}</a>
             </div>
-        </div>
+        </div>#}
     </div>
 {% endspaceless %}
 {% endblock %}
@@ -468,11 +470,11 @@
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion-eventDates" href="#collapse-eventDates">
-                        {# <span class="glyphicons glyphicon-collapse-top"></span> #} {{ 'Event Dates'|trans }}
+                        {{ 'Event Dates'|trans }} <small>{{ 'click to shrink'|trans }}</small>
                     </a>
                 </h4>
             </div>
-            <div id="collapse-eventDates" class="panel-collapse collapse">
+            <div id="collapse-eventDates" class="panel-collapse collapse in">
                 <div class="panel-body" {{ block('widget_container_attributes') }}>
                     {{ block('form_rows') }}
                     <a href="#" class="btn btn-default add_date_link" delete_date-text="{{ 'Delete this date'|trans }}">{{ icon('Plus')|raw }} {{ 'Add a date'|trans }}</a>
@@ -487,12 +489,12 @@
 {% spaceless %}
     <div class="form-group">
         {{ form_label(form) }}
-        {{ form_widget(form, {'attr': {'placeholder': 'Search'|trans}}) }}
+        {{ form_widget(form, {'attr': {'placeholder': 'Location'|trans}}) }}
         {{ form_errors(form) }}
     </div>
     
     <div class="form-group">
-        <div class="col-lg-12"><div gmap-canvas></div></div>
+        <div gmap-canvas></div>
     </div>
 {% endspaceless %}
 {% endblock %}
@@ -501,7 +503,7 @@
 {% spaceless %}
     <div class="form-group">
         {{ form_label(form) }}
-        {{ form_widget(form, {'attr': {'placeholder': 'Search'|trans}}) }}
+        {{ form_widget(form, {'attr': {'placeholder': 'Address'|trans}}) }}
         {{ form_errors(form) }}
     </div>
 {% endspaceless %}
