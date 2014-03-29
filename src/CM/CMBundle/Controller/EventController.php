@@ -26,6 +26,16 @@ use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\ImageCollectionType;
 use CM\CMBundle\Utility\UploadHandler;
 
+function getAllErrors($form, &$errors = array()) {
+    foreach ($form->getErrors() as $error) {
+        $errors[] = $form->getName().': '.$error->getMessage();
+    }
+    foreach ($form->all() as $child) {
+        getAllErrors($child, $errors);
+    }
+    return $errors;
+}
+
 /**
  * @Route("/events")
  */
@@ -264,6 +274,9 @@ class EventController extends Controller
         ))->add('save', 'submit');
         
         $form->handleRequest($request);
+
+        $errors = getAllErrors($form);
+        var_dump(count($errors), $errors);
 
         if ($form->isValid()) {
             foreach ($event->getEventDates() as $eventDate) {

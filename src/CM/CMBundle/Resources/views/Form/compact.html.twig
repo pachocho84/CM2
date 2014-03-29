@@ -12,10 +12,15 @@
     {% if type == 'file' %}
         {% set required = false %}
         <div class="fileinput fileinput-new" data-provides="fileinput">
-            <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
-                <img data-src="holder.js/100%x100%" alt="...">
-            </div>
-            <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+            {% if imgEdit is defined %}
+                {{ imgEdit.box|raw }}
+                <div class="fileinput-preview fileinput-exists thumbnail" style="position: relative; width: {{ imgEdit.width }}px; height: {{ imgEdit.width }}px;"></div>
+            {% else %}
+                <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+                    {{dump(form.vars)}}
+                </div>
+                <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+            {% endif %}
             <div>
                 <span class="btn btn-default btn-file">
                     <span class="fileinput-new">{{ 'Browse'|trans({}, translation_domain) }}</span>
@@ -154,14 +159,15 @@
     {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
     {% if type == 'time' %}<div class="input-group"><span class="input-group-addon">{{ prefix }}</span>{% endif %}
     <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+        {% if form.vars.value|length == 0 %}
+            <option value="" selected="selected" disabled="disabled">{{ label|trans({}, translation_domain) }}</option>
+        {% endif %}
         {% if empty_value is not none %}
             {% if empty_value is not null %}{% set empty_value = empty_value[:1]|upper ~ empty_value[1:] %}{% endif %}
             <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
-        {% elseif empty_value is none or empty_value is null %}
-            <option value="" selected="selected" disabled="disabled">{{ label|trans({}, translation_domain) }}</option>
         {% endif %}
         {% if preferred_choices|length > 0 %}
-            {% set options = preferred_choices %}
+            {% set options = preferred_choices|merge({}) %}
             {{ block('choice_widget_options') }}
             {% if choices|length > 0 and separator is not none %}
                 <option disabled="disabled">{{ separator }}</option>
@@ -261,8 +267,9 @@
 
 {% block cm_cmbundle_usertags_widget %}
 {% spaceless %}
-    {{ block('form_widget_simple') }}
     <div class="hidden">{{ block('choice_widget') }}</div>
+    {% set fake = true %}
+    {{ block('form_widget_simple') }}
 {% endspaceless %}
 {% endblock %}
 
@@ -589,3 +596,26 @@
     {% for attrname, attrvalue in attr %}{{ attrname }}="{{ attrvalue }}" {% endfor %}
 {% endspaceless %}
 {% endblock button_attributes %}
+
+{% block widget_attributes %}
+{% spaceless %}
+    {% if not fake|default(false) %}
+        id="{{ id }}" name="{{ full_name }}"
+    {% endif %}
+    {%- if read_only %} readonly="readonly"{% endif -%}
+    {%- if disabled %} disabled="disabled"{% endif -%}
+    {%- if required %} required="required"{% endif -%}
+    {%- if max_length %} maxlength="{{ max_length }}"{% endif -%}
+    {%- if pattern %} pattern="{{ pattern }}"{% endif -%}
+    {%- for attrname, attrvalue in attr -%}
+        {{- " " -}}
+        {%- if attrname in ['placeholder', 'title'] -%}
+            {{- attrname }}="{{ attrvalue|trans({}, translation_domain) }}"
+        {%- elseif attrvalue is sameas(true) -%}
+            {{- attrname }}="{{ attrname }}"
+        {%- elseif attrvalue is not sameas(false) -%}
+            {{- attrname }}="{{ attrvalue }}"
+        {%- endif -%}
+    {%- endfor -%}
+{% endspaceless %}
+{% endblock widget_attributes %}
