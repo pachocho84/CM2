@@ -19,7 +19,7 @@ class EntityTranslationType extends AbstractType
         }
         $builder->add('text', 'textarea', array(
             'error_bubbling' => false,
-            'attr' => array('class' => $options['articleWriter'] ? 'tinymce-advanced' : ''),
+            'attr' => array('class' => $options['articleWriter'] ? 'tinymce-advanced' : '', 'expandable' => ''),
             'label' => 'Description'
         ));
         if ($options['articleWriter']) {

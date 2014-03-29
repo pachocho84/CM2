@@ -2325,7 +2325,6 @@ $(function() {
     });
     
     
-    
     // Add images
     if ($('.fileinput-button').length > 0) {
         $('.fileinput-button').fileupload({
@@ -2333,38 +2332,23 @@ $(function() {
             maxFileSize: 10000000,
             acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i, 
             add: function(e, data) {
-                nb_files = 0;
-                nb_files_original = 0;
-                for (var i = 0; i < data.originalFiles.length; i++) {
-                    if (data.originalFiles[i].error == null) {
-                        nb_files_original++;
-                    }
-                }
-                if (nb_files_original > 0) {    
-                    $('.bar').closest('.objects').show();
-                }
+                $('.progress-bar').closest('.objects').removeClass('hidden');
                 data.submit();
             },
-            done: function(e, data) {
-                console.log(2, $('form ul.images'));
-                nb_files++;
-                $('.image:last').after(data.result);
-            },
-            always:  function(e, data) {
-                $('.bar').css('width', parseInt(nb_files / nb_files_original * 100, 10) + '%');
-                if (nb_files == nb_files_original) {
-                    $('.bar').closest('.objects').delay(1000).fadeOut('fast', function() { $(this).find('.bar').delay(1000).css('width', '0%') });
-                    // if ($('.fileinput-button').attr('data-redirect')) {
-                    //     window.location = $('.fileinput-button').attr('data-redirect');
-                    // }
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                if (progress == 100) {
+                    $('.progress .progress-bar').closest('.objects').addClass('hidden').css('width', '0%');
+                } else {
+                    $('.progress .progress-bar').css('width', progress + '%').find('span').text(progress + '%');
                 }
             },
+            done: function(e, data) {
+                $('.image:last').after(data.result);
+            },
             fail: function(e, data) {  
-                nb_files_original--;
                 $('.upload-errors').show().find('ul li:last').clone().fadeIn().prependTo('.upload-errors ul').find('span.upload-errors-file').text(data.files[0].name).parent().find('span.upload-errors-error').text(data.files[0].error);
             }  
         });
     }
-  
-  
 });

@@ -6,18 +6,9 @@
 
     <div class="box">
         <div class="box-heading">
-            <div class="row">
-                <div class="col-lg-5">
-                    <h2>{{ icon('Biography')|raw }} {{ block('title') }}</h2>
-                </div>
-                <div class="col-lg-7 text-right">
-                    <div class="btn-group btn-group-sm">
-                        <a href="{{ path('user_show', {'slug': app.user.slug}) }}" class="btn btn-default">{{ icon('User')|raw }} {{ 'View profile'|trans }}</a>
-                    </div>
-                </div>
-            </div>
+            <h2>{{ icon('Biography')|raw }} {{ block('title') }}</h2>
         </div>
-        <div class="objects">
+        <div class="box-body">
             {{ form(form) }}
         </div>
     </div>

@@ -925,6 +925,8 @@ class CMExtension extends \Twig_Extension
             case 'Remove':
                 return '<span class="glyphicon glyphicon-remove"></span>';
                 break;
+            case 'Home':
+                return '<span class="glyphicon glyphicon-home"></span>';
             case 'Event':
             case 'Calendar':
             case 'Event_'.Post::TYPE_CREATION:
@@ -989,7 +991,7 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-briefcase"></span>';
             case 'Education':
             case 'Education_'.Post::TYPE_UPDATE:
-                return '<span class="glyphicon glyphicon-book-open"></span>';
+                return '<span class="glyphicons book_open"></span>';
             case 'List':
                 return '<span class="glyphicon glyphicon-list"></span>';
             case 'Plus':

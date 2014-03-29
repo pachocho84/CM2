@@ -18,6 +18,29 @@ function calculateColumns() {
     return columns;
 }
 
+function recalculateWall() {
+    var $loadMore = $('#wall ~ .load_more').detach();
+
+    var data = {};
+    $.each($('#wall > div > [wall-col=left'), function(i, elem) {
+        data[$(elem).attr('wall-order') + ';left'] = $(elem).detach();
+    });
+    $.each($('#wall > div > [wall-col=center'), function(i, elem) {
+        data[$(elem).attr('wall-order') + ';center'] = $(elem).detach();
+    });
+    $.each($('#wall > div > [wall-col=right'), function(i, elem) {
+        data[$(elem).attr('wall-order') + ';right'] = $(elem).detach();
+    });
+    $.each($('#wall > div > *:not([wall-col])'), function(i, elem) {
+        data['order' + $(elem).attr('wall-order')] = $(elem).detach();
+    });
+    data['loadMore'] = $loadMore;
+
+    $('#wall').empty().append(calculateColumns());
+    wallOrder = 0;
+    wallLoad(data, null, null, true);
+}
+
 function wallLoad(data, t, c, reload) {
     var reload = reload || false;
 
@@ -26,12 +49,16 @@ function wallLoad(data, t, c, reload) {
         columns[i] = $(col);
     });
 
+    $('#wall ~ .load_more').remove();
+
     $.each(data, function(i, box) {
         if (i == 'loadMore') return;
 
         var position = i.split(';')[1];
 
-        $box = $(box);
+        var $box = $(box);
+        $box.attr('wall-order', wallOrder);
+        wallOrder++;
         
         var column;
         if (position == 'left') {
@@ -40,15 +67,15 @@ function wallLoad(data, t, c, reload) {
         } else if (position == 'right') {
             $box.attr('wall-col', 'right');
             column = $('#wall > div:last');
+        } else if (position == 'center') {
+            $box.attr('wall-col', 'center');
+            column = $('#wall > div:last');
         } else {
             columns.sort(function(a, b) { return a.outerHeight() > b.outerHeight(); });
             column = columns[0];
         }
 
-        $box.attr('wall-order', wallOrder);
-        wallOrder++;
-
-        $box.hide();
+        // $box.hide();
         column.append($box);
 
         if (!reload) {
@@ -64,16 +91,17 @@ function wallLoad(data, t, c, reload) {
             });
         }
 
-        // $box.find('img').load(function() {
-        //     console.log($(this));
-        //     loading = false;
+        // $box.find('img').each(function() {
+        //     if (!this.src.match(/\/(banner|medium|full)\//)) return;
+        //     $.ajax(this.src, {async: false});
         // });
 
-        $box.fadeIn('fast');
+        $box.show();
     });
 
-    $('#wall ~ .load_more').remove();
     $('#wall').after($(data.loadMore));
+
+    $('#wall').trigger('boxLoaded');
 }
 
 $(function() {
@@ -90,30 +118,10 @@ $(function() {
         if ((pageWidth > wallColW3 && num != 3) || (pageWidth <= wallColW3 && pageWidth > wallColW2 && num != 2) || (pageWidth <= wallColW2 && num != 1)) {
             clearTimeout(wallTimer);
             wallTimer = setTimeout(function() {
-                var $loadMore = $('#wall ~ .load_more').detach();            
-
-                var data = {};
-                $.each($('#wall > div > [wall-col=left'), function(i, elem) {
-                    data[$(elem).attr('wall-order') + ';left'] = $(elem).detach();
-                });
-                $.each($('#wall > div > [wall-col=right'), function(i, elem) {
-                    data[$(elem).attr('wall-order') + ';right'] = $(elem).detach();
-                });
-                $.each($('#wall > div > *:not([wall-col])'), function(i, elem) {
-                    data['order' + $(elem).attr('wall-order')] = $(elem).detach();
-                });
-                data['loadMore'] = $loadMore;
-
-                $('#wall').empty().append(calculateColumns());
-                wallOrder = 0;
-                wallLoad(data, null, null, true);
+                recalculateWall();
             }, 200);
         }
     });
-    
-    $('#wall > .col-xs-4').sortable({
-      connectWith: '.col-xs-4'
-    }).disableSelection();
 
 
 

@@ -120,35 +120,14 @@ $(function() {
         });
     });
 
+
+
     /* INFINITE UPDATE */
     if ($('[update_more]').length > 0) {
         setInterval(infiniteUpdate, 60000);
     }
 
-    /* FILE INPUT */
-    $(document).on('change', '.btn-file :file', function() {
-        var input = $(this),
-            numFiles = input.get(0).files ? input.get(0).files.length : 1,
-            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-        input.trigger('fileselect', [numFiles, label]);
-    });
-    $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-        $(event.target).closest('[btn-file-container]').find('input[readonly]').val(label);
-    });
-    // preview
-    $(document).on('change', 'input[type=file][image]', function(event) {
-        var file = event.currentTarget.files[0];
-        var reader = new FileReader();
-        // var img = document.createElement('img');
-        var img = $('<img class="col-lg-offset-3 col-lg-9 thumbnail" />');
-        $(event.currentTarget).closest('.form-group').append(img);
-        
-        var reader = new FileReader();
-        reader.onloadend = function() {
-             img.attr('src', reader.result);
-        }
-        reader.readAsDataURL(file);
-    });
+
 
     /* DELETE CONFIRMATION */
     $('body').popover({
@@ -373,6 +352,14 @@ $(function() {
             social.find('.iLikeIt').replaceWith(data.likeActions);
         });
     });
+
+
+
+    /* EXPANDABLE */
+    $('textarea[expandable]').autosize();
+    $(document).on('focus', 'textarea[expandable]', function() { 
+        $(this).autosize();
+    });
     
     
     
@@ -407,11 +394,6 @@ $(function() {
 
     // Hide comment form submit button
     // $('.comment_new form input[type="submit"]').addClass('hide');
-    // Elastic textarea
-    $('body').on('keyup', '.bottom textarea', function() { 
-        $(this).height(0); 
-        $(this).height($(this).get(0).scrollHeight - 8); 
-    });
     // Enter key press submit
     $('body').on('keydown', '.comment_new form textarea, .comment_new form input, .comment_edit form textarea', function(event) {
         if (event.keyCode == '13' && event.shiftKey === false) {

@@ -221,7 +221,7 @@
 {% block _cm_cmbundle_comment_comment_widget %}
 {% spaceless %}
     {% if downward|default(false) %}
-        {% set attr = {placeholder: 'write a comment...'|trans, class: 'input-lg comment form-control'} %}
+        {% set attr = {placeholder: 'write a comment...'|trans, class: 'input-lg comment form-control', expandable: ''} %}
         <div class="col-xs-12">
             <input autocomplete="off" comment-type="downward" type="text" {{ block('widget_attributes') }} />
         </div>

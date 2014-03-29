@@ -12,10 +12,14 @@
     {% if type == 'file' %}
         {% set required = false %}
         <div class="fileinput fileinput-new" data-provides="fileinput">
-            <div class="input-group">
-                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
-                <span class="input-group-addon btn btn-default btn-file">
-                    <span class="fileinput-new">{{ 'Browse'|trans({}, translation_domain) }}</span> <span class="fileinput-exists">{{ 'Change'|trans({}, translation_domain) }}</span>
+            <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+                <img data-src="holder.js/100%x100%" alt="...">
+            </div>
+            <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+            <div>
+                <span class="btn btn-default btn-file">
+                    <span class="fileinput-new">{{ 'Browse'|trans({}, translation_domain) }}</span>
+                    <span class="fileinput-exists">{{ 'Change'|trans({}, translation_domain) }}</span>
     {% endif %}
     {% if type == 'text' and form.vars.attr.datetimepicker is defined %}
         <div class="input-group input-append date" datetimepicker-container datetimepicker-format="{{ datetime_format('js') }}" datetimepicker-format-php="{{ datetime_format('php') }}">
@@ -27,7 +31,7 @@
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty and value is not iterable %}value="{{ value }}" {% endif %} placeholder="{{ label|trans({}, translation_domain) }}"/>
     {% if type == 'file' %}
                 </span>
-                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">{{ 'Remove'|trans({}, translation_domain) }}</a>
+                <span class="btn btn-default fileinput-exists" data-dismiss="fileinput">{{ 'Remove'|trans({}, translation_domain) }}</span>
             </div>
         </div>
     {% endif %}
@@ -50,11 +54,11 @@
     {% else %}
         <div class="col-lg-9">
             <div {{ block('widget_container_attributes') }} class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-6{% if form.vars.errors|length > 0 %} has-error{% endif %}">
                     {{ form_errors(form.date) }}
                     {{ form_widget(form.date) }}
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6{% if form.vars.errors|length > 0 %} has-error{% endif %}">
                     {{ form_errors(form.time) }}
                     {{ form_widget(form.time) }}
                 </div>
@@ -235,7 +239,7 @@
 {% block _cm_cmbundle_comment_comment_widget %}
 {% spaceless %}
     {% if downward|default(false) %}
-        {% set attr = {placeholder: 'write a comment...'|trans, class: 'input-lg comment form-control'} %}
+        {% set attr = {placeholder: 'write a comment...'|trans, class: 'input-lg comment form-control', expandable: ''} %}
         <div class="col-xs-12">
             <input autocomplete="off" comment-type="downward" type="text" {{ block('widget_attributes') }} />
         </div>
@@ -301,7 +305,7 @@
 
 {% block form_row_compound %}
 {% spaceless %}
-    <div>
+    <div{% if form.vars.errors|length > 0 %} class="has-error"{% endif %}>
         {{ form_widget(form) }}
         {{ form_errors(form) }}
     </div>
@@ -310,7 +314,7 @@
 
 {% block form_row_simple %}
 {% spaceless %}
-    <div class="form-group">
+    <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
         {{ form_widget(form) }}
         {{ form_errors(form) }}
     </div>
@@ -330,7 +334,7 @@
 {% endblock %}
 
 {% block choice_row %}
-    <div class="form-group">
+    <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
         {{ form_widget(form) }}
         {{ form_errors(form) }}
     </div>
@@ -342,7 +346,7 @@
 
 {% block checkbox_row %}
 {% spaceless %}
-  <div class="form-group">
+  <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
     <div class="col-sm-offset-3 col-sm-9">
       <div class="checkbox">
         <label>
@@ -357,7 +361,7 @@
 
 {% block radio_row %}
 {% spaceless %}
-  <div class="form-group">
+  <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
     <div class="col-sm-offset-3 col-sm-9">
       <div class="radio">
         <label>
@@ -414,7 +418,7 @@
 {% block recipients_selector_row %}
 {% spaceless %}
     {{ form_errors(form) }}
-    <div class="form-group recipients_typeahead">
+    <div class="form-group recipients_typeahead{% if form.vars.errors|length > 0 %} has-error{% endif %}">
         <div class="cm_cmbundle_message_recipients_control_group">
             <div id="recipients_finder_container">
                 <input type="text" id="recipients_finder" class="form-control" placeholder="{{ 'To'|trans }}" />
@@ -487,7 +491,7 @@
 
 {% block _cm_cmbundle_event_eventDates_entry_location_row %}
 {% spaceless %}
-    <div class="form-group">
+    <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
         {{ form_label(form) }}
         {{ form_widget(form, {'attr': {'placeholder': 'Location'|trans}}) }}
         {{ form_errors(form) }}
@@ -501,7 +505,7 @@
 
 {% block _cm_cmbundle_event_eventDates_entry_address_row %}
 {% spaceless %}
-    <div class="form-group">
+    <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
         {{ form_label(form) }}
         {{ form_widget(form, {'attr': {'placeholder': 'Address'|trans}}) }}
         {{ form_errors(form) }}
@@ -536,7 +540,7 @@
 
 {% block _cm_cmbundle_disc_year_row %}
 {% spaceless %}
-    <div class="form-group">
+    <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
         {{ form_label(form) }}
         {{ form_widget(form) }}
         {{ form_errors(form) }}
@@ -567,7 +571,7 @@
 {% block form_errors %}
 {% spaceless %}
     {% if errors|length > 0 %}
-    <ul class="col-lg-push-3 col-lg-6 red">
+    <ul>
         {% for error in errors %}
             <li class="text-danger">{{ error.message }}</li>
         {% endfor %}

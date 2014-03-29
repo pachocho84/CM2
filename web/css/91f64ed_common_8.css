@@ -28,9 +28,6 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     line-height: 1.4;
 }
 */
-form textarea.form-control {
-    height: 34px;
-}
 .text-danger {
     color: #aa0000;
 }
@@ -181,9 +178,6 @@ form .fileinput {
     -webkit-transform: translateZ(0); /* Opera, Chrome, and Safari */
         -ms-transform: translateZ(0); /* IE 9 */
             transform: translateZ(0);
-}
-form textarea[expandable] {
-    resize: none;
 }
 
 

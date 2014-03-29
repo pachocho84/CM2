@@ -4,20 +4,12 @@
 
 {% block body %}
 
-    <h3>{{ icon('Tags') | raw }} <span>{{ block('title') }}</span></h3>                                                       
+    <div class="box">
+        <div class="box-heading">
+            <h2>{{ icon('Tags') | raw }} <span>{{ block('title') }}</span></h2>
+        </div>
 
-
-     
-    {#<ul class="breadcrumb">
-      <li><?php echo link_to('Home', '@homepage') ?></li>
-      <li><?php echo link_to(__('Account'), '@account') ?></li>
-      <li class="active"><?php echo $sf_response->getTitle() ?></li>
-    </ul>#}
-
-
-
-    <div class="objects-container">
-        <div class="objects">
+        <div class="box-body">
             <form class="form-horizontal clearfix" action="{{ path('user_tags_edit') }}" method="post">
                 
                 <legend>{{ 'My tags'|trans }}</legend>

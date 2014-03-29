@@ -56,27 +56,14 @@
             <div class="container">
 
                 <ul class="nav navbar-nav pull-left">
-                    <li class="dropdown">
-                        <a href="{{ path('page_index') }}">{{ 'Pages'|trans }}</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ path('page_index') }}">{{ 'Pages'|trans }}</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="{{ path('group_index') }}">{{ 'Groups'|trans }}</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ path('group_index') }}">{{ 'Groups'|trans }}</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="{{ path('event_index') }}">{{ 'Entities'|trans }}</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ path('event_index') }}">{{ 'Events'|trans }}</a></li>
-                            <li><a href="{{ path('disc_index') }}">{{ 'Discs'|trans }}</a></li>
-                            <li><a href="{{ path('article_index') }}">{{ 'Articles'|trans }}</a></li>
-                            <li><a href="{{ path('multimedia_index') }}">{{ 'Miultimedia'|trans }}</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="{{ path('wall_index') }}">{{ icon('Home') }}</a></li>
+                    <li><a href="{{ path('event_index') }}">{{ 'Events'|trans }}</a></li>
+                    <li><a href="{{ path('disc_index') }}">{{ 'Discs'|trans }}</a></li>
+                    <li><a href="{{ path('article_index') }}">{{ 'Articles'|trans }}</a></li>
+                    <li><a href="{{ path('multimedia_index') }}">{{ 'Miultimedia'|trans }}</a></li>
+                    <li><a href="#{#{{ path('user_index') }}#}">{{ 'Users'|trans }}</a></li>
+                    <li><a href="{{ path('page_index') }}">{{ 'Pages'|trans }}</a></li>
+                    <li><a href="{{ path('group_index') }}">{{ 'Groups'|trans }}</a></li>
                     <li class="dropdown">
                         <a href="{{ path('user_locale') }}">{{ 'Locales'|trans }}</a>
                         <ul class="dropdown-menu">
@@ -93,9 +80,12 @@
                     {% else %}
                         <li class="dropdown menu-tab">
                             <a href="{{ path('fos_user_security_login') }}" class="dropdown-toggle" data-toggle="dropdown">{{ 'Login'|trans }}</a>
-                            <ul class="dropdown-menu">
-                                {{ render(controller('FOSUserBundle:Security:login')) }}
-                            </ul>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <div class="dropdown-menu-body">
+                                    <div class="col-md-6 col-push-6">{{ render(controller('FOSUserBundle:Security:login')) }}</div>
+                                    <div class="col-md-6 col-md-pull-6">{{render(controller('FOSUserBundle:Registration:register')) }}</div>
+                                </div>
+                            </div>
                         </li>
                     {% endif %}
                 </ul>
@@ -114,13 +104,13 @@
         {% set inAccountPage = inAccountPage|default(false) %}
         {# LEFT COLUMN #}
         {% if not noColumns and inAccountPage %}
-            <div class="col-md-3">
+            <div class="col-md-3 col-lg-2">
                 {% block accountSidebar %}
                 {% endblock %}
             </div>
         {% endif %}
 
-        <div class="col-md-{% if inAccountPage %}9{% else %}8{% endif %}">
+        <div class="col-md-{% if inAccountPage %}9 col-lg-10{% else %}8{% endif %}">
             {# FLASH #}
             {% block layoutBody %}{% block body %}{% endblock %}{% endblock %}
         </div>
@@ -165,6 +155,7 @@
         'js/jquery-ui.min.js'
         'js/i18n/jquery-ui-i18n.min.js'
         'lib/bootstrap/js/bootstrap.min.js'
+        'lib/autosize/jquery.autosize.min.js'
         'lib/blueimp-gallery/js/jquery.blueimp-gallery.min.js'
         'lib/i18next/i18next-1.7.2.min.js'
         'lib/typeahead/handlebars-v1.3.0.js'
