@@ -16,10 +16,12 @@
                 {{ imgEdit.box|raw }}
                 <div class="fileinput-preview fileinput-exists thumbnail" style="position: relative; width: {{ imgEdit.width }}px; height: {{ imgEdit.width }}px;"></div>
             {% else %}
+{#
                 <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
                     {{dump(form.vars)}}
                 </div>
-                <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+#}
+                <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;"></div>
             {% endif %}
             <div>
                 <span class="btn btn-default btn-file">
@@ -33,10 +35,10 @@
         </div>
         {% set type = 'hidden' %}
     {% endif %}
-    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty and value is not iterable %}value="{{ value }}" {% endif %} placeholder="{{ label|trans({}, translation_domain) }}"/>
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty and value is not iterable %}value="{{ value }}" {% endif %} placeholders="{{ label|trans({}, translation_domain) }}"/>
     {% if type == 'file' %}
                 </span>
-                <span class="btn btn-default fileinput-exists" data-dismiss="fileinput">{{ 'Remove'|trans({}, translation_domain) }}</span>
+                <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">{{ 'Remove'|trans({}, translation_domain) }}</a>
             </div>
         </div>
     {% endif %}

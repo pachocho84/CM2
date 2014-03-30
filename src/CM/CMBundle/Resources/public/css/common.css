@@ -839,8 +839,9 @@ form textarea[expandable] {
 
 
 /* FILE INPUT */
+/*
 .btn-file {
-    /*position: relative;*/
+    position: relative;
     overflow: hidden;
 }
 .btn-file input[type=file] {
@@ -857,6 +858,7 @@ form textarea[expandable] {
     cursor: inherit;
     display: block;
 }
+*/
 
 
 
