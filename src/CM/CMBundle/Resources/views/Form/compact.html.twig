@@ -37,7 +37,7 @@
     {% endif %}
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty and value is not iterable %}value="{{ value }}" {% endif %} placeholders="{{ label|trans({}, translation_domain) }}"/>
     {% if type == 'file' %}
-                </span>
+                </span>&nbsp;
                 <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">{{ 'Remove'|trans({}, translation_domain) }}</a>
             </div>
         </div>
