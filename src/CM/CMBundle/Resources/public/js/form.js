@@ -1,36 +1,38 @@
 $(function() {
     /* PROTAGONIST */
-    var protagonist_new_id = parseInt(1 + $('.protagonists_user:last').attr('protagonist_new_id')) + 5;
-    var collection = $('.protagonist_typeahead').children('.collection-items');
-    $('#protagonists_finder').on('keydown', function(event) {
-        if (event.keyCode === $.ui.keyCode.TAB && $(event.currentTarget).data('ui-autocomplete').menu.active) {
-            event.preventDefault();
-        }
-    }).autocomplete({
-        minLength: 1,
-        source: function(request, response) {
-            var url = typeaheadHintRoute + '?query=' + request.term + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user'); }).get().join(',');
-            $.ajax(url, {
-                success: function(data) {
-                    console.log(data);
-                    response(data);
-                }
-            });
-        },
-        focus: function() {
-          // prevent value inserted on focus
-          return false;
-        },
-        select: function(event, ui) {
-            event.preventDefault();
+    if($('#protagonists_finder').length > 0) {
+        var protagonist_new_id = parseInt(1 + $('.protagonists_user:last').attr('protagonist_new_id')) + 5;
+        var collection = $('.protagonist_typeahead').children('.collection-items');
+        $('#protagonists_finder').on('keydown', function(event) {
+            if (event.keyCode === $.ui.keyCode.TAB && $(event.currentTarget).data('ui-autocomplete').menu.active) {
+                event.preventDefault();
+            }
+        }).autocomplete({
+            minLength: 1,
+            source: function(request, response) {
+                var url = typeaheadHintRoute + '?query=' + request.term + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user'); }).get().join(',');
+                $.ajax(url, {
+                    success: function(data) {
+                        console.log(data);
+                        response(data);
+                    }
+                });
+            },
+            focus: function() {
+              // prevent value inserted on focus
+              return false;
+            },
+            select: function(event, ui) {
+                event.preventDefault();
 
-            $('.ui-autocomplete-input').autocomplete('close');
+                $('.ui-autocomplete-input').autocomplete('close');
 
-            $('#message_recipients').val($('#message_recipients').val() + ',' + ui.item.value);
-        }
-    }).data('ui-autocomplete')._renderItem = function(ul, item) {
-        return $('<li><a>' + item.view + '</a></li>').appendTo(ul);
-    };
+                $('#message_recipients').val($('#message_recipients').val() + ',' + ui.item.value);
+            }
+        }).data('ui-autocomplete')._renderItem = function(ul, item) {
+            return $('<li><a>' + item.view + '</a></li>').appendTo(ul);
+        };
+    }
     // $('#protagonists_finder').typeahead({
     //     name: 'protagonists',
     //     valueKey: 'fullname',
@@ -447,7 +449,7 @@ $(function() {
 
             $(elem).closest('.row').find('select[tags] option[selected]').each(function(i, e) {
                 $(elem).tokenfield('createToken', {label: $(e).html(), value: $(e).attr('value')});
-            });
+            }).filter('placeholder').remove();
         });
     }
     $(document).on('protagonist-added', '.protagonists_user', function(event) {

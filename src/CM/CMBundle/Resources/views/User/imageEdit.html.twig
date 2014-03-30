@@ -2,6 +2,23 @@
 
 {% block title %}{{ 'Profile & cover pictures'|trans }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        #profile-pic .fileinput-preview {
+            border: 1px solid #bbbbbb;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        #profile-pic .fileinput-preview img {
+            height: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
 
 
@@ -19,18 +36,22 @@
         <div class="box-body">
             {{ form_start(form) }}
 
-                {{ form_row(form.imgFile) }}
-                {{ form_row(form.imgOffset, {'attr': {'img-offset-field': null}}) }}
-                {% if user.img is not null %}
+                <div id="profile-pic">
+                    {{ form_row(form.imgFile, {imgEdit: {box: show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.img), {width: 150, offset: user.imgOffset, box_attributes: {class: 'fileinput-new', style: 'border: 1px solid #bbbbbb; margin-bottom: 15px;'}}), width: 150}}) }}
+                </div>
+
+                {{ form_row(form.imgOffset, {attr: {'img-offset-field': null}}) }}
+
+                {#{% if user.img is not null %}
                     <div class="alert alert-info">{{ icon('Alert') }} {{ 'Drag the image to adjust position.'|trans }}</div>
-                    {{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.img), {'width': 150, 'height': 150, 'offset': user.imgOffset, 'box_attributes': {'id': 'profile-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px;'}}) }}
-                {% endif %}
+                    {{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.img), {width: 150, height: 150, offset: user.imgOffset, box_attributes: {id: 'profile-pic', style: 'border: 1px solid #bbbbbb; margin-bottom: 15px;'}}) }}
+                {% endif %}#}
             
                 {{ form_row(form.coverImgFile) }}
-                {{ form_row(form.coverImgOffset, {'attr': {'cover-img-offset-field': null}}) }}
+                {{ form_row(form.coverImgOffset, {attr: {'cover-img-offset-field': null}}) }}
                 {% if user.coverImg is not null %}
                     <div class="alert alert-info">{{ icon('Alert') }} {{ 'Drag the image to adjust position.'|trans }}</div>
-                    <div>{{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.coverImg), {'width': 700, 'height': 266, 'offset': user.coverImgOffset, 'box_attributes': {'id': 'cover-pic', 'style': 'border: 1px solid #bbbbbb; margin-bottom: 15px; width: 702px; height 266px;' }}) }}</div>
+                    <div>{{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.coverImg), {width: 700, height: 266, offset: user.coverImgOffset, box_attributes: {id: 'cover-pic', style: 'border: 1px solid #bbbbbb; margin-bottom: 15px; width: 702px; height 266px;' }}) }}</div>
                 {% endif %}
             
             {{ form_end(form) }}
@@ -46,8 +67,8 @@
             /* PROFILE & COVER PICTURE */
             function image_position(box, target) {
                 box.css('cursor', 'move');
-                img = box.find('img');
-                offset = [img.position().left, img.position().top];
+                var img = box.find('img');
+                var offset = [img.position().left, img.position().top];
                 console.log([box.outerWidth(), box.outerHeight()], [box.width(), box.height()], [img.outerWidth(), img.outerHeight()], [img.width(), img.height()], offset);
                 img.draggable({
                     scroll: false,

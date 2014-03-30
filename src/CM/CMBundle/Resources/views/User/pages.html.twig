@@ -4,8 +4,14 @@
 
 {% block body %}
 
-    <h3>{{ icon('Page') | raw }} <span>{{ block('title') }}</span></h3>    
+    <div class="box">
+        <div class="box-heading">
+            <h2>{{ icon('Page') }} <span>{{ block('title') }}</span></h2>
+        </div>
 
-    {{ include('CMBundle:User:pageObjects.html.twig') }}
+        <div class="box-body">
+            {{ include('CMBundle:User:pageObjects.html.twig') }}
+        </div>
+    </div>
   
 {% endblock %}
