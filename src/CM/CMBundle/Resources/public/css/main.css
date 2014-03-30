@@ -193,6 +193,21 @@ img {
 #menu ul.pull-right .dropdown-menu {
     width: 400px;
 }
+@media (min-width: 992px) {
+    #menu ul.pull-right .login-dropdown {
+        width: 960px;
+    }
+}
+@media (min-width: 1200px) {
+    #menu ul.pull-right .login-dropdown {
+        width: 1180px;
+    }
+}
+@media (min-width: 1500px) {
+    #menu ul.pull-right .login-dropdown {
+        width: 1480px;
+    }
+}
 .dropdown-menu-header {
     background:#f2f2f2;
     border-bottom:1px solid #bbbbbb;
@@ -211,6 +226,9 @@ img {
     max-height: 350px;
     overflow-y: auto;
 
+}
+#menu ul.pull-right .login-dropdown .dropdown-menu-body {
+    max-height: initial;
 }
 .dropdown-menu-loader {
     text-align:center;
