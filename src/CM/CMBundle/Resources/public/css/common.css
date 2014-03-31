@@ -12,7 +12,7 @@ body {
 
 
 /* Bootstrap Fixes */
-@media (min-width: 1500px) {
+@media (min-width: 1512px) {
 .container {
     width: 1500px;
 }
@@ -575,7 +575,7 @@ form textarea[expandable] {
 .post .post-content a.pull-left > img {
     width: 120px;
 }
-@media (min-width: 1500px) {
+@media (min-width: 1512px) {
     .post .post-content a.pull-left > img {
         width: 150px;
     }
@@ -664,7 +664,7 @@ form textarea[expandable] {
 #wall .box-partner h2 img.img-responsive {
     display: inline;
 }
-@media (min-width: 1200px) {
+@media (min-width: 1212px) {
     #wall .box-partner h2 {
         top: -23px;
         font-size: 20px;
@@ -732,7 +732,7 @@ form textarea[expandable] {
     padding: 0;
     overflow: hidden;
 }
-@media (min-width: 1500px) {
+@media (min-width: 1512px) {
     #wall .box-partner .object {
         height: 360px;
     }
@@ -982,10 +982,39 @@ form textarea[expandable] {
 
 
 /* Publisher Popover */
-.popover .popover-cover img {
+.popover-publisher {
+    padding: 0 0 10px;
+}
+.popover-publisher .popover-content {
+    text-align: center;
+    padding: 0;
+}
+.popover-publisher .popover-publisher-content {
+    padding: 0 10px;
+}
+.popover-publisher h2 {
+    font-size: 24px;
+    margin: 5px 0 5px;
+}
+.popover-publisher h3 {
+    font-size: 14px;
+    margin: 0 0 10px;
+    color: #999999;
+    height: 15px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.popover-publisher .popover-cover-background {
+    width: 274px;
+    height: 105px;
+    background: url(../images/layout/damascato_silver.jpg) repeat;
+    border-bottom: 1px solid #cccccc;
+}
+.popover-publisher .popover-cover img {
     max-width: 100%;
 }
-.popover .popover-profile {
+.popover-publisher .popover-profile {
     margin: 0 auto -50px;
     top: -50px;
     position: relative;

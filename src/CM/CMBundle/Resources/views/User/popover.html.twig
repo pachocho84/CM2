@@ -1,15 +1,25 @@
-<div class="popover-cover">{% if user.coverImg is not null %}<img src='{{ user.coverImg|imagine_filter('small') }}' class="media-object" />{% endif %}</div>
-
-<div class="popover-profile">{{ show_img_box(user.img|imagine_filter('medium'), {width: 100, offset: user.imgOffset}) }}</div>
-
-<h2>{{ user }}</h2>
-
-<h3><small>{{ user.userTags|join(', ')|trim }}</small></h3>
-
-{# {% if biography is not null %}{{ biography|short_text({max: 150}) }}{% endif %} #}
-
-{% if is_granted('ROLE_USER') and user.id != app.user.id %}
-    {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
-    {{ render(controller('CMBundle:Relation:button', {user: user})) }}
-    <a href="{{ path('message_new', {'userId': user.id}) }}" class="btn btn-default">{{ icon('Message') }} {{ 'Send a message'|trans }}</a>
+{% if user.coverImg is not null %}
+    <div class="popover-cover">
+        {{ show_img_box(user.coverImg|imagine_filter('xsmall'), {width: 274, height: 105, offset: user.coverImgOffset}) }}
+    </div>
+{% else %}
+    <div class="popover-cover-background"></div>
 {% endif %}
+
+
+
+<div class="popover-publisher-content">
+    <div class="popover-profile">{{ show_img_box(user.img|imagine_filter('xsmall'), {width: 100, offset: user.imgOffset}) }}</div>
+    
+    <h2><a href="{{ path('user_show', {slug: user.slug}) }}">{{ user }}</a></h2>
+    
+    <h3>{{ user.userTags|join(', ')|trim }}</h3>
+    
+    {# {% if biography is not null %}{{ biography|short_text({max: 150}) }}{% endif %} #}
+    
+    {% if is_granted('ROLE_USER') and user.id != app.user.id %}
+        {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
+        {{ render(controller('CMBundle:Relation:button', {user: user})) }}
+        <a href="{{ path('message_new', {userId: user.id}) }}" class="btn btn-default">{{ icon('Message') }} {{ 'Send a message'|trans }}</a>
+    {% endif %}
+</div>
