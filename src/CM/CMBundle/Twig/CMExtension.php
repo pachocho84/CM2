@@ -303,7 +303,7 @@ class CMExtension extends \Twig_Extension
         $options = array_merge(array(
         ), $options);
 
-        return 'publisher-popover data-title="'.$publisher.'" data-href="'.$this->router->generate(strtolower($this->getClassName($publisher)).'_popover', array('slug' => $publisher->getSlug())).'"';
+        return 'popover-publisher data-href="'.$this->router->generate(strtolower($this->getClassName($publisher)).'_popover', array('slug' => $publisher->getSlug())).'"';
     }
 
     public function getShowImgBox($img, $options = array())
@@ -342,7 +342,15 @@ class CMExtension extends \Twig_Extension
         // Offset
         $imgStyle = array();
         if (!is_null($options['offset'])) {
-            $imgStyle[] = 'margin-'.($ratio > 1 ? 'left' : 'top').': -'.$options['offset'].'%';
+            if ($ratio > 1) { // landscape
+                $imgWidth = $height * $imageRatio;
+                $offset = $options['offset'] * $imgWidth / 100;
+                $imgStyle[] = 'left: -'.floor($offset + $width > $imgWidth ? $imgWidth - $width : $offset).'px';
+            } elseif ($ratio < 1) { // portrait
+                $imgHeight = $width / $imageRatio;
+                $offset = $options['offset'] * $imgHeight / 100;
+                $imgStyle[] = 'top: -'.floor($offset + $height > $imgHeight ? $imgHeight - $height : $offset).'px';
+            }
         } else {
             if ($ratio > 1) { // landscape
                 $imgStyle[] = 'left: -'.abs(($imageRatio / $boxRatio - 1) / 2 * 100).'%';

@@ -78,6 +78,13 @@ abstract class Entity
      * @ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
     private $image;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="img_offset", type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $imgOffset;
     
     /**
      * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"})
@@ -279,6 +286,29 @@ abstract class Entity
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * Set imgOffset
+     *
+     * @param integer $imgOffset
+     * @return Image
+     */
+    public function setImgOffset($imgOffset)
+    {
+        $this->imgOffset = $imgOffset;
+    
+        return $this;
+    }
+
+    /**
+     * Get imgOffset
+     *
+     * @return integer 
+     */
+    public function getImgOffset()
+    {
+        return $this->imgOffset;
     }
 
     /**

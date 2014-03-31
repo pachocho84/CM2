@@ -13,7 +13,7 @@
     			    
     				<div class="col-md-4">
     				    
-    				    {% if sponsored.event.images|length > 0 %}{{ show_img_box(sponsored.event.images[0]|imagine_filter('medium'), {'width': 220, 'height': 150})|raw }}{% endif %}
+    				    {% if sponsored.event.images|length > 0 %}{{ show_img_box(sponsored.event.image|default_img|imagine_filter('medium'), {width: 220, height: 150, offset: sponsored.event.imgOffset}) }}{% endif %}
     				    
 {#     							{% show_img_box($post->getImages()->getFirst(), array('width' => 234, 'height' => 117, 'link' => $post->getRawValue()->getEntity()->getLinkShow())) %}	 #}
     					
@@ -31,7 +31,7 @@
     						</div>
     						
     						<div class="media-body">
-    							<h4><a href="{{ path('event_show', { 'id': sponsored.event.id, 'slug': sponsored.event.getSlug }) }}" title="{{ sponsored.event }}">{{ sponsored.event[:33] ~ '...' }}</a></h4>
+    							<h4><a href="{{ path('event_show', { id: sponsored.event.id, slug: sponsored.event.getSlug }) }}" title="{{ sponsored.event }}">{{ sponsored.event[:33] ~ '...' }}</a></h4>
     {# 								<h4>{% echo link_to(truncate_text($post->getEntity(), 28, '...', true), $post->getRawValue()->getEntity()->getLinkShow()) %}</h4> #}
     							<div class="events-sponsored-locations cycle-slideshow" data-cycle-slides="> p" data-cycle-fx="scrollVert">
     								{% for date in sponsored.event.eventDates %}	

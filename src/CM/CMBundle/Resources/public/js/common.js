@@ -67,11 +67,11 @@ $(function() {
     UserActive.begin();
 
     /* PUBLISHER POPOVER */
-    $(document).popover({
-        selector: '[publisher-popover]',
-        trigger: 'hover',
+    $('[popover-publisher]').popover({
+        selector: '[popover-publisher]',
+        trigger: 'manual',
         placement: 'auto top',
-        delay: {show: 1000, hide: 100},
+        delay: {show: 1000, hide: 250},
         container: 'body',
         html: true,
         content: function() {
@@ -84,6 +84,18 @@ $(function() {
             });
             return content;
         }
+    }).on('mouseenter', function(event) {
+        $(event.currentTarget).popover('show');
+        $('.popover').on('mouseleave', function () {
+            $(event.currentTarget).popover('hide');
+        });
+    }).on('mouseleave', function(event) {
+        console.log(event);
+        setTimeout(function() {
+            if (!$(event.currentTarget).is(':hover') && !$('.popover').is(':hover')) {
+                $(event.currentTarget).popover('hide')
+            }
+        }, 250);
     });
 
     /* INFINITE SCROLL */

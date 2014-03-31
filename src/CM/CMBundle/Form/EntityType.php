@@ -53,6 +53,8 @@ class EntityType extends BaseEntityType
             //     'options' => array(
             //         'error_bubbling' => false,
             //     )
+            ))->add('imgOffset', 'hidden', array(
+                'attr' => array('img-offset-field' => '')
             ))->add('entityUsers', 'collection', array(
                 'type' => new EntityUserType,
                 'allow_add' => true,
