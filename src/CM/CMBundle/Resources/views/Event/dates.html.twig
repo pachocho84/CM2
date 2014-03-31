@@ -27,7 +27,7 @@
             <div class="event-date object{% if loop.index == 5 %} object-following{% endif %}">
                 {% if not loop.first %}
                     <p>
-                        <a href="#event-date-{{ loop.index }}" data-toggle="collapse" data-parent="#event-dates" class="text-muted collapsed">
+                        <a href="#event-date-{{ loop.index }}" data-toggle="collapser" class="text-muted collapsed">
                             {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
                             {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
                         </a>
@@ -36,7 +36,7 @@
                 <div id="event-date-{{ loop.index }}" class="collapse{% if loop.first %} in{% endif %}">
                     <p><span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span></p>
                     <div class="event-date-map">
-                        <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=378x100&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" />
+                        <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=478x125&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" class="img-responsive" />
                         <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
                     </div>
                 </div>

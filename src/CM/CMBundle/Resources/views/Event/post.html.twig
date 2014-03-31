@@ -2,7 +2,7 @@
 
     {% if post.entity.image is not null %}
         <a href="{{ path('event_show', {id: post.entity.id, slug: post.entity.getSlug}) }}" class="pull-left">
-            <img src="{{ post.entity.image|default_img|imagine_filter('medium') }}" />
+            <img src="{{ post.entity.image|imagine_filter('xsmall') }}" width="150px" />
         </a>
     {% endif %}
 

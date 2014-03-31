@@ -105,11 +105,12 @@
 {% endblock %}
 
 {% block container %}
+    {% set noColumns = noColumns|default(false) %}
+
     {% block bodyHeading %}{% endblock %}
     
-    <div class="row">
+    {% if not noColumns %}<div class="row">{% endif %}
     
-        {% set noColumns = noColumns|default(false) %}
         {% set inAccountPage = inAccountPage|default(false) %}
         {# LEFT COLUMN #}
         {% if not noColumns and inAccountPage %}
@@ -119,10 +120,12 @@
             </div>
         {% endif %}
 
-        <div class="col-md-{% if inAccountPage %}9 col-lg-10{% else %}8{% endif %}">
+        {% if not noColumns %}<div class="col-md-{% if inAccountPage %}9 col-lg-10{% else %}8{% endif %}">{% endif %}
             {# FLASH #}
-            {% block layoutBody %}{% block body %}{% endblock %}{% endblock %}
-        </div>
+            {% block layoutBody %}
+                {% block body %}{% endblock %}
+            {% endblock %}
+        {% if not noColumns %}</div>{% endif %}
 
         {# RIGHT COLUMN #}
         {% if not noColumns and not inAccountPage %}
@@ -136,7 +139,7 @@
             </div>
         {% endif %}
 
-    </div> <!-- END ROW -->
+    {% if not noColumns %}</div> <!-- END ROW -->{% endif %}
 {% endblock %}
 
 {% block footer %}

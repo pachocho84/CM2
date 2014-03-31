@@ -1,4 +1,4 @@
-{% if not inEntity and not singleComment|default(false) %}
+{% if not inEntity|default(false) and not singleComment|default(false) %}
     <div class="media object post">
 
         {% if post.entity.images|length > 0 %}

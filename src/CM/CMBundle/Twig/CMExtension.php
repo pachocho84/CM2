@@ -564,26 +564,9 @@ class CMExtension extends \Twig_Extension
 
     public function getPostText(Post $post, $relatedObjects = null)
     {
-        // $object_page = '@'.$post->getObject().'_index';
         $userLink = $this->router->generate($post->getPublisherType().'_show', array('slug' => $post->getPublisher()->getSlug()));
         $userBox = $this->getPublisherBox($post->getPublisher());
-        switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
-            case 'Event_'.Post::TYPE_CREATION:
-                $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                $categoryLink  = $this->router->generate('event_category', array('category_slug' => $post->getEntity()->getCategory()->getSlug()));
-                return $this->translator->trans('%user% published the event %object% in %category%.', array(
-                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>',
-                    '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getCategory()->getPlural()).'</a>'
-                ));
-            case 'Disc_'.Post::TYPE_CREATION:
-                $objectLink = $this->router->generate('disc_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                $categoryLink  = $this->router->generate('disc_category', array('category_slug' => $post->getEntity()->getCategory()->getSlug()));
-                return $this->translator->trans('%user% published the dics %object% in %category%.', array(
-                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>',
-                    '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getCategory()->getPlural()).'</a>'
-                ));
+        switch ($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Comment_'.Post::TYPE_CREATION:
                 $likeOrComment = 'commented on';
             case 'Like_'.Post::TYPE_CREATION:
@@ -679,30 +662,6 @@ class CMExtension extends \Twig_Extension
                     ));
                 }
                 break;
-            case 'image_album_image_add':
-                // return format_number_choice('[1]%user% added a new photo to the album %object%.|(1,+Inf]%user% added %count% new photos to the album %object%.', array(
-                //         '%user%'    => link_to($post->getUser(), $post->getUser()->getLinkShow()),
-                //         '%count%' => count($post->getObjectIds()),
-                //         '%object%'  => link_to($post->getEntity(), $post->getEntity()->getLinkShow())
-                //     ), count($post->getObjectIds()));
-            case 'Biography_'.Post::TYPE_CREATION:
-            case 'Biography_'.Post::TYPE_UPDATE:
-                $objectLink = $this->router->generate('user_biography', array('slug' => $post->getUser()->getSlug()));
-                return $this->translator->trans('%user% updated '.$post->getPublisherSex('his').' %biographyLinkStart%biography%biographyLinkEnd%.', array(
-                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                    '%biographyLinkStart%' => '<a href="'.$objectLink.'">', '%biographyLinkEnd%' => '</a>'
-                ));
-            case 'ImageAlbum_'.Post::TYPE_CREATION:
-                if ($post->getEntity()->getType() == ImageAlbum::TYPE_ALBUM) {
-                    $action = 'created the album';
-                } else {
-                    $action = 'changed '.$post->getPublisherSex('his');
-                }
-                $objectLink = $this->router->generate($post->getPublisherType().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
-                return $this->translator->trans('%user% '.$action.' %object%.', array(
-                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
-                ));
             case 'Image_'.Post::TYPE_CREATION:
             case 'Image_'.Post::TYPE_UPDATE:
                 switch ($this->getClassName($post->getEntity())) {
@@ -722,44 +681,6 @@ class CMExtension extends \Twig_Extension
                     '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
                     '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>'
                 ));
-            case 'Multimedia_'.Post::TYPE_CREATION:
-                $multimediaLink = $this->router->generate('multimedia_show', array('id' => $post->getEntityId(), 'slug' => $post->getEntity()->getSlug()));
-                return $this->translator->trans('%user% added a new %albumLinkStart%'.$post->getEntity()->typeString().'%albumLinkEnd%.', array(
-                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                    '%albumLinkStart%' => '<a href="'.$multimediaLink.'">', '%albumLinkEnd%' => '</a>'
-                ));
-            case 'Article_'.Post::TYPE_CREATION:
-                $objectLink = $this->router->generate('article_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                return $this->translator->trans('%user% published the article %object%.', array(
-                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
-                ));
-            case 'user_'.Post::TYPE_REGISTRATION:
-                // return __('%user% registered on Circuito Musica. - '.$post->getPublisherSex('M'), array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow())));
-            case 'User_'.Post::TYPE_CREATION:
-                return $this->translator->trans('%user% registered on Circuito Musica..', array(
-                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>'
-                ));
-            case 'Group_'.Post::TYPE_CREATION:
-                $userLink = $this->router->generate('user_show', array('slug' => $post->getGroup()->getCreator()->getSlug()));
-                $objectLink = $this->router->generate('group_show', array('slug' => $post->getGroup()->getSlug()));
-                return $this->translator->trans('%user% opened the group %group%.', array(
-                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getGroup()->getCreator().'</a>',
-                    '%group%' => '<a href="'.$objectLink.'">'.$post->getGroup().'</a>'
-                ));
-            case 'Page_'.Post::TYPE_CREATION:
-                $userLink = $this->router->generate('user_show', array('slug' => $post->getPage()->getCreator()->getSlug()));
-                $objectLink = $this->router->generate('page_show', array('slug' => $post->getPage()->getSlug()));
-                return $this->translator->trans('%user% opened the page %page%.', array(
-                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPage()->getCreator().'</a>',
-                    '%page%' => '<a href="'.$objectLink.'">'.$post->getPage().'</a>'
-                ));
-                // return __('%user% has opened the page %page%', array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow()), '%page%' => link_to($post->getRelatedObject()->getFirst(), $post->getRelatedObject()->getFirst()->getLinkShow())));
-            
-            case 'user_img_update':
-                // return __('%user% has updated '.$post->getPublisherSex('his').' profile picture.', array('%user%'   => link_to($post->getUser(), $post->getUser()->getLinkShow())));
-            case 'user_cover_img_update':
-                // return __('%user% has updated '.$post->getPublisherSex('his').' cover picture.', array('%user%'     => link_to($post->getUser(), $post->getUser()->getLinkShow())));
             case 'Fan_'.Post::TYPE_FAN_USER:
                 return 'Fan of an user';
                 switch (count($post->getObjectIds())) {
@@ -891,7 +812,7 @@ class CMExtension extends \Twig_Extension
             case 'job_update':
                 // return __('%user% has updated '.$post->getPublisherSex('his').' %works%.', array('%user%'   => link_to($post->getUser(), $post->getUser()->getLinkShow()), '%works%' => link_to(__('works'), '@work_education_user?user='.$post->getUser()->getUsername())));
             default:
-                return $this->getClassName($post->getObject()).'_'.$post->getType();
+                return $this->getEntityPostText($post);
         }
     }
 
@@ -901,18 +822,93 @@ class CMExtension extends \Twig_Extension
         $userBox = $this->getPublisherBox($post->getPublisher());
         switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Comment_'.Post::TYPE_CREATION:
-                return '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>';
-            // case 'Image_'.Post::TYPE_CREATION:
-            //     if (count($post->objectIds()) == 1) {
-            //         return $this->translator->trans('%user% added an image.', array(
-            //             '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>'
-            //         ));
-            //     } else {
-            //         return $this->translator->trans('%user% added %count% images.', array(
-            //             '%user%' => '<a href="'.$userLink.'">'.$post->getPublisher().'</a>',
-            //             '%count%' => count($post->objectIds())
-            //         ));
-            //     }
+            case 'Like_'.Post::TYPE_CREATION:
+                break;
+            case 'Event_'.Post::TYPE_CREATION:
+                $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
+                $categoryLink  = $this->router->generate('event_category', array('category_slug' => $post->getEntity()->getCategory()->getSlug()));
+                return $this->translator->trans('%user% published the event %object% in %category%.', array(
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>',
+                    '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getCategory()->getPlural()).'</a>'
+                ));
+            case 'Disc_'.Post::TYPE_CREATION:
+                $objectLink = $this->router->generate('disc_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
+                $categoryLink  = $this->router->generate('disc_category', array('category_slug' => $post->getEntity()->getCategory()->getSlug()));
+                return $this->translator->trans('%user% published the dics %object% in %category%.', array(
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>',
+                    '%category%' => '<a href="'.$categoryLink.'">'.ucfirst($post->getEntity()->getCategory()->getPlural()).'</a>'
+                ));
+            case 'Multimedia_'.Post::TYPE_CREATION:
+                $multimediaLink = $this->router->generate('multimedia_show', array('id' => $post->getEntityId(), 'slug' => $post->getEntity()->getSlug()));
+                return $this->translator->trans('%user% added a new %albumLinkStart%'.$post->getEntity()->typeString().'%albumLinkEnd%.', array(
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                    '%albumLinkStart%' => '<a href="'.$multimediaLink.'">', '%albumLinkEnd%' => '</a>'
+                ));
+            case 'Article_'.Post::TYPE_CREATION:
+                $objectLink = $this->router->generate('article_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
+                return $this->translator->trans('%user% published the article %object%.', array(
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
+                ));
+            case 'Biography_'.Post::TYPE_CREATION:
+            case 'Biography_'.Post::TYPE_UPDATE:
+                $objectLink = $this->router->generate('user_biography', array('slug' => $post->getUser()->getSlug()));
+                return $this->translator->trans('%user% updated '.$post->getPublisherSex('his').' %biographyLinkStart%biography%biographyLinkEnd%.', array(
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                    '%biographyLinkStart%' => '<a href="'.$objectLink.'">', '%biographyLinkEnd%' => '</a>'
+                ));
+            case 'ImageAlbum_'.Post::TYPE_CREATION:
+                if ($post->getEntity()->getType() == ImageAlbum::TYPE_ALBUM) {
+                    $action = 'created the album';
+                } else {
+                    $action = 'changed '.$post->getPublisherSex('his');
+                }
+                $objectLink = $this->router->generate($post->getPublisherType().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
+                return $this->translator->trans('%user% '.$action.' %object%.', array(
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
+                ));
+            case 'Image_'.Post::TYPE_CREATION:
+            case 'Image_'.Post::TYPE_UPDATE:
+                switch ($this->getClassName($post->getEntity())) {
+                    case 'Event':
+                        $entityLink = $this->router->generate('event_show', array('id' => $post->getEntityId(), 'slug' => $post->getEntity()->getSlug()));
+                        $entityString = ' event';
+                        break;
+                    case 'ImageAlbum':
+                        $entityLink = $this->router->generate($post->getPublisherType().'_album', array('id' => $post->getEntityId(), 'slug' => $post->getPublisher()->getSlug()));
+                        $albumString = $post->getEntity()->getType() == ImageAlbum::TYPE_ALBUM ? ' album' : '';
+                        break;
+                    default:
+                        $entityLink = '';
+                        break;
+                }
+                return $this->translator->trans('%user% added images to '.$post->getPublisherSex('his').$entityString.' %entity%.', array(
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                    '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>'
+                ));
+            case 'User_'.Post::TYPE_REGISTRATION:
+                // return __('%user% registered on Circuito Musica. - '.$post->getPublisherSex('M'), array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow())));
+            case 'User_'.Post::TYPE_CREATION:
+                return $this->translator->trans('%user% registered on Circuito Musica..', array(
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>'
+                ));
+            case 'Group_'.Post::TYPE_CREATION:
+                $userLink = $this->router->generate('user_show', array('slug' => $post->getGroup()->getCreator()->getSlug()));
+                $objectLink = $this->router->generate('group_show', array('slug' => $post->getGroup()->getSlug()));
+                return $this->translator->trans('%user% opened the group %group%.', array(
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getGroup()->getCreator().'</a>',
+                    '%group%' => '<a href="'.$objectLink.'">'.$post->getGroup().'</a>'
+                ));
+            case 'Page_'.Post::TYPE_CREATION:
+                $userLink = $this->router->generate('user_show', array('slug' => $post->getPage()->getCreator()->getSlug()));
+                $objectLink = $this->router->generate('page_show', array('slug' => $post->getPage()->getSlug()));
+                return $this->translator->trans('%user% opened the page %page%.', array(
+                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPage()->getCreator().'</a>',
+                    '%page%' => '<a href="'.$objectLink.'">'.$post->getPage().'</a>'
+                ));
             default:
                 return $this->getClassName($post->getObject()).'_'.$post->getType();
         }

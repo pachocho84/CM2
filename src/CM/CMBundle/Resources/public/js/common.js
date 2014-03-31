@@ -85,10 +85,14 @@ $(function() {
             return content;
         }
     }).on('mouseenter', function(event) {
-        $(event.currentTarget).popover('show');
-        $('.popover').addClass('popover-publisher').on('mouseleave', function () {
-            $(event.currentTarget).popover('hide');
-        });
+        setTimeout(function() {
+            if ($(event.currentTarget).is(':hover')) {
+                $(event.currentTarget).popover('show');
+                $('.popover').addClass('popover-publisher').on('mouseleave', function () {
+                    $(event.currentTarget).popover('hide');
+                });
+            }
+        }, 1000);
     }).on('mouseleave', function(event) {
         console.log(event);
         setTimeout(function() {
@@ -520,7 +524,6 @@ $(function() {
 */
 
     /* GMAPS */
-
     // directions
     $('body').on('click', '[gmap-directions]', function(event) {
         coords = $(event.currentTarget).attr('href').match(/daddr=([\d\.]+),([\d\.]+)/);
@@ -539,35 +542,10 @@ $(function() {
     });
 
     // map visualization
-    // function initializeMap(canvas) {
-    //     // canvas = $('[gmap-show]').get(index);
-    //     coords = $(canvas).attr('coords');
-
-    //     var mapOptions = {
-    //         zoom: 8,
-    //         center: new google.maps.LatLng(-34.397, 150.644)
-    //     };
-    //     var map = new google.maps.Map(
-    //         canvas,
-    //         mapOptions
-    //     );
-
-    //     $(canvas).attr('map', map);
-    // }
-    
-    // $('[gmap-show]').each(function(i) {
-    //     google.maps.event.addDomListener(window, 'load', initializeMap(i));
-    // });
-
-    // $('.event_date').one('show.bs.collapse', function(event) {
-    //     console.log(666);
-    //     google.maps.event.addDomListener(window, 'load', initializeMap($(event.currentTarget).find('[gmap-show]').get(0)));
-
-    // });
-
-    // $(document).on('click', '[gmap-show]', function(event) {
-    //     google.maps.event.trigger($(event.currentTarget).find('[gmap-show]'), 'resize');
-    // });
+    $(document).on('click', '[data-toggle="collapser"]', function(event) {
+        event.preventDefault();
+        $($(event.currentTarget).attr('href')).toggleClass('in');
+    });
 
     
     

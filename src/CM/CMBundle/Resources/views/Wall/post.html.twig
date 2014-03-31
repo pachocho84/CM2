@@ -20,7 +20,7 @@
     
     <div class="box-body">
 
-        <div class="media post-heading"{% if updateMore|default(false) and loop is defined and loop.first %} update_more="{{ path(app.request.attributes.get('_route')|replace({'_update': ''})~'_update', app.request.attributes.get('_route_params')|merge({ 'lastUpdated': post.updatedAt.timestamp })) }}"{% endif %}>
+        <div class="media post-heading"{% if updateMore|default(false) and loop is defined and loop.first %} update_more="{{ path(app.request.attributes.get('_route')|replace({_update: ''})~'_update', app.request.attributes.get('_route_params')|merge({lastUpdated: post.updatedAt.timestamp})) }}"{% endif %}>
             
             {{ show_img_box(post.publisher.img|imagine_filter('avatar'), {width: 50, offset: post.publisher.imgOffset,  link: path(post.publisherType ~ '_show', {slug: post.publisher.slug}), box_attributes: {class: 'pull-left img-rounded'}, publisher_box: post.publisher}) }}
         
@@ -36,15 +36,15 @@
             </div>
         </div>
         
-        
-        
-        <p>
-            {% if not inEntity %}
+        {% if not inEntity %}
+            <p>
                 {{ post_text(post, relatedObjects) }}
-            {% else %}
+            </p>
+        {% elseif inEntity and post.object|class_name != 'Comment' %}
+            <p>
                 {{ entity_post_text(post) }}
-            {% endif %}
-        </p>
+            </p>
+        {% endif %}
         
         
         
@@ -54,19 +54,19 @@
     
     
     
-    <div class="box-footer">
-        {% if not inEntity %}
+    {% if not inEntity %}
+        <div class="box-footer">
             {% if (post.object|class_name == 'Like' or post.object|class_name == 'Comment') and relatedObjects.imageId is not null %}
-                {{ include('CMBundle::social.html.twig', {'post': relatedObjects.image, 'isImage': true}) }}
+                {{ include('CMBundle::social.html.twig', {post: relatedObjects.image, isImage: true}) }}
             {% elseif (post.object|class_name == 'Like' or post.object|class_name == 'Comment') %}
-                {{ include('CMBundle::social.html.twig', {'post': relatedObjects.post}) }}
+                {{ include('CMBundle::social.html.twig', {post: relatedObjects.post}) }}
             {% elseif post.object|class_name == 'Biography' %}
-                {{ include('CMBundle::social.html.twig', {'post': post.entity.post}) }}
+                {{ include('CMBundle::social.html.twig', {post: post.entity.post}) }}
             {% elseif (post.object|class_name) == 'Fan' %}
             {% else  %}
                 {{ include('CMBundle::social.html.twig') }}
             {% endif %}
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
 
 </div>

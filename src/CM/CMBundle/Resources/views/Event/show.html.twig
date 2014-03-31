@@ -1,4 +1,5 @@
 {% extends 'CMBundle::layout.html.twig' %}
+{% set noColumns = true %}
 
 {% block bodyHeading %}
     <div class="row">
@@ -27,41 +28,45 @@
 
 
 {% block body %}
-    <div class="box">
-        <div class="box-heading">
-            <h2>{{ icon('Info') }} {{ 'Details'|trans }}</h2>
-        </div>
-        <div class="box-body">
-            <div class="object">
-                <p>
-                    {{ "Created by %publisher%"|trans({'%publisher%': '<a ' ~ publisher_box(event.post.publisher) ~ ' href="' ~ path(event.post.publisherType ~ '_show', {'slug': event.post.publisher.slug}) ~ '">' ~ event.post.publisher~'</a>'})|raw }}
-                    &middot;
-                    <a href="{{ path('event_category', { 'categorySlug': event.category.getSlug }) }}">{{ event.category|capitalize }}</a>
-                </p>
-            </div>
-            <div class="media object">
-                <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}" class="pull-left"><img src="{{ event.getImage|default_img|imagine_filter('medium') }}" width=200 /></a>
-                <div>
-                    <div class="text-justify">{{ event.getText|raw }}</div>
+
+    <div class="row">
+        <div class="col-md-4 col-md-push-8">
+            <div class="box">
+                <div class="box-heading">
+                    <h2>{{ icon('Info') }} {{ 'Details'|trans }}</h2>
+                </div>
+                <div class="box-body">
+                    <div class="object">
+                        <p>
+                            {{ "Created by %publisher%"|trans({'%publisher%': '<a ' ~ publisher_box(event.post.publisher) ~ ' href="' ~ path(event.post.publisherType ~ '_show', {'slug': event.post.publisher.slug}) ~ '">' ~ event.post.publisher~'</a>'})|raw }}
+                            &middot;
+                            <a href="{{ path('event_category', { 'categorySlug': event.category.getSlug }) }}">{{ event.category|capitalize }}</a>
+                        </p>
+                    </div>
+                    <div class="media object">
+                        <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}">
+                            <img src="{{ event.getImage|default_img|imagine_filter('medium') }}" class="img-responsive" />
+                        </a>
+                        <div>
+                            <div class="text-justify">{{ event.getText|raw }}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            
+            <div data-ajax-url="{{ path('event_dates', {id: event.id}) }}"></div>
+            
+            <div data-ajax-url="{{ path('image_entity', {id: event.id, type: event|class_name}) }}"></div>
+            
+            <div data-ajax-url="{{ path('multimedia_entity', {id: event.id, type: event|class_name}) }}"></div>
+            
+            <div data-ajax-url="{{ path('entityuser_protagonists', {id: event.id}) }}"></div>
+        </div>
+
+        <div class="col-md-8 col-md-pull-4">
+            <div data-ajax-url="{{ path('wall_entity', {id: event.id}) }}"></div>
         </div>
     </div>
-    
-    <div data-ajax-url="{{ path('wall_entity', {id: event.id}) }}"></div>
-{% endblock %}
-
-
-
-{% set sticky = false %}
-{% block sidebar %}
-    <div data-ajax-url="{{ path('event_dates', {id: event.id}) }}"></div>
-    
-    <div data-ajax-url="{{ path('image_entity', {id: event.id, type: event|class_name}) }}"></div>
-    
-    <div data-ajax-url="{{ path('multimedia_entity', {id: event.id, type: event|class_name}) }}"></div>
-    
-    <div data-ajax-url="{{ path('entityuser_protagonists', {id: event.id}) }}"></div>
 {% endblock %}
 
 {% block javascripts %}

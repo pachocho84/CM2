@@ -48,34 +48,37 @@ class RelationController extends Controller
         $relationRequest = false;
         $acceptedRelations = 0;
         $pendingRelations = 0;
-        $reqText = is_null($reqText) ? 'Request a relation' : $reqText;
+        $reqText = is_null($reqText) ? $request->get('reqText') : $reqText;
         $btnColour = 'danger';
         $tooltipArray = array();
-        foreach ($relationTypes as $relType) {
-            foreach ($relType->getRelations() as $relation) {
-                if ($relation->getUserId() == $this->getUser()->getId()) {
-                    continue;
-                } elseif ($relation->getAccepted() == Relation::ACCEPTED_NO) {
-                    $tooltipArray[] = $relType->getName().' (pending)';
-                    if (!$relationRequest) {
-                        $reqText = 'Respond to a relation request';
-                        $btnColour = 'warning';
-                        $relationRequest = true;
+        if (is_null($reqText)) {
+            $reqText = 'Request a relation';
+            foreach ($relationTypes as $relType) {
+                foreach ($relType->getRelations() as $relation) {
+                    if ($relation->getUserId() == $this->getUser()->getId()) {
+                        continue;
+                    } elseif ($relation->getAccepted() == Relation::ACCEPTED_NO) {
+                        $tooltipArray[] = $relType->getName().' (pending)';
+                        if (!$relationRequest) {
+                            $reqText = 'Respond to a relation request';
+                            $btnColour = 'warning';
+                            $relationRequest = true;
+                        }
+                    } elseif ($relation->getAccepted() == Relation::ACCEPTED_UNI) {
+                        $tooltipArray[] = $relType->getName();
+                        if ($acceptedRelations == 0 && $pendingRelations == 0 && !$relationRequest) {
+                            $reqText = $relType->getName().' (requested)';
+                            $btnColour = 'warning';
+                        }
+                        $pendingRelations++;
+                    } elseif ($relation->getAccepted() == Relation::ACCEPTED_BOTH) {
+                        $tooltipArray[] = $relType->getName();
+                        if (!$relationRequest) {
+                            $reqText = $relType->getName();
+                            $btnColour = 'success';
+                        }
+                        $acceptedRelations++;
                     }
-                } elseif ($relation->getAccepted() == Relation::ACCEPTED_UNI) {
-                    $tooltipArray[] = $relType->getName();
-                    if ($acceptedRelations == 0 && $pendingRelations == 0 && !$relationRequest) {
-                        $reqText = $relType->getName().' (requested)';
-                        $btnColour = 'warning';
-                    }
-                    $pendingRelations++;
-                } elseif ($relation->getAccepted() == Relation::ACCEPTED_BOTH) {
-                    $tooltipArray[] = $relType->getName();
-                    if (!$relationRequest) {
-                        $reqText = $relType->getName();
-                        $btnColour = 'success';
-                    }
-                    $acceptedRelations++;
                 }
             }
         }
