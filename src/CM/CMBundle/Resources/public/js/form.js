@@ -473,4 +473,74 @@ $(function() {
     $('.protagonists_user').each(function(i, elem) {
         initTags($(elem));
     });
+
+
+
+    /* IMAGE POSITIONING */
+    function imagePosition($img, $target) {
+        var $box = $img.closest('.image_box');
+        $box.css('cursor', 'move');
+
+        $img.draggable({
+            scroll: false,
+            drag: function(event, ui) {
+                if (ui.position.top > 0) {
+                    ui.position.top = 0;
+                } else if (ui.position.top < $box.height() - $img.outerHeight()) {
+                    ui.position.top = $box.height() - $img.outerHeight();
+                }
+                if (ui.position.left > 0) {
+                    ui.position.left = 0;
+                } else if (ui.position.left < $box.width() - $img.outerWidth()) {
+                    ui.position.left = $box.width() - $img.outerWidth();
+                } 
+            },
+            stop: function(event, ui) {
+                offsetX = Math.abs(100 * $img.position().left / $img.outerWidth()).toFixed(2);
+                offsetY = Math.abs(100 * $img.position().top / $img.outerHeight()).toFixed(2);
+                $target.val(Math.max(offsetX, offsetY));
+            }
+        });
+    }
+    if ($('#profile-pic').length == 1) {
+        imagePosition($('#profile-pic'), $('[img-offset-field]'));
+    }
+    if ($('#cover-pic').length == 1) {
+        imagePosition($('#cover-pic'), $('[cover-img-offset-field]'));
+    }
+
+
+
+    /* IMAGE BOX */
+    $.each($('[img-offset-field]'), function(i, elem) {
+        imagePosition($(elem).closest('.form-group').find('.fileinput-new img'), $(elem));
+    });
+    $(document).on('change.bs.fileinput', '.fileinput', function(event) {
+        if (event.namespace != 'bs.fileinput') return;
+
+        var $image =  $(event.currentTarget).find('.fileinput-exists img');
+        var $box = $image.parent();
+
+        var width  = $box.width();
+        var height = $box.height();
+
+        // Ratio
+        var imageRatio = $image.width() / $image.height();
+        var boxRatio = width / height;
+        var ratio = imageRatio / boxRatio;
+
+        // Offset
+        var imgStyle = [];
+        if (ratio == 1) {
+            $image.height('100%');
+        } else if (ratio > 1) { // landscape
+            $image.height('100%');
+            $image.css('left', (-Math.abs((imageRatio / boxRatio - 1) / 2 * 100)) + '%');
+        } else if (ratio < 1) { // portrait
+            $image.width('100%');
+            $image.css('top', (-Math.ceil(Math.min(width / imageRatio - height, width / imageRatio / 10))) + 'px');
+        }
+
+        imagePosition($image, $image.closest('.form-group').find('[img-offset-field]'));
+    });
 });

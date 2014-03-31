@@ -10,7 +10,7 @@
         <div class="box-body objects">
             {% for date in dates %}
                 <div class="media object">
-                    {{ show_img_box(date.event.image|imagine_filter('medium'), {width: 100, height: 66, box_attributes: {class: 'pull-left'}}) }}
+                    {{ show_img_box(date.event.image|default_img|imagine_filter('medium'), {width: 100, height: 66, offset: date.event.imgOffset, box_attributes: {class: 'pull-left'}}) }}
                     <div class="media-body">
                         <h4>{{ date.event }}</h4>
                         <p>

@@ -105,13 +105,11 @@ function wallLoad(data, t, c, reload) {
 }
 
 $(function() {
-/*
     $('#wall').append(calculateColumns());
 
     $.get(document.URL, function(data) {
         wallLoad(data);
     });
-*/
 
     $(window).resize(function(event) {
         var pageWidth = $(window).width();

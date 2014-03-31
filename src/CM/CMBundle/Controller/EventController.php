@@ -275,9 +275,6 @@ class EventController extends Controller
         
         $form->handleRequest($request);
 
-        $errors = getAllErrors($form);
-        var_dump(count($errors), $errors);
-
         if ($form->isValid()) {
             foreach ($event->getEventDates() as $eventDate) {
                 foreach ($oldEventDates as $key => $toDel) {

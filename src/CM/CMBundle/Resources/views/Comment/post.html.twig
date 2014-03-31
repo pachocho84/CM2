@@ -2,12 +2,12 @@
     <div class="media object post">
 
         {% if post.entity.images|length > 0 %}
-            {{ show_img_box(post.entity.image|default_img|imagine_filter('medium'), {'width': 150, 'height': 150, 'link': '', 'box_attributes': {'class': 'pull-left'}}) }} {# TODO: add image show link #}
+            {{ show_img_box(post.entity.image|default_img|imagine_filter('medium'), {width: 150, offset: post.entity.imgOffset, link: '', box_attributes: {class: 'pull-left'}}) }} {# TODO: add image show link #}
         {% endif %}
     
         <div class="media-body">
         
-            <h4><a href="{{ path('event_show', {'id': post.entity.id, 'slug': post.entity.getSlug}) }}">{{ post.entity }}</a></h4>
+            <h4><a href="{{ path('event_show', {id: post.entity.id, slug: post.entity.getSlug}) }}">{{ post.entity }}</a></h4>
     
             {{ post.entity|short_text }}
     
@@ -15,15 +15,15 @@
     </div><!-- END Object -->
 {% elseif singleComment|default(false) %}
     {% if can_manage(comment) or can_manage(post.entity) %}
-        <a href="{{ path('comment_delete', {'id': comment.id}) }}" class="close invisible" data-placement="left" data-toggle="popover" data-content="<p>{{ 'Are you sure you want to delete this comment?'|trans }}</p><a href='{{ path('comment_delete', {'id': comment.id}) }}' class='btn btn-primary'>{{ 'Delete'|trans }}</a> <span class='btn popover-close'>{{ 'Cancel'|trans }}</span>">{{ icon('Remove') }}</a>
-       {# {{ delete_link(path('comment_delete', {'id': comment.id}), 'comment', {'data-placement': 'left', 'class': 'close', 'text': '&times;', 'icon': false}) }} #}
+        <a href="{{ path('comment_delete', {id: comment.id}) }}" class="close invisible" data-placement="left" data-toggle="popover" data-content="<p>{{ 'Are you sure you want to delete this comment?'|trans }}</p><a href='{{ path('comment_delete', {id: comment.id}) }}' class='btn btn-primary'>{{ 'Delete'|trans }}</a> <span class='btn popover-close'>{{ 'Cancel'|trans }}</span>">{{ icon('Remove') }}</a>
+       {# {{ delete_link(path('comment_delete', {id: comment.id}), 'comment', {'data-placement': 'left', class: 'close', text: '&times;', icon: false}) }} #}
     {% endif %}
      <p>{{ comment }}</p>
 {% else %}
     {% set comment = post.entity.post.comments[post.objectIds[0]] %}
     {% if can_manage(comment) or can_manage(post.entity) %}
-        <a href="{{ path('comment_delete', {'id': comment.id}) }}" class="close invisible" data-placement="left" data-toggle="popover" data-content="<p>{{ 'Are you sure you want to delete this comment?'|trans }}</p><a href='{{ path('comment_delete', {'id': comment.id}) }}' class='btn btn-primary'>{{ 'Delete'|trans }}</a> <span class='btn popover-close'>{{ 'Cancel'|trans }}</span>">{{ icon('Remove') }}</a>
-       {# {{ delete_link(path('comment_delete', {'id': comment.id}), 'comment', {'data-placement': 'left', 'class': 'close', 'text': '&times;', 'icon': false}) }} #}
+        <a href="{{ path('comment_delete', {id: comment.id}) }}" class="close invisible" data-placement="left" data-toggle="popover" data-content="<p>{{ 'Are you sure you want to delete this comment?'|trans }}</p><a href='{{ path('comment_delete', {id: comment.id}) }}' class='btn btn-primary'>{{ 'Delete'|trans }}</a> <span class='btn popover-close'>{{ 'Cancel'|trans }}</span>">{{ icon('Remove') }}</a>
+       {# {{ delete_link(path('comment_delete', {id: comment.id}), 'comment', {'data-placement': 'left', class: 'close', text: '&times;', icon: false}) }} #}
     {% endif %}
      <p>{{ comment }}</p>
 {% endif %}

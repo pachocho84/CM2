@@ -2,19 +2,18 @@
     <div class="media">
         
         {% if date.getEvent.getImages|length > 0 %}
-            <a href="{{ path('event_show', { 'id': date.event.id, 'slug': date.event.getSlug }) }}" class="pull-left img-thumbnail">
-                {{ show_img_box(date.event.getImages[0].img|imagine_filter('medium'), {'width': 200, 'height': 133}) }}
+            <a href="{{ path('event_show', { id: date.event.id, slug: date.event.getSlug }) }}" class="pull-left img-thumbnail">
+                {{ show_img_box(date.event.image|default_img|imagine_filter('medium'), {width: 200, height: 133, offset: date.event.imgOffset}) }}
             </a>
         {% endif %}
-{#                         <?php show_img_box($post->getImages()->getFirst(), array('width' => 200, 'height' => 140, 'link' => $post->getRawValue()->getEntity()->getLinkShow(), 'link_attributes' => array('class' => 'pull-left img-thumbnail'))) ?>     #}
     
         <div class="media-body">
         
-            {% set publisher = date.event.posts[0].publisher %}
+            {% set publisher = date.event.post.publisher %}
             
-            <h4><a href="{{ path('event_show', {'id': date.event.id, 'slug': date.event.getSlug}) }}">{{ date.event.getTitle }}</a></h4>
+            <h4><a href="{{ path('event_show', {id: date.event.id, slug: date.event.getSlug}) }}">{{ date.event.getTitle }}</a></h4>
             <h5>
-                {{ "Published by %publisher% in %category%"|trans({'%publisher%': '<a ' ~ publisher_box(publisher) ~ ' href="'~path(date.event.posts[0].publisherType ~ '_show', {'slug': publisher.slug})~'">'~publisher~'</a>', '%category%': '<a href="'~path('event_category', { 'categorySlug': date.event.category.getSlug })~'">'~date.event.category~'</a>' })|raw }}
+                {{ "Published by %publisher% in %category%"|trans({'%publisher%': '<a ' ~ publisher_box(publisher) ~ ' href="'~path(date.event.post.publisherType ~ '_show', {slug: publisher.slug})~'">'~publisher~'</a>', '%category%': '<a href="'~path('event_category', { categorySlug: date.event.category.getSlug })~'">'~date.event.category~'</a>' })|raw }}
             </h5>
 
             <p class="text-muted">
@@ -24,7 +23,7 @@
     
             <p>{{ date.event.getExtract|raw }}</p>
 
-{#             {{ include('CMBundle::social.html.twig', {'post': date.event.post}) }} #}
+{#             {{ include('CMBundle::social.html.twig', {post: date.event.post}) }} #}
     
         </div><!-- END Media Body -->
     
