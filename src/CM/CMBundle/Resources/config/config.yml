@@ -115,6 +115,10 @@ liip_imagine:
             quality: 90
             filters:
                 thumbnail_min: { size: 50, mode: inset }
+        xsmall:
+            quality: 90
+            filters:
+                thumbnail_min: { size: 125, mode: inset }
         small:
             quality: 90
             filters:

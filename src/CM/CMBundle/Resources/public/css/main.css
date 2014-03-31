@@ -198,12 +198,12 @@ img {
         width: 960px;
     }
 }
-@media (min-width: 1200px) {
+@media (min-width: 1212px) {
     #menu ul.pull-right .login-dropdown {
         width: 1180px;
     }
 }
-@media (min-width: 1500px) {
+@media (min-width: 1512px) {
     #menu ul.pull-right .login-dropdown {
         width: 1480px;
     }
