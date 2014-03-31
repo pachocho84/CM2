@@ -84,8 +84,14 @@
                             <div class="dropdown-menu dropdown-menu-right login-dropdown">
                                 <div class="dropdown-menu-body">
                                     <div class="row">
-                                        <div class="col-md-6">{{ render(controller('FOSUserBundle:Security:login')) }}</div>
-                                        <div class="col-md-6">{{render(controller('FOSUserBundle:Registration:register')) }}</div>
+                                        <div class="col-md-6">
+                                            <h3>{{ 'Login'|trans }}</h3>
+                                            {{ render(controller('FOSUserBundle:Security:login')) }}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h3>{{ 'Registration'|trans }}</h3>
+                                            {{render(controller('FOSUserBundle:Registration:register')) }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

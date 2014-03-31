@@ -72,11 +72,6 @@ form textarea.form-control {
 .typeahead li a:hover h3 {
     color: #ffffff;
 }
-.popover {
-    -webkit-border-radius: 0px;
-       -moz-border-radius: 0px;
-            border-radius: 0px;
-}
 .popover .popover-content {
     color: #333333;
     font-size: 14px;
@@ -86,7 +81,6 @@ form textarea.form-control {
     display: inline;
 }
 .popover h3.popover-title {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-variant: normal;
 }
 .glyphicons { 
@@ -986,4 +980,20 @@ form textarea[expandable] {
 }*/
 .ui-autocomplete.ui-menu {
     z-index: 99999;
+}
+
+
+
+/* Publisher Popover */
+.popover .popover-cover img {
+    max-width: 100%;
+}
+.popover .popover-profile {
+    margin: 0 auto -50px;
+    top: -50px;
+    position: relative;
+    padding: 4px;
+    border: 1px solid #bbbbbb;
+    background: #ffffff;
+    width: 110px;
 }

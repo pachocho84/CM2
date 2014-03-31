@@ -14,7 +14,7 @@ use CM\CMBundle\Entity\Biography;
 class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
     private static $people = array(
-        array('firstname' => 'Er Nesto', /* 1 */
+        array('firstname' => 'Ernesto', /* 1 */
             'lastname' => 'Casareto',
             'username' => 'pachocho',
             'password' => 'pacho',
