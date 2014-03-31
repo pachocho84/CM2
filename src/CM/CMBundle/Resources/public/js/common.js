@@ -86,7 +86,7 @@ $(function() {
         }
     }).on('mouseenter', function(event) {
         $(event.currentTarget).popover('show');
-        $('.popover').on('mouseleave', function () {
+        $('.popover').addClass('popover-publisher').on('mouseleave', function () {
             $(event.currentTarget).popover('hide');
         });
     }).on('mouseleave', function(event) {
