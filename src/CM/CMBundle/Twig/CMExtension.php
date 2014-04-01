@@ -572,9 +572,6 @@ class CMExtension extends \Twig_Extension
                 $likeOrComment = 'commented on';
             case 'Like_'.Post::TYPE_CREATION:
             case 'Like[]_'.Post::TYPE_AGGREGATE:
-                if ($this->getClassName($post->getObject()).'_'.$post->getType() == 'Like_'.Post::TYPE_CREATION) {
-                    $likeOrComment = 'likes';
-                }
                 if ($post->getType() == Post::TYPE_AGGREGATE && count($relatedObjects) > 1) {
                     $userIds = array();
                     foreach ($relatedObjects as $i => $object) {
@@ -584,12 +581,19 @@ class CMExtension extends \Twig_Extension
                             $args['%user'.(count($args) + 1).'%'] = '<a href="'.$this->router->generate('user_show', array('slug' => $object->getUser()->getSlug())).'" '.$this->getPublisherBox($object->getUser()).'>'.$object->getUser().'</a>';
                         }
                     }
+                    $asd = '';
+                    foreach ($users as $key => $value) {
+                        $asd .= ' '.$value;
+                    }
                     if (count($userIds) > 2) {
-                        $args['%count%'] = '<span'.$this->getTooltip(array_slice($users, 2)).'>'.(count($users) - 2).'</>';
+                        $args['%count%'] = '<span'.$this->getTooltip(array_slice($users, 2)).'>'.(count($users) - 2).' '.$asd.'</>';
                     }
                     $user = $this->translator->transChoice('{1}%user1%|{2}%user1% and %user2%|[3,Inf]%user1%, %user2% and other %count%', count($users), $args);
-                    $likeOrComment = 'like'.($args['%count%'] > 1 ? '' : 's');
+                    if ($this->getClassName($post->getObject()) == 'Like[]') {
+                        $likeOrComment = 'like'.($args['%count%'] > 1 ? '' : 's');
+                    }
                 } else {
+                    $likeOrComment = 'likes';
                     $user = '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>';
                 }
                 $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherType().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));

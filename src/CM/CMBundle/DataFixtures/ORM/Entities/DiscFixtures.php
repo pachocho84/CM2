@@ -180,12 +180,150 @@ Angelo Formenti',
                     'title'         => 'Aria Variata alla maniera italiana: Variazione I (largo)',
                     'movement'      => null,
                     'artists'       => 'Andrea Bacchetti',
-                    'duration'      => '0:02:22'
+                    'duration'      => '0:02:22',
                 ),
             ),
             'text'  => 'This release is a delight from beginning to end...I greatly enjoy the character Bacchetti gives to [Capriccio sulla lontanaza del suo fratello diletissimo]...I like the sense of urbane bonhomie which Bacchetti find in these [Italian] variations, keeping our spirits up with sparks of wit amongst the sensitive regret and nostalgia elsewhere.',
             'img'   => 'bacchetti_the_italian_bach.jpg',
             'page'  => 1
+        ),
+        array('title' => 'An evening with the orchestra',
+            'label' => 'FaLaUt',
+            'year' => '2003-1-1',
+            'discTracks' => array(
+                array('composer'    => 'Jaques Iber',
+                    'title'         => 'Flute concerto',
+                    'movement'      => '1',
+                    'artists'       => 'Davide Formisano',
+                    'duration'      => '0:04:47',
+                    'audio'         => 'formisano_evening_1.mp3'
+                ),
+                array('composer'    => 'Jaques Iber',
+                    'title'         => 'Flute concerto',
+                    'movement'      => '2',
+                    'artists'       => 'Davide Formisano',
+                    'duration'      => '0:07:09',
+                    'audio'         => 'formisano_evening_2.mp3'
+                ),
+                array('composer'    => 'Jaques Iber',
+                    'title'         => 'Flute concerto',
+                    'movement'      => '3',
+                    'artists'       => 'Davide Formisano',
+                    'duration'      => '0:09:27',
+                    'audio'         => 'formisano_evening_3.mp3'
+                ),
+            ),
+            'text'  => 'formisano_evening.jpg',
+            'img'   => '',
+            'user'  => 11
+        ),
+        array('title' => 'Live in Luzern',
+            'label' => 'THYM',
+            'year' => '1999-1-1',
+            'discTracks' => array(
+                array('composer'    => 'L. van Beethoven',
+                    'title'         => 'Serenade D-Dur op.8',
+                    'movement'      => '',
+                    'artists'       => 'Davide Formisano',
+                    'duration'      => '0:16:16'
+                ),
+                array('composer'    => 'A. Jolivet',
+                    'title'         => 'Chant de Linos',
+                    'movement'      => 'Tranerlamentation',
+                    'artists'       => 'Davide Formisano',
+                    'duration'      => '0:11:09'
+                ),
+                array('composer'    => 'J. Mouquet',
+                    'title'         => 'Sonate op. 15 "La flute de Pan"',
+                    'movement'      => '',
+                    'artists'       => 'Davide Formisano',
+                    'duration'      => '0:15:2'
+                ),
+            ),
+            'text'  => '',
+            'img'   => 'formisano_luzern.jpg',
+            'user'  => 11
+        ),
+        array('title' => 'Trio Johannes',
+            'label' => 'Musicainsieme',
+            'year' => '2005-1-1',
+            'discTracks' => array(
+                array('composer'    => 'Dimitrij Sostakovic',
+                    'title'         => 'Trio in mi minore op. 67',
+                    'movement'      => '1',
+                    'artists'       => 'Francesca Manara violino, Massimo Polidori violoncello, Claudio Voghera pianoforte, Fabrizio Meloni clarinetto',
+                    'duration'      => '0:7:29:'
+                ),
+                array('composer'    => 'Dimitrij Sostakovic',
+                    'title'         => 'Trio in mi minore op. 67',
+                    'movement'      => '2',
+                    'artists'       => 'Francesca Manara violino, Massimo Polidori violoncello, Claudio Voghera pianoforte, Fabrizio Meloni clarinetto',
+                    'duration'      => '0:03:21'
+                ),
+                array('composer'    => 'Dimitrij Sostakovic',
+                    'title'         => 'Trio in mi minore op. 67',
+                    'movement'      => '3',
+                    'artists'       => 'Francesca Manara violino, Massimo Polidori violoncello, Claudio Voghera pianoforte, Fabrizio Meloni clarinetto',
+                    'duration'      => '0:05:12'
+                ),
+            ),
+            'text'  => '',
+            'img'   => 'trio_johannes.jpg',
+            'user'  => 12
+        ),
+        array('title' => 'Duo Obliquo',
+            'label' => 'THYM',
+            'year' => '1998-1-1',
+            'discTracks' => array(
+                array('composer'    => 'Nino Rota',
+                    'title'         => 'Sonata in re per clarinetto e pianoforte',
+                    'movement'      => '1',
+                    'artists'       => 'Carlo Boccadoro pianoforte, Fabrizio Meloni clarinetto',
+                    'duration'      => '0:05:09'
+                ),
+                array('composer'    => 'Nino Rota',
+                    'title'         => 'Sonata in re per clarinetto e pianoforte',
+                    'movement'      => '2',
+                    'artists'       => 'Carlo Boccadoro pianoforte, Fabrizio Meloni clarinetto',
+                    'duration'      => '0:04:17'
+                ),
+                array('composer'    => 'Nino Rota',
+                    'title'         => 'Sonata in re per clarinetto e pianoforte',
+                    'movement'      => '3',
+                    'artists'       => 'Carlo Boccadoro pianoforte, Fabrizio Meloni clarinetto',
+                    'duration'      => '0:04:04'
+                ),
+            ),
+            'text'  => '',
+            'img'   => 'duo_obliquo.jpg',
+            'user'  => 12
+        ),
+        array('title' => 'I fiati all\'Opera',
+            'label' => 'DAD Records',
+            'year' => '2002-1-1',
+            'discTracks' => array(
+                array('composer'    => 'Amilcare Ponchielli',
+                    'title'         => 'Quartetto',
+                    'movement'      => '',
+                    'artists'       => 'I solisti della Scala - Philip Moll',
+                    'duration'      => '0:14:07'
+                ),
+                array('composer'    => 'Polibio Fumagalli',
+                    'title'         => 'Gran terzetto di concerto op. 40',
+                    'movement'      => '',
+                    'artists'       => 'I solisti della Scala - Philip Moll',
+                    'duration'      => '0:11:44'
+                ),
+                array('composer'    => 'Benedetto Carulli',
+                    'title'         => 'Duetto su "il Poliuto" di G. Donizzetti',
+                    'movement'      => '',
+                    'artists'       => 'I solisti della Scala - Philip Moll',
+                    'duration'      => '0:06:45'
+                ),
+            ),
+            'text'  => '',
+            'img'   => '',
+            'user'  => 1
         ),
     );
 
@@ -225,9 +363,8 @@ Angelo Formenti',
                 ->setMovement(DiscFixtures::$discs[$i]['discTracks'][$j]['movement'])
                 ->setArtists(DiscFixtures::$discs[$i]['discTracks'][$j]['artists'])
                 ->setDuration(new \DateTime(DiscFixtures::$discs[$i]['discTracks'][$j]['duration']));
-
-            if (rand(0, 5) == 0) {
-                $discTrack->setAudio('62c3410ef8cc13c3dc7aa40646f9e805.mpga');
+            if (isset($disc[$i]['discTracks'][$j]['audio'])) {
+                $discTrack->setAudio($disc[$i]['discTracks'][$j]['audio']);
             }
 
             $disc->addDiscTrack($discTrack);

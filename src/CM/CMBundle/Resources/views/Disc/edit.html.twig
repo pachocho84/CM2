@@ -7,6 +7,17 @@
         </div>
         {{ include('CMBundle:Disc:menu.html.twig') }}
     </div>
-    
-    {{ form(form) }}
+
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-4">
+                {{ form_row(form.images) }}
+            </div>
+            <div class="col-md-8">
+                {{ form_row(form.translations) }}
+                {% if form.posts is defined %}{{ form_row(form.posts) }}{% endif %}
+                {{ form_row(form.category) }}
+            </div>
+        </div>
+    {{ form_end(form) }}
 {% endblock %}
