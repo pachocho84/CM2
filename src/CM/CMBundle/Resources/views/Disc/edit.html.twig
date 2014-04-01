@@ -1,5 +1,14 @@
 {% extends 'CMBundle:Form:layout.html.twig' %}
 
+{% block stylesheets %}
+    {% stylesheets
+        'lib/bootstrap/css/bootstrap.min.css'
+        'lib/jasny-bootstrap/css/jasny-bootstrap.min.css'
+    %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+{% endblock %}
+
 {% block body %}
     <div class="row">
         <div class="col-lg-5">
@@ -17,7 +26,81 @@
                 {{ form_row(form.translations) }}
                 {% if form.posts is defined %}{{ form_row(form.posts) }}{% endif %}
                 {{ form_row(form.category) }}
+                {{ form_row(form.label) }}
+                {{ form_row(form.date) }}
             </div>
         </div>
     {{ form_end(form) }}
+
+
+    <div class="row">
+        <form>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-file">
+                            <span class="fileinput-new">Browse</span>
+                            <span class="fileinput-exists">Change</span>
+                            <input type="file" id="cm_cmbundle_disc_discTracks_0_audioFile" name="cm_cmbundle_disc[discTracks][0][audioFile]" placeholder="Audio file"/>
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                </div>
+            </div>
+                
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-file">
+                            <span class="fileinput-new">Browse</span>
+                            <span class="fileinput-exists">Change</span>
+                            <input type="file" name="..."/>
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>  
+                </div>
+
+                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+  <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+  <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+  <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+</div>
+            
+            <div class="form-group">
+                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                    <div class="form-control" data-trigger="fileinput">
+                        <i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename">Audio file</span>
+                    </div>
+                    <span class="input-group-addon btn btn-default btn-file">
+                        <span class="fileinput-new">Browse</span>
+                        <span class="fileinput-exists">Change</span>
+                        <input type="file" id="cm_cmbundle_disc_discTracks_0_audioFile" name="cm_cmbundle_disc[discTracks][0][audioFile]" placeholder="Audio file"/>
+                    </span>
+                    <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+  <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+  <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+  <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {% javascripts
+        'js/jquery-2.0.3.min.js'
+        'lib/jasny-bootstrap/js/jasny-bootstrap.min.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

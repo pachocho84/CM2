@@ -5,7 +5,7 @@ namespace CM\CMBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use CM\CMBundle\Form\DataTransformer\ArrayCollectionToEntityTransformer;
+use CM\CMBundle\Form\DataTransformer\DateTimeToYearTransformer;
 
 class DiscType extends EntityType
 {
@@ -18,7 +18,7 @@ class DiscType extends EntityType
         parent::buildForm($builder, $options);
     
         $builder->add('label')
-            ->add('date')
+            ->add($builder->create('date', 'number', array('label' => 'Year', 'error_bubbling' => false))->addModelTransformer(new DateTimeToYearTransformer))
             ->add('discTracks', 'collection', array(
                 'type' => new DiscTrackType,
                 'allow_add' => true,

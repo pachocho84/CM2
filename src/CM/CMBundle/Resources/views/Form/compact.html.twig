@@ -8,44 +8,55 @@
         {% set label = name|humanize %}
     {% endif %}
     {% set type = type|default('text') %}
-    {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
     {% if type == 'file' %}
         {% set required = false %}
-        <div class="fileinput fileinput-new" data-provides="fileinput">
-            {% if imgEdit is defined %}
+        {% set notFormControl = true %}
+        {% if imgEdit is defined %}
+            <div class="fileinput fileinput-new" data-provides="fileinput">
                 {{ imgEdit.box|raw }}
                 <div class="fileinput-preview fileinput-exists image_box" data-trigger="fileinput" style="width: {{ imgEdit.width }}px; height: {{ imgEdit.width }}px;"></div>
-            {% elseif imgOffset is defined %}
+        {% elseif imgOffset is defined %}
+            <div class="fileinput fileinput-new" data-provides="fileinput">
                 {% if form.parent.vars.data.img is not null %}
                     {{ show_img_box(form.parent.vars.data.img|imagine_filter('medium'), {width: 190, height: 126, offset: imgOffset, box_attributes: {class: 'fileinput-new', style: 'border: 1px solid #bbbbbb; margin-bottom: 10px;'}}) }}
                 {% endif %}
                 <div class="fileinput-preview fileinput-exists image_box" data-trigger="fileinput" style="width: 190px; height: 126px; border: 1px solid #bbbbbb; margin-bottom: 10px;"></div>
-            {% elseif subtype|default(false) == 'image' %}
+        {% elseif subtype|default(false) == 'image' %}
+            <div class="fileinput fileinput-new" data-provides="fileinput">
                 <div class="fileinput-preview" data-trigger="fileinput" style="width: 200px; height: 150px;">
                     {% if form.parent.vars.data.img is not null %}
                         <img src="{{ form.parent.vars.data.img|imagine_filter('medium') }}" />
                     {% endif %}
                 </div>
-            {% else %}
-                <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
-            {% endif %}
-            <div>
-                <span class="btn btn-default btn-file">
-                    <span class="fileinput-new">{{ 'Browse'|trans({}, translation_domain) }}</span>
-                    <span class="fileinput-exists">{{ 'Change'|trans({}, translation_domain) }}</span>
-    {% endif %}
-    {% if type == 'text' and form.vars.attr.datetimepicker is defined %}
+        {% else %}
+            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+
+                <div class="form-control" data-trigger="fileinput">
+                    <i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename">{{ label|trans({}, translation_domain) }}</span>
+                </div>
+            {% set inputGroup = true %}
+        {% endif %}
+        <span class="{% if inputGroup|default(false) %}input-group-addon {% endif %}btn btn-default btn-file">
+            <span class="fileinput-new">{{ 'Browse'|trans({}, translation_domain) }}</span>
+            <span class="fileinput-exists">{{ 'Change'|trans({}, translation_domain) }}</span>
+    {% elseif type == 'time' %}
+        {% set type = 'text' %}
+        {% if value is not empty %}{% set value = value|format_datetime('q') %}{% endif %}
+        {% set attr = attr|merge({'timepicker-container': '', 'data-mask': '99:99:99'}) %}
+    {% elseif type == 'text' and form.vars.attr.datetimepicker is defined %}
         <div class="input-group input-append date" datetimepicker-container datetimepicker-format="{{ datetime_format('js') }}" datetimepicker-format-php="{{ datetime_format('php') }}">
             <input type="text" class="form-control" readonly {% if value is not empty %}value="{{ value|format_datetime(datetime_format('php')) }}" {% endif %} placeholder="{{ label|trans({}, translation_domain) }}{% if required %} *{% endif %}" />
             <span class="input-group-addon">{{ icon('Calendar') }}</span>
         </div>
         {% set type = 'hidden' %}
     {% endif %}
+    {% if not notFormControl|default(false) %}
+        {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
+    {% endif %}
     <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty and value is not iterable %}value="{{ value }}" {% endif %} placeholder="{{ label|trans({}, translation_domain) }}{% if required %} *{% endif %}"/>
     {% if type == 'file' %}
-                </span>&nbsp;
-                <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">{{ 'Remove'|trans({}, translation_domain) }}</a>
-            </div>
+            </span>
+            <a href="#" class="{% if inputGroup|default(false) %}input-group-addon {% endif %}btn btn-default fileinput-exists" data-dismiss="fileinput">{{ 'Remove'|trans({}, translation_domain) }}</a>
         </div>
     {% endif %}
 {% endspaceless %}
@@ -105,7 +116,7 @@
     {% if widget == 'single_text' %}
         <div time>{{ block('form_widget_simple') }}</div>
     {% else %}
-        {% set vars = widget == 'text' ? { attr: { size: 1 }} : {} %}
+        {% set vars = widget == 'text' ? {attr: {size: 1}} : {} %}
         {% set vars = vars|merge({type: 'time'}) %}
         <div {{ block('widget_container_attributes') }}>
             {{ form_widget(form.hour, vars|merge({prefix: 'h'})) }}
@@ -489,7 +500,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         {{ form_widget(form.start) }}
-                        {{ form_errors(form.end) }}
+                        {{ form_errors(form.start) }}
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -577,10 +588,65 @@
 
 {% block cm_cmbundle_disctrack_row %}
 {% spaceless %}
-    <div class="well well-sm">
-        {{ form_label(form) }}
-        {{ form_widget(form) }}
-        {{ form_errors(form) }}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        {{ form_widget(form.number) }}
+                        {{ form_errors(form.number) }}
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                  <div class="form-group">
+                        {{ form_widget(form.title) }}
+                        {{ form_errors(form.title) }}
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                        {{ form_widget(form.movement) }}
+                        {{ form_errors(form.movement) }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-4 col-lg-3">
+                    <div class="form-group">
+                        {{ form_widget(form.composer) }}
+                        {{ form_errors(form.composer) }}
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-9">
+                    <div class="form-group">
+                        {{ form_widget(form.artists) }}
+                        {{ form_errors(form.artists) }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        {{ form_widget(form.duration) }}
+                        {{ form_errors(form.duration) }}
+                    </div>
+                </div>
+                <div class="col-sm-7">
+                  <div class="form-group">
+                        {{ form_widget(form.audioFile) }}
+                        {{ form_errors(form.audioFile) }}
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                        {{ form_widget(form.extract) }}
+                        {{ form_errors(form.extract) }}
+                    </div>
+                </div>
+            </div>
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+        </div>
     </div>
 {% endspaceless %}
 {% endblock %}
