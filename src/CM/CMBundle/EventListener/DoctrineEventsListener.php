@@ -63,6 +63,9 @@ class DoctrineEventsListener
         if ($object instanceof PageUser) {
             $this->groupUserPersistedRoutine($object, $em);
         }
+        if ($object instanceof Post && in_array($object->getObject(), array(Comment::className(), Like::className()))) {
+            $this->postAggregatePersistedRoutine($object, $em);
+        }
         if ($object instanceof Comment) {
             $this->commentPersistedRoutine($object, $em);
         }
@@ -180,7 +183,7 @@ class DoctrineEventsListener
         }
     }
 
-    private function entityUserPersistedRoutine(EntityUser $entityUser, EntityManager $em)
+    private function entityUserPersistedRoutine(EntityUser &$entityUser, EntityManager $em)
     {
         $entity = $entityUser->getEntity();
         $post = $entity->getPost();
@@ -229,7 +232,7 @@ class DoctrineEventsListener
         }
     }
 
-    private function entityUserRemovedRoutine(EntityUser $entityUser, EntityManager $em)
+    private function entityUserRemovedRoutine(EntityUser &$entityUser, EntityManager $em)
     {
         $entity = $entityUser->getEntity();
         $post = $entity->getPost();
@@ -240,7 +243,7 @@ class DoctrineEventsListener
         $this->get('cm.request_center')->removeRequest($user, get_class($entity), $entity->getId(), 'sent');
     }
 
-    private function groupUserPersistedRoutine(GroupUser $groupUser, EntityManager $em)
+    private function groupUserPersistedRoutine(GroupUser &$groupUser, EntityManager $em)
     {
         $group = $groupUser->getGroup();
         $post = $group->getPost();
@@ -290,7 +293,7 @@ class DoctrineEventsListener
         }
     }
 
-    private function groupUserRemovedRoutine(GroupUser $groupUser, EntityManager $em)
+    private function groupUserRemovedRoutine(GroupUser &$groupUser, EntityManager $em)
     {
         $group = $groupUser->getGroup();
         $post = $group->getPost();
@@ -300,7 +303,7 @@ class DoctrineEventsListener
         $this->get('cm.request_center')->removeRequest($user, get_class($group), $group->getId(), 'sent');
     }
 
-    private function pageUserPersistedRoutine(PageUser $pageUser, EntityManager $em)
+    private function pageUserPersistedRoutine(PageUser &$pageUser, EntityManager $em)
     {
         $page = $pageUser->getPage();
         $post = $page->getPost();
@@ -350,7 +353,7 @@ class DoctrineEventsListener
         }
     }
 
-    private function pageUserRemovedRoutine(PageUser $pageUser, EntityManager $em)
+    private function pageUserRemovedRoutine(PageUser &$pageUser, EntityManager $em)
     {
         $page = $pageUser->getPage();
         $post = $page->getPost();
@@ -359,8 +362,42 @@ class DoctrineEventsListener
 
         $this->get('cm.request_center')->removeRequest($user, get_class($page), $page->getId(), 'sent');
     }
+    
+    private function postAggregatePersistedRoutine(Post &$post, EntityManager $em)
+    {
+        $arrayPost = $em->getRepository('CMBundle:Post')->getLastPosts(array(
+            'entityId' => $post->getEntity()->getId(),
+            'object' => $post->getObject().'[]',
+            'aggregate' => true,
+            'after' => new \DateTime('-1 week'),
+            'paginate' => false,
+            'limit' => 1
+        ));
 
-    private function commentPersistedRoutine(Comment $comment, EntityManager $em)
+        if (count($arrayPost) >= 1) {
+            $arrayPost = $arrayPost[0];
+            $arrayPost->setUser($post->getUser());
+
+            $arrayPost->addObjectId($post->getObjectIds()[0]);
+            $old = 'old';
+        } else {
+            $arrayPost = $this->get('cm.post_center')->newPost(
+                $post->getCreator(),
+                $post->getUser(),
+                Post::TYPE_AGGREGATE,
+                $post->getObject().'[]',
+                array($post->getObjectIds()[0]),
+                $post->getEntity()
+            );
+            $old = 'new';
+        }
+
+        $em->persist($arrayPost);
+
+        $this->flushNeeded = true;
+    }
+
+    private function commentPersistedRoutine(Comment &$comment, EntityManager $em)
     {
         if (!is_null($comment->getPost())) {
             $post = $comment->getPost();
@@ -376,27 +413,14 @@ class DoctrineEventsListener
             $toCreator = $object->getUser();
         }
 
-
-        $lastPost = $em->getRepository('CMBundle:Post')->getLastPosts(array(
-            'entityId' => $entity->getId(),
-            'object' => get_class($comment),
-            'after' => new \DateTime('-1 week'),
-            'paginate' => false,
-            'limit' => 1
-        ));
-
-        if (count($lastPost) >= 1) {
-            $lastPost[0]->addObjectId($comment->getId());
-        } else {
-            $this->get('cm.post_center')->newPost(
-                $comment->getUser(),
-                $comment->getUser(),
-                Post::TYPE_CREATION,
-                get_class($comment),
-                array($comment->getId()),
-                $entity
-            );
-        }
+        $this->get('cm.post_center')->newPost(
+            $comment->getUser(),
+            $comment->getUser(),
+            Post::TYPE_CREATION,
+            get_class($comment),
+            array($comment->getId()),
+            $entity
+        );
 
         $notifiedUserIds = array($comment->getUser()->getID());
 
@@ -439,7 +463,7 @@ class DoctrineEventsListener
         }
     }
 
-    private function commentRemovedRoutine(Comment $comment, EntityManager $em)
+    private function commentRemovedRoutine(Comment &$comment, EntityManager $em)
     {
         $post = $em->getRepository('CMBundle:Post')->getLastPosts(array(
             'object' => get_class($comment),
@@ -459,7 +483,7 @@ class DoctrineEventsListener
         $this->get('cm.notification_center')->removeNotifications($comment->getUser()->getId(), get_class($comment), $comment->getId(), Notification::TYPE_COMMENT);
     }
 
-    private function likePersistedRoutine(Like $like, EntityManager $em)
+    private function likePersistedRoutine(Like &$like, EntityManager $em)
     {
         if (!is_null($like->getPost())) {
             $post = $like->getPost();
@@ -518,7 +542,7 @@ class DoctrineEventsListener
         }
     }
 
-    private function likeRemovedRoutine(Like $like, EntityManager $em)
+    private function likeRemovedRoutine(Like &$like, EntityManager $em)
     {
         $post = $em->getRepository('CMBundle:Post')->getLastPosts(array(
             'like' => true,
@@ -539,7 +563,7 @@ class DoctrineEventsListener
         $this->get('cm.notification_center')->removeNotifications($like->getUser()->getId(), get_class($like), $like->getId(), Notification::TYPE_LIKE);
     }
 
-    private function biographyUpdatedRoutine(Biography $biography, EntityManager $em)
+    private function biographyUpdatedRoutine(Biography &$biography, EntityManager $em)
     {
         $post = $biography->getLastPost();
 
@@ -561,7 +585,7 @@ class DoctrineEventsListener
         $this->flushNeeded = true;
     }
 
-    private function biographyRemovedRoutine(Biography $biography, EntityManager $em)
+    private function biographyRemovedRoutine(Biography &$biography, EntityManager $em)
     {
         $this->get('cm.post_center')->removePost(
             $this->getUser(),
@@ -571,7 +595,7 @@ class DoctrineEventsListener
         );
     }
 
-    private function fanPersistedRoutine(Fan $fan, EntityManager $em)
+    private function fanPersistedRoutine(Fan &$fan, EntityManager $em)
     {
         if (!is_null($fan->getUser())) {
             $postType = Post::TYPE_FAN_USER;
@@ -619,7 +643,7 @@ class DoctrineEventsListener
         }
     }
 
-    private function fanRemovedRoutine(Fan $fan, EntityManager $em)
+    private function fanRemovedRoutine(Fan &$fan, EntityManager $em)
     {
         if (!is_null($fan->getUser())) {
             $postType = Post::TYPE_FAN_USER;
@@ -646,7 +670,7 @@ class DoctrineEventsListener
         $this->get('cm.notification_center')->removeNotifications($fan->getFromUser()->getId(), get_class($fan), $fan->getId(), Notification::TYPE_FAN);
     }
 
-    private function imagePersistedRoutine(Image $image, EntityManager $em)
+    private function imagePersistedRoutine(Image &$image, EntityManager $em)
     {
         $entity = $image->getEntity();
         $user = $image->getUser();
@@ -684,7 +708,7 @@ class DoctrineEventsListener
         $this->flushNeeded = true;
     }
 
-    public function imageAlbumUpdatedRoutine(ImageAlbum $album, EntityManager $em)
+    public function imageAlbumUpdatedRoutine(ImageAlbum &$album, EntityManager $em)
     {
         $post = $em->getRepository('CMBundle:Post')->getLastPosts(array(
             'entityId' => $album->getId(),
@@ -711,7 +735,7 @@ class DoctrineEventsListener
         $this->flushNeeded = true;
     }
 
-    private function imgPersistedRoutine($publisher, EntityManager $em)
+    private function imgPersistedRoutine(&$publisher, EntityManager $em)
     {
         $uow = $em->getUnitOfWork();
 
@@ -769,7 +793,7 @@ class DoctrineEventsListener
         $this->flushNeeded = true;
     }
 
-    private function imgUpdatedRoutine($publisher, EntityManager $em)
+    private function imgUpdatedRoutine(&$publisher, EntityManager $em)
     {
         $uow = $em->getUnitOfWork();
      
@@ -865,7 +889,7 @@ class DoctrineEventsListener
         }
     }
 
-    private function imgRemovedRoutine($publisher, EntityManager $em)
+    private function imgRemovedRoutine(&$publisher, EntityManager $em)
     {
         $this->get('cm.post_center')->removePost(
             $this->getUser(),
@@ -875,7 +899,7 @@ class DoctrineEventsListener
         );
     }
 
-    private function relationOutPersistedRoutine(Relation $relation, EntityManager $em)
+    private function relationOutPersistedRoutine(Relation &$relation, EntityManager $em)
     {
         $inverse = new Relation;
         $inverse->setUser($relation->getFromUser())
@@ -889,7 +913,7 @@ class DoctrineEventsListener
         $this->flushNeeded = true;
     }
 
-    private function relationInPersistedRoutine(Relation $relation, EntityManager $em)
+    private function relationInPersistedRoutine(Relation &$relation, EntityManager $em)
     {
         $this->get('cm.request_center')->newRequest(
             $relation->getFromUser(),
@@ -899,7 +923,7 @@ class DoctrineEventsListener
         );
     }
 
-    private function relationUpdatedRoutine(Relation $relation, EntityManager $em)
+    private function relationUpdatedRoutine(Relation &$relation, EntityManager $em)
     {
         $post = $this->get('cm.post_center')->newPost(
             $relation->getUser(),
@@ -931,7 +955,7 @@ class DoctrineEventsListener
         );
     }
 
-    private function relationRemovedRoutine(Relation $relation, EntityManager $em)
+    private function relationRemovedRoutine(Relation &$relation, EntityManager $em)
     {
         $em->getRepository('CMBundle:Request')->delete($relation->getFromUserId(), array(
             'object' => $relation->className(),
@@ -966,7 +990,7 @@ class DoctrineEventsListener
         );
     }
 
-    private function entityMultimediaPersistedRoutine(Multimedia $multimedia, EntityManager $em)
+    private function entityMultimediaPersistedRoutine(Multimedia &$multimedia, EntityManager $em)
     {
         $post = $this->get('cm.post_center')->getNewPost(
             is_null($this->get('security.context')->getToken()) ? $multimedia->getEntity()->getPost()->getCreator() : $this->getUser(),
@@ -978,7 +1002,7 @@ class DoctrineEventsListener
         );
     }
 
-    private function entityMultimediaRemovedRoutine(Multimedia $multimedia, EntityManager $em)
+    private function entityMultimediaRemovedRoutine(Multimedia &$multimedia, EntityManager $em)
     {
         try {
             $this->get('cm.post_center')->removePost(

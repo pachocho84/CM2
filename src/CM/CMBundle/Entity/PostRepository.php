@@ -23,6 +23,9 @@ class PostRepository extends BaseRepository
             'entityId' => null,
             'like' => false,
             'object' => null,
+            'objectId' => null,
+            'objects' => array(),
+            'aggregate' => null,
             'after' => null,
             'userId' => null,
             'pageId' => null,
@@ -37,7 +40,6 @@ class PostRepository extends BaseRepository
             'locales' => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate' => true,
             'limit' => null,
-            'objects' => array()
         ), $options);
     }
 
@@ -129,6 +131,19 @@ class PostRepository extends BaseRepository
             $count->andWhere('p.objectIds LIKE :object_id')->setParameter('object_id', '%,'.$options['objectId'].',%');
             $query->andWhere('p.objectIds LIKE :object_id')->setParameter('object_id', '%,'.$options['objectId'].',%');
         }
+
+
+
+        if (is_null($options['aggregate'])) {
+            $count->andWhere('p.object not in (:object_aggregate)')->setParameter('object_aggregate', array(Comment::className(), Like::className()));
+            $query->andWhere('p.object not in (:object_aggregate)')->setParameter('object_aggregate', array(Comment::className(), Like::className()));
+        } elseif (!$options['aggregate'])  {
+            $count->andWhere('p.type != '.Post::TYPE_AGGREGATE);
+            $query->andWhere('p.type != '.Post::TYPE_AGGREGATE);
+        }
+
+
+
         if (!is_null($options['after'])) {
             $count->andWhere('p.updatedAt > :after')->setParameter('after', $options['after']);
             $query->andWhere('p.updatedAt > :after')->setParameter('after', $options['after']);

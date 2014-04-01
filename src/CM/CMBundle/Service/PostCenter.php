@@ -39,16 +39,16 @@ class PostCenter
     {
         $post = new Post;
         $post->setCreator($creator)
-        	->setUser($user);
+            ->setUser($user);
         if (!is_null($type)) {
-        	$post->setType($type);
+            $post->setType($type);
         }
         if (!is_null($entity)) {
             $post->setEntity($entity);
         }
         if (!is_null($object)) {
-        	$post->setObject($object)
-        		->setObjectIds($objectIds);
+            $post->setObject($object)
+                ->setObjectIds($objectIds);
         }
         if (!is_null($page)) {
             $post->setPage($page);

@@ -154,7 +154,7 @@ class FanController extends Controller
      * @Route("/fan/unbecome/{object}/{fanId}", name="fan_unbecome", requirements={"fanId" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      */
-    public function unbecomeFanAction(Request $request, $object, $fanId)
+    public function unbecomeFanAction(Request $request, $object, $fanId, $reqText = null)
     {
         $fanId = intval($fanId);
 
@@ -174,16 +174,19 @@ class FanController extends Controller
 
         $em->remove($fan);
         $em->flush();
+
+        $reqText = is_null($reqText) ? $request->get('reqText') : $reqText;
         
         // if ($request->isXmlHttpRequest()) {
         return new Response($this->renderView('CMBundle:Fan:button.html.twig', array(
             'userId' => $fanId,
             'object' => $object,
             'imFan' => false,
+            'reqText' => $reqText
         )));
         // }
         
-        return new Response($this->renderView('CMBundle:Fan:button.html.twig', array('userId' => $fanId, 'imFan' => false)));
+        return new Response($this->renderView('CMBundle:Fan:button.html.twig', array('userId' => $fanId, 'imFan' => false, 'reqText' => $reqText)));
 
 
         // $this->getUser()->setFlash('success', $this->getContext()->getI18N()->__('You are not fan anymore.'));

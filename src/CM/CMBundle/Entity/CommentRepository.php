@@ -20,4 +20,15 @@ class CommentRepository extends BaseRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getComments(array $ids)
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c, u')
+            ->join('c.user', 'u')
+            ->where('c.id in (:ids)')->setParameter('ids', $ids)
+            ->orderBy('c.id', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -31,5 +31,16 @@ class LikeRepository extends BaseRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getLikes(array $ids)
+    {
+        return $this->createQueryBuilder('l')
+            ->select('l, u')
+            ->join('l.user', 'u')
+            ->where('l.id in (:ids)')->setParameter('ids', $ids)
+            ->orderBy('l.id', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
 }
     

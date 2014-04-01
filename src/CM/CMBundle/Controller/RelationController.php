@@ -81,6 +81,8 @@ class RelationController extends Controller
                     }
                 }
             }
+        } else {
+            $reqText = '';
         }
 
         if ($acceptedRelations > 1) {
