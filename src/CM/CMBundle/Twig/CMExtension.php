@@ -568,13 +568,37 @@ class CMExtension extends \Twig_Extension
         $userBox = $this->getPublisherBox($post->getPublisher());
         switch ($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Comment_'.Post::TYPE_CREATION:
+            case 'Comment[]_'.Post::TYPE_AGGREGATE:
                 $likeOrComment = 'commented on';
             case 'Like_'.Post::TYPE_CREATION:
+            case 'Like[]_'.Post::TYPE_AGGREGATE:
                 if ($this->getClassName($post->getObject()).'_'.$post->getType() == 'Like_'.Post::TYPE_CREATION) {
                     $likeOrComment = 'likes';
                 }
+                if ($post->getType() == Post::TYPE_AGGREGATE && count($relatedObjects) > 1) {
+                    $userIds = array();
+                    foreach ($relatedObjects as $i => $object) {
+                        if (in_array($object->getUser(), $users)) continue;
+                        $users[] = $object->getUser();
+                        if (count($args) < 2) {
+                            $args['%user'.(count($args) + 1).'%'] = '<a href="'.$this->router->generate('user_show', array('slug' => $object->getUser()->getSlug())).'" '.$this->getPublisherBox($object->getUser()).'>'.$object->getUser().'</a>';
+                        }
+                    }
+                    if (count($userIds) > 2) {
+                        $args['%count%'] = '<span'.$this->getTooltip(array_slice($users, 2)).'>'.(count($users) - 2).'</>';
+                    }
+                    $user = $this->translator->transChoice('{1}%user1%|{2}%user1% and %user2%|[3,Inf]%user1%, %user2% and other %count%', count($users), $args);
+                    $likeOrComment = 'like'.($args['%count%'] > 1 ? '' : 's');
+                } else {
+                    $user = '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>';
+                }
                 $publisherLink = $this->router->generate($post->getEntity()->getPost()->getPublisherType().'_show', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
                 $publisherBox = $this->getPublisherBox($post->getEntity()->getPost()->getPublisher());
+                if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
+                    $publisher = $this->translator->trans($post->getPublisherSex('his'));
+                } else {
+                    $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
+                }
                 if (is_null($post->getEntity())) {
                     return $this->getClassName($post->getObject()).'_'.$post->getType().' no entity';
                 } elseif ($post->getEntity() instanceof Biography) {
@@ -584,83 +608,34 @@ class CMExtension extends \Twig_Extension
                         $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
                     }
                     $objectLink = $this->router->generate($post->getPublisherType().'_biography', array('slug' => $post->getEntity()->getPost()->getPublisher()->getSlug()));
-                    return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %biographyLinkStart%Biography%biographyLinkEnd%.', array(
-                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                    return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %biographyLinkStart%biography%biographyLinkEnd%.', array(
+                        '%user%' => $user,
                         '%publisher%' => $publisher,
                         '%biographyLinkStart%' => '<a href="'.$objectLink.'">', '%biographyLinkEnd%' => '</a>'
                     ));
                 } elseif ($post->getEntity() instanceof Event) {
                     $objectLink = $this->router->generate('event_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                    if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
-                        $publisher = $this->translator->trans($post->getPublisherSex('his'));
-                    } else {
-                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
-                    }
-                    return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
-                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                        '%publisher%' => $publisher,
-                        '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
-                    ));
                 } elseif ($post->getEntity() instanceof Disc) {
                     $objectLink = $this->router->generate('disc_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                    if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
-                        $publisher = $this->translator->trans($post->getPublisherSex('his'));
-                    } else {
-                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
-                    }
-                    return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
-                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                        '%publisher%' => $publisher,
-                        '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
-                    ));
                 } elseif ($post->getEntity() instanceof ImageAlbum) {
                     $objectLink = $this->router->generate($post->getPublisherType().'_album', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
-                    if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
-                        $publisher = $this->translator->trans($post->getPublisherSex('his'));
-                    } else {
-                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
-                    }
-                    return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
-                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                        '%publisher%' => $publisher,
-                        '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
-                    ));
                 } elseif ($post->getEntity() instanceof Multimedia) {
                     $objectLink = $this->router->generate('multimedia_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getEntity()->getSlug()));
-                    if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
-                        $publisher = $this->translator->trans($post->getPublisherSex('his'));
-                    } else {
-                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
-                    }
-                    return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
-                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                        '%publisher%' => $publisher,
-                        '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
-                    ));
                 } elseif ($post->getEntity() instanceof Article) {
                     $objectLink = $this->router->generate('article_show', array('id' => $post->getEntity()->getId(), 'slug' => $post->getPublisher()->getSlug()));
-                    if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
-                        $publisher = $this->translator->trans($post->getPublisherSex('his'));
-                    } else {
-                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
-                    }
-                    return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
-                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                        '%publisher%' => $publisher,
-                        '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
-                    ));
                 } elseif (!is_null($relatedObjects->getImageId())) {
                     $objectLink = $this->router->generate($post->getPublisherType().'_image', array('id' => $relatedObjects->getImageId(), 'slug' => $post->getPublisher()->getSlug()));
-                    if ($this->securityContext->isGranted('ROLE_USER') && $this->securityContext->getToken()->getUser() == $post->getPublisher()) {
-                        $publisher = $this->translator->trans($post->getPublisherSex('his'));
-                    } else {
-                        $publisher = $this->translator->trans('%publisher%\'s', array('%publisher%' => '<a href="'.$publisherLink.'" '.$publisherBox.'>'.$post->getEntity()->getPost()->getPublisher().'</a>'));
-                    }
+
                     return $this->translator->trans('%user% '.$likeOrComment.' %objectLinkStart%a photo%objectLinkEnd%.', array(
-                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                        '%user%' => $user,
                         '%objectLinkStart%' => '<a href="'.$objectLink.'">', '%objectLinkEnd%' => '</a>'
                     ));
                 }
+                return $this->translator->trans('%user% '.$likeOrComment.' %publisher% %object%.', array(
+                    '%user%' => $user,
+                    '%publisher%' => $publisher,
+                    '%object%' => '<a href="'.$objectLink.'">'.$post->getEntity().'</a>'
+                ));
                 break;
             case 'Image_'.Post::TYPE_CREATION:
             case 'Image_'.Post::TYPE_UPDATE:
@@ -975,9 +950,11 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-book"></span>';
             case 'Like':
             case 'Like_'.Post::TYPE_CREATION:
+            case 'Like[]_'.Post::TYPE_AGGREGATE:
                 return '<span class="glyphicon glyphicon-thumbs-up"></span>';
             case 'Comment':
             case 'Comment_'.Post::TYPE_CREATION:
+            case 'Comment[]_'.Post::TYPE_AGGREGATE:
                 return '<span class="glyphicon glyphicon-comment"></span>';
             case 'Comments':
                 return '<span class="glyphicons conversation"></span>';

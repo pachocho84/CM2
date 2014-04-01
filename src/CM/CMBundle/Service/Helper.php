@@ -29,12 +29,16 @@ class Helper
 
     public static function className($object)
     {
+        if (substr($object, -2, 2) == '[]') {
+            $object = substr($object, 0, -2);
+            $aggregate = true;
+        }
         try {
             $name = new \ReflectionClass(is_string($object) ? $object : get_class($object));
         } catch (\Exception $e) {
-            throw new \Exception($object);
+            throw new \Exception($object.' is not a known class.');
         }
-        return $name->getShortName();
+        return $name->getShortName().($aggregate ? '[]' : '');
     }
 
     public static function fullClassName($shortName)
@@ -79,34 +83,14 @@ class Helper
                 return $this->em->getRepository('CMBundle:Image')->getImagesByIds($objectId, array('limit' => 6));
             case 'Comment':
                 return $this->em->getRepository('CMBundle:Comment')->findOneById($objectId);
+            case 'Comment[]':
+                return $this->em->getRepository('CMBundle:Comment')->getComments(array_slice($objectId, -4, 4));
             case 'Like':
                 return $this->em->getRepository('CMBundle:Like')->findOneById($objectId);
+            case 'Like[]':
+                return $this->em->getRepository('CMBundle:Like')->getLikes(array_slice($objectId, -4, 4));
             case 'Fan':
                 return $this->em->getRepository('CMBundle:Fan')->getFans($objectId);
-            case 'User':
-            case 'Group':
-                return null;
-            case 'image':
-                // return is_array($object_id) ? ImageQuery::create()->filterById($object_id)->orderByCreatedAt('desc')->find() : ImageQuery::create()->filterById($object_id)->findOne();
-            case 'link':
-                // return PostQuery::create()->joinWithEntity()->useEntityQuery()->joinWithLink()->endUse()->findOneById($object_id);
-            case 'user':
-                // return is_array($object_id) ? UserQuery::create()->filterById($object_id)->find() : UserQuery::create()->filterById($object_id)->findOne();
-            case 'page':
-                // return is_array($object_id) ? PageQuery::create()->filterById($object_id)->find() : PageQuery::create()->filterById($object_id)->findOne();
-            case 'group':
-                // return is_array($object_id) ? GroupQuery::create()->filterById($object_id)->find() : GroupQuery::create()->filterById($object_id)->findOne();
-            case 'education':
-                // return is_array($object_id) ? EducationQuery::create()->filterById($object_id)->orderByDateTo('desc')->find() : EducationQuery::create()->filterById($object_id)->findOne();
-            case 'job':
-                // return is_array($object_id) ? JobQuery::create()->filterById($object_id)->orderByDateTo('desc')->find() : JobQuery::create()->filterById($object_id)->findOne();
-            case 'education_masterclass':
-                // return is_array($object_id) ? EducationMasterclassQuery::create()->filterById($object_id)->orderByDateTo('desc')->find() : EducationMasterclassQuery::create()->filterById($object_id)->findOne();
-            case 'Entity':
-            case 'Event':
-            case 'ImageAlbum':
-            case 'Disc':
-            case 'Article':
             default:
                 return null;
         }

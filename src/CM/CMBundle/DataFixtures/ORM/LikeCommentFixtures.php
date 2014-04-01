@@ -27,6 +27,7 @@ class LikeCommentFixtures extends AbstractFixture implements OrderedFixtureInter
                 $post->addLike($like);
 
                 $manager->persist($like);
+                $manager->flush();
             }
 
             for ($j = 1; $j < rand(1, 11); $j++) {
@@ -38,9 +39,6 @@ class LikeCommentFixtures extends AbstractFixture implements OrderedFixtureInter
                 $post->addComment($comment);
 
                 $manager->persist($comment);
-            }
-                
-            if ($i % 10 == 0) {
                 $manager->flush();
             }
         }

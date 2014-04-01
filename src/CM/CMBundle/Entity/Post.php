@@ -25,6 +25,7 @@ class Post
     const TYPE_FAN_GROUP = 4;
     const TYPE_FAN_PAGE = 5;
     const TYPE_EDUCATION = 6;
+    const TYPE_AGGREGATE = 7;
 
     /**
      * @var integer

@@ -19,7 +19,7 @@
     
     {% if is_granted('ROLE_USER') and user.id != app.user.id %}
         {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
-        {{ render(controller('CMBundle:Relation:button', {user: user})) }}
-        <a href="{{ path('message_new', {userId: user.id}) }}" class="btn btn-default">{{ icon('Message') }}</a>
+        {{ render(controller('CMBundle:Relation:button', {user: user, reqText: null})) }}
+        <a href="{{ path('message_new', {userId: user.id}) }}" class="btn btn-default"></a>
     {% endif %}
 </div>

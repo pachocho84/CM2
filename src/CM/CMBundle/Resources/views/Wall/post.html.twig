@@ -47,8 +47,15 @@
         {% endif %}
         
         
-        
-        {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
+        {% if post.type == constant('CM\\CMBundle\\Entity\\Post::TYPE_AGGREGATE') %}
+            {% for comment in relatedObjects %}
+                {{ comment.id }}
+            {% else %}
+                {{ dump(relatedObjects) }}
+            {% endfor %}
+        {% else  %}
+            {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
+        {% endif %}
         
     </div>
     
@@ -56,7 +63,8 @@
     
     {% if not inEntity %}
         <div class="box-footer">
-            {% if (post.object|class_name == 'Like' or post.object|class_name == 'Comment') and relatedObjects.imageId is not null %}
+            {% if post.type == constant('CM\\CMBundle\\Entity\\Post::TYPE_AGGREGATE') %}
+            {% elseif (post.object|class_name == 'Like' or post.object|class_name == 'Comment') and relatedObjects.imageId is not null %}
                 {{ include('CMBundle::social.html.twig', {post: relatedObjects.image, isImage: true}) }}
             {% elseif (post.object|class_name == 'Like' or post.object|class_name == 'Comment') %}
                 {{ include('CMBundle::social.html.twig', {post: relatedObjects.post}) }}
