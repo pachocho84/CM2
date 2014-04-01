@@ -1015,11 +1015,15 @@ form textarea[expandable] {
     max-width: 100%;
 }
 .popover-publisher .popover-profile {
-    margin: 0 auto -50px;
-    top: -50px;
+    width: 100px;
+    margin: 0 auto -45px;
+    top: -45px;
     position: relative;
     padding: 4px;
     border: 1px solid #bbbbbb;
     background: #ffffff;
-    width: 110px;
+}
+.popover-publisher-biography {
+    font-size: 12px;
+    font-weight: 300;
 }
