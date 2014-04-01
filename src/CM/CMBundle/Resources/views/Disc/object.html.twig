@@ -6,7 +6,7 @@
 
                 <div class="col-lg-4 disc-content">
                     {% if disc.getImages|length > 0 %}
-                        <img src='{{ asset(uploaded_images_full_dir ~ '/' ~ disc.image.img) }}' width="200px" />
+                        <img src='{{ disc.image|default_img|imagine_filter('medium') }}' width="200px" />
                     {% endif %}
                 </div>
 

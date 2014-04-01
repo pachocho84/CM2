@@ -3,12 +3,13 @@
         {% if loop.index0 > 0 and loop.index0 % 5 == 0 %}</div><div class="discs-row clearfix">{% endif %}
         
         <div class="disc">
-            {% if disc.getImages|length > 0 %}
-                <a href="{{ path('disc_show', { 'id': disc.id, 'slug': disc.getSlug }) }}" class="pull-left img-thumbnail disc-cover">
-                    <img src='{{ asset(disc.images[0].img|imagine_filter('medium')) }}' width="200px" />
+            {% if disc.image is not null %}
+                <a href="{{ path('event_show', { id: disc.id, slug: disc.getSlug }) }}" class="pull-left img-thumbnail disc-cover">
+                    {{disc.image|default_img}}
                 </a>
             {% endif %}
-            <h4><a href="{{ path('disc_show', { 'id': disc.id, 'slug': disc.getSlug }) }}">{{ disc.getTitle }}</a></h4>
+
+            <h4><a href="{{ path('disc_show', {id: disc.id, slug: disc.getSlug }) }}">{{ disc.getTitle }}</a></h4>
         </div>
         
     {% endfor %}
@@ -16,6 +17,6 @@
 
 {% if discs.paginationData.current < discs.paginationData.last %}
     <div class="well well-small load_more">
-        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': discs.getPaginationData.next })) }}">{{ 'Load more' | trans }}</a>
+        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({page: discs.getPaginationData.next })) }}">{{ 'Load more'|trans }}</a>
     </div>
 {% endif %}

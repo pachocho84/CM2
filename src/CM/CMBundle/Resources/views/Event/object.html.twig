@@ -1,9 +1,10 @@
 <li class="object">
     <div class="media">
         
-        {% if date.getEvent.getImages|length > 0 %}
+        {% if date.event.image is not null %}
             <a href="{{ path('event_show', { id: date.event.id, slug: date.event.getSlug }) }}" class="pull-left img-thumbnail">
-                {{ show_img_box(date.event.image|default_img|imagine_filter('medium'), {width: 200, height: 133, offset: date.event.imgOffset}) }}
+                {{ show_img_box('grigolo_ave_maria.jpg'|imagine_filter('medium'), {width: 200, height: 133, offset: date.event.imgOffset}) }}
+                {{date.event.image|default_img}}
             </a>
         {% endif %}
     

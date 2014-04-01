@@ -213,8 +213,8 @@ Angelo Formenti',
                     'audio'         => 'formisano_evening_3.mp3'
                 ),
             ),
-            'text'  => 'formisano_evening.jpg',
-            'img'   => '',
+            'text'  => '',
+            'img'   => 'formisano_evening.jpg',
             'user'  => 11
         ),
         array('title' => 'Live in Luzern',
@@ -237,7 +237,7 @@ Angelo Formenti',
                     'title'         => 'Sonate op. 15 "La flute de Pan"',
                     'movement'      => '',
                     'artists'       => 'Davide Formisano',
-                    'duration'      => '0:15:2'
+                    'duration'      => '0:15:02'
                 ),
             ),
             'text'  => '',
@@ -252,7 +252,7 @@ Angelo Formenti',
                     'title'         => 'Trio in mi minore op. 67',
                     'movement'      => '1',
                     'artists'       => 'Francesca Manara violino, Massimo Polidori violoncello, Claudio Voghera pianoforte, Fabrizio Meloni clarinetto',
-                    'duration'      => '0:7:29:'
+                    'duration'      => '0:07:29'
                 ),
                 array('composer'    => 'Dimitrij Sostakovic',
                     'title'         => 'Trio in mi minore op. 67',
@@ -322,7 +322,7 @@ Angelo Formenti',
                 ),
             ),
             'text'  => '',
-            'img'   => '',
+            'img'   => 'fiati_opera.jpg',
             'user'  => 1
         ),
     );
@@ -363,8 +363,8 @@ Angelo Formenti',
                 ->setMovement(DiscFixtures::$discs[$i]['discTracks'][$j]['movement'])
                 ->setArtists(DiscFixtures::$discs[$i]['discTracks'][$j]['artists'])
                 ->setDuration(new \DateTime(DiscFixtures::$discs[$i]['discTracks'][$j]['duration']));
-            if (isset($disc[$i]['discTracks'][$j]['audio'])) {
-                $discTrack->setAudio($disc[$i]['discTracks'][$j]['audio']);
+            if (isset(DiscFixtures::$discs[$i]['discTracks'][$j]['audio'])) {
+                $discTrack->setAudio(DiscFixtures::$discs[$i]['discTracks'][$j]['audio']);
             }
 
             $disc->addDiscTrack($discTrack);
