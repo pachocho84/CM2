@@ -1032,17 +1032,45 @@ form textarea[expandable] {
 
 /* Disc Detail */
 @media (min-width:1512px) {
-    .disc .disc-cover {
+    .disc .disc-cover > a {
         height: 146px;
         width: 146px;
     }
 }
-.disc .disc-cover {
-    vertical-align: bottom;
+.disc {
+    margin-bottom: 15px;
 }
-.disc img {
+.disc .disc-cover {
+    margin-bottom: 5px;
+}
+.disc .disc-cover > a {
+    position: relative;
+    display: block;
+}
+.disc .disc-cover > a > img {
     border: 1px solid #bbbbbb;
+    bottom: 0px;
     max-height: 146px;
+    max-width: 146px;
+    position: absolute;
+}
+.disc h4,
+.disc h5 {
+    font-size: 13px;
+    height: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+}
+.disc h4 {
+    font-weight: bold;
+}
+.disc h4 a {
+    color: #333333;
+}
+.disc h5 a {
+    color: #999999;
 }
 .discs-row .disc a.disc-cover > img {
     -webkit-transition:all 0.2s ease-in-out;-moz-transition:all 0.2s ease-in-out;-o-transition:all 0.2s ease-in-out;transition:all 0.2s ease-in-out;

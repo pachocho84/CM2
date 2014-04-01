@@ -12,6 +12,7 @@
             </div>
 
             <h4><a href="{{ path('disc_show', {id: disc.id, slug: disc.getSlug }) }}">{{ disc.getTitle }}</a></h4>
+            <h5><a {{ publisher_box(disc.post.publisher) }} href="{{ path(disc.post.publisherType ~ '_show', {slug: disc.post.publisher.slug}) }}">{{ disc.post.publisher }}</a></h5>
         </div>
         
     {% endfor %}
