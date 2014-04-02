@@ -1067,7 +1067,6 @@ form textarea[expandable] {
     height: 180px;
     margin:10px;
     float: left;
-    overflow: hidden;
 }
 .disc .disc-cover {
     margin-bottom: 5px;
@@ -1075,15 +1074,15 @@ form textarea[expandable] {
 .disc .disc-cover > a {
     position: relative;
     display: block;
-        height: 140px;
-        width: 140px;
+    height: 140px;
+    width: 100%;
 }
 .disc .disc-cover > a > img {
     border: 1px solid #bbbbbb;
     bottom: 0px;
     position: absolute;
-        max-height: 140px;
-        max-width: 140px;
+    max-height: 100%;
+    max-width: 100%;
 }
 @media (min-width:1512px) {
     .disc {
@@ -1091,11 +1090,6 @@ form textarea[expandable] {
     }
     .disc .disc-cover > a {
         height: 146px;
-        width: 146px;
-    }
-    .disc .disc-cover > a > img {
-        max-height: 146px;
-        max-width: 146px;
     }
 }
 .disc h3,
@@ -1116,29 +1110,32 @@ form textarea[expandable] {
 .disc h4 a {
     color: #999999;
 }
-.discs-row .disc a.disc-cover > img {
+.disc-content .box {
+    margin: 10px 0;
+}
+.disc .disc-cover,
+.disc .disc-cover > a,
+.disc .disc-cover > a > img {
     -webkit-transition:all 0.2s ease-in-out;
        -moz-transition:all 0.2s ease-in-out;
          -o-transition:all 0.2s ease-in-out;
             transition:all 0.2s ease-in-out;
 }
-.disc.active {
-
-}
 .disc.active:before {
     position: absolute;
-    bottom: -6px;
+    bottom: -21px;
     left: 50%;
     margin-left: -10px;
     display: block;
     content: '';
-    border-color: transparent transparent #dddddd;
+    border-color: transparent transparent #bbbbbb;
     border-style: solid;
     border-width: 10px;
+    z-index: 999;
 }
 .disc.active:after {
     position: absolute;
-    bottom: -6px;
+    bottom: -21px;
     left: 50%;
     margin-left: -9px;
     display: block;
@@ -1146,81 +1143,22 @@ form textarea[expandable] {
     border-color: transparent transparent #ffffff;
     border-style: solid;
     border-width: 9px;
+    z-index: 999;
 }
-.disc.active a.disc-cover {
-    width: 118px;
-    height: 118px;
-    left: -10px;
-    top: -20px;
+.disc.active .disc-cover {
+    margin: -10px -10px 10px;
 }
-.disc.active a.disc-cover > img {
-    max-width: 118px;
-    max-height: 118px;
+.disc.active .disc-cover > a {
+    height: 160px;
+}
+@media (min-width:1512px) {
+    .disc.active .disc-cover > a {
+        height: 166px;
+    }
 }
 .disc.active h4 {
     display: none;
 }
-.disc-detail {
-    padding: 14px;
-    margin-bottom: 20px;
-    background: #f7f7f7;
-    border-top: 1px solid #bbbbbb;
-    border-bottom: 1px solid #bbbbbb;
-    -webkit-box-shadow: inset 0 7px 15px rgba(0, 0, 0, 0.065), inset 0 -7px 15px rgba(0, 0, 0, 0.065);
-       -moz-box-shadow: inset 0 7px 15px rgba(0, 0, 0, 0.065), inset 0 -7px 15px rgba(0, 0, 0, 0.065);
-            box-shadow: inset 0 7px 15px rgba(0, 0, 0, 0.065), inset 0 -7px 15px rgba(0, 0, 0, 0.065);
-    box-shadow: none;
-    background: #ffffff;
-    border: 1px solid #bbbbbb;
+.disc-content .box {
+    margin-bottom: 0;
 }
-.disc-detail .disc-image .thumbnail {
-    background: #ffffff;
-}
-@media (min-width:1200px) {
-    .discs-row .disc {
-        width: 125px;
-        margin: 20px 10px 0px;
-    }
-    .discs-row .disc a.disc-cover {
-        width: 123px;
-        height: 123px;
-    }
-    .discs-row .disc a.disc-cover > img {
-        max-width: 123px;
-        max-height: 123px;
-    }
-    .discs-row .disc.active a.disc-cover {
-        width: 143px;
-        height: 143px;
-        left: -10px;
-        top: -20px;
-    }
-    .discs-row .disc.active a.disc-cover > img {
-        max-width: 143px;
-        max-height: 143px;
-    }
-}
-.disc-detail-nodge {
-    position: absolute;
-}
-.disc-detail-nodge:before {
-  position: absolute;
-  top: -12px;
-  left: 0px;
-  display: inline-block;
-  border-right: 13px solid transparent;
-  border-bottom: 13px solid #bbbbbb;
-  border-left: 13px solid transparent;
-  content: '';
-}
-.disc-detail-nodge:after {
-  position: absolute;
-  top: -11px;
-  left: 1px;
-  display: inline-block;
-  border-right: 12px solid transparent;
-  border-bottom: 12px solid #e8e8e8;
-  border-bottom: 12px solid #ffffff;
-  border-left: 12px solid transparent;
-  content: '';
-}  
