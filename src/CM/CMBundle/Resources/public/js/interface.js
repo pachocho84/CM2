@@ -253,8 +253,6 @@ $(function() {
             return;
         }
 
-        $disc.addClass('active');
-
         var $lastInRow = null;
         $.each($disc.nextAll('.disc').addBack(), function(i, elem) {
             $lastInRow = $(elem);
@@ -263,13 +261,12 @@ $(function() {
                 return false;
             }
         });
-        console.log($lastInRow);
 
         $.get($(event.currentTarget).find('a').attr('href'), function(data) {
             var $data = $(data);
             $lastInRow.after($data.hide());
-            $data.slideDown();
-
+            $data.slideDown(250);
+            $disc.addClass('active');
         });
     });
 
