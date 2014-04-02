@@ -67,40 +67,40 @@ $(function() {
     UserActive.begin();
 
     /* PUBLISHER POPOVER */
-    $('[popover-publisher]').popover({
-        selector: '[popover-publisher]',
-        trigger: 'manual',
-        placement: 'auto top',
-        delay: {show: 1000, hide: 250},
-        container: 'body',
-        html: true,
-        content: function() {
-            var content;
-            $.ajax({
-                url: $(this).attr('data-href'),
-                async: false
-            }).done(function(data) {
-                content = data;
-            });
-            return content;
-        }
-    }).on('mouseenter', function(event) {
-        setTimeout(function() {
-            if ($(event.currentTarget).is(':hover')) {
-                $(event.currentTarget).popover('show');
-                $('.popover').addClass('popover-publisher').on('mouseleave', function () {
-                    $(event.currentTarget).popover('hide');
-                });
-            }
-        }, 1000);
-    }).on('mouseleave', function(event) {
-        console.log(event);
-        setTimeout(function() {
-            if (!$(event.currentTarget).is(':hover') && !$('.popover').is(':hover')) {
-                $(event.currentTarget).popover('hide')
-            }
-        }, 250);
-    });
+    // $('[popover-publisher]').popover({
+    //     selector: '[popover-publisher]',
+    //     trigger: 'manual',
+    //     placement: 'auto top',
+    //     delay: {show: 1000, hide: 250},
+    //     container: 'body',
+    //     html: true,
+    //     content: function() {
+    //         var content;
+    //         $.ajax({
+    //             url: $(this).attr('data-href'),
+    //             async: false
+    //         }).done(function(data) {
+    //             content = data;
+    //         });
+    //         return content;
+    //     }
+    // }).on('mouseenter', function(event) {
+    //     setTimeout(function() {
+    //         if ($(event.currentTarget).is(':hover')) {
+    //             $(event.currentTarget).popover('show');
+    //             $('.popover').addClass('popover-publisher').on('mouseleave', function () {
+    //                 $(event.currentTarget).popover('hide');
+    //             });
+    //         }
+    //     }, 1000);
+    // }).on('mouseleave', function(event) {
+    //     console.log(event);
+    //     setTimeout(function() {
+    //         if (!$(event.currentTarget).is(':hover') && !$('.popover').is(':hover')) {
+    //             $(event.currentTarget).popover('hide')
+    //         }
+    //     }, 250);
+    // });
 
     /* INFINITE SCROLL */
     $('body').ready(function() {

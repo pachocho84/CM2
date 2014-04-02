@@ -81,7 +81,7 @@ class DiscRepository extends BaseRepository
                 ->setParameter(':category_id', $options['categoryId']);
         }
 
-        $query->orderBy('p.createdAt', 'desc');
+        $query->orderBy('t.title');
         
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }

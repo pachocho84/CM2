@@ -1,14 +1,13 @@
 <div class="row">
     {% for disc in discs %}
-{#         {% if loop.index0 > 0 and loop.index0 % 6 == 0 %}</div><div class="row">{% endif %} #}
         
-        <div class="{# col-sm-2  #}disc">
+        <div class="disc">
             <div class="disc-cover">
-                {% if disc.image is not null %}
-                    <a href="{{ path('disc_show', {id: disc.id, slug: disc.getSlug}) }}">
+                <a href="{{ path('disc_show', {id: disc.id, slug: disc.getSlug}) }}">
+                    {% if disc.image is not null %}
                         <img src="{{ disc.image|default_img|imagine_filter('medium') }}" />
-                    </a>
-                {% endif %}
+                    {% endif %}
+                </a>
             </div>
 
             <h4><a href="{{ path('disc_show', {id: disc.id, slug: disc.getSlug }) }}">{{ disc.getTitle }}</a></h4>

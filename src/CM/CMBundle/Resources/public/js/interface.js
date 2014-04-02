@@ -110,35 +110,8 @@ $(function() {
     //         });
     //     });
     // });
-    
-    
-    
-    // Discs list
-    $(document).on('click', '.disc a', function(event) {
-        event.preventDefault();
-        if ($(event.target).closest('.disc').hasClass('active')) { // Disc detail close
-            $('.disc-detail-container').slideUp('fast', function() { $('.disc-detail-nodge').remove(); $(this).remove(); });
-            $('.disc').removeClass('active');
-        } else {
-            $('.disc').removeClass('active');
-            $.get(event.currentTarget.href, function(data) {
-                $(event.target).closest('.disc').addClass('active');
-                if ($(event.target).closest('.discs-row').next().is('.disc-detail-nodge')) { // There is alreaty a disc detail open in the current row
-                    $(event.target).closest('.discs-row').nextAll('.disc-detail-container').replaceWith(data);
-                    $('.disc-detail-nodge').animate({ left: $(event.target).closest('.disc').position().left + ($(event.target).closest('.disc').outerWidth() / 2) + parseInt($(event.target).closest('.disc').css('margin-left'), 10) - 13 }, 300);
-                } else { // No disc detail open in the current row
-                    $('.disc-detail-nodge').remove();
-                    $('.disc-detail-container').remove();
-                    $(event.target).closest('.discs-row').after('<div class="disc-detail-nodge"></div>' + data);
-                    $('.disc-detail-container').slideDown(500);
-                    $('.disc-detail-nodge').css('left', $(event.target).closest('.disc').position().left + ($(event.target).closest('.disc').outerWidth() / 2) + parseInt($(event.target).closest('.disc').css('margin-left'), 10) - 13);
-                }
-                $('.disc-detail-container').removeClass('hidden');
-            });
-        }
-    });
 
-    
+
 
     // YouTube preview
     $(document).on('click', '[youtube-video-source]', function(event) {
@@ -261,4 +234,67 @@ $(function() {
     if ($('#recipients_finder').length) {
         initRecipients();
     }
+
+
+
+    /* DISCS */
+    $(document).on('click', '.disc-cover', function(event) {
+        event.preventDefault();
+
+        var $disc = $(event.currentTarget).closest('.disc');
+        var wasActive = $disc.hasClass('active');
+
+        $('.disc.active').removeClass('active');
+        $('.disc-content').slideUp('fast', function() {
+            $(this).remove();
+        });
+
+        if (wasActive) {
+            return;
+        }
+
+        $disc.addClass('active');
+
+        var $lastInRow = null;
+        $.each($disc.nextAll('.disc').addBack(), function(i, elem) {
+            $lastInRow = $(elem);
+            if ($(elem).position().left == 0) {
+                $lastInRow = $(elem).prev();
+                return false;
+            }
+        });
+        console.log($lastInRow);
+
+        $.get($(event.currentTarget).find('a').attr('href'), function(data) {
+            var $data = $(data);
+            $lastInRow.after($data.hide());
+            $data.slideDown();
+
+        });
+    });
+
+
+    // $(document).on('click', '.disc a', function(event) {
+    //     event.preventDefault();
+    //     if ($(event.target).closest('.disc').hasClass('active')) { // Disc detail close
+    //         $('.disc-detail-container').slideUp('fast', function() { $('.disc-detail-nodge').remove(); $(this).remove(); });
+    //         $('.disc').removeClass('active');
+    //     } else {
+    //         $('.disc').removeClass('active');
+    //         $.get(event.currentTarget.href, function(data) {
+    //             $(event.target).closest('.disc').addClass('active');
+    //             if ($(event.target).closest('.discs-row').next().is('.disc-detail-nodge')) { // There is alreaty a disc detail open in the current row
+    //                 $(event.target).closest('.discs-row').nextAll('.disc-detail-container').replaceWith(data);
+    //                 $('.disc-detail-nodge').animate({ left: $(event.target).closest('.disc').position().left + ($(event.target).closest('.disc').outerWidth() / 2) + parseInt($(event.target).closest('.disc').css('margin-left'), 10) - 13 }, 300);
+    //             } else { // No disc detail open in the current row
+    //                 $('.disc-detail-nodge').remove();
+    //                 $('.disc-detail-container').remove();
+    //                 $(event.target).closest('.discs-row').after('<div class="disc-detail-nodge"></div>' + data);
+    //                 $('.disc-detail-container').slideDown(500);
+    //                 $('.disc-detail-nodge').css('left', $(event.target).closest('.disc').position().left + ($(event.target).closest('.disc').outerWidth() / 2) + parseInt($(event.target).closest('.disc').css('margin-left'), 10) - 13);
+    //             }
+    //             $('.disc-detail-container').removeClass('hidden');
+    //         });
+    //     }
+    // });
 });
