@@ -75,11 +75,11 @@ $(function() {
     // Images sort
     if ($('.images-sortable').length > 0) {
         $('.images-sortable form').sortable({ 
-            items:      'li',
-            stop:       function() {
-                console.log($('.image input[type="hidden"]').length);
-                $('.image input[type="hidden"]').each(function(i, e) {
-                    $(this).val($('.image input[type="hidden"]').length - i);
+            items: 'div.image',
+            forcePlaceholderSize: true,
+            stop: function() {
+                $.each($('.image input[type="hidden"]').get().reverse(), function(i, e) {
+                    $(e).val($('.image input[type="hidden"]').length - i);
                 });
             }
         }).disableSelection();  

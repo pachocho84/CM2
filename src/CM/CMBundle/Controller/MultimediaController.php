@@ -184,7 +184,7 @@ class MultimediaController extends Controller
     }
 
     /**
-     * @Route("/multimedia/{id}/add", name="multimediaalbum_add_multimedia", requirements={"id" = "\d+"})
+     * @Route("/multimedia/{id}/add", name="multimedia_add_multimedia", requirements={"id" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template("CMBundle:MultimediaAlbum:singleMultimedia.html.twig")
      */

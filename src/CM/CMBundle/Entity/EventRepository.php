@@ -20,6 +20,7 @@ class EventRepository extends BaseRepository
         ), $options);
         
         return array_merge(array(
+            'exclude'       => null,
             'userId'       => null,
             'groupId'      => null,
             'pageId'       => null,
@@ -134,7 +135,8 @@ class EventRepository extends BaseRepository
     {
         $options = self::getOptions($options);
         
-        $query = $this->createQueryBuilder('e')->select('e, t, ec, ect, d, i, p, l, c, u, lu, cu, pg, gr, eu, us')
+        $query = $this->createQueryBuilder('e')
+            ->select('e, t, ec, ect, d, i, p, l, c, u, lu, cu, pg, gr, eu, us')
             ->leftJoin('e.eventDates', 'd')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.category', 'ec')
@@ -165,17 +167,25 @@ class EventRepository extends BaseRepository
     {
         $options = self::getOptions($options);
         
-        return $this->createQueryBuilder('e')->select('e, t, ec, ect, i, p, u, pg, gr')
-            ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
-            ->leftJoin('e.category', 'ec')
-            ->leftJoin('ec.translations', 'ect', 'with', 'ect.locale = :locale')->setParameter('locale', $options['locale'])
+        $query = $this->createQueryBuilder('e')
+            ->select('e, t, ec, ect, i, p, pl, plu, pc, pcu, u, pg, gr')
+            ->join('e.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->join('e.category', 'ec')
+            ->join('ec.translations', 'ect', 'with', 'ect.locale = :locale')->setParameter('locale', $options['locale'])
             ->leftJoin('e.image', 'i')
-            ->leftJoin('e.post', 'p')
-            ->leftJoin('p.user', 'u')
+            ->join('e.post', 'p')
+            ->leftJoin('p.likes', 'pl')
+            ->join('pl.user', 'plu')
+            ->leftJoin('p.comments', 'pc')
+            ->join('pc.user', 'pcu')
+            ->join('p.user', 'u')
             ->leftJoin('p.page', 'pg')
             ->leftJoin('p.group', 'gr')
-            ->andWhere('e.id = :id')->setParameter('id', $id)
-            ->getQuery()->getSingleResult();
+            ->andWhere('e.id = :id')->setParameter('id', $id);
+        if (!is_null($options['slug'])) {
+            $query->andWhere('t.slug = :slug')->setParameter('slug', $options['slug']);
+        }
+        return $query->getQuery()->getSingleResult();
     }
 
     public function getNextDates($options = array())
@@ -198,6 +208,10 @@ class EventRepository extends BaseRepository
             ->leftJoin('e.image', 'i')
             ->andWhere('d.start >= :now')->setParameter('now', new \DateTime)
             ->orderBy('d.start');
+        if (!is_null($options['exclude'])) {
+            $count->andWhere('d.eventId != :exclude')->setParameter('exclude', $options['exclude']);
+            $query->andWhere('d.eventId != :exclude')->setParameter('exclude', $options['exclude']);
+        }
         if (!is_null($options['userId'])) {
             $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);

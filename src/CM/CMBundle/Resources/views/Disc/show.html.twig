@@ -1,5 +1,82 @@
 {% extends 'CMBundle::layout.html.twig' %}
+{% set noColumns = true %}
 
+{% block bodyHeading %}
+    <div class="row">
+        <div class="col-lg-8">
+            <h2>{{ disc.getTitle }}</h2>
+            {% if disc.getSubtitle is not null %}<h3>{{ disc.getSubtitle }}</h3>{% endif %}
+        </div>
+        <div class="col-lg-4 text-right pull-right">
+            {% if is_granted('ROLE_USER') %}
+                <div class="btn-group">
+                    {{ include('CMBundle:Like:likeActions.html.twig', {post: disc.post, button: true, selector: '#social'}) }}
+                    <a href="{# {{ path('post_show', {'post_id': postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }}</a>
+                </div>
+            {% endif %}
+            {% if can_manage(disc) %}
+                <div class="btn-group">
+                    <a href="{{ path('disc_edit', {'id': disc.id, 'slug': disc.getSlug}) }}" class="btn btn-default">{{ "Edit"|trans }}</a>
+                    <a href="{{ path('disc_delete', {'id': disc.id}) }}" class="btn btn-default">{{ "Delete"|trans }}</a>
+                </div>
+            {% endif %}
+            {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'entity': disc}) }}
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-4 col-md-push-8">
+            <div class="box">
+                <div class="box-heading">
+                    <h2>{{ icon('Info') }} {{ 'Details'|trans }}</h2>
+                </div>
+                <div class="box-body">
+                    <div class="object">
+                        <p>
+                            {{ "Created by %publisher%"|trans({'%publisher%': '<a ' ~ publisher_box(disc.post.publisher) ~ ' href="' ~ path(disc.post.publisherType ~ '_show', {'slug': disc.post.publisher.slug}) ~ '">' ~ disc.post.publisher~'</a>'})|raw }}
+                            &middot;
+                            <a href="{{ path('disc_category', { 'categorySlug': disc.category.getSlug }) }}">{{ disc.category|capitalize }}</a>
+                        </p>
+                    </div>
+                    <div class="media object">
+                        <a href="{{ path('disc_show', {'id': disc.id, 'slug': disc.getSlug}) }}">
+                            <img src="{{ disc.getImage|default_img|imagine_filter('medium') }}" class="img-responsive" />
+                        </a>
+                        <div>
+                            <div class="text-justify">{{ disc.getText|raw }}</div>
+                            <dl>
+                                <dt>Label</dt>
+                                <dd>{{ disc.label }}</dd>
+                                <dt>Year</dt>
+                                <dd>{{ disc.year|date('Y') }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div data-ajax-url="{{ path('disc_tracks', {id: disc.id}) }}"></div>
+{#            
+            <div data-ajax-url="{{ path('image_entity', {id: disc.id, type: disc|class_name}) }}"></div>
+            
+            <div data-ajax-url="{{ path('multimedia_entity', {id: disc.id, type: disc|class_name}) }}"></div>
+            
+            <div data-ajax-url="{{ path('entityuser_protagonists', {id: disc.id}) }}"></div>
+        </div>
+
+        <div class="col-md-8 col-md-pull-4">
+            <div data-ajax-url="{{ path('wall_entity', {id: disc.id}) }}"></div>
+        </div>
+#}
+    </div>
+{% endblock %}
+
+{#
 {% block body %}
 
     <div class="box-heading">
@@ -31,45 +108,12 @@
 
     <div class="media">
         {% if disc.getImages|length > 0 %}
-            <img src='{{ asset(uploaded_images_full_dir ~ '/' ~ disc.images[0].img) }}' width="200px" />
+            <img src='{{ disc.image|defauult_img|imagine_filter('small')) }}' width="200px" />
         {% endif %}
 
-        <dl>
-            <dt>Tile</dt>
-            <dd>{{ disc.getTitle }}</dd>
-            <dt>Label</dt>
-            <dd>{{ disc.label }}</dd>
-            <dt>Year</dt>
-            <dd>{{ disc.year|date('Y') }}</dd>
-            <dt>Tracks</dt>
-            <dd>
-                <ul>
-                    {% for track in disc.discTracks %}
-                        <li>
-                            {{ track.number }}
-                            <dl>
-                                <dd>{{ track }}</dd>
-                                {% if track.composer is not null and track.composer is not empty %}<dt>Composer</dt><dd>{{ track.composer }}</dd>{% endif %}
-                                {% if track.movement is not null and track.movement is not empty %}<dt>Movement</dt><dd>{{ track.movement }}</dd>{% endif %}
-                                {% if track.artists is not null and track.artists is not empty %}<dt>Artists</dt><dd>{{ track.artists }}</dd>{% endif %}
-                                {% if track.duration is not null and track.duration is not empty %}<dt>Duration</dt><dd>{{ track.duration|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}</dd>{% endif %}
-                                {% if track.audio is not null and track.audio is not empty %}
-                                    <dt>Audio</dt>
-                                    <dd>
-                                        <audio controls>
-                                            <source src="{{ asset(uploaded_audio_dir ~ '/' ~ track.audio) }}">
-                                            {{ 'Your browser does not support html5 audio playback'|trans }}
-                                        </audio>
-                                        {% if track.extract %}({{ 'extract'|trans }}){% endif %}
-                                    </dd>
-                                {% endif %}
-                            </dl>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </dd>
-        </dl>
+
     </div>
 
     {{ include('CMBundle::social.html.twig', {'post': disc.post}) }}
 {% endblock %}
+#}

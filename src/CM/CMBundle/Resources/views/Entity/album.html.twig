@@ -2,7 +2,7 @@
 
 {% block body %}
 	
-	<h2>{{ icon('Image')|raw }} {{ album }} - {{ 'images' }}</h2>
+	<h2><a href="{{ path(album|class_name|lower ~ '_show', {id: album.id, slug: album.getSlug}) }}">{{ icon(album|class_name) }} {{ album }} - {{ 'images'|trans }}</a></h2>
 
 
 
@@ -18,7 +18,7 @@
                                 <input id="images" type="file" name="images" multiple />
                             </form>
                         </span>
-                        <a href="{{ path('imagealbum_edit', {'id': album.id, 'slug': album.getSlug, 'publisher': album|class_name}) }}" class="btn btn-default btn-sm">{{ icon('Edit') }} {{ 'Edit'|trans }}</a> '{{ icon('Edit') }}</a>
+                        <a href="{{ path('imagealbum_edit', {'id': album.id, 'slug': album.getSlug, 'publisher': album|class_name}) }}" class="btn btn-default btn-sm">{{ icon('Edit') }} {{ 'Edit'|trans }}</a>
                     {% endif %}
                 </div>
             
@@ -47,7 +47,7 @@
                 <form action="{{ path('imagealbum_sort', {'id': album.id, 'slug': app.user.slug, 'publisher': album|class_name}) }}" method="post">
                     <div class="alert alert-info">
                         {{ 'Drag and drop the images to sort them, then press save.'|trans }}
-                        <input type="submit" class="btn btn-primaty" value="{{ 'Save'|trans }}" />
+                        <input type="submit" class="btn btn-default" value="{{ 'Save'|trans }}" />
                     </div>
             {% endif %}
             
@@ -57,89 +57,6 @@
                 </form>
             {% endif %}
         </div>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
-        a<br/>
 
     </div>
   

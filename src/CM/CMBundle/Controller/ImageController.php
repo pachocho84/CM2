@@ -25,16 +25,17 @@ use Symfony\Component\HttpFoundation\File\File;
 class ImageController extends Controller
 {
     /**
-     * @Route("/entity/{type}/{id}", name="image_entity", requirements={"id" = "\d+"}) 
+     * @Route("/entity/{type}/{id}/{slug}", name="image_entity", requirements={"id" = "\d+"}) 
      * @Template
      */
-    public function entityAction(Request $request, $id, $type)
+    public function entityAction(Request $request, $id, $type, $slug)
     {
         return array(
             'entityId' => $id,
             'entityType' => $type,
+            'entitySlug' => $slug,
             'count' => $this->getDoctrine()->getManager()->getRepository('CMBundle:Image')->countBy(array('entityId' => $id)),
-            'images' => $this->getDoctrine()->getManager()->getRepository('CMBundle:Image')->findBy(array('entityId' => $id), array('main' => 'desc', 'sequence' => 'asc'), 3)
+            'images' => $this->getDoctrine()->getManager()->getRepository('CMBundle:Image')->findBy(array('entityId' => $id), array('main' => 'desc', 'sequence' => 'asc'), 4)
         );
     }
     

@@ -1,9 +1,11 @@
 {% if dates|length > 0 %}
-    <div class="box">
+    {% set link = link|default(path('event_index')) %}
+
+    <div class="box box-system">
         <div class="box-heading">
             <h2>
                 {{ icon('Event') }} {{ 'Next events'|trans }}{% if count is defined %}
-                <small><a href="{{ path(dates[0].event.post.publisherType ~ '_events', {'slug': dates[0].event.post.publisher.slug}) }}" class="pull-right">{{ 'Show all (%count%)'|trans({'%count%': count}) }}</a></small>{% endif %}
+                <small><a href="{{ link }}" class="pull-right">{{ 'Show all (%count%)'|trans({'%count%': count}) }}</a></small>{% endif %}
             </h2>
         </div>
 
@@ -12,12 +14,12 @@
                 <div class="media object">
                     {{ show_img_box(date.event.image|default_img|imagine_filter('medium'), {width: 100, height: 66, offset: date.event.imgOffset, box_attributes: {class: 'pull-left'}}) }}
                     <div class="media-body">
-                        <h4>{{ date.event }}</h4>
-                        <p>
+                        <h3><a href="{{ path('event_show', {id: date.event.id, slug: date.event.getSlug}) }}" title="{{ date.event }}">{{ date.event }}</a></h3>
+                        <div>
                             {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
                             {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}<br/>
                             <span {{ tooltip(date.address) }}>{{ icon('Map') }} {{ date.location }}</span>
-                        </p>
+                        </div>
                     </div>
                 </div>
             {% endfor %}

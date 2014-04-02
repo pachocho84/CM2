@@ -60,6 +60,17 @@ class DiscController extends Controller
         
         return array('categories' => $categories, 'discs' => $pagination, 'category' => $category);
     }
+    
+    /**
+     * @Route("/tracks/{id}", name="disc_tracks", requirements={"id" = "\d+"})
+     * @Template
+     */
+    public function tracksAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        return array('tracks' => $em->getRepository('CMBundle:Disc')->getTracksPerDisc($id));
+    }
 
     /**
      * @Route("/new", name="disc_new") 

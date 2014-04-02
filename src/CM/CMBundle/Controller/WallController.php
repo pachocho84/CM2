@@ -57,7 +57,7 @@ class WallController extends Controller
             /* Next events */
             if ($page == 1 && $request->get('_route') == 'wall_index') {
                 $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('locale' => $request->getLocale())), $page, 3);
-                $boxes['dates;right'] = $this->renderView('CMBundle:Wall:boxEvents.html.twig', array('dates' => $dates));
+                $boxes['dates;right'] = $this->renderView('CMBundle:Event:nextDates.html.twig', array('dates' => $dates));
             }
 
             /* Sponsored */
@@ -195,11 +195,11 @@ class WallController extends Controller
         $em = $this->getDoctrine()->getManager();
         
         if (is_null($lastUpdated)) {
-            $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('entityId' => $id, 'locale' => $request->getLocale()));
+            $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('entityId' => $id, 'locale' => $request->getLocale(), 'aggregate' => false));
         } else {
             $after = new \DateTime;
             $after->setTimestamp($lastUpdated);
-            $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('entityId' => $id, 'locale' => $request->getLocale(), 'after' => $after));
+            $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('entityId' => $id, 'locale' => $request->getLocale(), 'aggregate' => false, 'after' => $after));
         }
         $pagination = $this->get('knp_paginator')->paginate($posts, $page, 10);
 

@@ -199,7 +199,7 @@ class CMExtension extends \Twig_Extension
         }
 
         if (empty($entity->getExtract()) && strlen($text) > $options['max']) {
-            preg_match('/^.{'.($options['max'] * 0.75).','.$options['max'].'}(\.|\:|\!|\?)/s', $text, $matches);
+            preg_match('/^.{'.floor($options['max'] * 0.75).','.$options['max'].'}(\.|\:|\!|\?)/s', $text, $matches);
             if (array_key_exists(0, $matches)) {
                 $text = rtrim($matches[0], '.:').'.';
             } else {
@@ -208,7 +208,9 @@ class CMExtension extends \Twig_Extension
                     $text .= '...';
                 }
             }
-            $text = $this->getSimpleFormatText($text);
+            if (!$options['stripped']) {
+                $text = $this->getSimpleFormatText($text);
+            }
         }
 
         if ($options['more'] && strlen($text) < strlen($entity->getText())) {
@@ -394,7 +396,7 @@ class CMExtension extends \Twig_Extension
         // Write box tag
         if (!is_null($options['lightbox'])) {
             $opt = array_merge(array('image' => null, 'publisher' => false), $options['lightbox']);
-            $boxTag = '<a '.$this->getLightbox($opt['image'], $opt['publisher']);
+            $boxTag = '<a href="'.$options['link'].'"'.$this->getLightbox($opt['image'], $opt['publisher']);
             $boxTagEnd = '</a>';
         } elseif (!is_null($options['link'])) {
             $boxTag = '<a href="'.$options['link'].'"';
@@ -656,9 +658,10 @@ class CMExtension extends \Twig_Extension
                         $entityLink = '';
                         break;
                 }
-                return $this->translator->trans('%user% added images to '.$post->getPublisherSex('his').$entityString.' %entity%.', array(
+                return $this->translator->transChoice('%user% added %count% image to '.$post->getPublisherSex('his').$entityString.' %entity%.|%user% added %count% images to '.$post->getPublisherSex('his').$entityString.' %entity%.', count($relatedObjects), array(
                     '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                    '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>'
+                    '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>',
+                    '%count%' => count($relatedObjects)
                 ));
             case 'Fan_'.Post::TYPE_FAN_USER:
                 return 'Fan of an user';
@@ -864,9 +867,14 @@ class CMExtension extends \Twig_Extension
                         $entityLink = '';
                         break;
                 }
-                return $this->translator->trans('%user% added images to '.$post->getPublisherSex('his').$entityString.' %entity%.', array(
+                // return $this->translator->trans('%user% added images to '.$post->getPublisherSex('his').$entityString.' %entity%.', array(
+                //     '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
+                //     '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>'
+                // ));
+                return $this->translator->transChoice('%user% added %count% image to '.$post->getPublisherSex('his').$entityString.' %entity%.|%user% added %count% images to '.$post->getPublisherSex('his').$entityString.' %entity%.', count($post->getObjectIds()), array(
                     '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                    '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>'
+                    '%entity%' => '<a href="'.$entityLink.'">'.$post->getEntity().'</a>',
+                    '%count%' => count($post->getObjectIds())
                 ));
             case 'User_'.Post::TYPE_REGISTRATION:
                 // return __('%user% registered on Circuito Musica. - '.$post->getPublisherSex('M'), array('%user%' => link_to($post->getPublisher(), $post->getPublisher()->getLinkShow())));
@@ -916,6 +924,9 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-calendar"></span>';
             case 'Disc':
             case 'Disc_'.Post::TYPE_CREATION:
+                return '<span class="glyphicons album"></span>';
+            case 'Track':
+            case 'Track_'.Post::TYPE_CREATION:
                 return '<span class="glyphicon glyphicon-headphones"></span>';
             case 'Article':
             case 'Review':
@@ -1049,7 +1060,7 @@ class CMExtension extends \Twig_Extension
             'separator' => '<br/>',
             'closure' => null,
             'args' => array(),
-            'limit' => 20
+            'limit' => INF
         ), $options);
 
         if (is_array($what) && !is_null($options['limit'])) {
@@ -1058,7 +1069,8 @@ class CMExtension extends \Twig_Extension
 
         if (is_array($what) && !is_null($options['closure'])) {
             $closure = create_function('$v, $a', 'return '.$options['closure'].';');
-            foreach ($what as &$v) {
+            foreach ($what as $i => &$v) {
+                if ($i == $options['limit']) break;
                 $v = $closure($v, $options[args]);
             }
         }

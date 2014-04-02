@@ -106,6 +106,9 @@ form textarea.form-control {
 .btn.btn-default.active span.glyphicons {
     color: #990000;
 }
+a.btn:hover {
+    text-decoration: none !important;
+}
 .form-group {
     margin-bottom: 10px;
 }
@@ -252,25 +255,47 @@ form textarea[expandable] {
 
 
 /* ENTITIES */
-.box .box-body.entity-assets {
-    padding: 14px 9px;
+.entity-assets {
+    margin: 6px -3px 0;
 }
 .entity-assets .entity-asset {
     float: left;
-    margin: 0 5px;
+    padding: 0 3px;
+    width: 33.33333%;
+}
+.entity-protagonists {
+    margin-bottom: 0px;
+}
+.entity-protagonists .entity-protagonist {
+    margin-top: 10px;
+}
+.entity-protagonists .entity-protagonist:first-child {
+    margin-top: 0;
 }
 /* event */
 .event-date-map {
     position: relative;
+    border: 1px solid #bbbbbb;
+    margin: 0 -15px;
+    overflow: hidden;
+}
+.event-date-map .event-date-map-img {
+    float: right;
+    min-width: 100%;
+    position: relative;
+    right: 50%;
+}
+.event-date-map .event-date-map-img > img {
+    min-width: 100%;
+    min-height: 100px;
+    max-width: none;
+    position: relative;
+    right: -50%;
 }
 .event-date-map .btn {
     position: absolute;
     right: 10px;
     top: 27px;
-}
-.event-date-map {
-    border: 1px solid #bbbbbb;
-    margin: 0 -15px;
 }
 
 
@@ -401,6 +426,28 @@ form textarea[expandable] {
 
 
 /* BOX */
+.box {
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
+}
+.box a {
+    color: #404040;
+}
+.box a:hover {
+    text-decoration: underline;
+}
+.box:hover a.btn {
+    color: #333333;
+}
+.box .box-heading {
+    -webkit-border-top-left-radius: 3px;
+       -moz-border-top-left-radius: 3px;
+            border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+       -moz-border-top-right-radius: 3px;
+            border-top-right-radius: 3px;
+}
 .box-container .nav,
 .box .box-heading .nav {
     margin-bottom: 0;
@@ -534,29 +581,27 @@ form textarea[expandable] {
        -moz-border-bottom-right-radius: 3px;
             border-bottom-right-radius: 3px;
 }
+.box:hover {
+    border-color: #aaaaaa;    
+    -webkit-transition: border-color 0.3s;
+       -moz-transition: border-color 0.3s;
+        -ms-transition: border-color 0.3s;
+         -o-transition: border-color 0.3s;
+            transition: border-color 0.3s;
+}
+.box:hover a,
+.box-system .object:hover a {
+    color: #aa0000;    
+    -webkit-transition: color 0.3s;
+       -moz-transition: color 0.3s;
+        -ms-transition: color 0.3s;
+         -o-transition: color 0.3s;
+            transition: color 0.3s;
+}
 
 
 
 /* POST */
-#wall .box {
-    -webkit-border-radius: 3px;
-       -moz-border-radius: 3px;
-            border-radius: 3px;
-}
-#wall .box a {
-    color: #404040;
-}
-#wall .box a:hover {
-    text-decoration: underline;
-}
-#wall .box .box-heading {
-    -webkit-border-top-left-radius: 3px;
-       -moz-border-top-left-radius: 3px;
-            border-top-left-radius: 3px;
-    -webkit-border-top-right-radius: 3px;
-       -moz-border-top-right-radius: 3px;
-            border-top-right-radius: 3px;
-}
 .post .post-heading {
     margin-bottom: 15px;
 }
@@ -590,23 +635,6 @@ form textarea[expandable] {
     margin: 0 auto;
     max-height: 600px;
 }
-.post:hover {
-    border-color: #aaaaaa;    
-    -webkit-transition: border-color 0.3s;
-       -moz-transition: border-color 0.3s;
-        -ms-transition: border-color 0.3s;
-         -o-transition: border-color 0.3s;
-            transition: border-color 0.3s;
-}
-.post:hover a,
-.box-system .object:hover a {
-    color: #aa0000;    
-    -webkit-transition: color 0.3s;
-       -moz-transition: color 0.3s;
-        -ms-transition: color 0.3s;
-         -o-transition: color 0.3s;
-            transition: color 0.3s;
-}
 .box .box-footer comment {
     margin-top: 10px;
 }
@@ -618,24 +646,26 @@ form textarea[expandable] {
     line-height: 1.4;
 }
 /* Box System */
-#wall .box-system {
+.box-system {
     background-color: #f5f5f5;
 }
-#wall .box-system .box-heading {
+.box-system .box-heading {
     border: none;
     background: transparent;
     margin-top: 10px;
 }
-#wall .box-system h4 {
+.box-system h3 {
     font-size: 14px;
     max-height: 38px;
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
-#wall .box-system .object {
+.box-system .object {
     margin-top: 10px;
     padding-top: 10px;
 }
-#wall .box-system .object:first-child {
+.box-system .object:first-child {
     margin-top: 0px;
     padding-top: 0px;
 }

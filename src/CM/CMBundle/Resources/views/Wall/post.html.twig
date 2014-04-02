@@ -36,13 +36,13 @@
             </div>
         </div>
         
-        {% if not inEntity %}
-            <p>
-                {{ post_text(post, relatedObjects) }}
-            </p>
-        {% elseif inEntity and post.object|class_name != 'Comment' %}
+        {% if inEntity and post.object|class_name not in ['Comment', 'Like'] %}
             <p>
                 {{ entity_post_text(post) }}
+            </p>
+        {% elseif not inEntity %}
+            <p>
+                {{ post_text(post, relatedObjects) }}
             </p>
         {% endif %}
         

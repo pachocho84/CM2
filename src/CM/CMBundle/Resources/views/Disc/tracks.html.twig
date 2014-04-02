@@ -1,0 +1,37 @@
+<div id="event-dates" class="box">
+    <div class="box-heading">
+        <h2>
+            {{ icon('Track') }} {{ 'Tracks'|trans }}
+        </h2>
+    </div>
+    <div class="box-body">
+        <dl>
+            <dt>Tracks</dt>
+            <dd>
+                <ul>
+                    {% for track in tracks %}
+                        <li>
+                            {{ track.number }}) {{ track }}
+                            <dl>
+                                {% if track.composer is not null and track.composer is not empty %}<dt>Composer</dt><dd>{{ track.composer }}</dd>{% endif %}
+                                {% if track.movement is not null and track.movement is not empty %}<dt>Movement</dt><dd>{{ track.movement }}</dd>{% endif %}
+                                {% if track.artists is not null and track.artists is not empty %}<dt>Artists</dt><dd>{{ track.artists }}</dd>{% endif %}
+                                {% if track.duration is not null and track.duration is not empty %}<dt>Duration</dt><dd>{{ track.duration|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}</dd>{% endif %}
+                                {% if track.audio is not null and track.audio is not empty %}
+                                    <dt>{{ 'Audio'|trans }}</dt>
+                                    <dd>
+                                        <audio controls>
+                                            <source src="{{ asset(uploaded_audio_dir ~ '/' ~ track.audio) }}">
+                                            {{ 'Your browser does not support html5 audio playback'|trans }}
+                                        </audio>
+                                        {% if track.extract %}({{ 'extract'|trans }}){% endif %}
+                                    </dd>
+                                {% endif %}
+                            </dl>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </dd>
+        </dl>
+    </div>
+</div>

@@ -26,16 +26,6 @@ use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\ImageCollectionType;
 use CM\CMBundle\Utility\UploadHandler;
 
-function getAllErrors($form, &$errors = array()) {
-    foreach ($form->getErrors() as $error) {
-        $errors[] = $form->getName().': '.$error->getMessage();
-    }
-    foreach ($form->all() as $child) {
-        getAllErrors($child, $errors);
-    }
-    return $errors;
-}
-
 /**
  * @Route("/events")
  */
@@ -146,11 +136,11 @@ class EventController extends Controller
         $em = $this->getDoctrine()->getManager();
             
         if ($request->isXmlHttpRequest()) {
-            $date = $em->getRepository('CMBundle:Event')->getDate($id, array('locale' => $request->getLocale()));
+            $date = $em->getRepository('CMBundle:Event')->getDate($id, array('slug' => $slug, 'locale' => $request->getLocale()));
             return $this->render('CMBundle:Event:object.html.twig', array('date' => $date));
         }
         
-        $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale()));
+        $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('slug' => $slug, 'locale' => $request->getLocale()));
 
         $images = new ArrayCollection();
 
@@ -185,15 +175,23 @@ class EventController extends Controller
     }
     
     /**
-     * @Route("/dates/next/{object}/{objectId}/{limit}", name="event_next_dates", requirements={"id" = "\d+"})
+     * @Route("/dates/next/{object}/{objectId}", name="event_next_dates", requirements={"id" = "\d+"})
      * @Template
      */
-    public function nextDatesAction(Request $request, $object, $objectId, $limit = 3)
+    public function nextDatesAction(Request $request, $object, $objectId)
     {
         $em = $this->getDoctrine()->getManager();
 
+        $dates = $em->getRepository('CMBundle:Event')->getNextDates(array(
+            $object.'Id' => $objectId,
+            'paginate' => false,
+            'exclude' => $request->get('exclude'),
+            'limit' => $request->get('limit')
+        ));
+
         return array(
-            'dates' => $em->getRepository('CMBundle:Event')->getNextDates(array($object.'Id' => $objectId, 'limit' => $limit)),
+            'dates' => $dates,
+            'link' => $this->generateUrl($dates[0]->getEvent()->getPost()->getPublisherType().'_events', array('slug' => $dates[0]->getEvent()->getPost()->getPublisher()->getSlug())),
             'count' => $em->getRepository('CMBundle:Event')->countNextDates(array($object.'Id' => $objectId))
         );
     }
@@ -244,7 +242,7 @@ class EventController extends Controller
             $post = $this->get('cm.post_center')->getNewPost($user, $user);
             $event->setPost($post);
         } else {
-            $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('locale' => $request->getLocale(), 'protagonists' => true, 'mainImageOnly' => true));
+            $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('slug' => $slug, 'locale' => $request->getLocale(), 'protagonists' => true, 'mainImageOnly' => true));
             if (!$this->get('cm.user_authentication')->canManage($event)) {
                 throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }

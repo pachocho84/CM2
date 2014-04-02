@@ -105,4 +105,16 @@ class DiscRepository extends BaseRepository
             ->getQuery()
             ->getSingleResult();
     }
+
+    public function getTracksPerDisc($id)
+    {   
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('t')
+            ->from('CMBundle:DiscTrack', 't')
+            ->where('t.discId = :id')->setParameter('id', $id)
+            ->orderBy('t.number')
+            ->addOrderBy('t.id')
+            ->getQuery()
+            ->getResult();
+    }
 }

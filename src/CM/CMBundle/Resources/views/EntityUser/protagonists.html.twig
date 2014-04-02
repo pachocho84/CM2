@@ -3,9 +3,9 @@
         <h2>{{ icon('Protagonist') }} {{ 'Protagonists'|trans }}</h2>
     </div>
     <div class="box-body">
-        <ul class="media-list">
+        <ul class="media-list entity-protagonists">
             {% for protagonist in protagonists[:5] %}
-                <li class="media">
+                <li class="media entity-protagonist">
                     {{ show_img_box(protagonist.user.img|imagine_filter('avatar'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'box_attributes': {'class': 'pull-left'}}) }}
                     <div class="media-body">
                         <small><a href="{{ path('user_show', {'slug': protagonist.user.slug}) }}" {{ publisher_box(protagonist.user) }}>{{ protagonist.user }}</a></small><br/>
@@ -18,9 +18,9 @@
             {% endfor %}
         </ul>
         {% if protagonists|length > 5 %}
-            <ul id="event_protagonists-more" class="media-list collapse">
+            <ul id="event_protagonists-more" class="media-list entity-protagonists collapse">
                 {% for protagonist in protagonists[5:] %}
-                    <li class="media">
+                    <li class="media entity-protagonist">
                         {{ show_img_box(protagonist.user.img|imagine_filter('avatar'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'link_attributes': {'class': 'pull-left'}}) }}
                         <div class="media-body">
                             <small><a href="{{ path('user_show', {'slug': protagonist.user.slug}) }}" {{ publisher_box(protagonist.user) }}>{{ protagonist.user }}</a></small><br/>

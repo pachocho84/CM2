@@ -237,7 +237,7 @@ $(function() {
         var imageUrl = href.split('/');
         imageUrl = imageUrl.slice(0, imageUrl.length - 1).join('/') + '/';
         var pageUrl = $target.attr('href').split('/');
-        pageUrl = pageUrl.slice(0, pageUrl  .length - 1).join('/') + '/';
+        pageUrl = pageUrl.slice(0, pageUrl.length - 1).join('/') + '/';
         var json = null;
         var sidebarReq = null;
 

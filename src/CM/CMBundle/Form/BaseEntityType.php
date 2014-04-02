@@ -4,6 +4,8 @@ namespace CM\CMBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use CM\CMBundle\Entity\EntityCategoryRepository;
@@ -59,7 +61,17 @@ class BaseEntityType extends AbstractType
                 ));
         } else {
             $builder->add($builder->create('translations', new EntityTranslationType, array('error_bubbling' => false, 'articleWriter' => $options['articleWriter']))
-                ->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 'en')));
+                ->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 'en')))
+                ->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
+                    $data = $event->getData();
+                    if (isset($data['translations'])) {
+                        $data['translations']['title'] = htmlentities($data['translations']['title']);
+                        $data['translations']['subtitle'] = htmlentities($data['translations']['subtitle']);
+                        $data['translations']['extract'] = htmlentities($data['translations']['extract']);
+                        $data['translations']['text'] = htmlentities($data['translations']['text']);
+                        $event->setData($data);
+                    }
+                });
         }
         if (in_array('ROLE_ADMIN', $options['roles'])) {
             $builder->add($builder->create('posts', new PostType, array('label' => 'Post'))->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'])));

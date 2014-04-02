@@ -1,26 +1,31 @@
 {% extends 'CMBundle::layout.html.twig' %}
+{% block title %}{{ event.getTitle }}{% endblock %}
+{% set meta = {
+    description: event|short_text({max: 155, stripped: true}),
+    image: event.image|default_img|imagine_filter('full')
+} %}
 {% set noColumns = true %}
 
 {% block bodyHeading %}
     <div class="row">
         <div class="col-lg-8">
-            <h2>{{ event.getTitle }}</h2>
+            <h2>{{ icon('Event') }} {{ event.getTitle }}</h2>
             {% if event.getSubtitle is not null %}<h3>{{ event.getSubtitle }}</h3>{% endif %}
         </div>
         <div class="col-lg-4 text-right pull-right">
             {% if is_granted('ROLE_USER') %}
                 <div class="btn-group">
                     {{ include('CMBundle:Like:likeActions.html.twig', {post: event.post, button: true, selector: '#social'}) }}
-                    <a href="{# {{ path('post_show', {'post_id': postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }}</a>
+                    <a href="{# {{ path('post_show', {post_id: postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }} {{ event.post.comments|length }}</a>
                 </div>
             {% endif %}
             {% if can_manage(event) %}
                 <div class="btn-group">
-                    <a href="{{ path('event_edit', {'id': event.id, 'slug': event.getSlug}) }}" class="btn btn-default">{{ "Edit"|trans }}</a>
-                    <a href="{{ path('event_delete', {'id': event.id}) }}" class="btn btn-default">{{ "Delete"|trans }}</a>
+                    <a href="{{ path('event_edit', {id: event.id, slug: event.getSlug}) }}" class="btn btn-default">{{ "Edit"|trans }}</a>
+                    <a href="{{ path('event_delete', {id: event.id}) }}" class="btn btn-default">{{ "Delete"|trans }}</a>
                 </div>
             {% endif %}
-            {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'entity': event}) }}
+            {{ include('CMBundle:EntityUser:requestAdd.html.twig', {entity: event}) }}
         </div>
     </div>
 {% endblock %}
@@ -30,7 +35,15 @@
 {% block body %}
 
     <div class="row">
-        <div class="col-md-4 col-md-push-8">
+        <div class="col-md-4 col-lg-3">
+            <div data-ajax-url="{{ path('image_entity', {id: event.id, slug: event.getSlug, type: 'events'}) }}"></div>
+
+            <div data-ajax-url="{{ path('multimedia_entity', {id: event.id, type: event|class_name}) }}"></div>
+            
+            <div data-ajax-url="{{ path('entityuser_protagonists', {id: event.id}) }}"></div>
+        </div>
+
+        <div class="col-md-8 col-lg-5">
             <div class="box">
                 <div class="box-heading">
                     <h2>{{ icon('Info') }} {{ 'Details'|trans }}</h2>
@@ -38,15 +51,12 @@
                 <div class="box-body">
                     <div class="object">
                         <p>
-                            {{ "Created by %publisher%"|trans({'%publisher%': '<a ' ~ publisher_box(event.post.publisher) ~ ' href="' ~ path(event.post.publisherType ~ '_show', {'slug': event.post.publisher.slug}) ~ '">' ~ event.post.publisher~'</a>'})|raw }}
+                            {{ "Created by %publisher%"|trans({'%publisher%': '<a ' ~ publisher_box(event.post.publisher) ~ ' href="' ~ path(event.post.publisherType ~ '_show', {slug: event.post.publisher.slug}) ~ '">' ~ event.post.publisher~'</a>'})|raw }}
                             &middot;
-                            <a href="{{ path('event_category', { 'categorySlug': event.category.getSlug }) }}">{{ event.category|capitalize }}</a>
+                            <a href="{{ path('event_category', {categorySlug: event.category.getSlug}) }}">{{ event.category|capitalize }}</a>
                         </p>
                     </div>
                     <div class="media object">
-                        <a href="{{ path('event_show', {'id': event.id, 'slug': event.getSlug}) }}">
-                            <img src="{{ event.getImage|default_img|imagine_filter('medium') }}" class="img-responsive" />
-                        </a>
                         <div>
                             <div class="text-justify">{{ event.getText|raw }}</div>
                         </div>
@@ -55,16 +65,12 @@
             </div>
             
             <div data-ajax-url="{{ path('event_dates', {id: event.id}) }}"></div>
-            
-            <div data-ajax-url="{{ path('image_entity', {id: event.id, type: event|class_name}) }}"></div>
-            
-            <div data-ajax-url="{{ path('multimedia_entity', {id: event.id, type: event|class_name}) }}"></div>
-            
-            <div data-ajax-url="{{ path('entityuser_protagonists', {id: event.id}) }}"></div>
+
+            <div data-ajax-url="{{ path('wall_entity', {id: event.id}) }}"></div>
         </div>
 
-        <div class="col-md-8 col-md-pull-4">
-            <div data-ajax-url="{{ path('wall_entity', {id: event.id}) }}"></div>
+        <div class="col-md-12 col-lg-4">
+            <div data-ajax-url="{{ path('event_next_dates', {object: event.post.publisherType, objectId: event.post.publisher.id, exclude: event.id, limit: 3}) }}"></div>
         </div>
     </div>
 {% endblock %}

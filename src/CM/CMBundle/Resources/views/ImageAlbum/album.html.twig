@@ -11,7 +11,7 @@
                             <input id="images" type="file" name="images" multiple />
                         </form>
                     </span>
-                    {% if album is defined and album|class_name == 'ImageAlbu' %}<a href="{{ path('imagealbum_edit', {'id': album.id, 'slug': publisher.slug, 'publisher': publisher|class_name}) }}" class="btn btn-default btn-sm">{{ icon('Edit') }} {{ 'Edit'|trans }}</a> '{{ icon('Edit') }}</a>{% endif %}
+                    {% if album is defined and album|class_name == 'ImageAlbu' %}<a href="{{ path('imagealbum_edit', {'id': album.id, 'slug': publisher.slug, 'publisher': publisher|class_name}) }}" class="btn btn-default btn-sm">{{ icon('Edit') }} {{ 'Edit'|trans }}</a>{% endif %}
                     {#<?php $album->getImageAlbum()->getType() == 'album' and print delete_link('@image_album_delete?id='.$album->getEntityId(), 'album', array('class' => 'btn btn-default btn-sm', 'data-placement' => 'left')) ?>#}
                 {% endif %}
             </div>

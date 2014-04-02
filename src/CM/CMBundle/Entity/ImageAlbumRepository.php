@@ -19,10 +19,11 @@ class ImageAlbumRepository extends BaseRepository
         ), $options);
         
         return array_merge(array(
+            'slug' => null,
             'userId'       => null,
             'groupId'      => null,
             'pageId'       => null,
-            'type'       => ImageAlbum::TYPE_ALBUM,
+            'type'         => ImageAlbum::TYPE_ALBUM,
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'after' => null,
             'paginate'      => true,
@@ -203,19 +204,25 @@ class ImageAlbumRepository extends BaseRepository
         $options = self::getOptions($options);
 
         $query = $this->getEntityManager()->createQueryBuilder('e')
-            ->select('e')->from('CMBundle:Entity', 'e')
-            ->innerJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
-            ->where('e.id = :id')->setParameter('id', $id);
+            ->select('e, t')->from('CMBundle:'.(!is_null($options['type']) ? ucfirst(substr($options['type'], 0, -1)) : 'Entity'), 'e')
+            ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')
+            ->setParameter('locales', $options['locales']);
+        if (!is_null($options['slug'])) {
+            $query->andWhere('t.slug = :slug')->setParameter('slug', $options['slug']);
+        }
         if (!is_null($options['userId'])) {
-            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
+            $query->join('e.post', 'p')
+                ->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
                 ->andWhere('p.pageId is NULL')
                 ->andWhere('p.groupId is NULL');
         }
         if (!is_null($options['pageId'])) {
-            $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+            $query->join('e.post', 'p')
+                ->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
         if (!is_null($options['groupId'])) {
-            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+            $query->join('e.post', 'p')
+                ->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
 
         return $query->getQuery()->getSingleResult();

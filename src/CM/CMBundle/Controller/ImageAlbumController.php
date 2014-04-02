@@ -390,17 +390,7 @@ class ImageAlbumController extends Controller
             $imagesDataInAlbum = $em->getRepository('CMBundle:Image')->getImages(array($type.'Id' => $publisherId));
             $imagesDataInAlbum = $this->get('knp_paginator')->paginate($imagesDataInAlbum, 1, 40);
             $imagesDataInAlbum = $imagesDataInAlbum->getItems();
-
-        foreach ($imagesDataInAlbum as $image) {
-            $this->get('logger')->info($image->getId().' '.$image->getImg());
-        }
-
             $imagesDataInAlbum = $em->getRepository('CMBundle:ImageAlbum')->getImagesDataPerPublisher($type, $publisherId, 'id, img, imgOffset');
-
-        foreach ($imagesDataInAlbum as $image) {
-            $this->get('logger')->info($image['id'].' '.$image['img']);
-        }
-
         }
 
         return new JsonResponse(array(
@@ -473,7 +463,7 @@ class ImageAlbumController extends Controller
     }
 
     /**
-     * @Route("/{type}/{id}/album/{page}", name="entity_album", requirements={"id" = "\d+", "page" = "\d+"})
+     * @Route("/{type}/{id}/{slug}/album/{page}", name="entity_album", requirements={"id" = "\d+", "page" = "\d+"})
      * @Route("/{slug}/album/{id}/{page}", name="user_album", requirements={"id" = "\d+", "page" = "\d+"})
      * @Route("/pages/{slug}/album/{id}/{page}", name="page_album", requirements={"id" = "\d+", "page" = "\d+"})
      * @Route("/groups/{slug}/album/{id}/{page}", name="group_album", requirements={"id" = "\d+", "page" = "\d+"})
@@ -482,7 +472,7 @@ class ImageAlbumController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id);
+        $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id, array('type' => $type, 'slug' => $slug));
         
         if (is_null($album) || $album->getPost()->getPublisher()->getSlug() == $slug) {
             throw new NotFoundHttpException($this->get('translator')->trans('Album not found.', array(), 'http-errors'));

@@ -1,9 +1,34 @@
 <!DOCTYPE html>
-<html>
+{% set meta = meta|default({description: ''|trans }) %}
+<html{% if meta.itemtype is defined %} itemscope itemtype="http://schema.org/{{ meta.type }}"{% endif %}>
+
     <head>
         <meta charset="UTF-8" />            
         <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+
         <title>{% block title %}{% endblock %}</title>
+        <meta name="description" content="{{ meta.description }}" />
+
+        <!-- Schema.org markup for Google+ -->
+        <meta itemprop="name" content="{{ block('title') }}">
+        <meta itemprop="description" content="{{ meta.description }}">
+        {% if meta.image is defined %}<meta itemprop="image" content="{{ app.request.schemeAndHttpHost ~ meta.image }}">{% endif %}
+
+        <!-- Twitter Card data -->
+        <meta name="twitter:card" content="product">
+        {#<meta name="twitter:site" content="@publisher_handle">#}
+        <meta name="twitter:title" content="{{ block('title') }}">
+        <meta name="twitter:description" content="{{ meta.description }}">
+        {% if meta.creator is defined %}<meta name="twitter:creator" content="@author_handle">{% endif %}
+        {% if meta.image is defined %}<meta name="twitter:image" content="{{ app.request.schemeAndHttpHost ~ meta.image }}">{% endif %}
+
+        <!-- Open Graph data -->
+        <meta property="og:title" content="{{ block('title') }}" />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="{{ app.request.uri }}" />
+        {% if meta.image is defined %}<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ meta.image }}" />{% endif %}
+        <meta property="og:description" content="{{ meta.description }}" />
+        <meta property="og:site_name" content="Circuito Musica" />
 
         {% block initialJavascript %}{% endblock %}
 
