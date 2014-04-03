@@ -40,6 +40,10 @@
         <span class="{% if inputGroup|default(false) %}input-group-addon {% endif %}btn btn-default btn-file">
             <span class="fileinput-new">{{ 'Browse'|trans({}, translation_domain) }}</span>
             <span class="fileinput-exists">{{ 'Change'|trans({}, translation_domain) }}</span>
+    {% elseif type == 'date' %}
+        {% set type = 'text' %}
+        {% if value is not empty %}{% set value = value|format_datetime('q') %}{% endif %}
+        {% set attr = attr|merge({'timepicker-container': '', 'data-mask': '99/99/9999'}) %}
     {% elseif type == 'time' %}
         {% set type = 'text' %}
         {% if value is not empty %}{% set value = value|format_datetime('q') %}{% endif %}
@@ -240,27 +244,6 @@
     </label>
 {% endspaceless %}
 {% endblock checkbox_widget %}
-
-{% block _cm_cmbundle_disc_year_widget %}
-{% spaceless %}
-    {% if widget == 'single_text' %}
-        {{ block('form_widget_simple') }}
-    {% else %}
-        <div {{ block('widget_container_attributes') }}>
-            {{ date_pattern|replace({
-                '{{ year }}':  form_widget(form.year),
-                '{{ month }}': form_widget(form.month, { 'attr' : { class: 'hidden' }}), 
-                '{{ day }}':  form_widget(form.day, { 'attr' : { class: 'hidden' }}),
-            })|raw }}
-            {#{{ date_pattern|replace({
-                '{{ year }}':  form_widget(form.year),
-                '{{ month }}': form_widget(form.month),
-                '{{ day }}':   form_widget(form.day),
-            })|raw }}#}
-        </div>
-    {% endif %}
-{% endspaceless %}
-{% endblock  %}
 
 {% block _cm_cmbundle_comment_comment_widget %}
 {% spaceless %}

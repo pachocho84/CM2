@@ -438,8 +438,7 @@ $(function() {
                     $form.find('textarea').focus().val('');
                 } else if (commentType == 'downward') {
                     $media.closest('.box').after(data.comment);
-                    $form.replaceWith(data.form);
-                    $(data.form).find('input').focus();
+                    $form.replaceWith(data.form).find('input').focus();
                 } else if ($.inArray('edit', commentType)) {
                     $form.closest('.comment').replaceWith(data.comment);
                 }

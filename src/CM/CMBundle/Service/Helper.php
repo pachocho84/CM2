@@ -50,6 +50,20 @@ class Helper
         }
     }
 
+    public function dateFormat()
+    {
+        $formatter = new \IntlDateFormatter(
+            $this->localeDetector->getLocale(),
+            \IntlDateFormatter::SHORT,
+            \IntlDateFormatter::SHORT,
+            $this->timezoneDetector->getTimezone(),
+            \IntlDateFormatter::GREGORIAN,
+            ''
+        );
+
+        return $formatter->getPattern();
+    }
+
     public function dateTimeFormat($lang = 'js')
     {
         $formatter = new \IntlDateFormatter(
