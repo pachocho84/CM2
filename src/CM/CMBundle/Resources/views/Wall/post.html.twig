@@ -51,7 +51,7 @@
             {% for comment in relatedObjects %}
                 {{ comment.id }}
             {% else %}
-                {{ dump(relatedObjects) }}
+                TODO
             {% endfor %}
         {% else  %}
             {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}

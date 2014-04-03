@@ -41,18 +41,19 @@ class EntityType extends BaseEntityType
                     $category = constant('CM\CMBundle\Entity\EntityCategory::'.$entityChild);
                     return $er->filterEntityCategoriesByEntityType($category, $options);
                 }
-            ))->add('images', 'collection', array(
-                'type' => new ImageType,
-                'by_reference' => false,
-                'options' => array(
-                    'error_bubbling' => false,
-                )
+            // ))->add('images', 'collection', array(
+            //     'type' => new ImageType,
+            //     'by_reference' => false,
+            //     'options' => array(
+            //         'error_bubbling' => false,
+            //     )
             // ))->add('multimedia', 'collection', array(
             //     'type' => new MultimediaType,
             //     'by_reference' => false,
             //     'options' => array(
             //         'error_bubbling' => false,
             //     )
+            ))->add('image', new ImageType, array(
             ))->add('imgOffset', 'hidden', array(
                 'attr' => array('img-offset-field' => '')
             ))->add('entityUsers', 'collection', array(
