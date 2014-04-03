@@ -433,7 +433,7 @@ $(function() {
                     form.closest('.bottom').find('.bottom-comment-count').replaceWith(data.commentCount);
                     form.find('textarea').focus().val('');
                 } else if (commentType == 'downward') {
-                    media.after(data.comment);
+                    media.closest('.box').after(data.comment);
                     form.find('input').focus().val('');
                 } else if ($.inArray('edit', commentType)) {
                     form.closest('.comment').replaceWith(data.comment);

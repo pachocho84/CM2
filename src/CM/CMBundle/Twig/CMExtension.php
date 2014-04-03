@@ -1070,7 +1070,6 @@ class CMExtension extends \Twig_Extension
         if (is_array($what) && !is_null($options['closure'])) {
             $closure = create_function('$v, $a', 'return '.$options['closure'].';');
             foreach ($what as $i => &$v) {
-                if ($i == $options['limit']) break;
                 $v = $closure($v, $options[args]);
             }
         }

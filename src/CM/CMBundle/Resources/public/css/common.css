@@ -213,6 +213,7 @@ form textarea[expandable] {
     padding-right: 250px;
 }
 #blueimp-gallery .info {
+    color: #ffffff;
     text-align: center;
     position: fixed;
     bottom: 0px;
@@ -244,6 +245,7 @@ form textarea[expandable] {
 }
 #blueimp-gallery .prev,
 #blueimp-gallery .next {
+    color: #ffffff;
     line-height: 34px !important;
     font-size: 20px;
 }
