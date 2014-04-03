@@ -5,12 +5,8 @@ namespace CM\CMBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use CM\CMBundle\Entity\Event;
-use CM\CMBundle\Entity\EventDate;
-use CM\CMBundle\Entity\Image;
-use CM\CMBundle\Form\DataTransformer\ArrayCollectionToEntityTransformer;
 
-class ImageAlbumType extends BaseEntityType
+class AlbumType extends BaseEntityType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -18,10 +14,8 @@ class ImageAlbumType extends BaseEntityType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-    
         $builder->add('images', 'collection', array(
-                'type' => new ImageType(),
+                'type' => new ImageEditType,
                 'by_reference' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -38,8 +32,7 @@ class ImageAlbumType extends BaseEntityType
         parent::setDefaultOptions($resolver);
         
         $resolver->setDefaults(array(
-            'data_class' => 'CM\CMBundle\Entity\ImageAlbum',
-            'groups' => array('ImageAlbum', 'Default'),
+            'data_class' => 'CM\CMBundle\Entity\Entity',
         ));
     }
 

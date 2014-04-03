@@ -78,7 +78,6 @@ $(function() {
             items: 'div.image',
             forcePlaceholderSize: true,
             appendTo: 'parent',
-            containment: 'parent',
             helper: 'clone',
             stop: function() {
                 $.each($('.image input[type="hidden"]').get().reverse(), function(i, e) {

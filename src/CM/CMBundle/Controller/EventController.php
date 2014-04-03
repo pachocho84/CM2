@@ -352,6 +352,7 @@ class EventController extends Controller
         }
 
         $em->remove($event);
+        var_dump('expression');die;
         $em->flush();
 
         return new JsonResponse(array('title' => $event->getTitle()));

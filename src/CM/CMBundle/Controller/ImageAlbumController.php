@@ -19,6 +19,7 @@ use CM\CMBundle\Entity\ImageAlbum;
 use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Form\ImageAlbumType;
+use CM\CMBundle\Form\AlbumType;
 use CM\CMBundle\Form\ImageType;
 
 class ImageAlbumController extends Controller
@@ -92,8 +93,14 @@ class ImageAlbumController extends Controller
             $formRoute = 'album_new';
             $formRouteArgs = array();
         }
+
+        if ($album instanceof ImageAlbum) {
+            $formType = new ImageAlbumType;
+        } else {
+            $formType = new AlbumType;
+        }
  
-        $form = $this->createForm(new ImageAlbumType, $album, array(
+        $form = $this->createForm($formType, $album, array(
 /*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
             'cascade_validation' => true,
             'error_bubbling' => false,
@@ -115,6 +122,8 @@ class ImageAlbumController extends Controller
                     return new RedirectResponse($this->generateUrl('page_album', array('id' => $album->getId(), 'slug' => $page->getSlug())));
                 case 'Group':
                     return new RedirectResponse($this->generateUrl('group_album', array('id' => $album->getId(), 'slug' => $group->getSlug())));
+                case 'events':
+                    return new RedirectResponse($this->generateUrl('entity_album', array('id' => $album->getId(), 'slug' => $album->getSlug(), 'type' => $object)));
                 default:
                     return new RedirectResponse($this->generateUrl('user_album', array('id' => $album->getId(), 'slug' => $publisher->getSlug())));
             }
