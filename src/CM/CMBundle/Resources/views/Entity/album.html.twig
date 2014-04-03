@@ -1,5 +1,11 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+{% block title %}{{ album.getTitle }}{% endblock %}
+{% set meta = {
+    description: album|short_text({max: 155, stripped: true}),
+    image: album.image|default_img|imagine_filter('full')
+} %}
+
 {% block body %}
 	
 	<h2><a href="{{ path(album|class_name|lower ~ '_show', {id: album.id, slug: album.getSlug}) }}">{{ icon(album|class_name) }} {{ album }} - {{ 'images'|trans }}</a></h2>

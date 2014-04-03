@@ -1,10 +1,11 @@
 {% extends 'CMBundle::layout.html.twig' %}
+{% set noColumns = true %}
+
 {% block title %}{{ event.getTitle }}{% endblock %}
 {% set meta = {
     description: event|short_text({max: 155, stripped: true}),
     image: event.image|default_img|imagine_filter('full')
 } %}
-{% set noColumns = true %}
 
 {% block bodyHeading %}
     <div class="row">

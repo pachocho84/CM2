@@ -1,5 +1,11 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+{% block title %}{{ image.entity.getTitle }}{% endblock %}
+{% set meta = {
+    description: image.text,
+    image: image|imagine_filter('full')
+} %}
+
 {% block body %}
 
     <div class="box">

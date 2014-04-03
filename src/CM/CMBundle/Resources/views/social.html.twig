@@ -7,6 +7,9 @@
         {% include('CMBundle:Comment:commentCount.html.twig') %}
     </span>
 
+    {{ include('CMBundle:Like:like.html.twig') }}
+    
+
     {% set isImage = isImage|default(false) %}
     {{ render(controller('CMBundle:Comment:comments', {'id': post.id, 'isImage': isImage})) }}
 

@@ -1,6 +1,5 @@
-{% if post.likes.count > 0 %}
-
-    <li class="bottom-likes">
+<div class="bottom-likes">
+    {% if post.likes.count > 0 %}
         
         {{ icon('Like')|raw }}
         
@@ -28,11 +27,6 @@
                 {{ '%name% and %link%%count% others %endlink% like this.'|trans({'%name%': '<a href="'~path('user_show', {'slug': post.likes[0].user.slug})~'">'~post.likes[0].user~'</a>', '%count%': whoLikesIt - 2, '%link%': '<a href="'~path('who_likes_it', {'type': post|class_name|lower, 'id': post.id})~'" class="modal-trigger" ' ~ tooltip(post.likes[2:], {'closure': '$v->getUser()->getFullname()'}) ~ '>', '%endlink%': '</a>'})|raw }}
             {% endif %}
         {% endif %}
-        
-    </li>
 
-{% else %}
-    
-    <div class="bottom-likes"></div>
-            
-{% endif %}
+    {% endif %}
+</div>

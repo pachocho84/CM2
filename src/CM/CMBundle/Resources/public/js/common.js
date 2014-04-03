@@ -613,7 +613,9 @@ $(function() {
         });
 
         $modal.find('.modal-footer button:first').on('click', function(event) {
-            $link.removeAttr('data-toggle').trigger('click', $link).attr('data-toggle', 'confirm');
+            $link.removeAttr('data-toggle');
+            $link[0].click();
+            $link.attr('data-toggle', 'confirm');
             $modal.modal('hide');
         });
 
