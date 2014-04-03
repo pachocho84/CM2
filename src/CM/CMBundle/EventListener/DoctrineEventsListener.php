@@ -414,7 +414,7 @@ class DoctrineEventsListener
         } else {
             $post = null;
             $object = $comment->getImage();
-            $entity = $object->getEntity();
+            $entity = null;
             $toUser = $object->getUser();
             $toCreator = $object->getUser();
         }
@@ -500,7 +500,7 @@ class DoctrineEventsListener
         } else {
             $post = null;
             $object = $like->getImage();
-            $entity = $object->getEntity();
+            $entity = null;
             $toUser = $object->getUser();
             $toCreator = $object->getUser();
         }

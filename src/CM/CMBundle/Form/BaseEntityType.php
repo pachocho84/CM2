@@ -74,7 +74,7 @@ class BaseEntityType extends AbstractType
                 });
         }
         if (in_array('ROLE_ADMIN', $options['roles'])) {
-            $builder->add($builder->create('posts', new PostType, array('label' => 'Post'))->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'])));
+            $builder->add('post', new PostType, array('label' => 'Post'));
         }
     }
     

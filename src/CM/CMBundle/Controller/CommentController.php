@@ -17,6 +17,16 @@ use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Comment;
 use CM\CMBundle\Form\CommentType;
 
+function getAllErrors($form, &$errors = array()) {
+    foreach ($form->getErrors() as $error) {
+        $errors[] = $form->getName().': '.$error->getMessage();
+    }
+    foreach ($form->all() as $child) {
+        getAllErrors($child, $errors);
+    }
+    return $errors;
+}
+
 /**
  * @Route("/comments")
  */
@@ -60,7 +70,7 @@ class CommentController extends Controller
             } else {
                 $comment = new Comment;
                 $form = $this->createForm(new CommentType, $comment, array(
-                    'action' => $this->generateUrl('comment_new', array(
+                    'action' => $this->generateUrl($request->get('_route'), array(
                         'id' => $id,
                         'isImage' => $isImage
                     )),
@@ -77,7 +87,7 @@ class CommentController extends Controller
             }
 
             if ($isValid) {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($comment);
                 $em->flush();
 
@@ -86,7 +96,8 @@ class CommentController extends Controller
                         $post = $em->getRepository('CMBundle:Post')->findOneBy(array('object' => $comment->className(), 'objectIds' => ','.$comment->getId().','));
                         
                         return new JsonResponse(array(
-                            'comment' => $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post, 'comment' => $comment, 'inEntity' => true, 'singleComment' => true))
+                            'comment' => $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post, 'comment' => $comment, 'inEntity' => true, 'singleComment' => true)),
+                            'form' => $this->renderView('CMBundle:Comment:postForm.html.twig', array('form' => $form->createView()))
                         ));
                     } elseif (!is_null($post)) {
                         $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getPost()));
@@ -105,6 +116,7 @@ class CommentController extends Controller
                 $this->get('session')->getFlashBag('confirm', 'Comment successfully added.');
             } else {
                 if ($request->get('_route') == 'comment_entity_new') {
+                    var_dump(getAllErrors($form));
                     throw new HttpException(400, $this->get('translator')->trans('Error.', array(), 'http-errors'));
                 }
                 $form = $form->createView();

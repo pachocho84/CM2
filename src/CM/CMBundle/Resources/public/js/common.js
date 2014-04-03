@@ -425,22 +425,25 @@ $(function() {
     // AJAX comment form
     $(document).on('submit', '.comment_new form, .comment_edit form', function(event) {
         event.preventDefault();
+        $(event.currentTarget).find('.comment').attr('readonly', '');
         $(event.currentTarget).ajaxSubmit({
             dataType: 'json',
-            success: function(data, statusText, xhr, form) {
-                var commentType = form.find('[comment-type]').attr('comment-type').split(' ');
-                var media = form.closest('.media');
+            success: function(data, statusText, xhr, $form) {
+                var commentType = $form.find('[comment-type]').attr('comment-type').split(' ');
+                var $media = $form.closest('.media');
 
                 if (commentType == 'upward') {
-                    media.before(data.comment);
-                    form.closest('.bottom').find('.bottom-comment-count').replaceWith(data.commentCount);
-                    form.find('textarea').focus().val('');
+                    $media.before(data.comment);
+                    $form.closest('.bottom').find('.bottom-comment-count').replaceWith(data.commentCount);
+                    $form.find('textarea').focus().val('');
                 } else if (commentType == 'downward') {
-                    media.closest('.box').after(data.comment);
-                    form.find('input').focus().val('');
+                    $media.closest('.box').after(data.comment);
+                    $form.replaceWith(data.form);
+                    $(data.form).find('input').focus();
                 } else if ($.inArray('edit', commentType)) {
-                    form.closest('.comment').replaceWith(data.comment);
+                    $form.closest('.comment').replaceWith(data.comment);
                 }
+                $(event.currentTarget).find('.comment').removeAttr('readonly');
             }
         });
     });
