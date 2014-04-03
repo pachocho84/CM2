@@ -1060,7 +1060,7 @@ class CMExtension extends \Twig_Extension
             'separator' => '<br/>',
             'closure' => null,
             'args' => array(),
-            'limit' => INF
+            'limit' => null
         ), $options);
 
         if (is_array($what) && !is_null($options['limit'])) {

@@ -12,13 +12,13 @@
             <div class="media">
                 <div class="pull-right">
                     {% if can_manage(album) %}
-                        <span class="btn btn-default btn-sm fileinput-button" data-redirect="{{ path('imagealbum_edit', {'id': album.id, 'slug': album.getSlug, 'publisher': album|class_name}) }}">
+                        <span class="btn btn-default btn-sm fileinput-button" data-redirect="{{ path('imagealbum_edit', {id: album.id, slug: album.getSlug, publisher: album|class_name}) }}">
                             {{ icon('Plus') }} {{ 'Add photos'|trans }}
-                            <form action="{{ path('imagealbum_add_image', {'id': album.id}) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ path('imagealbum_add_image', {id: album.id}) }}" method="post" enctype="multipart/form-data">
                                 <input id="images" type="file" name="images" multiple />
                             </form>
                         </span>
-                        <a href="{{ path('imagealbum_edit', {'id': album.id, 'slug': album.getSlug, 'publisher': album|class_name}) }}" class="btn btn-default btn-sm">{{ icon('Edit') }} {{ 'Edit'|trans }}</a>
+                        <a href="{{ path('imagealbum_edit', {id: album.id, slug: album.getSlug, publisher: album|class_name}) }}" class="btn btn-default btn-sm">{{ icon('Edit') }} {{ 'Edit'|trans }}</a>
                     {% endif %}
                 </div>
             
@@ -44,7 +44,7 @@
 
         <div class="box-body images{% if can_manage(album) and images|length > 1 %} images-sortable{% endif %} clearfix">
             {% if can_manage(album) and images|length > 1 %}
-                <form action="{{ path('imagealbum_sort', {'id': album.id, 'slug': app.user.slug, 'publisher': album|class_name}) }}" method="post">
+                <form action="{{ path('imagealbum_sort', {id: album.id, slug: album.getSlug, publisher: 'events'}) }}" method="post">
                     <div class="alert alert-info">
                         {{ 'Drag and drop the images to sort them, then press save.'|trans }}
                         <input type="submit" class="btn btn-default" value="{{ 'Save'|trans }}" />

@@ -77,6 +77,9 @@ $(function() {
         $('.images-sortable form').sortable({ 
             items: 'div.image',
             forcePlaceholderSize: true,
+            appendTo: 'parent',
+            containment: 'parent',
+            helper: 'clone',
             stop: function() {
                 $.each($('.image input[type="hidden"]').get().reverse(), function(i, e) {
                     $(e).val($('.image input[type="hidden"]').length - i);

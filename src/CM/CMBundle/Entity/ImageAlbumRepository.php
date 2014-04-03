@@ -24,6 +24,7 @@ class ImageAlbumRepository extends BaseRepository
             'groupId'      => null,
             'pageId'       => null,
             'type'         => ImageAlbum::TYPE_ALBUM,
+            'entityType' => null,
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'after' => null,
             'paginate'      => true,
@@ -204,9 +205,10 @@ class ImageAlbumRepository extends BaseRepository
         $options = self::getOptions($options);
 
         $query = $this->getEntityManager()->createQueryBuilder('e')
-            ->select('e, t')->from('CMBundle:'.(!is_null($options['type']) ? ucfirst(substr($options['type'], 0, -1)) : 'Entity'), 'e')
+            ->select('e, t')->from('CMBundle:'.(!is_null($options['entityType']) ? ucfirst(substr($options['entityType'], 0, -1)) : 'Entity'), 'e')
             ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')
-            ->setParameter('locales', $options['locales']);
+            ->setParameter('locales', $options['locales'])
+            ->andWhere('e.id = :id')->setParameter('id', $id);
         if (!is_null($options['slug'])) {
             $query->andWhere('t.slug = :slug')->setParameter('slug', $options['slug']);
         }

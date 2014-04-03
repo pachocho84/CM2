@@ -196,14 +196,8 @@ class ImageAlbumController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $publisher = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
-        
-        if (!$publisher) {
-            throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
-        }
-
         try {
-            $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id, array('userId' => $publisher->getId()));
+            $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id);
         } catch (\Exception $e) {
             throw new NotFoundHttpException($this->get('translator')->trans('Album not found.', array(), 'http-errors'));
         }
@@ -227,8 +221,8 @@ class ImageAlbumController extends Controller
             case 'User':
                 return $this->redirect($this->generateUrl('user_album', array('slug' => $slug, 'id' => $id)), 301);
                 break;
-            case 'Event':
-                return $this->redirect($this->generateUrl('entity_album', array('type' => $request->get('publisher'), 'id' => $id)), 301);
+            case 'events':
+                return $this->redirect($this->generateUrl('entity_album', array('type' => $request->get('publisher'), 'id' => $id, 'slug' => $slug)), 301);
                 break;
             
             default:
@@ -472,7 +466,7 @@ class ImageAlbumController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id, array('type' => $type, 'slug' => $slug));
+        $album = $em->getRepository('CMBundle:ImageAlbum')->getAlbum($id, array('entityType' => $type, 'slug' => $slug));
         
         if (is_null($album) || $album->getPost()->getPublisher()->getSlug() == $slug) {
             throw new NotFoundHttpException($this->get('translator')->trans('Album not found.', array(), 'http-errors'));
