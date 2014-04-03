@@ -196,6 +196,9 @@ $(function() {
         $(event.currentTarget).tooltip({
             delay: { show: 250, hide: 0 }
         }).tooltip('show');
+        $(event.currentTarget).on('remove', function() {
+            $(event.currentTarget).tooltip('destroy');
+        });
     });
 
 

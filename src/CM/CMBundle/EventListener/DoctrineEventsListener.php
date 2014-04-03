@@ -365,9 +365,15 @@ class DoctrineEventsListener
     
     private function postAggregatePersistedRoutine(Post &$post, EntityManager $em)
     {
+        switch ($post->getObject()) {
+            case Comment::className():
+            case Like::className():
+                $type = $em->getRepository('CMBundle:'.$this->serviceContainer->get('cm.helper')->className($post->getObject()))->findOneById($post->getObjectIds()[0])->getImageId();
+                break;
+        }
         $arrayPost = $em->getRepository('CMBundle:Post')->getLastPosts(array(
-            'entityId' => $post->getEntity()->getId(),
-            'object' => $post->getObject().'[]',
+            'entityId' => $post->getEntityId(),
+            'object' => $post->getObject().'['.$type.']',
             'aggregate' => true,
             'after' => new \DateTime('-1 week'),
             'paginate' => false,
@@ -385,7 +391,7 @@ class DoctrineEventsListener
                 $post->getCreator(),
                 $post->getUser(),
                 Post::TYPE_AGGREGATE,
-                $post->getObject().'[]',
+                $post->getObject().'['.$type.']',
                 array($post->getObjectIds()[0]),
                 $post->getEntity()
             );
@@ -407,8 +413,8 @@ class DoctrineEventsListener
             $toCreator = $post->getCreator();
         } else {
             $post = null;
-            $entity = null;
             $object = $comment->getImage();
+            $entity = $object->getEntity();
             $toUser = $object->getUser();
             $toCreator = $object->getUser();
         }
@@ -493,24 +499,12 @@ class DoctrineEventsListener
             $toCreator = $post->getCreator();
         } else {
             $post = null;
-            $entity = null;
             $object = $like->getImage();
+            $entity = $object->getEntity();
             $toUser = $object->getUser();
             $toCreator = $object->getUser();
         }
 
-        $lastPost = $em->getRepository('CMBundle:Post')->getLastPosts(array(
-            'entityId' => $entity->getId(),
-            'like' => true,
-            'object' => get_class($like),
-            'after' => new \DateTime('-1 week'),
-            'paginate' => false,
-            'limit' => 1
-        ));
-
-        if (count($lastPost) >= 1) {
-            $lastPost[0]->addObjectId($like->getId());
-        } else {
             $this->get('cm.post_center')->newPost(
                 $like->getUser(),
                 $like->getUser(),
@@ -519,7 +513,6 @@ class DoctrineEventsListener
                 array($like->getId()),
                 $entity
             );
-        }
 
         $this->get('cm.notification_center')->newNotification(
             Notification::TYPE_LIKE,

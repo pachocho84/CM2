@@ -29,16 +29,16 @@ class Helper
 
     public static function className($object)
     {
-        if (substr($object, -2, 2) == '[]') {
-            $object = substr($object, 0, -2);
-            $aggregate = true;
+        if ($pos = strpos($object, '[')) {
+            $object = substr($object, 0, $pos);
+            $aggregate = substr($object, $pos);
         }
         try {
             $name = new \ReflectionClass(is_string($object) ? $object : get_class($object));
         } catch (\Exception $e) {
             throw new \Exception($object.' is not a known class.');
         }
-        return $name->getShortName().($aggregate ? '[]' : '');
+        return $name->getShortName().(isset($aggregate) ? $aggregate : '');
     }
 
     public static function fullClassName($shortName)
