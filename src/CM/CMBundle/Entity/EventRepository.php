@@ -327,5 +327,13 @@ class EventRepository extends BaseRepository
             ->orderBy('d.start')
             ->setMaxResults($limit)
             ->getQuery()->getResult();
-    } 
+    }
+
+    public function delete($id)
+    {
+        $this->createQueryBuilder('e')
+            ->delete('CMBundle:Event', 'e')
+            ->where('e.id = :id')->setParameter('id', $id)
+            ->getQuery()->execute();
+    }
 }

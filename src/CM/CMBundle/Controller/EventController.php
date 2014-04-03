@@ -351,9 +351,11 @@ class EventController extends Controller
               throw new HttpException(401, 'Unauthorized access.');
         }
 
-        $em->remove($event);
-        var_dump('expression');die;
-        $em->flush();
+        $em->getRepository('CMBundle:Event')->delete($id);
+
+        // $em->remove($event);
+        // var_dump('expression');die;
+        // $em->flush();
 
         return new JsonResponse(array('title' => $event->getTitle()));
     }
