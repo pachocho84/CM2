@@ -97,7 +97,6 @@ class CommentController extends Controller
                         
                         return new JsonResponse(array(
                             'comment' => $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post, 'comment' => $comment, 'inEntity' => true, 'singleComment' => true)),
-                            'form' => $this->renderView('CMBundle:Comment:postForm.html.twig', array('form' => $form->createView()))
                         ));
                     } elseif (!is_null($post)) {
                         $commentCount = $this->renderView('CMBundle:Comment:commentCount.html.twig', array('post' => $comment->getPost()));
@@ -116,7 +115,6 @@ class CommentController extends Controller
                 $this->get('session')->getFlashBag('confirm', 'Comment successfully added.');
             } else {
                 if ($request->get('_route') == 'comment_entity_new') {
-                    var_dump(getAllErrors($form));
                     throw new HttpException(400, $this->get('translator')->trans('Error.', array(), 'http-errors'));
                 }
                 $form = $form->createView();

@@ -1,1 +1,18 @@
-<div class="objects">{{ post.publisher }} - {{ post.entity }}<div class="object">{{ include('CMBundle::social.html.twig', {isImage: true}) }}</div></div>
+<div class="media">
+    
+    {{ show_img_box(image.publisher.img|imagine_filter('avatar'), {width: 50, offset: image.publisher.imgOffset, link: path(image.publisherType ~ '_show', {slug: image.publisher.slug}), box_attributes: {class: 'pull-left img-rounded'}, publisher_box: image.publisher}) }}
+
+    <div class="media-body">
+
+        <a href="{{ path(image.publisherType ~ '_show', {slug: image.publisher.slug}) }}">{{ image.publisher }}</a>
+
+        <div class="text-muted small">
+            {{ icon((image|class_name)) }}
+            {{ image.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
+        </div>
+    </div>
+</div>
+
+<div class="image-description">{{ image.text }}</div>
+
+{{ include('CMBundle::social.html.twig', {post: image, isImage: true}) }}

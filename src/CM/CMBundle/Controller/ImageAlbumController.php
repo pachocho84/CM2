@@ -350,7 +350,7 @@ class ImageAlbumController extends Controller
 
             return new JsonResponse(array(
                 'albumTitle' => $image->getEntity()->getTitle(),
-                'sidebar' => $this->renderView('CMBundle:Wall:sidebarSocial.html.twig', array('post' => $image, 'isImage' => true))
+                'sidebar' => $this->renderView('CMBundle:Wall:sidebarSocial.html.twig', array('image' => $image))
             ));
         }
 

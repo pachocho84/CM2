@@ -28,7 +28,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     line-height: 1.4;
 }
 */
-form textarea.form-control {
+form textarea[expandable].form-control {
     height: 34px;
 }
 .text-danger {
@@ -233,15 +233,18 @@ form textarea[expandable] {
 #blueimp-gallery .sidebar {
     display: none;
     position: fixed;
-    width: 250px;
+    width: 300px;
     top: 0px;
     bottom: 0px;
     right: 0px;
     background: #fff;
     z-index: 100100;
-    padding: 10px;
-    font-size: 16px;
+    padding: 15px;
     overflow-y: scroll;
+}
+#blueimp-gallery .sidebar .image-description {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 #blueimp-gallery .prev,
 #blueimp-gallery .next {

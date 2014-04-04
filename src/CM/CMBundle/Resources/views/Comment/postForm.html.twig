@@ -1,5 +1,0 @@
-{% if is_granted('ROLE_USER') %}
-    {{ form_start(form) }}
-        {{ form_widget(form.comment, {downward: true}) }}
-    {{ form_end(form) }}
-{% endif %}

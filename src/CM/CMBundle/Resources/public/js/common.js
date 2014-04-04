@@ -243,6 +243,7 @@ $(function() {
         pageUrl = pageUrl.slice(0, pageUrl.length - 1).join('/') + '/';
         var json = null;
         var sidebarReq = null;
+        var sidebarTimer = null;
 
         var gallery = blueimp.Gallery([{
                 href: href,
@@ -303,6 +304,9 @@ $(function() {
                     history.replaceState(originalUrl, originalTitle, originalUrl);
                 },
                 onslide: function(i, slide) {
+                    if (sidebarTimer != null) {
+                        clearTimeout(sidebarTimer);
+                    }
                     if (sidebarReq != null) {
                         sidebarReq.abort();
                     }
@@ -316,14 +320,16 @@ $(function() {
                         url = pageUrl + json[i].id;
                     }
 
-                    sidebarReq = $.get(url, function(data) {
-                        history.pushState(url, data.albumTitle, url);
-                        historyCount++;
-                        document.title = data.albumTitle;
-                        
-                        $title.html(data.albumTitle);
-                        $sidebar.html(data.sidebar);
-                    });
+                    sidebarTimer = setTimeout(function() {
+                        sidebarReq = $.get(url, function(data) {
+                            history.pushState(url, data.albumTitle, url);
+                            historyCount++;
+                            document.title = data.albumTitle;
+                            
+                            $title.html(data.albumTitle);
+                            $sidebar.html(data.sidebar);
+                        });
+                    }, 100);
                     if (json != null) {
                         $sequence.html((json[i].index + 1)  + ' / ' + json.length);
                     }
@@ -425,7 +431,7 @@ $(function() {
     // AJAX comment form
     $(document).on('submit', '.comment_new form, .comment_edit form', function(event) {
         event.preventDefault();
-        $(event.currentTarget).find('.comment').attr('readonly', '');
+        $(event.currentTarget).find('.comment').attr('readonly', 'readonly');
         $(event.currentTarget).ajaxSubmit({
             dataType: 'json',
             success: function(data, statusText, xhr, $form) {
@@ -438,7 +444,7 @@ $(function() {
                     $form.find('textarea').focus().val('');
                 } else if (commentType == 'downward') {
                     $media.closest('.box').after(data.comment);
-                    $form.replaceWith(data.form).find('input').focus();
+                    $form.find('input[type!="hidden"]').focus().val('');
                 } else if ($.inArray('edit', commentType)) {
                     $form.closest('.comment').replaceWith(data.comment);
                 }
