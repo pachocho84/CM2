@@ -1,4 +1,4 @@
-{% if images|length > 1 %}
+{% if images|length > 0 %}
     <div class="box">
         <div class="box-heading">
             <h2>{{ icon('Photo') }} {{ 'Photos'|trans }} <small><a href="{{ path('entity_album', {id: entityId, type: entityType, slug: entitySlug}) }}">{{ 'View all photos'|trans }} ({{ count }})</a></small></h2>
@@ -9,14 +9,15 @@
                 <img src="{{ images[0]|default_img|imagine_filter('medium') }}" class="img-responsive" />
             </a>
 
-
-            <div class="entity-assets">
-                {% for image in images[1:] %}
-                    <div class="entity-asset">
-                        {{ show_img_box(image|default_img|imagine_filter('small'), {ratio: 1, link: path('image_show', {id: image.id}), box_attributes: {class: 'pull-left'}, lightbox: {image: image}}) }}
-                    </div>
-                {% endfor %}
-            </div>
+            {% if images|length > 1 %}
+                <div class="entity-assets">
+                    {% for image in images[1:] %}
+                        <div class="entity-asset">
+                            {{ show_img_box(image|default_img|imagine_filter('small'), {ratio: 1, link: path('image_show', {id: image.id}), box_attributes: {class: 'pull-left'}, lightbox: {image: image}}) }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endif %}
