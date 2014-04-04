@@ -232,7 +232,7 @@ $(function() {
         var originalUrl = document.URL;
         var originalTitle = document.title;
         var historyCount = 0;
-        var $sidebar = $('#blueimp-gallery .sidebar');
+        var $sidebar = $('#blueimp-gallery-container .sidebar');
         var $title = $('#blueimp-gallery .title');
         var $sequence = $('#blueimp-gallery .sequence');
         var $target = $(event.currentTarget);
@@ -250,8 +250,6 @@ $(function() {
                 thumbnail: href
             }], {
                 event: event,
-                transitionSpeed: 0,
-                slideshowTransitionSpeed: 0,
                 onopen: function() {
                     $('#body').addClass('fixing');
                     var top = $(document).scrollTop();
@@ -441,13 +439,15 @@ $(function() {
                 if (commentType == 'upward') {
                     $media.before(data.comment);
                     $form.closest('.bottom').find('.bottom-comment-count').replaceWith(data.commentCount);
-                    $form.find('textarea').focus().val('');
+                    $form.find('.comment').focus().val('').trigger('autosize.resize');
                 } else if (commentType == 'downward') {
                     $media.closest('.box').after(data.comment);
-                    $form.find('input[type!="hidden"]').focus().val('');
+                    $form.find('.comment').focus().val('').trigger('autosize.resize');
                 } else if ($.inArray('edit', commentType)) {
                     $form.closest('.comment').replaceWith(data.comment);
                 }
+            },
+            complete: function() {
                 $(event.currentTarget).find('.comment').removeAttr('readonly');
             }
         });

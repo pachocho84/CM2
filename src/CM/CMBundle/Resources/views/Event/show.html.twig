@@ -9,11 +9,11 @@
 
 {% block bodyHeading %}
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-md-8">
             <h2>{{ icon('Event') }} {{ event.getTitle }}</h2>
             {% if event.getSubtitle is not null %}<h3>{{ event.getSubtitle }}</h3>{% endif %}
         </div>
-        <div class="col-lg-4 text-right pull-right">
+        <div class="col-md-4 text-right pull-right">
             {% if is_granted('ROLE_USER') %}
                 <div class="btn-group">
                     {{ include('CMBundle:Like:likeActions.html.twig', {post: event.post, button: true, selector: '#social'}) }}

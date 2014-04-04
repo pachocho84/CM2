@@ -5,33 +5,44 @@
         </h2>
     </div>
     <div class="box-body">
-        <dl>
-            <dt>Tracks</dt>
-            <dd>
-                <ul>
+        <div class="table-responsive">
+            <table class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 1px"></th>
+                        <th style="width: 1px">#</th>
+                        <th>{{ 'Title'|trans }}</th>
+                        <th>{{ 'Composer'|trans }}</th>
+                        <th>{{ 'Artists'|trans }}</th>
+                        <th style="width: 1px">{{ 'Duration'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {% for track in tracks %}
-                        <li>
-                            {{ track.number }}) {{ track }}
-                            <dl>
-                                {% if track.composer is not null and track.composer is not empty %}<dt>Composer</dt><dd>{{ track.composer }}</dd>{% endif %}
-                                {% if track.movement is not null and track.movement is not empty %}<dt>Movement</dt><dd>{{ track.movement }}</dd>{% endif %}
-                                {% if track.artists is not null and track.artists is not empty %}<dt>Artists</dt><dd>{{ track.artists }}</dd>{% endif %}
-                                {% if track.duration is not null and track.duration is not empty %}<dt>Duration</dt><dd>{{ track.duration|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}</dd>{% endif %}
+                        <tr>
+                            <td>
                                 {% if track.audio is not null and track.audio is not empty %}
-                                    <dt>{{ 'Audio'|trans }}</dt>
-                                    <dd>
-                                        <audio controls>
-                                            <source src="{{ asset(uploaded_audio_dir ~ '/' ~ track.audio) }}">
-                                            {{ 'Your browser does not support html5 audio playback'|trans }}
-                                        </audio>
-                                        {% if track.extract %}({{ 'extract'|trans }}){% endif %}
-                                    </dd>
+                                    <audio>
+                                        <source src="{{ asset(uploaded_audio_dir ~ '/' ~ track.audio) }}">
+                                        {{ 'Your browser does not support html5 audio playback'|trans }}
+                                    </audio>
+                                    <a href="#" class="audio-controls" title="{{ 'play'|trans }}" title-alt="{{ 'pause'|trans }}">{{ icon('Play') }}</a>
+                                    {% if track.extract %}({{ 'extract'|trans }}){% endif %}
                                 {% endif %}
-                            </dl>
-                        </li>
+                            </td>
+                            <td>{{ track.number }}</td>
+                            <td>
+                                {% if track.title is not null and track.title is not empty %}{{ track.title }}{% endif %}
+                                {% if track.title is not null and track.title is not empty and track.movement is not null and track.movement is not empty %} - {% endif %}
+                                {% if track.movement is not null and track.movement is not empty %}{{ track.movement }}{% endif %}
+                            </td>
+                            <td>{% if track.composer is not null and track.composer is not empty %}{{ track.composer }}{% endif %}</td>
+                            <td>{% if track.artists is not null and track.artists is not empty %}{{ track.artists }}{% endif %}</td>
+                            <td>{% if track.duration is not null and track.duration is not empty %}{{ track.duration|date('H:i:s') }}{% endif %}</td>
+                        </tr>
                     {% endfor %}
-                </ul>
-            </dd>
-        </dl>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

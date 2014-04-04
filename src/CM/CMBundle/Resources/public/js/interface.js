@@ -253,8 +253,8 @@ $(function() {
             return;
         }
 
-        var $lastInRow = null;
-        $.each($disc.nextAll('.disc').addBack(), function(i, elem) {
+        var $lastInRow = $disc;
+        $.each($disc.nextAll('.disc'), function(i, elem) {
             $lastInRow = $(elem);
             if ($(elem).position().left == 0) {
                 $lastInRow = $(elem).prev();
@@ -268,6 +268,25 @@ $(function() {
             $data.slideDown(250);
             $disc.addClass('active');
         });
+    });
+    $(document).on('click', '.audio-controls', function(event) {
+        event.preventDefault();
+
+        var title = $(event.currentTarget).attr('title');
+        $(event.currentTarget).attr('title', $(event.currentTarget).attr('title-alt'));
+        $(event.currentTarget).attr('title-alt', title);
+
+        $.each($('audio'), function(i, elem) {
+            $(elem).closest('.audio-control').removeClass('active');
+            elem.pause();
+        });
+
+        var audio = $(event.currentTarget).siblings('audio')[0];
+        if (audio.paused || audio.ended) {
+            $(event.currentTarget).addClass('');
+            $(event.currentTarget).addClass('active');
+            audio.play();
+        }
     });
 
 

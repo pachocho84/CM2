@@ -189,6 +189,10 @@ class EventController extends Controller
             'limit' => $request->get('limit')
         ));
 
+        if (count($dates) == 0) {
+            return new Response;
+        }
+
         return array(
             'dates' => $dates,
             'link' => $this->generateUrl($dates[0]->getEvent()->getPost()->getPublisherType().'_events', array('slug' => $dates[0]->getEvent()->getPost()->getPublisher()->getSlug())),

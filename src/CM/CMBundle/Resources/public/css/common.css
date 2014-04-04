@@ -209,28 +209,63 @@ form textarea[expandable] {
 {
     margin-right: 10px;
 }
-#blueimp-gallery .slide {
-    padding-right: 250px;
+#blueimp-gallery {
+    margin-right: 300px;
 }
-#blueimp-gallery .info {
+#blueimp-gallery-container .blueimp-gallery, .blueimp-gallery>.slides>.slide>.slide-content {
+    -webkit-transition: opacity .0001s linear;
+       -moz-transition: opacity .0001s linear;
+        -ms-transition: opacity .0001s linear;
+         -o-transition: opacity .0001s linear;
+            transition: opacity .0001s linear;
+}
+#blueimp-gallery-container .info {
     color: #ffffff;
     text-align: center;
-    position: fixed;
+    position: absolute;
     bottom: 0px;
-    right: 0px;
-    width: 100%;
-    margin-right: 250px;
-    font-size: 17px;
+    left: 0px;
+    right: 0;
+    height: 44px;
+    width: 88px;
+    margin: 0 auto;
 }
-#blueimp-gallery .title {
-    max-width: 40%;
+#blueimp-gallery-container .title {
+    line-height: 44px;
+    position: absolute;
+    right: 88px;
+    padding: 0 10px;
+    overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
-#blueimp-gallery .slide-content {
-    position: static !important;
-    padding: 35px !important;
+#blueimp-gallery-container .prev-container,
+#blueimp-gallery-container .next-container {
+    position: absolute;
+    height: 44px;
+    width: 44px;
 }
-#blueimp-gallery .sidebar {
+#blueimp-gallery-container .prev,
+#blueimp-gallery-container .next {
+    display: block;
+    color: #ffffff;
+    font-size: 20px;
+    line-height: 44px;
+}
+#blueimp-gallery-container .next-container {
+    left: 44px;
+}
+#blueimp-gallery-container .sequence {
+    line-height: 44px;
+    position: absolute;
+    left: 88px;
+    padding: 0 10px;
+    white-space: nowrap;
+}
+#blueimp-gallery-container .slide-content {
+    padding: 35px;
+}
+#blueimp-gallery-container .sidebar {
     display: none;
     position: fixed;
     width: 300px;
@@ -242,20 +277,11 @@ form textarea[expandable] {
     padding: 15px;
     overflow-y: scroll;
 }
-#blueimp-gallery .sidebar .image-description {
+#blueimp-gallery-container .sidebar .image-description {
     margin-top: 10px;
     margin-bottom: 10px;
 }
-#blueimp-gallery .prev,
-#blueimp-gallery .next {
-    color: #ffffff;
-    line-height: 34px !important;
-    font-size: 20px;
-}
-#blueimp-gallery .next {
-    right: 265px !important;
-}
-#blueimp-gallery .close {
+#blueimp-gallery-container .close {
     left: 15px !important;
     right: auto !important;
 }
@@ -429,6 +455,21 @@ form textarea[expandable] {
     font-size: 14px;
     line-height: 14px;
     font-weight: bold;
+}
+.box .box-footer .bottom form .comment {
+    margin-top: 10px;
+}
+.box form input.comment,
+.box form textarea.comment {
+    height: 50px;
+}
+.box .box-footer .bottom form input.comment,
+.box .box-footer form textarea.comment {
+    padding: 6px 10px 4px;
+    height: 34px;
+    font-size: 13px;
+    line-height: 1.4;
+    resize: none;
 }
 
 
@@ -642,16 +683,6 @@ form textarea[expandable] {
 .post .post-image-container img {
     margin: 0 auto;
     max-height: 600px;
-}
-.box .box-footer comment {
-    margin-top: 10px;
-}
-.box .box-footer input.comment,
-.box .box-footer textarea {
-    padding: 6px 10px 4px;
-    height: 32px;
-    font-size: 13px;
-    line-height: 1.4;
 }
 /* Box System */
 .box-system {
@@ -1169,4 +1200,15 @@ form textarea[expandable] {
 }
 .disc-content .box {
     margin-bottom: 0;
+}
+.audio-controls {
+    color: #404040 !important;
+}
+.audio-controls.active {
+    color: #aa0000 !important;
+    -webkit-transition: color 1s;
+       -moz-transition: color 1s;
+        -ms-transition: color 1s;
+         -o-transition: color 1s;
+            transition: color 1s;
 }

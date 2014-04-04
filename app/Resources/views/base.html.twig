@@ -58,18 +58,20 @@
             {% block footer %}{% endblock %}
 
 
-            <div id="blueimp-gallery" class="blueimp-gallery">
-                <div class="slides"></div>
-                <div class="info">
-                    <a class="prev">‹</a>
-                    <span class="title"></span>
-                    <a class="next">›</a>
-                    <span class="sequence"></span>
+            <div id="blueimp-gallery-container">
+                <div id="blueimp-gallery" class="blueimp-gallery">
+                    <div class="slides"></div>
+                    <div class="info">
+                        <div class="title"></div>
+                        <div class="prev-container"><a href="" class="prev">{{ icon('Prev') }}</a></div>
+                        <div class="next-container"><a href="" class="next">{{ icon('Next') }}</a></div>
+                        <span class="sequence"></span>
+                    </div>
+                    
+                    <a class="close">×</a>
                 </div>
+
                 <div class="sidebar"></div>
-                
-                <a class="close">×</a>
-                <!-- <ol class="indicator"></ol> -->
             </div>
         </div>
         {% block javascripts %}{% endblock %}

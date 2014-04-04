@@ -1,13 +1,19 @@
 {% extends 'CMBundle::layout.html.twig' %}
 {% set noColumns = true %}
 
+{% block title %}{{ disc.getTitle }}{% endblock %}
+{% set meta = {
+    description: disc|short_text({max: 155, stripped: true}),
+    image: disc.image|default_img|imagine_filter('full')
+} %}
+
 {% block bodyHeading %}
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-md-8">
             <h2>{{ disc.getTitle }}</h2>
             {% if disc.getSubtitle is not null %}<h3>{{ disc.getSubtitle }}</h3>{% endif %}
         </div>
-        <div class="col-lg-4 text-right pull-right">
+        <div class="col-md-4 text-right pull-right">
             {% if is_granted('ROLE_USER') %}
                 <div class="btn-group">
                     {{ include('CMBundle:Like:likeActions.html.twig', {post: disc.post, button: true, selector: '#social'}) }}
@@ -30,7 +36,15 @@
 {% block body %}
 
     <div class="row">
-        <div class="col-md-4 col-md-push-8">
+        <div class="col-md-4 col-lg-3">
+            <div data-ajax-url="{{ path('image_entity', {id: disc.id, slug: disc.getSlug, type: 'discs'}) }}"></div>
+
+            <div data-ajax-url="{{ path('multimedia_entity', {id: disc.id, type: disc|class_name}) }}"></div>
+            
+            <div data-ajax-url="{{ path('entityuser_protagonists', {id: disc.id}) }}"></div>
+        </div>
+
+        <div class="col-md-8 col-lg-5">
             <div class="box">
                 <div class="box-heading">
                     <h2>{{ icon('Info') }} {{ 'Details'|trans }}</h2>
@@ -44,15 +58,12 @@
                         </p>
                     </div>
                     <div class="media object">
-                        <a href="{{ path('disc_show', {'id': disc.id, 'slug': disc.getSlug}) }}">
-                            <img src="{{ disc.getImage|default_img|imagine_filter('medium') }}" class="img-responsive" />
-                        </a>
                         <div>
                             <div class="text-justify">{{ disc.getText|raw }}</div>
                             <dl>
-                                <dt>Label</dt>
+                                <dt>{{ 'Label'|trans }}</dt>
                                 <dd>{{ disc.label }}</dd>
-                                <dt>Year</dt>
+                                <dt>{{ 'Year'|trans }}</dt>
                                 <dd>{{ disc.year|date('Y') }}</dd>
                             </dl>
                         </div>
@@ -61,19 +72,19 @@
             </div>
             
             <div data-ajax-url="{{ path('disc_tracks', {id: disc.id}) }}"></div>
-{#            
-            <div data-ajax-url="{{ path('image_entity', {id: disc.id, type: disc|class_name}) }}"></div>
-            
-            <div data-ajax-url="{{ path('multimedia_entity', {id: disc.id, type: disc|class_name}) }}"></div>
-            
-            <div data-ajax-url="{{ path('entityuser_protagonists', {id: disc.id}) }}"></div>
-        </div>
 
-        <div class="col-md-8 col-md-pull-4">
             <div data-ajax-url="{{ path('wall_entity', {id: disc.id}) }}"></div>
         </div>
-#}
+
+        <div class="col-md-12 col-lg-4">
+            {#<div data-ajax-url="{{ path('disc_next_dates', {object: disc.post.publisherType, objectId: disc.post.publisher.id, exclude: disc.id, limit: 3}) }}"></div>#}
+        </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language={{ app.request.locale }}"></script>
+    {{ parent() }}
 {% endblock %}
 
 {#

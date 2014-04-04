@@ -8,7 +8,7 @@
 
 {% block body %}
 	
-	<h2><a href="{{ path(album|class_name|lower ~ '_show', {id: album.id, slug: album.getSlug}) }}">{{ icon(album|class_name) }} {{ album }} - {{ 'images'|trans }}</a></h2>
+	<h2><a href="{{ path(album|class_name|lower ~ '_show', {id: album.id, slug: album.getSlug}) }}">{{ icon(album|class_name) }} {{ album }}</a></h2>
 
 
 
@@ -16,8 +16,8 @@
 
         <div class="box-heading">
             <div class="media">
-                <div class="pull-right">
-                    {% if can_manage(album) %}
+                {% if can_manage(album) %}
+                    <div class="pull-right">
                         <span class="btn btn-default btn-sm fileinput-button" data-redirect="{{ path('imagealbum_edit', {id: album.id, slug: album.getSlug, publisher: album|class_name}) }}">
                             {{ icon('Plus') }} {{ 'Add photos'|trans }}
                             <form action="{{ path('imagealbum_add_image', {id: album.id}) }}" method="post" enctype="multipart/form-data">
@@ -25,10 +25,11 @@
                             </form>
                         </span>
                         <a href="{{ path('imagealbum_edit', {id: album.id, slug: album.getSlug, object: album|class_name|lower ~ 's'}) }}" class="btn btn-default btn-sm">{{ icon('Edit') }} {{ 'Edit'|trans }}</a>
-                    {% endif %}
-                </div>
+                    </div>
+                {% endif %}
             
                 <div class="media-body">
+                    {{ album|short_text({more: true}) }}
                 </div>
 
             </div>

@@ -916,6 +916,8 @@ class CMExtension extends \Twig_Extension
             case 'Remove':
                 return '<span class="glyphicon glyphicon-remove"></span>';
                 break;
+            case 'Play':
+                return '<span class="glyphicon glyphicon-play-circle"></span>';
             case 'Home':
                 return '<span class="glyphicon glyphicon-home"></span>';
             case 'Event':
