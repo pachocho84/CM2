@@ -348,8 +348,10 @@ class ImageAlbumController extends Controller
                 throw new NotFoundHttpException($this->get('translator')->trans('Image not found.', array(), 'http-errors'));
             }
 
+            $entity = $image->getEntity();
             return new JsonResponse(array(
-                'albumTitle' => $image->getEntity()->getTitle(),
+                'albumTitle' => $entity->getTitle(),
+                'albumLink' => $this->generateUrl(strtolower($this->get('cm.helper')->className($entity->className()).'_show'), array('id' => $entity->getId(), 'slug' => $entity->getSlug())),
                 'sidebar' => $this->renderView('CMBundle:Wall:sidebarSocial.html.twig', array('image' => $image))
             ));
         }

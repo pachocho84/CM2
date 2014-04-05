@@ -4,7 +4,7 @@ imports:
 parameters:
     web.abs_dir: %kernel.root_dir%/../web
     cm_property_accessor.class: CM\CMBundle\PropertyAccess\CMPropertyAccessor
-    bundle.dir: /bundles/cm
+    bundle.dir: ''
     upload.dir: %bundle.dir%/uploads
     banners.dir: %upload.dir%/banners
     images.dir: %upload.dir%/images
@@ -173,6 +173,8 @@ services:
             options: 
                 images_dir: %kernel.root_dir%/../web%images_full.dir%
                 sizes: %liip_imagine.filter_sets% 
+        calls:
+            - [setAssets, ["@?templating.helper.assets="]]
         tags:
             - { name: twig.extension }
 
