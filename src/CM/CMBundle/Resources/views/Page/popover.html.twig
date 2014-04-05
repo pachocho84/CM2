@@ -1,11 +1,21 @@
-{% if page.coverImg is not null %}<img src='{{ page.coverImg|imagine_filter('small') }}' class="media-object" />{% endif %}</div>
-
-<img src='{{ page.img|imagine_filter('avatar') }}' width="50px" class="media-object" />
-
-<h2>{{ page }}</h2>
-
-{% if biography is not null %}{{ biography|short_text({max: 150}) }}{% endif %}
-
-{% if is_granted('ROLE_USER') %}
-    {{ render(controller('CMBundle:Fan:button', {'userId': page.id, 'object': page|class_name})) }}
+{% if page.coverImg is not null %}
+    <div class="popover-cover">
+        {{ show_img_box(page.coverImg|imagine_filter('small'), {width: 274, height: 105, offset: page.coverImgOffset}) }}
+    </div>
+{% else %}
+    <div class="popover-cover-background"></div>
 {% endif %}
+
+
+
+<div class="popover-publisher-content">
+    <div class="popover-profile">{{ show_img_box(page.img|imagine_filter('xsmall'), {width: 90, offset: page.imgOffset}) }}</div>
+    
+    <h2><a href="{{ path('page_show', {slug: page.slug}) }}">{{ page }}</a></h2>
+    
+    {% if biography is not null %}<div class="popover-publisher-biography">{{ biography|short_text({max: 150}) }}{% endif %}</div>
+    
+    {% if is_granted('ROLE_USER') %}
+        {{ render(controller('CMBundle:Fan:button', {'userId': page.id, 'object': page|class_name})) }}
+    {% endif %}
+</div>

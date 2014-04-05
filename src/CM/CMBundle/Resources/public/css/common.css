@@ -1203,6 +1203,7 @@ form textarea[expandable] {
 }
 .audio-controls {
     color: #404040 !important;
+    position: relative;
 }
 .audio-controls.active {
     color: #aa0000 !important;

@@ -6,9 +6,9 @@
         <ul class="media-list entity-protagonists">
             {% for protagonist in protagonists[:5] %}
                 <li class="media entity-protagonist">
-                    {{ show_img_box(protagonist.user.img|imagine_filter('avatar'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'box_attributes': {'class': 'pull-left'}}) }}
+                    {{ show_img_box(protagonist.user.img|imagine_filter('avatar'), {width: 32, link: path('user_show', {slug: protagonist.user.slug}), box_attributes: {class: 'pull-left'}, publisher_box: protagonist.user}) }}
                     <div class="media-body">
-                        <small><a href="{{ path('user_show', {'slug': protagonist.user.slug}) }}" {{ publisher_box(protagonist.user) }}>{{ protagonist.user }}</a></small><br/>
+                        <small><a href="{{ path('user_show', {slug: protagonist.user.slug}) }}" {{ publisher_box(protagonist.user) }}>{{ protagonist.user }}</a></small><br/>
                         
                         <small class="text-muted" {{ tooltip(protagonist.userTags, {closure: '$a[0][$v]', args: [tags], limit: 3}) }}>
                             {% for userTag in protagonist.userTags[:3] %}{{ tags[userTag] }}{% if not loop.last %}, {% endif %}{% if loop.last and loop.index < protagonist.userTags|length %}...{% endif %}{% endfor %}
@@ -21,9 +21,9 @@
             <ul id="event_protagonists-more" class="media-list entity-protagonists collapse">
                 {% for protagonist in protagonists[5:] %}
                     <li class="media entity-protagonist">
-                        {{ show_img_box(protagonist.user.img|imagine_filter('avatar'), {'width': 32, 'height': 32, 'link': path('user_show', {'slug': protagonist.user.slug}), 'link_attributes': {'class': 'pull-left'}}) }}
+                        {{ show_img_box(protagonist.user.img|imagine_filter('avatar'), {width: 32, height: 32, link: path('user_show', {slug: protagonist.user.slug}), link_attributes: {class: 'pull-left'}}) }}
                         <div class="media-body">
-                            <small><a href="{{ path('user_show', {'slug': protagonist.user.slug}) }}" {{ publisher_box(protagonist.user) }}>{{ protagonist.user }}</a></small><br/>
+                            <small><a href="{{ path('user_show', {slug: protagonist.user.slug}) }}" {{ publisher_box(protagonist.user) }}>{{ protagonist.user }}</a></small><br/>
                             
                             <small class="text-muted" {{ tooltip(protagonist.userTags, {closure: '$a[0][$v]', args: [tags], limit: 3}) }}>
                                 {% for userTag in protagonist.userTags[:3] %}{{ tags[userTag] }}{% if not loop.last %}, {% endif %}{% if loop.last and loop.index < protagonist.userTags|length %}...{% endif %}{% endfor %}

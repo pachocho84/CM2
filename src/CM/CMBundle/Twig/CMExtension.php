@@ -4,8 +4,8 @@ namespace CM\CMBundle\Twig;
 
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\HttpFoundation\RequestStack;
 use CM\CMBundle\Service\Helper;
 use Symfony\Component\Security\Core\SecurityContext;
 use CM\CMBundle\Service\UserAuthentication;
@@ -71,11 +71,11 @@ class CMExtension extends \Twig_Extension
             'sizes' => array()
         ), $options);
     }
-	
-	public function initRuntime(\Twig_Environment $environment)
-	{
-		$this->environment = $environment;
-	}
+    
+    public function initRuntime(\Twig_Environment $environment)
+    {
+        $this->environment = $environment;
+    }
 
     public function getFilters()
     {
@@ -384,6 +384,7 @@ class CMExtension extends \Twig_Extension
 
         // Write img tag
         $imgTag = '<img src="'.$img.'" style="';
+        // $imgTag = '<img src="'.$img.'" style="';
         foreach ($imgStyle as $attr) {
             $imgTag .= $attr.'; ';
         }
@@ -1129,110 +1130,3 @@ class CMExtension extends \Twig_Extension
         return 'cm_extension';
     }
 }
-
-
-/*
-    public function getShowImgBox($img, $options = array())
-    {
-        $options = array_merge(array(
-            'width' => 150,
-            'height' => null,
-            'ratio' => null,
-            'offset' => null,
-            'default' => false,
-            'link' => null,
-            'box_attributes' => array(),
-            'img_attributes' => array(),
-            'user_box' => null
-        ), $options);
-
-        $width  = $options['width'];
-        $height = is_null($options['height']) ? $width : $options['height'];
-
-        // Get image dimensions
-        $fileName = preg_replace('/^\/.*\//', '', $img);
-        $imageFileSize = @getimagesize($this->options['images_dir'].'/'.$fileName);
-        if (!$imageFileSize) {
-            return '';
-        }
-
-        // Ratio
-        $imageRatio = $imageFileSize[0] / $imageFileSize[1];
-        if (!is_null($options['ratio'])) {
-            $boxRatio = $options['ratio'];
-        } else {
-            $boxRatio = $width / $height;
-        }
-        $ratio = $imageRatio / $boxRatio;
-
-        // Image format
-        if ($ratio >= 1) {
-            $imageResizedHeight = 100;
-        } else {
-            $imageResizedHeight = $boxRatio / $imageRatio * 100;
-        }
-
-        // Offset
-        $imgStyle = array();
-        // if (!is_null($options['offset'])) {
-        //     $imgStyle[] = 'margin-'.($ratio > 1 ? 'left' : 'top').': -'.$options['offset'].'%';
-        // } elseif (is_null($options['ratio'])) {
-        //     if ($ratio > 1) { // landscape
-        //         $imgStyle[] = 'left: -'.(($imageRatio / $boxRatio - 1) / 2 * 100).'%';
-        //     } elseif ($ratio < 1) { // portrait
-        //         $imgStyle[] = 'top: -'.(min($imageResizedHeight - $height, $imageResizedHeight / 10) / $height * 100).'%';
-        //     }
-        // }
-
-        // Attributes
-        if (!is_null($options['ratio'])) {
-            $options['box_attributes']['style'] = 'width: 100%;  padding-top: '.(1 / $boxRatio * 100).'%;'.(array_key_exists('style', $options['box_attributes']) ? ' '.$options['box_attributes']['style'] : '');
-        } else {
-            $options['box_attributes']['style'] = 'width: '.$width.'px;  height: '.$height.'px;'.(array_key_exists('style', $options['box_attributes']) ? ' '.$options['box_attributes']['style'] : '');
-        }
-        $options['box_attributes']['class'] = 'image_box'.(array_key_exists('class', $options['box_attributes']) ? ' '.$options['box_attributes']['class'] : '');
-
-        if ($ratio == 1) {
-            $imgStyle[] = 'height: 100%';
-        } elseif (($ratio > 1 && is_null($options['ratio'])) || ($ratio < 1 && !is_null($options['ratio']))) {
-            $imgStyle[] = 'height: 100%';
-        } else {
-            $imgStyle[] = 'width: 100%';
-        }
-        // $imgStyle[] = 'height: '.$imageResizedHeight.'%';
-        if (array_key_exists('style', $options['img_attributes'])) {
-            $imgStyle[] = $options['img_attributes']['style'];
-            unset($options['img_attributes']['style']);
-        }
-
-        // Write img tag
-        $imgTag = '<img ratio="'.$boxRatio.'" src="'.$img.'" style="';
-        foreach ($imgStyle as $attr) {
-            $imgTag .= $attr.'; ';
-        }
-        $imgTag .= '"';
-        foreach ($options['img_attributes'] as $key => $attr) {
-            $imgTag .= ' '.$key.'="'.$attr.'"';
-        }
-        $imgTag .= ' />';
-
-        // Write box tag
-        if (!is_null($options['link'])) {
-            $boxTag = '<a href="'.$options['link'].'"';
-            $boxTagEnd = '</a>';
-        } else {
-            $boxTag = '<div';
-            $boxTagEnd = '</div>';
-        }
-        foreach ($options['box_attributes'] as $key => $attr) {
-            $boxTag .= ' '.$key.'="'.$attr.'"';
-        }
-
-        if (!is_null($options['user_box'])) {
-            $boxTag = '<div '.$this->getPublisherBox($options['user_box']).'>'.$boxTag;
-            $boxTagEnd = '</div>'.$boxTagEnd;
-        }
-        
-        return $boxTag.'>'.$imgTag.$boxTagEnd;
-    }
-*/

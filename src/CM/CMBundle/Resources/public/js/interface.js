@@ -276,16 +276,20 @@ $(function() {
         $(event.currentTarget).attr('title', $(event.currentTarget).attr('title-alt'));
         $(event.currentTarget).attr('title-alt', title);
 
-        $.each($('audio'), function(i, elem) {
-            $(elem).closest('.audio-control').removeClass('active');
-            elem.pause();
-        });
 
         var audio = $(event.currentTarget).siblings('audio')[0];
         if (audio.paused || audio.ended) {
+            $('.audio-controls').each(function(i, elem) {
+                $(elem).removeClass('active');
+                $(elem).siblings('audio')[0].pause();
+            });
+
             $(event.currentTarget).addClass('');
             $(event.currentTarget).addClass('active');
             audio.play();
+        } else {
+            $(event.currentTarget).removeClass('active');
+            audio.pause();
         }
     });
 
