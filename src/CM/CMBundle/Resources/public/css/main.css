@@ -4,8 +4,19 @@ body {
     font-family: Roboto,arial,sans-serif;
     font-size: 13px;
 }
+h2 {
+    font-weight: 300;
+    text-shadow: 0 1px 0 #ffffff;
+    margin: 0 0 20px 0;
+}
 h2 a {
     color: #333333;
+}
+h2 a:hover {
+    text-decoration: none;
+}
+h2 .glyphicon {
+    font-size: 26px;
 }
 #header {
     background: url(../images/layout/header_bg.jpg) repeat-x;
@@ -39,32 +50,17 @@ h2 a {
     background: none;
     padding: 0px;
 }
-.row h2 {
-/*
-    font-family: "Georgia", Times new roman, serif;
-    font-variant: small-caps;
-*/
-    font-weight: 300;
-    text-shadow: 0 1px 0 #ffffff;
-    margin: 0 0 20px 0;
-}
-.row h2 i {
-    font-size: 16px;
-    font-variant: normal;
-}
-.row h2 small,
-.row h3 small {
-    font-variant: normal;
-}
 h3 small {
     line-height: inherit;
 }
 h3 small a {
     color: #333333;
 }
+/*
 a:hover {
     text-decoration: none;
 }
+*/
 /*
 img {
   background: #f7f7f7 url('../images/loader-big.gif') no-repeat;
