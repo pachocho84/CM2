@@ -173,8 +173,6 @@ services:
             options: 
                 images_dir: %kernel.root_dir%/../web%images_full.dir%
                 sizes: %liip_imagine.filter_sets% 
-        calls:
-            - [setAssets, ["@?templating.helper.assets="]]
         tags:
             - { name: twig.extension }
 

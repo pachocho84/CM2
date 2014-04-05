@@ -5,7 +5,6 @@ namespace CM\CMBundle\Twig;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Translation\Translator;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\Templating\Helper\CoreAssetsHelper;
 use Symfony\Component\HttpFoundation\RequestStack;
 use CM\CMBundle\Service\Helper;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -29,8 +28,6 @@ class CMExtension extends \Twig_Extension
     private $translator;
 
     private $router;
-
-    private $assets;
 
     private $helper;
 
@@ -78,11 +75,6 @@ class CMExtension extends \Twig_Extension
     public function initRuntime(\Twig_Environment $environment)
     {
         $this->environment = $environment;
-    }
-
-    public function setAssets(CoreAssetsHelper $assets)
-    {
-        $this->assets = $assets;
     }
 
     public function getFilters()
