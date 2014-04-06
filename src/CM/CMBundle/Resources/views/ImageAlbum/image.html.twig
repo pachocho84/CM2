@@ -6,16 +6,25 @@
     image: image|imagine_filter('full')
 } %}
 
-{% block body %}
 
-    <h2>
-        {{ show_img_box(image.entity.post.publisher.img|imagine_filter('avatar'), {width: 50, offset: image.entity.post.publisher.imgOffset, link: path(image.entity.post.publisherType ~ '_show', {slug: image.entity.post.publisher.slug}), box_attributes: {class: 'pull-left'}}) }}
-    </h2>
+
+{% block bodyHeading %}
+    <div class="row">
+        <div class="col-md-8 col-lg-9">
+            <h2><a href="{{ path(image.entity|class_name|lower ~ '_show', {id: image.entity.id, slug: image.entity.getSlug}) }}">{{ icon(image.entity|class_name) }} {{ image.entity }}</a></h2>
+        </div>
+        <div class="col-md-4 col-lg-3">
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block body %}
 
     <div class="box">
         {% if image.entity.getText %}
             <div class="box-heading">
-                {{ image.entity.getTitle }}
                 {{ image.entity.getText }}
             </div>
         {% endif %}
@@ -32,7 +41,7 @@
             </div>
 
 
-            {% if image.text %}<div class="object text-center">{{ image.text|simple_format_text|raw }}</div>{% endif %}
+            {% if image.text %}<div class="text-center" style="margin-top: 15px;">{{ image.text|simple_format_text|raw }}</div>{% endif %}
 
             
             <div class="object">
@@ -41,6 +50,7 @@
                     <div class="col-sm-7 col-lg-8">
     
                         <div class="media">
+                            {{ show_img_box(image.entity.post.publisher.img|imagine_filter('avatar'), {width: 50, offset: image.entity.post.publisher.imgOffset, link: path(image.entity.post.publisherType ~ '_show', {slug: image.entity.post.publisher.slug}), box_attributes: {class: 'pull-left'}}) }}
                             <div class="media-body">
                                 <h4><a href="{{ path(image.entity.post.publisherType ~ '_show', {'slug': image.entity.post.publisher.slug}) }}">{{ image.entity.post.publisher }}</a></h4>
                             </div>
