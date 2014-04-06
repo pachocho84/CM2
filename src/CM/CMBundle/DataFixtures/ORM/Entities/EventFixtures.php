@@ -265,7 +265,7 @@ Comune di Madesimo
         /* Main Image */
         $image = new Image;
         $image->setImg(EventFixtures::$events[$i]['img'])
-            ->setText('main image for event \"'.$event->getTitle().'\"')
+            ->setText('main image for event "'.$event->getTitle().'"')
             ->setMain(true)
             ->setUser($user);
         $event->setImage($image);
