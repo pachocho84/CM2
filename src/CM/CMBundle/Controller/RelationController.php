@@ -96,7 +96,12 @@ class RelationController extends Controller
 
         if (!is_null($relationTypePassed)) {
             return new JsonResponse(array(
-                'button' => $this->renderView('CMBundle:Relation:buttonItem.html.twig', array('reqText' => $reqText, 'btnColour' => $btnColour, 'tooltipArray' => $tooltipArray)),
+                'button' => $this->renderView('CMBundle:Relation:buttonItem.html.twig', array(
+                    'reqText' => $reqText,
+                    'btnColour' => $btnColour,
+                    'btnColour' => $btnColour,
+                    'tooltipArray' => $tooltipArray
+                )),
                 'item' => $this->renderView('CMBundle:Relation:item.html.twig', array('user' => $user, 'relationType' => $relationTypePassed))
             ));
         }
@@ -105,6 +110,7 @@ class RelationController extends Controller
             'user' => $user,
             'relationTypes' => $relationTypes,
             'reqText' => $reqText,
+            'btn' => $request->get('btn'),
             'btnColour' => $btnColour,
             'tooltipArray' => $tooltipArray
         );

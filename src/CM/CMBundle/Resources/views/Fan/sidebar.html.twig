@@ -3,14 +3,14 @@
         <div class="box-heading">
             <h2>
                 {{ icon('Fan') }} <span>{{ 'Fans'|trans }}</span>
-                <small><a href="{{ path('fan_user', {'slug': user.slug}) }}" class="pull-right">{{ 'Show all'|trans }} ({{ count }})</a></small>
+                <small><a href="{{ path('fan_' ~ publisherType, {slug: publisher.slug}) }}" class="pull-right">{{ 'Show all'|trans }} ({{ count }})</a></small>
             </h2>
         </div>
 
         <div class="objects box-body square-images-grid">
             {% for i in 0..(fans|length - 1) if i < 7 or i < fans|length - (fans|length % 7) %}
-                {% set fan = fans[i] %}
-                    {{ show_img_box(fan.img|imagine_filter('avatar'), {width: 50, offset: fan.imgOffset, link: path('user_show', {'slug': fan.slug})}) }}
+                {% set fan = fans[i].fromUser %}
+                    {{ show_img_box(fan.img|imagine_filter('avatar'), {width: 50, offset: fan.imgOffset, link: path('user_show', {slug: fan.slug})}) }}
             {% endfor %}
         </div>
         

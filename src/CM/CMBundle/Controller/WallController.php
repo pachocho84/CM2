@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -236,6 +237,76 @@ class WallController extends Controller
     }
 
     /**
+     * @Route("/pages/{slug}/wall/{page}", name="wall_page", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function pageAction(Request $request, $slug, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+        
+        if (!$page) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Page not found.', array(), 'http-errors'));
+        }
+        
+        if ($request->isXmlHttpRequest()) {
+            $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('pageId' => $page->getId()));
+            $pagination = $this->get('knp_paginator')->paginate($posts, $page, 15);
+            
+            if ($page == 1) {
+                return $this->render('CMBundle:Wall:box.html.twig', array(
+                    'posts' => $pagination,
+                    'slug' => $page->getSlug(),
+                    'simple' => $request->get('simple'),
+                    'link' => $this->generateUrl('wall_page', array(
+                        'slug' => $slug
+                    ))
+                ));
+            } else {
+                return $this->render('CMBundle:Wall:posts.html.twig', array('posts' => $pagination, 'slug' => $page->getSlug()));
+            }
+        }
+
+        return array('page' => $page);
+    }
+
+    /**
+     * @Route("/groups/{slug}/wall/{group}", name="wall_group", requirements={"group" = "\d+"})
+     * @Template
+     */
+    public function groupAction(Request $request, $slug, $group = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        
+        if (!$group) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Group not found.', array(), 'http-errors'));
+        }
+        
+        if ($request->isXmlHttpRequest()) {
+            $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('groupId' => $group->getId()));
+            $pagination = $this->get('knp_paginator')->paginate($posts, $group, 15);
+            
+            if ($group == 1) {
+                return $this->render('CMBundle:Wall:box.html.twig', array(
+                    'posts' => $pagination,
+                    'slug' => $group->getSlug(),
+                    'simple' => $request->get('simple'),
+                    'link' => $this->generateUrl('wall_group', array(
+                        'slug' => $slug
+                    ))
+                ));
+            } else {
+                return $this->render('CMBundle:Wall:posts.html.twig', array('posts' => $pagination, 'slug' => $group->getSlug()));
+            }
+        }
+
+        return array('group' => $group);
+    }
+
+    /**
      * @Route("/{slug}/wall/{page}", name="wall_user", requirements={"page" = "\d+"})
      * @Template
      */
@@ -282,4 +353,12 @@ class WallController extends Controller
 
         return array('post' => $post);
     }
+
+    // /**
+    //  * @Route("/ping")
+    //  */
+    // public function pingAction()
+    // {
+    //     return new Response;
+    // }
 }

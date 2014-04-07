@@ -16,6 +16,6 @@
     {% if biography is not null %}<div class="popover-publisher-biography">{{ biography|short_text({max: 150}) }}{% endif %}</div>
     
     {% if is_granted('ROLE_USER') %}
-        {{ render(controller('CMBundle:Fan:button', {'userId': group.id, 'object': group|class_name})) }}
+        {{ render(controller('CMBundle:Fan:button', {'userId': group.id, 'object': group|class_name, btn: true})) }}
     {% endif %}
 </div>

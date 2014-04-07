@@ -70,7 +70,7 @@ class CommentController extends Controller
             } else {
                 $comment = new Comment;
                 $form = $this->createForm(new CommentType, $comment, array(
-                    'action' => $this->generateUrl($request->get('_route'), array(
+                    'action' => $this->generateUrl(is_null($request->get('_route')) ? 'comment_new' : $request->get('_route'), array(
                         'id' => $id,
                         'isImage' => $isImage
                     )),

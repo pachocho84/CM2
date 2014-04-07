@@ -90,7 +90,9 @@ class BiographyController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:Biography:box.html.twig', array(
-                'user' => $user, 'biography' => $biography,
+                'publisher' => $user,
+                'publisherType' => 'user',
+                'biography' => $biography,
                 'simple' => $request->get('simple')
             ));
         }
@@ -166,6 +168,15 @@ class BiographyController extends Controller
 
         $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($page->getId(), array('locale' => $request->getLocale()));
 
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Biography:box.html.twig', array(
+                'publisher' => $page,
+                'publisherType' => 'page',
+                'biography' => $biography,
+                'simple' => $request->get('simple')
+            ));
+        }
+
         return array('page' => $page, 'biography' => $biography);
     }
 
@@ -236,6 +247,15 @@ class BiographyController extends Controller
         }
 
         $biography = $em->getRepository('CMBundle:Biography')->getGroupBiography($group->getId(), array('locale' => $request->getLocale()));
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Biography:box.html.twig', array(
+                'publisher' => $group,
+                'publisherType' => 'group',
+                'biography' => $biography,
+                'simple' => $request->get('simple')
+            ));
+        }
 
         return array('group' => $group, 'biography' => $biography);
     }

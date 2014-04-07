@@ -21,7 +21,7 @@
                     {{ show_img_box(form.parent.vars.data.img|imagine_filter('medium'), {width: 190, height: 126, offset: imgOffset, box_attributes: {class: 'fileinput-new', style: 'border: 1px solid #bbbbbb; margin-bottom: 10px;'}}) }}
                 {% endif %}
                 <div class="fileinput-preview fileinput-exists image_box" data-trigger="fileinput" style="width: 190px; height: 126px; border: 1px solid #bbbbbb; margin-bottom: 10px;"></div>
-        {% elseif subtype|default(false) == 'image' %}
+        {% elseif subtype|default('') == 'image' %}
             <div class="fileinput fileinput-new" data-provides="fileinput">
                 <div class="fileinput-new" data-trigger="fileinput" style="width: 200px; height: 150px;">
                     {% if form.parent.vars.data is not null %}
@@ -248,7 +248,7 @@
 {% block _cm_cmbundle_comment_comment_widget %}
 {% spaceless %}
     {% if downward|default(false) %}
-        {% set attr = {placeholder: 'write a comment...'|trans, class: 'input-lg comment form-control', expandable: '', 'comment-type': 'downward', autocomplete: 'off'} %}
+        {% set attr = {placeholder: 'write a comment...'|trans, class: 'input-lg comment form-control', expandable: 'small', 'comment-type': 'downward', autocomplete: 'off'} %}
     {% else %}
         {% set attr = attr|merge({placeholder: 'write a comment...'|trans, 'comment-type': 'upward', autocomplete: 'off'}) %}
     {% endif %}
@@ -291,25 +291,25 @@
 {% endspaceless %}
 {% endblock %}
 
-{% block _cm_cmbundle_event_images_entry_imgFile_widget %}
-    {% set imgOffset = form.parent.parent.parent.iterator.imgOffset.vars.value %}
+{% block _cm_cmbundle_event_image_imgFile_widget %}
+    {% set imgOffset = form.parent.parent.imgOffset.vars.value %}
     {{ block('form_widget_simple')}}
-    {{ form_widget(form.parent.parent.parent.iterator.imgOffset) }}
+    {{ form_widget(form.parent.parent.imgOffset) }}
 {% endblock %}
 
-{% block _cm_cmbundle_disc_images_entry_imgFile_widget %}
-    {% set imgOffset = form.parent.parent.parent.iterator.imgOffset.vars.value %}
+{% block _cm_cmbundle_disc_image_imgFile_widget %}
+    {% set imgOffset = form.parent.parent.imgOffset.vars.value %}
     {{ block('form_widget_simple')}}
-    {{ form_widget(form.parent.parent.parent.iterator.imgOffset) }}
+    {{ form_widget(form.parent.parent.imgOffset) }}
 {% endblock %}
 
-{% block _cm_cmbundle_article_images_entry_imgFile_widget %}
-    {% set imgOffset = form.parent.parent.parent.iterator.imgOffset.vars.value %}
+{% block _cm_cmbundle_article_image_imgFile_widget %}
+    {% set imgOffset = form.parent.parent.imgOffset.vars.value %}
     {{ block('form_widget_simple')}}
-    {{ form_widget(form.parent.parent.parent.iterator.imgOffset) }}
+    {{ form_widget(form.parent.parent.imgOffset) }}
 {% endblock %}
 
-{% block _cm_cmbundle_imagealbum_images_entry_imgFile_widget %}
+{% block _cm_cmbundle_imagealbum_image_imgFile_widget %}
     {% set subtype = 'image' %}
     {{ block('form_widget_simple')}}
 {% endblock %}
@@ -675,7 +675,7 @@
     {% if app.environment == 'dev' %}
         {% set attr = attr|merge({novalidate: 'novalidate'}) %}
     {% endif %}
-    <form method="{{ form_method|lower }}" action="{{ action }}"{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+    <form {#form-stored="{{ form.vars.name }}"#} method="{{ form_method|lower }}" action="{{ action }}"{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
     {% if form_method != method %}
         <input type="hidden" name="_method" value="{{ method }}" />
     {% endif %}
