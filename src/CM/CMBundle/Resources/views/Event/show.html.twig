@@ -10,7 +10,7 @@
 {% block bodyHeading %}
     <div class="row">
         <div class="col-md-8 col-lg-9">
-            <h2>{{ icon('Event') }} {{ event.getTitle }}</h2>
+            <h2>{{ icon('Event') }} {{ event }}</h2>
             {% if event.getSubtitle is not null %}<h3>{{ event.getSubtitle }}</h3>{% endif %}
         </div>
         <div class="col-md-4 col-lg-3">
@@ -23,8 +23,8 @@
                 {% endif %}
                 {% if can_manage(event) %}
                     <div class="btn-group btn-group-sm">
-                        <a href="{{ path('event_edit', {id: event.id, slug: event.getSlug}) }}" class="btn btn-default">{{ "Edit"|trans }}</a>
-                        <a href="{{ path('event_delete', {id: event.id}) }}" class="btn btn-default" {{ modal({title: 'Event delete'|trans, text: 'Are you sure you want to delete this event?'|trans, size: 'sm'}) }}>{{ "Delete"|trans }}</a>
+                        <a href="{{ path('event_edit', {id: event.id, slug: event.getSlug}) }}" class="btn btn-default">{{ icon('Edit') }} {{ "Edit"|trans }}</a>
+                        <a href="{{ path('event_delete', {id: event.id}) }}" class="btn btn-default" {{ modal({title: 'Event delete'|trans, text: 'Are you sure you want to delete this event?'|trans, size: 'sm'}) }}>{{ icon('Delete') }} {{ "Delete"|trans }}</a>
                     </div>
                 {% endif %}
                 {{ include('CMBundle:EntityUser:requestAdd.html.twig', {entity: event}) }}

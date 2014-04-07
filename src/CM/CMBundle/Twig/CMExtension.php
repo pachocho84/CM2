@@ -915,6 +915,7 @@ class CMExtension extends \Twig_Extension
             case 'Next':
                 return '<span class="glyphicon glyphicon-chevron-right"></span>';
             case 'Remove':
+            case 'Delete':
                 return '<span class="glyphicon glyphicon-remove"></span>';
                 break;
             case 'Play':
@@ -927,7 +928,7 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-calendar"></span>';
             case 'Disc':
             case 'Disc_'.Post::TYPE_CREATION:
-                return '<span class="glyphicons album"></span>';
+                return '<span class="glyphicons albums"></span>';
             case 'Track':
             case 'Track_'.Post::TYPE_CREATION:
                 return '<span class="glyphicon glyphicon-headphones"></span>';

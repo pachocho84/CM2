@@ -9,24 +9,25 @@
 
 {% block bodyHeading %}
     <div class="row">
-        <div class="col-md-8">
-            <h2>{{ disc.getTitle }}</h2>
-            {% if disc.getSubtitle is not null %}<h3>{{ disc.getSubtitle }}</h3>{% endif %}
+        <div class="col-md-8 col-lg-9">
+            <h2>{{ icon('Disc') }} {{ disc }}</h2>
         </div>
-        <div class="col-md-4 text-right pull-right">
-            {% if is_granted('ROLE_USER') %}
-                <div class="btn-group">
-                    {{ include('CMBundle:Like:likeActions.html.twig', {post: disc.post, button: true, selector: '#social'}) }}
-                    <a href="{# {{ path('post_show', {'post_id': postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }}</a>
-                </div>
-            {% endif %}
-            {% if can_manage(disc) %}
-                <div class="btn-group">
-                    <a href="{{ path('disc_edit', {'id': disc.id, 'slug': disc.getSlug}) }}" class="btn btn-default">{{ "Edit"|trans }}</a>
-                    <a href="{{ path('disc_delete', {'id': disc.id}) }}" class="btn btn-default">{{ "Delete"|trans }}</a>
-                </div>
-            {% endif %}
-            {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'entity': disc}) }}
+        <div class="col-md-4 col-lg-3">
+            <div class="heading-buttons">
+                {% if is_granted('ROLE_USER') %}
+                    <div class="btn-group btn-group-sm">
+                        {{ include('CMBundle:Like:likeActions.html.twig', {post: disc.post, button: true, selector: '#social'}) }}
+                        <a href="{# {{ path('post_show', {post_id: postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }} {{ disc.post.comments|length }}</a>
+                    </div>
+                {% endif %}
+                {% if can_manage(disc) %}
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ path('disc_edit', {id: disc.id, slug: disc.getSlug}) }}" class="btn btn-default">{{ icon('Edit') }} {{ "Edit"|trans }}</a>
+                        <a href="{{ path('disc_delete', {id: disc.id}) }}" class="btn btn-default" {{ modal({title: 'Delete disc'|trans, text: 'Are you sure you want to delete this disc?'|trans, size: 'sm'}) }}>{{ icon('Delete') }} {{ "Delete"|trans }}</a>
+                    </div>
+                {% endif %}
+                {{ include('CMBundle:EntityUser:requestAdd.html.twig', {entity: disc}) }}
+            </div>
         </div>
     </div>
 {% endblock %}
