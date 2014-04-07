@@ -8,7 +8,61 @@
         </div>
 
         <div class="box-body">
-            {{ form(form) }}
+            {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-sm-6">
+                        {{ form_row(form.school) }}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(form.teacher) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        {{ form_row(form.course) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        {{ form_row(form.dateFrom) }}
+                    </div>
+                    <div class="col-sm-4">
+                        {{ form_row(form.dateTo) }}
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="checkbox-inline"><input type="checkbox"value="0">{{ 'Current'|trans }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        {{ form_row(form.mark) }}
+                    </div>
+                    <div class="col-sm-3">
+                        {{ form_row(form.markScale) }}
+                    </div>
+                    <div class="col-sm-3">
+                        {{ form_row(form.laude) }}
+                    </div>
+                    <div class="col-sm-3">
+                        {{ form_row(form.honour) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        {{ form_row(form.courseType) }}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(form.degreeType) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        {{ form_row(form.description) }}
+                    </div>
+                </div>
+            {{ form_end(form) }}
         </div>
     </div>
 
@@ -28,7 +82,7 @@
 
                 $(event.currentTarget).ajaxSubmit({
                     success: function(data, statusText, xhr, form) {
-                        $('.education:first').before(data);
+                        $('.box:first').after(data);
                         form[0].reset();
                     }
                 });

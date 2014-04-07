@@ -144,7 +144,7 @@ class EventController extends Controller
 
         $images = new ArrayCollection();
 
-        $form = $this->createForm(new ImageCollectionType(), $images, array(
+        $form = $this->createForm(new ImageCollectionType, $images, array(
                 'action' => $this->generateUrl('event_show', array(
                 'id' => $event->getId(),
                 'slug' => $event->getSlug()

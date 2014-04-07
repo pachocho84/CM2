@@ -1,21 +1,49 @@
 {% extends 'CMBundle:User:accountLayout.html.twig' %}
 
-{% block body %}
+{% form_theme form _self %}
 
+{% block _cm_cmbundle_work_collection_works_entry_widget %}
     <div class="box">
         <div class="box-heading">
             <h3>{{ icon('Work') }} <span>{{ 'Work'|trans }}</span></h3>
         </div>
 
         <div class="box-body">
-            {{ form(form) }}
+            <div class="row">
+                <div class="col-sm-4">
+                    {{ form_row(form.position) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_row(form.employer) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_row(form.company) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-5">
+                    {{ form_row(form.dateFrom) }}
+                </div>
+                <div class="col-sm-5">
+                    {{ form_row(form.dateTo) }}
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label class="checkbox-inline"><input type="checkbox"value="0">{{ 'Current'|trans }}</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    {{ form_row(form.description) }}
+                </div>
+            </div>
         </div>
     </div>
+{% endblock %}
 
-
-    {% for work in works %}
-        {{ include('CMBundle:Work:object.html.twig') }}
-    {% endfor %}
+{% block body %}
+    {{ form(form) }}
 {% endblock %}
 
 {% block javascripts %}
@@ -28,7 +56,7 @@
 
                 $(event.currentTarget).ajaxSubmit({
                     success: function(data, statusText, xhr, form) {
-                        $('.work:first').before(data);
+                        $('.box:first').after(data);
                         form[0].reset();
                     }
                 });
@@ -36,3 +64,44 @@
         });
     </script>
 {% endblock %}
+
+
+{#
+        <div class="box">
+            <div class="box-heading">
+                <h3>{{ icon('Work') }} <span>{{ 'Work'|trans }}</span></h3>
+            </div>
+
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        {{ form_row(form.position) }}
+                    </div>
+                    <div class="col-sm-4">
+                        {{ form_row(form.employer) }}
+                    </div>
+                    <div class="col-sm-4">
+                        {{ form_row(form.company) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5">
+                        {{ form_row(form.dateFrom) }}
+                    </div>
+                    <div class="col-sm-5">
+                        {{ form_row(form.dateTo) }}
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label class="checkbox-inline"><input type="checkbox"value="0">{{ 'Current'|trans }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        {{ form_row(form.description) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+#}

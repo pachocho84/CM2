@@ -117,11 +117,11 @@ class GroupController extends Controller
             }
         }
         
-        if ($request->get('_route') == 'event_edit') {
-            $formRoute = 'event_edit';
+        if ($request->get('_route') == 'group_edit') {
+            $formRoute = 'group_edit';
             $formRouteArgs = array('id' => $event->getId(), 'slug' => $event->getSlug());
         } else {
-            $formRoute = 'event_new';
+            $formRoute = 'group_new';
             $formRouteArgs = array();
         }
  

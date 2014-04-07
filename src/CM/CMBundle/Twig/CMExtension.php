@@ -172,10 +172,12 @@ class CMExtension extends \Twig_Extension
         ), $options);
 
         if (is_null($image) || empty($image)) {
-            $image = $options['default'];
+            $img = $options['default'];
+        } else {
+            $img = $image->getImg();
         }
 
-        return $options['path'].$image;
+        return $options['path'].$img;
     }
 
     public function getShortText(Entity $entity, $options = array())
@@ -905,6 +907,10 @@ class CMExtension extends \Twig_Extension
     function getIcon($object)
     {
         switch ($object) {
+            case 'Add':
+                return '<span class="glyphicon glyphicon-plus"></span>';
+            case 'Remove':
+                return '<span class="glyphicon glyphicon-minus"></span>';
             case 'Up':
                 return '<span class="glyphicon glyphicon-chevron-up"></span>';
             case 'Down':

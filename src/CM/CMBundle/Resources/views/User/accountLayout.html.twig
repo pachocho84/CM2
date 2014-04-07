@@ -4,11 +4,13 @@
 
 {% block bodyHeading %}
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-8 col-lg-9">
             <h2>{{ 'Account edit'|trans }} </h2>
         </div>
-        <div class="col-md-7 text-right">
-            <a href="{{ path('user_show', {'slug': app.user.slug}) }}" class="btn btn-default">{{ icon('User') }} {{ 'View profile'|trans }}</a>
+        <div class="col-md-4 col-lg-3">
+            <div class="heading-buttons">
+                <a href="{{ path('user_show', {'slug': app.user.slug}) }}" class="btn btn-default">{{ icon('User') }} {{ 'View profile'|trans }}</a>
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -47,6 +49,9 @@
             </li>
             <li{% if controller_name() == 'education' %} class="active"{% endif %}>
                 <a href="{{ path('user_education') }}">{{ icon('Education') }} {{ 'Education'|trans }}</a>
+            </li>
+            <li{% if controller_name() == 'work' %} class="active"{% endif %}>
+                <a href="{{ path('user_work') }}">{{ icon('Work') }} {{ 'Work'|trans }}</a>
             </li>
             <li{% if controller_name() == 'relation' %} class="active"{% endif %}>
                 <a href="{{ path('relation_user') }}"><span class="glyphicons git_branch"></span> {{ 'Relations'|trans }}</a>

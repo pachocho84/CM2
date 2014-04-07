@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use CM\CMBundle\Entity\Work;
 
-class WorkType extends AbstractType
+class GroupUserType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -17,12 +17,9 @@ class WorkType extends AbstractType
     {
         parent::buildForm($builder, $options);
     
-        $builder->add('position')
-            ->add('employer')
-            ->add('company')
-            ->add('dateFrom', 'date', array('required' => false, 'widget' => 'single_text', 'empty_value' => ''))
-            ->add('dateTo', 'date', array('required' => false, 'widget' => 'single_text', 'empty_value' => ''))
-            ->add('description', 'textarea', array('attr' => array('expandable' => $options['expandable'])));
+        $builder->add('joinArticle', 'choice', array(
+                'choices' => array(GroupUser::JOIN_NO, GroupUser::JOIN_YES, GroupUser::JOIN_REQUEST)
+        	));
     }
     
     /**
@@ -33,8 +30,7 @@ class WorkType extends AbstractType
         parent::setDefaultOptions($resolver);
         
         $resolver->setDefaults(array(
-            'data_class' => 'CM\CMBundle\Entity\Work',
-            'expandable' => ''
+            'data_class' => 'CM\CMBundle\Entity\GroupUser',
         ));
     }
 
@@ -43,6 +39,6 @@ class WorkType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_work';
+        return 'cm_cmbundle_groupUser';
     }
 }

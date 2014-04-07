@@ -15,15 +15,13 @@ class EducationType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-    
         $builder->add('school')
             ->add('course')
             ->add('teacher')
-            ->add('dateFrom', 'date', array('required' => false, 'empty_value' => ''))
-            ->add('dateTo', 'date', array('required' => false, 'empty_value' => ''))
+            ->add('dateFrom', 'date', array('required' => false, 'widget' => 'single_text', 'empty_value' => ''))
+            ->add('dateTo', 'date', array('required' => false, 'widget' => 'single_text', 'empty_value' => ''))
             ->add('mark')
-            ->add('markScale', 'choice', array('choices' => array(
+            ->add('markScale', 'choice', array('required' => false, 'choices' => array(
                 Education::MARK_SCALE_10 => '10',
                 Education::MARK_SCALE_30 => '30',
                 Education::MARK_SCALE_60 => '60',
@@ -33,7 +31,7 @@ class EducationType extends AbstractType
             ->add('honour')
             ->add('courseType')
             ->add('degreeType')
-            ->add('description');
+            ->add('description', 'textarea', array('attr' => array('expandable' => $options['expandable'])));
     }
     
     /**
@@ -41,10 +39,9 @@ class EducationType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        parent::setDefaultOptions($resolver);
-        
         $resolver->setDefaults(array(
             'data_class' => 'CM\CMBundle\Entity\Education',
+            'expandable' => ''
         ));
     }
 

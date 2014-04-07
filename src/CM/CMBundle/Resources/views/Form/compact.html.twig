@@ -238,7 +238,7 @@
 
 {% block checkbox_widget %}
 {% spaceless %}
-    <label class="checkbox-inline control-label">
+    <label class="checkbox-inline">
         <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
         {{ form.vars.label|default(form.vars.name|humanize)|trans({}, translation_domain) }}
     </label>
@@ -376,31 +376,21 @@
 
 {% block checkbox_row %}
 {% spaceless %}
-  <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
-    <div class="col-sm-offset-3 col-sm-9">
-      <div class="checkbox">
-        <label>
-            {{ form_widget(form) }} {{ form.vars.label|default(form.vars.name|humanize)|trans({}, translation_domain) }}
-        </label>
+    <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
+        {{ form_widget(form) }}
         {{ form_errors(form) }}
-      </div>
     </div>
-  </div>
 {% endspaceless %}
 {% endblock %}
 
 {% block radio_row %}
 {% spaceless %}
-  <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
-    <div class="col-sm-offset-3 col-sm-9">
-      <div class="radio">
-        <label>
+    <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
+        <div class="radio">
             {{ form_widget(form) }} {{ form.vars.label|default(form.vars.name|humanize)|trans({}, translation_domain) }}
-        </label>
-        {{ form_errors(form) }}
-      </div>
+            {{ form_errors(form) }}
+        </div>
     </div>
-  </div>
 {% endspaceless %}
 {% endblock %}
 

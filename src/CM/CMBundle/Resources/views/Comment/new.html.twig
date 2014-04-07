@@ -2,7 +2,7 @@
     {{ show_img_box(app.user.img|imagine_filter('avatar'), {width: 34, offset: app.user.imgOffset,  link: path('user_show', {slug: app.user.slug}), box_attributes: {class: 'pull-left img-rounded'}}) }}
     <div class="media-body">      
         {{ form_start(form) }}
-            {{ form_widget(form.comment, {no_container_class: true, attr: {comment_new: '', expandable: ''}}) }}
+            {{ form_widget(form.comment, {no_container_class: true, attr: {comment_new: '', expandable: 'small'}}) }}
             <input type="submit" name="commit" value="{{ 'Send'|trans }}" class="pull-right btn btn-mini hidden" />
         {{ form_end(form) }}
     </div>

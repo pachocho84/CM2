@@ -15,7 +15,7 @@ use JMS\SecurityExtraBundle\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
 use CM\CMBundle\Entity\Work;
-use CM\CMBundle\Form\WorkType;
+use CM\CMBundle\Form\WorkCollectionType;
 
 class WorkController extends Controller
 {
@@ -30,19 +30,25 @@ class WorkController extends Controller
 
         $works = $em->getRepository('CMBundle:Work')->findBy(
             array('userId' => $this->getUser()->getId()),
-            array('dateFrom' => 'desc')
+            array('dateFrom' => 'desc', 'id' => 'desc')
         );
 
         $work = new Work;
         $work->setUser($this->getUser());
-        $form = $this->createForm(new WorkType(), $work, array(
-            'cascade_validation' => true
+
+        $works[] = $work;
+
+        $form = $this->createForm(new WorkCollectionType, array('works' => new ArrayCollection($works)), array(
+            'cascade_validation' => true,
+            'expandable' => (is_null($work) ? '' : 'small')
         ))->add('save', 'submit');
 
         $form->handleRequest($request);
         
         if ($form->isValid()) {
-            $em->persist($work);
+            foreach ($works as $work) {
+                $em->persist($work);
+            }
             $em->flush();
 
             return $this->render('CMBundle:Work:object.html.twig', array('work' => $work));

@@ -1,9 +1,6 @@
 <div id="event-dates" class="box">
     <div class="box-heading">
-        <h2>
-            {{ icon('Calendar') }} {{ dates[0].start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
-            {{ icon('Time') }} {{ dates[0].start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
-        </h2>
+        <h2>{{ icon('Calendar') }} {{ 'Dates'|trans }}</h2>
     </div>
     <div class="box-body">
         {% set count = 0 %}
@@ -34,6 +31,10 @@
                     </p>
                 {% endif %}
                 <div id="event-date-{{ loop.index }}" class="collapse{% if loop.first %} in{% endif %}">
+                    <p>
+                        {{ icon('Calendar') }} {{ dates[0].start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
+                        {{ icon('Time') }} {{ dates[0].start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
+                    </p>
                     <p>{{ icon('Map') }} {{ date.location }}, <small class="text-muted">{{ date.address }}</small></p>
                     <div class="event-date-map">
                         <div class="event-date-map-img">

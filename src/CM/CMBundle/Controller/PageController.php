@@ -117,11 +117,11 @@ class PageController extends Controller
             }
         }
         
-        if ($request->get('_route') == 'event_edit') {
-            $formRoute = 'event_edit';
+        if ($request->get('_route') == 'page_edit') {
+            $formRoute = 'page_edit';
             $formRouteArgs = array('id' => $event->getId(), 'slug' => $event->getSlug());
         } else {
-            $formRoute = 'event_new';
+            $formRoute = 'page_new';
             $formRouteArgs = array();
         }
  

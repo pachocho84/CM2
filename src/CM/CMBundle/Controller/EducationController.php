@@ -35,8 +35,9 @@ class EducationController extends Controller
 
         $education = new Education;
         $education->setUser($this->getUser());
-        $form = $this->createForm(new EducationType(), $education, array(
-            'cascade_validation' => true
+        $form = $this->createForm(new EducationType, $education, array(
+            'cascade_validation' => true,
+            'expandable' => (is_null($education) ? '' : 'small')
         ))->add('save', 'submit');
 
         $form->handleRequest($request);
