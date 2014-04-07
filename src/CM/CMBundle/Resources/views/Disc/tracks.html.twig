@@ -24,7 +24,7 @@
                                 {% if track.audio is not null and track.audio is not empty %}
                                     <audio>
                                         <source src="{{ asset(uploaded_audio_dir ~ '/' ~ track.audio) }}">
-                                        {{ 'Your browser does not support html5 audio playback'|trans }}
+                                        <span class="glyphicons glyphicon-remove-circle" title="{{ 'Your browser does not support html5 audio playback'|trans }}"></span>
                                     </audio>
                                     <a href="#" class="audio-controls" title="{{ 'play'|trans }}" title-alt="{{ 'pause'|trans }}">{{ icon('Play') }}</a>
                                     {% if track.extract %}({{ 'extract'|trans }}){% endif %}

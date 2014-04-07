@@ -61,12 +61,8 @@
                     <div class="media object">
                         <div>
                             <div class="text-justify">{{ disc.getText|raw }}</div>
-                            <dl>
-                                <dt>{{ 'Label'|trans }}</dt>
-                                <dd>{{ disc.label }}</dd>
-                                <dt>{{ 'Year'|trans }}</dt>
-                                <dd>{{ disc.year|date('Y') }}</dd>
-                            </dl>
+
+                            <p><strong>{{ 'Label'|trans }}</strong> {{ disc.label }} &middot; <strong>{{ 'Year'|trans }}</strong> {{ disc.year|date('Y') }}</p>
                         </div>
                     </div>
                 </div>
