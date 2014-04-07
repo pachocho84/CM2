@@ -1,49 +1,23 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+{% block bodyHeading %}
+    {{ include('CMBundle:Group:top.html.twig') }}
+{% endblock %}
+
 {% block body %}
-
-    {% if is_granted('ROLE_USER') %}
-        {{ include('CMBundle:GroupUser:requestAdd.html.twig') }}
-    {% endif %}
-
-    {{ include('CMBundle:Group:top.html.twig', {'inPage': 'profile'}) }}
-
-
-    {#<ul class="breadcrumb">
-      <li><?php echo link_to('Home', '@homegroup') ?></li>
-      <li><?php echo link_to(__('Users'), '@group_list') ?></li>
-      <li class="active"><?php echo $group ?></li>
-    </ul>#}
-
-
-    <div class="box">
-        <div class="box-heading">
-                    <a href="{{ path('group_biography', {'slug': group.slug}) }}">{{ icon('Biography') }} {{ 'Biography'|trans }}</a>
-            <h2>{{ icon('Biography') }} <a href="{{ path('group_biography', {'slug': group.slug}) }}">{{ 'Biography'|trans }}</a> <small><a href="{{ path('group_biography', {'slug': group.slug}) }}">{{ 'show complete biography'|trans }}</small></a></h2>
-        </div>
-        <div class="media objects">
-            {{ show_img_box(group.img|imagine_filter('medium'), {'width': 200, 'offset': group.imgOffset, 'default': 'group', 'box_attributes': {'class': 'pull-left img-thumbnail'}}) }}
-            <div class="meda-body">
-                <h4>
-                    {{ group }}
-                </h4>
-                {% if biography is not null %}{{ biography|short_text }}{% endif %}
-            </div>
-        </div>
-    </div>
+    <div data-ajax-url="{{ path('group_biography', {slug: group.slug, simple: true}) }}"></div>
 
     {{ include('CMBundle:Group:membersMini.html.twig') }}
 
     {% if is_admin(group) %}
-        <a href="{{ path('group_members_settings', {'slug': group.slug}) }}">{{ 'Manage members'|trans }}</a>
+        <a href="{{ path('group_members_settings', {slug: group.slug}) }}">{{ 'Manage members'|trans }}</a>
     {% endif %}
 
+    <div data-ajax-url="{{ path('wall_group', {slug: group.slug, simple: true}) }}"></div>
+{% endblock %}
 
-    {{ include('CMBundle:Wall:posts.html.twig', {'slug': group.slug}) }}
-    
+{% block sidebar %}
+    <div data-ajax-url="{{ path('fan_group_sidebar', {slug: group.slug}) }}"></div>
 
-    {#<?php slot('sidebar_slot3') ?>  
-        <?php include_component('fan', 'groupFans', array('group' => $group)) ?>
-    <?php end_slot() ?>#}
-  
+    <div data-ajax-url="{{ path('event_next_dates', {object: 'group', objectId: group.id, limit: 3}) }}"></div>
 {% endblock %}

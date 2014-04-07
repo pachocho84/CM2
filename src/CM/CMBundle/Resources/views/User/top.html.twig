@@ -21,7 +21,7 @@
                 {% if is_granted('ROLE_USER') and user.id != app.user.id %}
                     {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
                     {{ render(controller('CMBundle:Relation:button', {user: user})) }}
-                    <a href="{{ path('message_new', {'userId': user.id}) }}" class="btn btn-default" {{ modal({remote: path('message_new', {'userId': user.id}), callback: '$initRecipients()'}) }}>{{ icon('Message') }} {{ 'Send a message'|trans }}</a>
+                    <a href="{{ path('message_new', {userId: user.id}) }}" class="btn btn-default" {{ modal({remote: path('message_new', {userId: user.id}), callback: '$initRecipients()'}) }}>{{ icon('Message') }} {{ 'Send a message'|trans }}</a>
                 {% endif %}
             </div>
             
@@ -47,51 +47,4 @@
             </span>
         {% endspaceless %}
     </div>
-
-{#
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="collapse navbar-collapse navbar-ex1-collapse user-menu">
-            <ul class="nav navbar-nav">
-                <li{% if controller_name() == 'profile' %} class="active"{% endif %}>
-                    <a href="{{ path('user_show', {'slug': user.slug}) }}">{{ icon('User')|raw }} {{ 'Profile'|trans }}</a>
-                </li>
-                <li{% if controller_name() == 'wall' %} class="active"{% endif %}>
-                    <a href="{{ path('wall_user', {'slug': user.slug}) }}">{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
-                </li>
-                <li{% if controller_name() == 'biography' %} class="active"{% endif %}>
-                    <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
-                </li>
-                <li{% if controller_name() == 'event' %} class="active"{% endif %}>
-                    <a href="{{ path('user_events', {'slug': user.slug}) }}">{{ icon('Event')|raw }} {{ 'Events'|trans }}</a>
-                </li>
-                <li{% if controller_name() == 'image' %} class="active"{% endif %}>
-                    <a href="{{ path('user_images', {'slug': user.slug}) }}">{{ icon('Image')|raw }} {{ 'Images'|trans }}</a>
-                </li>
-                <li{% if controller_name() == 'multimedia' %} class="active"{% endif %}>
-                    <a href="{{ path('user_multimedia', {'slug': user.slug}) }}">{{ icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
-                </li>
-                <li{% if controller_name() == 'disc' %} class="active"{% endif %}>
-                    <a href="{{ path('user_discs', {'slug': user.slug}) }}">{{ icon('Disc')|raw }} {{ 'Discs'|trans }}</a>
-                </li>
-            </ul>
-            <ul class="nav nav navbar-nav pull-right">
-                <li class="dropdown{% if controller_name() == 'fan' or controller_name() == 'relation' or controller_name() == 'education' %} active{% endif %}">
-                    <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">{{ 'More'|trans }} <b class="caret"></b></a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                        <li>
-                            <a href="{{ path('fan_user', {'slug': user.slug}) }}">{{ icon('Fan')|raw }} {{ 'Fans'|trans }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('relation_user', {'slug': user.slug}) }}">{{ icon('Relation')|raw }} {{ 'Relations'|trans }}</a>
-                        </li>
-                        <li role="presentation" class="divider"></li>
-                        <li>
-                            <a href="{{ path('fan_user', {'slug': user.slug}) }}">{{ icon('Work')|raw }} {{ 'Work and education [TODO]'|trans }}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </nav>
-#}
 </div>

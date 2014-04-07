@@ -503,10 +503,10 @@ $(function() {
         });
     }
     if ($('#profile-pic').length == 1) {
-        imagePosition($('#profile-pic'), $('[img-offset-field]'));
+        imagePosition($('#profile-pic').find('img'), $('[img-offset-field]'));
     }
     if ($('#cover-pic').length == 1) {
-        imagePosition($('#cover-pic'), $('[cover-img-offset-field]'));
+        imagePosition($('#cover-pic').find('img'), $('[cover-img-offset-field]'));
     }
 
 

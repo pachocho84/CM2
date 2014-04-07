@@ -3,9 +3,9 @@
         <div class="box-heading">
             <h2>
                 {% if simple|default(false) %}
-                    <a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ icon('Biography') }} {{ 'Biography'|trans }}</a> <small><a href="{{ path('user_biography', {'slug': user.slug}) }}">{{ 'show complete biography'|trans }}</small></a>
+                    <a href="{{ path(publisherType ~ '_biography', {slug: publisher.slug}) }}">{{ icon('Biography') }} {{ 'Biography'|trans }}</a> <small><a href="{{ path(publisherType ~ '_biography', {slug: publisher.slug}) }}">{{ 'show complete biography'|trans }}</small></a>
                 {% else %}
-                    {{ icon('Biography') }} {{ 'Biography'|trans }}<small><a href="{{ path('file_biography_pdf', {'slug': user.slug})}}">{{ 'download the pdf version'|trans }}</a></small>
+                    {{ icon('Biography') }} {{ 'Biography'|trans }}<small><a href="{{ path('file_biography_pdf', {slug: publisher.slug})}}">{{ 'download the pdf version'|trans }}</a></small>
                 {% endif %}
             </h2>
         </div>
@@ -15,16 +15,16 @@
                 {% if simple|default(false) %}
                     {{ biography|short_text }}
                 {% else %}
-                    <img src='{{ asset(user.img|imagine_filter('medium')) }}' width=200 class="img-thumbnail pull-left" />
+                    <img src='{{ asset(publisher.img|imagine_filter('medium')) }}' width=200 class="img-thumbnail pull-left" />
                     <h3>
-                        {{ user }}
-                        <small>{{ user.userTags|join(', ')|trim }}</small>
+                        {{ publisher }}
+                        <small>{{ publisher.userTags|join(', ')|trim }}</small>
                     </h3>
 
                     {{ biography }}               
                 
                     {% if is_granted('ROLE_USER') and biography is not null and biography.post is not null %}
-                        {{ include('CMBundle::social.html.twig', {'post': biography.post}) }}
+                        {{ include('CMBundle::social.html.twig', {post: biography.post}) }}
                         {% endif %}
                 {% endif %}
             </div>

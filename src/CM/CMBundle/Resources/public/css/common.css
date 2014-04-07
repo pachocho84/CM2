@@ -29,6 +29,9 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 */
 form textarea[expandable].form-control {
+    height: 300px;
+}
+form textarea[expandable="small"].form-control {
     height: 34px;
 }
 .text-danger {

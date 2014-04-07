@@ -61,7 +61,7 @@
                     <li><a href="{{ path('event_index') }}">{{ 'Events'|trans }}</a></li>
                     <li><a href="{{ path('disc_index') }}">{{ 'Discs'|trans }}</a></li>
                     <li><a href="{{ path('article_index') }}">{{ 'Articles'|trans }}</a></li>
-                    <li><a href="{{ path('multimedia_index') }}">{{ 'Miultimedia'|trans }}</a></li>
+                    <li><a href="{{ path('multimedia_index') }}">{{ 'Multimedia'|trans }}</a></li>
                     <li><a href="#{#{{ path('user_index') }}#}">{{ 'Users'|trans }}</a></li>
                     <li><a href="{{ path('page_index') }}">{{ 'Pages'|trans }}</a></li>
                     <li><a href="{{ path('group_index') }}">{{ 'Groups'|trans }}</a></li>
@@ -193,4 +193,39 @@
             <script src="{{ asset_url }}"></script>
         {% endjavascripts %}
     {% endif %}
+    <script type="text/javascript">
+        // if (typeof(Storage) !== 'undefined') {
+        //     function formOffline($form) {
+        //         var formIds = sessionStorage.getItem('sf@' + document.URL) || '';
+        //         formIds = formIds.split(',');
+        //         formIds.push($form.attr('form-stored'));
+        //         var formHTML = $('<div>').append($form.eq(0).clone()).html();
+        //         sessionStorage.setItem('sf@' + document.URL, formIds.join(','));
+        //         sessionStorage.setItem('sf:' + document.URL + ':' + $form.attr('form-stored'), formHTML);
+        //     }
+        //     if ($('[form-stored]').length > 0 && sessionStorage.getItem('sf@' + document.URL) !== null) {
+        //         $.each($("[form-stored='" + sessionStorage.getItem('sf@' + document.URL).split(',').join("'],[form-stored='") + "']"), function(i, elem) {
+        //             var $form = $(elem);
+        //             var token = $('#' + $form.attr('form-stored') + '_token').val();
+        //             var $savedForm = $(sessionStorage.getItem('sf:' + document.URL + ':' + $form.attr('form-stored')));
+        //             $savedForm.find('input[id=' + $form.attr('form-stored') + '_token]').val(token);
+        //             $form.replaceWith($savedForm);
+        //         });
+        //     }
+        //     $(document).on('submit', '[form-stored]', function(event) {
+        //         var ok = true;
+        //         $.ajax({
+        //             url: script + '/ping',
+        //             cache: false,
+        //             timeout: 2000,
+        //             async: false,
+        //             error: function() { ok = false; formOffline($(event.currentTarget)); },
+        //             success: function(data) { if (!data) { ok = false; formOffline($(event.currentTarget)); }; }
+        //         });
+        //         if (!ok) {
+        //             event.preventDefault();
+        //         }
+        //     });
+        // }
+    </script>
 {% endblock %}

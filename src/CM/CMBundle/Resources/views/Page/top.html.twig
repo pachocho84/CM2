@@ -1,107 +1,36 @@
-{% if false and is_granted('ROLE_USER') %}
-    {{ render(controller('CMBundle:Fan:button', {'userId': page.id, 'object': page|class_name})) }}
-{% endif %}
-
-{% if not page.coverImg or page.coverImg == '' %}
-    <div class="media">
-        {{ show_img_box(page.img|imagine_filter('avatar'), {'width': 32, 'height': 32, 'offset': page.imgOffset, 'default': 'page', 'box_attributes': {'class': 'pull-left'}})|raw }}
-        <div class="media-body">
+<div class="box profile-header">
+    <div class="clearfix">
+    
+        <div class="col-md-4 box-body profile-header-info text-center">
+            <div class="profile-header-picture thumbnail">
+                {{ show_img_box(page.img|imagine_filter('medium'), {width: 120, offset: page.imgOffset}) }}
+            </div>
             <h2>{{ page }}</h2>
         </div>
-    </div>
-{% endif %}
-
-<div class="profile-header shadow">
-    {% if page.coverImg != '' %}
-        <div class="cover image_box">
-            {{ show_img_box(page.coverImg|imagine_filter('large'), {'width': 750, 'height': 285, 'offset': page.coverImgOffset, 'img_only': true})|raw }}
-            <div class="cover-shadow"></div>
-            <h2>{{ page }}</h2>
-        </div>
-    {% endif %}
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="collapse navbar-collapse navbar-ex1-collapse user-menu">
-            <ul class="nav navbar-nav">
-                <li{% if inPage == 'profile' %} class="active"{% endif %}>
-                    <a href="{{ path('page_show', {'slug': page.slug}) }}">{{ icon('User')|raw }} {{ 'Profile'|trans }}</a>
-                </li>
-                <li{% if inPage == 'wall' %} class="active"{% endif %}>
-                    <a href="{{ path('page_wall', {'slug': page.slug}) }}">{{ icon('Wall')|raw }} {{ 'Wall'|trans }}</a>
-                </li>
-                <li{% if inPage == 'biography' %} class="active"{% endif %}>
-                    <a href="{{ path('page_biography', {'slug': page.slug}) }}">{{ icon('Biography')|raw }} {{ 'Biography'|trans }}</a>
-                </li>
-                <li{% if inPage == 'event' %} class="active"{% endif %}>
-                    <a href="{{ path('page_events', {'slug': page.slug}) }}">{{ icon('Event')|raw }} {{ 'Events'|trans }}</a>
-                </li>
-                <li{% if inPage == 'image' %} class="active"{% endif %}>
-                    <a href="{{ path('page_images', {'slug': page.slug}) }}">{{ icon('Image')|raw }} {{ 'Images'|trans }}</a>
-                </li>
-                <li{% if inPage == 'multimedia' %} class="active"{% endif %}>
-                    <a href="{{ path('page_multimedia', {'slug': page.slug}) }}">{{ icon('Multimedia')|raw }} {{ 'Multimedia'|trans }}</a>
-                </li>
-                <li{% if inPage == 'disc' %} class="active"{% endif %}>
-                    <a href="{{ path('page_discs', {'slug': page.slug}) }}">{{ icon('Disc')|raw }} {{ 'Discs'|trans }}</a>
-                </li>
-                {#<li{% if $inPage == 'fan' %} class="active"{% endif %}><?php echo link_to(icon('fan').' '.__('Fans'), '@fan_page?page='.$page->getUsername()) ?></li>#}
-            </ul>
-            <ul class="nav nav navbar-nav pull-right">
-                <li class="dropdown{% if inPage == 'fan' or inPage == 'education' %} active{% endif %}">
-                    <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">{{ 'More'|trans }} <b class="caret"></b></a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                        <li>
-                            <a href="{#{{ path('fan_page', {'slug': page.slug}) }}#}">{{ icon('Fan')|raw }} {{ 'Fans'|trans }}</a>
-                        </li>
-                        <li role="presentation" class="divider"></li>
-                        <li>
-                            <a href="{#{{ path('fan_page', {'slug': page.slug}) }}#}">{{ icon('Work')|raw }} {{ 'Work and education [TODO]'|trans }}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </nav>
-</div>
-
-
-{#<?php if (!$page->getCoverImg() || !is_file('uploads/images/770/'.$page->getCoverImg())): ?>
-    <div class="media">
         
-        <?php show_img_box($page->getImg(), array('width' => 35, 'height' => 35, 'offset' => $page->getImgOffset(), 'default' => 'page', 'box_attributes' => array('class' => 'pull-left'))) ?>
-        <div class="media-body">
-            <h2><?php echo $page ?></h2>
+        <div class="col-md-8 profile-header-cover">
+            {% if page.coverImg != '' %}
+                {{ show_img_box(page.coverImg|imagine_filter('large'), {width: 780, height: 300, offset: page.coverImgOffset}) }}
+            {% endif %}
+            <div class="profile-header-buttons btn-toolbar" role="toolbar">
+                {% if is_granted('ROLE_USER') %}
+                    {{ render(controller('CMBundle:Fan:button', {userId: page.id, object: page|class_name})) }}
+                {% endif %}
+                {{ include('CMBundle:PageUser:requestAdd.html.twig') }}
+            </div>
+            
         </div>
     </div>
-<?php endif ?>
-
-<div class="profile-header shadow">
-    <?php if ($page->getCoverImg() && is_file('uploads/images/770/'.$page->getCoverImg())): ?>
-        <div class="cover image_box">
-            <?php show_img_box($page->getCoverImg(), array('width' => 770, 'height' => 285, 'offset' => $page->getCoverImgOffset(), 'img_only' => true)) ?>
-            <div class="cover-shadow"></div>
-            <h2><?php echo $page ?></h2>
-        </div>
-    <?php endif ?>
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="collapse navbar-collapse navbar-ex1-collapse page-menu">
-            <ul class="nav navbar-nav">
-                <li<?php $inPage == 'show' and print ' class="active"' ?>><?php echo link_to(icon('page').' '.__('Profile'), $page->getRawValue()->getLinkShow()) ?></li>
-                <li<?php $inPage == 'wall' and print ' class="active"' ?>><?php echo link_to(icon('wall').' '.__('Wall'), '@wall_page?page='.$page->getUsername()) ?></li>
-                <li<?php $inPage == 'biography' and print ' class="active"' ?>><?php echo link_to(icon('biography').' '.__('Biography'), '@biography_page?page='.$page->getUsername()) ?></li>
-                <li<?php $inPage == 'event' and print ' class="active"' ?>><?php echo link_to(icon('event').' '.__('Events'), '@image_page?page='.$page->getUsername()) ?></li>
-                <li<?php $inPage == 'image' and print ' class="active"' ?>><?php echo link_to(icon('image').' '.__('Images'), '@image_page?page='.$page->getUsername()) ?></li>
-                <li<?php $inPage == 'disc' and print ' class="active"' ?>><?php echo link_to(icon('disc').' '.__('Discs'), '@disc_page?page='.$page->getUsername()) ?></li>
-            </ul>
-            <ul class="nav nav navbar-nav pull-right">
-                <li class="dropdown<?php in_array($inPage, array('fan', 'education')) and print ' active' ?>">
-            <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><?php echo __('More') ?> <b class="caret"></b></a>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                <li><?php echo link_to(icon('fan').' '.__('Fans'), '@fan_page?page='.$page->getUsername()) ?></li>
-              <li role="presentation" class="divider"></li>
-                <li><?php echo link_to(icon('work').' '.__('Work and education'), '@work_education_page?page='.$page->getUsername()) ?></li>
-            </ul>
-          </li>
-            </ul>
-        </div>
-    </nav>
-</div>#}
+    
+    <div class="profile-menu">
+        {% spaceless %}
+            <a href="{{ path('page_show', {slug: page.slug}) }}"{% if controller_name() == 'page' %} class="active"{% endif %}>{{ icon('User') }} {{ 'Profile'|trans }}</a>
+            <a href="{{ path('page_wall', {slug: page.slug}) }}"{% if controller_name() == 'wall' %} class="active"{% endif %}>{{ icon('Wall') }} {{ 'Wall'|trans }}</a>
+            <a href="{{ path('page_biography', {slug: page.slug}) }}"{% if controller_name() == 'biography' %} class="active"{% endif %}>{{ icon('Biography') }} {{ 'Biography'|trans }}</a>
+            <a href="{{ path('page_events', {slug: page.slug}) }}"{% if controller_name() == 'event' %} class="active"{% endif %}>{{ icon('Event') }} {{ 'Events'|trans }}</a>
+            <a href="{{ path('page_images', {slug: page.slug}) }}"{% if controller_name() == 'image' %} class="active"{% endif %}>{{ icon('Image') }} {{ 'Images'|trans }}</a>
+            <a href="{{ path('page_multimedia', {slug: page.slug}) }}"{% if controller_name() == 'multimedia' %} class="active"{% endif %}>{{ icon('Multimedia') }} {{ 'Multimedia'|trans }}</a>
+            <a href="{{ path('page_discs', {slug: page.slug}) }}"{% if controller_name() == 'disc' %} class="active"{% endif %}>{{ icon('Disc') }} {{ 'Discs'|trans }}</a>
+        {% endspaceless %}
+    </div>
+</div>

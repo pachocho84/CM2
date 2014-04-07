@@ -13,13 +13,26 @@ use Doctrine\ORM\Query;
  */
 class FanRepository extends BaseRepository
 {
-    public function getUserFans($userId, $limit = null)
+    public function getItsFans($id, $object = 'User', $limit = null)
     {
-        $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('u')
-            ->from('CMBundle:User', 'u')
-            ->leftJoin('u.fanOf', 'f')
-            ->where('f.userId = :user_id')->setParameter('user_id', $userId); // TODO: integrate with clients
+        $query = $this->createQueryBuilder('f')
+            ->select('f, o');
+        switch($object) {
+            default:
+            case 'User':
+                $query->leftJoin('f.user', 'o')
+                    ->where('f.userId = :id');
+                break;
+            case 'Page':
+                $query->leftJoin('f.page', 'o')
+                    ->where('f.pageId = :id');
+                break;
+            case 'Group':
+                $query->leftJoin('f.group', 'o')
+                    ->where('f.groupId = :id');
+                break;
+        }
+        $query->setParameter('id', $id); // TODO: integrate with clients
         // return UserQuery::create()->
         //  useFanRelatedByFromUserIdQuery()->
         //      filterByUserId($user_id)->
@@ -55,11 +68,23 @@ class FanRepository extends BaseRepository
         return $query->getQuery()->getResult();
     }
     
-    public function countUserFans($userId)
+    public function countItsFans($id, $object = 'User')
     {
-        return $this->createQueryBuilder('f')
-            ->select('count(f.id)')
-            ->where('identity(f.user) = :user_id')->setParameter('user_id', $userId)
+        $query = $this->createQueryBuilder('f')
+            ->select('count(f.id)');
+        switch($object) {
+            default:
+            case 'User':
+                $query->where('f.userId = :id');
+                break;
+            case 'Page':
+                $query->where('f.pageId = :id');
+                break;
+            case 'Group':
+                $query->where('f.groupId = :id');
+                break;
+        }
+        return $query->setParameter('id', $id)
             // leftJoin('f.user', 'u', 'WITH', 'u.enabled ='.true.' AND u.isActive = '.true)
             ->getQuery()->getSingleScalarResult();
     }
@@ -89,16 +114,16 @@ class FanRepository extends BaseRepository
     {
         $query = $this->createQueryBuilder('f')
             ->select('count(f.id)')
-            ->where('identity(f.fromUser) = :user_id')->setParameter('user_id', $userId);
+            ->where('f.fromUserId = :user_id')->setParameter('user_id', $userId);
         switch($object) {
             case 'User':
-                $query->andWhere('identity(f.user) = :fan_id');
+                $query->andWhere('f.userId = :fan_id');
                 break;
             case 'Page':
-                $query->andWhere('identity(f.page) = :fan_id');
+                $query->andWhere('f.pageId = :fan_id');
                 break;
             case 'Group':
-                $query->andWhere('identity(f.group) = :fan_id');
+                $query->andWhere('f.groupId = :fan_id');
                 break;
         }
         return $query->setParameter('fan_id', $fanId)->getQuery()->getSingleScalarResult() > 0;
