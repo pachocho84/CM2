@@ -25,7 +25,7 @@
     <div class="box">
         {% if image.entity.getText %}
             <div class="box-heading">
-                {{ image.entity.getText }}
+                {{ image.entity|short_text({more: true}) }}
             </div>
         {% endif %}
         
@@ -76,8 +76,8 @@
                                 <li class="divider"></li>#}
                                 <li><a class="ajax-link" href="{{ path('image_make_profile', {'id': image.id}) }}">{{ 'Make profile picture'|trans }}</a></li>
                                 <li><a class="ajax-link" href="{{ path('image_make_cover', {'id': image.id}) }}">{{ 'Make cover picture'|trans }}</a></li>
-                                <li class="divider"></li>
-                                {#<li><?php echo link_to('<i class="glyphicon-unshare"></i> '.__('Rotate left'), 'image/rotate?direction=anticlockwise&id='.$image->getId()) ?></li>
+                                {#<li class="divider"></li>
+                                <li><?php echo link_to('<i class="glyphicon-unshare"></i> '.__('Rotate left'), 'image/rotate?direction=anticlockwise&id='.$image->getId()) ?></li>
                                 <li><?php echo link_to('<i class="glyphicon glyphicon-share-alt"></i> '.__('Rotate right'), 'image/rotate?direction=clockwise&id='.$image->getId()) ?></li>#}
     
                             {% endif %}

@@ -212,6 +212,9 @@ form textarea[expandable] {
 #blueimp-gallery {
     margin-right: 300px;
 }
+#blueimp-gallery a {
+    color: #ffffff;
+}
 #blueimp-gallery-container .blueimp-gallery, .blueimp-gallery>.slides>.slide>.slide-content {
     -webkit-transition: opacity .0001s linear;
        -moz-transition: opacity .0001s linear;

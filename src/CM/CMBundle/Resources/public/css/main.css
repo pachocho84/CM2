@@ -56,6 +56,14 @@ h3 small {
 h3 small a {
     color: #333333;
 }
+.heading-buttons {
+    margin-bottom: 20px;
+}
+@media (min-width: 992px) {
+    .heading-buttons {
+        float: right;  
+    }
+}
 /*
 a:hover {
     text-decoration: none;

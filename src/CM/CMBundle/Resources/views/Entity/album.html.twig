@@ -6,33 +6,37 @@
     image: album.image|default_img|imagine_filter('full')
 } %}
 
+
+
+{% block bodyHeading %}
+    <div class="row">
+        <div class="col-md-8 col-lg-9">
+            <h2><a href="{{ path(album|class_name|lower ~ '_show', {id: album.id, slug: album.getSlug}) }}">{{ icon(album|class_name) }} {{ album }}</a></h2>
+        </div>
+        <div class="col-md-4 col-lg-3">
+            {% if can_manage(album) %}
+                <div class="heading-buttons">
+                    <span class="btn btn-default btn-sm fileinput-button" data-redirect="{{ path('imagealbum_edit', {id: album.id, slug: album.getSlug, publisher: album|class_name}) }}">
+                        {{ icon('Plus') }} {{ 'Add photos'|trans }}
+                        <form action="{{ path('imagealbum_add_image', {id: album.id}) }}" method="post" enctype="multipart/form-data">
+                            <input id="images" type="file" name="images" multiple />
+                        </form>
+                    </span>
+                    <a href="{{ path('imagealbum_edit', {id: album.id, slug: album.getSlug, object: album|class_name|lower ~ 's'}) }}" class="btn btn-default btn-sm">{{ icon('Edit') }} {{ 'Edit'|trans }}</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+
+
 {% block body %}
 	
-	<h2><a href="{{ path(album|class_name|lower ~ '_show', {id: album.id, slug: album.getSlug}) }}">{{ icon(album|class_name) }} {{ album }}</a></h2>
-
-
-
     <div class="box">
 
         <div class="box-heading">
-            <div class="media">
-                {% if can_manage(album) %}
-                    <div class="pull-right">
-                        <span class="btn btn-default btn-sm fileinput-button" data-redirect="{{ path('imagealbum_edit', {id: album.id, slug: album.getSlug, publisher: album|class_name}) }}">
-                            {{ icon('Plus') }} {{ 'Add photos'|trans }}
-                            <form action="{{ path('imagealbum_add_image', {id: album.id}) }}" method="post" enctype="multipart/form-data">
-                                <input id="images" type="file" name="images" multiple />
-                            </form>
-                        </span>
-                        <a href="{{ path('imagealbum_edit', {id: album.id, slug: album.getSlug, object: album|class_name|lower ~ 's'}) }}" class="btn btn-default btn-sm">{{ icon('Edit') }} {{ 'Edit'|trans }}</a>
-                    </div>
-                {% endif %}
-            
-                <div class="media-body">
-                    {{ album|short_text({more: true}) }}
-                </div>
-
-            </div>
+            {{ album|short_text({more: true}) }}
         </div>
 
 
@@ -53,7 +57,7 @@
             {% if can_manage(album) and images|length > 1 %}
                 <form action="{{ path('imagealbum_sort', {id: album.id, slug: album.getSlug, publisher: album|class_name|lower ~ 's'}) }}" method="post">
                     <div class="alert alert-info">
-                        {{ 'Drag and drop the images to sort them, then press save.'|trans }}
+                        {{ 'Drag the images to sort them, then press save.'|trans }}
                         <input type="submit" class="btn btn-default" value="{{ 'Save'|trans }}" />
                     </div>
             {% endif %}
