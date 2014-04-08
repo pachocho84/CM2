@@ -12,29 +12,17 @@
                     <div class="col-sm-4">
                         
                         {{ show_img_box(event.image|default_img|imagine_filter('medium'), {ratio: 1.6, offset: event.imgOffset}) }}
-
-                        <div class="media">
-                            
-                            <div class="pull-left">                                         
-                                <div class="events-sponsored-dates cycle-slideshow" data-cycle-slides="> div" data-cycle-fx="scrollVert">
-                                    {% for date in event.eventDates %}                                                
-                                        <div>
-                                            <h3>{{ date.start|format_date('MMM') }}</h3>
-                                            <h2>{{ date.start|format_date('d') }}</h2>
-                                        </div>
-                                    {% endfor %}
+                        
+                        <h3><a href="{{ path('event_show', { id: event.id, slug: event.getSlug }) }}" title="{{ event }}">{{ event }}</a></h3>
+                                      
+                        <div class="events-sponsored-dates cycle-slideshow" data-cycle-slides="> div" data-cycle-fx="scrollVert">
+                            {% for date in event.eventDates %}                                                
+                                <div>
+                                    <div class="event-date-month">{{ date.start|format_date('MMM') }}</div>
+                                    <div class="event-date-month">{{ date.start|format_date('d') }}</div>
+                                    <p class="text-muted"><small>{{ date.location }}</small></p>
                                 </div>
-                            </div>
-                            
-                            <div class="media-body">
-                                <h4><a href="{{ path('event_show', { id: event.id, slug: event.getSlug }) }}" title="{{ event }}">{{ event[:33] ~ '...' }}</a></h4>
-
-                                <div class="events-sponsored-locations cycle-slideshow" data-cycle-slides="> p" data-cycle-fx="scrollVert">
-                                    {% for date in event.eventDates %}    
-                                        <p class="text-muted"><small>{{ date.location }}</small></p>
-                                    {% endfor %}
-                                </div>
-                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                 {% endfor %}    
