@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class WorkCollectionType extends AbstractType
+class PageUserCollectionType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -15,11 +15,10 @@ class WorkCollectionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('works', 'collection', array(
-                'label' => 'Add works',
+        $builder->add('pages', 'collection', array(
+                'label' => 'Pages',
                 'required' => false,
-                'type' => new WorkType,
-                'allow_add' => true,
+                'type' => new PageUserType,
                 'allow_delete' => true,
                 'by_reference' => false,
                 'options' => array(
@@ -41,6 +40,6 @@ class WorkCollectionType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_work_collection';
+        return 'cm_cmbundle_pageUser_collection';
     }
 }

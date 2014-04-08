@@ -54,27 +54,27 @@ function uploadCollection($target, trigger, text) {
     });
 }
 
-jQuery(document).ready(function() {
+$(function() {
     uploadCollection($('#cm_cmbundle_event_eventDates'), '.add_date_link', $('.add_date_link').attr('delete_date-text'));
     uploadCollection($('#cm_cmbundle_disc_discTracks'), '.add_track_link', $('.add_track_link').attr('delete_track-text'));
 
-    $('body').on('click', '.copy_date_link', function(event) {
-        event.preventDefault();
+    // $('body').on('click', '.copy_date_link', function(event) {
+    //     event.preventDefault();
 
-        var $newForm = newFromPrototype($($(event.currentTarget).attr('href')));
+    //     var $newForm = newFromPrototype($($(event.currentTarget).attr('href')));
         
-        // make a copy of each input
-        $(event.currentTarget).closest('.panel-body').find('input, textarea, select').each(function(i, elem) {
-            var copy = $newForm.find('input, textarea, select').get(i);
-            var id = $(copy).attr('id');
-            var name = $(copy).attr('name');
-            $(copy).replaceWith($(elem).clone(true, true));
-            $(copy).attr('id', id);
-            $(copy).attr('name', name);
-        });
+    //     // make a copy of each input
+    //     $(event.currentTarget).closest('.panel-body').find('input, textarea, select').each(function(i, elem) {
+    //         var copy = $newForm.find('input, textarea, select').get(i);
+    //         var id = $(copy).attr('id');
+    //         var name = $(copy).attr('name');
+    //         $(copy).replaceWith($(elem).clone(true, true));
+    //         $(copy).attr('id', id);
+    //         $(copy).attr('name', name);
+    //     });
         
-        $(event.currentTarget).closest('.panel').after($newForm);
-    });
+    //     $(event.currentTarget).closest('.panel').after($newForm);
+    // });
 });
 
 

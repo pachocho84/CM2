@@ -1,31 +1,40 @@
-{% for group in groups %}
+{% form_theme form _self %}
+
+{% block _cm_cmbundle_groupUser_collection_widget %}
+    asdasdf
+{% endblock %}
+
+{% block _cm_cmbundle_groupUser_collection_groups_entry_widget %}
     <div class="media">
-        {{ show_img_box(group|default_img|imagine_filter('medium'), {width: 150, box_attributes: {class: 'pull-left img-thumbnail'}}) }} {# TODO: add image show link #}
+        {{ dump(form) }}
+        {#{{ show_img_box(form.vars.data|default_img|imagine_filter('medium'), {width: 150, box_attributes: {class: 'pull-left img-thumbnail'}}) }}
 
         <div class="media-body">
         
-            <h4 class="media-heading"><a href="{{ path('group_show', {slug: group.getSlug}) }}">{{ group }}</a></h4>
+            <h4 class="media-heading"><a href="{{ path('form.vars.data_show', {slug: form.vars.data.getSlug}) }}">{{ form.vars.data }}</a></h4>
 
-            {% if group.groupUsers[app.user.id].status != constant('CM\\CMBundle\\Entity\\GroupUser::STATUS_ACTIVE') %}
-                {{ group.groupUsers[app.user.id].status }}
+            {% if form.vars.data.form.vars.dataUsers[app.user.id].status != constant('CM\\CMBundle\\Entity\\form.vars.dataUser::STATUS_ACTIVE') %}
+                {{ form.vars.data.form.vars.dataUsers[app.user.id].status }}
             {% endif %}
 
-            {{ include('CMBundle:GroupUser:joinType.html.twig', {object: 'Event'}) }}
-            {{ include('CMBundle:GroupUser:joinType.html.twig', {object: 'Disc'}) }}
+            {{ include('CMBundle:form.vars.dataUser:joinType.html.twig', {object: 'Event'}) }}
+            {{ include('CMBundle:form.vars.dataUser:joinType.html.twig', {object: 'Disc'}) }}
 
-            {% if group.creatorId == app.user.id %}
+            {% if form.vars.data.creatorId == app.user.id %}
                 {{ 'Creator'|trans }}
             {% endif %}
-            {% if is_admin(group) %}
+            {% if is_admin(form.vars.data) %}
                 {{ 'Admin'|trans }}
                 <ul>
-                    <li><a href="{{ path('group_edit', {slug: group.slug})}}">{{ 'Edit'|trans }}</a></li>
-                    <li><a href="{{ path('group_members_settings', {slug: group.slug}) }}">{{ 'Manage members'|trans }}</a></li>
-                    <li><a href="{{ path('group_delete', {slug: group.slug})}}">{{ 'Delete group'|trans }}</a></li>
+                    <li><a href="{{ path('form.vars.data_edit', {slug: form.vars.data.slug})}}">{{ 'Edit'|trans }}</a></li>
+                    <li><a href="{{ path('form.vars.data_members_settings', {slug: form.vars.data.slug}) }}">{{ 'Manage members'|trans }}</a></li>
+                    <li><a href="{{ path('form.vars.data_delete', {slug: form.vars.data.slug})}}">{{ 'Delete form.vars.data'|trans }}</a></li>
                 </ul>
             {% endif %}
 
-        </div><!-- END Media Body -->
+        </div><!-- END Media Body -->#}
 
     </div><!-- END Object -->
-{% endfor %}
+{% endblock %}
+
+{{ form(form) }}

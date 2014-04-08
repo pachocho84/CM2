@@ -39,8 +39,7 @@ class WorkController extends Controller
         $works[] = $work;
 
         $form = $this->createForm(new WorkCollectionType, array('works' => new ArrayCollection($works)), array(
-            'cascade_validation' => true,
-            'expandable' => (is_null($work) ? '' : 'small')
+            'cascade_validation' => true
         ))->add('save', 'submit');
 
         $form->handleRequest($request);
@@ -51,7 +50,7 @@ class WorkController extends Controller
             }
             $em->flush();
 
-            return $this->render('CMBundle:Work:object.html.twig', array('work' => $work));
+            return $this->redirect($this->generateUrl('user_work'));
         }
         
         return array(

@@ -26,6 +26,8 @@ use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\BiographyType;
 use CM\CMBundle\Form\UserImageType;
 use CM\CMBundle\Form\EducationType;
+use CM\CMBundle\Form\GroupUserCollectionType;
+use CM\CMBundle\Form\PageUserCollectionType;
 
 class UserController extends Controller
 {
@@ -247,7 +249,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/account/groups/{page}", name = "user_groups", requirements={"page" = "\d+"})
+     * @Route("/account/groups/{page}", name="user_groups", requirements={"page" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
@@ -255,10 +257,27 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $groups = $em->getRepository('CMBundle:Group')->getGroups(array('userId' => $this->getUser()->getId()));
-        $pagination = $this->get('knp_paginator')->paginate($groups, $page, 15);
+        $groups = $em->getRepository('CMBundle:GroupUser')->findBy(array('userId' => $this->getUser()->getId()));
+        // $pagination = $this->get('knp_paginator')->paginate($groups, $page, 15);
 
-        return array('groups' => $pagination);
+        $form = $this->createForm(new GroupUserCollectionType, array('groups' => new ArrayCollection($groups)), array(
+            'cascade_validation' => true
+        ))->add('save', 'submit');
+
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+            foreach ($groups as $group) {
+                $em->persist($group);
+            }
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('user_groups'));
+        }
+        
+        return array(
+            'form' => $form->createView()
+        );
     }
 
     /**
@@ -270,10 +289,27 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $pages = $em->getRepository('CMBundle:Page')->getPages(array('userId' => $this->getUser()->getId()));
-        $pagination = $this->get('knp_paginator')->paginate($pages, $pageNum, 15);
+        $pages = $em->getRepository('CMBundle:PageUser')->findBy(array('userId' => $this->getUser()->getId()));
+        // $pagination = $this->get('knp_paginator')->paginate($pages, $pageNum, 15);
 
-        return array('pages' => $pagination);
+        $form = $this->createForm(new PageUserCollectionType, array('pages' => new ArrayCollection($pages)), array(
+            'cascade_validation' => true
+        ))->add('save', 'submit');
+
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+            foreach ($pages as $page) {
+                $em->persist($page);
+            }
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('user_pages'));
+        }
+        
+        return array(
+            'form' => $form->createView()
+        );
     }
     
     /**

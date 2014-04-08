@@ -22,4 +22,24 @@ class HomepageBannerRepository extends BaseRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getRandBanners($count)
+    {
+        $banners = $this->createQueryBuilder('b')
+            ->select('b')
+            ->getQuery()
+            ->getResult();
+
+        if (count($banners) == 0) return null;
+
+        shuffle($banners);
+        $banners = array_slice($banners, 0, $count);
+
+        return $this->createQueryBuilder('b')
+            ->select('partial b.{id, img}')
+            ->orderBy('b.position')
+            ->where('b.id in (:ids)')->setParameter('ids', array_map(function($i) { return $i->getId(); }, $banners))
+            ->getQuery()
+            ->getResult();
+    }
 }

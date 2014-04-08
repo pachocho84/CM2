@@ -342,14 +342,14 @@ class WallController extends Controller
     }
 
     /**
-     * @Route("/banners/{num}", name="wall_banner", requirements={"num" = "\d+"})
+     * @Route("/banners/{count}", name="wall_banner", requirements={"count" = "\d+"})
      * @Template
      */
-    public function bannersAction(Request $request, $num = 1)
+    public function bannersAction(Request $request, $count = 1)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $banners = $em->getRepository('CMBundle:HomepageBanner')->getBanners(0, $num);
+        $banners = $em->getRepository('CMBundle:HomepageBanner')->getRandBanners($count);
 
         return array('banners' => $banners);
     }

@@ -617,7 +617,7 @@ $(function() {
             $data.hide();
             $(elem).replaceWith($data);
             $data.fadeIn('fast');
-            $(document).trigger('loaded.data-ajax', $data);
+            $data.trigger('loaded.data-ajax', $data);
         });
     });  
 

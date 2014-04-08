@@ -15,7 +15,7 @@ use JMS\SecurityExtraBundle\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
 use CM\CMBundle\Entity\Education;
-use CM\CMBundle\Form\EducationType;
+use CM\CMBundle\Form\EducationCollectionType;
 
 class EducationController extends Controller
 {
@@ -29,13 +29,16 @@ class EducationController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $educations = $em->getRepository('CMBundle:Education')->findBy(
-        	array('userId' => $this->getUser()->getId()),
-        	array('dateFrom' => 'desc')
+            array('userId' => $this->getUser()->getId()),
+            array('dateFrom' => 'desc', 'id' => 'desc')
         );
 
         $education = new Education;
         $education->setUser($this->getUser());
-        $form = $this->createForm(new EducationType, $education, array(
+
+        $educations[] = $education;
+
+        $form = $this->createForm(new EducationCollectionType, array('educations' => new ArrayCollection($educations)), array(
             'cascade_validation' => true,
             'expandable' => (is_null($education) ? '' : 'small')
         ))->add('save', 'submit');
@@ -43,7 +46,9 @@ class EducationController extends Controller
         $form->handleRequest($request);
         
         if ($form->isValid()) {
-            $em->persist($education);
+            foreach ($educations as $education) {
+                $em->persist($education);
+            }
             $em->flush();
 
             return $this->render('CMBundle:Education:object.html.twig', array('education' => $education));

@@ -5,7 +5,7 @@ namespace CM\CMBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use CM\CMBundle\Entity\Work;
+use CM\CMBundle\Entity\GroupUser;
 
 class GroupUserType extends AbstractType
 {
@@ -18,8 +18,15 @@ class GroupUserType extends AbstractType
         parent::buildForm($builder, $options);
     
         $builder->add('joinArticle', 'choice', array(
+                'expanded' => true,
                 'choices' => array(GroupUser::JOIN_NO, GroupUser::JOIN_YES, GroupUser::JOIN_REQUEST)
-        	));
+            ))->add('joinDisc', 'choice', array(
+                'expanded' => true,
+                'choices' => array(GroupUser::JOIN_NO, GroupUser::JOIN_YES, GroupUser::JOIN_REQUEST)
+            ))->add('joinEvent', 'choice', array(
+                'expanded' => true,
+                'choices' => array(GroupUser::JOIN_NO, GroupUser::JOIN_YES, GroupUser::JOIN_REQUEST)
+            ));
     }
     
     /**

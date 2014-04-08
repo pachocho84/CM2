@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class GroupUserCollectionType extends AbstractType
+class EducationCollectionType extends AbstractType
 {
         /**
      * @param FormBuilderInterface $builder
@@ -15,10 +15,11 @@ class GroupUserCollectionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('groups', 'collection', array(
-                'label' => 'Groups',
+        $builder->add('educations', 'collection', array(
+                'label' => 'Add educations',
                 'required' => false,
-                'type' => new UserGroupType,
+                'type' => new EducationType,
+                'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
                 'options' => array(
@@ -31,7 +32,8 @@ class GroupUserCollectionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => null
+            'data_class' => null,
+            'expandable' => (is_null($education) ? '' : 'small')
         ));
     }
 
@@ -40,6 +42,6 @@ class GroupUserCollectionType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_userGroup_collection';
+        return 'cm_cmbundle_education_collection';
     }
 }

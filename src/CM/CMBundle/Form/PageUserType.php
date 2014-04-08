@@ -5,9 +5,9 @@ namespace CM\CMBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use CM\CMBundle\Entity\Work;
+use CM\CMBundle\Entity\PageUser;
 
-class WorkType extends AbstractType
+class PageUserType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -16,13 +16,17 @@ class WorkType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-
-        $builder->add('position', 'text', array('required' => true))
-            ->add('employer')
-            ->add('company')
-            ->add('dateFrom', 'date', array('required' => false, 'widget' => 'single_text', 'empty_value' => ''))
-            ->add('dateTo', 'date', array('required' => false, 'widget' => 'single_text', 'empty_value' => ''))
-            ->add('description', 'textarea', array('required' => false, 'attr' => array('expandable' => is_null($builder->getData()) ? 'small' : '')));
+    
+        $builder->add('joinArticle', 'choice', array(
+                'expanded' => true,
+                'choices' => array(PageUser::JOIN_NO, PageUser::JOIN_YES, PageUser::JOIN_REQUEST)
+            ))->add('joinDisc', 'choice', array(
+                'expanded' => true,
+                'choices' => array(PageUser::JOIN_NO, PageUser::JOIN_YES, PageUser::JOIN_REQUEST)
+            ))->add('joinEvent', 'choice', array(
+                'expanded' => true,
+                'choices' => array(PageUser::JOIN_NO, PageUser::JOIN_YES, PageUser::JOIN_REQUEST)
+            ));
     }
     
     /**
@@ -33,7 +37,7 @@ class WorkType extends AbstractType
         parent::setDefaultOptions($resolver);
         
         $resolver->setDefaults(array(
-            'data_class' => 'CM\CMBundle\Entity\Work'
+            'data_class' => 'CM\CMBundle\Entity\PageUser',
         ));
     }
 
@@ -42,6 +46,6 @@ class WorkType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_work';
+        return 'cm_cmbundle_pageUser';
     }
 }

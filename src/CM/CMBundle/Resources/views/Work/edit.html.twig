@@ -3,15 +3,18 @@
 {% form_theme form _self %}
 
 {% block _cm_cmbundle_work_collection_works_entry_widget %}
-    <div class="box">
+    <div class="box work-form">
         <div class="box-heading">
-            <h3>{{ icon('Work') }} <span>{{ 'Work'|trans }}</span></h3>
+            <h3>
+                {{ icon('Work') }} <span>{{ 'Work'|trans }}</span>
+                {% if form.vars.data is not null and form.vars.data.position is not null %}<a class="btn btn-default pull-right" remove-link href="#">{{ icon('Remove') }}</a>{% endif %}
+            </h3>
         </div>
 
         <div class="box-body">
             <div class="row">
                 <div class="col-sm-4">
-                    {{ form_row(form.position) }}
+                    {{ form_row(form.position, {attr: {required: true}}) }}
                 </div>
                 <div class="col-sm-4">
                     {{ form_row(form.employer) }}
@@ -51,15 +54,77 @@
     <script type="text/javascript">
         $(function(){
             /* EDUCATION */
-            $(document).on('submit', 'form', function(event) {
+            // function newFromPrototype($target) {
+            //     // get the new index
+            //     var index = $target.data('index');
+
+            //     // Replace '__name__' in the prototype's HTML to
+            //     // instead be a number based on how many items we have
+            //     var newForm = $target.data('prototype').replace(/__name__label__/g, index).replace(/__name__/g, index);
+
+            //     // increase the index with one for the next item
+            //     $target.data('index', index + 1);
+
+            //     return $(newForm);
+            // }
+
+            // function addFormDeleteLink($target, text) {
+            //     var $removeFormA = $('<a class="btn btn-default" href="#"><span class="glyphicon glyphicon-minus"></span> ' + text + '</a>');
+            //     if ($target.find('.panel-footer') < 1) {
+            //         $target.append('<div class="panel-footer"><div class="btn-group"></div></div>');
+            //     }
+            //     $target.find('.btn-group').append($removeFormA);
+
+            //     $removeFormA.on('click', function(e) {
+            //         // prevent the link from creating a "#" on the URL
+            //         e.preventDefault();
+
+            //         // remove the li for the tag form
+            //         $target.remove();
+            //     });
+            // }
+
+            // function uploadCollection($target, trigger, text) {
+            //     // add the "add a tag" anchor and li to the tags ul
+            //     $target.append($('<div></div>'));
+            //     $target.children('div.panel-body').slice(1).each(function() {
+            //         addFormDeleteLink($(this), text);
+            //     });
+
+            //     // count the current form inputs we have (e.g. 2), use that as the new
+            //     // index when inserting a new item (e.g. 2)
+            //     $target.data('index', $target.find(':input').length);
+
+            //     $(document).on('click', trigger, function(e) {   
+            //         // prevent the link from creating a "#" on the URL
+            //         e.preventDefault();
+
+            //         var $newForm = newFromPrototype($target);
+
+            //         // Display the form in the page in an li, before the "Add a tag" link li
+            //         $target.find('.panel:last').after($newForm);
+
+            //         addFormDeleteLink($newForm, text);
+
+            //         $(e.currentTarget).trigger('collection-added', $newForm);
+            //     });
+            // }
+            $(document).on('keydown', 'form .work-form:last', function(event) {
+                var $form = $(event.currentTarget);
+                var $collection = $form.closest('[data-prototype]');
+                var index = $collection.find('.work-form').length;
+                var newForm = $collection.data('prototype').replace(/__name__label__/g, index).replace(/__name__/g, index);
+
+                $form.find('.box-heading h3').append('<a class="btn btn-default pull-right" remove-link href="#">{{ icon('Remove') }}</a>');
+                $form.after($(newForm));
+            });
+            $(document).on('click', '[remove-link]', function(event) {
                 event.preventDefault();
 
-                $(event.currentTarget).ajaxSubmit({
-                    success: function(data, statusText, xhr, form) {
-                        $('.box:first').after(data);
-                        form[0].reset();
-                    }
-                });
+                $(event.currentTarget).closest('.work-form').remove();
+            });
+            $(document).on('submit', 'form', function(event) {
+                $(event.currentTarget).find('.work-form:last [name]').attr('name', '');
             });
         });
     </script>
