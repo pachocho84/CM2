@@ -665,35 +665,14 @@ table.events .object:first-child {
     margin-top: 0;
     padding-top: 0;
 }
-table.events .popover {
-    width: 500px;
-    max-width: 550px;
-}
-.events-sponsored .media {
-    margin-top: 0px;
-}
-.events-sponsored-dates {
-    height: 56px;
-    width: 48px;
-}
-.events-sponsored h2,
 .events-sponsored h3 {
-    margin: 0;
-    text-align: center;
     line-height: 26px;
-}
-.events-sponsored h4 {
-    margin: 0;
-    line-height: 18px;
+    height: 26px;
     font-size: 16px;
-    margin-top: 7px;
-}
-.events-sponsored h4 a {
-    font-weight: normal;
-}
-.events-sponsored p {
-    line-height: 16px;
-    margin-bottom: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
 }
 
 
