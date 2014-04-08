@@ -1,10 +1,21 @@
 <div class="btn-group ajax-link-target">
-    {% if not imFan %}
-	    <a href="{{ path('fan_become', {fanId: userId, object: object, btn: btn}) }}" class="btn btn-default fan-become ajax-link" {% if btn %}title="{{ 'Become fan'|trans }}"{% endif %}>{{ icon('Fan') }}{% if not btn %} {{ 'Become fan'|trans }}{% endif %}</a>
+    {% if btn %}
+        {% if not imFan %}
+            <a href="{{ path('fan_become', {fanId: userId, object: object, btn: btn}) }}" class="btn btn-default fan-become ajax-link">{{ icon('Fan') }} {{ 'Become fan'|trans }}</a>
+        {% else %}
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">{{ icon('Fan') }} {{ 'You are fan'|trans }}</button>
+            <ul class="dropdown-menu">
+                <li><a href="{{ path('fan_unbecome', {fanId: userId, object: object, btn: btn}) }}" class="fan-become ajax-link">{{ 'Unbecome fan'|trans }}</a></li>
+            </ul>
+        {% endif %}
     {% else %}
-	    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" {% if btn %}title="{{ 'You are fan'|trans }}"{% endif %}>{{ icon('Fan') }}{% if not btn %} {{ 'You are fan'|trans }}{% endif %}</button>
-        <ul class="dropdown-menu">
-	        <li><a href="{{ path('fan_unbecome', {fanId: userId, object: object, btn: btn}) }}" class="fan-become ajax-link">{{ 'Unbecome fan'|trans }}</a></li>
-        </ul>
+        {% if not imFan %}
+            <a href="{{ path('fan_become', {fanId: userId, object: object, btn: btn}) }}" class="fan-become ajax-link" title="{{ 'Become fan'|trans }}">{{ icon('Fan') }}</a>
+        {% else %}
+            <a class="dropdown-toggle text-success" href="#" data-toggle="dropdown" title="{{ 'You are fan'|trans }}">{{ icon('Fan') }}</a>
+            <ul class="dropdown-menu">
+                <li><a href="{{ path('fan_unbecome', {fanId: userId, object: object, btn: btn}) }}" class="fan-become ajax-link">{{ 'Unbecome fan'|trans }}</a></li>
+            </ul>
+        {% endif %}
     {% endif %}
 </div>

@@ -213,6 +213,32 @@ class DiscController extends Controller
             'joinEntityType' => 'joinDisc'
         );
     }
+    
+    /**
+     * @Route("/lasts/{object}/{objectId}", name="disc_lasts", requirements={"id" = "\d+"})
+     * @Template
+     */
+    public function lastsAction(Request $request, $object, $objectId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $discs = $em->getRepository('CMBundle:Disc')->getLast(array(
+            $object.'Id' => $objectId,
+            'paginate' => false,
+            'exclude' => $request->get('exclude'),
+            'limit' => $request->get('limit')
+        ));
+
+        if (count($discs) == 0) {
+            return new Response;
+        }
+
+        return array(
+            'discs' => $discs,
+            'link' => $this->generateUrl($discs[0]->getPost()->getPublisherType().'_discs', array('slug' => $discs[0]->getPost()->getPublisher()->getSlug())),
+            'count' => $em->getRepository('CMBundle:Disc')->countLasts(array($object.'Id' => $objectId))
+        );
+    }
 
     /**
      * @Route("/discDelete/{id}", name="disc_delete", requirements={"id" = "\d+"})

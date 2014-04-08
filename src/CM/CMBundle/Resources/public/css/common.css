@@ -34,8 +34,17 @@ form textarea[expandable].form-control {
 form textarea[expandable="small"].form-control {
     height: 34px;
 }
+a.text-success:focus {
+    color: #2b542c;
+}
+a.text-warning:focus {
+    color: #66512c;
+}
 .text-danger {
     color: #aa0000;
+}
+a.text-danger:focus {
+    color: #843534;
 }
 .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
     background-color: #660000;
@@ -75,16 +84,26 @@ form textarea[expandable="small"].form-control {
 .typeahead li a:hover h3 {
     color: #ffffff;
 }
+.popover {
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
+}
 .popover .popover-content {
     color: #333333;
     font-size: 14px;
     text-shadow: none;
 }
-.dropdown-menu li a.btn {
-    display: inline;
-}
 .popover h3.popover-title {
     font-variant: normal;
+}
+.popover .popover-footer {
+    border-top: 1px solid #dddddd;
+    padding: 5px 0px;
+    background-color: #f7f7f7;
+}
+.dropdown-menu li a.btn {
+    display: inline;
 }
 .glyphicons { 
     padding: 0 2px 0 0; 
@@ -1064,13 +1083,14 @@ form textarea[expandable] {
 
 /* Publisher Popover */
 .popover-publisher {
-    padding: 0 0 10px;
+    padding: 0;
 }
 .popover-publisher .popover-content {
     text-align: center;
     padding: 0;
 }
 .popover-publisher .popover-publisher-content {
+    height: 180px;
     padding: 0 10px;
 }
 .popover-publisher h2 {
@@ -1107,6 +1127,21 @@ form textarea[expandable] {
 .popover-publisher-biography {
     font-size: 12px;
     font-weight: 300;
+}
+.popover-publisher .popover-footer > * {
+    padding: 0 5px;
+}
+.popover-publisher .popover-footer a:not(.text-success):not(.text-warning):not(.text-danger) {
+    color: #333333;
+}
+
+
+
+/* SPONSORED */
+.events-sponsored h4 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 

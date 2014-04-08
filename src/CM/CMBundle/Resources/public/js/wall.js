@@ -79,16 +79,7 @@ function wallLoad(data, t, c, reload) {
         column.append($box);
 
         if (!reload) {
-            $box.find('.cycle-slideshow').cycle({
-                loader: true,
-                log: false,
-                next: '.box-partner-nav-next',
-                pauseOnHover: true,
-                prev: '.box-partner-nav-prev',
-                slides: '> div',
-                swipe: true,
-                fx: 'scrollHorz'
-            });
+            initSlideshow($box.find('.cycle-slideshow'));
         }
 
         // $box.find('img').each(function() {

@@ -59,7 +59,7 @@ function infiniteUpdate() {
 }
 
 function insertRelationItem(c, d, a) {
-    $(c).closest('.relation-menu').children('button').replaceWith(d.button);
+    $(c).closest('.relation-menu').find('.relation-button').replaceWith(d.button);
     $(c).closest('div').replaceWith(d.item);
 }
 
@@ -97,7 +97,7 @@ $(function() {
         }).on('mouseleave', function(event) {
             setTimeout(function() {
                 if (!$(event.currentTarget).is(':hover') && !$('.popover').is(':hover')) {
-                    $(event.currentTarget).popover('hide')
+                    $(event.currentTarget).popover('hide');
                 }
             }, 250);
         });
@@ -106,6 +106,51 @@ $(function() {
     $(document).on('mouseenter', '[popover-publisher]', function(event) {
         initPopoverPublisher($(event.currentTarget));
     });
+    // function initPopoverPublisher($elem) {
+    //     if ($elem.attr('popover-publisher') == 'active') return;
+
+    //     $elem.attr('popover-publisher', 'active');
+    //     $elem.popover({
+    //         selector: '[popover-publisher]',
+    //         trigger: 'manual',
+    //         placement: 'auto top',
+    //         delay: {show: 1000, hide: 250},
+    //         container: 'body',
+    //         html: true,
+    //         content: function() {
+    //             var content;
+    //             $.ajax({
+    //                 url: $(this).attr('data-href'),
+    //                 async: false
+    //             }).done(function(data) {
+    //                 content = data;
+    //             });
+    //             return content;
+    //         }
+    //     }).on('mouseenter', function(event) {
+    //         $(event.currentTarget).addClass('hover');
+    //         setTimeout(function() {
+    //             if ($(event.currentTarget).hasClass('hover')) {
+    //                 $(event.currentTarget).popover('show');
+    //                 $('.popover').addClass('hover').addClass('popover-publisher').on('mouseleave', function () {
+    //                     $('.popover').removeClass('hover');
+    //                     $(event.currentTarget).popover('hide');
+    //                 });
+    //             }
+    //         }, 1000);
+    //     }).on('mouseleave', function(event) {
+    //         $(event.currentTarget).removeClass('hover');
+    //         setTimeout(function() {
+    //             if (!$(event.currentTarget).hasClass('hover') && !$('.popover').hasClass('hover')) {
+    //                 $(event.currentTarget).popover('hide');
+    //             }
+    //         }, 250);
+    //     });
+    // }
+    // initPopoverPublisher($('[popover-publisher]'));
+    // $(document).on('mouseenter', '[popover-publisher!="active"]', function(event) {
+    //     initPopoverPublisher($(event.currentTarget));
+    // });
 
     /* INFINITE SCROLL */
     $('body').ready(function() {
@@ -568,9 +613,11 @@ $(function() {
     /* AJAX LOAD CONTROLLER */
     $('[data-ajax-url]').each(function(i, elem) {
         $.get($(this).attr('data-ajax-url'), function(data) {
-            data = $(data).hide();
-            $(elem).replaceWith(data);
-            $(data).fadeIn('fast');
+            $data = $(data);
+            $data.hide();
+            $(elem).replaceWith($data);
+            $data.fadeIn('fast');
+            $(document).trigger('loaded.data-ajax', $data);
         });
     });  
 
@@ -688,5 +735,25 @@ $(function() {
             }, 300);
             $(event.currentTarget).parent().parent().find('[show-less]').slideToggle(300);
         });
+    });
+
+
+
+    /* SLIDESHOW */
+    function initSlideshow($slideshow) {
+        $slideshow.cycle({
+            loader: true,
+            log: false,
+            next: '.box-partner-nav-next',
+            pauseOnHover: true,
+            prev: '.box-partner-nav-prev',
+            slides: '> div',
+            swipe: true,
+            fx: 'scrollHorz'
+        });
+    }
+    $(document).on('loaded.data-ajax', function(event, data) {
+        console.log(data);
+        initSlideshow($(data).find('.cycle-slideshow'));
     });
 });

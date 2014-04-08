@@ -1,4 +1,4 @@
-<li class="dropdown menu-tab{% if controller_name() == 'message' %} active{% endif %}">
+<li class="dropdown menu-tab{% if controller_name() == 'message' %} active{% endif %} menu-tab-ajax">
     
     <a href="{{ path('message_index') }}" id="menu-messages" class="dropdown-toggle" data-toggle="dropdown">
         {{ icon('Message') }}
@@ -24,7 +24,7 @@
 
 
 
-<li class="dropdown menu-tab{% if controller_name() == 'request' %} active{% endif %}">
+<li class="dropdown menu-tab{% if controller_name() == 'request' %} active{% endif %} menu-tab-ajax">
     
     <a href="{{ path('request_index') }}" id="menu-requests" class="dropdown-toggle" data-toggle="dropdown">
         {{ icon('Request') }}
@@ -50,7 +50,7 @@
 
 
 
-<li class="dropdown menu-tab{% if controller_name() == 'notification' %} active{% endif %}">
+<li class="dropdown menu-tab{% if controller_name() == 'notification' %} active{% endif %} menu-tab-ajax">
 	
 	<a href="{{ path('user_notifications') }}" id="menu-notifications" class="dropdown-toggle" data-toggle="dropdown">
 	    {{ icon('Notification') }}

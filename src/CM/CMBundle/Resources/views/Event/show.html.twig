@@ -74,6 +74,10 @@
 
         <div class="col-md-12 col-lg-4">
             <div data-ajax-url="{{ path('event_next_dates', {object: event.post.publisherType, objectId: event.post.publisher.id, exclude: event.id, limit: 3}) }}"></div>
+
+            <div data-ajax-url="{{ path('event_sponsored') }}"></div>
+
+            <div data-ajax-url="{{ path('wall_banner', {num: 1}) }}"></div>
         </div>
     </div>
 {% endblock %}

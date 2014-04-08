@@ -98,11 +98,15 @@ class RelationController extends Controller
             return new JsonResponse(array(
                 'button' => $this->renderView('CMBundle:Relation:buttonItem.html.twig', array(
                     'reqText' => $reqText,
-                    'btnColour' => $btnColour,
+                    'btn' => is_null($request->get('btn')) ? true : $request->get('btn'),
                     'btnColour' => $btnColour,
                     'tooltipArray' => $tooltipArray
                 )),
-                'item' => $this->renderView('CMBundle:Relation:item.html.twig', array('user' => $user, 'relationType' => $relationTypePassed))
+                'item' => $this->renderView('CMBundle:Relation:item.html.twig', array(
+                    'user' => $user,
+                    'btn' => is_null($request->get('btn')) ? true : $request->get('btn'),
+                    'relationType' => $relationTypePassed
+                ))
             ));
         }
 
@@ -110,7 +114,7 @@ class RelationController extends Controller
             'user' => $user,
             'relationTypes' => $relationTypes,
             'reqText' => $reqText,
-            'btn' => $request->get('btn'),
+            'btn' => is_null($request->get('btn')) ? true : $request->get('btn'),
             'btnColour' => $btnColour,
             'tooltipArray' => $tooltipArray
         );
@@ -160,7 +164,6 @@ class RelationController extends Controller
         }
 
         return $this->buttonAction($request, $user, null, $relationType);
-        return $this->forward('CMBundle:Relation:button', array('user' => $user, 'relationTypePassed' => $relationType));
     }
 
     /**
@@ -194,7 +197,6 @@ class RelationController extends Controller
         $em->flush();
 
         return $this->buttonAction($request, $user, null, $relation->getRelationType());
-        return $this->forward('CMBundle:Relation:button', array('user' => $user, 'relationTypePassed' => $relation->getRelationType()));
     }
 
     /**
@@ -227,7 +229,6 @@ class RelationController extends Controller
         }
 
         return $this->buttonAction($request, $user, null, $relation->getRelationType());
-        return $this->forward('CMBundle:Relation:button', array('user' => $user, 'relationTypePassed' => $relation->getRelationType()));
     }
 
     /**

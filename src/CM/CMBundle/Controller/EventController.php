@@ -321,11 +321,6 @@ class EventController extends Controller
 
             $em->flush();
 
-            // foreach ($event->getEntityUsers() as $entityUser) {
-            //     echo $entityUser->getUser().' -> i: '.count($entityUser->getUser()->getRequestsIncoming()).', o: '.'<br/>';
-            // }
-            // die;
-
             return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
         }
 
@@ -366,16 +361,9 @@ class EventController extends Controller
      */
     public function sponsoredAction(Request $request, $limit = 3)
     {
-        $request->setLocale($request->get('_locale')); // TODO: workaround for locale in subsession
+        $em = $this->getDoctrine()->getManager();
+        $sponsored = $em->getRepository('CMBundle:Event')->getSponsored(array('limit' => $limit, 'locale' => $request->getLocale()));
         
-        $sponsored = $this->getDoctrine()->getManager()->getRepository('CMBundle:Event')->getSponsored(array('limit' => $limit, 'locale' => $request->getLocale()));
-        
-        $pagination = $this->get('knp_paginator')->paginate($sponsored, 1, $limit);
-        
-        $ids = array_map(function($i) { return $i->getId(); }, $pagination->getItems());
-                
-        $this->getDoctrine()->getManager()->createQuery("UPDATE CMBundle:Sponsored s SET s.views = s.views + 1 WHERE s.id IN (:ids)")->setParameter('ids', $ids)->execute();
-        
-        return array('sponsoredEvents' => $pagination);
+        return array('sponsoredEvents' => $sponsored);
     }
 }

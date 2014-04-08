@@ -1,91 +1,44 @@
-{% if sponsoredEvents %}
+{% if sponsoredEvents is not null %}
     <div class="box">
-    	
-    	<div class="box-heading">
-    		<h2>{{ 'Sponsored Events'|trans }}</h2>
-    	</div>
-    	
-    {# 		{% if !isset($sidebar) %} #}
-    	
-    		<div class="objects events-sponsored"><div class="row">
-    
-                {% for sponsored in sponsoredEvents %}
-    			    
-    				<div class="col-md-4">
-    				    
-    				    {% if sponsored.event.images|length > 0 %}{{ show_img_box(sponsored.event.image|default_img|imagine_filter('medium'), {width: 220, height: 150, offset: sponsored.event.imgOffset}) }}{% endif %}
-    				    
-{#     							{% show_img_box($post->getImages()->getFirst(), array('width' => 234, 'height' => 117, 'link' => $post->getRawValue()->getEntity()->getLinkShow())) %}	 #}
-    					
-    					<div class="media">
-    						
-    						<div class="pull-left">											
-    							<div class="events-sponsored-dates cycle-slideshow" data-cycle-slides="> div" data-cycle-fx="scrollVert">
-    								{% for date in sponsored.event.eventDates %}												
-    									<div>
-    										<h3>{{ date.start|format_date('MMM') }}</h3>
-    										<h2>{{ date.start|format_date('d') }}</h2>
-    									</div>
-    								{% endfor %}
-    							</div>
-    						</div>
-    						
-    						<div class="media-body">
-    							<h4><a href="{{ path('event_show', { id: sponsored.event.id, slug: sponsored.event.getSlug }) }}" title="{{ sponsored.event }}">{{ sponsored.event[:33] ~ '...' }}</a></h4>
-    {# 								<h4>{% echo link_to(truncate_text($post->getEntity(), 28, '...', true), $post->getRawValue()->getEntity()->getLinkShow()) %}</h4> #}
-    							<div class="events-sponsored-locations cycle-slideshow" data-cycle-slides="> p" data-cycle-fx="scrollVert">
-    								{% for date in sponsored.event.eventDates %}	
-    									<p class="text-muted"><small>{{ date.location }}</small></p>
-    {# 										<p class="text-muted"><small>{% echo truncate_text($data->getLocation(), 45, '...', true) %}</small></p> #}
-    								{% endfor %}
-    							</div>
-    {# 								<p class="text-muted"><small>{% echo __('by') %} {% echo link_to($post->getPublisher(), $post->getRawValue()->getPublisher()->getLinkShow()) %}</small></p> #}
-    						</div>
-    					
-    					</div>
-    					
-    				</div>
-    				
-                {% endfor %}	
-    
-    		</div></div>
-    		
-    {#
-    	{% else: %}
-    	
-    		<ul class="media-list objects">
-    			{% foreach($posts as $i => $post): %}
-    				
-    				<li class="media object object-small">
-    					<div class="pull-left">											
-    						<div class="events-sponsored-dates">
-    							{% foreach($post->getEventDates() as $data): %}												
-    								<div>
-    									<h3>{% echo format_date($data->getStart(), 'MMM') %}</h3>
-    									<h2>{% echo format_date($data->getStart(), ' d ') %}</h2>
-    								</div>
-    							{% endfor %}
-    						</div>
-    					</div>
-    					<div class="pull-left">	
-    						{% show_img_box($post->getImages()->getFirst(), array('width' => 120, 'height' => 60, 'link' => $post->getRawValue()->getEntity()->getLinkShow())) %}
-    					</div>
-    							
-    					<div class="media-body">
-    						<h4>{% echo link_to(truncate_text($post->getEntity(), 28, '...', true), $post->getRawValue()->getEntity()->getLinkShow()) %}</h4>
-    						<div class="events-sponsored-locationsa">
-    							{% foreach($post->getEventDates() as $data): %}	
-    								<p class="text-muted"><small>{% echo truncate_text($data->getLocation(), 35, '...', true) %}</small></p>
-    							{% endfor %}
-    						</div>
-    						<p class="text-muted"><small>{% echo __('by') %} {% echo link_to($post->getPublisher(), $post->getRawValue()->getPublisher()->getLinkShow()) %}</small></p>
-    					</div>
-    				</li>
-    			{% endfor %}
-    		</ul>
-    	
-    	{% endif %}
-    #}
-    
+        
+        <div class="box-heading">
+            <h2>{{ icon('Sponsored') }} {{ 'Sponsored Events'|trans }}</h2>
+        </div>
+        
+        <div class="box-body objects events-sponsored">
+            <div class="row">
+                {% for event in sponsoredEvents %}
+                    
+                    <div class="col-sm-4">
+                        
+                        {{ show_img_box(event.image|default_img|imagine_filter('medium'), {ratio: 1.6, offset: event.imgOffset}) }}
+
+                        <div class="media">
+                            
+                            <div class="pull-left">                                         
+                                <div class="events-sponsored-dates cycle-slideshow" data-cycle-slides="> div" data-cycle-fx="scrollVert">
+                                    {% for date in event.eventDates %}                                                
+                                        <div>
+                                            <h3>{{ date.start|format_date('MMM') }}</h3>
+                                            <h2>{{ date.start|format_date('d') }}</h2>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <div class="media-body">
+                                <h4><a href="{{ path('event_show', { id: event.id, slug: event.getSlug }) }}" title="{{ event }}">{{ event[:33] ~ '...' }}</a></h4>
+
+                                <div class="events-sponsored-locations cycle-slideshow" data-cycle-slides="> p" data-cycle-fx="scrollVert">
+                                    {% for date in event.eventDates %}    
+                                        <p class="text-muted"><small>{{ date.location }}</small></p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}    
+            </div>
+        </div>
     </div>
 {% endif %}

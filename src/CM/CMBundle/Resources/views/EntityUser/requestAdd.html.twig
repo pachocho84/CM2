@@ -2,13 +2,13 @@
 
     {% if request is null or (request is not null and request.entity.entityUsers[app.user.id] is not defined) %}
         
-        <div class="btn-group">
-            <a href="{{ path('request_add', {'object': entity|class_name , 'objectId': entity.id, 'userId': app.user.id}) }}" class="btn btn-default ajax-link ajax-link-target" data-loading-text="{{ 'Loading'|trans }}" data-toggle="tooltip" data-container="body" title="{{ 'Send a request to join and to show this element on your profile'|trans }}" data-placement="top">{{ icon('Crown') }}</a>
+        <div class="btn-group btn-group-sm ajax-link-target">
+            <a href="{{ path('request_add', {'object': entity|class_name , 'objectId': entity.id, 'userId': app.user.id}) }}" class="btn btn-default ajax-link" data-loading-text="{{ 'Loading'|trans }}" data-toggle="tooltip" data-container="body" title="{{ 'Send a request to join and to show this element on your profile'|trans }}" data-placement="top">{{ icon('Crown') }}</a>
         </div>
 
     {% elseif request.entity.entityUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_PENDING') %}
         
-        <div class="btn-group ajax-link-target">
+        <div class="btn-group btn-group-sm ajax-link-target">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 <div data-toggle="tooltip" data-container="body" title="{{ 'You have been added as protagonsit'|trans }}">{{ icon('Crown') }}</div>
             </button>
@@ -20,8 +20,8 @@
 
     {% elseif request.entity.entityUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_ACTIVE') %}
 
-        <div class="btn-group ajax-link-target">
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <div class="btn-group btn-group-sm ajax-link-target">
+            <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">
                 <div data-toggle="tooltip" data-container="body" title="{{ 'You are a protagonist'|trans }}">{{ icon('Crown') }}</div>
             </button>
             <ul class="dropdown-menu">
@@ -31,8 +31,8 @@
 
     {% elseif request.entity.entityUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_REQUESTED') %}
 
-        <div class="btn-group ajax-link-target">
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <div class="btn-group btn-group-sm ajax-link-target">
+            <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
                 <div data-toggle="tooltip" data-container="body" title="{{ 'Request sent'|trans }}">{{ icon('Crown') }}</div>
             </button>
             <ul class="dropdown-menu">
@@ -42,11 +42,11 @@
 
     {% elseif request.entity.entityUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_REFUSED_ADMIN') %}
         
-        <span class="btn btn-default disabled" title="{{ 'Your request has been refused'|trans }}">{{ icon('Crown') }}</span>
+        <span class="btn btn-sm btn-danger disabled" title="{{ 'Your request has been refused'|trans }}">{{ icon('Crown') }}</span>
 
     {% elseif request.entity.entityUsers[app.user.id].status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_REFUSED_ENTITY_USER') %}
         
-        <span class="btn btn-default disabled" title="{{ 'You refused the protagonist request'|trans }}">{{ icon('Crown') }}</span>
+        <span class="btn btn-sm btn-danger disabled" title="{{ 'You refused the protagonist request'|trans }}">{{ icon('Crown') }}</span>
         
     {% endif %}
 {% endif %}

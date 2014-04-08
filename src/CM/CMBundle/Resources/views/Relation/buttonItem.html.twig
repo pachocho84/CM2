@@ -1,1 +1,5 @@
-<button type="button" class="btn btn-{{ btnColour }} dropdown-toggle relation-button" data-toggle="dropdown" title="{% if btn %} {{ reqText|trans }}{% endif %}"><span {{ tooltip(tooltipArray, {placement: 'top'}) }}>{{ icon('Relation') }}{% if not btn %} {{ reqText|trans }}{% endif %}</span></button>
+{% if btn %}
+    <button type="button" class="btn btn-{{ btnColour }} dropdown-toggle relation-button" data-toggle="dropdown"><span {{ tooltip(tooltipArray, {placement: 'top'}) }}>{{ icon('Relation') }}</span></button>
+{% else %}
+    <a class="text-{{ btnColour }} dropdown-toggle relation-button" data-toggle="dropdown" href="#" title="{{ reqText|trans }}"><span {{ tooltip(tooltipArray, {placement: 'top'}) }}>{{ icon('Relation') }}</span></a>
+{% endif %}

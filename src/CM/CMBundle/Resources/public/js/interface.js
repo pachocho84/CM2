@@ -56,8 +56,7 @@ function initRecipients() {
 
 $(function() {
     /* MENU */
-/*
-    $('#menu ul.pull-right li.menu-tab a').on('click', function(event) {
+    $('#menu ul.pull-right li.menu-tab.menu-tab-ajax a').on('click', function(event) {
         if ($(this).parent('li.dropdown.menu-tab').hasClass('open')) {
             return true;
         }
@@ -84,7 +83,6 @@ $(function() {
             event.preventDefault();
         }
     });
-*/
     
     // $('#menu').hcSticky({
     //     noContainer: true

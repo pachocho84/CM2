@@ -265,7 +265,7 @@ class FanController extends Controller
             'userId' => $fanId,
             'object' => $object,
             'imFan' => true,
-            'btn' => $request->get('btn')
+            'btn' => is_null($request->get('btn')) ? true : $request->get('btn')
         )));
         // }
 
@@ -307,7 +307,7 @@ class FanController extends Controller
             'userId' => $fanId,
             'object' => $object,
             'imFan' => false,
-            'btn' => $request->get('btn')
+            'btn' => is_null($request->get('btn')) ? true : $request->get('btn')
         )));
         // }
         
@@ -334,7 +334,7 @@ class FanController extends Controller
             'userId' => $userId,
             'object' => $object,
             'imFan' => $imFan,
-            'btn' => $request->get('btn')
+            'btn' => is_null($request->get('btn')) ? true : $request->get('btn')
         );
     }
 }

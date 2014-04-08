@@ -1004,7 +1004,6 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-plus"></span>';
             case 'Minus':
                 return '<span class="glyphicon glyphicon-minus"></span>';
-            case 'Protagonist':
             case 'Crown':
                 return '<span class="glyphicons crown"></span>';
             case 'Ok':
@@ -1029,9 +1028,11 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-bell"></span>';
             case 'Request_out':
                 return '<span class="glyphicon glyphicon-share-alt"></span>';
+            case 'Protagonist':
+                return '<span class="glyphicons group"></span>';
             case 'Relation':
             case 'Relation_'.Post::TYPE_CREATION:
-                return '<span class="glyphicons git_branch"></span>';
+                return '<span class="glyphicons user_add"></span>';
             case 'Options':
                 return '<span class="glyphicons cogwheels"></span>';
             case 'Photo':

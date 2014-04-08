@@ -19,6 +19,7 @@ class DiscRepository extends BaseRepository
         ), $options);
         
         return array_merge(array(
+            'exclude'       => null,
             'userId'       => null,
             'groupId'      => null,
             'pageId'       => null,
@@ -36,11 +37,10 @@ class DiscRepository extends BaseRepository
                  
         $count = $this->createQueryBuilder('d')
             ->select('count(d.id)')
-            ->join('d.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION.' AND p.object = :object')
-            ->setParameter('object', Disc::className());
+            ->join('d.post', 'p');
 
         $query = $this->createQueryBuilder('d')
-            ->select('d, dt, t, i, p, l, c, u, lu, cu, pg, gr'.($options['protagonists'] ? ', eu, us' : ''))
+            ->select('d, dt, t, i, p, l, c, u, lu, cu, pg, gr')
             ->leftJoin('d.discTracks','dt')
             ->leftJoin('d.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->setParameter('locales', $options['locales'])
@@ -55,13 +55,18 @@ class DiscRepository extends BaseRepository
             ->leftJoin('p.group', 'gr');
             
         if ($options['protagonists']) {
-            $query->leftJoin('d.entityUsers', 'eu', 'eu.userId')
-                ->leftJoin('eu.user', 'us');
+            $query->addSelect('eu, us')
+                ->join('d.entityUsers', 'eu', '', '', 'eu.userId')
+                ->join('eu.user', 'us');
         }
         
         if ($options['userId']) {
-            $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
-            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
+            $count->join('d.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
+            $query->join('d.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
         }
         
         if ($options['pageId']) {
@@ -96,14 +101,78 @@ class DiscRepository extends BaseRepository
             ->leftJoin('d.category', 'ec')
             ->leftJoin('ec.translations', 'ect', 'with', 'ect.locale = :locale')->setParameter('locale', $options['locale'])
             ->leftJoin('d.discTracks', 'dt')
-            ->leftJoin('d.images', 'i', 'with', 'i.main = '.true)
-            ->leftJoin('d.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
+            ->leftJoin('d.image', 'i')
+            ->leftJoin('d.post', 'p')
             ->leftJoin('p.user', 'u')
             ->leftJoin('p.page', 'pg')
             ->leftJoin('p.group', 'gr')
             ->andWhere('d.id = :id')->setParameter('id', $id)
             ->getQuery()
             ->getSingleResult();
+    }
+
+    public function getLast($options = array())
+    {
+        $options = self::getOptions($options);
+        
+        $count = $this->createQueryBuilder('d')
+            ->select('count(d.id)')
+            ->join('d.post', 'p');
+
+        $query = $this->createQueryBuilder('d')
+            ->select('d, t, p, i')
+            ->leftJoin('d.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->join('d.post', 'p')
+            ->leftJoin('d.image', 'i')
+            ->orderBy('p.createdAt', 'desc');
+        if (!is_null($options['exclude'])) {
+            $count->andWhere('d.id != :exclude')->setParameter('exclude', $options['exclude']);
+            $query->andWhere('d.id != :exclude')->setParameter('exclude', $options['exclude']);
+        }
+        if (!is_null($options['userId'])) {
+            $count->join('d.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
+            $query->join('d.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
+        }
+        if (!is_null($options['pageId'])) {
+            $count->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+            $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $count->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+
+    public function countLasts($options = array())
+    {
+        $options = self::getOptions($options);
+        
+        $query = $this->createQueryBuilder('d')
+            ->select('count(d.id)')
+            ->join('d.post', 'p')
+            ->orderBy('p.createdAt', 'desc');
+        if (!is_null($options['userId'])) {
+            $query->join('d.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
+        }
+        if (!is_null($options['pageId'])) {
+            $query->andWhere('p.pageId = :page_id')
+                ->setParameter('page_id', $options['pageId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $query->andWhere('p.groupId = :group_id')
+                ->setParameter('group_id', $options['groupId']);
+        }
+
+        return $query->getQuery()
+            ->getSingleScalarResult();
     }
 
     public function getTracksPerDisc($id)

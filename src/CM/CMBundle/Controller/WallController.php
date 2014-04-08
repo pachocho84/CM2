@@ -342,6 +342,19 @@ class WallController extends Controller
     }
 
     /**
+     * @Route("/banners/{num}", name="wall_banner", requirements={"num" = "\d+"})
+     * @Template
+     */
+    public function bannersAction(Request $request, $num = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $banners = $em->getRepository('CMBundle:HomepageBanner')->getBanners(0, $num);
+
+        return array('banners' => $banners);
+    }
+
+    /**
      * @Route("/wall/show/{postId}", name="wall_show", requirements={"postId" = "\d+"})
      * @Template
      */

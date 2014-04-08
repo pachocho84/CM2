@@ -53,40 +53,44 @@ class EventRepository extends BaseRepository
             ->select('d, e, t, ec, ect, i, p, l, c, u, lu, cu, pg, gr')
             ->from('CMBundle:EventDate','d')
             ->join('d.event', 'e')
-            ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')
-            ->leftJoin('e.category', 'ec')
-            ->leftJoin('ec.translations', 'ect', 'with', 'ect.locale = :locale')
+            ->join('e.translations', 't', 'with', 't.locale IN (:locales)')
+            ->join('e.category', 'ec')
+            ->join('ec.translations', 'ect', 'with', 'ect.locale = :locale')
             ->leftJoin('e.image', 'i')
-            ->innerJoin('e.post', 'p')
-            ->leftJoin('e.entityUsers', 'eu', '', '', 'eu.userId')
-            ->leftJoin('eu.user', 'us')
+            ->join('e.post', 'p')
+            ->join('p.user', 'u')
+            ->leftJoin('p.page', 'pg')
+            ->leftJoin('p.group', 'gr')
             ->leftJoin('p.likes', 'l')
             ->leftJoin('p.comments', 'c')
-            ->leftJoin('p.user', 'u')
             ->leftJoin('l.user', 'lu')
-            ->leftJoin('c.user', 'cu')
-            ->leftJoin('p.page', 'pg')
-            ->leftJoin('p.group', 'gr');
+            ->leftJoin('c.user', 'cu');
             
         if ($options['protagonists']) {
-            $query->addSelect('eu, us');
+            $query->addSelect('eu, us')
+                ->join('e.entityUsers', 'eu', '', '', 'eu.userId')
+                ->join('eu.user', 'us');
         }
         
         if ($options['userId']) {
-            $count->andWhere('p.user = :user_id');
-            $query->andWhere('p.user = :user_id');
+            $count->join('e.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
+            $query->join('e.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
             $parameters['user_id'] = $options['userId'];
         }
         
         if ($options['pageId']) {
-            $count->andWhere('p.page = :page_id');
-            $query->andWhere('p.page = :page_id');
+            $count->andWhere('p.pageId = :page_id');
+            $query->andWhere('p.pageId = :page_id');
             $parameters['page_id'] = $options['pageId'];
         }
         
         if ($options['groupId']) {
-            $count->andWhere('p.group = :group_id');
-            $query->andWhere('p.group = :group_id');
+            $count->andWhere('p.groupId = :group_id');
+            $query->andWhere('p.groupId = :group_id');
             $parameters['group_id'] = $options['groupId'];
         }
         
@@ -213,8 +217,12 @@ class EventRepository extends BaseRepository
             $query->andWhere('d.eventId != :exclude')->setParameter('exclude', $options['exclude']);
         }
         if (!is_null($options['userId'])) {
-            $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
-            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
+            $count->join('e.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
+            $query->join('e.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
         }
         if (!is_null($options['pageId'])) {
             $count->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
@@ -240,8 +248,9 @@ class EventRepository extends BaseRepository
             ->andWhere('d.start >= :now')->setParameter('now', new \DateTime)
             ->orderBy('d.start');
         if (!is_null($options['userId'])) {
-            $query->andWhere('p.userId = :user_id')
-                ->setParameter('user_id', $options['userId']);
+            $query->join('e.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
         }
         if (!is_null($options['pageId'])) {
             $query->andWhere('p.pageId = :page_id')
@@ -270,35 +279,35 @@ class EventRepository extends BaseRepository
     {   
         $options = self::getOptions($options);
         
-        $count = $this->getEntityManager()->createQueryBuilder()
-            ->select('count(s.id)')
+        $sponsored = $this->getEntityManager()->createQueryBuilder()
+            ->select('partial s.{id, entityId, views, start, end}, partial e.{id}')
             ->from('CMBundle:Sponsored','s')
-            ->join('s.event', 'e')
-            ->leftJoin('e.eventDates', 'd')
+            ->join('s.entity', 'e', 'with', 'e instance of '.Event::className())
             ->andWhere('s.start <= :now')
             ->andWhere('s.end >= :now')
-            ->andWhere('d.start >= :now')
-            ->setParameter(':now', new \DateTime);
+            ->setParameter(':now', new \DateTime)
+            ->getQuery()
+            ->getResult();
+
+        if (count($sponsored) == 0) return null;
+
+        shuffle($sponsored);
+        $sponsored = array_slice($sponsored, 0, $options['limit']);
         
-        $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('s, e, d, t, i')
-            ->from('CMBundle:Sponsored', 's')
-            ->join('s.event', 'e')
+        $this->getEntityManager()->createQueryBuilder()
+            ->update('CMBundle:Sponsored', 's')
+            ->set('s.views', 's.views + 1')
+            ->where('s.id in (:ids)')->setParameter('ids', array_map(function($i) { return $i->getId(); }, $sponsored))
+            ->getQuery()->execute();
+
+        return $this->createQueryBuilder('e')
+            ->select('e, d, t, i')
             ->leftJoin('e.eventDates', 'd')
-            ->leftJoin('e.translations', 't')
+            ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->leftJoin('e.image', 'i')
-            ->andWhere('s.start <= :now')
-            ->andWhere('s.end >= :now')
-            ->andWhere('d.start >= :now')
-            ->andWhere('t.locale IN (:locales)')
-            ->setParameters(array(
-                ':now' => new \DateTime,
-                ':locales' => $options['locales']
-            ))
-            ->setMaxResults($options['limit'])
-            ->orderBy('s.views');
-            
-            return $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult());
+            ->andWhere('e.id IN (:ids)')->setParameter('ids', array_map(function($i) { return $i->getEntityId(); }, $sponsored))
+            ->getQuery()
+            ->getResult();
     }
 
     public function getLastByVip($limit, $options = array())

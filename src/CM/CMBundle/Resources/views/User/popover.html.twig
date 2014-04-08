@@ -15,11 +15,14 @@
     
     <h3>{{ user.userTags|join(', ')|trim }}</h3>
     
-    {% if biography is not null %}<div class="popover-publisher-biography">{{ biography|short_text({max: 150}) }}{% endif %}</div>
-    
+    {% if biography is not null %}<div class="popover-publisher-biography">{{ biography|short_text({max: 120}) }}{% endif %}</div>
+</div>
+
+
+<div class="popover-footer">
     {% if is_granted('ROLE_USER') and user.id != app.user.id %}
-        {{ render(controller('CMBundle:Fan:button', {userId: user.id, btn: true})) }}
-        {{ render(controller('CMBundle:Relation:button', {user: user, btn: true})) }}
-        <a href="{{ path('message_new', {userId: user.id}) }}" class="btn btn-default">{{ icon('Message') }}</a>
+        {{ render(controller('CMBundle:Fan:button', {userId: user.id, btn: false})) }}
+        {{ render(controller('CMBundle:Relation:button', {user: user, btn: false})) }}
+        <a href="{{ path('message_new', {userId: user.id}) }}">{{ icon('Message') }}</a>
     {% endif %}
 </div>
