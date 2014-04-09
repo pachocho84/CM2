@@ -15,14 +15,23 @@
                         
                         <h3><a href="{{ path('event_show', { id: event.id, slug: event.getSlug }) }}" title="{{ event }}">{{ event }}</a></h3>
                                       
-                        <div class="events-sponsored-dates cycle-slideshow" data-cycle-slides="> div" data-cycle-fx="scrollVert">
+                        <div class="event-sponsored-dates">
                             {% for date in event.eventDates %}                                             
-                                <div class="events-sponsored-date">
-                                    <div class="events-sponsored-date-day">
+                                <div class="event-sponsored-date">
+                                    <div class="event-sponsored-date-day">
                                         {{ date.start|format_date('d') }}
                                         {{ date.start|format_date('MMM') }} 
                                     </div>
-                                    <div class="events-sponsored-date-location">{{ date.location }}</div>
+                                    <div class="event-sponsored-date-location">{{ date.location }}</div>
+                                </div>
+                            {% endfor %}
+                            {% for date in event.eventDates %}                                             
+                                <div class="event-sponsored-date">
+                                    <div class="event-sponsored-date-day">
+                                        {{ date.start|format_date('d') }}
+                                        {{ date.start|format_date('MM') }} 
+                                    </div>
+                                    <div class="event-sponsored-date-location">{{ date.location }}</div>
                                 </div>
                             {% endfor %}
                         </div>

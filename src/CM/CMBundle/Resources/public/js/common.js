@@ -756,4 +756,20 @@ $(function() {
         console.log(data);
         initSlideshow($(data).find('.cycle-slideshow'));
     });
+
+
+
+    /* SPONSORED */
+    function initSlideshowSponsored($slideshow) {
+        $slideshow.cycle({
+            log: false,
+            pauseOnHover: true,
+            slides: '> div',
+            fx: 'scrollVert'
+        });
+    }
+
+    $(document).on('loaded.data-ajax', function(event, data) {
+        initSlideshowSponsored($(data).find('.event-sponsored-dates'));
+    });
 });
