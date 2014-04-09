@@ -96,31 +96,26 @@ img {
     border-top: 1px solid #bbbbbb;
     border-bottom: 1px solid #bbbbbb;
 }
-#menu ul.nav
-{
+#menu ul.nav {
     border-right:1px solid #bbbbbb;
 }
-#menu ul.nav > li
-{
+#menu ul.nav > li {
     margin-bottom: -1px;
 }
-#menu ul.nav > li > a
-{
+#menu ul.nav > li > a {
     font-family: Georgia, "Times New Roman", Times, serif;
     font-size: 16px;
     line-height: 34px;
     padding: 0 12px;
     border-left: 1px solid #bbbbbb;
 }
-#menu ul.nav.pull-left > li:hover > a
-{
+#menu ul.nav.pull-left > li:hover > a {
     color: #aa0000;
     -webkit-box-shadow: none;
        -moz-box-shadow: none;
             box-shadow: none;
 }
-#menu ul.nav.pull-left > li.dropdown:hover > a
-{
+#menu ul.nav.pull-left > li.dropdown:hover > a {
     background: #ffffff;
 }
 #menu ul.nav.pull-left > li:first-child > a:focus,
@@ -131,8 +126,7 @@ img {
 #menu ul.nav > li > a:hover,
 #menu ul.nav > li > a:active,
 #menu ul.nav > li:hover > a,
-#menu ul.nav > li.active > a
-{
+#menu ul.nav > li.active > a {
 /*     -webkit-box-shadow: 0 5px 10px rgba(255, 255, 255, 0.85); */
 /*     -moz-box-shadow: 0 5px 10px rgba(255, 255, 255, 0.85); */
 /*     box-shadow: 0 15px 15px rgba(245, 245, 245, 0.85); */
@@ -140,13 +134,11 @@ img {
 /*     background: url(/images/subtle_grunge.jpg); */
     background: transparent;
 }
-#menu ul.nav > li > a > img
-{
+#menu ul.nav > li > a > img {
     width: 16px;
     vertical-align: -2px;
 }
-#menu ul.nav > li a > span.countNew 
-{ 
+#menu ul.nav > li a > span.countNew  { 
     font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
     display: block;
     background: #cc0000;
@@ -665,14 +657,25 @@ table.events .object:first-child {
     margin-top: 0;
     padding-top: 0;
 }
-.events-sponsored h3 {
-    line-height: 26px;
-    height: 26px;
-    font-size: 16px;
+.events-sponsored .event-sponsored {
+    height: 160px;
+}
+.events-sponsored .event-sponsored h3 {
+    font-size: 14px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin: 0;
+    margin: 2px 0;
+}
+.events-sponsored .event-sponsored .events-sponsored-dates .events-sponsored-date {
+    text-align: center;
+    color: #999999;
+}
+.events-sponsored .event-sponsored .events-sponsored-dates .events-sponsored-date .events-sponsored-date-day {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 36px;
+    text-transform: uppercase;
+    line-height: 1;
 }
 
 
