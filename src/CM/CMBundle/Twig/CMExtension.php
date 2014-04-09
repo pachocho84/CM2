@@ -579,12 +579,11 @@ class CMExtension extends \Twig_Extension
         $userBox = $this->getPublisherBox($post->getPublisher());
         switch ($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Comment_'.Post::TYPE_CREATION:
-            case 'Comment[]_'.Post::TYPE_AGGREGATE:
+            case 'Comment_'.Post::TYPE_AGGREGATE:
                 $likeOrComment = 'commented on';
             case 'Like_'.Post::TYPE_CREATION:
-            case 'Like[]_'.Post::TYPE_AGGREGATE:
+            case 'Like_'.Post::TYPE_AGGREGATE:
                 if ($post->getType() == Post::TYPE_AGGREGATE && count($relatedObjects) > 1) {
-                    $userIds = array();
                     foreach ($relatedObjects as $i => $object) {
                         if (in_array($object->getUser(), $users)) continue;
                         $users[] = $object->getUser();
@@ -592,18 +591,14 @@ class CMExtension extends \Twig_Extension
                             $args['%user'.(count($args) + 1).'%'] = '<a href="'.$this->router->generate('user_show', array('slug' => $object->getUser()->getSlug())).'" '.$this->getPublisherBox($object->getUser()).'>'.$object->getUser().'</a>';
                         }
                     }
-                    $asd = '';
-                    foreach ($users as $key => $value) {
-                        $asd .= ' '.$value;
-                    }
-                    if (count($userIds) > 2) {
-                        $args['%count%'] = '<span'.$this->getTooltip(array_slice($users, 2)).'>'.(count($users) - 2).' '.$asd.'</>';
+                    if (count($users) > 2) {
+                        $args['%count%'] = '<span '.$this->getTooltip(array_slice($users, 2)).'>'.(count($users) - 2).'</span>';
                     }
                     $user = $this->translator->transChoice('{1}%user1%|{2}%user1% and %user2%|[3,Inf]%user1%, %user2% and other %count%', count($users), $args);
-                    if ($this->getClassName($post->getObject()) == 'Like[]') {
+                    if ($this->getClassName($post->getObject()) == 'Like') {
                         $likeOrComment = 'like'.($args['%count%'] > 1 ? '' : 's');
                     }
-                } else {
+                } elseif ($this->getClassName($post->getObject()) == 'Like') {
                     $likeOrComment = 'likes';
                     $user = '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>';
                 }
@@ -979,11 +974,11 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-book"></span>';
             case 'Like':
             case 'Like_'.Post::TYPE_CREATION:
-            case 'Like[]_'.Post::TYPE_AGGREGATE:
+            case 'Like_'.Post::TYPE_AGGREGATE:
                 return '<span class="glyphicon glyphicon-thumbs-up"></span>';
             case 'Comment':
             case 'Comment_'.Post::TYPE_CREATION:
-            case 'Comment[]_'.Post::TYPE_AGGREGATE:
+            case 'Comment_'.Post::TYPE_AGGREGATE:
                 return '<span class="glyphicon glyphicon-comment"></span>';
             case 'Comments':
                 return '<span class="glyphicons conversation"></span>';
