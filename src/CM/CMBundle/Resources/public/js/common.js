@@ -63,59 +63,45 @@ function insertRelationItem(c, d, a) {
     $(c).closest('div').replaceWith(d.item);
 }
 
-function initPopoverPublisher($elem) {
-    $elem.popover({
-        selector: '[popover-publisher]',
-        trigger: 'manual',
-        placement: 'auto top',
-        delay: {show: 1000, hide: 250},
-        container: 'body',
-        html: true,
-        content: function() {
-            var content;
-            $.ajax({
-                url: $(this).attr('data-href'),
-                async: false
-            }).done(function(data) {
-                content = data;
-            });
-            return content;
-        }
-    }).on('mouseenter', function(event) {
-        setTimeout(function() {
-            if ($(event.currentTarget).is(':hover')) {
-                $(event.currentTarget).popover('show');
-                $('.popover').addClass('popover-publisher').on('mouseleave', function () {
-                    $(event.currentTarget).popover('hide');
-                });
-            }
-        }, 1000);
-    }).on('mouseleave', function(event) {
-        setTimeout(function() {
-            if (!$(event.currentTarget).is(':hover') && !$('.popover').is(':hover')) {
-                $(event.currentTarget).popover('hide');
-            }
-        }, 250);
-    });
-}
-
-function initSlideshow($slideshow) {
-    $slideshow.cycle({
-        loader: true,
-        log: false,
-        next: '.box-partner-nav-next',
-        pauseOnHover: true,
-        prev: '.box-partner-nav-prev',
-        slides: '> div',
-        swipe: true,
-        fx: 'scrollHorz'
-    });
-}
-
 $(function() {
     UserActive.begin();
 
     /* PUBLISHER POPOVER */
+    function initPopoverPublisher($elem) {
+        $elem.popover({
+            selector: '[popover-publisher]',
+            trigger: 'manual',
+            placement: 'auto top',
+            delay: {show: 1000, hide: 250},
+            container: 'body',
+            html: true,
+            content: function() {
+                var content;
+                $.ajax({
+                    url: $(this).attr('data-href'),
+                    async: false
+                }).done(function(data) {
+                    content = data;
+                });
+                return content;
+            }
+        }).on('mouseenter', function(event) {
+            setTimeout(function() {
+                if ($(event.currentTarget).is(':hover')) {
+                    $(event.currentTarget).popover('show');
+                    $('.popover').addClass('popover-publisher').on('mouseleave', function () {
+                        $(event.currentTarget).popover('hide');
+                    });
+                }
+            }, 1000);
+        }).on('mouseleave', function(event) {
+            setTimeout(function() {
+                if (!$(event.currentTarget).is(':hover') && !$('.popover').is(':hover')) {
+                    $(event.currentTarget).popover('hide');
+                }
+            }, 250);
+        });
+    }
     initPopoverPublisher($('[popover-publisher]'));
     $(document).on('mouseenter', '[popover-publisher]', function(event) {
         initPopoverPublisher($(event.currentTarget));
@@ -264,130 +250,34 @@ $(function() {
             $(event.currentTarget).tooltip('destroy');
         });
     });
-    
-    
-    
-    /* COMMENTS */
-    // Show comment form
-    $('body').on('click', '.comment_new-show', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        $(this).closest('.bottom').find('ul').fadeIn('fast');
-        $(this).closest('.object, .bottom').find('.comment_new').removeClass('hide').find('textarea').focus();
-        fix_triangle($(this));
-    });
-    // Hide comment form on blur
-    $('body').on('blur', '.comment_new:not(.object-detail .comment_new) form textarea, .comment_new:not(.object-detail .comment_new) form input[type="submit"]', function() {
-        if ($(this).closest('.bottom').find('li.comment').length == 1) {
-            $(this).closest('li.comment').addClass('hide');
-            fix_triangle($(this));
-        }
-    });
-    // Show comments on likes_comments_expanded == false
-    $('body').on('click', '.bottom-comment-count', function(event) {
-        event.preventDefault();
-        $(this).closest('.bottom').find('ul').fadeToggle('fast');
-    });
-    // Show all comments
-    $('body').on('click', '.comments-show_all', function(event) {
-        event.preventDefault();
-        $(event.currentTarget).closest('.bottom').find('.comment').removeClass('hidden'); // TODO: .fadeIn() not working anymore
-        $(event.currentTarget).parent().remove();
-    });
-    
-
-    // Hide comment form submit button
-    // $('.comment_new form input[type="submit"]').addClass('hide');
-    // Enter key press submit
-    $('body').on('keydown', '.comment_new form textarea, .comment_new form input, .comment_edit form textarea', function(event) {
-        if (event.keyCode == '13' && event.shiftKey === false) {
-            event.preventDefault();
-            if ($(this).val().length > 1) {
-                $(this).closest('form').submit();
-            }                         
-        }
-    });
-    // AJAX comment form
-    $(document).on('submit', '.comment_new form, .comment_edit form', function(event) {
-        event.preventDefault();
-        $(event.currentTarget).find('.comment').attr('readonly', 'readonly');
-        $(event.currentTarget).ajaxSubmit({
-            dataType: 'json',
-            success: function(data, statusText, xhr, $form) {
-                var commentType = $form.find('[comment-type]').attr('comment-type').split(' ');
-                var $media = $form.closest('.media');
-
-                if (commentType == 'upward') {
-                    $media.before(data.comment);
-                    $form.closest('.bottom').find('.bottom-comment-count').replaceWith(data.commentCount);
-                    $form.find('.comment').focus().val('').trigger('autosize.resize');
-                } else if (commentType == 'downward') {
-                    $media.closest('.box').after(data.comment);
-                    $form.find('.comment').focus().val('').trigger('autosize.resize');
-                } else if ($.inArray('edit', commentType)) {
-                    $form.closest('.comment').replaceWith(data.comment);
-                }
-            },
-            complete: function() {
-                $(event.currentTarget).find('.comment').removeAttr('readonly');
-            }
-        });
-    });
-    // // Delete comment
-    // $('body').on('click', '.comment .popover .btn-primary', function(event) {
-    //     event.preventDefault();
-    //     event.stopPropagation();
-    //     $.get($(event.target).attr('href'), function(data) {
-    //         // $(event.target).closest('.bottom').find('.modal').modal('hide');  
-    //         $(event.target).closest('li').slideUp(300, function() {
-    //             $(event.target).closest('.bottom').find('.bottom-comment-count').replaceWith(data); 
-    //             $(this).remove(); 
-    //         });
-    //     });
-    // });
-    // Modify comment
-    $('body').on('click', '.comment .comment_edit-btn', function(event) {
-        event.preventDefault();
-
-        var $comment = $(event.currentTarget).closest('.comment');
-        var $image = $comment.find('.image_box');
-        var href = $(event.currentTarget).attr('href');
-        var text = $comment.find('.comment-body').text().trim();
-        var old = $comment.html();
-        $comment.html('');
-        $comment.append($image);
-        $comment.append('\
-            <div class="media-body comment_edit">\
-                <form method="post" action="' + href + '" class="form-horizontal" novalidate="novalidate">\
-                    <div>\
-                        <textarea id="cm_cmbundle_comment_comment" name="cm_cmbundle_comment[comment]" required="required" class="input-lg form-control" comment_new="" placeholder="write a comment..." comment-type="upward edit" autocomplete="off"></textarea>\
-                    </div>\
-                    <input type="submit" name="commit" value="Send" class="pull-right btn btn-mini hidden">\
-                </form>\
-                <div class="text-muted">Press ESC to cancel</div>\
-            </div>'
-        );
-        $comment.find('textarea').focus().html(text);
-
-        $comment.find('textarea').on('keyup', function(event) {
-            if (event.keyCode == 27) {
-                $comment.html(old);
-            }
-        });
-    });
 
 
 
     /* FULLSCREEN */
-    $('#blueimp-gallery-container .sidebar .comment_new form textarea').on('keydown', function(event) {
-        event.stopPropagation();
-        if (event.keyCode == '13' && event.shiftKey === false) {
-            event.preventDefault();
-            if ($(this).val().length > 1) {
-                $(this).closest('form').submit();
-            }                         
-        }
-    });
+
+    // TODO: http://codecanyon.net/item/nacho-lightbox-flat-responsive-lightbox/5434882
+    
+    // images
+    // $('body').on('click', '[ilightbox="album"]', function(event){
+    //     event.preventDefault();
+
+    //     console.log($(event.currentTarget).closest('[ilightbox="album"]').find('[ilightbox="image"]'));
+
+    //     $('[ilightbox="album"]').iLightBox({
+    //     });
+
+    // });
+
+    // document.getElementById('links').onclick = function (event) {
+    //     event = event || window.event;
+    //     var target = event.target || event.srcElement,
+    //         link = target.src ? target.parentNode : target,
+    //         options = {index: link, event: event},
+    //         links = this.getElementsByTagName('a');
+    //     blueimp.Gallery(links, options);
+    // };
+
+
     $('body').on('click', '[lightbox="image"]', function(event){
         var originalUrl = document.URL;
         var originalTitle = document.title;
@@ -542,6 +432,117 @@ $(function() {
     $('textarea[expandable]').autosize();
     $(document).on('focus', 'textarea[expandable]', function() { 
         $(this).autosize();
+    });
+    
+    
+    
+    /* COMMENTS */
+    // Show comment form
+    $('body').on('click', '.comment_new-show', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        $(this).closest('.bottom').find('ul').fadeIn('fast');
+        $(this).closest('.object, .bottom').find('.comment_new').removeClass('hide').find('textarea').focus();
+        fix_triangle($(this));
+    });
+    // Hide comment form on blur
+    $('body').on('blur', '.comment_new:not(.object-detail .comment_new) form textarea, .comment_new:not(.object-detail .comment_new) form input[type="submit"]', function() {
+        if ($(this).closest('.bottom').find('li.comment').length == 1) {
+            $(this).closest('li.comment').addClass('hide');
+            fix_triangle($(this));
+        }
+    });
+    // Show comments on likes_comments_expanded == false
+    $('body').on('click', '.bottom-comment-count', function(event) {
+        event.preventDefault();
+        $(this).closest('.bottom').find('ul').fadeToggle('fast');
+    });
+    // Show all comments
+    $('body').on('click', '.comments-show_all', function(event) {
+        event.preventDefault();
+        $(event.currentTarget).closest('.bottom').find('.comment').removeClass('hidden'); // TODO: .fadeIn() not working anymore
+        $(event.currentTarget).parent().remove();
+    });
+    
+
+    // Hide comment form submit button
+    // $('.comment_new form input[type="submit"]').addClass('hide');
+    // Enter key press submit
+    $('body').on('keydown', '.comment_new form textarea, .comment_new form input, .comment_edit form textarea', function(event) {
+        if (event.keyCode == '13' && event.shiftKey === false) {
+            event.preventDefault();
+            if ($(this).val().length > 1) {
+                $(this).closest('form').submit();
+            }                         
+        }
+    });
+    // AJAX comment form
+    $(document).on('submit', '.comment_new form, .comment_edit form', function(event) {
+        event.preventDefault();
+        $(event.currentTarget).find('.comment').attr('readonly', 'readonly');
+        $(event.currentTarget).ajaxSubmit({
+            dataType: 'json',
+            success: function(data, statusText, xhr, $form) {
+                var commentType = $form.find('[comment-type]').attr('comment-type').split(' ');
+                var $media = $form.closest('.media');
+
+                if (commentType == 'upward') {
+                    $media.before(data.comment);
+                    $form.closest('.bottom').find('.bottom-comment-count').replaceWith(data.commentCount);
+                    $form.find('.comment').focus().val('').trigger('autosize.resize');
+                } else if (commentType == 'downward') {
+                    $media.closest('.box').after(data.comment);
+                    $form.find('.comment').focus().val('').trigger('autosize.resize');
+                } else if ($.inArray('edit', commentType)) {
+                    $form.closest('.comment').replaceWith(data.comment);
+                }
+            },
+            complete: function() {
+                $(event.currentTarget).find('.comment').removeAttr('readonly');
+            }
+        });
+    });
+    // // Delete comment
+    // $('body').on('click', '.comment .popover .btn-primary', function(event) {
+    //     event.preventDefault();
+    //     event.stopPropagation();
+    //     $.get($(event.target).attr('href'), function(data) {
+    //         // $(event.target).closest('.bottom').find('.modal').modal('hide');  
+    //         $(event.target).closest('li').slideUp(300, function() {
+    //             $(event.target).closest('.bottom').find('.bottom-comment-count').replaceWith(data); 
+    //             $(this).remove(); 
+    //         });
+    //     });
+    // });
+    // Modify comment
+    $('body').on('click', '.comment .comment_edit-btn', function(event) {
+        event.preventDefault();
+
+        var $comment = $(event.currentTarget).closest('.comment');
+        var $image = $comment.find('.image_box');
+        var href = $(event.currentTarget).attr('href');
+        var text = $comment.find('.comment-body').text().trim();
+        var old = $comment.html();
+        $comment.html('');
+        $comment.append($image);
+        $comment.append('\
+            <div class="media-body comment_edit">\
+                <form method="post" action="' + href + '" class="form-horizontal" novalidate="novalidate">\
+                    <div>\
+                        <textarea id="cm_cmbundle_comment_comment" name="cm_cmbundle_comment[comment]" required="required" class="input-lg form-control" comment_new="" placeholder="write a comment..." comment-type="upward edit" autocomplete="off"></textarea>\
+                    </div>\
+                    <input type="submit" name="commit" value="Send" class="pull-right btn btn-mini hidden">\
+                </form>\
+                <div class="text-muted">Press ESC to cancel</div>\
+            </div>'
+        );
+        $comment.find('textarea').focus().html(text);
+
+        $comment.find('textarea').on('keyup', function(event) {
+            if (event.keyCode == 27) {
+                $comment.html(old);
+            }
+        });
     });
 
     
@@ -739,8 +740,19 @@ $(function() {
 
 
     /* SLIDESHOW */
+    function initSlideshow($slideshow) {
+        $slideshow.cycle({
+            loader: true,
+            log: false,
+            next: '.box-partner-nav-next',
+            pauseOnHover: true,
+            prev: '.box-partner-nav-prev',
+            slides: '> div',
+            swipe: true,
+            fx: 'scrollHorz'
+        });
+    }
     $(document).on('loaded.data-ajax', function(event, data) {
-        console.log(data);
         initSlideshow($(data).find('.cycle-slideshow'));
     });
 
@@ -749,10 +761,11 @@ $(function() {
     /* SPONSORED */
     function initSlideshowSponsored($slideshow) {
         $slideshow.cycle({
+            fx: 'scrollVert',
             log: false,
             pauseOnHover: true,
             slides: '> div',
-            fx: 'scrollVert'
+            speed: 250
         });
     }
 

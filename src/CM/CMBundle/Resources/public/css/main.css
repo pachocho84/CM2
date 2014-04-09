@@ -657,36 +657,41 @@ table.events .object:first-child {
     margin-top: 0;
     padding-top: 0;
 }
+.events-sponsored .row {
+    margin: 0 -5px;
+}
 .events-sponsored .event-sponsored {
-    min-height: 160px;
+    padding: 0;
+    margin: 0 4px;
+    background: #f7f7f7;
+    border: 1px solid #bbbbbb;
+}
+.events-sponsored .event-sponsored .image_box {
+    background: #f7f7f7;
+    border-bottom: 1px solid #bbbbbb;
 }
 .events-sponsored .event-sponsored h3 {
     font-size: 14px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin: 2px 0;
+    margin: 5px 2px;
 }
-.events-sponsored .event-sponsored .events-sponsored-dates .events-sponsored-dates {
-    position: relative;
-    width: 100%;
-    height: 90px;
-}
-.events-sponsored .event-sponsored .events-sponsored-dates .events-sponsored-date {
+.events-sponsored .event-sponsored .event-sponsored-dates .event-sponsored-date {
     text-align: center;
-    color: #999999;
-    height: 90px;
+    color: #777777;
 }
-.events-sponsored .event-sponsored .events-sponsored-dates .events-sponsored-date .events-sponsored-date-day {
+.events-sponsored .event-sponsored .event-sponsored-dates .event-sponsored-date .event-sponsored-date-day {
     font-family: Georgia, "Times New Roman", Times, serif;
-    font-size: 36px;
+    font-size: 34px;
     text-transform: uppercase;
     line-height: 1;
 }
-.events-sponsored .event-sponsored .events-sponsored-dates .events-sponsored-date .events-sponsored-date-location {
+.events-sponsored .event-sponsored .event-sponsored-dates .event-sponsored-date .event-sponsored-date-location {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin: 5px 0;
 
 }
 
