@@ -868,7 +868,7 @@ form textarea[expandable] {
 }
 /* Banner */
 #wall .banner {
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 /* Post Multimedia */
 .post .video-container {   
