@@ -28,7 +28,8 @@ While working on javascripts or css files, run `php app/console assetic:dump` to
 3) Debugging
 ------------
 
-Do you want to avoid the painful experience of 500-HTTP status blank pages? Run `tail -f app/logs/<env>.log` in a separate terminal.  
+Do you want to avoid the painful experience of 500-HTTP status blank pages? Run `tail -f app/logs/<env>.log` in a separate terminal.
+If you want to remove also verbose junk use `rm -fr app/logs/<env>.log; touch -f app/logs/<env>.log; tail -f app/logs/<env>.log | grep -vE 'event.DEBUG'`.
 
 [1]: http://lesscss.org/
 [2]: http://nodejs.org/
