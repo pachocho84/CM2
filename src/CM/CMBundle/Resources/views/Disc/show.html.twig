@@ -74,7 +74,11 @@
         </div>
 
         <div class="col-md-12 col-lg-4">
-            <div data-ajax-url="{{ path('disc_lasts', {object: disc.post.publisherType, objectId: disc.post.publisher.id, exclude: disc.id, limit: 3}) }}"></div>
+            <div data-ajax-url="{{ path('disc_latests', {object: disc.post.publisherType, objectId: disc.post.publisher.id, exclude: disc.id, limit: 3}) }}"></div>
+
+            <div data-ajax-url="{{ path('disc_sponsored') }}"></div>
+
+            <div data-ajax-url="{{ path('wall_banner', {count: 1}) }}"></div>
         </div>
     </div>
 {% endblock %}

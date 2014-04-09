@@ -61,8 +61,12 @@ class ArticleRepository extends BaseRepository
         }
         
         if ($options['userId']) {
-            $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
-            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
+            $count->join('d.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
+            $query->join('d.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
         }
         
         if ($options['pageId']) {
@@ -109,5 +113,103 @@ class ArticleRepository extends BaseRepository
             ->andWhere('t.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->getQuery()
             ->getSingleResult();
+    }
+
+    public function getLatests($options = array())
+    {
+        $options = self::getOptions($options);
+        
+        $count = $this->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->join('a.post', 'p');
+
+        $query = $this->createQueryBuilder('a')
+            ->select('a, t, p, i')
+            ->leftJoin('a.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->join('a.post', 'p')
+            ->leftJoin('a.image', 'i')
+            ->orderBy('p.createdAt', 'desc');
+        if (!is_null($options['exclude'])) {
+            $count->andWhere('a.id != :exclude')->setParameter('exclude', $options['exclude']);
+            $query->andWhere('a.id != :exclude')->setParameter('exclude', $options['exclude']);
+        }
+        if (!is_null($options['userId'])) {
+            $count->join('a.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
+            $query->join('a.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
+        }
+        if (!is_null($options['pageId'])) {
+            $count->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+            $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $count->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
+        }
+
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+
+    public function countLatests($options = array())
+    {
+        $options = self::getOptions($options);
+        
+        $query = $this->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->join('a.post', 'p')
+            ->orderBy('p.createdAt', 'desc');
+        if (!is_null($options['userId'])) {
+            $query->join('a.entityUsers', 'eu', '', '', 'eu.userId')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
+        }
+        if (!is_null($options['pageId'])) {
+            $query->andWhere('p.pageId = :page_id')
+                ->setParameter('page_id', $options['pageId']);
+        }
+        if (!is_null($options['groupId'])) {
+            $query->andWhere('p.groupId = :group_id')
+                ->setParameter('group_id', $options['groupId']);
+        }
+
+        return $query->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getSponsored(array $options = array())
+    {   
+        $options = self::getOptions($options);
+        
+        $sponsored = $this->getEntityManager()->createQueryBuilder()
+            ->select('partial s.{id, entityId, views, start, end}, partial a.{id}')
+            ->from('CMBundle:Sponsored','s')
+            ->join('s.entity', 'a', 'with', 'a instance of '.Article::className())
+            ->andWhere('s.start <= :now')
+            ->andWhere('s.end >= :now')
+            ->setParameter(':now', new \DateTime)
+            ->getQuery()
+            ->getResult();
+
+        if (count($sponsored) == 0) return null;
+
+        shuffle($sponsored);
+        $sponsored = array_slice($sponsored, 0, $options['limit']);
+        
+        $this->getEntityManager()->createQueryBuilder()
+            ->update('CMBundle:Sponsored', 's')
+            ->set('s.views', 's.views + 1')
+            ->where('s.id in (:ids)')->setParameter('ids', array_map(function($i) { return $i->getId(); }, $sponsored))
+            ->getQuery()->execute();
+
+        return $this->createQueryBuilder('a')
+            ->select('a, t, i')
+            ->leftJoin('a.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->leftJoin('a.image', 'i')
+            ->andWhere('a.id IN (:ids)')->setParameter('ids', array_map(function($i) { return $i->getEntityId(); }, $sponsored))
+            ->getQuery()
+            ->getResult();
     }
 }

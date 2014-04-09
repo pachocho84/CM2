@@ -9,13 +9,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class WorkCollectionType extends AbstractType
 {
-        /**
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder->add('works', 'collection', array(
+    
+{        $builder->add('works', 'collection', array(
                 'label' => 'Add works',
                 'required' => false,
                 'type' => new WorkType,

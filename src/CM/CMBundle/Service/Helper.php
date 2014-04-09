@@ -27,18 +27,31 @@ class Helper
         $this->localeDetector = $localeDetector;
     }
 
-    public static function className($object)
+    public function getAggregate($object)
     {
         if ($pos = strpos($object, '[')) {
+            $aggregate = substr($object, $pos + 1, -1);
             $object = substr($object, 0, $pos);
-            $aggregate = substr($object, $pos);
         }
         try {
             $name = new \ReflectionClass(is_string($object) ? $object : get_class($object));
         } catch (\Exception $e) {
             throw new \Exception($object.' is not a known class.');
         }
-        return $name->getShortName().(isset($aggregate) ? $aggregate : '');
+        return (isset($aggregate) ? array('name' => $name->getShortName(), 'aggregate' => $aggregate) : null);
+    }
+
+    public static function className($object)
+    {
+        if ($pos = strpos($object, '[')) {
+            $object = substr($object, 0, $pos);
+        }
+        try {
+            $name = new \ReflectionClass(is_string($object) ? $object : get_class($object));
+        } catch (\Exception $e) {
+            throw new \Exception($object.' is not a known class.');
+        }
+        return $name->getShortName();
     }
 
     public static function fullClassName($shortName)
@@ -55,7 +68,7 @@ class Helper
         $formatter = new \IntlDateFormatter(
             $this->localeDetector->getLocale(),
             \IntlDateFormatter::SHORT,
-            \IntlDateFormatter::SHORT,
+            \IntlDateFormatter::NONE,
             $this->timezoneDetector->getTimezone(),
             \IntlDateFormatter::GREGORIAN,
             ''
@@ -95,14 +108,14 @@ class Helper
         {
             case 'Image':
                 return $this->em->getRepository('CMBundle:Image')->getImagesByIds($objectId, array('limit' => 6));
+            case (preg_match('/Comment\[.*\]$/', $object) ? true : false):
+                return $this->em->getRepository('CMBundle:Comment')->getComments($objectId);
             case 'Comment':
                 return $this->em->getRepository('CMBundle:Comment')->findOneById($objectId);
-            case 'Comment[]':
-                return $this->em->getRepository('CMBundle:Comment')->getComments(array_slice($objectId, -4, 4));
+            case (preg_match('/Like\[.*\]$/', $object) ? true : false):
+                return $this->em->getRepository('CMBundle:Like')->getLikes($objectId);
             case 'Like':
                 return $this->em->getRepository('CMBundle:Like')->findOneById($objectId);
-            case 'Like[]':
-                return $this->em->getRepository('CMBundle:Like')->getLikes(array_slice($objectId, -4, 4));
             case 'Fan':
                 return $this->em->getRepository('CMBundle:Fan')->getFans($objectId);
             default:

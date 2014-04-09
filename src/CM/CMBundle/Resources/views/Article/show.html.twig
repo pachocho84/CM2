@@ -1,41 +1,85 @@
 {% extends 'CMBundle::layout.html.twig' %}
+{% set noColumns = true %}
+
+{% block title %}{{ article.getTitle }}{% endblock %}
+{% set meta = {
+    description: article|short_text({max: 155, stripped: true}),
+    image: article.image|default_img|imagine_filter('full')
+} %}
+
+{% block bodyHeading %}
+    <div class="row">
+        <div class="col-md-8 col-lg-9">
+            <h2>{{ icon('Article') }} {{ article }}</h2>
+            {% if article.getSubtitle is not null %}<h3>{{ article.getSubtitle }}</h3>{% endif %}
+        </div>
+        <div class="col-md-4 col-lg-3">
+            <div class="heading-buttons">
+                {% if is_granted('ROLE_USER') %}
+                    <div class="btn-group btn-group-sm">
+                        {{ include('CMBundle:Like:likeActions.html.twig', {post: article.post, button: true, selector: '#social'}) }}
+                        <a href="{# {{ path('post_show', {post_id: postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }} {{ article.post.comments|length }}</a>
+                    </div>
+                {% endif %}
+                {% if can_manage(article) %}
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ path('article_edit', {id: article.id, slug: article.getSlug}) }}" class="btn btn-default">{{ icon('Edit') }} {{ "Edit"|trans }}</a>
+                        <a href="{{ path('article_delete', {id: article.id}) }}" class="btn btn-default" {{ modal({title: 'article delete'|trans, text: 'Are you sure you want to delete this article?'|trans, size: 'sm'}) }}>{{ icon('Delete') }} {{ "Delete"|trans }}</a>
+                    </div>
+                {% endif %}
+                {{ include('CMBundle:EntityUser:requestAdd.html.twig', {entity: article}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
 
 {% block body %}
+    <div class="row">
+        <div class="col-md-4 col-lg-3">
+            <div data-ajax-url="{{ path('image_entity', {id: article.id, slug: article.getSlug, type: 'articles'}) }}"></div>
 
-    <div class="box-heading">
-        <h3>{{ icon('Article')|raw }} <span>{{ article }}</span></h3>
-    </div>
-
-    {% if can_manage(article) %}
-        <div class="media">
-            <div class="btn pull-left alert-info"><a href="{{ path('article_edit', {'id': article.id, 'slug': article.getSlug}) }}">{{ "Edit"|trans }}</a></div>
-            <div class="btn pull-right alert-danger"><a href="{{ path('article_delete', {'id': article.id}) }}">{{ "Delete"|trans }}</a></div>
+            <div data-ajax-url="{{ path('multimedia_entity', {id: article.id, type: article|class_name}) }}"></div>
+            
+            <div data-ajax-url="{{ path('entityuser_protagonists', {id: article.id}) }}"></div>
         </div>
-    {% endif %}
 
+        <div class="col-md-8 col-lg-5">
+            <div class="box">
+                <div class="box-heading">
+                    <h2>{{ icon('Info') }} {{ 'Details'|trans }}</h2>
+                </div>
+                <div class="box-body">
+                    <div class="object">
+                        <p>
+                            {{ "Created by %publisher%"|trans({'%publisher%': '<a ' ~ publisher_box(article.post.publisher) ~ ' href="' ~ path(article.post.publisherType ~ '_show', {slug: article.post.publisher.slug}) ~ '">' ~ article.post.publisher~'</a>'})|raw }}
+                            &middot;
+                            <a href="{{ path('article_category', {categorySlug: article.category.getSlug}) }}">{{ article.category|capitalize }}</a>
+                        </p>
+                    </div>
+                    <div class="media object">
+                        <div>
+                            <div class="text-justify">{{ article.getText|raw }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    {{ include('CMBundle:EntityUser:requestAdd.html.twig', {'entity': article}) }}
+            <div data-ajax-url="{{ path('wall_entity', {id: article.id}) }}"></div>
+        </div>
 
-    <ul>
-        {% for protagonist in article.entityUsers if protagonist.status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_ACTIVE') %}
-            <li>
-                {{ protagonist.id }} : {{ protagonist.user }}
-                {% for userTag in protagonist.userTags %}
-                    <ul>
-                        <li>{{ tags[userTag] }}</li>
-                    </ul>
-                {% endfor %}
-            </li>
-        {% endfor %}
-    </ul>
+        <div class="col-md-12 col-lg-4">
+            <div data-ajax-url="{{ path('article_latests', {object: article.post.publisherType, objectId: article.post.publisher.id, exclude: article.id, limit: 3}) }}"></div>
 
-    <div class="media">
-        {% if article.getImages|length > 0 %}
-            <img src='{{ asset(uploaded_images_full_dir ~ '/' ~ article.images[0].img) }}' width="200px" />
-        {% endif %}
+            <div data-ajax-url="{{ path('article_sponsored') }}"></div>
 
-        {}
+            <div data-ajax-url="{{ path('wall_banner', {count: 1}) }}"></div>
+        </div>
     </div>
+{% endblock %}
 
-    {{ include('CMBundle::social.html.twig', {'post': article.post}) }}
+{% block javascripts %}
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language={{ app.request.locale }}"></script>
+    {{ parent() }}
 {% endblock %}

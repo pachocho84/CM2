@@ -22,7 +22,7 @@
 
         <div class="media post-heading"{% if updateMore|default(false) and loop is defined and loop.first %} update_more="{{ path(app.request.attributes.get('_route')|replace({_update: ''})~'_update', app.request.attributes.get('_route_params')|merge({lastUpdated: post.updatedAt.timestamp})) }}"{% endif %}>
             
-            {{ show_img_box(post.publisher.img|imagine_filter('avatar'), {width: 50, offset: post.publisher.imgOffset,  link: path(post.publisherType ~ '_show', {slug: post.publisher.slug}), box_attributes: {class: 'pull-left img-rounded'}, publisher_box: post.publisher}) }}
+            {{ show_img_box(post.publisher|default_img|imagine_filter('avatar'), {width: 50, offset: post.publisher.imgOffset,  link: path(post.publisherType ~ '_show', {slug: post.publisher.slug}), box_attributes: {class: 'pull-left img-rounded'}, publisher_box: post.publisher}) }}
         
             <div class="media-body">
         
@@ -47,13 +47,7 @@
         {% endif %}
         
         
-        {% if post.type == constant('CM\\CMBundle\\Entity\\Post::TYPE_AGGREGATE') %}
-            {% for comment in relatedObjects %}
-                {{ comment.id }}
-            {% else %}
-                TODO
-            {% endfor %}
-        {% else  %}
+        {% if post.type != constant('CM\\CMBundle\\Entity\\Post::TYPE_AGGREGATE') %}
             {{ include('CMBundle:'~(post.object|class_name)~':post.html.twig') }}
         {% endif %}
         
@@ -64,6 +58,7 @@
     {% if not inEntity %}
         <div class="box-footer">
             {% if post.type == constant('CM\\CMBundle\\Entity\\Post::TYPE_AGGREGATE') %}
+                {{ include('CMBundle::social.html.twig', {post: post.entity.post}) }}
             {% elseif (post.object|class_name == 'Like' or post.object|class_name == 'Comment') and relatedObjects.imageId is not null %}
                 {{ include('CMBundle::social.html.twig', {post: relatedObjects.image, isImage: true}) }}
             {% elseif (post.object|class_name == 'Like' or post.object|class_name == 'Comment') %}

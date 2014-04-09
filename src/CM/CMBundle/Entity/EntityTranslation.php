@@ -75,7 +75,6 @@ class EntityTranslation
      * @var string
      *
      * @ORM\Column(name="text", type="text", nullable=true)
-     * @Assert\NotBlank
      * @Assert\Length(
      *      groups="Event",
      *      min = "12",

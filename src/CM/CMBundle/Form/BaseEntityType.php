@@ -64,13 +64,19 @@ class BaseEntityType extends AbstractType
                 ->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 'en')))
                 ->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
                     $data = $event->getData();
-                    if (isset($data['translations'])) {
+                    if (isset($data['translations']['title'])) {
                         $data['translations']['title'] = htmlentities($data['translations']['title']);
-                        $data['translations']['subtitle'] = htmlentities($data['translations']['subtitle']);
-                        $data['translations']['extract'] = htmlentities($data['translations']['extract']);
-                        $data['translations']['text'] = htmlentities($data['translations']['text']);
-                        $event->setData($data);
                     }
+                    if (isset($data['translations']['subtitle'])) {
+                        $data['translations']['subtitle'] = htmlentities($data['translations']['subtitle']);
+                    }
+                    if (isset($data['translations']['extract'])) {
+                        $data['translations']['extract'] = htmlentities($data['translations']['extract']);
+                    }
+                    if (isset($data['translations']['text'])) {
+                        $data['translations']['text'] = htmlentities($data['translations']['text']);
+                    }
+                    $event->setData($data);
                 });
         }
         if (in_array('ROLE_ADMIN', $options['roles'])) {

@@ -3,6 +3,7 @@
 namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Work
@@ -32,6 +33,7 @@ class Work
      * @var string
      *
      * @ORM\Column(name="position", type="string", length=150)
+     * @Assert\NotBlank
      */
     private $position;
 
@@ -69,7 +71,7 @@ class Work
     private $userId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="works")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $user;

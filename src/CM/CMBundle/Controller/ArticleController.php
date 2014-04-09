@@ -146,11 +146,11 @@ class ArticleController extends Controller
             $image = new Image;
             $image->setMain(true)
                 ->setUser($user);
-            $article->addImage($image);
+            $article->setImage($image);
 
             $post = $this->get('cm.post_center')->getNewPost($user, $user);
 
-            $article->addPost($post);
+            $article->setPost($post);
         } else {
             $article = $em->getRepository('CMBundle:Article')->getArticle($id, array('locale' => $request->getLocale(), 'protagonists' => true));
             if (!$this->get('cm.user_authentication')->canManage($article)) {
@@ -207,8 +207,6 @@ class ArticleController extends Controller
                 $em->remove($entityUser);
             }
 
-            $article->getHomepageArchive()->setUser($this->getUser());
-
             $em->persist($article);
 
             $em->flush();
@@ -233,6 +231,44 @@ class ArticleController extends Controller
             'joinEntityType' => 'joinArticle'
         );
     }
+    
+    /**
+     * @Route("/lasts/{object}/{objectId}", name="article_latests", requirements={"id" = "\d+"})
+     * @Template
+     */
+    public function latestsAction(Request $request, $object, $objectId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $articles = $em->getRepository('CMBundle:Article')->getLatests(array(
+            $object.'Id' => $objectId,
+            'paginate' => false,
+            'exclude' => $request->get('exclude'),
+            'limit' => $request->get('limit')
+        ));
+
+        if (count($articles) == 0) {
+            return new Response;
+        }
+
+        return array(
+            'articles' => $articles,
+            'link' => $this->generateUrl($articles[0]->getPost()->getPublisherType().'_articles', array('slug' => $articles[0]->getPost()->getPublisher()->getSlug())),
+            'count' => $em->getRepository('CMBundle:Article')->countLatests(array($object.'Id' => $objectId))
+        );
+    }
+    
+    /**
+     * @Route("/sponsored/{limit}", name="article_sponsored", requirements={"limit" = "\d+"})
+     * @Template
+     */
+    public function sponsoredAction(Request $request, $limit = 3)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $sponsored = $em->getRepository('CMBundle:Article')->getSponsored(array('limit' => $limit, 'locale' => $request->getLocale()));
+        
+        return array('sponsoredArticles' => $sponsored);
+    }
 
     /**
      * @Route("/articleDelete/{id}", name="article_delete", requirements={"id" = "\d+"})
@@ -251,21 +287,5 @@ class ArticleController extends Controller
         $em->flush();
 
         return new JsonResponse(array('title' => $article->getTitle()));
-    }
-    
-    /**
-     * @Template
-     */
-    public function sponsoredAction(Request $request, $limit = 3)
-    {
-        $request->setLocale($request->get('_locale')); // TODO: workaround for locale in subsession
-        
-        $sponsored = $this->getDoctrine()->getManager()->getRepository('CMBundle:Article')->getSponsored(array('limit' => $limit, 'locale' => $request->getLocale()));
-        
-        $pagination  = $this->get('knp_paginator')->paginate($sponsored, 1, $limit);
-        
-        $this->getDoctrine()->getManager()->createQuery("UPDATE CMBundle:Sponsored s SET s.views = s.views + 1 WHERE s.id IN (2, 20)")->getResult();
-        
-        return array('sponsored_articles' => $pagination);
     }
 }
