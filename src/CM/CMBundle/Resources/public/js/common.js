@@ -63,45 +63,69 @@ function insertRelationItem(c, d, a) {
     $(c).closest('div').replaceWith(d.item);
 }
 
+function initPopoverPublisher($elem) {
+    $elem.popover({
+        selector: '[popover-publisher]',
+        trigger: 'manual',
+        placement: 'auto top',
+        delay: {show: 1000, hide: 250},
+        container: 'body',
+        html: true,
+        content: function() {
+            var content;
+            $.ajax({
+                url: $(this).attr('data-href'),
+                async: false
+            }).done(function(data) {
+                content = data;
+            });
+            return content;
+        }
+    }).on('mouseenter', function(event) {
+        setTimeout(function() {
+            if ($(event.currentTarget).is(':hover')) {
+                $(event.currentTarget).popover('show');
+                $('.popover').addClass('popover-publisher').on('mouseleave', function () {
+                    $(event.currentTarget).popover('hide');
+                });
+            }
+        }, 1000);
+    }).on('mouseleave', function(event) {
+        setTimeout(function() {
+            if (!$(event.currentTarget).is(':hover') && !$('.popover').is(':hover')) {
+                $(event.currentTarget).popover('hide');
+            }
+        }, 250);
+    });
+}
+
+function initSlideshow($slideshow) {
+    $slideshow.cycle({
+        loader: true,
+        log: false,
+        next: '.box-partner-nav-next',
+        pauseOnHover: true,
+        prev: '.box-partner-nav-prev',
+        slides: '> div',
+        swipe: true,
+        fx: 'scrollHorz'
+    });
+}
+
+function initSlideshowSponsored($slideshow) {
+    $slideshow.cycle({
+        fx: 'scrollVert',
+        log: false,
+        pauseOnHover: true,
+        slides: '> div',
+        speed: 250
+    });
+}
+
 $(function() {
     UserActive.begin();
 
     /* PUBLISHER POPOVER */
-    function initPopoverPublisher($elem) {
-        $elem.popover({
-            selector: '[popover-publisher]',
-            trigger: 'manual',
-            placement: 'auto top',
-            delay: {show: 1000, hide: 250},
-            container: 'body',
-            html: true,
-            content: function() {
-                var content;
-                $.ajax({
-                    url: $(this).attr('data-href'),
-                    async: false
-                }).done(function(data) {
-                    content = data;
-                });
-                return content;
-            }
-        }).on('mouseenter', function(event) {
-            setTimeout(function() {
-                if ($(event.currentTarget).is(':hover')) {
-                    $(event.currentTarget).popover('show');
-                    $('.popover').addClass('popover-publisher').on('mouseleave', function () {
-                        $(event.currentTarget).popover('hide');
-                    });
-                }
-            }, 1000);
-        }).on('mouseleave', function(event) {
-            setTimeout(function() {
-                if (!$(event.currentTarget).is(':hover') && !$('.popover').is(':hover')) {
-                    $(event.currentTarget).popover('hide');
-                }
-            }, 250);
-        });
-    }
     initPopoverPublisher($('[popover-publisher]'));
     $(document).on('mouseenter', '[popover-publisher]', function(event) {
         initPopoverPublisher($(event.currentTarget));
@@ -740,18 +764,6 @@ $(function() {
 
 
     /* SLIDESHOW */
-    function initSlideshow($slideshow) {
-        $slideshow.cycle({
-            loader: true,
-            log: false,
-            next: '.box-partner-nav-next',
-            pauseOnHover: true,
-            prev: '.box-partner-nav-prev',
-            slides: '> div',
-            swipe: true,
-            fx: 'scrollHorz'
-        });
-    }
     $(document).on('loaded.data-ajax', function(event, data) {
         initSlideshow($(data).find('.cycle-slideshow'));
     });
@@ -759,16 +771,6 @@ $(function() {
 
 
     /* SPONSORED */
-    function initSlideshowSponsored($slideshow) {
-        $slideshow.cycle({
-            fx: 'scrollVert',
-            log: false,
-            pauseOnHover: true,
-            slides: '> div',
-            speed: 250
-        });
-    }
-
     $(document).on('loaded.data-ajax', function(event, data) {
         initSlideshowSponsored($(data).find('.event-sponsored-dates'));
     });

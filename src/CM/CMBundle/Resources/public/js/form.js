@@ -1,3 +1,144 @@
+initDatetimepicker = function(elem) {
+    $(elem).datetimepicker({
+        language: 'it',
+        format: $(elem).attr('datetimepicker-format'),
+        autoclose: true,
+        todayBtn: true,
+        todayHighlight: true,
+        pickerPosition: "bottom-left",
+        linkField: $(elem).siblings('input[type="hidden"]').attr('id'),
+        linkFormat: "yyyy-mm-dd hh:ii"
+    });
+}
+
+initDatepicker = function(elem) {
+    $(elem).datetimepicker({
+        pickTime: false,
+        language: 'it',
+        format: $(elem).attr('datepicker-format'),
+        autoclose: true,
+        todayBtn: true,
+        todayHighlight: true,
+        pickerPosition: "bottom-left",
+        linkField: $(elem).siblings('input[type="hidden"]').attr('id'),
+        linkFormat: "yyyy-mm-dd"
+    });
+}
+
+function initializePlaces(index) {
+    canvas = $('[gmap-canvas]').get(index);
+    input = $(canvas).parent().parent().parent().find('[places-autocomplete]').get(0);
+
+    var mapOptions = {
+        center: new google.maps.LatLng(45.4654542, 9.186515999999999),
+        zoom: 14
+    };
+    var map = new google.maps.Map(canvas,
+        mapOptions);
+
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.bindTo('bounds', map);
+
+    var infowindow = new google.maps.InfoWindow();
+    var marker = new google.maps.Marker({
+        map: map
+    });
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+        infowindow.close();
+        marker.setVisible(false);
+        var place = autocomplete.getPlace();
+        if (!place.geometry) {
+            return;
+        }
+
+        // If the place has a geometry, then present it on a map.
+        if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+        } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);  // Why 17? Because it looks good.
+        }
+/*
+      marker.setIcon(({
+            url: place.icon,
+            size: new google.maps.Size(71, 71),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(17, 34),
+            scaledSize: new google.maps.Size(35, 35)
+        }));
+*/
+        marker.setPosition(place.geometry.location);
+        marker.setVisible(true);
+
+        var address = '';
+        if (place.address_components) {
+            address = [
+                (place.address_components[0] && place.address_components[0].short_name || ''),
+                (place.address_components[1] && place.address_components[1].short_name || ''),
+                (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+        }
+
+        infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+        $(canvas).parent().parent().parent().find('[address-autocomplete]').val(address);
+        $(canvas).parent().parent().parent().find('[places-autocomplete]').val(place.name);
+        $(canvas).parent().parent().parent().find('[address-coordinates]').val(place.geometry.location.lat() + ',' + place.geometry.location.lng());
+        infowindow.open(map, marker);
+    });
+}
+
+function initTags($protagonist) {
+    $protagonist.find('input[tags]').each(function(i, elem) {
+        var source = $.map($(elem).closest('.row').find('select[tags] option'), function(e) { return {label: $(e).html(), value: $(e).attr('value')}; } );
+        $(elem).tokenfield({
+            autocomplete: {
+                source: source,
+                focus: function() {
+                  // prevent value inserted on focus
+                  return false;
+                },
+                select: function(event, ui) {
+                    event.preventDefault();
+
+                    $('.ui-autocomplete-input').autocomplete('close');
+                }
+            },
+            showAutocompleteOnFocus: true
+        });
+
+        $(elem).closest('.row').find('select[tags] option[selected]').each(function(i, e) {
+            $(elem).tokenfield('createToken', {label: $(e).html(), value: $(e).attr('value')});
+        }).filter('placeholder').remove();
+    });
+}
+
+function imagePosition($img, $target) {
+    var $box = $img.closest('.image_box');
+    $box.css('cursor', 'move');
+
+    $img.draggable({
+        scroll: false,
+        drag: function(event, ui) {
+            if (ui.position.top > 0) {
+                ui.position.top = 0;
+            } else if (ui.position.top < $box.height() - $img.outerHeight()) {
+                ui.position.top = $box.height() - $img.outerHeight();
+            }
+            if (ui.position.left > 0) {
+                ui.position.left = 0;
+            } else if (ui.position.left < $box.width() - $img.outerWidth()) {
+                ui.position.left = $box.width() - $img.outerWidth();
+            } 
+        },
+        stop: function(event, ui) {
+            offsetX = Math.abs(100 * $img.position().left / $img.outerWidth()).toFixed(2);
+            offsetY = Math.abs(100 * $img.position().top / $img.outerHeight()).toFixed(2);
+            $target.val(Math.max(offsetX, offsetY));
+        }
+    });
+}
+
 $(function() {
     /* PROTAGONIST */
     if($('#protagonists_finder').length > 0) {
@@ -115,18 +256,6 @@ $(function() {
 
     /* DATETIME PICKER & INPUT MASK */
     // datetime
-    initDatetimepicker = function(elem) {
-        $(elem).datetimepicker({
-            language: 'it',
-            format: $(elem).attr('datetimepicker-format'),
-            autoclose: true,
-            todayBtn: true,
-            todayHighlight: true,
-            pickerPosition: "bottom-left",
-            linkField: $(elem).siblings('input[type="hidden"]').attr('id'),
-            linkFormat: "yyyy-mm-dd hh:ii"
-        });
-    }
     $('[datetimepicker-container]').each(function(i, elem) {
         initDatetimepicker(elem);
     });
@@ -136,19 +265,6 @@ $(function() {
         });
     });
     // date
-    initDatepicker = function(elem) {
-        $(elem).datetimepicker({
-            pickTime: false,
-            language: 'it',
-            format: $(elem).attr('datepicker-format'),
-            autoclose: true,
-            todayBtn: true,
-            todayHighlight: true,
-            pickerPosition: "bottom-left",
-            linkField: $(elem).siblings('input[type="hidden"]').attr('id'),
-            linkFormat: "yyyy-mm-dd"
-        });
-    }
     $('[datepicker-container]').each(function(i, elem) {
         initDatepicker(elem);
     });
@@ -163,69 +279,6 @@ $(function() {
     /* AUTOCOMPLETE */
 
     // Places autocomplete
-    function initializePlaces(index) {
-        canvas = $('[gmap-canvas]').get(index);
-        input = $(canvas).parent().parent().parent().find('[places-autocomplete]').get(0);
-
-        var mapOptions = {
-            center: new google.maps.LatLng(45.4654542, 9.186515999999999),
-            zoom: 14
-        };
-        var map = new google.maps.Map(canvas,
-            mapOptions);
-
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        autocomplete.bindTo('bounds', map);
-
-        var infowindow = new google.maps.InfoWindow();
-        var marker = new google.maps.Marker({
-            map: map
-        });
-
-        google.maps.event.addListener(autocomplete, 'place_changed', function() {
-            infowindow.close();
-            marker.setVisible(false);
-            var place = autocomplete.getPlace();
-            if (!place.geometry) {
-                return;
-            }
-
-            // If the place has a geometry, then present it on a map.
-            if (place.geometry.viewport) {
-                map.fitBounds(place.geometry.viewport);
-            } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(17);  // Why 17? Because it looks good.
-            }
-  /*
-          marker.setIcon(({
-                url: place.icon,
-                size: new google.maps.Size(71, 71),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(17, 34),
-                scaledSize: new google.maps.Size(35, 35)
-            }));
-*/
-            marker.setPosition(place.geometry.location);
-            marker.setVisible(true);
-
-            var address = '';
-            if (place.address_components) {
-                address = [
-                    (place.address_components[0] && place.address_components[0].short_name || ''),
-                    (place.address_components[1] && place.address_components[1].short_name || ''),
-                    (place.address_components[2] && place.address_components[2].short_name || '')
-                ].join(' ');
-            }
-
-            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-            $(canvas).parent().parent().parent().find('[address-autocomplete]').val(address);
-            $(canvas).parent().parent().parent().find('[places-autocomplete]').val(place.name);
-            $(canvas).parent().parent().parent().find('[address-coordinates]').val(place.geometry.location.lat() + ',' + place.geometry.location.lng());
-            infowindow.open(map, marker);
-        });
-    }
-    
     $('[gmap-canvas]').each(function(i) {
         google.maps.event.addDomListener(window, 'load', initializePlaces(i));
     });
@@ -451,30 +504,6 @@ $(function() {
 
 
     /* TAGS */
-    function initTags($protagonist) {
-        $protagonist.find('input[tags]').each(function(i, elem) {
-            var source = $.map($(elem).closest('.row').find('select[tags] option'), function(e) { return {label: $(e).html(), value: $(e).attr('value')}; } );
-            $(elem).tokenfield({
-                autocomplete: {
-                    source: source,
-                    focus: function() {
-                      // prevent value inserted on focus
-                      return false;
-                    },
-                    select: function(event, ui) {
-                        event.preventDefault();
-
-                        $('.ui-autocomplete-input').autocomplete('close');
-                    }
-                },
-                showAutocompleteOnFocus: true
-            });
-
-            $(elem).closest('.row').find('select[tags] option[selected]').each(function(i, e) {
-                $(elem).tokenfield('createToken', {label: $(e).html(), value: $(e).attr('value')});
-            }).filter('placeholder').remove();
-        });
-    }
     $(document).on('protagonist-added', '.protagonists_user', function(event) {
         initTags($(event.currentTarget));
     });
@@ -500,31 +529,6 @@ $(function() {
 
 
     /* IMAGE POSITIONING */
-    function imagePosition($img, $target) {
-        var $box = $img.closest('.image_box');
-        $box.css('cursor', 'move');
-
-        $img.draggable({
-            scroll: false,
-            drag: function(event, ui) {
-                if (ui.position.top > 0) {
-                    ui.position.top = 0;
-                } else if (ui.position.top < $box.height() - $img.outerHeight()) {
-                    ui.position.top = $box.height() - $img.outerHeight();
-                }
-                if (ui.position.left > 0) {
-                    ui.position.left = 0;
-                } else if (ui.position.left < $box.width() - $img.outerWidth()) {
-                    ui.position.left = $box.width() - $img.outerWidth();
-                } 
-            },
-            stop: function(event, ui) {
-                offsetX = Math.abs(100 * $img.position().left / $img.outerWidth()).toFixed(2);
-                offsetY = Math.abs(100 * $img.position().top / $img.outerHeight()).toFixed(2);
-                $target.val(Math.max(offsetX, offsetY));
-            }
-        });
-    }
     if ($('#profile-pic').length == 1) {
         imagePosition($('#profile-pic').find('img'), $('[img-offset-field]'));
     }
