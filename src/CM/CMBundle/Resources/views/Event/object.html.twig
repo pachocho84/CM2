@@ -1,12 +1,10 @@
 <li class="object">
     <div class="media">
         
-        {% if date.event.image is not null %}
-            <a href="{{ path('event_show', { id: date.event.id, slug: date.event.getSlug }) }}" class="pull-left img-thumbnail">
-                {{ show_img_box(date.event.image|default_img|imagine_filter('medium'), {width: 200, height: 133, offset: date.event.imgOffset}) }}
-            </a>
-        {% endif %}
-    
+        <a href="{{ path('event_show', { id: date.event.id, slug: date.event.getSlug }) }}" class="pull-left img-thumbnail">
+            {{ show_img_box(date.event.image|default_img|imagine_filter('medium'), {width: 200, height: 133, offset: date.event.imgOffset}) }}
+        </a>
+            
         <div class="media-body">
         
             {% set publisher = date.event.post.publisher %}

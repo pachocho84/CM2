@@ -114,6 +114,7 @@ $(function() {
 
 
     /* DATETIME PICKER & INPUT MASK */
+    // datetime
     initDatetimepicker = function(elem) {
         $(elem).datetimepicker({
             language: 'it',
@@ -132,6 +133,28 @@ $(function() {
     $('body').on('collection-added', '.add_date_link', function(event, elem) {
         $(elem).find('[datetimepicker-container]').each(function(i, elem) {
             initDatetimepicker(elem);
+        });
+    });
+    // date
+    initDatepicker = function(elem) {
+        $(elem).datetimepicker({
+            pickTime: false,
+            language: 'it',
+            format: $(elem).attr('datepicker-format'),
+            autoclose: true,
+            todayBtn: true,
+            todayHighlight: true,
+            pickerPosition: "bottom-left",
+            linkField: $(elem).siblings('input[type="hidden"]').attr('id'),
+            linkFormat: "yyyy-mm-dd"
+        });
+    }
+    $('[datepicker-container]').each(function(i, elem) {
+        initDatepicker(elem);
+    });
+    $('body').on('collection-added', '.add_date_link', function(event, elem) {
+        $(elem).find('[datepicker-container]').each(function(i, elem) {
+            initDatepicker(elem);
         });
     });
     

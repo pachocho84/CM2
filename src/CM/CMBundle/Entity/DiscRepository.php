@@ -111,7 +111,7 @@ class DiscRepository extends BaseRepository
             ->getSingleResult();
     }
 
-    public function getLast($options = array())
+    public function getLatests($options = array())
     {
         $options = self::getOptions($options);
         
@@ -149,7 +149,7 @@ class DiscRepository extends BaseRepository
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
-    public function countLasts($options = array())
+    public function countLatests($options = array())
     {
         $options = self::getOptions($options);
         
@@ -183,6 +183,41 @@ class DiscRepository extends BaseRepository
             ->where('t.discId = :id')->setParameter('id', $id)
             ->orderBy('t.number')
             ->addOrderBy('t.id')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getSponsored(array $options = array())
+    {   
+        $options = self::getOptions($options);
+        
+        $sponsored = $this->getEntityManager()->createQueryBuilder()
+            ->select('partial s.{id, entityId, views, start, end}, partial d.{id}')
+            ->from('CMBundle:Sponsored','s')
+            ->join('s.entity', 'd', 'with', 'd instance of '.Disc::className())
+            ->andWhere('s.start <= :now')
+            ->andWhere('s.end >= :now')
+            ->setParameter(':now', new \DateTime)
+            ->getQuery()
+            ->getResult();
+
+        if (count($sponsored) == 0) return null;
+
+        shuffle($sponsored);
+        $sponsored = array_slice($sponsored, 0, $options['limit']);
+        
+        $this->getEntityManager()->createQueryBuilder()
+            ->update('CMBundle:Sponsored', 's')
+            ->set('s.views', 's.views + 1')
+            ->where('s.id in (:ids)')->setParameter('ids', array_map(function($i) { return $i->getId(); }, $sponsored))
+            ->getQuery()->execute();
+
+        return $this->createQueryBuilder('d')
+            ->select('d, dt, t, i')
+            ->leftJoin('d.discTracks', 'dt')
+            ->leftJoin('d.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->leftJoin('d.image', 'i')
+            ->andWhere('d.id IN (:ids)')->setParameter('ids', array_map(function($i) { return $i->getEntityId(); }, $sponsored))
             ->getQuery()
             ->getResult();
     }

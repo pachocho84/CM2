@@ -101,6 +101,17 @@ class UserRepository extends BaseRepository
             ->getQuery()->getResult();
     }
 
+    public function getWith($id, $what = array())
+    {
+        $query = $this->createQueryBuilder('u')
+            ->select('u')
+            ->andWhere('u.id = :id')->setParameter('id', $id);
+            foreach ($what as $prop) {
+                $query->leftJoin('u.'.$prop, $prop);
+            }
+        return $query->getQuery()->getSingleResult();
+    }
+
     public function search($q, $limit)
     {
         return $this->createQueryBuilder('u')

@@ -215,14 +215,14 @@ class DiscController extends Controller
     }
     
     /**
-     * @Route("/lasts/{object}/{objectId}", name="disc_lasts", requirements={"id" = "\d+"})
+     * @Route("/lasts/{object}/{objectId}", name="disc_latests", requirements={"id" = "\d+"})
      * @Template
      */
-    public function lastsAction(Request $request, $object, $objectId)
+    public function latestsAction(Request $request, $object, $objectId)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $discs = $em->getRepository('CMBundle:Disc')->getLast(array(
+        $discs = $em->getRepository('CMBundle:Disc')->getLatests(array(
             $object.'Id' => $objectId,
             'paginate' => false,
             'exclude' => $request->get('exclude'),
@@ -236,8 +236,20 @@ class DiscController extends Controller
         return array(
             'discs' => $discs,
             'link' => $this->generateUrl($discs[0]->getPost()->getPublisherType().'_discs', array('slug' => $discs[0]->getPost()->getPublisher()->getSlug())),
-            'count' => $em->getRepository('CMBundle:Disc')->countLasts(array($object.'Id' => $objectId))
+            'count' => $em->getRepository('CMBundle:Disc')->countLatests(array($object.'Id' => $objectId))
         );
+    }
+    
+    /**
+     * @Route("/sponsored/{limit}", name="disc_sponsored", requirements={"limit" = "\d+"})
+     * @Template
+     */
+    public function sponsoredAction(Request $request, $limit = 3)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $sponsored = $em->getRepository('CMBundle:Disc')->getSponsored(array('limit' => $limit, 'locale' => $request->getLocale()));
+        
+        return array('sponsoredDiscs' => $sponsored);
     }
 
     /**
@@ -258,22 +270,6 @@ class DiscController extends Controller
 
         return new JsonResponse(array('title' => $disc->getTitle()));
     }
-    
-//     /**
-//      * @Template
-//      */
-//     public function sponsoredAction(Request $request, $limit = 3)
-//     {
-//         $request->setLocale($request->get('_locale')); // TODO: workaround for locale in subsession
-        
-//         $sponsored = $this->getDoctrine()->getManager()->getRepository('CMBundle:Event')->getSponsored(array('limit' => $limit, 'locale' => $request->getLocale()));
-        
-//         $pagination  = $this->get('knp_paginator')->paginate($sponsored, 1, $limit);
-        
-//         $this->getDoctrine()->getManager()->createQuery("UPDATE CMBundle:Sponsored s SET s.views = s.views + 1 WHERE s.id IN (2, 20)")->getResult();
-        
-//         return array('sponsored_events' => $pagination);
-//     }
 
     /**
      * @Route("/{id}/{slug}", name="disc_show", requirements={"id" = "\d+"})

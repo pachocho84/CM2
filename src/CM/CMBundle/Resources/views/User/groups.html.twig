@@ -2,37 +2,89 @@
 
 {% form_theme form _self %}
 
+{% block _cm_cmbundle_groupUser_collection_groups_widget %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    <div {{ block('widget_container_attributes') }}>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th colspan="2"></th>
+                    <th>{{ 'status'|trans }}</th>
+                    <th></th>
+                    <th>{{ 'visible on my profile'|trans }}</th>
+                    <th>{{ 'hidden on my profile'|trans }}</th>
+                    <th>{{ 'send me a request'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ block('form_rows') }}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
 {% block _cm_cmbundle_groupUser_collection_groups_entry_widget %}
-    <div class="media">
-        {{ show_img_box(form.vars.data.group|default_img|imagine_filter('small'), {width: 50, box_attributes: {class: 'pull-left img-thumbnail'}}) }}
+    {{ form_row(form.joinArticle) }}
+    {{ form_row(form.joinDisc) }}
+    {{ form_row(form.joinEvent) }}
+    {% if form.vars.data.group.creatorId == app.user.id or is_admin(form.vars.data.group) %}
+        <tr>
+            <td></td>
 
-        <div class="media-body">
-        
-            <h4 class="media-heading"><a href="{{ path('group_show', {slug: form.vars.data.group.getSlug}) }}">{{ form.vars.data.group }}</a></h4>
+            <td colspan="6">
+                {% if form.vars.data.group.creatorId == app.user.id %}
+                    {{ 'Creator'|trans }}
+                {% endif %}
+                {% if form.vars.data.group.creatorId == app.user.id and is_admin(form.vars.data.group) %}
+                &middot;
+                {% endif %}
+                {% if is_admin(form.vars.data.group) %}
+                    {{ 'Admin'|trans }}
+                    <a href="{{ path('group_edit', {slug: form.vars.data.group.slug})}}">{{ 'Edit group'|trans }}</a>,
+                    <a href="{{ path('group_members_settings', {slug: form.vars.data.group.slug}) }}">{{ 'Manage members'|trans }}</a>,
+                    <a href="{{ path('group_delete', {slug: form.vars.data.group.slug})}}">{{ 'Delete group'|trans }}</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endif %}
+{% endblock %}
 
-            {% if form.vars.data.status != constant('CM\\CMBundle\\Entity\\form.vars.data.groupUser::STATUS_ACTIVE') %}
-                {{ form.vars.data.status }}
-            {% endif %}
+{% block _cm_cmbundle_groupUser_collection_groups_entry_joinArticle_widget %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
+    <tr {{ block('widget_container_attributes') }}>
+        <td rowspan="3">{{ show_img_box(form.parent.vars.data.group|default_img|imagine_filter('small'), {width: 50, box_attributes: {class: 'pull-left img-thumbnail'}}) }}</td>
 
-            {{ form_row(form.joinArticle) }}
-            {{ form_row(form.joinDisc) }}
-            {{ form_row(form.joinEvent) }}
+        <td rowspan="3"><a href="{{ path('group_show', {slug: form.parent.vars.data.group.getSlug}) }}">{{ form.parent.vars.data.group }}</a></td>
 
-            {% if form.vars.data.group.creatorId == app.user.id %}
-                {{ 'Creator'|trans }}
-            {% endif %}
-            {% if is_admin(form.vars.data.group) %}
-                {{ 'Admin'|trans }}
-                <ul>
-                    <li><a href="{{ path('group_edit', {slug: form.vars.data.group.slug})}}">{{ 'Edit'|trans }}</a></li>
-                    <li><a href="{{ path('group_members_settings', {slug: form.vars.data.group.slug}) }}">{{ 'Manage members'|trans }}</a></li>
-                    <li><a href="{{ path('group_delete', {slug: form.vars.data.group.slug})}}">{{ 'Delete group'|trans }}</a></li>
-                </ul>
-            {% endif %}
+        <td rowspan="3">{{ form.parent.vars.data.status }}</td>
 
-        </div><!-- END Media Body -->
+        <td class="join-input">{{ label|trans({}, translation_domain) }}</td>
+        {% for child in form.children %}<td>{{ form_row(child) }}</td>{% endfor %}
+    </tr>
+{% endblock %}
 
-    </div><!-- END Object -->
+{% block _cm_cmbundle_groupUser_collection_groups_entry_joinDisc_widget %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
+    <tr {{ block('widget_container_attributes') }}>
+        <td class="join-input">{{ label|trans({}, translation_domain) }}</td>
+        {% for child in form.children %}<td>{{ form_row(child) }}</td>{% endfor %}
+    </tr>
+{% endblock %}
+
+{% block _cm_cmbundle_groupUser_collection_groups_entry_joinEvent_widget %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
+    <tr {{ block('widget_container_attributes') }}>
+        <td class="join-input">{{ label|trans({}, translation_domain) }}</td>
+        {% for child in form.children %}<td>{{ form_row(child) }}</td>{% endfor %}
+    </tr>
 {% endblock %}
 
 {% block title %}{{ 'Groups'|trans }}{% endblock %}

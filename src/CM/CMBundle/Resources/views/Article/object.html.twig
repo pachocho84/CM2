@@ -1,16 +1,26 @@
 <li class="object"{# data-type="article" data-id="{{ article.id }}"#}>
 
     <div class="media">
-        {% if article.getImages|length > 0 %}
-            <a href="{{ path('article_show', {'id': article.id, 'slug': article.getSlug }) }}" class="pull-left img-thumbnail article-cover">
-                <img src='{{ asset(uploaded_images_full_dir ~ '/' ~ article.images[0].img) }}' width="200px" />
-            </a>
-        {% endif %}
+        <a href="{{ path('article_show', { id: article.id, slug: article.getSlug }) }}" class="pull-left img-thumbnail">
+            {{ show_img_box(article.image|default_img|imagine_filter('medium'), {width: 200, height: 133, offset: article.imgOffset}) }}
+        </a>
 
         <div class="media-body">
-            {{ article|short_text }}
+        
+            {% set publisher = article.post.publisher %}
+            
+            <h4><a href="{{ path('article_show', {id: article.id, slug: article.getSlug}) }}">{{ article.getTitle }}</a></h4>
+            <h5>
+                {{ "Published by %publisher% in %category%"|trans({'%publisher%': '<a ' ~ publisher_box(publisher) ~ ' href="'~path(article.post.publisherType ~ '_show', {slug: publisher.slug})~'">'~publisher~'</a>', '%category%': '<a href="'~path('article_category', {categorySlug: article.category.getSlug})~'">'~article.category~'</a>' })|raw }}
+            </h5>
 
-            {{ include('CMBundle::social.html.twig', {'post': article.post}) }}
+            <p class="text-muted">
+            </p>
+    
+            <p>{{ article.getExtract|raw }}</p>
+
+{#             {{ include('CMBundle::social.html.twig', {post: article.post}) }} #}
+    
         </div>
     </div>
 

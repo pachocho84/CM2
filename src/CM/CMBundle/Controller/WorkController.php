@@ -33,24 +33,51 @@ class WorkController extends Controller
             array('dateFrom' => 'desc', 'id' => 'desc')
         );
 
-        $work = new Work;
-        $work->setUser($this->getUser());
+        $blankWork = new Work;
+        $blankWork->setUser($this->getUser());
 
-        $works[] = $work;
+        $works[] = $blankWork;
 
-        $form = $this->createForm(new WorkCollectionType, array('works' => new ArrayCollection($works)), array(
+        $form = $this->createForm(new WorkCollectionType, array('works' => $works), array(
             'cascade_validation' => true
         ))->add('save', 'submit');
 
         $form->handleRequest($request);
-        
-        if ($form->isValid()) {
-            foreach ($works as $work) {
+
+        $isValid = $form->isValid();
+        if ($isValid) {
+            foreach ($form->getData()['works'] as $work) {
+                if (count($this->get('validator')->validate($work)) > 0) {
+                    $works = $form->getData()['works'];
+                    $isValid = false;
+                    break;
+                }
+            }
+        }
+
+        if ($isValid) {
+            $newWorks = $form->getData()['works'];
+            $toBeRemoved = array();
+            foreach ($works as $key => $work) {
+                if (!in_array($work, $form->getData()['works'])) {
+                    $toBeRemoved[] = $work;
+                    unset($works[$key]);
+                }
+            }
+            
+            foreach ($toBeRemoved as $work) {
+                $em->remove($work);
+            }
+            foreach ($newWorks as $work) {
+                $work->setUser($this->getUser());
                 $em->persist($work);
             }
             $em->flush();
 
             return $this->redirect($this->generateUrl('user_work'));
+        } else {
+            $works = $form->getData()['works'];
+            $works[] = $blankWork;
         }
         
         return array(

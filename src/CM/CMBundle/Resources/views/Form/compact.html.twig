@@ -41,9 +41,11 @@
             <span class="fileinput-new">{{ 'Browse'|trans({}, translation_domain) }}</span>
             <span class="fileinput-exists">{{ 'Change'|trans({}, translation_domain) }}</span>
     {% elseif type == 'date' %}
-        {% set type = 'text' %}
-        {% if value is not empty %}{% set value = value|format_datetime('q') %}{% endif %}
-        {% set attr = attr|merge({'timepicker-container': '', 'data-mask': '99/99/9999'}) %}
+        <div class="input-group input-append date" datepicker-container datepicker-format="{{ date_format() }}">
+            <input type="text" class="form-control" readonly {% if value is not empty %}value="{{ value }}" {% endif %} placeholder="{{ label|trans({}, translation_domain) }}{% if required %} *{% endif %}" />
+            <span class="input-group-addon btn">{{ icon('Calendar') }}</span>
+        </div>
+        {% set type = 'hidden' %}
     {% elseif type == 'time' %}
         {% set type = 'text' %}
         {% if value is not empty %}{% set value = value|format_datetime('q') %}{% endif %}
@@ -51,7 +53,7 @@
     {% elseif type == 'text' and form.vars.attr.datetimepicker is defined %}
         <div class="input-group input-append date" datetimepicker-container datetimepicker-format="{{ datetime_format('js') }}" datetimepicker-format-php="{{ datetime_format('php') }}">
             <input type="text" class="form-control" readonly {% if value is not empty %}value="{{ value|format_datetime(datetime_format('php')) }}" {% endif %} placeholder="{{ label|trans({}, translation_domain) }}{% if required %} *{% endif %}" />
-            <span class="input-group-addon">{{ icon('Calendar') }}</span>
+            <span class="input-group-addon btn">{{ icon('Calendar') }}</span>
         </div>
         {% set type = 'hidden' %}
     {% endif %}
@@ -250,7 +252,7 @@
     {% if downward|default(false) %}
         {% set attr = {placeholder: 'write a comment...'|trans, class: 'input-lg comment form-control', expandable: 'small', 'comment-type': 'downward', autocomplete: 'off'} %}
     {% else %}
-        {% set attr = attr|merge({placeholder: 'write a comment...'|trans, 'comment-type': 'upward', autocomplete: 'off'}) %}
+        {% set attr = attr|merge({placeholder: 'write a comment...'|trans, class: 'comment', 'comment-type': 'upward', autocomplete: 'off'}) %}
     {% endif %}
     {{ block('textarea_widget') }}
 {% endspaceless %}

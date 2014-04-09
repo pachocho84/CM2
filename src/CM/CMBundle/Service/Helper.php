@@ -55,7 +55,7 @@ class Helper
         $formatter = new \IntlDateFormatter(
             $this->localeDetector->getLocale(),
             \IntlDateFormatter::SHORT,
-            \IntlDateFormatter::SHORT,
+            \IntlDateFormatter::NONE,
             $this->timezoneDetector->getTimezone(),
             \IntlDateFormatter::GREGORIAN,
             ''

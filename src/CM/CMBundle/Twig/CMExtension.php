@@ -94,6 +94,7 @@ class CMExtension extends \Twig_Extension
         return array(
             'controller_name' => new \Twig_Function_Method($this, 'getControllerName'),
             'action_name' => new \Twig_Function_Method($this, 'getActionName'),
+            'date_format' => new \Twig_Function_Method($this, 'getDateFormat', array('is_safe' => array('html'))),
             'datetime_format' => new \Twig_Function_Method($this, 'getDateTimeFormat', array('is_safe' => array('html'))),
             'can_manage' => new \Twig_Function_Method($this, 'getCanManage'),
             'is_admin' => new \Twig_Function_Method($this, 'getIsAdmin'),
@@ -171,7 +172,7 @@ class CMExtension extends \Twig_Extension
             'path' => ''
         ), $options);
 
-        if (is_null($image) || empty($image)) {
+        if (is_null($image) || empty($image->getImg())) {
             $img = $options['default'];
         } else {
             $img = $image->getImg();
@@ -253,6 +254,11 @@ class CMExtension extends \Twig_Extension
         }
 
         return $this->actionName;
+    }
+
+    public function getDateFormat()
+    {
+        return $this->helper->dateFormat();
     }
 
     public function getDateTimeFormat($lang = 'js')
@@ -907,10 +913,6 @@ class CMExtension extends \Twig_Extension
     function getIcon($object)
     {
         switch ($object) {
-            case 'Add':
-                return '<span class="glyphicon glyphicon-plus"></span>';
-            case 'Remove':
-                return '<span class="glyphicon glyphicon-minus"></span>';
             case 'Up':
                 return '<span class="glyphicon glyphicon-chevron-up"></span>';
             case 'Down':
@@ -920,6 +922,8 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-chevron-left"></span>';
             case 'Next':
                 return '<span class="glyphicon glyphicon-chevron-right"></span>';
+            case 'Add':
+                return '<span class="glyphicon glyphicon-plus"></span>';
             case 'Remove':
             case 'Delete':
                 return '<span class="glyphicon glyphicon-remove"></span>';

@@ -226,19 +226,29 @@ class User extends BaseUser implements ParticipantInterface
     private $posts;
         
     /**
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="user", cascade={"persist", "remove"})
-     */
-    private $comments;
-        
-    /**
      * @ORM\OneToMany(targetEntity="Image", mappedBy="user", cascade={"persist", "remove"})
      */
     private $images;
+        
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $comments;
     
     /**
      * @ORM\OneToMany(targetEntity="Like", mappedBy="user", cascade={"persist", "remove"})
      */
     private $likes;
+        
+    /**
+     * @ORM\OneToMany(targetEntity="Work", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $works;
+        
+    /**
+     * @ORM\OneToMany(targetEntity="Education", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $educations;
     
     /**
      * @ORM\OneToMany(targetEntity="Notification", mappedBy="user", cascade={"persist", "remove"})
@@ -291,9 +301,11 @@ class User extends BaseUser implements ParticipantInterface
         $this->userGroups = new ArrayCollection;
         $this->userPages = new ArrayCollection;
         $this->posts = new ArrayCollection;
-        $this->comments = new ArrayCollection;
         $this->images = new ArrayCollection;
+        $this->comments = new ArrayCollection;
         $this->likes = new ArrayCollection;
+        $this->works = new ArrayCollection;
+        $this->educations = new ArrayCollection;
         $this->notificationsIncoming = new ArrayCollection;
         $this->notificationsOutgoing = new ArrayCollection;
         $this->requestsIncoming = new ArrayCollection;
@@ -821,36 +833,6 @@ class User extends BaseUser implements ParticipantInterface
     }
 
     /**
-     * @param \CM\CMBundle\Entity\Comment $comment
-     * @return Entity
-     */
-    public function addComment(Comment $comment)
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments[] = $comment;
-            $comment->setUser($this);
-        }
-    
-        return $this;
-    }
-
-    /**
-     * @param \CM\CMBundle\Entity\Comment $images
-     */
-    public function removeComment(Comment $comment)
-    {
-        $this->comments->removeElement($comment);
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getComments()
-    {
-        return $this->comments;
-    }
-
-    /**
      * @param \CM\CMBundle\Entity\Image $comment
      * @return Entity
      */
@@ -878,6 +860,36 @@ class User extends BaseUser implements ParticipantInterface
     public function getImages()
     {
         return $this->images;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Comment $comment
+     * @return Entity
+     */
+    public function addComment(Comment $comment)
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Comment $images
+     */
+    public function removeComment(Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 
     /**
@@ -912,6 +924,66 @@ class User extends BaseUser implements ParticipantInterface
     public function getLikes()
     {
         return $this->likes;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Work $comment
+     * @return Entity
+     */
+    public function addWork(Work $work)
+    {
+        if (!$this->works->contains($work)) {
+            $this->works[] = $work;
+            $work->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Work $works
+     */
+    public function removeWork(Work $work)
+    {
+        $this->works->removeElement($work);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getWorks()
+    {
+        return $this->works;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Education $comment
+     * @return Entity
+     */
+    public function addEducation(Education $education)
+    {
+        if (!$this->educations->contains($education)) {
+            $this->educations[] = $education;
+            $education->setUser($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Education $educations
+     */
+    public function removeEducation(Education $education)
+    {
+        $this->educations->removeElement($education);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEducations()
+    {
+        return $this->educations;
     }
 
     /**
