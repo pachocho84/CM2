@@ -9,18 +9,20 @@
             <div class="row">
                 {% for event in sponsoredEvents %}
                     
-                    <div class="col-sm-4">
+                    <div class="col-sm-4 event-sponsored">
                         
-                        {{ show_img_box(event.image|default_img|imagine_filter('medium'), {ratio: 1.6, offset: event.imgOffset}) }}
+                        {{ show_img_box(event.image|default_img|imagine_filter('medium'), {ratio: 1.6, offset: event.imgOffset, link: path('event_show', { id: event.id, slug: event.getSlug })}) }}
                         
                         <h3><a href="{{ path('event_show', { id: event.id, slug: event.getSlug }) }}" title="{{ event }}">{{ event }}</a></h3>
                                       
                         <div class="events-sponsored-dates cycle-slideshow" data-cycle-slides="> div" data-cycle-fx="scrollVert">
-                            {% for date in event.eventDates %}                                                
-                                <div>
-                                    <div class="event-date-month">{{ date.start|format_date('MMM') }}</div>
-                                    <div class="event-date-month">{{ date.start|format_date('d') }}</div>
-                                    <p class="text-muted"><small>{{ date.location }}</small></p>
+                            {% for date in event.eventDates %}                                             
+                                <div class="events-sponsored-date">
+                                    <div class="events-sponsored-date-day">
+                                        {{ date.start|format_date('d') }}
+                                        {{ date.start|format_date('MMM') }} 
+                                    </div>
+                                    <div class="events-sponsored-date-location">{{ date.location }}</div>
                                 </div>
                             {% endfor %}
                         </div>
