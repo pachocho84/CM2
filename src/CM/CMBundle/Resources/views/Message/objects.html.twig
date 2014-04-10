@@ -4,6 +4,17 @@
     </div>
 {% endif %}
 
-{% for message in messages|reverse %}
+{% set rmessages = messages|reverse %}
+
+{% for message in rmessages %}
+    {% if messages.paginationData.current == messages.paginationData.last and loop.first %}
+        <div class="message-separator"><span class="message-date">{{ 'Conversation started %date%'|trans({'%date%': message.createdAt|humanize_day|lower}) }}</span></div>
+        
+    {% endif %}
+
     {{ include('CMBundle:Message:object.html.twig') }}
+
+    {% if messages[loop.index] is defined and message.createdAt|date('d') < messages[loop.index].createdAt|date('d') %}
+        <div class="message-separator"><span class="message-date">{{ messages[loop.index].createdAt|humanize_day }}</span></div>
+    {% endif %}
 {% endfor %}

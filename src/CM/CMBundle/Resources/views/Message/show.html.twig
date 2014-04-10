@@ -1,23 +1,33 @@
 {% form_theme form 'CMBundle:Form:compact.html.twig' %}
 
+<h2>
+    {{ thread.subject }}
+
+    <small class="pull-right">
+        <a href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">{{ icon('Actions') }}</a>
+        <ul class="dropdown-menu">
+            <li><a href="{{ path('message_mark_unread', {threadId: thread.id}) }}">{{ 'Mark unread'|trans }}</a></li>
+            <li><a href="{{ path('message_delete_thread', {threadId: thread.id}) }}">{{ 'Quit conversation'|trans }}</a></li>
+        </ul>
+    </small>
+</h2>
+<h3>
+    {% set text = '' %}{% set users = {} %}
+    {% for metadata in thread.metadata[:5] %}
+        {% if loop.index == thread.metadata|length or loop.index == 5 %}
+            {% set text = text ~ ' and' %}
+        {% elseif loop.index > 1 %}
+            {% set text = text ~ ',' %}
+        {% endif %}
+        {% set user = '%user' ~ loop.index ~ '%'%}
+        {% set text = text ~ ' ' ~ user %}
+        {% set users = users|merge({(user): '<a href="' ~ path('user_show', {slug: metadata.participant.slug}) ~ '">' ~ metadata.participant ~ '</a>'}) %}
+    {% endfor %}
+
+    {{ text|trans(users)|raw }}
+</h3>
+
 <div id="messages">
-    <h2>{{ thread.subject }} <small>
-        {% set text = '' %}{% set users = {} %}
-        {% for metadata in thread.metadata[:5] %}
-            {% if loop.index == thread.metadata|length or loop.index == 5 %}
-                {% set text = text ~ ' and' %}
-            {% elseif loop.index > 1 %}
-                {% set text = text ~ ',' %}
-            {% endif %}
-            {% set user = '%user' ~ loop.index ~ '%'%}
-            {% set text = text ~ ' ' ~ user %}
-            {% set users = users|merge({(user): '<a href="' ~ path('user_show', {slug: metadata.participant.slug}) ~ '">' ~ metadata.participant ~ '</a>'}) %}
-        {% endfor %}
-
-        {{ text|trans(users)|raw }}
-    </small></h2>
-    <a href="{{ path('message_delete_thread', {threadId: thread.id}) }}">{{ 'Quit conversation'|trans }}</a>
-
     {{ include('CMBundle:Message:objects.html.twig') }}
 </div>
 

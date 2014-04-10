@@ -1,9 +1,13 @@
-<div id="message_{{ message.id }}">   
-    <div>{% if loop is defined %}{{ loop.index }}{% endif %}
-        {% if message.senderId == app.user.id %}{{ 'you'|trans }}{% else %}{{ message.sender }}{% endif %}
-        <a href="{{ path('message_delete_message', {threadId: message.threadId, messageId: message.id}) }}">{{ 'Remove message'|trans }}</a>
+<div class="message">   
+    {{ show_img_box(message.sender|default_img|imagine_filter('avatar'), {width: 32, offset: message.sender.imgOffset, box_attributes: {class: 'pull-left'}}) }}
+
+    <div class="message-heading">
+        <h2>
+            {{ message.sender }}
+            {#<a href="{{ path('message_delete_message', {threadId: message.threadId, messageId: message.id}) }}" {{ tooltip('Remove message'|trans) }}>{{ icon('Remove') }}</a>#}
+            <small class="message-date">{{ message.createdAt|format_time(null, null, null, constant('IntlDateFormatter::MEDIUM')) }}</small>
+        </h2>
     </div>
-    <div>{{ message.createdAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</div>
     <div>
         {{ message.body }}
     </div>

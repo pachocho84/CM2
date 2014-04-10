@@ -63,18 +63,36 @@ class Helper
         }
     }
 
-    public function dateFormat()
+    public function dayName($day, $format = 'EEEE')
     {
         $formatter = new \IntlDateFormatter(
             $this->localeDetector->getLocale(),
-            \IntlDateFormatter::SHORT,
+            \IntlDateFormatter::NONE,
+            \IntlDateFormatter::NONE,
+            $this->timezoneDetector->getTimezone(),
+            \IntlDateFormatter::GREGORIAN,
+            $format
+        );
+
+        return $formatter->format($day->getTimestamp());
+    }
+
+    public function dateFormat($format = 'SHORT', $date = null)
+    {
+        $formatter = new \IntlDateFormatter(
+            $this->localeDetector->getLocale(),
+            constant('\IntlDateFormatter::'.$format),
             \IntlDateFormatter::NONE,
             $this->timezoneDetector->getTimezone(),
             \IntlDateFormatter::GREGORIAN,
             ''
         );
 
-        return $formatter->getPattern();
+        if (!is_null($date)) {
+            return $formatter->format($date);
+        } else {
+            return $formatter->getPattern();
+        }
     }
 
     public function dateTimeFormat($lang = 'js')

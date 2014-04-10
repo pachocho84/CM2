@@ -43,7 +43,7 @@ class MessageController extends Controller
         $messages = $em->getRepository('CMBundle:MessageThread')->getActiveThreads(array('userId' => $this->getUser()->getId()));
         $pagination = $this->get('knp_paginator')->paginate($messages, $page, 12);
 
-        $em->getRepository('CMBundle:MessageThread')->setUnread($this->getUser()->getId());
+        $em->getRepository('CMBundle:MessageThread')->setUnread($this->getUser()->getId(), null, MessageMetadata::STATUS_NEW);
 
         if ($request->isXmlHttpRequest() && !$request->get('outgoing')) {
             return $this->render('CMBundle:Message:messageList.html.twig', array('messages' => $pagination));
@@ -125,17 +125,27 @@ class MessageController extends Controller
     }
 
     /**
-     * @Route("/{threadId}/{messageId}/remove", name="message_delete_message", requirements={"threadId" = "\d+", "messageId" = "\d+"})
+     * @Route("/{threadId}/read", name="message_mark_read", requirements={"threadId" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
-    public function deleteMessageAction($threadId, $messageId)
+    public function markReadAction($threadId)
     {
-        $em = $this->getDoctrine()->getManager();
+        $this->getDoctrine()->getManager()->getRepository('CMBundle:MessageThread')->setRead($this->getUser()->getId(), $threadId);
 
-        $em->getRepository('CMBundle:MessageThread')->deleteFromMessage($messageId, $this->getUser()->getId());
+        return new Response;
+    }
 
-        return $this->forward('CMBundle:Message:show', array('threadId' => $threadId));
+    /**
+     * @Route("/{threadId}/unread", name="message_mark_unread", requirements={"threadId" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function markUnreadAction($threadId)
+    {
+        $this->getDoctrine()->getManager()->getRepository('CMBundle:MessageThread')->setUnread($this->getUser()->getId());
+
+        return new Response;
     }
 
     /**
@@ -155,8 +165,6 @@ class MessageController extends Controller
 
         return $this->forward('CMBundle:Message:index');
     }
-
-
 
     /**
      * @Route("/{threadId}/{page}", name="message_show", requirements={"threadId" = "\d+", "page" = "\d+"})

@@ -98,35 +98,41 @@ class MessageThreadRepository extends BaseRepository
     public function countNew($userId)
     {
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('count(m.id)')
+            ->select('count(distinct m.threadId)')
             ->from('CMBundle:Message', 'm')
             ->join('m.metadata', 'mm', 'with', 'mm.participantId = :user_id and mm.status = '.MessageMetadata::STATUS_NEW)
-            ->andWhere('m.senderId != :user_id')
-            ->setParameter('user_id', $userId)
+            ->andWhere('m.senderId != :user_id')->setParameter('user_id', $userId)
             ->getQuery()
             ->getSingleScalarResult();
     }
 
-    public function setUnread($userId)
+    public function setUnread($userId, $threadId = null, $oldStatus = null)
     {
-        $this->getEntityManager()->createQueryBuilder()
+        $query = $this->getEntityManager()->createQueryBuilder()
             ->update('CMBundle:MessageMetadata', 'mm')
-            ->where('mm.participantId = :user_id')
-            ->setParameter('user_id', $userId)
-            ->andWhere('mm.status = '.MessageMetadata::STATUS_NEW)
-            ->set('mm.status', MessageMetadata::STATUS_UNREAD)
+            ->andWhere('mm.participantId = :user_id')
+            ->setParameter('user_id', $userId);
+        if (!is_null($threadId)) {
+            $query->andWhere('mm.messageId in (select m.id from CMBundle:Message m where m.threadId = :thread_id)')
+                ->setParameter('thread_id', $threadId);
+        }          
+        if (!is_null($oldStatus)) {
+            $query->andWhere('mm.status = :old_status')
+                ->setParameter('old_status', $oldStatus);
+        }            
+        $query->set('mm.status', MessageMetadata::STATUS_UNREAD)
             ->getQuery()
             ->execute();
     }
 
-    public function setRead($threadId, $userId)
+    public function setRead($userId, $threadId)
     {
         $this->getEntityManager()->createQueryBuilder()
             ->update('CMBundle:MessageMetadata', 'mm')
-            ->where('mm.participantId = :user_id')
+            ->andWhere('mm.participantId = :user_id')
+            ->setParameter('user_id', $userId)
             ->andWhere('mm.messageId in (select m.id from CMBundle:Message m where m.threadId = :thread_id)')
             ->setParameter('thread_id', $threadId)
-            ->setParameter('user_id', $userId)
             ->set('mm.status', MessageMetadata::STATUS_ACTIVE)
             ->getQuery()
             ->execute();

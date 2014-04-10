@@ -86,6 +86,7 @@ class CMExtension extends \Twig_Extension
             'show_text' => new \Twig_Filter_Method($this, 'getShowText'),
             'default_img' => new \Twig_Filter_Method($this, 'getDefaultImg'),
             'short_text' => new \Twig_Filter_Method($this, 'getShortText', array('is_safe' => array('html'))),
+            'humanize_day' => new \Twig_Filter_Method($this, 'getHumanizeDay', array('is_safe' => array('html'))),
         );
     }
 
@@ -222,6 +223,23 @@ class CMExtension extends \Twig_Extension
         }
 
         return $text;
+    }
+
+    public function getHumanizeDay(\DateTime $date)
+    {
+        $today = new \DateTime('now');
+
+        if ($date->format('Y-m-d') == $today->format('Y-m-d')) {
+            $day = $this->translator->trans('Today');
+        } elseif ($date->format('Y-m-d') == $today->modify('-1 day')->format('Y-m-d')) {
+            $day = $this->translator->trans('Yesterday');
+        } elseif ($date >= $today->modify('-1 week')) {
+            $day = $this->helper->dayName($date, 'EEEE');
+        } else {
+            $day = $this->helper->dateFormat('MEDIUM', $date);
+        }
+
+        return $day;
     }
     
     /**

@@ -186,7 +186,7 @@ $(function() {
         });
     });
 
-    $('body').on('click', '.load_more a', function(event) {
+    $('body').on('click', '.load_more a, .load_more-reverse a', function(event) {
         event.preventDefault();
         var target = $(event.target).closest('.load_more');
         infiniteScroll(target, null, function() { return true; }, false, target.attr('load_more-callback')); 

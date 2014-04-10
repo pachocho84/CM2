@@ -126,53 +126,6 @@ class EventController extends Controller
 
         return array('dates' => $dates, 'month' => $cMonth, 'loadMore' => $request->get('loadMore'));
     }
-
-    /**
-     * @Route("/{id}/{slug}", name="event_show", requirements={"id" = "\d+", "_locale" = "en|fr|it"})
-     * @Template
-     */
-    public function showAction(Request $request, $id, $slug)
-    {
-        $em = $this->getDoctrine()->getManager();
-            
-        if ($request->isXmlHttpRequest()) {
-            $date = $em->getRepository('CMBundle:Event')->getDate($id, array('slug' => $slug, 'locale' => $request->getLocale()));
-            return $this->render('CMBundle:Event:object.html.twig', array('date' => $date));
-        }
-        
-        $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('slug' => $slug, 'locale' => $request->getLocale()));
-
-        $images = new ArrayCollection();
-
-        $form = $this->createForm(new ImageCollectionType, $images, array(
-                'action' => $this->generateUrl('event_show', array(
-                'id' => $event->getId(),
-                'slug' => $event->getSlug()
-            )),
-            'cascade_validation' => true
-        ))->add('save', 'submit');
-
-        $form->handleRequest($request);
-        
-        if ($form->isValid()) {
-            $event->addImages($images);
-
-            $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($event);
-            $em->flush();
-
-            return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
-        }
-
-        if ($this->get('security.context')->isGranted('ROLE_USER')) {
-            $req = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('entityId' => $event->getId()));
-        }
-        
-        return array(
-            'event' => $event,
-            'request' => $req
-        );
-    }
     
     /**
      * @Route("/dates/next/{object}/{objectId}", name="event_next_dates", requirements={"id" = "\d+"})
@@ -365,5 +318,25 @@ class EventController extends Controller
         $sponsored = $em->getRepository('CMBundle:Event')->getSponsored(array('limit' => $limit, 'locale' => $request->getLocale()));
         
         return array('sponsoredEvents' => $sponsored);
+    }
+
+    /**
+     * @Route("/{id}/{slug}", name="event_show", requirements={"id" = "\d+", "_locale" = "en|fr|it"})
+     * @Template
+     */
+    public function showAction(Request $request, $id, $slug)
+    {
+        $em = $this->getDoctrine()->getManager();
+            
+        if ($request->isXmlHttpRequest()) {
+            $date = $em->getRepository('CMBundle:Event')->getDate($id, array('slug' => $slug, 'locale' => $request->getLocale()));
+            return $this->render('CMBundle:Event:object.html.twig', array('date' => $date));
+        }
+        
+        $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('slug' => $slug, 'locale' => $request->getLocale()));
+        
+        return array(
+            'event' => $event
+        );
     }
 }
