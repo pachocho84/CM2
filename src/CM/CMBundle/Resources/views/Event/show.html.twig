@@ -37,7 +37,7 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-md-4 col-lg-3">
+        <div class="col-sm-4 col-md-3">
             <div data-ajax-url="{{ path('image_entity', {id: event.id, slug: event.getSlug, type: 'events'}) }}"></div>
 
             <div data-ajax-url="{{ path('multimedia_entity', {id: event.id, type: event|class_name}) }}"></div>
@@ -45,7 +45,7 @@
             <div data-ajax-url="{{ path('entityuser_protagonists', {id: event.id}) }}"></div>
         </div>
 
-        <div class="col-md-8 col-lg-5">
+        <div class="col-sm-8 col-md-5">
             <div class="box">
                 <div class="box-heading">
                     <h2>{{ icon('Info') }} {{ 'Details'|trans }}</h2>
@@ -71,7 +71,7 @@
             <div data-ajax-url="{{ path('wall_entity', {id: event.id}) }}"></div>
         </div>
 
-        <div class="col-md-12 col-lg-4">
+        <div class="col-sm-12 col-md-4">
             <div data-ajax-url="{{ path('event_next_dates', {object: event.post.publisherType, objectId: event.post.publisher.id, exclude: event.id, limit: 3}) }}"></div>
 
             <div data-ajax-url="{{ path('event_sponsored') }}"></div>
