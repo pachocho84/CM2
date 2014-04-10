@@ -184,6 +184,8 @@ class CMExtension extends \Twig_Extension
 
     public function getShortText(Entity $entity, $options = array())
     {
+        return 'asd';
+
         $options = array_merge(array(
             'max' => 400,
             'stripped' => false,
@@ -958,7 +960,7 @@ class CMExtension extends \Twig_Extension
             case 'Article':
             case 'Review':
             case 'Article_'.Post::TYPE_CREATION:
-                return '<span class="glyphicon glyphicon-print"></span>';
+                return '<span class="glyphicon glyphicon-file"></span>';
             case 'Link':
             case 'Link_'.Post::TYPE_CREATION:
                 return '<span class="glyphicon glyphicon-bookmark"></span>';

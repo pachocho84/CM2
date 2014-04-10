@@ -50,16 +50,28 @@ class EntityUserController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="entityuser_publisher", requirements={"id" = "\d+"})
+     * @Route("/{type}/{id}", name="entityuser_publisher", requirements={"type" = "user|page|group", "id" = "\d+"})
      * @Template
      */
-    public function publisherAction(Request $request, $id)
+    public function publisherAction(Request $request, $type, $id)
     {
         $em = $this->getDoctrine()->getManager();
+
+        switch ($type) {
+            case 'user':
+                $publisher = $em->getRepository('CMBundle:User')->getWithTags($id, array('locale' => $request->getLocale()));
+                break;
+            case 'group':
+            case 'page':
+                $publisher = $em->getRepository('CMBundle:'.ucfirst($type))->findOneById($id);
+                break;
+        }
+
+        $func = 'get'.ucfirst($type).'Biography';
             
         return array(
-            'protagonists' => $em->getRepository('CMBundle:EntityUser')->getActiveForEntity($id),
-            'tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()))
+            'publisher' => $publisher,
+            'biography' => $em->getRepository('CMBundle:Biography')->$func($publisher->getId(), array('locale' => $request->getLocale()))
         );
     }
     

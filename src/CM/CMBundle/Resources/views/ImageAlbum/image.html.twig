@@ -8,7 +8,7 @@
 
 
 
-{% block bodyHeading %}
+{% block heading %}
     <div class="row">
         <div class="col-md-8 col-lg-9">
             <h2><a href="{{ path(image.entity|class_name|lower ~ '_show', {id: image.entity.id, slug: image.entity.getSlug}) }}">{{ icon(image.entity|class_name) }} {{ image.entity }}</a></h2>

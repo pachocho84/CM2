@@ -13,9 +13,11 @@
     
     <h2><a href="{{ path('user_show', {slug: user.slug}) }}">{{ user }}</a></h2>
     
-    <h3>{{ user.userTags|join(', ')|trim }}</h3>
+    {% if publisher.userTags is defined and publisher.userTags|length > 0 %}
+        <h3>{{ publisher.userTags|join(', ')|trim }}</h3>
+    {% endif %}
     
-    {% if biography is not null %}<div class="popover-publisher-biography">{{ biography|short_text({max: 120}) }}{% endif %}</div>
+    <div class="popover-publisher-biography">{{ biography|short_text({max: 120}) }}</div>
 </div>
 
 

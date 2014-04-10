@@ -39,7 +39,7 @@
 
             <div data-ajax-url="{{ path('multimedia_entity', {id: event.id, type: event|class_name}) }}"></div>
             
-            <div data-ajax-url="{{ path('entityuser_publisher', {id: event.id}) }}"></div>
+            <div data-ajax-url="{{ path('entityuser_publisher', {type: event.post.publisherType, id: event.post.publisherId}) }}"></div>
             
             <div data-ajax-url="{{ path('entityuser_protagonists', {id: event.id}) }}"></div>
         </div>

@@ -18,7 +18,10 @@
                     <img src='{{ asset(publisher.img|imagine_filter('medium')) }}' width=200 class="img-thumbnail pull-left" />
                     <h3>
                         {{ publisher }}
-                        <small>{{ publisher.userTags|join(', ')|trim }}</small>
+
+                        {% if publisher.userTags is defined and publisher.userTags|length > 0 %}
+                            <small>{{ publisher.userTags|join(', ')|trim }}</small>
+                        {% endif %}
                     </h3>
 
                     {{ biography }}               

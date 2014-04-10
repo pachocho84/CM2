@@ -7,7 +7,7 @@
     image: article.image|default_img|imagine_filter('full')
 } %}
 
-{% block bodyHeading %}
+{% block heading %}
     <div class="row">
         <div class="col-md-8 col-lg-9">
             <h2>{{ icon('Article') }} {{ article }}</h2>
@@ -41,6 +41,8 @@
             <div data-ajax-url="{{ path('image_entity', {id: article.id, slug: article.getSlug, type: 'articles'}) }}"></div>
 
             <div data-ajax-url="{{ path('multimedia_entity', {id: article.id, type: article|class_name}) }}"></div>
+            
+            <div data-ajax-url="{{ path('entityuser_publisher', {type: article.post.publisherType, id: article.post.publisherId}) }}"></div>
             
             <div data-ajax-url="{{ path('entityuser_protagonists', {id: article.id}) }}"></div>
         </div>

@@ -15,13 +15,18 @@ class UserRepository extends BaseRepository
 {
     static protected function getOptions(array $options = array())
     {
+        $options = array_merge(array(
+            'locale'        => 'en'
+        ), $options);
+        
         return array_merge(array(
             'group_id'      => null,
             'page_id'       => null,
             'archive'       => null, 
             'paginate'      => true,
             'limit'         => 25,
-            'tags'          => false
+            'tags'          => false,
+            'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
         ), $options);
     }
 
@@ -109,6 +114,18 @@ class UserRepository extends BaseRepository
             foreach ($what as $prop) {
                 $query->leftJoin('u.'.$prop, $prop);
             }
+        return $query->getQuery()->getSingleResult();
+    }
+
+    public function getWithTags($id, $options = array())
+    {
+        $query = $this->createQueryBuilder('u')
+            ->select('u, uut, ut, utt')
+            ->leftJoin('u.userUserTags', 'uut')
+            ->leftJoin('uut.userTag', 'ut')
+            ->leftJoin('ut.translations', 'utt', 'with', 'utt.locale = :locale')
+            ->setParameter('locale', $options['locale'])
+            ->andWhere('u.id = :id')->setParameter('id', $id);
         return $query->getQuery()->getSingleResult();
     }
 

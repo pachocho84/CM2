@@ -5,7 +5,7 @@
         <span class="countNew" id="messagesCounter">{% if newMessages > 0 %}{{ newMessages }}{% endif %}</span>
     </a>
     
-	<div class="dropdown-menu dropdown-menu-right">
+    <div class="dropdown-menu dropdown-menu-right">
 
         <div class="dropdown-menu-header">
             <h3>{{ 'Messages' | trans }}</h3>
@@ -31,7 +31,7 @@
         <span class="countNew" id="requestsCounter">{% if newRequests > 0 %}{{ newRequests }}{% endif %}</span>
     </a>
     
-	<div class="dropdown-menu dropdown-menu-right">
+    <div class="dropdown-menu dropdown-menu-right">
 
         <div class="dropdown-menu-header">
             <h3>{{ 'Requests'|trans }}</h3>
@@ -51,27 +51,27 @@
 
 
 <li class="dropdown menu-tab{% if controller_name() == 'notification' %} active{% endif %} menu-tab-ajax">
-	
-	<a href="{{ path('user_notifications') }}" id="menu-notifications" class="dropdown-toggle" data-toggle="dropdown">
-	    {{ icon('Notification') }}
-		<span class="countNew" id="notificationsCounter">{% if newNotifications > 0 %}{{ newNotifications }}{% endif %}</span>
-	</a>
-	
-	<div class="dropdown-menu dropdown-menu-right">
+    
+    <a href="{{ path('user_notifications') }}" id="menu-notifications" class="dropdown-toggle" data-toggle="dropdown">
+        {{ icon('Notification') }}
+        <span class="countNew" id="notificationsCounter">{% if newNotifications > 0 %}{{ newNotifications }}{% endif %}</span>
+    </a>
+    
+    <div class="dropdown-menu dropdown-menu-right">
 
-		<div class="dropdown-menu-header">
-			<h3>{{ 'Notifications'|trans }}</h3>
-		</div>
+        <div class="dropdown-menu-header">
+            <h3>{{ 'Notifications'|trans }}</h3>
+        </div>
 
-		<div class="dropdown-menu-body" load_more_container>
+        <div class="dropdown-menu-body" load_more_container>
             <ul class="media-list"></ul>
             <div class="dropdown-menu-loader"><img src="{{ asset('images/loader.gif') }}" /></div>
-		</div>
-	
-		<div class="dropdown-menu-footer"><a href="{{ path('user_notifications') }}">{{ 'View all notifications'|trans }}</a></div>
-	
-	</div>
-	
+        </div>
+    
+        <div class="dropdown-menu-footer"><a href="{{ path('user_notifications') }}">{{ 'View all notifications'|trans }}</a></div>
+    
+    </div>
+    
 </li>
 
 
@@ -80,9 +80,9 @@
 
     <a href="{{ path('user_show', {"slug": app.getUser.slug}) }}"  id="menu-user" class="dropdown-toggle" data-toggle="dropdown">{{ icon('User') }}</a>
 
-	<ul class="dropdown-menu dropdown-menu-right media-list">
+    <ul class="dropdown-menu dropdown-menu-right media-list">
         <li class="media dropdown-menu-header">
-            {{ show_img_box(app.getUser.img|imagine_filter('avatar'), {width: 50, offset: app.getUser.imgOffset, box_attributes: {class: 'pull-left'}}) }}
+            {{ show_img_box(app.getUser|default_img|imagine_filter('avatar'), {width: 50, offset: app.getUser.imgOffset, box_attributes: {class: 'pull-left img-rounded'}}) }}
             <div class="media-body">
                 <h4 class="media-heading">{{ app.getUser }}</h4>
             </div>

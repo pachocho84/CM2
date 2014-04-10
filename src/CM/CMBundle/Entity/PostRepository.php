@@ -217,28 +217,7 @@ class PostRepository extends BaseRepository
         }
         return $query->getQuery()->getResult();
     }
-
-    // static public function getLastPosts($options = array())
-    // {
-    //     $options = self::getOptions($options);
-        
-    //     $query = PostQuery::create()->
-    //         init()->
-    //         _if($options['user_id'])->
-    //             leftJoin('Post.Protagonist')->
-    //             condition('owner', 'Post.UserId = ?', $options['user_id'])->
-    //             condition('protagonist_user', 'Protagonist.UserId = ?', $options['user_id'])->
-    //         condition('protagonist_active', 'Protagonist.Status = ?', 'active')->
-    //         combine(array('protagonist_user', 'protagonist_active'), 'and', 'protagonist')->
-    //         where(array('owner', 'protagonist'), 'or')->
-    //         _endIf()->
-    //         groupBy('Post.Id')->
-    //         orderByUpdatedAt('desc');
-            
-    //     return $options['paginate'] ? $query->paginate(sfContext::getInstance()->getRequest()->getParameter('page', 1), $options['per_page']) : $query->limit($options['limit'])->find();
-            
-    // }
-
+    
     public function delete($creatorId, $userId, $object, $objectIds = array(), $entityId = null)
     {
         $query = $this->createQueryBuilder('p')
