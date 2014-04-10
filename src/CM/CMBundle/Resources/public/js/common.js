@@ -465,9 +465,7 @@ $(function() {
     $('body').on('click', '.comment_new-show', function(event) {
         event.preventDefault();
         event.stopPropagation();
-        $(this).closest('.bottom').find('ul').fadeIn('fast');
-        $(this).closest('.object, .bottom').find('.comment_new').removeClass('hide').find('textarea').focus();
-        fix_triangle($(this));
+        $($(event.currentTarget).attr('href')).focus();
     });
     // Hide comment form on blur
     $('body').on('blur', '.comment_new:not(.object-detail .comment_new) form textarea, .comment_new:not(.object-detail .comment_new) form input[type="submit"]', function() {

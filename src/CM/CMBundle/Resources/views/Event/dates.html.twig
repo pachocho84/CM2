@@ -22,7 +22,12 @@
                 <div id="event-date-next" class="collapse">
             {% endif %}
             <div class="event-date object{% if loop.index == 5 %} object-following{% endif %}">
-                {% if not loop.first %}
+                {% if loop.first %}
+                    <p>
+                        {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
+                        {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
+                    </p>
+                {% else %}
                     <p>
                         <a href="#event-date-{{ loop.index }}" data-toggle="collapser" class="text-muted collapsed">
                             {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
@@ -31,10 +36,6 @@
                     </p>
                 {% endif %}
                 <div id="event-date-{{ loop.index }}" class="collapse{% if loop.first %} in{% endif %}">
-                    <p>
-                        {{ icon('Calendar') }} {{ dates[0].start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
-                        {{ icon('Time') }} {{ dates[0].start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
-                    </p>
                     <p>{{ icon('Map') }} {{ date.location }}, <small class="text-muted">{{ date.address }}</small></p>
                     <div class="event-date-map">
                         <div class="event-date-map-img">
@@ -57,24 +58,24 @@
                 <small><a href="#event-date-past" class="pull-right box-collapser collapsed" data-toggle="collapse" data-parent="#event-dates" text-alt="{{ 'Hide'|trans }}">{{ 'Show all (%count%)'|trans({'%count%': dates|length - count}) }}</a></small>
             </h3>
         </div>
-        <div class="box-body collapse" id="event-date-past">
-            {% for date in dates if date.start < date('now') %}
-                <div class="event-date object">
-                    <p>
-                        <a href="#event-date-past-{{ loop.index }}" data-toggle="collapse" data-parent="#event-dates" class="text-muted collapsed">
+        <div class="collapse" id="event-date-past">
+            <div class="box-body">
+                {% for date in dates if date.start < date('now') %}
+                    <div class="event-date object">
+                        <p>
                             {{ icon('Calendar') }} {{ date.start|format_date(null, null, null, constant('IntlDateFormatter::LONG')) }}
                             {{ icon('Time') }} {{ date.start|format_time(null, null, null, constant('IntlDateFormatter::SHORT')) }}
-                        </a>
-                    </p>
-                    <div id="event-date-past-{{ loop.index }}" class="event-date-map collapse">
-                        <p><{{ icon('Map') }} {{ date.location }}, <small class="text-muted">{{ date.address }}</small></p>
-                        <div class="event-date-map-img">
-                            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=640x125&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" class="img-responsive" />
+                        </p>
+                        <div id="event-date-past-{{ loop.index }}" class="event-date-map collapse">
+                            <p>{{ icon('Map') }} {{ date.location }}, <small class="text-muted">{{ date.address }}</small></p>
+                            <div class="event-date-map-img">
+                                <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=640x125&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" class="img-responsive" />
+                            </div>
+                                <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
                         </div>
-                            <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
     {% endif %}
 </div>

@@ -105,41 +105,9 @@
 {% endblock %}
 
 {% block container %}
-    {% set noColumns = noColumns|default(false) %}
-
-    {% block bodyHeading %}{% endblock %}
+    {% block heading %}{% endblock %}
     
-    {% if not noColumns %}<div class="row">{% endif %}
-    
-        {% set inAccountPage = inAccountPage|default(false) %}
-        {# LEFT COLUMN #}
-        {% if not noColumns and inAccountPage %}
-            <div class="col-md-3 col-lg-2">
-                {% block accountSidebar %}
-                {% endblock %}
-            </div>
-        {% endif %}
-
-        {% if not noColumns %}<div class="col-md-{% if inAccountPage %}9 col-lg-10{% else %}8{% endif %}">{% endif %}
-            {# FLASH #}
-            {% block layoutBody %}
-                {% block body %}{% endblock %}
-            {% endblock %}
-        {% if not noColumns %}</div>{% endif %}
-
-        {# RIGHT COLUMN #}
-        {% if not noColumns and not inAccountPage %}
-            {#{% if sticky is not defined %}
-                {% set sticky = true %}
-            {% endif %}#}
-            <div class="col-md-4"{#{% if sticky %} sticky{% endif %}#}>
-                {% block sidebar %}
-                    <img src="{{ asset('/bundles/cm/images/layout/banner.jpg') }}" class="img-responsive" />
-                {% endblock %}
-            </div>
-        {% endif %}
-
-    {% if not noColumns %}</div> <!-- END ROW -->{% endif %}
+    {% block body %}{% endblock %}
 {% endblock %}
 
 {% block footer %}
@@ -193,39 +161,4 @@
             <script src="{{ asset_url }}"></script>
         {% endjavascripts %}
     {% endif %}
-    <script type="text/javascript">
-        // if (typeof(Storage) !== 'undefined') {
-        //     function formOffline($form) {
-        //         var formIds = sessionStorage.getItem('sf@' + document.URL) || '';
-        //         formIds = formIds.split(',');
-        //         formIds.push($form.attr('form-stored'));
-        //         var formHTML = $('<div>').append($form.eq(0).clone()).html();
-        //         sessionStorage.setItem('sf@' + document.URL, formIds.join(','));
-        //         sessionStorage.setItem('sf:' + document.URL + ':' + $form.attr('form-stored'), formHTML);
-        //     }
-        //     if ($('[form-stored]').length > 0 && sessionStorage.getItem('sf@' + document.URL) !== null) {
-        //         $.each($("[form-stored='" + sessionStorage.getItem('sf@' + document.URL).split(',').join("'],[form-stored='") + "']"), function(i, elem) {
-        //             var $form = $(elem);
-        //             var token = $('#' + $form.attr('form-stored') + '_token').val();
-        //             var $savedForm = $(sessionStorage.getItem('sf:' + document.URL + ':' + $form.attr('form-stored')));
-        //             $savedForm.find('input[id=' + $form.attr('form-stored') + '_token]').val(token);
-        //             $form.replaceWith($savedForm);
-        //         });
-        //     }
-        //     $(document).on('submit', '[form-stored]', function(event) {
-        //         var ok = true;
-        //         $.ajax({
-        //             url: script + '/ping',
-        //             cache: false,
-        //             timeout: 2000,
-        //             async: false,
-        //             error: function() { ok = false; formOffline($(event.currentTarget)); },
-        //             success: function(data) { if (!data) { ok = false; formOffline($(event.currentTarget)); }; }
-        //         });
-        //         if (!ok) {
-        //             event.preventDefault();
-        //         }
-        //     });
-        // }
-    </script>
 {% endblock %}

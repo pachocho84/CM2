@@ -334,9 +334,14 @@ class EventController extends Controller
         }
         
         $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('slug' => $slug, 'locale' => $request->getLocale()));
-        
+               
+        if ($this->get('security.context')->isGranted('ROLE_USER')) {
+            $req = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('entityId' => $event->getId()));
+        }
+       
         return array(
-            'event' => $event
+            'event' => $event,
+            'request' => $req
         );
     }
 }

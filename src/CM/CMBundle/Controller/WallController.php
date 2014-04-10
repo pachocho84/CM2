@@ -27,6 +27,7 @@ class WallController extends Controller
 {
     /**
      * @Route("/{page}", name="wall_index", requirements={"page"="\d+"})
+     * @Route("/{page}", name="home", requirements={"page"="\d+"})
      * @Route("/vips/{page}", name="wall_vips")
      * @Route("/fans/{page}", name="wall_fans")
      * @Route("/connections/{page}", name="wall_connections")

@@ -1,5 +1,4 @@
 {% extends 'CMBundle::layout.html.twig' %}
-{% set noColumns = true %}
 
 {% block title %}{{ event.getTitle }}{% endblock %}
 {% set meta = {
@@ -7,7 +6,7 @@
     image: event.image|default_img|imagine_filter('full')
 } %}
 
-{% block bodyHeading %}
+{% block heading %}
     <div class="row">
         <div class="col-md-8 col-lg-9">
             <h2>{{ icon('Event') }} {{ event }}</h2>
@@ -18,7 +17,7 @@
                 {% if is_granted('ROLE_USER') %}
                     <div class="btn-group btn-group-sm">
                         {{ include('CMBundle:Like:likeActions.html.twig', {post: event.post, button: true, selector: '#social'}) }}
-                        <a href="{# {{ path('post_show', {post_id: postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }} {{ event.post.comments|length }}</a>
+                        <a href="#cm_cmbundle_comment_comment" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }} {{ event.post.comments|length }}</a>
                     </div>
                 {% endif %}
                 {% if can_manage(event) %}
@@ -32,8 +31,6 @@
         </div>
     </div>
 {% endblock %}
-
-
 
 {% block body %}
     <div class="row">
