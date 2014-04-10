@@ -660,11 +660,13 @@ table.events .object:first-child {
 .events-sponsored .row {
     margin: 0 -5px;
 }
-.events-sponsored .event-sponsored {
-    padding: 0;
-    margin: 0 4px;
+.events-sponsored .event-sponsored-container {
+    padding: 0 4px;
+}
+.events-sponsored .event-sponsored-container  .event-sponsored {
     background: #f7f7f7;
     border: 1px solid #bbbbbb;
+    text-align: center;
 }
 .events-sponsored .event-sponsored .image_box {
     background: #f7f7f7;
@@ -678,12 +680,11 @@ table.events .object:first-child {
     margin: 5px 2px;
 }
 .events-sponsored .event-sponsored .event-sponsored-dates .event-sponsored-date {
-    text-align: center;
     color: #777777;
 }
 .events-sponsored .event-sponsored .event-sponsored-dates .event-sponsored-date .event-sponsored-date-day {
     font-family: Georgia, "Times New Roman", Times, serif;
-    font-size: 34px;
+    font-size: 32px;
     text-transform: uppercase;
     line-height: 1;
 }
@@ -693,6 +694,18 @@ table.events .object:first-child {
     white-space: nowrap;
     margin: 5px 0;
 
+}
+@media (min-width: 992px) and (max-width: 1212px) {
+    .events-sponsored .event-sponsored h3 {
+        font-size: 13px;
+    }  
+    .events-sponsored .event-sponsored .event-sponsored-dates .event-sponsored-date .event-sponsored-date-day {
+        font-size: 22px;
+    } 
+    .events-sponsored .event-sponsored .event-sponsored-dates .event-sponsored-date .event-sponsored-date-location {
+        font-size: 12px;
+    
+    }
 }
 
 

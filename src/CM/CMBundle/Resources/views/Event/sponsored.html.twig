@@ -8,34 +8,27 @@
         <div class="box-body objects events-sponsored">
             <div class="row">
                 {% for event in sponsoredEvents %}
-                    
-                    <div class="col-sm-4 event-sponsored">
+                    <div class="col-sm-4 event-sponsored-container">
+                        <div class="event-sponsored">
                         
-                        {{ show_img_box(event.image|default_img|imagine_filter('medium'), {ratio: 1.6, offset: event.imgOffset, link: path('event_show', { id: event.id, slug: event.getSlug })}) }}
-                        
-                        <h3><a href="{{ path('event_show', { id: event.id, slug: event.getSlug }) }}" title="{{ event }}">{{ event }}</a></h3>
-                                      
-                        <div class="event-sponsored-dates">
-                            {% for date in event.eventDates %}                                             
-                                <div class="event-sponsored-date">
-                                    <div class="event-sponsored-date-day">
-                                        {{ date.start|format_date('d') }}
-                                        {{ date.start|format_date('MMM') }} 
+                            {{ show_img_box(event.image|default_img|imagine_filter('medium'), {ratio: 1.6, offset: event.imgOffset, link: path('event_show', { id: event.id, slug: event.getSlug })}) }}
+                            
+                            <h3><a href="{{ path('event_show', { id: event.id, slug: event.getSlug }) }}" title="{{ event }}">{{ event }}</a></h3>
+                                          
+                            <div class="event-sponsored-dates">
+                                {% for date in event.eventDates %}                                             
+                                    <div class="event-sponsored-date">
+                                        <div class="event-sponsored-date-day">
+                                            {{ date.start|format_date('d') }}
+                                            {{ date.start|format_date('MMM') }} 
+                                        </div>
+                                        <div class="event-sponsored-date-location">{{ date.location }}</div>
                                     </div>
-                                    <div class="event-sponsored-date-location">{{ date.location }}</div>
-                                </div>
-                            {% endfor %}
-                            {% for date in event.eventDates %}                                             
-                                <div class="event-sponsored-date">
-                                    <div class="event-sponsored-date-day">
-                                        {{ date.start|format_date('d') }}
-                                        {{ date.start|format_date('MM') }} 
-                                    </div>
-                                    <div class="event-sponsored-date-location">{{ date.location }}</div>
-                                </div>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
+                            
                         </div>
-                    </div>
+                    </div> 
                 {% endfor %}    
             </div>
         </div>
