@@ -44,7 +44,21 @@ class EntityUserController extends Controller
         $em = $this->getDoctrine()->getManager();
             
         return array(
-    		'protagonists' => $em->getRepository('CMBundle:EntityUser')->getActiveForEntity($id),
+            'protagonists' => $em->getRepository('CMBundle:EntityUser')->getActiveForEntity($id),
+            'tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()))
+        );
+    }
+
+    /**
+     * @Route("/{id}", name="entityuser_publisher", requirements={"id" = "\d+"})
+     * @Template
+     */
+    public function publisherAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+            
+        return array(
+            'protagonists' => $em->getRepository('CMBundle:EntityUser')->getActiveForEntity($id),
             'tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()))
         );
     }
