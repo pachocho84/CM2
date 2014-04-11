@@ -37,12 +37,11 @@
                     <div class="alert alert-info">{{ icon('Alert') }} {{ 'Drag the image to adjust position.'|trans }}</div>
                     {{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.img), {width: 150, height: 150, offset: user.imgOffset, box_attributes: {id: 'profile-pic', style: 'border: 1px solid #bbbbbb; margin-bottom: 15px;'}}) }}
                 {% endif %}#}
-            
-                {{ form_row(form.coverImgFile) }}
-                {{ form_row(form.coverImgOffset, {attr: {'cover-img-offset-field': null}}) }}
+
                 {% if user.coverImg is not null %}
                     <div class="alert alert-info">{{ icon('Alert') }} {{ 'Drag the image to adjust position.'|trans }}</div>
-                    <div>{{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.coverImg), {width: 700, height: 266, offset: user.coverImgOffset, box_attributes: {id: 'cover-pic', style: 'border: 1px solid #bbbbbb; margin-bottom: 10px; width: 702px; height 266px;' }}) }}</div>
+                    <div>{{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.coverImg), {width: 620, height: 350, offset: user.coverImgOffset, box_attributes: {id: 'cover-pic', style: 'border: 1px solid #bbbbbb; margin-bottom: 10px; width: 702px; height 266px;' }}) }}</div>
+                    {{ form_row(form.coverImgOffset, {attr: {'cover-img-offset-field': null}}) }}
                 {% endif %}
             
             {{ form_end(form) }}
