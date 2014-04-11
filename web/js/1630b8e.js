@@ -29,7 +29,7 @@ $(function() {
             success: function(data, statusText, xhr, form) {
                 $('#messages').append(data);
                 resizeMessages();
-                $(form).find('textarea').focus().val('');
+                $(form).find('textarea').removeAttr('readonly').focus().val('');
             }
         });
     });
@@ -39,6 +39,7 @@ $(function() {
         if (event.keyCode == '13' && event.shiftKey === false) {
             event.preventDefault();
             if ($(event.currentTarget).val().length >= 1) {
+                $(event.currentTarget).attr('readonly', 'readonly');
                 $(event.currentTarget).closest('form').submit();
             }
         }

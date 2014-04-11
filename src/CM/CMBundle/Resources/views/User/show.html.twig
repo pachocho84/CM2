@@ -1,17 +1,15 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+{% block title %}{{ user }}{% endblock %}
+{% set meta = {
+    description: biography|short_text({max: 155, stripped: true}),
+    image: user|default_img|imagine_filter('full')
+} %}
+
+
 {% block heading %}
     {{ include('CMBundle:User:top.html.twig') }}
 {% endblock %}
 
 {% block body %}
-    <div data-ajax-url="{{ path('user_biography', {slug: user.slug, simple: true}) }}"></div>
-
-    <div data-ajax-url="{{ path('wall_user', {slug: user.slug, simple: true}) }}"></div>  
-{% endblock %}
-
-{% block sidebar %}
-    <div data-ajax-url="{{ path('fan_user_sidebar', {slug: user.slug}) }}"></div>
-
-    <div data-ajax-url="{{ path('event_next_dates', {object: 'user', objectId: user.id, limit: 3}) }}"></div>
 {% endblock %}

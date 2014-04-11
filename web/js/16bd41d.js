@@ -22,13 +22,16 @@ function recalculateWall() {
     var $loadMore = $('#wall ~ .load_more').detach();
 
     var data = {};
-    $.each($('#wall > div > [wall-col=left'), function(i, elem) {
+    $.each($('#wall > div > [wall-col="left"'), function(i, elem) {
         data[$(elem).attr('wall-order') + ';left'] = $(elem).detach();
     });
-    $.each($('#wall > div > [wall-col=center'), function(i, elem) {
-        data[$(elem).attr('wall-order') + ';center'] = $(elem).detach();
+    $.each($('#wall > div > [wall-col="center,left"'), function(i, elem) {
+        data[$(elem).attr('wall-order') + ';center,left'] = $(elem).detach();
     });
-    $.each($('#wall > div > [wall-col=right'), function(i, elem) {
+    $.each($('#wall > div > [wall-col="center,right"'), function(i, elem) {
+        data[$(elem).attr('wall-order') + ';center,right'] = $(elem).detach();
+    });
+    $.each($('#wall > div > [wall-col="right"'), function(i, elem) {
         data[$(elem).attr('wall-order') + ';right'] = $(elem).detach();
     });
     $.each($('#wall > div > *:not([wall-col])'), function(i, elem) {
@@ -67,9 +70,20 @@ function wallLoad(data, t, c, reload) {
         } else if (position == 'right') {
             $box.attr('wall-col', 'right');
             column = $('#wall > div:last');
-        } else if (position == 'center') {
-            $box.attr('wall-col', 'center');
-            column = $('#wall > div:last');
+        } else if (position == 'center,left') {
+            $box.attr('wall-col', 'center,left');
+            if ($('#wall > div').length == 3) {
+                column = $('#wall > div:nth-child(2)');
+            } else {
+                column = $('#wall > div:first');
+            }
+        } else if (position == 'center,right') {
+            $box.attr('wall-col', 'center,right');
+            if ($('#wall > div').length == 3) {
+                column = $('#wall > div:nth-child(2)');
+            } else {
+                column = $('#wall > div:last');
+            }
         } else {
             columns.sort(function(a, b) { return a.outerHeight() > b.outerHeight(); });
             column = columns[0];
@@ -79,16 +93,7 @@ function wallLoad(data, t, c, reload) {
         column.append($box);
 
         if (!reload) {
-            $box.find('.cycle-slideshow').cycle({
-                loader: true,
-                log: false,
-                next: '.box-partner-nav-next',
-                pauseOnHover: true,
-                prev: '.box-partner-nav-prev',
-                slides: '> div',
-                swipe: true,
-                fx: 'scrollHorz'
-            });
+            initSlideshow($box.find('.cycle-slideshow'));
         }
 
         // $box.find('img').each(function() {

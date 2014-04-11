@@ -19,7 +19,7 @@ h2 .glyphicon {
     font-size: 26px;
 }
 #header {
-    background: url(../images/layout/header_bg.jpg) repeat-x;
+    background: url(../../bundles/cm/images/layout/header_bg.jpg) repeat-x;
     height:66px;
 /*
     -webkit-box-shadow: 0 100px 200px rgba(0, 0, 0, 0.2);
@@ -32,7 +32,7 @@ h2 .glyphicon {
     display:block; 
     width:450px;
     height:60px;
-    background:url(../images/layout/logo.png) no-repeat;
+    background:url(../../bundles/cm/images/layout/logo.png) no-repeat;
 } 
 #logo h1 {
     text-indent: -999999px;
@@ -71,7 +71,7 @@ a:hover {
 */
 /*
 img {
-  background: #f7f7f7 url('../images/loader-big.gif') no-repeat;
+  background: #f7f7f7 url('../../bundles/cm/images/loader-big.gif') no-repeat;
 }
 */
 
@@ -301,8 +301,8 @@ form .panel-group .panel {
 }
 .profile-header .profile-header-info {
     border-right: 1px solid #bbbbbb;
-    background: url(../images/layout/damascato_silver.jpg) repeat;
-/*     background: url(../images/layout/shadow.png) bottom repeat-x; */
+    background: url(../../bundles/cm/images/layout/damascato_silver.jpg) repeat;
+/*     background: url(../../bundles/cm/images/layout/shadow.png) bottom repeat-x; */
     height: 300px;
 }
 .profile-header .profile-header-info .profile-header-picture {
@@ -683,7 +683,7 @@ table.events .object:first-child {
     color: #777777;
 }
 .events-sponsored .event-sponsored .event-sponsored-dates .event-sponsored-date .event-sponsored-date-day {
-    font-family: "Times New Roman", Times, serif;
+    font-family: Georgia, "Times New Roman", Times, serif;
     font-size: 32px;
     text-transform: uppercase;
     line-height: 1;

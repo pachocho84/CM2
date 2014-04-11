@@ -359,9 +359,11 @@ class CMExtension extends \Twig_Extension
         if (!$imageFileSize) {
             return '';
         }
+        $imgWidth = $imageFileSize[0];
+        $imgHeight = $imageFileSize[1];
 
         // Ratio
-        $imageRatio = $imageFileSize[0] / $imageFileSize[1];
+        $imageRatio = $imgWidth / $imgHeight;
         if (!is_null($options['ratio'])) {
             $boxRatio = $options['ratio'];
         } else {
@@ -373,19 +375,17 @@ class CMExtension extends \Twig_Extension
         $imgStyle = array();
         if (!is_null($options['offset'])) {
             if ($ratio > 1) { // landscape
-                $imgWidth = $height * $imageRatio;
-                $offset = $options['offset'] * $imgWidth / 100;
-                $imgStyle[] = 'left: -'.floor($offset + $width > $imgWidth ? $imgWidth - $width : $offset).'px';
+                $imgStyle[] = 'left: -'.min(max(0, $options['offset']), 100 * ($imageRatio / $boxRatio - 1)).'%';
+                $options['box_attributes']['dbg'] = $options['offset'].' -> '.(100 * ($imageRatio / $boxRatio - 1));
             } elseif ($ratio < 1) { // portrait
-                $imgHeight = $width / $imageRatio;
-                $offset = $options['offset'] * $imgHeight / 100;
-                $imgStyle[] = 'top: -'.floor($offset + $height > $imgHeight ? $imgHeight - $height : $offset).'px';
+                $imgStyle[] = 'top: -'.min(max(0, $options['offset']), 100 * (1 / $imageRatio - 1 / $boxRatio)).'%';
+                $options['box_attributes']['dbg'] = $options['offset'].' -> '.(100 * (1 / $imageRatio - 1 / $boxRatio));
             }
         } else {
             if ($ratio > 1) { // landscape
                 $imgStyle[] = 'left: -'.abs(($imageRatio / $boxRatio - 1) / 2 * 100).'%';
-            } elseif ($ratio < 1 && is_null($options['ratio'])) { // portrait
-                $imgStyle[] = 'top: -'.ceil(min($width / $imageRatio - $height, $width / $imageRatio / 10)).'px';
+            } elseif ($ratio < 1) { // portrait
+                $imgStyle[] = 'top: -'.min(10 / $boxRatio, 50 * abs(1 / $imageRatio - 1 / $boxRatio)).'%';
             }
         }
 

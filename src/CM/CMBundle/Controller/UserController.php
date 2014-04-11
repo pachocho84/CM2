@@ -463,6 +463,11 @@ class UserController extends Controller
             return $this->render('CMBundle:Wall:posts.html.twig', array('slug' => $user->getSlug(), 'posts' => $pagination, 'page' => $page));
         }
 
-        return array('user' => $user);
+        $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId(), array('locale' => $request->getLocale()));
+
+        return array(
+            'user' => $user,
+            'biography' => $biography
+        );
     }
 }
