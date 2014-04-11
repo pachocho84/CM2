@@ -683,7 +683,7 @@ table.events .object:first-child {
     color: #777777;
 }
 .events-sponsored .event-sponsored .event-sponsored-dates .event-sponsored-date .event-sponsored-date-day {
-    font-family: Georgia, "Times New Roman", Times, serif;
+    font-family: "Times New Roman", Times, serif;
     font-size: 32px;
     text-transform: uppercase;
     line-height: 1;
