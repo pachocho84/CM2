@@ -1,17 +1,31 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+{% block title %}{{ user }}{% endblock %}
+{% set meta = {
+    description: biography|short_text({max: 155, stripped: true}),
+    image: user|default_img|imagine_filter('full')
+} %}
+
+
 {% block heading %}
-    {{ include('CMBundle:User:top.html.twig') }}
+    {#{{ include('CMBundle:User:top.html.twig') }}#}
+
+    <div style="width: 100px; background: red;">
+        <p>width: 100px, height: 200px</p>
+        {{ show_img_box(user.coverImg|imagine_filter('full'), {width: 100, height: 200, offset: user.coverImgOffset, box_attributes: {style: {background: 'white'}}}) }}
+
+        <p>ratio: 1.77</p>
+        {{ show_img_box(user.coverImg|imagine_filter('full'), {ratio: 1.77, offset: user.coverImgOffset, box_attributes: {style: {background: 'white'}}}) }}
+    </div>
+    <div style="width: 200px; background: red;">
+        <p>width: 200px, height: 133px</p>
+        {{ show_img_box(user.coverImg|imagine_filter('full'), {width: 200, height: 133, offset: user.coverImgOffset, box_attributes: {style: {background: 'white'}}}) }}
+
+        <p>ratio: 1.77</p>
+        {{ show_img_box(user.coverImg|imagine_filter('full'), {ratio: 1.77, offset: user.coverImgOffset, box_attributes: {style: {background: 'white'}}}) }}
+    </div>
+
 {% endblock %}
 
 {% block body %}
-    <div data-ajax-url="{{ path('user_biography', {slug: user.slug, simple: true}) }}"></div>
-
-    <div data-ajax-url="{{ path('wall_user', {slug: user.slug, simple: true}) }}"></div>  
-{% endblock %}
-
-{% block sidebar %}
-    <div data-ajax-url="{{ path('fan_user_sidebar', {slug: user.slug}) }}"></div>
-
-    <div data-ajax-url="{{ path('event_next_dates', {object: 'user', objectId: user.id, limit: 3}) }}"></div>
 {% endblock %}
