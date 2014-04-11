@@ -15,7 +15,7 @@
         
         <div class="col-sm-8 profile-header-cover">
             {% if user.coverImg != '' %}
-                {{ show_img_box(user.coverImg|imagine_filter('large'), {width: 479, height: 270, offset: user.coverImgOffset}) }}
+                {{ show_img_box(user.coverImg|imagine_filter('large'), {ratio: 1.77, offset: user.coverImgOffset}) }}
             {% endif %}
             <div class="profile-header-buttons btn-toolbar" role="toolbar">
                 {% if is_granted('ROLE_USER') and user.id != app.user.id %}
