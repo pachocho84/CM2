@@ -40,7 +40,7 @@
 
                 {% if user.coverImg is not null %}
                     <div class="alert alert-info">{{ icon('Alert') }} {{ 'Drag the image to adjust position.'|trans }}</div>
-                    <div>{{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.coverImg), {width: 620, height: 350, offset: user.coverImgOffset, box_attributes: {id: 'cover-pic', style: 'border: 1px solid #bbbbbb; margin-bottom: 10px; width: 702px; height 266px;' }}) }}</div>
+                    <div>{{ show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.coverImg), {width: 486, height: 274, offset: user.coverImgOffset, box_attributes: {id: 'cover-pic', style: 'border: 1px solid #bbbbbb; margin-bottom: 10px;' }}) }}</div>
                     {{ form_row(form.coverImgOffset, {attr: {'cover-img-offset-field': null}}) }}
                 {% endif %}
             

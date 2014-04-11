@@ -197,12 +197,12 @@ img {
         width: 960px;
     }
 }
-@media (min-width: 1212px) {
+@media (min-width: 1200px) {
     #menu ul.pull-right .login-dropdown {
         width: 1180px;
     }
 }
-@media (min-width: 1512px) {
+@media (min-width: 1500px) {
     #menu ul.pull-right .login-dropdown {
         width: 1480px;
     }
@@ -298,20 +298,21 @@ form .panel-group .panel {
 /* USER */
 .profile-header {
     margin-bottom: 20px;
+    overflow: hidden;
 }
 .profile-header .profile-header-info {
     border-right: 1px solid #bbbbbb;
     background: url(../images/layout/damascato_silver.jpg) repeat;
 /*     background: url(../images/layout/shadow.png) bottom repeat-x; */
-    height: 300px;
+    height: 274px;
 }
 .profile-header .profile-header-info .profile-header-picture {
     margin: 0 auto 15px;
-    width: 130px;
+    width: 110px;
 }
 .profile-header .profile-header-info h2 {
-    font-size: 26px;
-    margin: 0 0 15px;
+    font-size: 22px;
+    margin: 0 0 10px;
 }
 .profile-header .profile-header-info h3 {
     font-size: 16px;
@@ -319,13 +320,13 @@ form .panel-group .panel {
     margin: 0 0 15px;
 }
 .profile-header .profile-header-cover {
-    height: 300px;
+    height: 274px;
     padding: 0px;
     position: relative;
 }
 .profile-header .profile-header-cover .image_box, 
 .profile-header .profile-header-cover img {
-    width: 100% !important;
+    width: 101% !important;
 }
 .profile-header .profile-header-cover img {
     height: auto !important;
@@ -351,6 +352,20 @@ form .panel-group .panel {
 .profile-header .profile-header-cover .profile-header-buttons .dropdown-menu {
     left: auto;
     right: 0;
+}
+@media (max-width: 991px) {
+    .profile-header .profile-header-info .profile-header-picture .image_box {
+        width: 100px !important;
+        height: 100px !important;
+    }
+}
+@media (min-width: 992px) {
+    .profile-header .profile-header-info .profile-header-picture {
+        width: 130px;
+    }
+    .profile-header .profile-header-info h2 {
+        font-size: 26px;
+    }
 }
 .profile-menu {
     height: 45px;
