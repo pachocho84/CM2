@@ -648,7 +648,8 @@ form textarea[expandable] {
 }
 .box form input.comment,
 .box form textarea.comment {
-    height: 50px;
+    height: 40px;
+    line-height: 1;
 }
 .box .box-footer .bottom form input.comment,
 .box .box-footer form textarea.comment {
@@ -733,7 +734,7 @@ form textarea[expandable] {
 }
 .box .box-heading h2 {
     max-width: 100%;
-    margin: 0;
+    margin: 3px 0;
     font-size: 20px;
 }
 .box .box-heading h2 a, 
@@ -747,7 +748,7 @@ form textarea[expandable] {
 }
 .box .box-heading h2 small {
     font-size: 12px;
-    margin-top: 10px;
+    margin-top: 8px;
     float: right;
 }
 .box .box-heading h2 small span.glyphicon,
@@ -842,7 +843,7 @@ form textarea[expandable] {
     margin-bottom: 15px;
 }
 .post .post-heading h4 {
-    font-size: 15px;
+    font-size: 16px;
     margin-bottom: 10px;
 }
 .post .post-content {
@@ -878,7 +879,7 @@ form textarea[expandable] {
 .box-system .box-heading {
     border: none;
     background: transparent;
-    margin-top: 10px;
+/*     margin-top: 10px; */
 }
 .box-system h3 {
     font-size: 14px;

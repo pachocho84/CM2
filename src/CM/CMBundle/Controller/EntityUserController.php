@@ -70,6 +70,7 @@ class EntityUserController extends Controller
         $func = 'get'.ucfirst($type).'Biography';
             
         return array(
+            'type' => $type,
             'publisher' => $publisher,
             'biography' => $em->getRepository('CMBundle:Biography')->$func($publisher->getId(), array('locale' => $request->getLocale()))
         );
