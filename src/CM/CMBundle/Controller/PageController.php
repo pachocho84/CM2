@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -551,6 +552,73 @@ class PageController extends Controller
         if (!$page) {
             throw new NotFoundHttpException('User not found.');
         }
+        
+        if ($request->isXmlHttpRequest()) {
+            /* FETCH */
+            // Sponsored 
+            $sponsoreds = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale())), $pageNum, 2);
+            
+            // Box partners
+            if ($pageNum == 1) {
+                $partners = $em->getRepository('CMBundle:HomepageBox')->getBoxes(4, array('locale' => $request->getLocale()));
+            }
+
+            // Banners
+            $banners = $em->getRepository('CMBundle:HomepageBanner')->getBanners(($pageNum -1) * 2, 2);
+
+            /* ORDER */
+            $order = array(
+                'login'  => '0,1,2',
+                'last'   => '1,0,0',
+                'rev'    => '5,2,1',
+                'spo0'   => '4,8,3',
+                'spo1'   => '11,14,7',
+                'ban0'   => '6,9,11',
+                'ban1'   => '15,12,15',
+                'vip0'   => '10,10,12',
+                'vip1'   => '13,13,13',
+                'par0'   => '3,6,4',
+                'par1'   => '8,7,9',
+                'par2'   => '12,11,10',
+                'par3'   => '14,15,14',
+                'events' => '2,3,5',
+                'discs'  => '9,4,6',
+                'sugg'   => '7,5,8'
+            );
+            $boxes = array();
+
+            // Last registered users 
+            if ($pageNum == 1) {
+                // Next events
+                $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('pageId' => $page->getId(), 'locale' => $request->getLocale())), $pageNum, 3);
+                $boxes['events;'.$order['events']] = $this->renderView('CMBundle:Event:nextDates.html.twig', array('dates' => $dates));
+
+                // Next discs
+                $discs = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Disc')->getLatests(array('pageId' => $page->getId(), 'locale' => $request->getLocale())), $pageNum, 3);
+                $boxes['discs;'.$order['discs']] = $this->renderView('CMBundle:Disc:latests.html.twig', array('discs' => $discs));
+
+                // Sponsored
+                foreach ($sponsoreds as $i => $sponsored) {
+                    $boxes['sponsored_'.$sponsored->getId().';'.$order['spo'.$i]] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $sponsored->getEntity()->getPost(), 'postType' => 'sponsored'));
+                }
+
+                // Banners
+                foreach ($banners as $i => $banner) {
+                    $boxes['banner_'.$banner->getId().';'.$order['ban'.$i]] = $this->renderView('CMBundle:Wall:boxBanner.html.twig', array('banner' => $banner));
+                }
+
+            }
+
+            /* OTHER POSTS */
+            $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('pageId' => $page->getId(), 'locale' => $request->getLocale())), $pageNum, 15);
+            foreach ($posts as $post) {
+                $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
+            }
+
+            $boxes['loadMore'] = $this->renderView('CMBundle:Wall:loadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
+
+            return new JsonResponse($boxes);
+        }
 
         $members = $em->getRepository('CMBundle:GroupUser')->getMembers($page->getId(), array('paginate' => false, 'limit' => 10));
 
@@ -559,13 +627,6 @@ class PageController extends Controller
         }
 
         $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($page->getId(), array('locale' => $request->getLocale()));
-
-        $posts = $em->getRepository('CMBundle:Post')->getLastPosts(array('pageId' => $page->getId()));
-        $pagination = $this->get('knp_paginator')->paginate($posts, $pageNum, 15);
-        
-        if ($request->isXmlHttpRequest()) {
-            return $this->render('CMBundle:Wall:posts.html.twig', array('slug' => $page->getSlug(), 'posts' => $pagination, 'page' => $pageNum));
-        }
 
         return array('page' => $page, 'members' => $members, 'request' => $req, 'biography' => $biography, 'posts' => $pagination);
     }

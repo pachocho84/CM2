@@ -41,17 +41,11 @@ function recalculateWall() {
 
     var data = {};
     var colIndex = $('#wall > div').length;
-    $.each($('#wall > div > [wall-col-' + colIndex + '^="l"'), function(i, elem) {
-        data[$(elem).attr('wall-order') + ';l'] = $(elem).detach();
-    });
-    $.each($('#wall > div > [wall-col-' + colIndex + '^="l"'), function(i, elem) {
-        data[$(elem).attr('wall-order') + ';center,left'] = $(elem).detach();
-    });
-    $.each($('#wall > div > [wall-col-' + colIndex + '^="r"'), function(i, elem) {
-        data[$(elem).attr('wall-order') + ';right'] = $(elem).detach();
+    $.each($('#wall > div > [wall-col]'), function(i, elem) {
+        data['order-' + i + ';' + $(elem).attr('wall-col')] = $(elem).detach();
     });
     $.each($('#wall > div > *:not([wall-col])'), function(i, elem) {
-        data['order' + $(elem).attr('wall-order')] = $(elem).detach();
+        data['col-' + i] = $(elem).detach();
     });
     data['loadMore'] = $loadMore;
 
@@ -81,7 +75,7 @@ function wallLoad(data, t, c, reload) {
         else return parseInt(aP) - parseInt(bP);
     });
 
-    console.log(fields);
+    console.log(data, fields);
 
     $.each(fields, function(i, field) {
         if (field == 'loadMore') return;
@@ -108,10 +102,7 @@ function wallLoad(data, t, c, reload) {
         var $box = $(data[field]);
 
         if (typeof positions !== 'undefined') {
-            $box.attr('wall-order', '');
-            $box.attr('wall-order-1', positions.split(',')[0]);
-            $box.attr('wall-order-2', positions.split(',')[1]);
-            $box.attr('wall-order-3', positions.split(',')[2]);
+            $box.attr('wall-col', positions);
         }
 
         // $box.hide();

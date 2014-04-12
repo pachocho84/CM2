@@ -137,6 +137,7 @@ class EventController extends Controller
 
         $dates = $em->getRepository('CMBundle:Event')->getNextDates(array(
             $object.'Id' => $objectId,
+            'locale' => $request->getLocale(),
             'paginate' => false,
             'exclude' => $request->get('exclude'),
             'limit' => $request->get('limit')

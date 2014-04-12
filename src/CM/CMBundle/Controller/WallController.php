@@ -39,146 +39,180 @@ class WallController extends Controller
         if ($request->isXmlHttpRequest()) {
             $em = $this->getDoctrine()->getManager();
 
-            $boxes = array();
-
-            /* Last registered users */
-            if ($page == 1) {
-                $boxes['lastUsers;1,2,0'] = $this->renderView('CMBundle:Wall:boxLastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(28)));
+            /* FETCH */
+            // Sponsored 
+            $sponsoreds = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale())), $page, 2);
+            
+            // Box partners
+            if ($page == 1 && $request->get('_route') == 'wall_index') {
+                $partners = $em->getRepository('CMBundle:HomepageBox')->getBoxes(4, array('locale' => $request->getLocale()));
             }
 
-            /* Reviews */
-            if ($page == 1 && in_array($request->get('_route'), array('wall_index', 'wall_newspaper'))) {
-                if ($page == 1) {
+            // Vips
+            if (in_array($request->get('_route'), array('wall_index', 'wall_vips'))) {
+                $vips = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('vip' => true, 'entityCreation' => true, 'locale' => $request->getLocale())), $page, 2);
+            }
+
+            // Banners
+            $banners = $em->getRepository('CMBundle:HomepageBanner')->getBanners(($page -1) * 2, 2);
+
+            /* ORDER */
+            $order = array(
+                'login'  => '0,1,2',
+                'last'   => '1,0,0',
+                'rev'    => '5,2,1',
+                'spo0'   => '4,8,3',
+                'spo1'   => '11,14,7',
+                'ban0'   => '6,9,11',
+                'ban1'   => '15,12,15',
+                'vip0'   => '10,10,12',
+                'vip1'   => '13,13,13',
+                'par0'   => '3,6,4',
+                'par1'   => '8,7,9',
+                'par2'   => '12,11,10',
+                'par3'   => '14,15,14',
+                'events' => '2,3,5',
+                'discs'  => '9,4,6',
+                'sugg'   => '7,5,8'
+            );
+            $boxes = array();
+
+            // Last registered users 
+            if ($page == 1) {
+                $boxes['lastUsers;'.$order['last']] = $this->renderView('CMBundle:Wall:boxLastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(28)));
+
+                // Reviews 
+                if (in_array($request->get('_route'), array('wall_index', 'wall_newspaper'))) {
                     $reviews = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:HomepageArchive')->getLastReviews(array('locale' => $request->getLocale())), $page, 4);
-                    $boxes['reviews;2,0,3'] = $this->renderView('CMBundle:Wall:boxReviews.html.twig', array('reviews' => $reviews));
+                    $boxes['reviews;'.$order['rev']] = $this->renderView('CMBundle:Wall:boxReviews.html.twig', array('reviews' => $reviews));
+                }
+
+                // Login/Register box
+                if (!$this->get('security.context')->isGranted('ROLE_USER')) {
+                    $boxes['login_register;'.$order['login']] = $this->renderView('CMBundle:Wall:boxAuthentication.html.twig');
+                }
+
+                // Next events
+                if ($request->get('_route') == 'wall_index') {
+                    $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('locale' => $request->getLocale())), $page, 3);
+                    $boxes['events;'.$order['events']] = $this->renderView('CMBundle:Event:nextDates.html.twig', array('dates' => $dates));
+                }
+
+                // Next discs
+                if ($request->get('_route') == 'wall_index') {
+                    $discs = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Disc')->getLatests(array('locale' => $request->getLocale())), $page, 3);
+                    $boxes['discs;'.$order['discs']] = $this->renderView('CMBundle:Disc:latests.html.twig', array('discs' => $discs));
+                }
+
+                // Suggested users
+                if ($this->get('security.context')->isGranted('ROLE_USER')) {
+                    $relationTypes = $em->getRepository('CMBundle:RelationType')->findBy(array());
+                    $boxes['suggestedUsers;'.$order['sugg']] = $this->renderView('CMBundle:Wall:boxSuggested.html.twig', array('suggestions' => $em->getRepository('CMBundle:Relation')->getSuggestedUsers($this->getUser()->getId(), 0, 5, true), 'relationTypes' => $relationTypes));
+                }
+
+                // Sponsored
+                foreach ($sponsoreds as $i => $sponsored) {
+                    $boxes['sponsored_'.$sponsored->getId().';'.$order['spo'.$i]] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $sponsored->getEntity()->getPost(), 'postType' => 'sponsored'));
+                }
+
+                // Box partners
+                foreach ($partners as $i => $box) {
+                    switch ($box->getType()) {
+                        case HomepageBox::TYPE_EVENT:
+                            $objects = $em->getRepository('CMBundle:Event')->getNextDates(array('pageId' => $box->getPageId(), 'locale' => $request->getLocale()));
+                            $limit = 5;
+                            break;
+                        case HomepageBox::TYPE_DISC:
+                            $objects = $em->getRepository('CMBundle:Disc')->getDiscs(array('pageId' => $box->getPageId(), 'locale' => $request->getLocale()));
+                            $limit = 6;
+                            break;
+                        case HomepageBox::TYPE_ARTICLE:
+                            $objects = $em->getRepository('CMBundle:Disc')->getArticles(array('pageId' => $box->getPageId(), 'locale' => $request->getLocale()));
+                            $limit = 5;
+                            break;
+                        case HomepageBox::TYPE_RUBRIC:
+                            $objects = $em->getRepository('CMBundle:HomepageArchive')->getArticles($box->getCategoryId(), array('locale' => $request->getLocale()));
+                            $limit = 3;
+                            break;
+                    }
+                    $objects = $this->get('knp_paginator')->paginate($objects, $page, $limit);
+
+                    if (empty($objects->getItems()) && $box->getType() != HomepageBox::TYPE_RUBRIC) {
+                        $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($box->getPageId(), array('locale' => $request->getLocale()));
+                    }
+
+                    $boxes['partner_'.$box->getPosition().';'.$order['par'.$i]] = $this->renderView('CMBundle:Wall:boxPartner.html.twig', array('box' => $box, 'objects' => $objects, 'biography' => $biography));
+                }
+
+                // Vips
+                foreach ($vips as $i => $post) {
+                    $boxes['vip_'.$post->getId().';'.$order['vip'.$i]] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post, 'postType' => 'vip'));
+                }
+
+                // Banners
+                foreach ($banners as $i => $banner) {
+                    $boxes['banner_'.$banner->getId().';'.$order['ban'.$i]] = $this->renderView('CMBundle:Wall:boxBanner.html.twig', array('banner' => $banner));
                 }
             }
 
-            /* Login/Register box */
-            if ($page == 1 && !$this->get('security.context')->isGranted('ROLE_USER')) {
-                $boxes['login_register;0,1,2'] = $this->renderView('CMBundle:Wall:boxAuthentication.html.twig');
+            /* OTHER POSTS */
+            // Box connections
+            if ($this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'wall_connections') {
+                $relationsIds = $em->getRepository('CMBundle:Relation')->getRelationsIdsPerUser($this->getUser()->getId());
+                if (!empty($relationsIds)) {
+                    $relationsIds = array_map(function($v) { return $v['fromUserId']; }, $relationsIds);
+                    $connections = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('inUsers' => $relationsIds, 'locale' => $request->getLocale())), $page, 30);
+
+                }
+                foreach ($connections as $post) {
+                    $boxes['suggested_'.$post->getId().';'.$order['spo'.$i]] = $this->renderView('CMBundle:Wall:boxPost.html.twig', array('post' => $post));
+                }
             }
 
-            /* Next events */
-            if ($page == 1 && $request->get('_route') == 'wall_index') {
-                $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('locale' => $request->getLocale())), $page, 3);
-                $boxes['dates'] = $this->renderView('CMBundle:Event:nextDates.html.twig', array('dates' => $dates));
+            // Box fans
+            if ($this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'wall_fans') {
+                $fansIds = $em->getRepository('CMBundle:Fan')->getFans($this->getUser()->getId(), true);
+                if (!empty($fansIds)) {
+                    $in = array('inUsers' => array(), 'inPages' => array(), 'inGroups' => array());
+                    foreach ($fansIds as $fan) {
+                        if (!is_null($fan->getUserId())) {
+                            $in['inUsers'][] = $fan->getUserId();
+                        } elseif (!is_null($fan->getPageId())) {
+                            $in['inPages'][] = $fan->getPageId();
+                        } elseif (!is_null($fan->getGroupId())) {
+                            $in['inGroups'][] = $fan->getGroupId();
+                        }
+                    }
+                    $fans = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('in' => $in, 'locale' => $request->getLocale())), $page, 30);
+                }
+                foreach ($fans as $i => $post) {
+                    $boxes['fan_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
+                }
             }
 
-            // /* Suggested users */
-            // if ($page == 1 && $this->get('security.context')->isGranted('ROLE_USER')) {
-            //     $relationTypes = $em->getRepository('CMBundle:RelationType')->findBy(array());
-            //     $boxes['suggestedUsers'] = $this->renderView('CMBundle:Wall:boxSuggested.html.twig', array('suggestions' => $em->getRepository('CMBundle:Relation')->getSuggestedUsers($this->getUser()->getId(), 0, 5, true), 'relationTypes' => $relationTypes));
-            // }
+            // Posts
+            if ($request->get('_route') == 'wall_index') {
+                $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
+                foreach ($posts as $post) {
+                    $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
+                }
+            }
 
-            // /* Sponsored */
-            // $sponsoreds = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Sponsored')->getLessViewed(array('locale' => $request->getLocale())), $page, 2);
-            // foreach ($sponsoreds as $sponsored) {
-            //     $boxes['sponsored_'.$sponsored->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $sponsored->getEntity()->getPost(), 'postType' => 'sponsored'));
-            // }
-
-            // /* Box partners */
-            // if ($page == 1 && $request->get('_route') == 'wall_index') {
-            //     $wallBoxes = $em->getRepository('CMBundle:HomepageBox')->getBoxes(4, array('locale' => $request->getLocale()));
-            //     foreach ($wallBoxes as $box) {
-            //         switch ($box->getType()) {
-            //             case HomepageBox::TYPE_EVENT:
-            //                 $objects = $em->getRepository('CMBundle:Event')->getNextDates(array('pageId' => $box->getPageId(), 'locale' => $request->getLocale()));
-            //                 $limit = 5;
-            //                 break;
-            //             case HomepageBox::TYPE_DISC:
-            //                 $objects = $em->getRepository('CMBundle:Disc')->getDiscs(array('pageId' => $box->getPageId(), 'locale' => $request->getLocale()));
-            //                 $limit = 6;
-            //                 break;
-            //             case HomepageBox::TYPE_ARTICLE:
-            //                 $objects = $em->getRepository('CMBundle:Disc')->getArticles(array('pageId' => $box->getPageId(), 'locale' => $request->getLocale()));
-            //                 $limit = 5;
-            //                 break;
-            //             case HomepageBox::TYPE_RUBRIC:
-            //                 $objects = $em->getRepository('CMBundle:HomepageArchive')->getArticles($box->getCategoryId(), array('locale' => $request->getLocale()));
-            //                 $limit = 3;
-            //                 break;
-            //         }
-            //         $objects = $this->get('knp_paginator')->paginate($objects, $page, $limit);
-
-            //         if (empty($objects->getItems()) && $box->getType() != HomepageBox::TYPE_RUBRIC) {
-            //             $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($box->getPageId(), array('locale' => $request->getLocale()));
-            //         }
-
-            //         $boxes['partners_'.$box->getPosition()] = $this->renderView('CMBundle:Wall:boxPartner.html.twig', array('box' => $box, 'objects' => $objects, 'biography' => $biography));
-            //     }
-            // }
-
-            // /* Vips */
-            // if (in_array($request->get('_route'), array('wall_index', 'wall_vips'))) {
-            //     $vips = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('vip' => true, 'entityCreation' => true, 'locale' => $request->getLocale())), $page, 2);
-            //     foreach ($vips as $post) {
-            //         $boxes['vip_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post, 'postType' => 'vip'));
-            //     }
-            // }
-
-            // /* Banners */
-            // $banners = $em->getRepository('CMBundle:HomepageBanner')->getBanners(($page -1) * 2, 2);
-            // foreach ($banners as $banner) {
-            //     $boxes['banner_'.$banner->getId()] = $this->renderView('CMBundle:Wall:boxBanner.html.twig', array('banner' => $banner));
-            // }
-
-            // /* Box fans */
-            // if ($this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'wall_fans') {
-            //     $fansIds = $em->getRepository('CMBundle:Fan')->getFans($this->getUser()->getId(), true);
-            //     if (!empty($fansIds)) {
-            //         $in = array('inUsers' => array(), 'inPages' => array(), 'inGroups' => array());
-            //         foreach ($fansIds as $fan) {
-            //             if (!is_null($fan->getUserId())) {
-            //                 $in['inUsers'][] = $fan->getUserId();
-            //             } elseif (!is_null($fan->getPageId())) {
-            //                 $in['inPages'][] = $fan->getPageId();
-            //             } elseif (!is_null($fan->getGroupId())) {
-            //                 $in['inGroups'][] = $fan->getGroupId();
-            //             }
-            //         }
-            //         $fans = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('in' => $in, 'locale' => $request->getLocale())), $page, 30);
-            //         foreach ($fans as $post) {
-            //             $boxes['fan_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
-            //         }
-            //     }
-            // }
-
-            // /* Box connections */
-            // if ($this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'wall_connections') {
-            //     $relationsIds = $em->getRepository('CMBundle:Relation')->getRelationsIdsPerUser($this->getUser()->getId());
-            //     if (!empty($relationsIds)) {
-            //         $relationsIds = array_map(function($v) { return $v['fromUserId']; }, $relationsIds);
-            //         $connections = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('inUsers' => $relationsIds, 'locale' => $request->getLocale())), $page, 30);
-            //         foreach ($connections as $post) {
-            //             $boxes['connection_'.$post->getId()] = $this->renderView('CMBundle:Wall:boxPost.html.twig', array('post' => $post));
-            //         }
-            //     }
-            // }
-
-            // /* Posts */
-            // if ($request->get('_route') == 'wall_index') {
-            //     $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
-            //     foreach ($posts as $post) {
-            //         $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
-            //     }
-            // }
-
-            // switch ($request->get('_route')) {
-            //     case 'wall_index':
-            //         $paginationData = $posts->getPaginationData();
-            //         break;
-            //     case 'wall_vips':
-            //         $paginationData = $vips->getPaginationData();
-            //         break;
-            //     case 'wall_fans':
-            //         $paginationData = $fans->getPaginationData();
-            //         break;
-            //     case 'wall_connections':
-            //         $paginationData = $connections->getPaginationData();
-            //         break;
-            // }
-            // $boxes['loadMore'] = $this->renderView('CMBundle:Wall:loadMore.html.twig', array('paginationData' => $paginationData));
+            switch ($request->get('_route')) {
+                case 'wall_index':
+                    $paginationData = $posts->getPaginationData();
+                    break;
+                case 'wall_vips':
+                    $paginationData = $vips->getPaginationData();
+                    break;
+                case 'wall_fans':
+                    $paginationData = $fans->getPaginationData();
+                    break;
+                case 'wall_connections':
+                    $paginationData = $connections->getPaginationData();
+                    break;
+            }
+            $boxes['loadMore'] = $this->renderView('CMBundle:Wall:loadMore.html.twig', array('paginationData' => $paginationData));
 
             return new JsonResponse($boxes);
         }
