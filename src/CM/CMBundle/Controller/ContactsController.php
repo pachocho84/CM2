@@ -60,10 +60,10 @@ class ContactsController extends Controller
             ))
             ->add('recaptcha', 'ewz_recaptcha', array(
                 'constraints'   => array(
-                    // new EWZ\True
+                    new EWZ\True
                 ),
                 'error_bubbling' => false,
-            ))->add('save', 'submit')
+            ))->add('send', 'submit')
             ->getForm();
 
         $form->handleRequest($request);
@@ -72,7 +72,7 @@ class ContactsController extends Controller
             $message = \Swift_Message::newInstance()
                 ->setSubject('Feedback')
                 ->setFrom($form->getData()['email'])
-                ->setTo('f.castellarin@gmail.com')
+                ->setTo($this->container->getParameter('mailer_email'))
                 ->setBody($form->getData()['body'])
             ;
             $this->get('mailer')->send($message);
