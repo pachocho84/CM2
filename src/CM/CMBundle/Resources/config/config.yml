@@ -111,11 +111,13 @@ knp_paginator:
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
 
 liip_imagine:
-    cache_mkdir_mode: 0755
-    web_root: %kernel.root_dir%/../web
-    data_root: %kernel.root_dir%/../web%images_full.dir%
-    cache_prefix: %images.dir%
-    cache_clearer: false
+    resolvers:
+        default:
+            web_path: %kernel.root_dir%/../web%images_full.dir%
+    loaders:
+        default:
+            filesystem:
+                data_root: %kernel.root_dir%/../web
     filter_sets:
         avatar:
             quality: 90
