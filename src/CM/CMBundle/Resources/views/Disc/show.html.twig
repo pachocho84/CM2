@@ -17,7 +17,7 @@
                 {% if is_granted('ROLE_USER') %}
                     <div class="btn-group btn-group-sm">
                         {{ include('CMBundle:Like:likeActions.html.twig', {post: disc.post, button: true, selector: '#social'}) }}
-                        <a href="{# {{ path('post_show', {post_id: postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }} {{ disc.post.comments|length }}</a>
+                        <a href="{# {{ path('post_show', {post_id: postId}) }} #}" class="comment_new-show {{ is_granted('ROLE_USER') ? '' : 'unlogged' }} btn btn-default">{{ icon('Comment') }}{% if disc.post.comments|length > 0 %} {{ disc.post.comments|length }}{% endif %}</a>
                     </div>
                 {% endif %}
                 {% if can_manage(disc) %}

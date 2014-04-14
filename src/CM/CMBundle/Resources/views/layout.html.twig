@@ -83,16 +83,21 @@
                             <a href="{{ path('fos_user_security_login') }}" class="dropdown-toggle" data-toggle="dropdown">{{ 'Login'|trans }}</a>
                             <div class="dropdown-menu dropdown-menu-right login-dropdown">
                                 <div class="dropdown-menu-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h3>{{ 'Login'|trans }}</h3>
-                                            {{ render(controller('FOSUserBundle:Security:login')) }}
+                                    {% if action_name() != 'register' and app.request.get('_route') != 'wall_index' %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h3>{{ 'Login'|trans }}</h3>
+                                                {{ render(controller('FOSUserBundle:Security:login', {'template': 'CMUserBundle:Security:form.html.twig'})) }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h3>{{ 'Registration'|trans }}</h3>
+                                                {{ render(controller('FOSUserBundle:Registration:register', {'template': null})) }}
+                                            </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <h3>{{ 'Registration'|trans }}</h3>
-                                            {{render(controller('FOSUserBundle:Registration:register')) }}
-                                        </div>
-                                    </div>
+                                    {% else %}
+                                        <h3>{{ 'Login'|trans }}</h3>
+                                        {{ render(controller('FOSUserBundle:Security:login', {'template': 'CMUserBundle:Security:form.html.twig'})) }}
+                                    {% endif %}
                                 </div>
                             </div>
                         </li>
@@ -116,7 +121,7 @@
             <div id="footer">
                 Circuito Musica &copy; 2006-{{ "now"|date("Y") }}
                 <div class="pull-right">
-                    {{ "Contacts"|trans }}
+                    <a href="{{ path('contacts_index') }}">{{ "Contacts"|trans }}</a>
                 </div>
             </div>
         </div>

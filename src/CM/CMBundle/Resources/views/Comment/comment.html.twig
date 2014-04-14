@@ -5,11 +5,11 @@
         <a href="{{ path('comment_edit', {id: comment.postId, commentId: comment.id}) }}" class="close invisible comment_edit-btn" data-placement="left" data-toggle>{{ icon('Edit') }}</a>
     {% endif %}
 
-    {{ show_img_box(comment.user.img|imagine_filter('avatar'), {'width': 32, 'height': 32, 'offset': comment.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+    {{ show_img_box(comment.user.img|imagine_filter('avatar'), {'width': 32, 'height': 32, 'offset': comment.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) }}
 
     <div class="media-body">
         <a href="{{ path('user_show', {'slug': comment.user.slug}) }}" {{ publisher_box(comment.user) }} >{{ comment.user }}</a>
-        <span class="text-muted">{{ '%date% at %time%'|trans({'%date%': comment.createdAt|format_date('d MMMM Y'), '%time%': comment.createdAt|format_date('HH:mm')}) }}</span>
+        <span class="text-muted">{{ '%date% at %time%'|trans({'%date%': comment.createdAt|humanize_day, '%time%': comment.createdAt|format_date('HH:mm')}) }}</span>
         <div class="comment-body">{{ comment.comment }}</div>
     </div>
     

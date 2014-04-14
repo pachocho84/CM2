@@ -17,16 +17,6 @@ use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Comment;
 use CM\CMBundle\Form\CommentType;
 
-function getAllErrors($form, &$errors = array()) {
-    foreach ($form->getErrors() as $error) {
-        $errors[] = $form->getName().': '.$error->getMessage();
-    }
-    foreach ($form->all() as $child) {
-        getAllErrors($child, $errors);
-    }
-    return $errors;
-}
-
 /**
  * @Route("/comments")
  */

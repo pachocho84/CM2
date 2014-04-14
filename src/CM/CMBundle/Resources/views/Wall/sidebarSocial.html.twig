@@ -8,7 +8,7 @@
 
         <div class="text-muted small">
             {{ icon((image|class_name)) }}
-            {{ image.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
+            {{ '%date% at %time%'|trans({'%date%': image.updatedAt|humanize_day, '%time%': image.updatedAt|format_date('HH:mm')}) }}
         </div>
     </div>
 </div>

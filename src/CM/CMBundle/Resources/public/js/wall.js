@@ -39,15 +39,21 @@ function getFields(obj) {
 function recalculateWall() {
     var $loadMore = $('#wall ~ .load_more').detach();
 
-    var data = {};
+    var dataPos = {};
+    var dataOrder = {};
     var colIndex = $('#wall > div').length;
-    $.each($('#wall > div > [wall-col]'), function(i, elem) {
-        data['order-' + i + ';' + $(elem).attr('wall-col')] = $(elem).detach();
+    $.each($('#wall > div > [wall-pos]'), function(i, elem) {
+        dataPos['pos-' + i + ';' + $(elem).attr('wall-pos')] = $(elem).detach();
     });
-    $.each($('#wall > div > *:not([wall-col])'), function(i, elem) {
-        data['col-' + i] = $(elem).detach();
+    $.each($('#wall > div > [wall-order]'), function(i, elem) {
+        dataOrder[$(elem).attr('wall-order')] = $(elem).detach();
     });
+    // dataOrder = dataOrder.sort();
+    var data = dataPos.concat(dataOrder);
+
     data['loadMore'] = $loadMore;
+
+console.log(data);
 
     $('#wall').empty().append(calculateColumns());
     wallOrder = 0;
@@ -75,17 +81,17 @@ function wallLoad(data, t, c, reload) {
         else return parseInt(aP) - parseInt(bP);
     });
 
-    console.log(data, fields);
-
     $.each(fields, function(i, field) {
         if (field == 'loadMore') return;
+
+        var $box = $(data[field]);
+
+        if ($box.attr('post-id') != '' && $('.post[post-id="' + $box.attr('post-id') + '"]').length != 0) return;
 
         var colIndex = $('#wall > div').length;
 
         var positions = field.split(';')[1];
         var position = (positions || '').split(',')[colIndex - 1];
-
-        console.log(field, position);
 
         var column;
         if (typeof position === 'undefined') {
@@ -99,10 +105,10 @@ function wallLoad(data, t, c, reload) {
             column = $('#wall > div:first');
         }
 
-        var $box = $(data[field]);
-
         if (typeof positions !== 'undefined') {
-            $box.attr('wall-col', positions);
+            $box.attr('wall-pos', positions);
+        } else {
+            $box.attr('wall-order', i);
         }
 
         // $box.hide();

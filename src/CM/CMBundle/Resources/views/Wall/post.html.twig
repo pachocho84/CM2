@@ -4,7 +4,7 @@
 {% endif %}
 
 
-<div class="box post">
+<div class="box post" post-id="{{ post.id }}">
 
     {% if postType is defined %}
         <div class="box-heading">
@@ -30,7 +30,7 @@
         
                 <div class="text-muted small">
                     {{ icon((post.object|class_name)~'_'~(post.type)) }}
-                    {{ post.updatedAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}
+                    {{ '%date% at %time%'|trans({'%date%': post.updatedAt|humanize_day, '%time%': post.updatedAt|format_date('HH:mm')}) }}
                 </div>
         
             </div>

@@ -3,7 +3,10 @@ $(document).ready(function() {
     $.ajaxSetup({ cache: false });
 });
 
-
+// is :hover
+function isHover($elem) {
+    return $elem.parent().find(':hover').get(0) == $elem.get(0);
+}
 
 /* USER ACTIVE */
 var UserActive = {
@@ -64,11 +67,31 @@ function insertRelationItem(c, d, a) {
 }
 
 function initPopoverPublisher($elem) {
+    if ($elem.attr('popover-publisher') == 'init') return;
+    $elem.attr('popover-publisher', 'init');
+
+    var hoverOut = function($e) {
+        setTimeout(function() {
+            if (!isHover($e) && !isHover($('.popover'))) {
+                $e.removeClass('popover-publisher-in').popover('hide');
+            }
+        }, 250);
+    };
+
+    var hoverIn = function($e) {
+        if (isHover($e)) {
+            $e.popover('show');
+            $('.popover').addClass('popover-publisher').on('mouseleave', function() {
+                hoverOut($e);
+            });
+        }
+    };
+
     $elem.popover({
         selector: '[popover-publisher]',
         trigger: 'manual',
         placement: 'auto top',
-        delay: {show: 1000, hide: 250},
+        delay: {show: 700, hide: 250},
         container: 'body',
         html: true,
         content: function() {
@@ -82,21 +105,13 @@ function initPopoverPublisher($elem) {
             return content;
         }
     }).on('mouseenter', function(event) {
-        setTimeout(function() {
-            if ($(event.currentTarget).is(':hover')) {
-                $(event.currentTarget).popover('show');
-                $('.popover').addClass('popover-publisher').on('mouseleave', function () {
-                    $(event.currentTarget).popover('hide');
-                });
-            }
-        }, 1000);
+        hoverIn($(event.currentTarget));
     }).on('mouseleave', function(event) {
-        setTimeout(function() {
-            if (!$(event.currentTarget).is(':hover') && !$('.popover').is(':hover')) {
-                $(event.currentTarget).popover('hide');
-            }
-        }, 250);
+        hoverOut($(event.currentTarget));
     });
+    if (isHover($elem)) {
+        hoverIn($elem);
+    }
 }
 
 function initSlideshow($slideshow) {
@@ -126,8 +141,8 @@ $(function() {
     UserActive.begin();
 
     /* PUBLISHER POPOVER */
-    initPopoverPublisher($('[popover-publisher]'));
-    $(document).on('mouseenter', '[popover-publisher]', function(event) {
+    initPopoverPublisher($('[popover-publisher][popover-publisher!="init"]'));
+    $(document).on('mouseenter', '[popover-publisher][popover-publisher!="init"]', function(event) {
         initPopoverPublisher($(event.currentTarget));
     });
     // function initPopoverPublisher($elem) {

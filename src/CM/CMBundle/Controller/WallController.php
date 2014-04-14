@@ -77,8 +77,8 @@ class WallController extends Controller
             );
             $boxes = array();
 
-            // Last registered users 
             if ($page == 1) {
+                // Last registered users
                 $boxes['lastUsers;'.$order['last']] = $this->renderView('CMBundle:Wall:boxLastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(28)));
 
                 // Reviews 
@@ -156,6 +156,7 @@ class WallController extends Controller
             }
 
             /* OTHER POSTS */
+            $otherBoxes = array();
             // Box connections
             if ($this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'wall_connections') {
                 $relationsIds = $em->getRepository('CMBundle:Relation')->getRelationsIdsPerUser($this->getUser()->getId());
@@ -164,13 +165,12 @@ class WallController extends Controller
                     $connections = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('inUsers' => $relationsIds, 'locale' => $request->getLocale())), $page, 30);
 
                 }
-                foreach ($connections as $post) {
-                    $boxes['suggested_'.$post->getId().';'.$order['spo'.$i]] = $this->renderView('CMBundle:Wall:boxPost.html.twig', array('post' => $post));
+                foreach ($connections as $i => $post) {
+                    $otherBoxes[] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
                 }
             }
-
             // Box fans
-            if ($this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'wall_fans') {
+            elseif ($this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'wall_fans') {
                 $fansIds = $em->getRepository('CMBundle:Fan')->getFans($this->getUser()->getId(), true);
                 if (!empty($fansIds)) {
                     $in = array('inUsers' => array(), 'inPages' => array(), 'inGroups' => array());
@@ -186,17 +186,54 @@ class WallController extends Controller
                     $fans = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('in' => $in, 'locale' => $request->getLocale())), $page, 30);
                 }
                 foreach ($fans as $i => $post) {
-                    $boxes['fan_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
+                    $otherBoxes[] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
+                }
+            }
+            // Posts
+            elseif ($request->get('_route') == 'wall_index') {
+                $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
+                foreach ($posts as $post) {
+                    $otherBoxes[] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
                 }
             }
 
-            // Posts
-            if ($request->get('_route') == 'wall_index') {
-                $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('locale' => $request->getLocale())), $page, 15);
-                foreach ($posts as $post) {
-                    $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
+            /* INSERT IN OTHER POSTS */
+            if ($page > 1) {
+                // sponsoreds
+                $indexes = range(0, count($otherBoxes));
+                shuffle($indexes);
+                $sponsoredIndexes = array_slice($indexes, 0, count($sponsoreds));
+                sort($sponsoredIndexes);
+                foreach ($sponsoreds as $sponsored) {
+                    $index = array_shift($sponsoredIndexes);
+                    $box = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $sponsored->getEntity()->getPost(), 'postType' => 'sponsored'));
+                    array_splice($otherBoxes, $index, 0, $box);
+                }
+                
+                // vips
+                $indexes = range(0, count($otherBoxes));
+                shuffle($indexes);
+                $vipIndexes = array_slice($indexes, 0, count($vips));
+                sort($vipIndexes);
+                foreach ($vips as $vip) {
+                    $index = array_shift($vipIndexes);
+                    $box = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post, 'postType' => 'vip'));
+                    array_splice($otherBoxes, $index, 0, $box);
+                }
+                
+                // banners
+                $indexes = range(0, count($otherBoxes));
+                shuffle($indexes);
+                $bannerIndexes = array_slice($indexes, 0, count($banners));
+                sort($bannerIndexes);
+                foreach ($banners as $banner) {
+                    $index = array_shift($bannerIndexes);
+                    $box = $this->renderView('CMBundle:Wall:boxBanner.html.twig', array('banner' => $banner));
+                    array_splice($otherBoxes, $index, 0, $box);
                 }
             }
+
+            $boxes = array_merge($boxes, $otherBoxes);
 
             switch ($request->get('_route')) {
                 case 'wall_index':

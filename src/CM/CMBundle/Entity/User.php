@@ -8,6 +8,7 @@ use FOS\UserBundle\Model\User as BaseUser;
 use FOS\MessageBundle\Model\ParticipantInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 /**
  * User
  *

@@ -76,6 +76,12 @@ fos_user:
         form:
             type: cm_cmbundle_user_profile
 
+ewz_recaptcha:
+    public_key:   6Ld0ufESAAAAAN5e79hGMo7QIYJjrwtZGVLtj1fp
+    private_key:  6Ld0ufESAAAAAImIX0gLxej3x70nBZYOoivw_O9n
+    secure:       true
+    locale_key:   kernel.default_locale
+
 fos_message:
     db_driver: orm
     thread_class: CM\CMBundle\Entity\MessageThread

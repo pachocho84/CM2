@@ -8,7 +8,7 @@
         {% if button %} {{ tooltip(post.likes.toArray, {closure: '$v->getUser()', limit: 20}) }}{% endif %}
     >
         {% if button %}
-            {{ icon('Like') }} {{ post.likes|length }}
+            {{ icon('Like') }}{% if post.likes|length > 0 %} {{ post.likes|length }}{% endif %}
         {% else %}
             {{ 'Like'|trans }}
         {% endif %}
@@ -20,7 +20,7 @@
        {% if button %} {{ tooltip(post.likes.toArray, {closure: '$v->getUser()', limit: 20}) }}{% endif %}
     >
         {% if button %}
-            {{ icon('Like') }} {{ post.likes|length }}
+            {{ icon('Like') }}{% if post.likes|length > 0 %} {{ post.likes|length }}{% endif %}
         {% else %}
             {{ 'Unlike'|trans }}
         {% endif %}

@@ -6,7 +6,7 @@
                 {{ show_img_box(user.img|imagine_filter('medium'), {width: 120, offset: user.imgOffset}) }}
             </div>
             <h2>{{ user }}</h2>
-            <h3 class="text-muted" {{ user.userTags|length > 3 and tooltip(user.userTags) }}>
+            <h3 class="text-muted"{% if user.userTags|length > 3 %} {{ tooltip(user.userTags) }}{% endif %}>
                 {{ user.userTags[:3]|join(', ')|trim }}{% if user.userTags|length > 3 %}...{% endif %}
             </h3>
 
@@ -20,7 +20,7 @@
             <div class="profile-header-buttons btn-toolbar" role="toolbar">
                 {% if is_granted('ROLE_USER') and user.id != app.user.id %}
                     {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
-                    {{ render(controller('CMBundle:Relation:button', {user: user})) }}
+                    {{ render(controller('CMBundle:Relation:button', {user: user, btn: true})) }}
                     <a href="{{ path('message_new', {userId: user.id}) }}" class="btn btn-default" {{ modal({remote: path('message_new', {userId: user.id}), callback: '$initRecipients()'}) }}>{{ icon('Message') }} {{ 'Send a message'|trans }}</a>
                 {% endif %}
             </div>
