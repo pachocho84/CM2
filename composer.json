@@ -8,7 +8,7 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "2.*",
+        "symfony/symfony": "2.4.*",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "doctrine/doctrine-bundle": "1.2.*",
         "twig/twig": "1.13.*",
@@ -36,10 +36,9 @@
         "liip/imagine-bundle": "dev-master",
         "jms/debugging-bundle": "dev-master",
         "sonata-project/core-bundle": "~2.2@dev",
-        "sonata-project/admin-bundle": "dev-master",
-        "sonata-project/doctrine-orm-admin-bundle": "dev-master",
         "knplabs/knp-snappy-bundle": "dev-master",
-        "friendsofsymfony/message-bundle": "dev-master"
+        "friendsofsymfony/message-bundle": "dev-master",
+        "excelwebzone/recaptcha-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
