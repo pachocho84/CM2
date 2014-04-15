@@ -300,15 +300,17 @@ form .panel-group .panel {
     margin-bottom: 20px;
     overflow: hidden;
 }
+.profile-header-row {
+    background: url(../images/layout/damascato_silver.jpg) repeat;
+}
 .profile-header .profile-header-info {
     border-right: 1px solid #bbbbbb;
-    background: url(../images/layout/damascato_silver.jpg) repeat;
 /*     background: url(../images/layout/shadow.png) bottom repeat-x; */
-    height: 274px;
+    height: 202px;
 }
 .profile-header .profile-header-info .profile-header-picture {
     margin: 0 auto 15px;
-    width: 110px;
+    width: 85px;
 }
 .profile-header .profile-header-info h2 {
     font-size: 22px;
@@ -320,7 +322,7 @@ form .panel-group .panel {
     margin: 0 0 15px;
 }
 .profile-header .profile-header-cover {
-    height: 274px;
+    height: 202px;
     padding: 0px;
     position: relative;
 }
@@ -354,17 +356,92 @@ form .panel-group .panel {
     right: 0;
 }
 @media (max-width: 991px) {
+    .profile-header .profile-header-info .profile-header-picture {
+        margin: 0 auto 10px;
+/*         width: 85px; */
+    }
     .profile-header .profile-header-info .profile-header-picture .image_box {
-        width: 100px !important;
-        height: 100px !important;
+        width: 75px !important;
+        height: 75px !important;
+    }
+    .profile-header .profile-header-info h2 {
+        font-size: 20px;
+    }
+    .profile-header .profile-header-info h2,
+    .profile-header .profile-header-info h3,
+    .profile-header .profile-header-info .profile-header-cities {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+@media (max-width: 991px) {
+    .profile-header .profile-header-info .profile-header-picture {
+        margin: 0 auto 10px;
+    }
+    .profile-header .profile-header-info .profile-header-picture .image_box {
+        width: 75px !important;
+        height: 75px !important;
+    }
+    .profile-header .profile-header-info h2 {
+        font-size: 20px;
+    }
+}
+@media (max-width: 1199px) {
+    .profile-header .profile-header-info h2,
+    .profile-header .profile-header-info h3,
+    .profile-header .profile-header-info .profile-header-cities {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }
 @media (min-width: 992px) {
+    .profile-header .profile-header-info,
+    .profile-header .profile-header-cover {
+        height: 260px;
+    }
     .profile-header .profile-header-info .profile-header-picture {
         width: 130px;
     }
     .profile-header .profile-header-info h2 {
         font-size: 26px;
+    }
+}
+@media (min-width: 1200px) {
+    .profile-header .profile-header-info,
+    .profile-header .profile-header-cover {
+        height: 327px;
+    }
+}
+@media (min-width: 1500px) {
+    .profile-header .profile-header-info,
+    .profile-header .profile-header-cover {
+        height: 411px;
+    }
+    .profile-header .profile-header-info {
+        padding-top: 25px;
+    }
+    .profile-header .profile-header-info .profile-header-picture,
+    .profile-header .profile-header-info h2,
+    .profile-header .profile-header-info h3 {
+        margin-bottom: 25px;
+    }
+    .profile-header .profile-header-info .profile-header-picture {
+        width: 160px;
+    }
+    .profile-header .profile-header-info .profile-header-picture .image_box {
+        width: 150px !important;
+        height: 150px !important;
+    }
+    .profile-header .profile-header-info h2 {
+        font-size: 32px;
+    }
+    .profile-header .profile-header-info h3 {
+        font-size: 20px;
+    }
+    .profile-header .profile-header-info p {
+        font-size: 14px;
     }
 }
 .profile-menu {
@@ -374,7 +451,7 @@ form .panel-group .panel {
     background: #ffffff;
 }
 .profile-menu a {
-    line-height: 44px;
+    line-height: 45px;
     color: #333333;
     padding: 14px 10px 11px;
 }

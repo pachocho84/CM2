@@ -1,21 +1,21 @@
 <div class="box profile-header">
-    <div class="clearfix">
+    <div class="profile-header-row clearfix">
     
         <div class="col-sm-4 box-body profile-header-info text-center">
             <div class="profile-header-picture thumbnail">
                 {{ show_img_box(user.img|imagine_filter('medium'), {width: 120, offset: user.imgOffset}) }}
             </div>
-            <h2>{{ user }}</h2>
+            <h2 title="{{ user }}">{{ user }}</h2>
             <h3 class="text-muted" {{ user.userTags|length > 3 and tooltip(user.userTags) }}>
                 {{ user.userTags[:3]|join(', ')|trim }}{% if user.userTags|length > 3 %}...{% endif %}
             </h3>
 
-            <p>{{ icon('Map') }} {{ 'comes from'|trans }}: {{ user.cityBirth }} - {{ 'lives in'|trans }}: {{ user.cityCurrent }}</p>
+            <p title="{{ 'from'|trans }}: {{ user.cityBirth }} - {{ 'lives in'|trans }}: {{ user.cityCurrent }}" class="profile-header-cities">{{ icon('Map') }} {{ 'from'|trans }}: {{ user.cityBirth }} - {{ 'lives in'|trans }}: {{ user.cityCurrent }}</p>
         </div>
         
         <div class="col-sm-8 profile-header-cover">
             {% if user.coverImg != '' %}
-                {{ show_img_box(user.coverImg|imagine_filter('large'), {ratio: 1.77, offset: user.coverImgOffset}) }}
+                {{ show_img_box(user.coverImg|imagine_filter('large'), {ratio: 2.4, offset: user.coverImgOffset}) }}
             {% endif %}
             <div class="profile-header-buttons btn-toolbar" role="toolbar">
                 {% if is_granted('ROLE_USER') and user.id != app.user.id %}
