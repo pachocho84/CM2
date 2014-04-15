@@ -1,5 +1,7 @@
 {% extends 'CMBundle:User:accountLayout.html.twig' %}
 
+{% block section %}{{ 'Work'|trans }}{% endblock %}
+
 {% form_theme form _self %}
 
 {% block _cm_cmbundle_work_collection_works_widget %}
