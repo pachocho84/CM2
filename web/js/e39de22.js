@@ -2851,7 +2851,10 @@ $(document).ready(function() {
     $.ajaxSetup({ cache: false });
 });
 
-
+// is :hover
+function isHover($elem) {
+    return $elem.parent().find(':hover').get(0) == $elem.get(0);
+}
 
 /* USER ACTIVE */
 var UserActive = {
@@ -2912,11 +2915,31 @@ function insertRelationItem(c, d, a) {
 }
 
 function initPopoverPublisher($elem) {
+    if ($elem.attr('popover-publisher') == 'init') return;
+    $elem.attr('popover-publisher', 'init');
+
+    var hoverOut = function($e) {
+        setTimeout(function() {
+            if (!isHover($e) && !isHover($('.popover'))) {
+                $e.removeClass('popover-publisher-in').popover('hide');
+            }
+        }, 250);
+    };
+
+    var hoverIn = function($e) {
+        if (isHover($e)) {
+            $e.popover('show');
+            $('.popover').addClass('popover-publisher').on('mouseleave', function() {
+                hoverOut($e);
+            });
+        }
+    };
+
     $elem.popover({
         selector: '[popover-publisher]',
         trigger: 'manual',
         placement: 'auto top',
-        delay: {show: 1000, hide: 250},
+        delay: {show: 700, hide: 250},
         container: 'body',
         html: true,
         content: function() {
@@ -2930,21 +2953,13 @@ function initPopoverPublisher($elem) {
             return content;
         }
     }).on('mouseenter', function(event) {
-        setTimeout(function() {
-            if ($(event.currentTarget).is(':hover')) {
-                $(event.currentTarget).popover('show');
-                $('.popover').addClass('popover-publisher').on('mouseleave', function () {
-                    $(event.currentTarget).popover('hide');
-                });
-            }
-        }, 1000);
+        hoverIn($(event.currentTarget));
     }).on('mouseleave', function(event) {
-        setTimeout(function() {
-            if (!$(event.currentTarget).is(':hover') && !$('.popover').is(':hover')) {
-                $(event.currentTarget).popover('hide');
-            }
-        }, 250);
+        hoverOut($(event.currentTarget));
     });
+    if (isHover($elem)) {
+        hoverIn($elem);
+    }
 }
 
 function initSlideshow($slideshow) {
@@ -2974,8 +2989,8 @@ $(function() {
     UserActive.begin();
 
     /* PUBLISHER POPOVER */
-    initPopoverPublisher($('[popover-publisher]'));
-    $(document).on('mouseenter', '[popover-publisher]', function(event) {
+    initPopoverPublisher($('[popover-publisher][popover-publisher!="init"]'));
+    $(document).on('mouseenter', '[popover-publisher][popover-publisher!="init"]', function(event) {
         initPopoverPublisher($(event.currentTarget));
     });
     // function initPopoverPublisher($elem) {
@@ -3652,7 +3667,7 @@ function initRecipients() {
         showAutocompleteOnFocus: true
     });
     $('.ui-autocomplete-input').data('ui-autocomplete')._renderItem = function(ul, item) {
-        return $('<li><a>' + item.view + '</a></li>').appendTo(ul);
+        return $('<li><a href="#">' + item.view + '</a></li>').appendTo(ul);
     };
 
     var placeholder = $('#recipients_finder_container input.ui-autocomplete-input').attr('placeholder');
@@ -3706,6 +3721,39 @@ $(function() {
             event.preventDefault();
         }
     });
+    // search bar
+    $('#search-bar').on('click', function(event) {
+        event.preventDefault();
+    }).autocomplete({
+        minLength: 1,
+        source: function(request, response) {
+            var url = $('#search-bar').data('url') + '?q=' + request.term;
+
+            $('#search-bar').siblings('a').attr('href', url);
+
+            $.ajax(url, {
+                success: function(data) {
+                    response(data);
+                }
+            });
+        },
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function(event, ui) {
+            event.preventDefault();
+
+            $('.ui-autocomplete-input').autocomplete('close');
+
+            window.location = ui.item.url;
+        }
+    });
+    $('.ui-autocomplete-input').data('ui-autocomplete')._renderItem = function(ul, item) {
+        var url = item.url || '#';
+        var view = item.view || item.label;
+        return $('<li><a href="' + url + '">' + view + '</a></li>').appendTo(ul);
+    };
     
     // $('#menu').hcSticky({
     //     noContainer: true

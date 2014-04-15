@@ -72,8 +72,10 @@ class PostRepository extends BaseRepository
             ->select('count(p)');
             
         $query = $this->createQueryBuilder('p')
-            ->select('p, u, pl, pc, plu, pcu, e, t, c, ct, i,  ep, epu, epp, epg, epl, epc, eplu, epcu')
+            ->select('p, u, pg, pp, pl, pc, plu, pcu, e, t, c, ct, i, ep, epu, epp, epg, epl, epc, eplu, epcu')
             ->join('p.user', 'u')
+            ->leftJoin('p.group', 'pg')
+            ->leftJoin('p.page', 'pp')
             ->leftJoin('p.likes', 'pl')
             ->leftJoin('p.comments', 'pc', '', '', 'pc.id')
             ->leftJoin('pl.user', 'plu')
@@ -92,13 +94,17 @@ class PostRepository extends BaseRepository
             ->leftJoin('epl.user', 'eplu')
             ->leftJoin('epc.user', 'epcu');
         if ($options['vip']) {
-            $count->join('p.user', 'u')->andWhere('u.roles like :vip')->setParameter('vip', '%ROLE_VIP%');
-            $query->andWhere('p.groupId is null')->andWhere('p.pageId is null')
-                ->andWhere('u.roles like :vip')->setParameter('vip', '%s:8:"ROLE_VIP";%');
-        } else {
-            $query->addSelect('pg, pp')
+            $count->join('p.user', 'u')
                 ->leftJoin('p.group', 'pg')
-                ->leftJoin('p.page', 'pp');
+                ->leftJoin('p.page', 'pp')
+                ->andWhere($query->expr()->orX(
+                    $query->expr()->orX('pg.vip = '.true, 'pp.vip = '.true),
+                    $query->expr()->andX('u.vip = '.true, $query->expr()->andX('p.pageId is null', 'p.groupId is null'))
+                ));
+            $query->andWhere($query->expr()->orX(
+                    $query->expr()->orX('pg.vip = '.true, 'pp.vip = '.true),
+                    $query->expr()->andX('u.vip = '.true, $query->expr()->andX('p.pageId is null', 'p.groupId is null'))
+                ));
         }
         if ($options['protagonists']) {
             $query->addSelect('eu, euu')

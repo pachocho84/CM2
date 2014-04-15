@@ -376,10 +376,8 @@ class CMExtension extends \Twig_Extension
         if (!is_null($options['offset'])) {
             if ($ratio > 1) { // landscape
                 $imgStyle[] = 'left: -'.min(max(0, $options['offset']), 100 * ($imageRatio / $boxRatio - 1)).'%';
-                $options['box_attributes']['dbg'] = $options['offset'].' -> '.(100 * ($imageRatio / $boxRatio - 1));
             } elseif ($ratio < 1) { // portrait
                 $imgStyle[] = 'top: -'.min(max(0, $options['offset']), 100 * (1 / $imageRatio - 1 / $boxRatio)).'%';
-                $options['box_attributes']['dbg'] = $options['offset'].' -> '.(100 * (1 / $imageRatio - 1 / $boxRatio));
             }
         } else {
             if ($ratio > 1) { // landscape

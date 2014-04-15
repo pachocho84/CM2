@@ -1936,9 +1936,10 @@ function imagePosition($img, $target) {
             } 
         },
         stop: function(event, ui) {
-            offsetX = Math.abs(100 * $img.position().left / $img.outerWidth()).toFixed(2);
-            offsetY = Math.abs(100 * $img.position().top / $img.outerHeight()).toFixed(2);
-            $target.val(Math.max(offsetX, offsetY));
+            offsetX = - $img.position().left;
+            offsetY = - $img.position().top;
+            console.log(offsetX, offsetY, $box.width(), Math.abs(100 * Math.max(offsetX, offsetY) / $box.width()).toFixed(2));
+            $target.val(Math.abs(100 * Math.max(offsetX, offsetY) / $box.width()).toFixed(2));
         }
     });
 }

@@ -165,6 +165,14 @@ class User extends BaseUser implements ParticipantInterface
     /**
      * @var boolean
      *
+     * @ORM\Column(name="vip", type="boolean")
+     * @Assert\Choice(choices = {true, false})
+     */
+    private $vip = false;
+
+    /**
+     * @var boolean
+     *
      * @ORM\Column(name="newsletter", type="boolean")
      * @Assert\Choice(choices = {true, false})
      */
@@ -524,6 +532,29 @@ class User extends BaseUser implements ParticipantInterface
     public function getCityCurrent()
     {
         return $this->cityCurrent;
+    }
+
+    /**
+     * Set vip
+     *
+     * @param boolean $vip
+     * @return User
+     */
+    public function setVip($vip)
+    {
+        $this->vip = $vip;
+    
+        return $this;
+    }
+
+    /**
+     * Get vip
+     *
+     * @return boolean 
+     */
+    public function getVip()
+    {
+        return $this->vip;
     }
 
     /**

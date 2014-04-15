@@ -29,7 +29,7 @@ function initRecipients() {
         showAutocompleteOnFocus: true
     });
     $('.ui-autocomplete-input').data('ui-autocomplete')._renderItem = function(ul, item) {
-        return $('<li><a>' + item.view + '</a></li>').appendTo(ul);
+        return $('<li><a href="#">' + item.view + '</a></li>').appendTo(ul);
     };
 
     var placeholder = $('#recipients_finder_container input.ui-autocomplete-input').attr('placeholder');
@@ -83,6 +83,39 @@ $(function() {
             event.preventDefault();
         }
     });
+    // search bar
+    $('#search-bar').on('click', function(event) {
+        event.preventDefault();
+    }).autocomplete({
+        minLength: 1,
+        source: function(request, response) {
+            var url = $('#search-bar').data('url') + '?q=' + request.term;
+
+            $('#search-bar').siblings('a').attr('href', url);
+
+            $.ajax(url, {
+                success: function(data) {
+                    response(data);
+                }
+            });
+        },
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function(event, ui) {
+            event.preventDefault();
+
+            $('.ui-autocomplete-input').autocomplete('close');
+
+            window.location = ui.item.url;
+        }
+    });
+    $('.ui-autocomplete-input').data('ui-autocomplete')._renderItem = function(ul, item) {
+        var url = item.url || '#';
+        var view = item.view || item.label;
+        return $('<li><a href="' + url + '">' + view + '</a></li>').appendTo(ul);
+    };
     
     // $('#menu').hcSticky({
     //     noContainer: true

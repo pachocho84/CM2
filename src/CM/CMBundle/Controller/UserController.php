@@ -93,7 +93,6 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/{slug}/wall/{lastUpdated}/update", name="wall_user_update")
      * @Route("/{slug}/wall/{lastUpdated}/update", name="user_show_update")
      * @Template("CMBundle:Wall:posts.html.twig")
      */

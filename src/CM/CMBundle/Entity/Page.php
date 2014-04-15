@@ -369,7 +369,7 @@ class Page
      * Set vip
      *
      * @param boolean $vip
-     * @return Page
+     * @return User
      */
     public function setVip($vip)
     {
