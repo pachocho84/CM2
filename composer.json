@@ -33,7 +33,7 @@
         "sonata-project/intl-bundle": ">=2.1",
         "knplabs/knp-paginator-bundle": "dev-master",
         "imagine/imagine": "0.5.*",
-        "liip/imagine-bundle": "dev-8581ab7",
+        "liip/imagine-bundle": "dev-master",
         "jms/debugging-bundle": "dev-master",
         "sonata-project/core-bundle": "~2.2@dev",
         "knplabs/knp-snappy-bundle": "dev-master",
