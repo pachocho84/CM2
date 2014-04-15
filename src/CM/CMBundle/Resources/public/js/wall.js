@@ -39,21 +39,21 @@ function getFields(obj) {
 function recalculateWall() {
     var $loadMore = $('#wall ~ .load_more').detach();
 
-    var data = {};
+    var dataPos = {};
+    var dataOrder = {};
     var colIndex = $('#wall > div').length;
-    $.each($('#wall > div > [wall-col-' + colIndex + '^="l"'), function(i, elem) {
-        data[$(elem).attr('wall-order') + ';l'] = $(elem).detach();
+    $.each($('#wall > div > [wall-pos]'), function(i, elem) {
+        dataPos['pos-' + i + ';' + $(elem).attr('wall-pos')] = $(elem).detach();
     });
-    $.each($('#wall > div > [wall-col-' + colIndex + '^="l"'), function(i, elem) {
-        data[$(elem).attr('wall-order') + ';center,left'] = $(elem).detach();
+    $.each($('#wall > div > [wall-order]'), function(i, elem) {
+        dataOrder[$(elem).attr('wall-order')] = $(elem).detach();
     });
-    $.each($('#wall > div > [wall-col-' + colIndex + '^="r"'), function(i, elem) {
-        data[$(elem).attr('wall-order') + ';right'] = $(elem).detach();
-    });
-    $.each($('#wall > div > *:not([wall-col])'), function(i, elem) {
-        data['order' + $(elem).attr('wall-order')] = $(elem).detach();
-    });
+    // dataOrder = dataOrder.sort();
+    var data = dataPos.concat(dataOrder);
+
     data['loadMore'] = $loadMore;
+
+console.log(data);
 
     $('#wall').empty().append(calculateColumns());
     wallOrder = 0;
@@ -81,17 +81,17 @@ function wallLoad(data, t, c, reload) {
         else return parseInt(aP) - parseInt(bP);
     });
 
-    console.log(fields);
-
     $.each(fields, function(i, field) {
         if (field == 'loadMore') return;
+
+        var $box = $(data[field]);
+
+        if ($box.attr('post-id') != '' && $('.post[post-id="' + $box.attr('post-id') + '"]').length != 0) return;
 
         var colIndex = $('#wall > div').length;
 
         var positions = field.split(';')[1];
         var position = (positions || '').split(',')[colIndex - 1];
-
-        console.log(field, position);
 
         var column;
         if (typeof position === 'undefined') {
@@ -105,13 +105,10 @@ function wallLoad(data, t, c, reload) {
             column = $('#wall > div:first');
         }
 
-        var $box = $(data[field]);
-
         if (typeof positions !== 'undefined') {
-            $box.attr('wall-order', '');
-            $box.attr('wall-order-1', positions.split(',')[0]);
-            $box.attr('wall-order-2', positions.split(',')[1]);
-            $box.attr('wall-order-3', positions.split(',')[2]);
+            $box.attr('wall-pos', positions);
+        } else {
+            $box.attr('wall-order', i);
         }
 
         // $box.hide();

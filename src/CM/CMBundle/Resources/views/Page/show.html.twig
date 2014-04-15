@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <div data-ajax-url="{{ path('page_biography', {slug: page.slug, simple: true}) }}"></div>
+    {{ include('CMBundle:Biography:box.html.twig', {publisher: page, publisherType: 'page', simple: true}) }}
 
     {{ include('CMBundle:Page:membersMini.html.twig') }}
 
@@ -13,11 +13,14 @@
         <a href="{{ path('page_members_settings', {slug: page.slug}) }}">{{ 'Manage members'|trans }}</a>
     {% endif %}
 
-    <div data-ajax-url="{{ path('wall_page', {slug: page.slug, simple: true}) }}"></div>
+    <div class="row" id="wall"></div>
 {% endblock %}
 
-{% block sidebar %}
-    <div data-ajax-url="{{ path('fan_page_sidebar', {slug: page.slug}) }}"></div>
-
-    <div data-ajax-url="{{ path('event_next_dates', {object: 'page', objectId: page.id, limit: 3}) }}"></div>
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+         '@CMBundle/Resources/public/js/wall.js'
+    %}
+         <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

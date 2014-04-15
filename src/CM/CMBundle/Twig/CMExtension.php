@@ -354,7 +354,7 @@ class CMExtension extends \Twig_Extension
         $height = is_null($options['height']) ? $width : $options['height'];
 
         // Get image dimensions
-        $fileName = preg_replace('/^\/.*\//', '', $img);
+        $fileName = preg_replace('/^.*\//', '', $img);
         $imageFileSize = @getimagesize($this->options['images_dir'].'/'.$fileName);
         if (!$imageFileSize) {
             return '';

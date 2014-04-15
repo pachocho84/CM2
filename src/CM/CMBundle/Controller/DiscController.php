@@ -215,7 +215,7 @@ class DiscController extends Controller
     }
     
     /**
-     * @Route("/lasts/{object}/{objectId}", name="disc_latests", requirements={"id" = "\d+"})
+     * @Route("/latests/{object}/{objectId}", name="disc_latests", requirements={"id" = "\d+"})
      * @Template
      */
     public function latestsAction(Request $request, $object, $objectId)
@@ -224,6 +224,7 @@ class DiscController extends Controller
 
         $discs = $em->getRepository('CMBundle:Disc')->getLatests(array(
             $object.'Id' => $objectId,
+            'locale' => $request->getLocale(),
             'paginate' => false,
             'exclude' => $request->get('exclude'),
             'limit' => $request->get('limit')

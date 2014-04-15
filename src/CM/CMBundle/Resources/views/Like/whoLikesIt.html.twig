@@ -1,0 +1,16 @@
+{% for user in whoLikesIt %}
+    <li class="media object">
+        {{ show_img_box(user|default_img|imagine_filter('medium'), {width: 200, height: 120, offset: user.imgOffset, link: path('user_show', {slug: user.slug}), default: 'user', link_attributes: {class: 'pull-left img-thumbnail'}}) }}
+        <div class="media-body">
+            <h4>
+                <a href="{{ path('user_show', {slug: user.slug}) }}">{{ user }}</a>
+            </h4>
+        </div>
+    </li>    
+{% endfor %}
+
+{% if whoLikesIt.paginationData.current < whoLikesIt.paginationData.last %}
+    <div class="well well-small load_more">
+        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({ page: whoLikesIt.getPaginationData.next })) }}">{{ 'Load more'|trans }}</a>
+    </div>
+{% endif %}

@@ -1,0 +1,13 @@
+{% extends 'CMBundle:Form:layout.html.twig' %}
+
+{% block body %}
+    {% for flashMessage in app.session.flashbag.get('email') %}
+        <div class="flash-notice">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    TODO: contacts
+
+    {{ form(form) }}
+{% endblock %}

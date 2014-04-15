@@ -4,8 +4,7 @@ imports:
 parameters:
     web.abs_dir: %kernel.root_dir%/../web
     cm_property_accessor.class: CM\CMBundle\PropertyAccess\CMPropertyAccessor
-    bundle.dir: ''
-    upload.dir: %bundle.dir%/uploads
+    upload.dir: /uploads
     banners.dir: %upload.dir%/banners
     images.dir: %upload.dir%/images
     images_full.dir: %images.dir%/full # if you change this, change it also in the Entity/Image.php file!
@@ -76,6 +75,12 @@ fos_user:
         form:
             type: cm_cmbundle_user_profile
 
+ewz_recaptcha:
+    public_key:   6Ld0ufESAAAAAN5e79hGMo7QIYJjrwtZGVLtj1fp
+    private_key:  6Ld0ufESAAAAAImIX0gLxej3x70nBZYOoivw_O9n
+    secure:       true
+    locale_key:   kernel.default_locale
+
 fos_message:
     db_driver: orm
     thread_class: CM\CMBundle\Entity\MessageThread
@@ -105,11 +110,16 @@ knp_paginator:
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
 
 liip_imagine:
-    cache_mkdir_mode: 0755
-    web_root: %kernel.root_dir%/../web
-    data_root: %kernel.root_dir%/../web%images_full.dir%
-    cache_prefix: %images.dir%
-    cache_clearer: false
+    loaders:
+        default:
+            filesystem:
+                data_root: %kernel.root_dir%/../web%images_full.dir%
+    resolvers:
+        default:
+            web_path: 
+                web_root: %kernel.root_dir%/../web
+                cache_prefix: %images.dir%
+    cache: default
     filter_sets:
         avatar:
             quality: 90
@@ -133,13 +143,6 @@ liip_imagine:
                 thumbnail_min: { size: 800, mode: inset }
         full:
             quality: 100
-
-sonata_block:
-    default_contexts: [cms]
-    blocks:
-        # Enable the SonataAdminBundle block
-        sonata.admin.block.admin_list:
-            contexts:   [admin]
 
 knp_snappy:
     pdf:

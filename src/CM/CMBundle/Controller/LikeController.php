@@ -95,19 +95,14 @@ class LikeController extends Controller
     }
 
     /**
-     * @Route("/whoLikes/{type}/{id}", name="who_likes_it", requirements={"type" = "post|image", "_request_type"="json"})
+     * @Route("/whoLikes/{type}/{id}/{page}", name="who_likes_it", requirements={"type" = "post|image", "id" = "\d+", "page" = "\d+"})
+     * @Template
      */
-    public function whoLikesItAction(Request $request, $type, $id)
+    public function whoLikesItAction(Request $request, $type, $id, $page = 1)
     {
-        return new Response('OK');
+        $whoLikesIt = $this->getDoctrine()->getManager()->getRepository('CMBundle:Like')->whoLikesIt($type, $id);
+        $pagination = $this->get('knp_paginator')->paginate($whoLikesIt, $page, 10);
 
-        // $em = $this->getDoctrine()->getManager();
-        // $whoLikesIt = $em->getRepository('CMBundle:Like')->whoLikesIt($type, $id);
-        
-        // return $this->render('utenti/dialog', array(
-        //     'title'             => 'Who likes it',
-        //     'users'             => $whoLikesIt, 
-        //     'whoImFanOf'    => false // $this->getUser()->isAuthenticated() ? FansQuery::whoImFanOf() : false
-        // ));
+        return array('whoLikesIt' => $pagination);
     }
 }

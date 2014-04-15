@@ -5,6 +5,7 @@ namespace CM\CMBundle\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
+use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as EWZ;
 use CM\CMBundle\Entity\User;
 
 class RegistrationType extends BaseType
@@ -17,14 +18,19 @@ class RegistrationType extends BaseType
     {
         parent::buildForm($builder, $options);
     
-        $builder
-            ->add('firstName')
+        $builder->add('firstName')
             ->add('lastName')
             ->add('sex', 'choice', array(
                 'choices' => array(User::SEX_M => 'Male', User::SEX_F => 'Female'),
                 'expanded' => true
             ))
-            ->add('imgFile');
+            ->add('imgFile')
+            ->add('recaptcha', 'ewz_recaptcha', array(
+                'mapped' => false,
+                'constraints'   => array(
+                    new EWZ\True
+                )
+            ));
     }
     
     /**

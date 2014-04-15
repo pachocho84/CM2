@@ -20,7 +20,7 @@
             <div class="profile-header-buttons btn-toolbar" role="toolbar">
                 {% if is_granted('ROLE_USER') and user.id != app.user.id %}
                     {{ render(controller('CMBundle:Fan:button', {userId: user.id})) }}
-                    {{ render(controller('CMBundle:Relation:button', {user: user})) }}
+                    {{ render(controller('CMBundle:Relation:button', {user: user, btn: true})) }}
                     <a href="{{ path('message_new', {userId: user.id}) }}" class="btn btn-default" {{ modal({remote: path('message_new', {userId: user.id}), callback: '$initRecipients()'}) }}>{{ icon('Message') }} {{ 'Send a message'|trans }}</a>
                 {% endif %}
             </div>

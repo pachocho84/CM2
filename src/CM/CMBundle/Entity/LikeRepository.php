@@ -25,11 +25,17 @@ class LikeRepository extends BaseRepository
 
     public function whoLikesIt($type, $id)
     {
-        return $this->createQueryBuilder('l')
-            ->select('l')
-            ->where('l.'.$type.' = :id')->setParameter('id', $id)
-            ->getQuery()
-            ->getResult();
+        $count = $this->getEntityManager()->createQueryBuilder()
+            ->select('count(u.id)')
+            ->from('CMBundle:User', 'u')
+            ->join('u.likes', 'l', 'with', 'l.'.$type.' = :id')->setParameter('id', $id);
+
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('u')
+            ->from('CMBundle:User', 'u')
+            ->join('u.likes', 'l', 'with', 'l.'.$type.' = :id')->setParameter('id', $id);
+
+        return $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult());
     }
 
     public function getLikes(array $ids)

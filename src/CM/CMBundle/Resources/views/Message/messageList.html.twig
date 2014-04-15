@@ -25,7 +25,7 @@
             <div class="media-body">
                 {{ show_img_box(message.thread.creator.img|imagine_filter('avatar'), {width: 50, height: 50, offset: message.thread.creator.imgOffset, box_attributes: {class: 'pull-left'}}) }}
                 {{ message.body|length > 50 ? message.body|slice(0, 47) ~ '...' : message.body }}
-                <p class="text-muted"><small>{{ message.createdAt|format_datetime(null, null, null, constant('IntlDateFormatter::LONG')) }}</small></p>
+                <p class="text-muted"><small>{{ message.createdAt|humanize_day }}</small></p>
             </div>
         </a>
     </li>

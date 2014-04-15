@@ -1,5 +1,5 @@
 {% if post.comments.count > 0 %}
-    <a href="{# {{ path('post_show', {'post_id': postId}) }} #}" class="bottom-comment-count" >{{ icon('Comment') }} {{ post.comments|length }}</a>
+    <a href="{# {{ path('post_show', {'post_id': postId}) }} #}" class="bottom-comment-count" >{{ icon('Comment') }}{% if post.comments|length > 0 %} {{ post.comments|length }}{% endif %}</a>
 {% else %}
     <span class="bottom-comment-count"></span>
 {% endif %}

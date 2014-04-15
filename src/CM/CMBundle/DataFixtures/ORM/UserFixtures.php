@@ -74,7 +74,7 @@ Suona un flauto Yamaha 18 carati all gold.
         ),
         array('firstname' => 'Luca', /* 4 */
             'lastname' => 'Casareto',
-            'username' => 'ghey',
+            'username' => 'lucasareto',
             'password' => 'pacho',
             'email' => 'lucasareto@gmail.it',
             'sex' => User::SEX_M,
