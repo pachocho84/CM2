@@ -75,6 +75,11 @@
                     </li>
                 </ul>
 
+                <div class="input-group">
+                    <input id="search-bar" type="text" class="form-control" data-url="{{ path('search_bar') }}" placeholder="{{ 'Search for people, groups and pages'|trans }}"></input>
+                    <a href="#" class="input-group-addon">{{ icon('Search') }}</a>
+                </div>
+
                 <ul class="nav navbar-nav pull-right">
                     {% if is_granted('ROLE_USER') %}
                         {{ render(controller('CMBundle:User:menu', {path: app.request.pathInfo} )) }}

@@ -75,6 +75,11 @@ class Work
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $user;
+    
+    public function __toString()
+    {
+        return $this->getPosition();
+    }
 
     public static function className()
     {

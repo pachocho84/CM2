@@ -12,4 +12,20 @@ use Doctrine\ORM\EntityRepository as BaseRepository;
  */
 class WorkRepository extends BaseRepository
 {
+    public function getLast($id)
+    {
+        $work = $this->createQueryBuilder('w')
+            ->where('w.userId = :id')->setParameter('id', $id)
+            ->orderBy('w.dateFrom', 'desc')
+            ->orderBy('w.dateTo', 'desc')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+
+        if (is_array($work)) {
+            $work = $work[0];
+        }
+
+        return $work;
+    }
 }

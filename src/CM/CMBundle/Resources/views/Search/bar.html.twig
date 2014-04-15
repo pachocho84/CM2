@@ -1,19 +1,15 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
 {% block body %}
-    asd
-
     {% for user in users %}
-        {{ user }}
+        {{ include('CMBundle:Search:user.html.twig') }}
     {% endfor %}
 
     {% for page in pages %}
-        {{ page }}
+        {{ include('CMBundle:Search:page.html.twig') }}
     {% endfor %}
 
     {% for group in groups %}
-        {{ group }}
+        {{ include('CMBundle:Search:group.html.twig') }}
     {% endfor %}
-
-    dsa
 {% endblock %}

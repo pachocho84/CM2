@@ -13,17 +13,19 @@
                 {% endif %}
             </div>
         </div>
-    
+        
         <div class="profile-header-info">
             <div class="profile-header-picture thumbnail">
                 {{ show_img_box(user.img|imagine_filter('medium'), {width: 120, offset: user.imgOffset}) }}
             </div>
-            <h2 title="{{ user }}">{{ user }}</h2>
-            <h3 class="text-muted" {{ user.userTags|length > 3 and tooltip(user.userTags) }}>
+            <h2>{{ user }}</h2>
+            <h3 class="text-muted"{% if user.userTags|length > 3 %} {{ tooltip(user.userTags) }}{% endif %}>
                 {{ user.userTags[:3]|join(', ')|trim }}{% if user.userTags|length > 3 %}...{% endif %}
             </h3>
 
-            <p title="{{ 'from'|trans }}: {{ user.cityBirth }} - {{ 'lives in'|trans }}: {{ user.cityCurrent }}" class="profile-header-cities">{{ icon('Map') }} {{ 'from'|trans }}: {{ user.cityBirth }} - {{ 'lives in'|trans }}: {{ user.cityCurrent }}</p>
+            <p>{{ icon('Map') }} {{ 'comes from'|trans }}: {{ user.cityBirth }} - {{ 'lives in'|trans }}: {{ user.cityCurrent }}</p>
+            {% if lastEducation is not null %}<p>{{ icon('Education') }} {% if lastEducation.dateTo is null %}{{ 'studies' }}{% else %}{{ 'studied' }}{% endif %}: {{ lastEducation }}</p>{% endif %}
+            {% if lastWork is not null %}<p>{{ icon('Work') }} {% if lastWork.dateTo is null %}{{ 'works as' }}{% else %}{{ 'worked as' }}{% endif %}: {{ lastWork }}</p>{% endif %}
         </div>
 
     </div>

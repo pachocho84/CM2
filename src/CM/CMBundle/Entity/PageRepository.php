@@ -115,7 +115,9 @@ class PageRepository extends BaseRepository
         return $this->createQueryBuilder('p')
             ->select('p')
             ->orWhere('p.name LIKE :query')
-            ->setParameter('query', $q)
+            ->orWhere('p.name LIKE :Squery')
+            ->setParameter('query', $q.'%')
+            ->setParameter('Squery', '% '.$q.'%')
             ->setMaxResults($limit)
             ->getQuery()->getResult();
     }
