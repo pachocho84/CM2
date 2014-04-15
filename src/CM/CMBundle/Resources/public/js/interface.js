@@ -90,6 +90,9 @@ $(function() {
         minLength: 1,
         source: function(request, response) {
             var url = $('#search-bar').data('url') + '?q=' + request.term;
+
+            $('#search-bar').siblings('a').attr('href', url);
+
             $.ajax(url, {
                 success: function(data) {
                     response(data);
