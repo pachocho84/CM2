@@ -131,12 +131,19 @@ class UserRepository extends BaseRepository
 
     public function search($q, $limit)
     {
-        return $this->createQueryBuilder('u')
-            ->select('u')
-            ->orWhere('CONCAT(u.firstName, CONCAT(\' \', u.lastName)) LIKE :query')
-            ->orWhere('CONCAT(u.lastName, CONCAT(\' \', u.firstName)) LIKE :query')
-            ->setParameter('query', $q)
+        $qb = $this->createQueryBuilder('u');
+        return $qb->select('u')
+            // ->where('u.IsActive = ?', true)
+            ->andWhere('u.enabled = '.true)
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->orX('CONCAT(u.firstName, CONCAT(\' \', u.lastName)) LIKE :query', 'CONCAT(u.lastName, CONCAT(\' \', u.firstName)) LIKE :query'),
+                    'CONCAT(u.lastName, CONCAT(\' \', u.firstName)) LIKE :Squery'
+                )
+            )->setParameter('query', $q.'%')
+            ->setParameter('Squery', '% '.$q.'%')
             ->setMaxResults($limit)
-            ->getQuery()->getResult();
+            ->getQuery()
+            ->getResult();
     }
 }

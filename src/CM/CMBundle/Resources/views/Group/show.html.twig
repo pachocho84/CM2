@@ -5,8 +5,6 @@
 {% endblock %}
 
 {% block body %}
-    {{ include('CMBundle:Biography:box.html.twig', {publisher: group, publisherType: 'group', simple: true}) }}
-
     {{ include('CMBundle:Group:membersMini.html.twig') }}
 
     {% if is_admin(group) %}

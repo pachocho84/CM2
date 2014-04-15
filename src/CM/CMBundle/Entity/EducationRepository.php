@@ -12,4 +12,20 @@ use Doctrine\ORM\EntityRepository as BaseRepository;
  */
 class EducationRepository extends BaseRepository
 {
+    public function getLast($id)
+    {
+        $education = $this->createQueryBuilder('e')
+            ->where('e.userId = :id')->setParameter('id', $id)
+            ->orderBy('e.dateFrom')
+            ->orderBy('e.dateTo')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+
+        if (is_array($education)) {
+            $education = $education[0];
+        }
+
+        return $education;
+    }
 }

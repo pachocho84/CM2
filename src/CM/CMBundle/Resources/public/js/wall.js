@@ -39,17 +39,18 @@ function getFields(obj) {
 function recalculateWall() {
     var $loadMore = $('#wall ~ .load_more').detach();
 
+    var data = [];
     var dataPos = {};
     var dataOrder = {};
     var colIndex = $('#wall > div').length;
     $.each($('#wall > div > [wall-pos]'), function(i, elem) {
-        dataPos['pos-' + i + ';' + $(elem).attr('wall-pos')] = $(elem).detach();
+        data['pos-' + i + ';' + $(elem).attr('wall-pos')] = $(elem).detach();
     });
     $.each($('#wall > div > [wall-order]'), function(i, elem) {
-        dataOrder[$(elem).attr('wall-order')] = $(elem).detach();
+        data[$(elem).attr('wall-order')] = $(elem).detach();
     });
     // dataOrder = dataOrder.sort();
-    var data = dataPos.concat(dataOrder);
+    // var data = dataPos.concat(dataOrder);
 
     data['loadMore'] = $loadMore;
 

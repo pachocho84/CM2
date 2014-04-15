@@ -11,6 +11,8 @@
             </h3>
 
             <p>{{ icon('Map') }} {{ 'comes from'|trans }}: {{ user.cityBirth }} - {{ 'lives in'|trans }}: {{ user.cityCurrent }}</p>
+            {% if lastEducation is not null %}<p>{{ icon('Education') }} {% if lastEducation.dateTo is null %}{{ 'studies' }}{% else %}{{ 'studied' }}{% endif %}: {{ lastEducation }}</p>{% endif %}
+            {% if lastWork is not null %}<p>{{ icon('Work') }} {% if lastWork.dateTo is null %}{{ 'works as' }}{% else %}{{ 'worked as' }}{% endif %}: {{ lastWork }}</p>{% endif %}
         </div>
         
         <div class="col-sm-8 profile-header-cover">

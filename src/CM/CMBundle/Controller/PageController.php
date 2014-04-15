@@ -568,27 +568,17 @@ class PageController extends Controller
 
             /* ORDER */
             $order = array(
-                'login'  => '0,1,2',
-                'last'   => '1,0,0',
-                'rev'    => '5,2,1',
-                'spo0'   => '4,8,3',
-                'spo1'   => '11,14,7',
-                'ban0'   => '6,9,11',
-                'ban1'   => '15,12,15',
-                'vip0'   => '10,10,12',
-                'vip1'   => '13,13,13',
-                'par0'   => '3,6,4',
-                'par1'   => '8,7,9',
-                'par2'   => '12,11,10',
-                'par3'   => '14,15,14',
-                'events' => '2,3,5',
-                'discs'  => '9,4,6',
-                'sugg'   => '7,5,8'
+                'bio'   => '0,0,0',
+                'events' => '1,1,2',
+                'discs'  => '2,2,3',
             );
             $boxes = array();
 
-            // Last registered users 
             if ($pageNum == 1) {
+                // Biography
+                $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($page->getId(), array('locale' => $request->getLocale()));
+                $boxes['biography;'.$order['bio']] = $this->renderView('CMBundle:Biography:box.html.twig', array('publisher' => $page, 'publisherType' => 'page', 'biography' => $biography, 'simple' => true));
+
                 // Next events
                 $dates = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Event')->getNextDates(array('pageId' => $page->getId(), 'locale' => $request->getLocale())), $pageNum, 3);
                 $boxes['events;'.$order['events']] = $this->renderView('CMBundle:Event:nextDates.html.twig', array('dates' => $dates));
@@ -596,24 +586,39 @@ class PageController extends Controller
                 // Next discs
                 $discs = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Disc')->getLatests(array('pageId' => $page->getId(), 'locale' => $request->getLocale())), $pageNum, 3);
                 $boxes['discs;'.$order['discs']] = $this->renderView('CMBundle:Disc:latests.html.twig', array('discs' => $discs));
-
-                // Sponsored
-                foreach ($sponsoreds as $i => $sponsored) {
-                    $boxes['sponsored_'.$sponsored->getId().';'.$order['spo'.$i]] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $sponsored->getEntity()->getPost(), 'postType' => 'sponsored'));
-                }
-
-                // Banners
-                foreach ($banners as $i => $banner) {
-                    $boxes['banner_'.$banner->getId().';'.$order['ban'.$i]] = $this->renderView('CMBundle:Wall:boxBanner.html.twig', array('banner' => $banner));
-                }
-
             }
 
             /* OTHER POSTS */
+            $otherBoxes = array();
             $posts = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('pageId' => $page->getId(), 'locale' => $request->getLocale())), $pageNum, 15);
             foreach ($posts as $post) {
-                $boxes['post_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
+                $otherBoxes['post_'.$post->getId()] = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $post));
             }
+
+            /* INSERT IN OTHER POSTS */
+            // sponsoreds
+            $indexes = range(0, count($otherBoxes));
+            shuffle($indexes);
+            $sponsoredIndexes = array_slice($indexes, 0, count($sponsoreds));
+            sort($sponsoredIndexes);
+            foreach ($sponsoreds as $sponsored) {
+                $index = array_shift($sponsoredIndexes);
+                $box = $this->renderView('CMBundle:Wall:post.html.twig', array('post' => $sponsored->getEntity()->getPost(), 'postType' => 'sponsored'));
+                array_splice($otherBoxes, $index, 0, $box);
+            }
+            
+            // banners
+            $indexes = range(0, count($otherBoxes));
+            shuffle($indexes);
+            $bannerIndexes = array_slice($indexes, 0, count($banners));
+            sort($bannerIndexes);
+            foreach ($banners as $banner) {
+                $index = array_shift($bannerIndexes);
+                $box = $this->renderView('CMBundle:Wall:boxBanner.html.twig', array('banner' => $banner));
+                array_splice($otherBoxes, $index, 0, $box);
+            }
+
+            $boxes = array_merge($boxes, $otherBoxes);
 
             $boxes['loadMore'] = $this->renderView('CMBundle:Wall:loadMore.html.twig', array('paginationData' => $posts->getPaginationData()));
 
@@ -626,7 +631,9 @@ class PageController extends Controller
             $req = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('pageId' => $page->getId()));
         }
 
-        $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($page->getId(), array('locale' => $request->getLocale()));
+        if (is_null($biography)) {
+            $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($page->getId(), array('locale' => $request->getLocale()));
+        }
 
         return array('page' => $page, 'members' => $members, 'request' => $req, 'biography' => $biography, 'posts' => $pagination);
     }

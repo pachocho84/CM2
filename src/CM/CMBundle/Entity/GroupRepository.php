@@ -115,7 +115,9 @@ class GroupRepository extends BaseRepository
         return $this->createQueryBuilder('g')
             ->select('g')
             ->orWhere('g.name LIKE :query')
-            ->setParameter('query', $q)
+            ->orWhere('g.name LIKE :Squery')
+            ->setParameter('query', $q.'%')
+            ->setParameter('Squery', '% '.$q.'%')
             ->setMaxResults($limit)
             ->getQuery()->getResult();
     }

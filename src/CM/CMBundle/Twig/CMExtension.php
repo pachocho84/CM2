@@ -1054,6 +1054,8 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicons user_add"></span>';
             case 'Options':
                 return '<span class="glyphicons cogwheels"></span>';
+            case 'Search':
+                return '<span class="glyphicon glyphicon-search"></span>';
             case 'Photo':
                 return '<span class="glyphicons camera"></span>';
             case 'Folder':
