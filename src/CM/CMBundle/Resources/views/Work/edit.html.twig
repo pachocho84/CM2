@@ -8,7 +8,7 @@
     {% endif %}
     <div class="box" {{ block('widget_container_attributes') }}>
         <div class="box-heading">
-            <h2>{{ icon('Work') }} {{ 'Works'|trans }}</h2>
+            <h2>{{ icon('Work') }} {{ block('section') }}</h2>
         </div>
 
         <div class="box-body">
@@ -59,7 +59,7 @@
     </div>
 {% endblock %}
 
-{% block body %}
+{% block main %}
     {{ form(form) }}
 {% endblock %}
 
@@ -68,61 +68,6 @@
     <script type="text/javascript">
         $(function(){
             /* EDUCATION */
-            // function newFromPrototype($target) {
-            //     // get the new index
-            //     var index = $target.data('index');
-
-            //     // Replace '__name__' in the prototype's HTML to
-            //     // instead be a number based on how many items we have
-            //     var newForm = $target.data('prototype').replace(/__name__label__/g, index).replace(/__name__/g, index);
-
-            //     // increase the index with one for the next item
-            //     $target.data('index', index + 1);
-
-            //     return $(newForm);
-            // }
-
-            // function addFormDeleteLink($target, text) {
-            //     var $removeFormA = $('<a class="btn btn-default" href="#"><span class="glyphicon glyphicon-minus"></span> ' + text + '</a>');
-            //     if ($target.find('.panel-footer') < 1) {
-            //         $target.append('<div class="panel-footer"><div class="btn-group"></div></div>');
-            //     }
-            //     $target.find('.btn-group').append($removeFormA);
-
-            //     $removeFormA.on('click', function(e) {
-            //         // prevent the link from creating a "#" on the URL
-            //         e.preventDefault();
-
-            //         // remove the li for the tag form
-            //         $target.remove();
-            //     });
-            // }
-
-            // function uploadCollection($target, trigger, text) {
-            //     // add the "add a tag" anchor and li to the tags ul
-            //     $target.append($('<div></div>'));
-            //     $target.children('div.panel-body').slice(1).each(function() {
-            //         addFormDeleteLink($(this), text);
-            //     });
-
-            //     // count the current form inputs we have (e.g. 2), use that as the new
-            //     // index when inserting a new item (e.g. 2)
-            //     $target.data('index', $target.find(':input').length);
-
-            //     $(document).on('click', trigger, function(e) {   
-            //         // prevent the link from creating a "#" on the URL
-            //         e.preventDefault();
-
-            //         var $newForm = newFromPrototype($target);
-
-            //         // Display the form in the page in an li, before the "Add a tag" link li
-            //         $target.find('.panel:last').after($newForm);
-
-            //         addFormDeleteLink($newForm, text);
-
-            //         $(e.currentTarget).trigger('collection-added', $newForm);
-            //     });
-            // }
             $(document).on('keydown', 'form .work-form:last', function(event) {
                 var $form = $(event.currentTarget);
                 var $collection = $form.closest('[data-prototype]');

@@ -1,6 +1,6 @@
 {% extends "CMBundle:User:accountLayout.html.twig" %}
 
-{% block title %}{{ 'Profile & cover pictures'|trans }}{% endblock %}
+{% block section %}{{ 'Profile & cover pictures'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -19,10 +19,10 @@
     </style>
 {% endblock %}
 
-{% block body %}
+{% block main %}
     <div class="box">
         <div class="box-heading">
-            <h2>{{ icon('Photo') }} {{ block('title') }}</h2>
+            <h2>{{ icon('Photo') }} {{ block('section') }}</h2>
         </div>
         <div class="box-body">
             {{ form_start(form) }}

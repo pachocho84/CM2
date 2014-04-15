@@ -1,12 +1,12 @@
 {% extends 'CMBundle:User:accountLayout.html.twig' %}
 
-{% block title %}{{ 'Biography'|trans }}{% endblock %}
+{% block section %}{{ 'Biography'|trans }}{% endblock %}
 
-{% block body %}
+{% block main %}
 
     <div class="box">
         <div class="box-heading">
-            <h2>{{ icon('Biography') }} {{ block('title') }}</h2>
+            <h2>{{ icon('Biography') }} {{ block('section') }}</h2>
         </div>
         <div class="box-body">
             {{ form(form) }}
