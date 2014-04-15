@@ -1,19 +1,7 @@
-<div class="box profile-header">
-    <div class="profile-header-row clearfix">
+<div class="profile-header">
+    <div class="profile-header-row">
     
-        <div class="col-sm-4 box-body profile-header-info text-center">
-            <div class="profile-header-picture thumbnail">
-                {{ show_img_box(user.img|imagine_filter('medium'), {width: 120, offset: user.imgOffset}) }}
-            </div>
-            <h2 title="{{ user }}">{{ user }}</h2>
-            <h3 class="text-muted" {{ user.userTags|length > 3 and tooltip(user.userTags) }}>
-                {{ user.userTags[:3]|join(', ')|trim }}{% if user.userTags|length > 3 %}...{% endif %}
-            </h3>
-
-            <p title="{{ 'from'|trans }}: {{ user.cityBirth }} - {{ 'lives in'|trans }}: {{ user.cityCurrent }}" class="profile-header-cities">{{ icon('Map') }} {{ 'from'|trans }}: {{ user.cityBirth }} - {{ 'lives in'|trans }}: {{ user.cityCurrent }}</p>
-        </div>
-        
-        <div class="col-sm-8 profile-header-cover">
+        <div class="profile-header-cover">
             {% if user.coverImg != '' %}
                 {{ show_img_box(user.coverImg|imagine_filter('large'), {ratio: 2.4, offset: user.coverImgOffset}) }}
             {% endif %}
@@ -24,8 +12,20 @@
                     <a href="{{ path('message_new', {userId: user.id}) }}" class="btn btn-default" {{ modal({remote: path('message_new', {userId: user.id}), callback: '$initRecipients()'}) }}>{{ icon('Message') }} {{ 'Send a message'|trans }}</a>
                 {% endif %}
             </div>
-            
         </div>
+    
+        <div class="profile-header-info">
+            <div class="profile-header-picture thumbnail">
+                {{ show_img_box(user.img|imagine_filter('medium'), {width: 120, offset: user.imgOffset}) }}
+            </div>
+            <h2 title="{{ user }}">{{ user }}</h2>
+            <h3 class="text-muted" {{ user.userTags|length > 3 and tooltip(user.userTags) }}>
+                {{ user.userTags[:3]|join(', ')|trim }}{% if user.userTags|length > 3 %}...{% endif %}
+            </h3>
+
+            <p title="{{ 'from'|trans }}: {{ user.cityBirth }} - {{ 'lives in'|trans }}: {{ user.cityCurrent }}" class="profile-header-cities">{{ icon('Map') }} {{ 'from'|trans }}: {{ user.cityBirth }} - {{ 'lives in'|trans }}: {{ user.cityCurrent }}</p>
+        </div>
+
     </div>
     
     <div class="profile-menu">
