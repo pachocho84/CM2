@@ -33,7 +33,6 @@
     <div class="profile-menu">
         {% spaceless %}
             <a href="{{ path('user_show', {slug: user.slug}) }}"{% if controller_name() == 'user' %} class="active"{% endif %}>{{ icon('User') }} {{ 'Profile'|trans }}</a>
-            <a href="{{ path('wall_user', {slug: user.slug}) }}"{% if controller_name() == 'wall' %} class="active"{% endif %}>{{ icon('Wall') }} {{ 'Wall'|trans }}</a>
             <a href="{{ path('user_biography', {slug: user.slug}) }}"{% if controller_name() == 'biography' %} class="active"{% endif %}>{{ icon('Biography') }} {{ 'Biography'|trans }}</a>
             <a href="{{ path('user_events', {slug: user.slug}) }}"{% if controller_name() == 'event' %} class="active"{% endif %}>{{ icon('Event') }} {{ 'Events'|trans }}</a>
             <a href="{{ path('user_images', {slug: user.slug}) }}"{% if controller_name() == 'image' %} class="active"{% endif %}>{{ icon('Image') }} {{ 'Images'|trans }}</a>
