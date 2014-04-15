@@ -31,7 +31,6 @@ class SearchController extends Controller
 {
     /**
      * @Route("", name = "search_bar")
-     * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
     public function barAction(Request $request)

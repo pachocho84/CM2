@@ -648,7 +648,8 @@ form textarea[expandable] {
 }
 .box form input.comment,
 .box form textarea.comment {
-    height: 50px;
+    height: 40px;
+    line-height: 1;
 }
 .box .box-footer .bottom form input.comment,
 .box .box-footer form textarea.comment {
@@ -669,9 +670,6 @@ form textarea[expandable] {
 }
 .box a {
     color: #404040;
-}
-.box a:hover {
-    text-decoration: underline;
 }
 .box:hover a.btn {
     color: #333333;
@@ -733,7 +731,7 @@ form textarea[expandable] {
 }
 .box .box-heading h2 {
     max-width: 100%;
-    margin: 0;
+    margin: 3px 0;
     font-size: 20px;
 }
 .box .box-heading h2 a, 
@@ -747,7 +745,7 @@ form textarea[expandable] {
 }
 .box .box-heading h2 small {
     font-size: 12px;
-    margin-top: 10px;
+    margin-top: 8px;
     float: right;
 }
 .box .box-heading h2 small span.glyphicon,
@@ -825,15 +823,6 @@ form textarea[expandable] {
          -o-transition: border-color 0.3s;
             transition: border-color 0.3s;
 }
-.box:hover a,
-.box-system .object:hover a {
-    color: #aa0000;    
-    -webkit-transition: color 0.3s;
-       -moz-transition: color 0.3s;
-        -ms-transition: color 0.3s;
-         -o-transition: color 0.3s;
-            transition: color 0.3s;
-}
 
 
 
@@ -842,7 +831,7 @@ form textarea[expandable] {
     margin-bottom: 15px;
 }
 .post .post-heading h4 {
-    font-size: 15px;
+    font-size: 16px;
     margin-bottom: 10px;
 }
 .post .post-content {
@@ -856,7 +845,7 @@ form textarea[expandable] {
 .post .post-content a.pull-left > img {
     width: 120px;
 }
-@media (min-width: 1512px) {
+@media (min-width: 1500px) {
     .post .post-content a.pull-left > img {
         width: 150px;
     }
@@ -871,6 +860,17 @@ form textarea[expandable] {
     margin: 0 auto;
     max-height: 600px;
 }
+.post:hover a {
+    color: #aa0000;    
+    -webkit-transition: color 0.3s;
+       -moz-transition: color 0.3s;
+        -ms-transition: color 0.3s;
+         -o-transition: color 0.3s;
+            transition: color 0.3s;
+}
+.post a:hover {
+    text-decoration: underline;
+}
 /* Box System */
 .box-system {
     background-color: #f5f5f5;
@@ -878,7 +878,7 @@ form textarea[expandable] {
 .box-system .box-heading {
     border: none;
     background: transparent;
-    margin-top: 10px;
+/*     margin-top: 10px; */
 }
 .box-system h3 {
     font-size: 14px;
@@ -920,7 +920,7 @@ form textarea[expandable] {
 #wall .box-partner h2 img.img-responsive {
     display: inline;
 }
-@media (min-width: 1212px) {
+@media (min-width: 1200px) {
     #wall .box-partner h2 {
         top: -23px;
         font-size: 20px;
@@ -988,7 +988,7 @@ form textarea[expandable] {
     padding: 0;
     overflow: hidden;
 }
-@media (min-width: 1512px) {
+@media (min-width: 1500px) {
     #wall .box-partner .object {
         height: 360px;
     }
@@ -1326,7 +1326,7 @@ form textarea[expandable] {
     max-height: 100%;
     max-width: 100%;
 }
-@media (min-width:1512px) {
+@media (min-width:1500px) {
     .disc {
         width: 146px;
     }
@@ -1393,7 +1393,7 @@ form textarea[expandable] {
 .disc.active .disc-cover > a {
     height: 160px;
 }
-@media (min-width:1512px) {
+@media (min-width:1500px) {
     .disc.active .disc-cover > a {
         height: 166px;
     }

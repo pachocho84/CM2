@@ -306,7 +306,7 @@ Con L’etichetta  Limen Music  ha registrato cd e dvd dei quintetti per clarine
                ->setBirthDateVisible($person['birth_date_visible'])
                ->setImg($person['img']);
             if (array_key_exists('vip', $person)) {
-                $user->addRole('ROLE_VIP');
+                $user->setVip(true);
             }
             if (array_key_exists('writer', $person)) {
                 $user->addRole('ROLE_WRITER');
