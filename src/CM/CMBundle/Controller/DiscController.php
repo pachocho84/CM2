@@ -85,7 +85,6 @@ class DiscController extends Controller
         $user = $this->getUser();
         
         if ($id == null || $slug == null) {
-            
             $disc = new Disc;
 
             $disc->addUser(
@@ -98,7 +97,7 @@ class DiscController extends Controller
             $image = new Image;
             $image->setMain(true)
                 ->setUser($user);
-            $disc->addImage($image);
+            $disc->setImage($image);
 
             $disc->addDiscTrack(new DiscTrack);
 
@@ -132,7 +131,7 @@ class DiscController extends Controller
             $formRoute = 'disc_new';
             $formRouteArgs = array();
         }
- 
+
         $form = $this->createForm(new DiscType, $disc, array(
 /*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
             'cascade_validation' => true,

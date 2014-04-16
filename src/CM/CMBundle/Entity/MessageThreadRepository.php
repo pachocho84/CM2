@@ -28,11 +28,8 @@ class MessageThreadRepository extends BaseRepository
     {
         $options = self::getOptions($options);
 
-        $count = $this->getEntityManager()->createQueryBuilder()
-            ->select('count(m.id)')
-            ->from('CMBundle:Message', 'm')
-            ->join('m.metadata', 'mm', 'with', 'mm.participantId = :user_id')
-            ->join('m.thread', 't')
+        $count = $this->createQueryBuilder('t')
+            ->select('count(t.id)')
             ->join('t.metadata', 'tm', 'with', 'tm.participantId = :user_id')
             ->setParameter('user_id', $options['userId']);
 

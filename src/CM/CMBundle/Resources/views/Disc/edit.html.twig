@@ -1,5 +1,103 @@
 {% extends 'CMBundle:Form:layout.html.twig' %}
 
+{% form_theme form _self %}
+
+{% block _cm_cmbundle_disc_discTracks_row %}
+{% spaceless %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    <div class="panel-group" id="accordion-discTracks">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion-discTracks" href="#collapse-discTracks">
+                        {{ 'Disc Tracks'|trans }} <small>{{ 'click to shrink'|trans }}</small>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse-discTracks" class="panel-collapse collapse in">
+                <div class="panel-body" {{ block('widget_container_attributes') }}>
+                    {{ block('form_rows') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block cm_cmbundle_disctrack_row %}
+{% spaceless %}
+    <div class="well well-sm track-form">
+        <p class="clearfix{% if form.vars.data is null or form.vars.data.title is null and form.title.vars.errors|length == 0 %} hidden{% endif %}"><button type="button" class="close" aria-hidden="true" remove-link>&times;</button></p>
+        <div class="row">
+            <div class="col-sm-2">
+                <div class="form-group">
+                    {{ form_widget(form.number) }}
+                    {{ form_errors(form.number) }}
+                </div>
+            </div>
+            <div class="col-sm-8">
+              <div class="form-group">
+                    {{ form_widget(form.title) }}
+                    {{ form_errors(form.title) }}
+                </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                    {{ form_widget(form.movement) }}
+                    {{ form_errors(form.movement) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-4 col-lg-3">
+                <div class="form-group">
+                    {{ form_widget(form.composer) }}
+                    {{ form_errors(form.composer) }}
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-8 col-lg-9">
+                <div class="form-group">
+                    {{ form_widget(form.artists) }}
+                    {{ form_errors(form.artists) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">
+                <div class="form-group">
+                    {{ form_widget(form.duration) }}
+                    {{ form_errors(form.duration) }}
+                </div>
+            </div>
+            <div class="col-sm-7">
+              <div class="form-group">
+                    {{ form_widget(form.audioFile) }}
+                    {{ form_errors(form.audioFile) }}
+                </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                    {{ form_widget(form.extract) }}
+                    {{ form_errors(form.extract) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_disc_year_row %}
+{% spaceless %}
+    <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock  %}
+
 {% block body %}
     <div class="row">
         <div class="col-lg-5">

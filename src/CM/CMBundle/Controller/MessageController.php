@@ -192,6 +192,13 @@ class MessageController extends Controller
             throw new NotFoundHttpException($this->get('translator')->trans('Thread not found.', array(), 'http-errors'));
         }
 
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:Message:objects.html.twig', array(
+                'thread' => $thread,
+                'messages' => $pagination,
+            ));
+        }
+
         $form = $this->container->get('fos_message.reply_form.factory')->create($thread);
         $formHandler = $this->container->get('fos_message.reply_form.handler');
 

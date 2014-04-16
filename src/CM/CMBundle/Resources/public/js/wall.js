@@ -37,7 +37,7 @@ function getFields(obj) {
 }
 
 function recalculateWall() {
-    var $loadMore = $('#wall ~ .load_more').detach();
+    var $loadMore = $('#wall ~ [load_more]').detach();
 
     var data = [];
     var dataPos = {};
@@ -69,7 +69,7 @@ function wallLoad(data, t, c, reload) {
         columns[i] = $(col);
     });
 
-    $('#wall ~ .load_more').remove();
+    $('#wall ~ [load_more]').remove();
 
     var colIndex = $('#wall > div').length - 1;
     var fields = getFields(data);

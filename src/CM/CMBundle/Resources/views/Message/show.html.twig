@@ -27,7 +27,7 @@
     {{ text|trans(users)|raw }}
 </h3>
 
-<div id="messages">
+<div id="messages" load_more_container>
     {{ include('CMBundle:Message:objects.html.twig') }}
 </div>
 

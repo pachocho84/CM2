@@ -952,7 +952,7 @@
 							}
 						}
 						var oldViewMode = this.viewMode;
-						this.showMode(-1);
+						// this.showMode(-1);
 						this.fill();
 						if (oldViewMode == this.viewMode && this.autoclose) {
 							this.hide();

@@ -3,7 +3,7 @@
 {% endfor %}
 
 {% if images.paginationData is defined and images.paginationData.current < images.paginationData.last %}
-    <div class="well well-small load_more">
+    <div class="well well-small" load_more>
         <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': images.getPaginationData.next })) }}">{{ 'Load more' | trans }}</a>
     </div>
 {% endif %}

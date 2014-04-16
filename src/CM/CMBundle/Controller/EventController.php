@@ -178,7 +178,6 @@ class EventController extends Controller
         $user = $this->getUser();
         
         if ($id == null || $slug == null) {
-            
             $event = new Event;
 
             $event->addUser(
