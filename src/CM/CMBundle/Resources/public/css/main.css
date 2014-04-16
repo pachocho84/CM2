@@ -286,6 +286,9 @@ form .panel-group .panel {
 .protagonist_typeahead .alert {
     margin-bottom: 0;
 }
+form .well {
+    margin-bottom: 15px;
+}
 
 
 
@@ -754,15 +757,21 @@ table.events .object:first-child {
 
 /* Tags */
 .tag {
-    background-color: #fcf3e9;    
-    color: #333333 !important;
+    background-color: #fcf3e9;  
+    font-weight: normal;  
+    color: #555555 !important;
     white-space: nowrap;
     overflow: hidden;
-    padding: 4px;
+    padding: 2px 5px;
     text-overflow: ellipsis;
+    border: 1px solid #cccccc;
+    margin-right: 5px;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
 }
 #userTags {
-    min-height: 55px;
+    min-height: 30px;
 }
 .tag-list .tag {
     cursor: move;

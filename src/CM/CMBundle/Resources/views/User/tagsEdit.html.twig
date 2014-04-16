@@ -1,40 +1,37 @@
 {% extends 'CMBundle:User:accountLayout.html.twig' %}
 
-{% block title %}{{ 'Define yourself'|trans }}{% endblock %}
+{% block section %}{{ 'Define yourself'|trans }}{% endblock %}
 
-{% block body %}
+{% block main %}
 
     <div class="box">
         <div class="box-heading">
-            <h2>{{ icon('Tags') | raw }} <span>{{ block('title') }}</span></h2>
+            <h2>{{ icon('Tags') }} {{ block('section') }}</h2>
         </div>
 
         <div class="box-body">
-            <form class="form-horizontal clearfix" action="{{ path('user_tags_edit') }}" method="post">
+            <form action="{{ path('user_tags_edit') }}" method="post">
                 
                 <legend>{{ 'My tags'|trans }}</legend>
-                <div id="userTags" class="row tag-list">
+                <div id="userTags" class="tag-list">
                     {% for userTag in app.user.userTagsIds %}
-                        <div class="span2">
-                            <label class="round tag" title=" {{ tags[userTag] }}"><input type="hidden" name="tag_{{ userTag }}" value="{{ userTag }}">{{ icon('Tag') }} {{ tags[userTag] }}</label>
-                        </div>
+                        <label class="tag" title=" {{ tags[userTag] }}"><input type="hidden" name="tag_{{ userTag }}" value="{{ userTag }}">{{ icon('Tag') }} {{ tags[userTag] }}</label>
                     {% endfor %}
-                </div>
-                
-                <div class="text-center">
-                    <input type="submit" name="commit" value="{{ 'Save'|trans }}" class="btn btn-primary" />
                 </div>
 
                 <legend>{{ 'Available tags'|trans }}</legend>
-                <div id="tags" class="row tag-list">
+                <div id="tags" class="tag-list">
                     {% for tag in availableTags %}
-                        <div class="span2">
-                            <label class="round tag" title="{{ tag }}"><input type="hidden" name="tag_{{ tag.id }}" value="{{ tag.id }}">{{ icon('Tag') }} {{ tag }}</label>
-                        </div>
+                        <label class="tag" title="{{ tag }}"><input type="hidden" name="tag_{{ tag.id }}" value="{{ tag.id }}">{{ icon('Tag') }} {{ tag }}</label>
                     {% endfor %}
                 </div>
                 
                 <input type="hidden" name="userTagsVal" id="userTagsVal" value="{{ app.user.userTags|join(',') }}" />
+                
+                <div class="text-right">
+                    <a href="{{ path(app.request.attributes.get('_route')) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+                    <input type="submit" name="commit" value="{{ 'Save'|trans }}" class="btn btn-primary" />
+                </div>
             
             </form>
         </div>
