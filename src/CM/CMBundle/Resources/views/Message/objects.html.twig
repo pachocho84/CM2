@@ -1,6 +1,6 @@
 {% if messages.paginationData.current < messages.paginationData.last %}
-    <div class="well well-small load_more-reverse">
-        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params') | merge({ 'page': messages.getPaginationData.next })) }}">{{ 'Load more' | trans }}</a>
+    <div class="well well-small" load_more="reverse">
+        <a href="{{ path('message_show', {threadId: thread.id, page: messages.getPaginationData.next}) }}">{{ 'Load more'|trans }}</a>
     </div>
 {% endif %}
 

@@ -1048,6 +1048,7 @@ class CMExtension extends \Twig_Extension
             case 'Relation':
             case 'Relation_'.Post::TYPE_CREATION:
                 return '<span class="glyphicons user_add"></span>';
+            case 'Actions':
             case 'Options':
                 return '<span class="glyphicons cogwheels"></span>';
             case 'Search':

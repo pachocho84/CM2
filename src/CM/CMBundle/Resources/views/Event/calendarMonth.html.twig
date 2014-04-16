@@ -65,7 +65,7 @@
 
 
 {% if loadMore|default(false) %}
-    <div class="well well-small load_more">
+    <div class="well well-small" load_more>
         <a href=" {{ path('event_calendar', {year: month.next_year, month: month.next_month, loadMore: true}) }}">{{ icon('Calendar') }} {{ month.timestamp|date_modify('+1 month')|format_date('MMMM Y', null, 'GMT')|capitalize }}</a>
     </div>
 {% endif %}

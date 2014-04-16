@@ -34,7 +34,7 @@
 {% endfor %}
 
 {% if messages.paginationData.current < messages.paginationData.last %}
-    <div class="well well-small load_more">
+    <div class="well well-small" load_more>
         <a href="{{ path('message_index', {page: messages.getPaginationData.next}) }}">{{ 'Load more'|trans }}</a>
     </div>
 {% endif %}

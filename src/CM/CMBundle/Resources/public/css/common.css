@@ -344,16 +344,16 @@ form .fileinput {
 
 
 /* LAYOUT */
-.load_more_container {
+[load_more_container] {
     overflow-y: scroll;
 }
-.load_more {
+[load_more] {
     margin-top: 20px;
     clear: both;
     float: none;
     text-align: center;
 }
-.load_more a {
+[load_more] a {
     display: block;
 }
 #body.fixed {

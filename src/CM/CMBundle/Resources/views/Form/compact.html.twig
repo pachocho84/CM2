@@ -15,7 +15,7 @@
             <div class="fileinput fileinput-new" data-provides="fileinput">
                 {{ imgEdit.box|raw }}
                 <div class="fileinput-preview fileinput-exists image_box" data-trigger="fileinput" style="width: {{ imgEdit.width }}px; height: {{ imgEdit.width }}px;"></div>
-        {% elseif imgOffset is defined %}
+        {% elseif imgOffset is defined and imgOffset is not null %}
             <div class="fileinput fileinput-new" data-provides="fileinput">
                 {% if form.parent.vars.data.img is not null %}
                     {{ show_img_box(form.parent.vars.data.img|imagine_filter('medium'), {width: 200, height: 113, offset: imgOffset, box_attributes: {class: 'fileinput-new', style: 'border: 1px solid #bbbbbb; margin-bottom: 10px;'}}) }}
@@ -295,23 +295,27 @@
     {% set imgOffset = form.parent.parent.imgOffset.vars.value %}
     {{ block('form_widget_simple')}}
     {{ form_widget(form.parent.parent.imgOffset) }}
+    {% set imgOffset = null %}
 {% endblock %}
 
 {% block _cm_cmbundle_disc_image_imgFile_widget %}
     {% set imgOffset = form.parent.parent.imgOffset.vars.value %}
     {{ block('form_widget_simple')}}
     {{ form_widget(form.parent.parent.imgOffset) }}
+    {% set imgOffset = null %}
 {% endblock %}
 
 {% block _cm_cmbundle_article_image_imgFile_widget %}
     {% set imgOffset = form.parent.parent.imgOffset.vars.value %}
     {{ block('form_widget_simple')}}
     {{ form_widget(form.parent.parent.imgOffset) }}
+    {% set imgOffset = null %}
 {% endblock %}
 
 {% block _cm_cmbundle_imagealbum_image_imgFile_widget %}
     {% set subtype = 'image' %}
     {{ block('form_widget_simple')}}
+    {% set subtype = null %}
 {% endblock %}
 
 {# Labels #}
@@ -467,190 +471,6 @@
     {{ block('cm_cmbundle_entityuser_collection_row') }}
 {% endspaceless %}
 {% endblock %}
-
-{% block cm_cmbundle_eventdate_row %}
-{% spaceless %}
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        {{ form_widget(form.start) }}
-                        {{ form_errors(form.start) }}
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="form-group">
-                        {{ form_widget(form.end) }}
-                        {{ form_errors(form.end) }}
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        {{ form_widget(form.location) }}
-                        {{ form_errors(form.location) }}
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        {{ form_widget(form.address) }}
-                        {{ form_errors(form.address) }}
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div gmap-canvas></div>
-                </div>
-            </div>
-            {{ form_widget(form) }}
-            {{ form_errors(form) }}
-        </div>
-        {#<div class="panel-footer">
-            <div class="btn-group">
-                <a class="btn btn-default copy_date_link" href="#cm_cmbundle_event_eventDates"><span class="glyphicons more_items"></span> {{ 'Copy'|trans }}</a>
-            </div>
-        </div>#}
-    </div>
-{% endspaceless %}
-{% endblock %}
-
-{% block _cm_cmbundle_event_eventDates_row %}
-{% spaceless %}
-    {% if prototype is defined %}
-        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
-    {% endif %}
-    <div class="panel-group" id="accordion-eventDates">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion-eventDates" href="#collapse-eventDates">
-                        {{ 'Event Dates'|trans }} <small>{{ 'click to shrink'|trans }}</small>
-                    </a>
-                </h4>
-            </div>
-            <div id="collapse-eventDates" class="panel-collapse collapse in">
-                <div class="panel-body" {{ block('widget_container_attributes') }}>
-                    {{ block('form_rows') }}
-                    <a href="#" class="btn btn-default add_date_link" delete_date-text="{{ 'Delete this date'|trans }}">{{ icon('Plus') }} {{ 'Add a date'|trans }}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endspaceless %}
-{% endblock %}
-
-{% block _cm_cmbundle_event_eventDates_entry_location_row %}
-{% spaceless %}
-    <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
-        {{ form_label(form) }}
-        {{ form_widget(form, {attr: {placeholder: 'Location'|trans}}) }}
-        {{ form_errors(form) }}
-    </div>
-{% endspaceless %}
-{% endblock %}
-
-{% block _cm_cmbundle_event_eventDates_entry_address_row %}
-{% spaceless %}
-    <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
-        {{ form_label(form) }}
-        {{ form_widget(form, {attr: {placeholder: 'Address'|trans}}) }}
-        {{ form_errors(form) }}
-    </div>
-{% endspaceless %}
-{% endblock %}
-
-{% block cm_cmbundle_disctrack_row %}
-{% spaceless %}
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        {{ form_widget(form.number) }}
-                        {{ form_errors(form.number) }}
-                    </div>
-                </div>
-                <div class="col-sm-8">
-                  <div class="form-group">
-                        {{ form_widget(form.title) }}
-                        {{ form_errors(form.title) }}
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                  <div class="form-group">
-                        {{ form_widget(form.movement) }}
-                        {{ form_errors(form.movement) }}
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12 col-md-4 col-lg-3">
-                    <div class="form-group">
-                        {{ form_widget(form.composer) }}
-                        {{ form_errors(form.composer) }}
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-9">
-                    <div class="form-group">
-                        {{ form_widget(form.artists) }}
-                        {{ form_errors(form.artists) }}
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        {{ form_widget(form.duration) }}
-                        {{ form_errors(form.duration) }}
-                    </div>
-                </div>
-                <div class="col-sm-7">
-                  <div class="form-group">
-                        {{ form_widget(form.audioFile) }}
-                        {{ form_errors(form.audioFile) }}
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="form-group">
-                        {{ form_widget(form.extract) }}
-                        {{ form_errors(form.extract) }}
-                    </div>
-                </div>
-            </div>
-            {{ form_widget(form) }}
-            {{ form_errors(form) }}
-        </div>
-    </div>
-{% endspaceless %}
-{% endblock %}
-
-{% block _cm_cmbundle_disc_discTracks_row %}
-{% spaceless %}
-    {% if prototype is defined %}
-        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
-    {% endif %}
-    <div class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">{{ 'Disc Tracks'|trans }}</h3></div>
-        <div class="panel-body" {{ block('widget_container_attributes') }}>
-            {{ block('form_rows') }}
-            <a href="#" class="btn btn-default add_track_link" delete_track-text="{{ 'Delete this track'|trans }}">{{ icon('Plus')|raw }} {{ 'Add a track'|trans }}</a>
-        </div>
-    </div>
-{% endspaceless %}
-{% endblock %}
-
-{% block _cm_cmbundle_disc_year_row %}
-{% spaceless %}
-    <div class="form-group{% if form.vars.errors|length > 0 %} has-error{% endif %}">
-        {{ form_label(form) }}
-        {{ form_widget(form) }}
-        {{ form_errors(form) }}
-    </div>
-{% endspaceless %}
-{% endblock  %}
 
 {# Misc #}
 
