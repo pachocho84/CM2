@@ -105,7 +105,7 @@
 {% block date_widget %}
 {% spaceless %}
     {% if widget == 'single_text' %}
-        <div>{{ block('form_widget_simple') }}</div>
+        {{ block('form_widget_simple') }}
     {% else %}
         <div {{ block('widget_container_attributes') }}>
             {{ date_pattern|replace({
@@ -167,12 +167,10 @@
 
 {% block collection_widget %}
 {% spaceless %}
-    <div>
-        {% if prototype is defined %}
-            {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
-        {% endif %}
-        {{ block('form_widget') }}
-    </div>
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    {{ block('form_widget') }}
 {% endspaceless %}
 {% endblock collection_widget %}
 

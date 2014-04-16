@@ -184,8 +184,6 @@ class CMExtension extends \Twig_Extension
 
     public function getShortText(Entity $entity, $options = array())
     {
-        return 'asd';
-
         $options = array_merge(array(
             'max' => 400,
             'stripped' => false,
