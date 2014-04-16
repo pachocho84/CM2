@@ -6,9 +6,7 @@
 
 {% block _cm_cmbundle_work_collection_works_entry_widget %}
     <div class="well well-sm work-form">
-        {% if form.vars.data is not null and form.vars.data.position is not null or form.position.vars.errors|length != 0 %}
-            <p class="clearfix"><button type="button" class="close" aria-hidden="true" remove-link>&times;</button></p>
-        {% endif %}
+        <p class="clearfix{% if form.vars.data is null or form.vars.data.position is null and form.position.vars.errors|length == 0 %} hidden{% endif %}"><button type="button" class="close" aria-hidden="true" remove-link>&times;</button></p>
         <div class="row">
             <div class="col-sm-6">
                 {{ form_row(form.position, {attr: {required: true}}) }}
@@ -59,10 +57,12 @@
                 var $form = $(event.currentTarget);
                 var $collection = $form.closest('[data-prototype]');
                 var index = $collection.find('.work-form :input').length;
-                var newForm = $collection.data('prototype').replace(/__name__label__/g, index).replace(/__name__/g, index);
+                var $newForm = $($collection.data('prototype').replace(/__name__label__/g, index).replace(/__name__/g, index));
 
-                $form.find('.panel-heading').append('<a class="btn btn-default pull-right" remove-link href="#">{{ icon('Remove') }}</a>');
-                $form.after($(newForm));
+                $form.find('[remove-link]').parent().removeClass('hidden');
+                $form.after($newForm);
+
+                $(event.currentTarget).trigger('collection-added', $newForm);
             });
             $(document).on('click', '[remove-link]', function(event) {
                 event.preventDefault();
@@ -73,6 +73,7 @@
                 $(event.currentTarget).find('.work-form:last [name]').attr('name', '');
             });
             $(document).on('change', '.current-input', function(event) {
+                console.log(42);
                 var datetimepicker = $(event.currentTarget).closest('.work-form').find('.current-input-target [datepicker-container]').data('datetimepicker');
                 var $button = $(event.currentTarget).closest('.work-form').find('.current-input-target [datepicker-container] .btn');
                 if ($(event.currentTarget).is(':checked')) {

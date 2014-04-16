@@ -260,16 +260,14 @@ $(function() {
     $('[datetimepicker-container]').each(function(i, elem) {
         initDatetimepicker(elem);
     });
-    $('body').on('collection-added', '.add_date_link', function(event, elem) {
-        $(elem).find('[datetimepicker-container]').each(function(i, elem) {
-            initDatetimepicker(elem);
-        });
-    });
     // date
     $('[datepicker-container]').each(function(i, elem) {
         initDatepicker(elem);
     });
-    $('body').on('collection-added', '.add_date_link', function(event, elem) {
+    $(document).on('collection-added', '.add_date_link, .work-form, .education-form', function(event, elem) {
+        $(elem).find('[datetimepicker-container]').each(function(i, elem) {
+            initDatetimepicker(elem);
+        });
         $(elem).find('[datepicker-container]').each(function(i, elem) {
             initDatepicker(elem);
         });
@@ -283,7 +281,7 @@ $(function() {
     $('[gmap-canvas]').each(function(i) {
         google.maps.event.addDomListener(window, 'load', initializePlaces(i));
     });
-    $(document).on('collection-added', function(event) {
+    $(document).on('collection-added','.add_date_link', function(event) {
         google.maps.event.addDomListener(window, 'load', initializePlaces(-1));
     });
 

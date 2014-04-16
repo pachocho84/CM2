@@ -31,7 +31,7 @@ class EducationType extends AbstractType
             ->add('honour')
             ->add('courseType')
             ->add('degreeType')
-            ->add('description', 'textarea', array('attr' => array('expandable' => $options['expandable'])));
+            ->add('description', 'textarea', array('attr' => array('expandable' => is_null($builder->getData()) ? 'small' : '')));
     }
     
     /**

@@ -33,25 +33,51 @@ class EducationController extends Controller
             array('dateFrom' => 'desc', 'id' => 'desc')
         );
 
-        $education = new Education;
-        $education->setUser($this->getUser());
+        $blankEducation = new Education;
+        $blankEducation->setUser($this->getUser());
 
-        $educations[] = $education;
+        $educations[] = $blankEducation;
 
-        $form = $this->createForm(new EducationCollectionType, array('educations' => new ArrayCollection($educations)), array(
-            'cascade_validation' => true,
-            'expandable' => (is_null($education) ? '' : 'small')
+        $form = $this->createForm(new EducationCollectionType, array('educations' => $educations), array(
+            'cascade_validation' => true
         ))->add('save', 'submit');
 
         $form->handleRequest($request);
-        
-        if ($form->isValid()) {
-            foreach ($educations as $education) {
+
+        $isValid = $form->isValid();
+        if ($isValid) {
+            foreach ($form->getData()['educations'] as $education) {
+                if (count($this->get('validator')->validate($education)) > 0) {
+                    $educations = $form->getData()['educations'];
+                    $isValid = false;
+                    break;
+                }
+            }
+        }
+
+        if ($isValid) {
+            $newEducations = $form->getData()['educations'];
+            $toBeRemoved = array();
+            foreach ($educations as $key => $education) {
+                if (!in_array($education, $form->getData()['educations'])) {
+                    $toBeRemoved[] = $education;
+                    unset($educations[$key]);
+                }
+            }
+            
+            foreach ($toBeRemoved as $education) {
+                $em->remove($education);
+            }
+            foreach ($newEducations as $education) {
+                $education->setUser($this->getUser());
                 $em->persist($education);
             }
             $em->flush();
 
-            return $this->render('CMBundle:Education:object.html.twig', array('education' => $education));
+            return $this->redirect($this->generateUrl('user_education'));
+        } else {
+            $educations = $form->getData()['educations'];
+            $educations[] = $blankEducation;
         }
         
         return array(
