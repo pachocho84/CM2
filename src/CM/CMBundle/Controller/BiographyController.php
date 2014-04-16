@@ -55,7 +55,7 @@ class BiographyController extends Controller
             'em' => $em,
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
-        ))->add('save', 'submit');
+        ));
         
         $form->handleRequest($request);
 

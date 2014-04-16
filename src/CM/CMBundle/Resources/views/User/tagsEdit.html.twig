@@ -30,7 +30,7 @@
                 
                 <div class="text-right">
                     <a href="{{ path(app.request.attributes.get('_route')) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
-                    <input type="submit" name="commit" value="{{ 'Save'|trans }}" class="btn btn-primary" />
+                    <button type="submit" name="commit" class="btn btn-primary">{{ 'Save'|trans }}</button>
                 </div>
             
             </form>

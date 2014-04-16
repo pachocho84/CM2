@@ -40,7 +40,7 @@ class EducationController extends Controller
 
         $form = $this->createForm(new EducationCollectionType, array('educations' => $educations), array(
             'cascade_validation' => true
-        ))->add('save', 'submit');
+        ));
 
         $form->handleRequest($request);
 

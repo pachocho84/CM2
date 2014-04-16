@@ -1,5 +1,11 @@
 {% extends 'CMBundle:User:accountLayout.html.twig' %}
 
+{% block section %}{{ 'Pages'|trans }}{% endblock %}
+
+{% block headingButtons %}
+    <a href="{{ path('page_new') }}" class="btn btn-default">{{ icon('Add') }} {{ 'Create a page'|trans }}</a>
+{% endblock %}
+
 {% form_theme form _self %}
 
 {% block _cm_cmbundle_pageUser_collection_pages_entry_widget %}
@@ -35,27 +41,11 @@
     </div><!-- END Object -->
 {% endblock %}
 
-{% block title %}{{ 'Pages'|trans }}{% endblock %}
-
-{% block heading %}
-    <div class="row">
-        <div class="col-md-8 col-lg-9">
-            <h2>{{ 'Account edit'|trans }} </h2>
-        </div>
-        <div class="col-md-4 col-lg-3">
-            <div class="heading-buttons">
-                <a href="{{ path('page_new') }}" class="btn btn-default">{{ icon('Add') }} {{ 'Create a page'|trans }}</a>
-                <a href="{{ path('user_show', {'slug': app.user.slug}) }}" class="btn btn-default">{{ icon('User') }} {{ 'View profile'|trans }}</a>
-            </div>
-        </div>
-    </div>
-{% endblock %}
-
-{% block body %}
+{% block main %}
 
     <div class="box">
         <div class="box-heading">
-            <h2>{{ icon('Page') }} <span>{{ block('title') }}</span></h2>
+            <h2>{{ icon('Page') }} {{ block('section') }}</h2>
         </div>
 
         <div class="box-body">

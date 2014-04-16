@@ -40,7 +40,7 @@ class WorkController extends Controller
 
         $form = $this->createForm(new WorkCollectionType, array('works' => $works), array(
             'cascade_validation' => true
-        ))->add('save', 'submit');
+        ));
 
         $form->handleRequest($request);
 

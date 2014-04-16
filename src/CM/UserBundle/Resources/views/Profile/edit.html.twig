@@ -1,18 +1,19 @@
 {% extends "CMBundle:User:accountLayout.html.twig" %}
-{% set inProfilePage = true %}
 
-{% block title %}{{ 'Basic informations'|trans }}{% endblock %}
+{% block section %}{{ 'Basic informations'|trans }}{% endblock %}
 
-{% block body %}
+{% block main %}
     <div class="box">
         <div class="box-heading">
-            <h2>{{ icon('Options') }} <span>{{ block('title') }}</h2>
+            <h2>{{ icon('Options') }} {{ block('section') }}</h2>
         </div>
         <div class="box-body">
             {{ form_start(form) }}
                 {{ form_widget(form) }}
+                
                 <div class="text-right">
-                    <button type="submit" class="btn btn-primary">{{ 'Save'|trans }}</button>
+                    <a href="{{ path(app.request.attributes.get('_route')) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+                    <button type="submit" name="commit" class="btn btn-primary">{{ 'Save'|trans }}</button>
                 </div>
             {{ form_end(form) }}
         </div>

@@ -267,11 +267,10 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         
         $groups = $em->getRepository('CMBundle:GroupUser')->findBy(array('userId' => $this->getUser()->getId()));
-        // $pagination = $this->get('knp_paginator')->paginate($groups, $page, 15);
 
         $form = $this->createForm(new GroupUserCollectionType, array('groups' => new ArrayCollection($groups)), array(
             'cascade_validation' => true
-        ))->add('save', 'submit');
+        ));
 
         $form->handleRequest($request);
         
@@ -303,7 +302,7 @@ class UserController extends Controller
 
         $form = $this->createForm(new PageUserCollectionType, array('pages' => new ArrayCollection($pages)), array(
             'cascade_validation' => true
-        ))->add('save', 'submit');
+        ));
 
         $form->handleRequest($request);
         
