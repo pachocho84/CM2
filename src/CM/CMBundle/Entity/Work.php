@@ -25,13 +25,6 @@ class Work
     /**
      * @var string
      *
-     * @ORM\Column(name="employer", type="string", length=150, nullable=true)
-     */
-    private $employer;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="position", type="string", length=150)
      * @Assert\NotBlank
      */
@@ -94,29 +87,6 @@ class Work
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set employer
-     *
-     * @param string $employer
-     * @return Work
-     */
-    public function setEmployer($employer)
-    {
-        $this->employer = $employer;
-    
-        return $this;
-    }
-
-    /**
-     * Get employer
-     *
-     * @return string 
-     */
-    public function getEmployer()
-    {
-        return $this->employer;
     }
 
     /**

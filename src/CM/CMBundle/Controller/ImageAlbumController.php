@@ -326,10 +326,17 @@ class ImageAlbumController extends Controller
             ));
         }
 
+        if ($request->get('_route') == 'user_images') {
+            $lastWork = $em->getRepository('CMBundle:Work')->getLast($publisher->getId());
+            $lastEducation = $em->getRepository('CMBundle:Education')->getLast($publisher->getId());
+        }
+
         return new Response($this->renderView($template, array(
             $publisherType => $publisher,
             'images' => $pagination,
-            'count' => $this->countAlbumsAndImages(array($publisherType.'Id' => $publisher->getId()))
+            'count' => $this->countAlbumsAndImages(array($publisherType.'Id' => $publisher->getId())),
+            'lastWork' => $lastWork,
+            'lastEducation' => $lastEducation,
         )));
     }
 

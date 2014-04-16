@@ -18,7 +18,6 @@ class WorkType extends AbstractType
         parent::buildForm($builder, $options);
 
         $builder->add('position', 'text', array('required' => true))
-            ->add('employer')
             ->add('company')
             ->add('dateFrom', 'date', array('required' => false, 'widget' => 'single_text', 'empty_value' => ''))
             ->add('dateTo', 'date', array('required' => false, 'widget' => 'single_text', 'empty_value' => ''))

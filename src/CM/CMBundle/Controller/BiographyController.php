@@ -97,7 +97,15 @@ class BiographyController extends Controller
             ));
         }
 
-        return array('user' => $user, 'biography' => $biography);
+        $lastWork = $em->getRepository('CMBundle:Work')->getLast($user->getId());
+        $lastEducation = $em->getRepository('CMBundle:Education')->getLast($user->getId());
+
+        return array(
+            'user' => $user,
+            'biography' => $biography,
+            'lastWork' => $lastWork,
+            'lastEducation' => $lastEducation,
+        );
     }
 
     /**

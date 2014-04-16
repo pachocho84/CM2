@@ -165,10 +165,15 @@ class UserController extends Controller
                 'multimedias' => $pagination
             ));
         }
+        
+        $lastWork = $em->getRepository('CMBundle:Work')->getLast($user->getId());
+        $lastEducation = $em->getRepository('CMBundle:Education')->getLast($user->getId());
 
         return array(
             'user' => $user,
-            'multimedias' => $pagination
+            'multimedias' => $pagination,
+            'lastWork' => $lastWork,
+            'lastEducation' => $lastEducation,
         );
     }
 
@@ -195,10 +200,15 @@ class UserController extends Controller
                 'links' => $pagination
             ));
         }
+        
+        $lastWork = $em->getRepository('CMBundle:Work')->getLast($user->getId());
+        $lastEducation = $em->getRepository('CMBundle:Education')->getLast($user->getId());
 
         return array(
             'user' => $user,
-            'links' => $pagination
+            'links' => $pagination,
+            'lastWork' => $lastWork,
+            'lastEducation' => $lastEducation,
         );
     }
 
@@ -348,7 +358,18 @@ class UserController extends Controller
             return $this->render('CMBundle:Event:objects.html.twig', array('dates' => $pagination, 'page' => $page));
         }
         
-        return array('categories' => $categories, 'user' => $user, 'dates' => $pagination, 'category' => $category, 'page' => $page);
+        $lastWork = $em->getRepository('CMBundle:Work')->getLast($user->getId());
+        $lastEducation = $em->getRepository('CMBundle:Education')->getLast($user->getId());
+        
+        return array(
+            'categories' => $categories,
+            'user' => $user,
+            'dates' => $pagination,
+            'category' => $category,
+            'page' => $page,
+            'lastWork' => $lastWork,
+            'lastEducation' => $lastEducation,
+        );
     }
     
     /**
@@ -386,8 +407,19 @@ class UserController extends Controller
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:Disc:objects.html.twig', array('discs' => $pagination, 'page' => $page));
         }
+
+        $lastWork = $em->getRepository('CMBundle:Work')->getLast($user->getId());
+        $lastEducation = $em->getRepository('CMBundle:Education')->getLast($user->getId());
         
-        return array('categories' => $categories, 'user' => $user, 'discs' => $pagination, 'category' => $category, 'page' => $page);
+        return array(
+            'categories' => $categories,
+            'user' => $user,
+            'discs' => $pagination,
+            'category' => $category,
+            'page' => $page,
+            'lastWork' => $lastWork,
+            'lastEducation' => $lastEducation,
+        );
     }
     
     /**
@@ -414,8 +446,16 @@ class UserController extends Controller
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:Article:objects.html.twig', array('dates' => $pagination, 'page' => $page));
         }
+
+        $lastWork = $em->getRepository('CMBundle:Work')->getLast($user->getId());
+        $lastEducation = $em->getRepository('CMBundle:Education')->getLast($user->getId());
         
-        return array('user' => $user, 'articles' => $pagination);
+        return array(
+            'user' => $user,
+            'articles' => $pagination,
+            'lastWork' => $lastWork,
+            'lastEducation' => $lastEducation,
+        );
     }
 
     /**
@@ -438,7 +478,15 @@ class UserController extends Controller
 
         $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($user->getId(), array('locale' => $request->getLocale()));
 
-        return array('user' => $user, 'biography' => $biography);
+        $lastWork = $em->getRepository('CMBundle:Work')->getLast($user->getId());
+        $lastEducation = $em->getRepository('CMBundle:Education')->getLast($user->getId());
+
+        return array(
+            'user' => $user,
+            'biography' => $biography,
+            'lastWork' => $lastWork,
+            'lastEducation' => $lastEducation,
+        );
     }
 
     /**

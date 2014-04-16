@@ -4,34 +4,16 @@
 
 {% form_theme form _self %}
 
-{% block _cm_cmbundle_work_collection_works_widget %}
-    {% if prototype is defined %}
-        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
-    {% endif %}
-    <div class="box" {{ block('widget_container_attributes') }}>
-        <div class="box-heading">
-            <h2>{{ icon('Work') }} {{ block('section') }}</h2>
-        </div>
-
-        <div class="box-body">
-            {{ block('form_rows') }}
-        </div>
-    </div>
-{% endblock %}
-
 {% block _cm_cmbundle_work_collection_works_entry_widget %}
     <div class="well well-sm work-form">
         {% if form.vars.data is not null and form.vars.data.position is not null or form.position.vars.errors|length != 0 %}
             <p class="clearfix"><button type="button" class="close" aria-hidden="true" remove-link>&times;</button></p>
         {% endif %}
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 {{ form_row(form.position, {attr: {required: true}}) }}
             </div>
-            <div class="col-sm-4">
-                {{ form_row(form.employer) }}
-            </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 {{ form_row(form.company) }}
             </div>
         </div>
@@ -57,7 +39,15 @@
 {% endblock %}
 
 {% block main %}
-    {{ form(form) }}
+    <div class="box">
+        <div class="box-heading">
+            <h2>{{ icon('Work') }} {{ 'Work' }}</h2>
+        </div>
+
+        <div class="box-body">
+            {{ form(form) }}
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
