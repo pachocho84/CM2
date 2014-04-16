@@ -267,6 +267,7 @@ form label.required:after {
     display:inline;
     white-space: nowrap;
 }
+/*
 form ul li.object,
 form ul li.object:first-child
 {
@@ -274,6 +275,7 @@ form ul li.object:first-child
     border: 1px solid #bbbbbb;
     padding: 9px;
 }
+*/
 form textarea:not([comment_new]) {
     max-width: 100%;
 }

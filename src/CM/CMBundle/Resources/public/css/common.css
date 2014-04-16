@@ -290,6 +290,11 @@ a.btn:hover {
 .form-group {
     margin-bottom: 10px;
 }
+.radio,
+.checkbox {
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
 .modal .modal-footer {
     margin-top: 0;
 }

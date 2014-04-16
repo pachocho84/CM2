@@ -20,42 +20,37 @@
 {% endblock %}
 
 {% block _cm_cmbundle_work_collection_works_entry_widget %}
-    <div class="panel panel-default work-form">
-        <div class="panel-heading">
-            {{ 'work'|trans }}
-            {% if form.vars.data is not null and form.vars.data.position is not null or form.position.vars.errors|length != 0 %}
-                <a class="btn btn-default pull-right" remove-link href="#">{{ icon('Remove') }}</a>
-            {% endif %}
+    <div class="well well-sm work-form">
+        {% if form.vars.data is not null and form.vars.data.position is not null or form.position.vars.errors|length != 0 %}
+            <p class="clearfix"><button type="button" class="close" aria-hidden="true" remove-link>&times;</button></p>
+        {% endif %}
+        <div class="row">
+            <div class="col-sm-4">
+                {{ form_row(form.position, {attr: {required: true}}) }}
+            </div>
+            <div class="col-sm-4">
+                {{ form_row(form.employer) }}
+            </div>
+            <div class="col-sm-4">
+                {{ form_row(form.company) }}
+            </div>
         </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-4">
-                    {{ form_row(form.position, {attr: {required: true}}) }}
-                </div>
-                <div class="col-sm-4">
-                    {{ form_row(form.employer) }}
-                </div>
-                <div class="col-sm-4">
-                    {{ form_row(form.company) }}
+        <div class="row">
+            <div class="col-sm-5">
+                {{ form_row(form.dateFrom) }}
+            </div>
+            <div class="col-sm-5 current-input-target">
+                {{ form_row(form.dateTo) }}
+            </div>
+            <div class="col-sm-2">
+                <div class="checkbox">
+                    <label><input type="checkbox" class="current-input" value="0">{{ 'Current'|trans }}</label>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-5">
-                    {{ form_row(form.dateFrom) }}
-                </div>
-                <div class="col-sm-5 current-input-target">
-                    {{ form_row(form.dateTo) }}
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label class="checkbox-inline"><input type="checkbox" class="current-input" value="0">{{ 'Current'|trans }}</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    {{ form_row(form.description) }}
-                </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                {{ form_row(form.description) }}
             </div>
         </div>
     </div>
