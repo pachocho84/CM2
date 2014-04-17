@@ -8,6 +8,7 @@
 
 {% form_theme form _self %}
 
+{#
 {% block _cm_cmbundle_pageUser_collection_pages_entry_widget %}
     <div class="media">
         {{ show_img_box(form.vars.data.page|default_img|imagine_filter('small'), {width: 50, box_attributes: {class: 'pull-left img-thumbnail'}}) }}
@@ -40,6 +41,84 @@
 
     </div><!-- END Object -->
 {% endblock %}
+#}
+
+
+
+
+
+
+
+{% block _cm_cmbundle_pageUser_collection_pages_widget %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    {{ block('form_rows') }}
+{% endblock %}
+
+{% block _cm_cmbundle_pageUser_collection_pages_entry_widget %}
+    
+    <div class="well well-sm">
+        <div class="media">
+            {{ show_img_box(form.vars.data.page|default_img|imagine_filter('small'), {width: 50, box_attributes: {class: 'pull-left img-thumbnail'}}) }}
+            <div class="media-body">
+                <h4 class="media-heading"><a href="{{ path('page_show', {slug: form.vars.data.page.getSlug}) }}">{{ form.vars.data.page }}</a></h4>
+            </div>
+        </div>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="text-center">{{ 'visible on my profile'|trans }}</th>
+                    <th class="text-center">{{ 'hidden on my profile'|trans }}</th>
+                    <th class="text-center">{{ 'send me a request'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ form_row(form.joinEvent) }}
+                {{ form_row(form.joinArticle) }}
+                {{ form_row(form.joinDisc) }}
+            </tbody>
+        
+        </table>
+                {{ dump(form.vars.data.page.slug) }}
+        {% if is_admin(form.vars.data.page) %}
+            <div class="btn-group btn-group-sm">
+                <a href="{{ path('page_edit', {slug: form.vars.data.page.slug})}}">{{ icon('edit') }} {{ 'Edit page'|trans }}</a>,
+                <a href="{{ path('page_members_settings', {slug: form.vars.data.page.slug}) }}">{{ icon('Users') }} {{ 'Manage members'|trans }}</a>,
+                <a href="{{ path('page_delete', {slug: form.vars.data.page.slug})}}">{{ icon('Delete') }} {{ 'Delete page'|trans }}</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block _cm_cmbundle_pageUser_collection_pages_entry_joinEvent_widget %}
+    <tr>
+        <td>{{ 'When the page publishes an event'|trans }}</td>
+        {% for child in form.children %}<td class="text-center">{{ form_widget(child) }}</td>{% endfor %}
+    </tr>
+{% endblock %}
+
+{% block _cm_cmbundle_pageUser_collection_pages_entry_joinArticle_widget %}
+    <tr>
+        <td>{{ 'When the page publishes an article'|trans }}</td>
+        {% for child in form.children %}<td class="text-center">{{ form_widget(child) }}</td>{% endfor %}
+    </tr>
+{% endblock %}
+
+{% block _cm_cmbundle_pageUser_collection_pages_entry_joinDisc_widget %}
+    <tr>
+        <td>{{ 'When the page publishes a disc'|trans }}</td>
+        {% for child in form.children %}<td class="text-center">{{ form_widget(child) }}</td>{% endfor %}
+    </tr>
+{% endblock %}
+
+
+
+
+
+
 
 {% block main %}
 
@@ -49,7 +128,13 @@
         </div>
 
         <div class="box-body">
-            {{ form(form) }}
+            {{ form_start(form) }}
+                {{ form_row(form) }}                
+                <div class="text-right">
+                    <a href="{{ path(app.request.attributes.get('_route')) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+                    <button type="submit" name="commit" class="btn btn-primary">{{ 'Save'|trans }}</button>
+                </div>
+            {{ form_end(form) }}
         </div>
     </div>
   

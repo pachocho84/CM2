@@ -297,7 +297,7 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $pages = $em->getRepository('CMBundle:PageUser')->findBy(array('userId' => $this->getUser()->getId()));
+        $pages = $em->getRepository('CMBundle:PageUser')->findBy(array('userId' => $this->getUser()->getId(), 'status' => 1));
         // $pagination = $this->get('knp_paginator')->paginate($pages, $pageNum, 15);
 
         $form = $this->createForm(new PageUserCollectionType, array('pages' => new ArrayCollection($pages)), array(
