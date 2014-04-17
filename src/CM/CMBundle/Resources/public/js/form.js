@@ -37,7 +37,6 @@ function initCollectionForm(type) {
 }
 
 initDatetimepicker = function(elem) {
-    console.log(42);
     $(elem).datetimepicker({
         language: culture,
         format: $(elem).attr('datetimepicker-format'),
@@ -51,7 +50,6 @@ initDatetimepicker = function(elem) {
 }
 
 initDatepicker = function(elem) {
-    console.log(elem);
     $(elem).datetimepicker({
         viewSelect: 'month',
         language: culture,

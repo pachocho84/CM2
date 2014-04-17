@@ -54,8 +54,6 @@ function recalculateWall() {
 
     data['loadMore'] = $loadMore;
 
-console.log(data);
-
     $('#wall').empty().append(calculateColumns());
     wallOrder = 0;
     wallLoad(data, null, null, true);

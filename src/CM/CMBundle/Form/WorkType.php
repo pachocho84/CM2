@@ -19,9 +19,15 @@ class WorkType extends AbstractType
 
         $builder->add('position', 'text', array('required' => true))
             ->add('company')
-            ->add('dateFrom', 'date', array('required' => false, 'widget' => 'single_text', 'empty_value' => ''))
-            ->add('dateTo', 'date', array('required' => false, 'widget' => 'single_text', 'empty_value' => ''))
-            ->add('description', 'textarea', array('required' => false, 'attr' => array('expandable' => is_null($builder->getData()['description']) ? 'small' : '')));
+            ->add('dateFrom', 'date', array(
+                'required' => false,
+                'widget' => 'single_text',
+                'empty_value' => ''
+            ))->add('dateTo', 'date', array(
+                'required' => false,
+                'widget' => 'single_text',
+                'empty_value' => ''
+            ))->add('description', 'textarea', array('required' => false, 'attr' => array('expandable' => is_null($builder->getData()['description']) ? 'small' : '')));
     }
     
     /**
