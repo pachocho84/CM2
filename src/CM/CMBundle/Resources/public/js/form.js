@@ -256,28 +256,15 @@ $(function() {
             $(this).closest('.protagonists_user').remove();
         }
     });
-    // group
-    $(document).on('change', '.protagonists_group', function (event) {
-        event.preventDefault();
-        var group = $(this).children('option:selected').attr('value');
-        $('.protagonists_user[group_id]').each(function () {
-            $(this).remove();
-        });
-        if (group != '') {
-            $.get(script + '/protagonist/addGroup?group_id=' + group + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',') + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1), function (data) {
-                $('.protagonists_user:last').after(data);
-            });
-        }
-    });
     // page
     $(document).on('change', '.protagonists_page', function (event) {
         event.preventDefault();
-        var group = $(this).children('option:selected').attr('value');
+        var page = $(this).children('option:selected').attr('value');
         $('.protagonists_user[page_id]').each(function () {
             $(this).remove();
         });
-        if (group != '') {
-            $.get(script + '/protagonist/addPage?page_id=' + group + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',') + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1), function (data) {
+        if (page != '') {
+            $.get(script + '/protagonist/addPage?page_id=' + page + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',') + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1), function (data) {
                 $('.protagonists_user:last').after(data);
             });
         }

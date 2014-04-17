@@ -20,7 +20,6 @@ class ArticleRepository extends BaseRepository
 
         return array_merge(array(
             'userId'       => null,
-            'groupId'      => null,
             'pageId'       => null,
             'paginate'      => true,
             'categoryId' => null,
@@ -40,7 +39,7 @@ class ArticleRepository extends BaseRepository
             ->setParameter('object', Article::className());
 
         $query = $this->createQueryBuilder('a')
-            ->select('a, t, i, p, l, c, u, lu, cu, pg, gr'.($options['protagonists'] ? ', eu, us' : ''))
+            ->select('a, t, i, p, l, c, u, lu, cu, pg'.($options['protagonists'] ? ', eu, us' : ''))
             ->leftJoin('a.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->setParameter('locales', $options['locales'])
             ->leftJoin('a.images', 'i', 'WITH', 'i.main = '.true)
@@ -52,7 +51,6 @@ class ArticleRepository extends BaseRepository
             ->leftJoin('l.user', 'lu')
             ->leftJoin('c.user', 'cu')
             ->leftJoin('p.page', 'pg')
-            ->leftJoin('p.group', 'gr')
             ->where('t.locale in (:locales)')->setParameter('locales', $options['locales']);
             
         if ($options['protagonists']) {
@@ -74,11 +72,6 @@ class ArticleRepository extends BaseRepository
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
         
-        if ($options['groupId']) {
-            $count->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
-            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
-        }
-        
         if ($options['categoryId']) {
             $count->andWhere('a.category = :category_id')
                 ->setParameter(':category_id', $options['categoryId']);
@@ -96,7 +89,7 @@ class ArticleRepository extends BaseRepository
         $options = self::getOptions($options);
         
         return $this->createQueryBuilder('a')
-            ->select('a, t, i, p, l, c, u, lu, cu, pg, gr, eu, us')
+            ->select('a, t, i, p, l, c, u, lu, cu, pg, eu, us')
             ->leftJoin('a.translations', 't')
             ->leftJoin('a.images', 'i')
             ->leftJoin('a.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
@@ -106,7 +99,6 @@ class ArticleRepository extends BaseRepository
             ->leftJoin('l.user', 'lu')
             ->leftJoin('c.user', 'cu')
             ->leftJoin('p.page', 'pg')
-            ->leftJoin('p.group', 'gr')
             ->leftJoin('a.entityUsers', 'eu')
             ->leftJoin('eu.user', 'us')
             ->andWhere('a.id = :id')->setParameter('id', $id)
@@ -145,10 +137,6 @@ class ArticleRepository extends BaseRepository
             $count->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
-        if (!is_null($options['groupId'])) {
-            $count->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
-            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
-        }
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
@@ -169,10 +157,6 @@ class ArticleRepository extends BaseRepository
         if (!is_null($options['pageId'])) {
             $query->andWhere('p.pageId = :page_id')
                 ->setParameter('page_id', $options['pageId']);
-        }
-        if (!is_null($options['groupId'])) {
-            $query->andWhere('p.groupId = :group_id')
-                ->setParameter('group_id', $options['groupId']);
         }
 
         return $query->getQuery()

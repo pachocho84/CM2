@@ -55,19 +55,6 @@ class Image
     private $user;
 
     /**
-     * @ORM\Column(name="group_id", type="integer", nullable=true)
-     **/
-    private $groupId;
-
-    /**
-     * @var integer
-     *
-     * @ORM\ManyToOne(targetEntity="Group", inversedBy="images")
-     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
-     */
-    private $group;
-
-    /**
      * @ORM\Column(name="page_id", type="integer", nullable=true)
      **/
     private $pageId;
@@ -145,8 +132,6 @@ class Image
     {
         if ($this->getPage()) {
             return $this->getPage();
-        } elseif ($this->getGroup()) {
-            return $this->getGroup();
         } else {
             return $this->getUser();
         }
@@ -156,8 +141,6 @@ class Image
     {
         if ($this->getPage()) {
             return $this->getPageId();
-        } elseif ($this->getGroup()) {
-            return $this->getGroupId();
         } else {
             return $this->getUserId();
         }
@@ -167,8 +150,6 @@ class Image
     {
         if ($this->getPage()) {
             return 'page';
-        } elseif ($this->getGroup()) {
-            return 'group';
         } else {
             return 'user';
         }
@@ -176,7 +157,7 @@ class Image
 
     public function getPublisherSex($type = 'he')
     {
-        if (!is_null($this->getPageId()) || !is_null($this->getGroupId())) {
+        if (!is_null($this->getPageId())) {
             $sex = array('he' => 'it', 'his' => 'its', 'M' => '');
         } elseif ($this->getUser()->getSex() == User::SEX_M) {
             $sex = array('he' => 'he', 'his' => 'his', 'M' => 'M');
@@ -326,42 +307,6 @@ class Image
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Get fromUser
-     *
-     * @return User 
-     */
-    public function getGroupId()
-    {
-        return $this->groupId;
-    }
-
-    /**
-     * Set group
-     *
-     * @param Group $group
-     * @return Image
-     */
-    public function setGroup(Group $group = null)
-    {
-        $this->group = $group;
-        if (!is_null($group)) {
-            $this->groupId = $group->getId();
-        }
-    
-        return $this;
-    }
-
-    /**
-     * Get group
-     *
-     * @return Group 
-     */
-    public function getGroup()
-    {
-        return $this->group;
     }
 
     /**

@@ -47,13 +47,6 @@ class UserTag
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_group", type="boolean")
-     */
-    private $isGroup;
-
-    /**
-     * @var boolean
-     *
      * @ORM\Column(name="is_page", type="boolean")
      */
     private $isPage;
@@ -169,29 +162,6 @@ class UserTag
     public function getIsUser()
     {
         return $this->isUser;
-    }
-
-    /**
-     * Set isGroup
-     *
-     * @param boolean $isGroup
-     * @return UserTag
-     */
-    public function setIsGroup($isGroup)
-    {
-        $this->isGroup = $isGroup;
-    
-        return $this;
-    }
-
-    /**
-     * Get isGroup
-     *
-     * @return boolean 
-     */
-    public function getIsGroup()
-    {
-        return $this->isGroup;
     }
 
     /**

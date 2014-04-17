@@ -173,14 +173,12 @@ class WallController extends Controller
             elseif ($this->get('security.context')->isGranted('ROLE_USER') && $request->get('_route') == 'wall_fans') {
                 $fansIds = $em->getRepository('CMBundle:Fan')->getFans($this->getUser()->getId(), true);
                 if (!empty($fansIds)) {
-                    $in = array('inUsers' => array(), 'inPages' => array(), 'inGroups' => array());
+                    $in = array('inUsers' => array(), 'inPages' => array());
                     foreach ($fansIds as $fan) {
                         if (!is_null($fan->getUserId())) {
                             $in['inUsers'][] = $fan->getUserId();
                         } elseif (!is_null($fan->getPageId())) {
                             $in['inPages'][] = $fan->getPageId();
-                        } elseif (!is_null($fan->getGroupId())) {
-                            $in['inGroups'][] = $fan->getGroupId();
                         }
                     }
                     $fans = $this->get('knp_paginator')->paginate($em->getRepository('CMBundle:Post')->getLastPosts(array('in' => $in, 'locale' => $request->getLocale())), $page, 30);

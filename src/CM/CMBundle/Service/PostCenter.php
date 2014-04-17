@@ -33,8 +33,7 @@ class PostCenter
         $object = null,
         array $objectIds = array(),
         $entity = null,
-        $page = null,
-        $group = null
+        $page = null
     )
     {
         $post = new Post;
@@ -52,8 +51,6 @@ class PostCenter
         }
         if (!is_null($page)) {
             $post->setPage($page);
-        } elseif (!is_null($group)) {
-            $post->setGroup($group);
         }
 
         return $post;
@@ -66,8 +63,7 @@ class PostCenter
         $object = null,
         array $objectIds = array(),
         $entity = null,
-        $page = null,
-        $group = null
+        $page = null
     )
     {
     	$post = $this->getNewPost(
@@ -77,8 +73,7 @@ class PostCenter
             $object,
             $objectIds,
             $entity,
-            $page,
-            $group
+            $page
         );
         $this->em->persist($post);
         $this->flushNeeded = true;

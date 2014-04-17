@@ -45,9 +45,6 @@
                     <li{% if action_name() == 'tagsedit' %} class="active"{% endif %}>
                         <a href="{{ path('user_tags_edit') }}"><span class="glyphicon glyphicon-tags"></span> {{ 'Tags'|trans }}</a>
                     </li>
-                    <li{% if action_name() == 'groups' %} class="active"{% endif %}>
-                        <a href="{{ path('user_groups') }}">{{ icon('Group') }} {{ 'Groups'|trans }}</a>
-                    </li>
                     <li{% if action_name() == 'pages' %} class="active"{% endif %}>
                         <a href="{{ path('user_pages') }}">{{ icon('Page') }} {{ 'Pages'|trans }}</a>
                     </li>

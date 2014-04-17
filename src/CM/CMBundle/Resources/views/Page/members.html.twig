@@ -1,20 +1,20 @@
 {% if members|length > 0 %}
     
-    <div id="groupMembers" class="columnLeft-sezione" ajaxUrl="{#<?php echo url_for('@group_members?id='.$group->getId()) ?>#}">
+    <div id="pageMembers" class="columnLeft-sezione" ajaxUrl="{#<?php echo url_for('@page_members?id='.$page->getId()) ?>#}">
     
-        <div id="groupMembers-top" class="columnLeft-sezione-top">
+        <div id="pageMembers-top" class="columnLeft-sezione-top">
             <h3>{{ 'Members'|trans }}</h3>
-            <div id="groupMembers-count" class="leftColumnUsers-count">
-                {#<?php echo link_to($groupMembersCount.' '.( $groupMembersCount == 1 ? __('member') : __('members') ), '@group_members?id='.$group->getId(), array('class' => 'whoIsFan', 'title' => __('Group members'))) ?>#}
+            <div id="pageMembers-count" class="leftColumnUsers-count">
+                {#<?php echo link_to($pageMembersCount.' '.( $pageMembersCount == 1 ? __('member') : __('members') ), '@page_members?id='.$page->getId(), array('class' => 'whoIsFan', 'title' => __('Page members'))) ?>#}
             </div>
-            <div id="groupMembers-show" class="leftColumnUsers-show">
-                {#<?php echo link_to(__('Show all'), '@group_members?id='.$group->getId(), array('class' => 'whoIsMember', 'title' => __('View all members'))) ?>#}
+            <div id="pageMembers-show" class="leftColumnUsers-show">
+                {#<?php echo link_to(__('Show all'), '@page_members?id='.$page->getId(), array('class' => 'whoIsMember', 'title' => __('View all members'))) ?>#}
             </div>
         </div> 
         
         
         
-        <div id="groupMembers-content" class="leftColumnUsers-content">
+        <div id="pageMembers-content" class="leftColumnUsers-content">
             {% for member in members %}
                 <div class="leftColumnListUser">
                     <a href="{{ path('user_show', {'slug': member.user.slug}) }}" class="leftColumnListUser-img">
@@ -33,28 +33,28 @@
     </div>
 
 {% else %}
-    {#<div id="groupMembers" ajaxUrl="<?php echo url_for('@group_members?id='.$group->getId()) ?>"></div>#}
+    {#<div id="pageMembers" ajaxUrl="<?php echo url_for('@page_members?id='.$page->getId()) ?>"></div>#}
 {% endif %}
 
 
-{#<?php if ($groupMembersCount > 0): ?>
+{#<?php if ($pageMembersCount > 0): ?>
     
-    <div id="groupMembers" class="columnLeft-sezione" ajaxUrl="<?php echo url_for('@group_members?id='.$group->getId()) ?>">
+    <div id="pageMembers" class="columnLeft-sezione" ajaxUrl="<?php echo url_for('@page_members?id='.$page->getId()) ?>">
     
-        <div id="groupMembers-top" class="columnLeft-sezione-top">
+        <div id="pageMembers-top" class="columnLeft-sezione-top">
             <h3><?php echo __('Members') ?></h3>
-            <div id="groupMembers-count" class="leftColumnUsers-count">
-                <?php echo link_to($groupMembersCount.' '.( $groupMembersCount == 1 ? __('member') : __('members') ), '@group_members?id='.$group->getId(), array('class' => 'whoIsFan', 'title' => __('Group members'))) ?>
+            <div id="pageMembers-count" class="leftColumnUsers-count">
+                <?php echo link_to($pageMembersCount.' '.( $pageMembersCount == 1 ? __('member') : __('members') ), '@page_members?id='.$page->getId(), array('class' => 'whoIsFan', 'title' => __('Page members'))) ?>
             </div>
-            <div id="groupMembers-show" class="leftColumnUsers-show">
-                <?php echo link_to(__('Show all'), '@group_members?id='.$group->getId(), array('class' => 'whoIsMember', 'title' => __('View all members'))) ?>
+            <div id="pageMembers-show" class="leftColumnUsers-show">
+                <?php echo link_to(__('Show all'), '@page_members?id='.$page->getId(), array('class' => 'whoIsMember', 'title' => __('View all members'))) ?>
             </div>
         </div> 
         
         
         
-        <div id="groupMembers-content" class="leftColumnUsers-content">
-            <?php foreach ($groupMembers as $member): ?>
+        <div id="pageMembers-content" class="leftColumnUsers-content">
+            <?php foreach ($pageMembers as $member): ?>
                 <div class="leftColumnListUser">
                     <a href="<?php echo url_for('@utenti_show?slug='.$member->getSlug()) ?>" class="leftColumnListUser-img">
                         <?php echo $member->getImg() != '' && file_exists('uploads/utenti/avatar/50/'.$member->getImg()) ? image_tag('/uploads/utenti/avatar/50/'.$member->getImg()) : image_tag('/uploads/utenti/avatar/50/default.jpg') ?>
@@ -72,5 +72,5 @@
     </div>
 
 <?php else: ?>
-    <div id="groupMembers" ajaxUrl="<?php echo url_for('@group_members?id='.$group->getId()) ?>"></div>
+    <div id="pageMembers" ajaxUrl="<?php echo url_for('@page_members?id='.$page->getId()) ?>"></div>
 <?php endif ?>#}

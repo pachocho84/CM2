@@ -66,7 +66,6 @@
 {#
                     <li><a href="{{ path('user_index') }}">{{ 'Users'|trans }}</a></li>
                     <li><a href="{{ path('page_index') }}">{{ 'Pages'|trans }}</a></li>
-                    <li><a href="{{ path('group_index') }}">{{ 'Groups'|trans }}</a></li>
 #}
                     <li class="dropdown">
                         <a href="{{ path('user_locale') }}">{{ 'Locales'|trans }}</a>
@@ -80,7 +79,7 @@
                 
                 <form class="navbar-form navbar-left" role="search">
                     <div class="form-group">
-                        <input id="search-bar" type="text" class="form-control" data-url="{{ path('search_bar') }}" placeholder="{{ 'Search for people, groups and pages'|trans }}"></input>
+                        <input id="search-bar" type="text" class="form-control" data-url="{{ path('search_bar') }}" placeholder="{{ 'Search for people and pages'|trans }}"></input>
 {#                         <a href="#" class="input-group-addon">{{ icon('Search') }}</a> #}
                     </div>
                 </form>

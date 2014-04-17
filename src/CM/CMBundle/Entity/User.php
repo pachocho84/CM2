@@ -220,11 +220,6 @@ class User extends BaseUser implements ParticipantInterface
     protected $userEntities;
 
     /**
-     * @ORM\OneToMany(targetEntity="GroupUser", mappedBy="user", cascade={"persist", "remove"})
-     */
-    protected $userGroups;
-
-    /**
      * @ORM\OneToMany(targetEntity="PageUser", mappedBy="user", cascade={"persist", "remove"})
      */
     protected $userPages;
@@ -307,7 +302,6 @@ class User extends BaseUser implements ParticipantInterface
         
         $this->userUserTags = new ArrayCollection;
         $this->userEntities = new ArrayCollection;
-        $this->userGroups = new ArrayCollection;
         $this->userPages = new ArrayCollection;
         $this->posts = new ArrayCollection;
         $this->images = new ArrayCollection;
@@ -771,36 +765,6 @@ class User extends BaseUser implements ParticipantInterface
     public function getUserEntities()
     {
         return $this->userEntities;
-    }
-
-    /**
-     * @param \CM\CMBundle\Entity\EntityUser $comment
-     * @return Entity
-     */
-    public function addUserGroup(GroupUser $groupUser)
-    {
-        if (!$this->userGroups->contains($groupUser)) {
-            $this->userGroups[] = $groupUser;
-            $groupUser->setUser($this);
-        }
-    
-        return $this;
-    }
-
-    /**
-     * @param \CM\CMBundle\Entity\GroupUser $users
-     */
-    public function removeUserGroup(GroupUser $groupUser)
-    {
-        $this->userGroups->removeElement($groupUser);
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getUserGroups()
-    {
-        return $this->userGroups;
     }
 
     /**

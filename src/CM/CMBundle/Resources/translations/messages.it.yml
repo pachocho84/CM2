@@ -37,10 +37,6 @@ saturday: sabato
 
 # USER
 
-# GROUP
-Group: Gruppo
-Groups: Gruppi
-
 # PAGE
 Page: Pagina
 Pages: Pagine
@@ -49,8 +45,8 @@ Pages: Pagine
 Protagonists: Protagonisti
 Add protagonists: Aggiungi protagonisti
 Role: Ruolo
-%user% will not recive a request and this element will not be visible to his profile due to his group settings.: %user% non riceverà una richiesta e questo elemento non sarà visibile sul suo profilo per via delle sue impostazioni sul gruppo.
-This element will be automatically added to %user%'s profile due to his group settings.: Questo elemento verrà automaticamente aggiunto al profilo di %user% per via delle sue impostazioni sul gruppo.
+%user% will not recive a request and this element will not be visible to his profile due to his page settings.: %user% non riceverà una richiesta e questo elemento non sarà visibile sul suo profilo per via delle sue impostazioni sulla pagina.
+This element will be automatically added to %user%'s profile due to his page settings.: Questo elemento verrà automaticamente aggiunto al profilo di %user% per via delle sue impostazioni sulla pagina.
 %user% will recive a request to add this element to his profile.: %user% riceverà una richiesta per aggiungere questo elemento al suo profilo.
 This element will appear on your profile.: Questo elemento comparirà sul tuo profilo.
 

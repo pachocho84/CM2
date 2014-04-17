@@ -8,9 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use CM\CMBundle\Entity\Post;
-use CM\CMBundle\Entity\Group;
 use CM\CMBundle\Entity\Page;
-use CM\CMBundle\Entity\GroupRepository;
 use CM\CMBundle\Entity\PageRepository;
 
 class PostType extends AbstractType
@@ -35,16 +33,7 @@ class PostType extends AbstractType
                 $data = $event->getData();
 
                 if (method_exists($data, 'getUser')) {
-                    $form->add('group', 'entity', array(
-                            'class' => 'CMBundle:Group',
-                            'query_builder' => function (GroupRepository $er) use ($data) {
-                                return $er->filterGroupsForUser($data->getUser());
-                            },
-                            'empty_value' => 'No group selected',
-                            'attr' => array('class' => 'protagonists_group'),
-                            'required' => false
-                        ))
-                        ->add('page', 'entity', array(
+                    $form->add('page', 'entity', array(
                             'class' => 'CMBundle:Page',
                             'query_builder' => function (PageRepository $er) use ($data) {
                                 return $er->filterPagesForUser($data->getUser());

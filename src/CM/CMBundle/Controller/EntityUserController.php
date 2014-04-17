@@ -50,7 +50,7 @@ class EntityUserController extends Controller
     }
 
     /**
-     * @Route("/{type}/{id}", name="entityuser_publisher", requirements={"type" = "user|page|group", "id" = "\d+"})
+     * @Route("/{type}/{id}", name="entityuser_publisher", requirements={"type" = "user|page", "id" = "\d+"})
      * @Template
      */
     public function publisherAction(Request $request, $type, $id)
@@ -61,7 +61,6 @@ class EntityUserController extends Controller
             case 'user':
                 $publisher = $em->getRepository('CMBundle:User')->getWithTags($id, array('locale' => $request->getLocale()));
                 break;
-            case 'group':
             case 'page':
                 $publisher = $em->getRepository('CMBundle:'.ucfirst($type))->findOneById($id);
                 break;
@@ -78,7 +77,6 @@ class EntityUserController extends Controller
     
     /**
      * @Route("/add/{object}", name="entityuser_add")
-     * @Route("/addGroup/{object}", name="entityuser_add_group")
      * @Route("/addPage/{object}", name="entityuser_add_page")
      * @Template
      */
@@ -94,18 +92,6 @@ class EntityUserController extends Controller
             $user_id = intval($request->query->get('user_id'));
 
             $users = array($em->getRepository('CMBundle:User')->findOneById($user_id));
-        } elseif (!is_null($request->query->get('group_id'))) {
-            $group_id = $request->query->get('group_id');
-
-            $excludes = explode(',', $request->query->get('exclude'));
-            $group = $em->getRepository('CMBundle:Group')->getGroupExcludeUsers($group_id, $excludes);
-
-            $users = array();
-            foreach ($group->getGroupUsers() as $groupUser) {
-                $users[] = $groupUser->getUser();
-            }
-
-            $target = array('type' => 'group', 'obj' => $group);
         } elseif (!is_null($request->query->get('page_id'))) {
             $page_id = $request->query->get('page_id');
 
@@ -175,20 +161,12 @@ class EntityUserController extends Controller
     }
 
     /**
-     * @Route("/removeGroup", name="entityuser_remove_group")
      * @Route("/removePage", name="entityuser_remove_page")
      */
     public function removeProtagonistAction(Request $request)
     {
-        if (!is_null($request->query->get('group_id'))) {
-            $group_ids = explode(',', $request->query->get('group_id'));
-            $user_ids = $em->getRepository('CMBundle:Group')->getUserIdsFor($group_ids);
-        } elseif (!is_null($request->query->get('page_id'))) {
-            $page_ids = explode(',', $request->query->get('page_id'));
-            $user_ids = $em->getRepository('CMBundle:Page')->getUserIdsFor($page_ids);
-        } else {
-            // throw exception
-        }
+        $pageIds = explode(',', $request->query->get('page_id'));
+        $userIds = $em->getRepository('CMBundle:Page')->getUserIdsFor($pageIds);
 
         return new JsonResponse($user_ids);
     }

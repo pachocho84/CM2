@@ -267,6 +267,7 @@ form label.required:after {
     display:inline;
     white-space: nowrap;
 }
+/*
 form ul li.object,
 form ul li.object:first-child
 {
@@ -274,6 +275,7 @@ form ul li.object:first-child
     border: 1px solid #bbbbbb;
     padding: 9px;
 }
+*/
 form textarea:not([comment_new]) {
     max-width: 100%;
 }
@@ -283,6 +285,9 @@ form .panel-group .panel {
 }
 .protagonist_typeahead .alert {
     margin-bottom: 0;
+}
+form .well {
+    margin-bottom: 15px;
 }
 
 
@@ -299,7 +304,6 @@ form .panel-group .panel {
 .profile-header {
     margin-bottom: 20px;
     border: 1px solid #bbbbbb;
-    overflow: hidden;
 }
 .profile-header .profile-header-row {
     background: url(../../bundles/cm/images/layout/damascato_silver.jpg) repeat;
@@ -484,104 +488,18 @@ form .panel-group .panel {
     text-align: center;
     border-top: 1px solid #bbbbbb;
     background: #ffffff;
+    overflow-x: scroll;
+    white-space: nowrap;
 }
 .profile-menu a {
     line-height: 45px;
     color: #333333;
     padding: 14px 10px 11px;
 }
-/*
-.profile-menu li {
-    display: inline-block;
-    text-overflow: ellipsis;
-    min-width: 20px;
-    max-width: 180px;
-}
-.profile-menu li a {
-    height: 44px;
-    display: inline-block;
-    color: #333333;
-    background: #efefef;
-    padding: 10px;
-}
-*/
 .profile-menu a:hover,
 .profile-menu a.active {
     border-bottom: 3px solid #990000;
 }
-
-/*
-.profile-header .navbar {
-    margin-bottom: 0;
-    border: 0px;
-    border-top: 1px solid #bbbbbb;
-    border-radius: 0;
-    min-height: 0;
-}
-.profile-header .navbar .navbar-collapse {
-    padding: 0;
-}
-.profile-header .navbar .user-menu {
-    border: none;
-    background: transparent;
-}
-.profile-header .navbar .user-menu > .nav > li > a {
-    font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
-    font-size: 13px;
-    border-right: 1px solid #bbbbbb;
-    padding: 10px;
-}
-.profile-header .navbar .user-menu > .nav.pull-right > li > a {
-    border-left: 1px solid #bbbbbb;
-    border-right: none;
-}
-.profile-header .navbar .user-menu > ul.nav > li.dropdown.active > a,
-.profile-header .navbar .user-menu > ul.nav > li.active > a {
-    color: #990000;
-    background-color: #ffffff;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    position: relative;
-}
-*/
-/*.profile-header .navbar .user-menu > ul.nav > li.active > a:before {
-  position: absolute;
-  bottom: -24px;
-  left: 50%;
-  margin-left: -13px;
-  display: inline-block;
-  border-right: 13px solid transparent;
-  border-bottom: 13px solid #990000;
-  border-left: 13px solid transparent;
-  content: '';
-}*/
-/*.profile-header .navbar .user-menu > ul.nav > li.active > a:after {
-  position: absolute;
-  bottom: -25px;
-  left: 50%;
-  margin-left: -10px;
-  display: inline-block;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid #f7f7f7;
-  border-left: 10px solid transparent;
-  content: '';
-  z-index: 1;
-} */
-/*
-.profile-header .navbar .user-menu li.active a.dropdown-toggle .caret { 
-    border-top-color: #990000;
-    border-bottom-color: #990000;
-}
-.profile-header .navbar .user-menu li .dropdown-menu {
-    margin-top: 0;
-    margin-right: -1px;
-    border: 1px solid #bbbbbb;
-}
-.profile-header .navbar .nav li.dropdown.open>.dropdown-toggle {
-    background: #ffffff;
-}
-*/
 
 
 
@@ -839,15 +757,21 @@ table.events .object:first-child {
 
 /* Tags */
 .tag {
-    background-color: #fcf3e9;    
-    color: #333333 !important;
+    background-color: #fcf3e9;  
+    font-weight: normal;  
+    color: #555555 !important;
     white-space: nowrap;
     overflow: hidden;
-    padding: 4px;
+    padding: 2px 5px;
     text-overflow: ellipsis;
+    border: 1px solid #cccccc;
+    margin-right: 5px;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
 }
 #userTags {
-    min-height: 55px;
+    min-height: 30px;
 }
 .tag-list .tag {
     cursor: move;

@@ -36,18 +36,14 @@ class ImageAlbumController extends Controller
 
         $publisher = $this->getUser();
         $page = null;
-        $group = null;
         $showRoute = 'user_album';
         if (!is_null($objectId)) {
-            switch ($object) {
-                case 'Page':
-                    $page = $em->getRepository('CMBundle:Page')->findOneById($objectId);
-                    break;
-                case 'Group':
-                    $group = $em->getRepository('CMBundle:Group')->findOneById($objectId);
-                    break;
+            $page = $em->getRepository('CMBundle:Page')->findOneById($objectId);
+
+            if (!$this->get('cm.user_authentication')->isAdminOf($page)) {
+                throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }
-            if (is_null($page) && is_null($group)) {
+            if (is_null($page)) {
                 throw new NotFoundHttpException($this->get('translator')->trans('Object not found.', array(), 'http-errors'));
             }
         }
@@ -61,8 +57,7 @@ class ImageAlbumController extends Controller
             $image = new Image;
             $image->setMain(true)
                 ->setUser($publisher)
-                ->setPage($page)
-                ->setGroup($group);
+                ->setPage($page);
             $album->addImage($image);
 
             $post = $this->get('cm.post_center')->newPost(
@@ -72,8 +67,7 @@ class ImageAlbumController extends Controller
                 get_class($album),
                 array(),
                 $album,
-                $page,
-                $group
+                $page
             );
 
             $album->addPost($post);
@@ -120,8 +114,6 @@ class ImageAlbumController extends Controller
             switch ($object) {
                 case 'Page':
                     return new RedirectResponse($this->generateUrl('page_album', array('id' => $album->getId(), 'slug' => $page->getSlug())));
-                case 'Group':
-                    return new RedirectResponse($this->generateUrl('group_album', array('id' => $album->getId(), 'slug' => $group->getSlug())));
                 case 'events':
                     return new RedirectResponse($this->generateUrl('entity_album', array('id' => $album->getId(), 'slug' => $album->getSlug(), 'type' => $object)));
                 default:
@@ -164,10 +156,6 @@ class ImageAlbumController extends Controller
             $image->setPage($album->getPost()->getPage());
             $publisher = $album->getPost()->getPage();
             $link = 'page_image';
-        } elseif (!is_null($album->getPost()->getGroup())) {
-            $image->setGroup($album->getPost()->getGroup());
-            $publisher = $album->getPost()->getGroup();
-            $link = 'group_image';
         } else {
             $publisher = $this->getUser();
             $link = 'user_image';
@@ -275,7 +263,6 @@ class ImageAlbumController extends Controller
     /**
      * @Route("/{slug}/images/{page}", name="user_images", requirements={"page" = "\d+"})
      * @Route("/pages/{slug}/images/{page}", name="page_images", requirements={"page" = "\d+"})
-     * @Route("/groups/{slug}/images/{page}", name="group_images", requirements={"page" = "\d+"})
      */
     public function imagesAction(Request $request, $slug, $page = 1)
     {
@@ -301,16 +288,6 @@ class ImageAlbumController extends Controller
             $publisherType = 'page';
 
             $template = 'CMBundle:Page:images.html.twig';
-        } elseif ($request->get('_route') == 'group_images') {
-            $publisher = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
-            
-            if (!$publisher) {
-                throw new NotFoundHttpException($this->get('translator')->trans('Group not found.', array(), 'http-errors'));
-            }
-
-            $publisherType = 'group';
-
-            $template = 'CMBundle:Group:images.html.twig';
         }
 
         $images = $em->getRepository('CMBundle:Image')->getImages(array($publisherType.'Id' => $publisher->getId()));
@@ -414,7 +391,6 @@ class ImageAlbumController extends Controller
     /**
      * @Route("/{slug}/albums/{page}", name="user_albums", requirements={"page" = "\d+"})
      * @Route("/pages/{slug}/albums/{page}", name="page_albums", requirements={"page" = "\d+"})
-     * @Route("/groups/{slug}/albums/{page}", name="group_albums", requirements={"page" = "\d+"})
      */
     public function albumsAction(Request $request, $slug, $page = 1)
     {
@@ -440,16 +416,6 @@ class ImageAlbumController extends Controller
             $publisherType = 'page';
 
             $template = 'CMBundle:Page:albums.html.twig';
-        } elseif ($request->get('_route') == 'group_albums') {
-            $publisher = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
-            
-            if (!$publisher) {
-                throw new NotFoundHttpException($this->get('translator')->trans('Group not found.', array(), 'http-errors'));
-            }
-
-            $publisherType = 'group';
-
-            $template = 'CMBundle:Group:albums.html.twig';
         }
 
         $albums = $em->getRepository('CMBundle:ImageAlbum')->getAlbums(array(
@@ -478,7 +444,6 @@ class ImageAlbumController extends Controller
      * @Route("/{type}/{id}/{slug}/album/{page}", name="entity_album", requirements={"id" = "\d+", "page" = "\d+"})
      * @Route("/{slug}/album/{id}/{page}", name="user_album", requirements={"id" = "\d+", "page" = "\d+"})
      * @Route("/pages/{slug}/album/{id}/{page}", name="page_album", requirements={"id" = "\d+", "page" = "\d+"})
-     * @Route("/groups/{slug}/album/{id}/{page}", name="group_album", requirements={"id" = "\d+", "page" = "\d+"})
      */
     public function albumAction(Request $request, $id, $type = null, $slug = null, $page = 1)
     {
@@ -514,7 +479,6 @@ class ImageAlbumController extends Controller
     /**
      * @Route("/{slug}/images/entities/{page}", name="user_entities_albums", requirements={"page" = "\d+"})
      * @Route("/pages/{slug}/images/entities/{page}", name="page_entities_albums", requirements={"page" = "\d+"})
-     * @Route("/groups/{slug}/images/entities/{page}", name="group_entities_albums", requirements={"page" = "\d+"})
      */
     public function imagesEntitiesAction(Request $request, $slug, $page = 1)
     {
@@ -540,16 +504,6 @@ class ImageAlbumController extends Controller
             $publisherType = 'page';
 
             $template = 'CMBundle:Page:imagesEntities.html.twig';
-        } elseif ($request->get('_route') == 'group_entities_albums') {
-            $publisher = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
-            
-            if (!$publisher) {
-                throw new NotFoundHttpException($this->get('translator')->trans('Group not found.', array(), 'http-errors'));
-            }
-
-            $publisherType = 'group';
-
-            $template = 'CMBundle:Group:imagesEntities.html.twig';
         }
 
         $entities = $em->getRepository('CMBundle:Image')->getEntityImages(array(

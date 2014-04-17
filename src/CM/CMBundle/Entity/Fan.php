@@ -53,21 +53,6 @@ class Fan
     /**
      * @var integer
      *
-     * @ORM\Column(name="group_id", type="integer", nullable=true)
-     */
-    private $groupId;
-
-    /**
-     * @var integer
-     *
-     * @ORM\ManyToOne(targetEntity="Group", inversedBy="fans")
-     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
-     */
-    private $group;
-
-    /**
-     * @var integer
-     *
      * @ORM\Column(name="page_id", type="integer", nullable=true)
      */
     private $pageId;
@@ -161,40 +146,6 @@ class Fan
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Get groupId
-     *
-     * @return integer 
-     */
-    public function getGroupId()
-    {
-        return $this->groupId;
-    }
-
-    /**
-     * Set group
-     *
-     * @param Group $group
-     * @return Image
-     */
-    public function setGroup(Group $group = null)
-    {
-        $this->group = $group;
-        $this->groupId = $group->getId();
-    
-        return $this;
-    }
-
-    /**
-     * Get group
-     *
-     * @return Group 
-     */
-    public function getGroup()
-    {
-        return $this->group;
     }
 
     /**

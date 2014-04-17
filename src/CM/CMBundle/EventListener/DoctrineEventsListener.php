@@ -7,7 +7,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\EntityManager;
 use CM\CMBundle\Entity\EntityUser;
-use CM\CMBundle\Entity\GroupUser;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Request;
 use CM\CMBundle\Entity\Notification;
@@ -20,7 +19,6 @@ use CM\CMBundle\Entity\Fan;
 use CM\CMBundle\Entity\ImageAlbum;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\Page;
-use CM\CMBundle\Entity\Group;
 use CM\CMBundle\Entity\Relation;
 use CM\CMBundle\Entity\Multimedia;
 
@@ -57,11 +55,8 @@ class DoctrineEventsListener
         if ($object instanceof EntityUser) {
             $this->entityUserPersistedRoutine($object, $em);
         }
-        if ($object instanceof GroupUser) {
-            $this->groupUserPersistedRoutine($object, $em);
-        }
         if ($object instanceof PageUser) {
-            $this->groupUserPersistedRoutine($object, $em);
+            $this->pageUserPersistedRoutine($object, $em);
         }
         if ($object instanceof Post && in_array($object->getObject(), array(Comment::className(), Like::className()))) {
             $this->postAggregatePersistedRoutine($object, $em);
@@ -78,7 +73,7 @@ class DoctrineEventsListener
         if ($object instanceof Image) {
             $this->imagePersistedRoutine($object, $em);
         }
-        if (($object instanceof User || $object instanceof Page || $object instanceof Group)
+        if (($object instanceof User || $object instanceof Page)
             && ($object->getImg() || $object->getCoverImg() || (property_exists($object, 'backgroundImg') && $object->getBackgroundImg()))) {
             $this->imgPersistedRoutine($object, $em);
         }
@@ -107,7 +102,7 @@ class DoctrineEventsListener
         if ($object instanceof ImageAlbum) {
             $this->imageAlbumUpdatedRoutine($object, $em);
         }
-        if (($object instanceof User || $object instanceof Page || $object instanceof Group)
+        if (($object instanceof User || $object instanceof Page)
             && (array_key_exists('img', $em->getUnitOfWork()->getEntityChangeSet($object)) 
                 || array_key_exists('cover_img', $em->getUnitOfWork()->getEntityChangeSet($object)) 
                 || array_key_exists('background_img', $em->getUnitOfWork()->getEntityChangeSet($object)))) {
@@ -129,14 +124,8 @@ class DoctrineEventsListener
         if ($object instanceof Page) {
             $this->pagePersistedRoutine($object, $em);
         }
-        if ($object instanceof Group) {
-            $this->groupPersistedRoutine($object, $em);
-        }
         if ($object instanceof EntityUser) {
             $this->entityUserRemovedRoutine($object, $em);
-        }
-        if ($object instanceof GroupUser) {
-            $this->groupUserRemovedRoutine($object, $em);
         }
         if ($object instanceof PageUser) {
             $this->pageUserRemovedRoutine($object, $em);
@@ -156,7 +145,7 @@ class DoctrineEventsListener
         if ($object instanceof ImageAlbum) {
             // $this->imageAlbumRemovedRoutine($object, $em);
         }
-        if ($object instanceof User || $object instanceof Page || $object instanceof Group) {
+        if ($object instanceof User || $object instanceof Page) {
             $this->imgRemovedRoutine($object, $em);
         }
         if ($object instanceof Relation) {
@@ -188,7 +177,6 @@ class DoctrineEventsListener
         $entity = $entityUser->getEntity();
         $post = $entity->getPost();
         $user = $post->getUser();
-        $group = $post->getGroup();
         $page = $post->getPage();
 
         $requestCenter = $this->get('cm.request_center');
@@ -202,8 +190,7 @@ class DoctrineEventsListener
                     null,
                     null,
                     $entity,
-                    $page,
-                    $group
+                    $page
                 );
                 break;
             case EntityUser::STATUS_ACTIVE:
@@ -214,8 +201,7 @@ class DoctrineEventsListener
                     null,
                     null,
                     $post,
-                    $page,
-                    $group
+                    $page
                 );
                 break;
             case EntityUser::STATUS_REQUESTED:
@@ -237,70 +223,9 @@ class DoctrineEventsListener
         $entity = $entityUser->getEntity();
         $post = $entity->getPost();
         $user = $post->getUser();
-        $group = $post->getGroup();
         $page = $post->getPage();
 
         $this->get('cm.request_center')->removeRequest($user, get_class($entity), $entity->getId(), 'sent');
-    }
-
-    private function groupUserPersistedRoutine(GroupUser &$groupUser, EntityManager $em)
-    {
-        $group = $groupUser->getGroup();
-        $post = $group->getPost();
-        $user = $post->getUser();
-        $page = $post->getPage();
-
-        $requestCenter = $this->get('cm.request_center');
-        $notificationCenter = $this->get('cm.notification_center');
-
-        switch ($groupUser->getStatus()) {
-            case GroupUser::STATUS_PENDING:
-                $requestCenter->newRequest(
-                    $groupUser->getUser(),
-                    $user,
-                    null,
-                    null,
-                    null,
-                    null,
-                    $group
-                );
-                break;
-            case GroupUser::STATUS_ACTIVE:
-                $notificationCenter->newNotification(
-                    Notification::TYPE_REQUEST_ACCEPTED,
-                    $groupUser->getUser(),
-                    $user,
-                    null,
-                    null,
-                    $post,
-                    $page,
-                    $group
-                );
-                break;
-            case GroupUser::STATUS_REQUESTED:
-                foreach ($em->getRepository('CMBundle:Group')->getAdmins($group->getId()) as $admin) {
-                    $requestCenter->newRequest(
-                        $admin,
-                        $groupUser->getUser(),
-                        null,
-                        null,
-                        null,
-                        $page,
-                        $group
-                    );
-                }
-                break;
-        }
-    }
-
-    private function groupUserRemovedRoutine(GroupUser &$groupUser, EntityManager $em)
-    {
-        $group = $groupUser->getGroup();
-        $post = $group->getPost();
-        $user = $post->getUser();
-        $page = $post->getPage();
-
-        $this->get('cm.request_center')->removeRequest($user, get_class($group), $group->getId(), 'sent');
     }
 
     private function pageUserPersistedRoutine(PageUser &$pageUser, EntityManager $em)
@@ -594,8 +519,6 @@ class DoctrineEventsListener
             $postType = Post::TYPE_FAN_USER;
         } elseif (!is_null($fan->getPage())) {
             $postType = Post::TYPE_FAN_PAGE;
-        } elseif (!is_null($fan->getGroup())) {
-            $postType = Post::TYPE_FAN_GROUP;
         }
 
         $post = $em->getRepository('CMBundle:Post')->getLastPostFor($fan->getFromUser()->getId(), $postType, get_class($fan), null, array('after' => new \DateTime('-12 hours'), 'limit' => 1));
@@ -620,8 +543,6 @@ class DoctrineEventsListener
             $toNotify[] = $fan->getUser();
         } elseif (!is_null($fan->getPage())) {
             $toNotify = $em->getRepository('CMBundle:Page')->getAdmins($fan->getPage()->getId());
-        } elseif (!is_null($fan->getGroup())) {
-            $toNotify = $em->getRepository('CMBundle:Group')->getAdmins($fan->getGroup()->getId());
         }
 
         foreach ($toNotify as $user) {
@@ -642,8 +563,6 @@ class DoctrineEventsListener
             $postType = Post::TYPE_FAN_USER;
         } elseif (!is_null($fan->getPage())) {
             $postType = Post::TYPE_FAN_PAGE;
-        } elseif (!is_null($fan->getGroup())) {
-            $postType = Post::TYPE_FAN_GROUP;
         }
 
         $post = $em->getRepository('CMBundle:Post')->getLastPostFor($fan->getFromUser()->getId(), $postType, get_class($fan), $fan->getId(), array('limit' => 1));
@@ -668,7 +587,6 @@ class DoctrineEventsListener
         $entity = $image->getEntity();
         $user = $image->getUser();
         $page = $image->getPage();
-        $group = $image->getGroup();
 
         if ((!is_null($entity) && is_null($entity->getId())) || $image->getMain()) {
             return;
@@ -678,7 +596,6 @@ class DoctrineEventsListener
             'entityId' => $entity->getId(),
             'object' => get_class($image),
             'userId' => is_null($user) ? null : $user->getId(),
-            'groupId' => is_null($group) ? null : $group->getId(),
             'pageId' => is_null($page) ? null : $page->getId(),
             'after' => new \DateTime('-12 hours'),
             'paginate' => false,
@@ -691,7 +608,6 @@ class DoctrineEventsListener
         } else {
             $post = $this->get('cm.post_center')->getNewPost($user, $image->getUser());
             $post->setPage($image->getPage())
-                ->setGroup($image->getGroup())
                 ->setObject(get_class($image))
                 ->addObjectId($image->getId());
 
@@ -718,7 +634,6 @@ class DoctrineEventsListener
 
             $post = $this->get('cm.post_center')->getNewPost($user, $creationPost->getUser(), Post::TYPE_UPDATE);
             $post->setPage($creationPost->getPage());
-            $post->setGroup($creationPost->getGroup());
 
             $album->addPost($post);
         }
@@ -741,11 +656,6 @@ class DoctrineEventsListener
             $page = $publisher;
             $user = is_null($this->get('security.context')->getToken()) ? $page->getCreator() : $this->getUser();
         }
-        $group = null;
-        if ($publisher instanceof Group) {
-            $group = $publisher;
-            $user = is_null($this->get('security.context')->getToken()) ? $group->getCreator() : $this->getUser();
-        }
 
         $album = new ImageAlbum;
         $image = new Image;
@@ -767,13 +677,11 @@ class DoctrineEventsListener
 
         $post = $this->get('cm.post_center')->getNewPost($user, $user);
         $post->setPage($page);
-        $post->setGroup($group);
         $album->setPost($post);
 
         $image->setMain(true)
             ->setUser($user)
-            ->setPage($page)
-            ->setGroup($group);
+            ->setPage($page);
         $album->setImage($image);
 
         $em->persist($album);
@@ -798,15 +706,10 @@ class DoctrineEventsListener
         if ($publisher instanceof Page) {
             $page = $publisher;
         }
-        $group = null;
-        if ($publisher instanceof Group) {
-            $group = $publisher;
-        }
 
         if (array_key_exists('img', $em->getUnitOfWork()->getEntityChangeSet($publisher))) {
             $album = $em->getRepository('CMBundle:ImageAlbum')->getImageAlbum(array(
                 'userId' => is_null($user) ? null : $user->getId(),
-                'groupId' => is_null($group) ? null : $group->getId(),
                 'pageId' => is_null($page) ? null : $page->getId(),
                 'type' => ImageAlbum::TYPE_PROFILE,
             ));
@@ -820,8 +723,7 @@ class DoctrineEventsListener
                 ->setImgOffset($publisher->getImgOffset())
                 ->setMain(true)
                 ->setUser($user)
-                ->setPage($page)
-                ->setGroup($group);
+                ->setPage($page);
             $album->addImage($image);
 
             $em->persist($album);
@@ -832,7 +734,6 @@ class DoctrineEventsListener
         if (array_key_exists('cover_img', $em->getUnitOfWork()->getEntityChangeSet($publisher))) {
             $album = $em->getRepository('CMBundle:ImageAlbum')->getImageAlbum(array(
                 'userId' => is_null($user) ? null : $user->getId(),
-                'groupId' => is_null($group) ? null : $group->getId(),
                 'pageId' => is_null($page) ? null : $page->getId(),
                 'type' => ImageAlbum::TYPE_COVER,
             ));
@@ -846,8 +747,7 @@ class DoctrineEventsListener
                 ->setImgOffset($publisher->getCoverImgOffset())
                 ->setMain(true)
                 ->setUser($user)
-                ->setPage($page)
-                ->setGroup($group);
+                ->setPage($page);
             $album->addImage($image);
 
             $em->persist($album);
@@ -858,7 +758,6 @@ class DoctrineEventsListener
         if (array_key_exists('background_img', $em->getUnitOfWork()->getEntityChangeSet($publisher))) {
             $album = $em->getRepository('CMBundle:ImageAlbum')->getImageAlbum(array(
                 'userId' => is_null($user) ? null : $user->getId(),
-                'groupId' => is_null($group) ? null : $group->getId(),
                 'pageId' => is_null($page) ? null : $page->getId(),
                 'type' => ImageAlbum::TYPE_BACKGROUND,
             ));
@@ -871,8 +770,7 @@ class DoctrineEventsListener
             $image->setImg($publisher->getBackgroundImg())
                 ->setMain(true)
                 ->setUser($user)
-                ->setPage($page)
-                ->setGroup($group);
+                ->setPage($page);
             $album->addImage($image);
 
             $em->persist($album);

@@ -80,19 +80,6 @@ class HomepageBanner
     private $user;
 
     /**
-     * @ORM\Column(name="group_id", type="integer", nullable=true)
-     **/
-    private $groupId;
-
-    /**
-     * @var integer
-     *
-     * @ORM\ManyToOne(targetEntity="Group")
-     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
-     */
-    private $group;
-
-    /**
      * @ORM\Column(name="page_id", type="integer", nullable=true)
      **/
     private $pageId;
@@ -287,42 +274,6 @@ class HomepageBanner
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Get fromUser
-     *
-     * @return User 
-     */
-    public function getGroupId()
-    {
-        return $this->groupId;
-    }
-
-    /**
-     * Set entity
-     *
-     * @param Entity $entity
-     * @return Image
-     */
-    public function setGroup(Group $group = null)
-    {
-        $this->group = $group;
-        if (!is_null($group)) {
-            $this->groupId = $group->getId();
-        }
-    
-        return $this;
-    }
-
-    /**
-     * Get entity
-     *
-     * @return Entity 
-     */
-    public function getGroup()
-    {
-        return $this->group;
     }
 
     /**

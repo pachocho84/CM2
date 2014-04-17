@@ -257,7 +257,7 @@ class Page
     {
         if (!$this->pageUsers->contains($pageUser)) {
             $this->pageUsers[] = $pageUser;
-            $pageUser->setGroup($this);
+            $pageUser->setPage($this);
         }
 
         return $this;

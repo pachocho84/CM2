@@ -38,7 +38,6 @@ class LinkController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:Link:objects.html.twig', array(
-                'group' => $group,
                 'links' => $pagination
             ));
         }
@@ -60,23 +59,13 @@ class LinkController extends Controller
 
         $user = $this->getUser();
         $page = null;
-        $group = null;
         if (!is_null($objectId)) {
-            switch ($object) {
-                case 'Page':
-                    $page = $em->getRepository('CMBundle:Page')->findOneById($objectId);
-                    if (!$this->get('cm.user_authentication')->isAdminOf($page)) {
-                        throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-                    }
-                    break;
-                case 'Group':
-                    $group = $em->getRepository('CMBundle:Group')->findOneById($objectId);
-                    if (!$this->get('cm.user_authentication')->isAdminOf($group)) {
-                        throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-                    }
-                    break;
+            $page = $em->getRepository('CMBundle:Page')->findOneById($objectId);
+
+            if (!$this->get('cm.user_authentication')->isAdminOf($page)) {
+                throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }
-            if (is_null($page) && is_null($group)) {
+            if (is_null($page)) {
                 throw new NotFoundHttpException($this->get('translator')->trans('Object not found.', array(), 'http-errors'));
             }
         }
@@ -91,8 +80,7 @@ class LinkController extends Controller
                 get_class($link),
                 array(),
                 $link,
-                $page,
-                $group
+                $page
             );
 
             $link->addPost($post);

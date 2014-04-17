@@ -625,7 +625,7 @@ class PageController extends Controller
             return new JsonResponse($boxes);
         }
 
-        $members = $em->getRepository('CMBundle:GroupUser')->getMembers($page->getId(), array('paginate' => false, 'limit' => 10));
+        $members = $em->getRepository('CMBundle:PageUser')->getMembers($page->getId(), array('paginate' => false, 'limit' => 10));
 
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $req = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('pageId' => $page->getId()));

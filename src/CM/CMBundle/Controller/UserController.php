@@ -26,7 +26,6 @@ use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\BiographyType;
 use CM\CMBundle\Form\UserImageType;
 use CM\CMBundle\Form\EducationType;
-use CM\CMBundle\Form\GroupUserCollectionType;
 use CM\CMBundle\Form\PageUserCollectionType;
 
 class UserController extends Controller
@@ -258,37 +257,6 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/account/groups/{page}", name="user_groups", requirements={"page" = "\d+"})
-     * @JMS\Secure(roles="ROLE_USER")
-     * @Template
-     */
-    public function groupsAction(Request $request, $page = 1)
-    {
-        $em = $this->getDoctrine()->getManager();
-        
-        $groups = $em->getRepository('CMBundle:GroupUser')->findBy(array('userId' => $this->getUser()->getId()));
-
-        $form = $this->createForm(new GroupUserCollectionType, array('groups' => new ArrayCollection($groups)), array(
-            'cascade_validation' => true
-        ));
-
-        $form->handleRequest($request);
-        
-        if ($form->isValid()) {
-            foreach ($groups as $group) {
-                $em->persist($group);
-            }
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('user_groups'));
-        }
-        
-        return array(
-            'form' => $form->createView()
-        );
-    }
-
-    /**
      * @Route("/account/pages/{pageNum}", name = "user_pages", requirements={"pageNum" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
@@ -297,10 +265,9 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $pages = $em->getRepository('CMBundle:PageUser')->findBy(array('userId' => $this->getUser()->getId()));
-        // $pagination = $this->get('knp_paginator')->paginate($pages, $pageNum, 15);
+        $pageUsers = $em->getRepository('CMBundle:PageUser')->findBy(array('userId' => $this->getUser()->getId()));
 
-        $form = $this->createForm(new PageUserCollectionType, array('pages' => new ArrayCollection($pages)), array(
+        $form = $this->createForm(new PageUserCollectionType, array('pages' => $pageUsers), array(
             'cascade_validation' => true
         ));
 

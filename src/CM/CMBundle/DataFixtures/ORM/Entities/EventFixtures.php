@@ -210,21 +210,16 @@ Comune di Madesimo
 
         /* Post */
         $page = null;
-        $group = null;
         if (array_key_exists('page', EventFixtures::$events[$i])) {
             $page = $manager->merge($fixture->getReference('page-'.EventFixtures::$events[$i]['page']));
             $user = $page->getCreator();
-        } elseif (array_key_exists('group', EventFixtures::$events[$i])) {
-            $group = $manager->merge($fixture->getReference('page-'.EventFixtures::$events[$i]['group']));
-            $user = $group->getCreator();
         } elseif (array_key_exists('user', EventFixtures::$events[$i])) {
             $user = $manager->merge($fixture->getReference('user-'.EventFixtures::$events[$i]['user']));
         }
 
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
         $manager->persist($post);
-        $post->setPage($page)
-            ->setGroup($group);
+        $post->setPage($page);
 
         $event->setPost($post);
         

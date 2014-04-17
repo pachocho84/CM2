@@ -29,13 +29,13 @@ class FanController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $page = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
         
         if (!$page) {
-            throw new NotFoundHttpException('Group not found.');
+            throw new NotFoundHttpException('Page not found.');
         }
 
-        $fans = $em->getRepository('CMBundle:Fan')->getItsFans($page->getId(), 'Group');
+        $fans = $em->getRepository('CMBundle:Fan')->getItsFans($page->getId(), 'Page');
 
         $imFanOf = null;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
@@ -46,36 +46,6 @@ class FanController extends Controller
         
         return array(
             'page' => $page,
-            'fans' => $fans,
-            'imFanOf' => $imFanOf
-        );
-    }
-
-    /**
-     * @Route("/{slug}/fans", name="fan_group")
-     * @Template
-     */
-    public function groupAction(Request $request, $slug)
-    {
-        $em = $this->getDoctrine()->getManager();
-        
-        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
-        
-        if (!$group) {
-            throw new NotFoundHttpException('Group not found.');
-        }
-
-        $fans = $em->getRepository('CMBundle:Fan')->getItsFans($group->getId(), 'Group');
-
-        $imFanOf = null;
-        if ($this->get('security.context')->isGranted('ROLE_USER')) {
-            $imFanOf = $em->getRepository('CMBundle:Fan')->getFanOf($this->getUser()->getId());
-
-            $imFanOf = empty($imFanOf) ? false : in_array($this->getUser(), $imFanOf);
-        }
-        
-        return array(
-            'group' => $group,
             'fans' => $fans,
             'imFanOf' => $imFanOf
         );
@@ -118,15 +88,15 @@ class FanController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $page = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
+        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
         
         if (!$page) {
-            throw new NotFoundHttpException('Group not found.');
+            throw new NotFoundHttpException('Page not found.');
         }
 
-        $fans = $em->getRepository('CMBundle:Fan')->getItsFans($page->getId(), 'Group', 16);
+        $fans = $em->getRepository('CMBundle:Fan')->getItsFans($page->getId(), 'Page', 16);
 
-        $count = $em->getRepository('CMBundle:Fan')->countItsFans($page->getId(), 'Group');
+        $count = $em->getRepository('CMBundle:Fan')->countItsFans($page->getId(), 'Page');
 
         $imFanOf = null;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
@@ -138,39 +108,6 @@ class FanController extends Controller
         return $this->render('CMBundle:Fan:sidebar.html.twig', array(
             'publisher' => $page,
             'publisherType' => 'page',
-            'fans' => $fans,
-            'count' => $count,
-            'imFanOf' => $imFanOf
-        ));
-    }
-
-    /**
-     * @Route("/groups/{slug}/fans/sidebar", name="fan_group_sidebar")
-     */
-    public function groupSidebarAction(Request $request, $slug)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $group = $em->getRepository('CMBundle:Group')->findOneBy(array('slug' => $slug));
-        
-        if (!$group) {
-            throw new NotFoundHttpException('Group not found.');
-        }
-
-        $fans = $em->getRepository('CMBundle:Fan')->getItsFans($group->getId(), 'Group', 16);
-
-        $count = $em->getRepository('CMBundle:Fan')->countItsFans($group->getId(), 'Group');
-
-        $imFanOf = null;
-        if ($this->get('security.context')->isGranted('ROLE_USER')) {
-            $imFanOf = $em->getRepository('CMBundle:Fan')->getFanOf($this->getUser()->getId());
-
-            $imFanOf = empty($imFanOf) ? false : in_array($this->getUser(), $imFanOf);
-        }
-        
-        return $this->render('CMBundle:Fan:sidebar.html.twig', array(
-            'publisher' => $group,
-            'publisherType' => 'group',
             'fans' => $fans,
             'count' => $count,
             'imFanOf' => $imFanOf
@@ -251,10 +188,8 @@ class FanController extends Controller
             $this->getUser()->addFanOf($fan);
             if ($object == 'User') {
                 $em->getRepository('CMBundle:User')->findOneById($fanId)->addFan($fan);
-            } elseif ($object == 'Group') {
-                $em->getRepository('CMBundle:Group')->findOneById($fanId)->addFan($fan);
-            } elseif ($object == 'Group') {
-                $em->getRepository('CMBundle:Group')->findOneById($fanId)->addFan($fan);
+            } elseif ($object == 'Page') {
+                $em->getRepository('CMBundle:Page')->findOneById($fanId)->addFan($fan);
             }
             $em->persist($fan);
             $em->flush();
@@ -291,10 +226,8 @@ class FanController extends Controller
 
         if ($object == 'User') {
             $fan = $em->getRepository('CMBundle:Fan')->findOneBy(array('userId' => $fanId, 'fromUserId' => $this->getUser()->getId()));
-        } elseif ($object == 'Group') {
+        } elseif ($object == 'Page') {
             $fan = $em->getRepository('CMBundle:Fan')->findOneBy(array('pageId' => $fanId, 'fromUserId' => $this->getUser()->getId()));
-        } elseif ($object == 'Group') {
-            $fan = $em->getRepository('CMBundle:Fan')->findOneBy(array('groupId' => $fanId, 'fromUserId' => $this->getUser()->getId()));
         }
 
         $em->remove($fan);

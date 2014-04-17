@@ -21,7 +21,6 @@ class ImageRepository extends BaseRepository
         return array_merge(array(
             'albumId' => null,
             'userId'       => null,
-            'groupId'      => null,
             'pageId'       => null,
             'next' => null,
             'entityId' => null,
@@ -80,10 +79,6 @@ class ImageRepository extends BaseRepository
             $count->andWhere('i.pageId = :page_id')->setParameter('page_id', $options['pageId']);
             $query->andWhere('i.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
-        if (!is_null($options['groupId'])) {
-            $count->andWhere('i.groupId = :group_id')->setParameter('group_id', $options['groupId']);
-            $query->andWhere('i.groupId = :group_id')->setParameter('group_id', $options['groupId']);
-        }
         $query->addOrderBy('i.id', 'desc');
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
@@ -108,14 +103,10 @@ class ImageRepository extends BaseRepository
             ->andWhere('size(e.images) > 2');
         if (!is_null($options['userId'])) {
             $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
-                ->andWhere('p.pageId is NULL')
-                ->andWhere('p.groupId is NULL');
+                ->andWhere('p.pageId is NULL');
         }
         if (!is_null($options['pageId'])) {
             $count->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
-        }
-        if (!is_null($options['groupId'])) {
-            $count->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
 
         $query = $this->getEntityManager()->createQueryBuilder()
@@ -135,14 +126,10 @@ class ImageRepository extends BaseRepository
             ->andWhere('size(e.images) > 1');
         if (!is_null($options['userId'])) {
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
-                ->andWhere('p.pageId is NULL')
-                ->andWhere('p.groupId is NULL');
+                ->andWhere('p.pageId is NULL');
         }
         if (!is_null($options['pageId'])) {
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
-        }
-        if (!is_null($options['groupId'])) {
-            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
         // $query->orderBy('i.main')
         //     ->addOrderBy('i.sequence');
@@ -181,14 +168,10 @@ class ImageRepository extends BaseRepository
         }
         if (!is_null($options['userId'])) {
             $query->andWhere('i.userId = :user_id')->setParameter('user_id', $options['userId'])
-                ->andWhere('i.pageId is NULL')
-                ->andWhere('i.groupId is NULL');
+                ->andWhere('i.pageId is NULL');
         }
         if (!is_null($options['pageId'])) {
             $query->andWhere('i.pageId = :page_id')->setParameter('page_id', $options['pageId']);
-        }
-        if (!is_null($options['groupId'])) {
-            $query->andWhere('i.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
         if (!is_null($options['next'])) {
             $query->andWhere('i.entityId = :entity_id')->setParameter('entity_id', $entityId)

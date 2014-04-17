@@ -19,7 +19,6 @@ use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
-use CM\CMBundle\Entity\GroupUser;
 use CM\CMBundle\Entity\PageUser;
 use CM\CMBundle\Entity\Relation;
 use CM\CMBundle\Entity\Notification;
@@ -171,40 +170,6 @@ class RequestController extends Controller
 
                 $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('entity' => $request->getEntity(), 'request' => $request));
                 break;
-            case 'Group':
-                if (count($em->getRepository('CMBundle:GroupUser')->findBy(array('groupId' => $objectId, 'userId' => $userId))) > 0) {
-                     throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-                }
-
-                $group = $em->getRepository('CMBundle:Group')->findOneById($objectId);
-                if ($userId != $this->getUser()->getId()) {
-                    if (!$this->get('cm.user_authentication')->isAdminOf($group)) {
-                        throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-                    }
-
-                    $user = $em->getRepository('CMBundle:User')->findOneById($userId);
-                    if (!$user) {
-                        throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
-                    }
-                    $status = GroupUser::STATUS_PENDING;
-                } else {
-                    $user = $this->getUser();
-                    $status = GroupUser::STATUS_REQUESTED;
-                }
-
-                $group->addUser(
-                    $user,
-                    false, // admin
-                    $status
-                );
-                $em->persist($group);
-
-                $em->flush();
-
-                $request = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($user->getId(), 'any', array('groupId' => $group->getId()));
-
-                $response = $this->renderView('CMBundle:GroupUser:requestAdd.html.twig', array('group' => $request->getGroup(), 'request' => $request));
-                break;
             case 'Page':
                 if (count($em->getRepository('CMBundle:PageUser')->findBy(array('pageId' => $objectId, 'userId' => $userId))) > 0) {
                     throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
@@ -284,27 +249,7 @@ class RequestController extends Controller
             $em->persist($entityUser);
 
             $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('entity' => $request->getEntity(), 'request' => $request));
-        } elseif (!is_null($request->getGroupId())) {
-            if ($this->get('cm.user_authentication')->isAdminOf($request->getGroup())) {
-                $em->getRepository('CMBundle:Request')->delete($this->getUser()->getId(), array('fromUserId' => $request->getFromUserId(), 'groupId' => $request->getGroupId(), 'exclude' => true));
-
-                $userId = $request->getFromUserId();
-            } else {
-                $userId = $this->getUser()->getId();
-            }
-
-            $groupUser = $em->getRepository('CMBundle:GroupUser')->findOneBy(array('userId' => $userId, 'groupId' => $request->getGroupId()));
-            if ($choice == 'accept') {
-                $groupUser->setStatus(GroupUser::STATUS_ACTIVE);
-                
-            } elseif ($choice == 'refuse') {
-                $groupUser->setStatus($groupUser->getStatus() == GroupUser::STATUS_PENDING ? GroupUser::STATUS_REFUSED_GROUP_USER : GroupUser::STATUS_REFUSED_ADMIN);
-
-            }
-            $em->persist($groupUser);
-
-            $response = $this->renderView('CMBundle:GroupUser:requestAdd.html.twig', array('group' => $request->getGroup(), 'request' => $request));
-        } elseif (!is_null($request->getPageId())) {
+        }elseif (!is_null($request->getPageId())) {
             $userId = $this->getUser()->getId();
 
             $pageUser = $em->getRepository('CMBundle:PageUser')->findOneBy(array('userId' => $userId, 'pageId' => $request->getPageId()));
@@ -350,20 +295,6 @@ class RequestController extends Controller
             $em->getRepository('CMBundle:EntityUser')->delete($userId, $request->getEntityId());
 
             $response = $this->renderView('CMBundle:EntityUser:requestAdd.html.twig', array('entity' => $request->getEntity(), 'request' => null));
-        } elseif (!is_null($request->getGroupId())) {
-            if ($this->get('cm.user_authentication')->isAdminOf($request->getGroup())) {
-                $userId = $request->getUserId();
-                $em->getRepository('CMBundle:Request')->delete($userId, array('fromUserId' => $this->getUser()->getId(), 'groupId' => $request->getGroupId()));
-            } else {
-                $userId = $this->getUser()->getId();
-                $em->getRepository('CMBundle:Request')->delete(null, array('fromUserId' => $this->getUser()->getId(), 'groupId' => $request->getGroupId()));
-                $em->getRepository('CMBundle:Request')->delete($this->getUser()->getId(), array('groupId' => $request->getGroupId()));
-            }
-
-            $em->getRepository('CMBundle:GroupUser')->delete($userId, $request->getGroupId());
-            
-
-            $response = $this->renderView('CMBundle:GroupUser:requestAdd.html.twig', array('group' => $request->getGroup(), 'request' => null));
         } elseif (!is_null($request->getPageId())) {
             if ($this->get('cm.user_authentication')->isAdminOf($request->getPage())) {
                 $userId = $request->getUserId();

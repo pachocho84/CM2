@@ -69,17 +69,6 @@ class Notification
     private $fromUser;
 
     /**
-     * @ORM\Column(name="from_group_id", type="integer", nullable=true)
-     **/
-    private $fromGroupId;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Group", inversedBy="notificationsOutgoing")
-     * @ORM\JoinColumn(name="from_group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     **/
-    private $fromGroup;
-
-    /**
      * @ORM\Column(name="from_page_id", type="integer", nullable=true)
      **/
     private $fromPageId;
@@ -252,40 +241,6 @@ class Notification
     public function getFromUser()
     {
         return $this->fromUser;
-    }
-
-    /**
-     * Get fromUser
-     *
-     * @return User 
-     */
-    public function getFromGroupId()
-    {
-        return $this->fromGroupId;
-    }
-
-    /**
-     * Set fromUser
-     *
-     * @param User $fromUser
-     * @return Notification
-     */
-    public function setFromGroup(Group $fromGroup = null)
-    {
-        $this->fromGroup = $fromGroup;
-        $this->fromGroupId = $fromGroup->getId();
-    
-        return $this;
-    }
-
-    /**
-     * Get fromUser
-     *
-     * @return User 
-     */
-    public function getFromGroup()
-    {
-        return $this->fromGroup;
     }
 
     /**

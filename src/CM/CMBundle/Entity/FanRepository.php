@@ -27,10 +27,6 @@ class FanRepository extends BaseRepository
                 $query->leftJoin('f.page', 'o')
                     ->where('f.pageId = :id');
                 break;
-            case 'Group':
-                $query->leftJoin('f.group', 'o')
-                    ->where('f.groupId = :id');
-                break;
         }
         $query->setParameter('id', $id); // TODO: integrate with clients
         // return UserQuery::create()->
@@ -80,9 +76,6 @@ class FanRepository extends BaseRepository
             case 'Page':
                 $query->where('f.pageId = :id');
                 break;
-            case 'Group':
-                $query->where('f.groupId = :id');
-                break;
         }
         return $query->setParameter('id', $id)
             // leftJoin('f.user', 'u', 'WITH', 'u.enabled ='.true.' AND u.isActive = '.true)
@@ -100,9 +93,6 @@ class FanRepository extends BaseRepository
                 break;
             case 'Page':
                 $query->from('CMBundle:Page', 'o');
-                break;
-            case 'Group':
-                $query->from('CMBundle:Group', 'o');
                 break;
         }
         return $query->leftJoin('o.fans', 'f')
@@ -122,9 +112,6 @@ class FanRepository extends BaseRepository
             case 'Page':
                 $query->andWhere('f.pageId = :fan_id');
                 break;
-            case 'Group':
-                $query->andWhere('f.groupId = :fan_id');
-                break;
         }
         return $query->setParameter('fan_id', $fanId)->getQuery()->getSingleScalarResult() > 0;
     }
@@ -134,8 +121,7 @@ class FanRepository extends BaseRepository
         $query = $this->createQueryBuilder('f')
             ->select('f')
             ->leftJoin('f.user', 'u')
-            ->leftJoin('f.page', 'p')
-            ->leftJoin('f.group', 'g');
+            ->leftJoin('f.page', 'p');
         if ($fromUser) {
             $query->where('f.fromUserId = :ids');
         } else {

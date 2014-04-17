@@ -36,7 +36,7 @@ class HomepageArchiveRepository extends BaseRepository
             ->join('CMBundle:HomepageArchive', 'h', 'with', 'h.articleId = a.id and h.categoryId = :category_id')->setParameter(':category_id', $categoryId);
 
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('a, t, h, hc, hct, i, p, l, c, u, lu, cu, pg, gr')
+            ->select('a, t, h, hc, hct, i, p, l, c, u, lu, cu, pg')
             ->from('CMBundle:Article', 'a')
             ->leftJoin('a.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->join('CMBundle:HomepageArchive', 'h', 'with', 'h.articleId = a.id and h.categoryId = :category_id')->setParameter(':category_id', $categoryId)
@@ -50,7 +50,6 @@ class HomepageArchiveRepository extends BaseRepository
             ->leftJoin('l.user', 'lu')
             ->leftJoin('c.user', 'cu')
             ->leftJoin('p.page', 'pg')
-            ->leftJoin('p.group', 'gr')
             ->orderBy('a.id', 'desc');
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
@@ -66,7 +65,7 @@ class HomepageArchiveRepository extends BaseRepository
             ->join('CMBundle:HomepageArchive', 'h', 'with', 'h.articleId = a.id and h.categoryId = :category_id')->setParameter(':category_id', $categoryId);
 
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('a, t, h, hc, hct, i, p, l, c, u, lu, cu, pg, gr')
+            ->select('a, t, h, hc, hct, i, p, l, c, u, lu, cu, pg')
             ->from('CMBundle:Article', 'a')
             ->leftJoin('a.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->join('CMBundle:HomepageArchive', 'h', 'with', 'h.articleId = a.id and h.categoryId = :category_id')->setParameter(':category_id', $categoryId)
@@ -80,7 +79,6 @@ class HomepageArchiveRepository extends BaseRepository
             ->leftJoin('l.user', 'lu')
             ->leftJoin('c.user', 'cu')
             ->leftJoin('p.page', 'pg')
-            ->leftJoin('p.group', 'gr')
             ->orderBy('a.id', 'desc');
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();

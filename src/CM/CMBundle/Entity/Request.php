@@ -59,17 +59,6 @@ class Request
     private $fromUser;
 
     /**
-     * @ORM\Column(name="group_id", type="integer", nullable=true)
-     **/
-    private $groupId;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Group", inversedBy="requests")
-     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     **/
-    private $group;
-
-    /**
      * @ORM\Column(name="page_id", type="integer", nullable=true)
      **/
     private $pageId;
@@ -237,42 +226,6 @@ class Request
     public function getFromUser()
     {
         return $this->fromUser;
-    }
-
-    /**
-     * Get fromUser
-     *
-     * @return User 
-     */
-    public function getGroupId()
-    {
-        return $this->groupId;
-    }
-
-    /**
-     * Set fromUser
-     *
-     * @param User $fromUser
-     * @return Notification
-     */
-    public function setGroup(Group $group)
-    {
-        if ($group->addRequest($this)) {
-            $this->group = $group;
-            $this->groupId = $group->getId();
-        }
-    
-        return $this;
-    }
-
-    /**
-     * Get fromUser
-     *
-     * @return User 
-     */
-    public function getGroup()
-    {
-        return $this->group;
     }
 
     /**

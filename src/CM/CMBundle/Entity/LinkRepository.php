@@ -17,7 +17,6 @@ class LinkRepository extends BaseRepository
         return array_merge(array(
             'userId' => null,
             'pageId' => null,
-            'groupId' => null,
             'paginate' => true,
             'limit' => null
         ), $options);
@@ -37,14 +36,10 @@ class LinkRepository extends BaseRepository
 
         if (!is_null($options['userId'])) {
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
-                ->andWhere('p.pageId is NULL')
-                ->andWhere('p.groupId is NULL');
+                ->andWhere('p.pageId is NULL');
         }
         if (!is_null($options['pageId'])) {
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
-        }
-        if (!is_null($options['groupId'])) {
-            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
 
         if (is_null($options['paginate']) && !is_null($options['limit'])) {
@@ -70,14 +65,10 @@ class LinkRepository extends BaseRepository
 
         if (!is_null($options['userId'])) {
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
-                ->andWhere('p.pageId is NULL')
-                ->andWhere('p.groupId is NULL');
+                ->andWhere('p.pageId is NULL');
         }
         if (!is_null($options['pageId'])) {
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
-        }
-        if (!is_null($options['groupId'])) {
-            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
 
         $link = $query->setMaxResults(1)->getQuery()->getResult();
