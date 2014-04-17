@@ -22,10 +22,9 @@ class Post
     const TYPE_REGISTRATION = 1;
     const TYPE_UPDATE = 2;
     const TYPE_FAN_USER = 3;
-    const TYPE_FAN_GROUP = 4;
-    const TYPE_FAN_PAGE = 5;
-    const TYPE_EDUCATION = 6;
-    const TYPE_AGGREGATE = 7;
+    const TYPE_FAN_PAGE = 4;
+    const TYPE_EDUCATION = 5;
+    const TYPE_AGGREGATE = 6;
 
     /**
      * @var integer
@@ -97,19 +96,6 @@ class Post
     private $objectIdsArray = array();
 
     /**
-     * @ORM\Column(name="group_id", type="integer", nullable=true)
-     **/
-    private $groupId;
-
-    /**
-     * @var integer
-     *
-     * @ORM\ManyToOne(targetEntity="Group", inversedBy="posts")
-     * @ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
-     */
-    private $group;
-
-    /**
      * @ORM\Column(name="page_id", type="integer", nullable=true)
      **/
     private $pageId;
@@ -165,8 +151,6 @@ class Post
     {
         if ($this->getPage()) {
             return $this->getPage();
-        } elseif ($this->getGroup()) {
-            return $this->getGroup();
         } else {
             return $this->getUser();
         }
@@ -176,8 +160,6 @@ class Post
     {
         if ($this->getPage()) {
             return $this->getPageId();
-        } elseif ($this->getGroup()) {
-            return $this->getGroupId();
         } else {
             return $this->getUserId();
         }
@@ -187,8 +169,6 @@ class Post
     {
         if ($this->getPage()) {
             return 'page';
-        } elseif ($this->getGroup()) {
-            return 'group';
         } else {
             return 'user';
         }
@@ -196,7 +176,7 @@ class Post
 
     public function getPublisherSex($type = 'he')
     {
-        if (!is_null($this->getPageId()) || !is_null($this->getGroupId())) {
+        if (!is_null($this->getPageId())) {
             $sex = array('he' => 'it', 'his' => 'its', 'M' => '')[$type];
         } else {
             $sex = $this->getUser()->getSexArray($type);
@@ -407,42 +387,6 @@ class Post
     }
 
     /**
-     * Get fromUser
-     *
-     * @return User 
-     */
-    public function getGroupId()
-    {
-        return $this->groupId;
-    }
-
-    /**
-     * Set entity
-     *
-     * @param Entity $entity
-     * @return Image
-     */
-    public function setGroup(Group $group = null)
-    {
-        $this->group = $group;
-        if (!is_null($group)) {
-            $this->groupId = $group->getId();
-        }
-    
-        return $this;
-    }
-
-    /**
-     * Get entity
-     *
-     * @return Entity 
-     */
-    public function getGroup()
-    {
-        return $this->group;
-    }
-
-    /**
      * Get entity
      *
      * @return Entity 
@@ -601,8 +545,6 @@ class Post
             echo $this->getEntity()->getImages()[0];
         } elseif ($this->getPageId()) {
             return $this->getPage()->getImg();
-        } elseif ($this->getGroupId()) {
-            return $this->getGroup()->getImg();
         } else {
             return $this->getUser()->getImg();
         }

@@ -372,21 +372,16 @@ Angelo Formenti',
 
         /* Post */
         $page = null;
-        $group = null;
         if (array_key_exists('page', DiscFixtures::$discs[$i])) {
             $page = $manager->merge($fixture->getReference('page-'.DiscFixtures::$discs[$i]['page']));
             $user = $page->getCreator();
-        } elseif (array_key_exists('group', DiscFixtures::$discs[$i])) {
-            $group = $manager->merge($fixture->getReference('page-'.DiscFixtures::$discs[$i]['group']));
-            $user = $group->getCreator();
         } elseif (array_key_exists('user', DiscFixtures::$discs[$i])) {
             $user = $manager->merge($fixture->getReference('user-'.DiscFixtures::$discs[$i]['user']));
         }
 
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
         $manager->persist($post);
-        $post->setPage($page)
-            ->setGroup($group);
+        $post->setPage($page);
 
         $disc->setPost($post);
         

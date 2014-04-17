@@ -42,10 +42,6 @@ class FileServerController extends Controller
                 $publisher = $em->getRepository('CMBundle:Page')->findOneById(array('slug' => $slug));
                 $biography = $em->getRepository('CMBundle:Biography')->getPageBiography($publisher->getId());
                 break;
-            case 'Group':
-                $publisher = $em->getRepository('CMBundle:Group')->findOneById(array('slug' => $slug));
-            $biography = $em->getRepository('CMBundle:Biography')->getGroupBiography($publisher->getId());
-                break;
             case 'User':
             default:
                 $publisher = $em->getRepository('CMBundle:User')->findOneBy(array('usernameCanonical' => $slug));
@@ -53,10 +49,6 @@ class FileServerController extends Controller
                 break;
         }
         
-        if (is_null($publisher)) {
-            throw new NotFoundHttpException($this->get('translator')->trans('Publisher not found.', array(), 'http-errors'));
-        }
-
         if (is_null($publisher)) {
             throw new NotFoundHttpException($this->get('translator')->trans('Publisher not found.', array(), 'http-errors'));
         }

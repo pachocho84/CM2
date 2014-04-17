@@ -42,7 +42,6 @@ class UserTagFixtures extends AbstractFixture implements OrderedFixtureInterface
 		    $userTag = new UserTag;
 		    $userTag->setVisible(true)
                 ->setIsUser(true)
-                ->setIsGroup(true)
                 ->setIsPage(true)
                 ->setIsProtagonist(true);
             $userTag->setName($this->tags[$i - 1]['name-en']);

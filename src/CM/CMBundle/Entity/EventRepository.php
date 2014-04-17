@@ -22,7 +22,6 @@ class EventRepository extends BaseRepository
         return array_merge(array(
             'exclude'       => null,
             'userId'       => null,
-            'groupId'      => null,
             'pageId'       => null,
             'archive'       => null, 
             'categoryId'   => null,
@@ -50,7 +49,7 @@ class EventRepository extends BaseRepository
             ->join('e.post', 'p');
                     
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('d, e, t, ec, ect, i, p, l, c, u, lu, cu, pg, gr')
+            ->select('d, e, t, ec, ect, i, p, l, c, u, lu, cu, pg')
             ->from('CMBundle:EventDate','d')
             ->join('d.event', 'e')
             ->join('e.translations', 't', 'with', 't.locale IN (:locales)')
@@ -60,7 +59,6 @@ class EventRepository extends BaseRepository
             ->join('e.post', 'p')
             ->join('p.user', 'u')
             ->leftJoin('p.page', 'pg')
-            ->leftJoin('p.group', 'gr')
             ->leftJoin('p.likes', 'l')
             ->leftJoin('p.comments', 'c')
             ->leftJoin('l.user', 'lu')
@@ -86,12 +84,6 @@ class EventRepository extends BaseRepository
             $count->andWhere('p.pageId = :page_id');
             $query->andWhere('p.pageId = :page_id');
             $parameters['page_id'] = $options['pageId'];
-        }
-        
-        if ($options['groupId']) {
-            $count->andWhere('p.groupId = :group_id');
-            $query->andWhere('p.groupId = :group_id');
-            $parameters['group_id'] = $options['groupId'];
         }
         
         if ($options['categoryId']) {
@@ -140,7 +132,7 @@ class EventRepository extends BaseRepository
         $options = self::getOptions($options);
         
         $query = $this->createQueryBuilder('e')
-            ->select('e, t, ec, ect, d, i, p, l, c, u, lu, cu, pg, gr, eu, us')
+            ->select('e, t, ec, ect, d, i, p, l, c, u, lu, cu, pg, eu, us')
             ->leftJoin('e.eventDates', 'd')
             ->leftJoin('e.translations', 't')
             ->leftJoin('e.category', 'ec')
@@ -156,7 +148,6 @@ class EventRepository extends BaseRepository
             ->leftJoin('l.user', 'lu')
             ->leftJoin('c.user', 'cu')
             ->leftJoin('p.page', 'pg')
-            ->leftJoin('p.group', 'gr')
             ->leftJoin('e.entityUsers', 'eu')
             ->leftJoin('eu.user', 'us')
             ->andWhere('e.id = :id')->setParameter('id', $id)
@@ -184,7 +175,6 @@ class EventRepository extends BaseRepository
             ->leftJoin('pc.user', 'pcu')
             ->join('p.user', 'u')
             ->leftJoin('p.page', 'pg')
-            ->leftJoin('p.group', 'gr')
             ->andWhere('e.id = :id')->setParameter('id', $id);
         if (!is_null($options['slug'])) {
             $query->andWhere('t.slug = :slug')->setParameter('slug', $options['slug']);
@@ -228,10 +218,6 @@ class EventRepository extends BaseRepository
             $count->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
-        if (!is_null($options['groupId'])) {
-            $count->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
-            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
-        }
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
@@ -255,10 +241,6 @@ class EventRepository extends BaseRepository
         if (!is_null($options['pageId'])) {
             $query->andWhere('p.pageId = :page_id')
                 ->setParameter('page_id', $options['pageId']);
-        }
-        if (!is_null($options['groupId'])) {
-            $query->andWhere('p.groupId = :group_id')
-                ->setParameter('group_id', $options['groupId']);
         }
 
         return $query->getQuery()
@@ -315,7 +297,7 @@ class EventRepository extends BaseRepository
         $options = self::getOptions($options);
         
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('d, e, t, i, p, l, c, u, lu, cu, pg, gr')
+            ->select('d, e, t, i, p, l, c, u, lu, cu, pg')
             ->from('CMBundle:EventDate','d')
             ->join('d.event', 'e')
             ->leftJoin('e.translations', 't')
@@ -329,7 +311,6 @@ class EventRepository extends BaseRepository
             ->leftJoin('l.user', 'lu')
             ->leftJoin('c.user', 'cu')
             ->leftJoin('p.page', 'pg')
-            ->leftJoin('p.group', 'gr')
             ->where('t.locale in (:locales)')->setParameter('locales', $options['locales'])
             ->andWhere('u.vip = '.true)
             ->andWhere('d.start >= :now')->setParameter('now', new \DateTime)

@@ -1,9 +1,47 @@
+function initCollectionForm(type) {
+    $(document).on('keydown, change', 'form .' + type + '-form:last', function(event) {
+        var $form = $(event.currentTarget);
+        var $collection = $form.closest('[data-prototype]');
+        var index = $collection.find('.' + type + '-form :input').length;
+        var $newForm = $($collection.data('prototype').replace(/__name__label__/g, index).replace(/__name__/g, index));
+
+        $form.find('[remove-link]').parent().removeClass('hidden');
+        $form.after($newForm);
+
+        $(event.currentTarget).trigger('collection-added', $newForm);
+    });
+    $(document).on('click', '[remove-link]', function(event) {
+        event.preventDefault();
+
+        $(event.currentTarget).closest('.' + type + '-form').remove();
+    });
+    $(document).on('submit', 'form', function(event) {
+        $(event.currentTarget).find('.' + type + '-form:last [name]').attr('name', '');
+    });
+    $(document).on('change', '.current-input', function(event) {
+        var datetimepicker = $(event.currentTarget).closest('.' + type + '-form').find('.current-input-target [datepicker-container]').data('datetimepicker');
+        var $button = $(event.currentTarget).closest('.' + type + '-form').find('.current-input-target [datepicker-container] .btn');
+        if ($(event.currentTarget).is(':checked')) {
+            $button.attr('disabled', 'disabled');
+            var date = new Date();
+            date = new Date(Date.UTC.apply(Date, [date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), 0]));
+            datetimepicker.viewMode = datetimepicker.startViewMode;
+            datetimepicker.showMode(0);
+            datetimepicker._setDate(date);
+            datetimepicker.fill();
+        } else {
+            datetimepicker.reset();
+            $button.removettr('disabled');
+        }
+    });
+}
+
 initDatetimepicker = function(elem) {
     $(elem).datetimepicker({
-        language: 'it',
+        language: culture,
         format: $(elem).attr('datetimepicker-format'),
         autoclose: true,
-        todayBtn: true,
+        todayBtn: false,
         todayHighlight: true,
         pickerPosition: "bottom-left",
         linkField: $(elem).siblings('input[type="hidden"]').attr('id'),
@@ -13,8 +51,8 @@ initDatetimepicker = function(elem) {
 
 initDatepicker = function(elem) {
     $(elem).datetimepicker({
-        pickTime: false,
-        language: 'it',
+        viewSelect: 'month',
+        language: culture,
         format: $(elem).attr('datepicker-format'),
         autoclose: true,
         todayBtn: true,
@@ -218,28 +256,15 @@ $(function() {
             $(this).closest('.protagonists_user').remove();
         }
     });
-    // group
-    $(document).on('change', '.protagonists_group', function (event) {
-        event.preventDefault();
-        var group = $(this).children('option:selected').attr('value');
-        $('.protagonists_user[group_id]').each(function () {
-            $(this).remove();
-        });
-        if (group != '') {
-            $.get(script + '/protagonist/addGroup?group_id=' + group + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',') + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1), function (data) {
-                $('.protagonists_user:last').after(data);
-            });
-        }
-    });
     // page
     $(document).on('change', '.protagonists_page', function (event) {
         event.preventDefault();
-        var group = $(this).children('option:selected').attr('value');
+        var page = $(this).children('option:selected').attr('value');
         $('.protagonists_user[page_id]').each(function () {
             $(this).remove();
         });
-        if (group != '') {
-            $.get(script + '/protagonist/addPage?page_id=' + group + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',') + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1), function (data) {
+        if (page != '') {
+            $.get(script + '/protagonist/addPage?page_id=' + page + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',') + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1), function (data) {
                 $('.protagonists_user:last').after(data);
             });
         }
@@ -255,21 +280,27 @@ $(function() {
 
 
 
+    /* COLLECTIONS */
+    initCollectionForm('work');
+    initCollectionForm('education');
+    initCollectionForm('date');
+    initCollectionForm('trak');
+
+
+
     /* DATETIME PICKER & INPUT MASK */
     // datetime
     $('[datetimepicker-container]').each(function(i, elem) {
         initDatetimepicker(elem);
     });
-    $('body').on('collection-added', '.add_date_link', function(event, elem) {
-        $(elem).find('[datetimepicker-container]').each(function(i, elem) {
-            initDatetimepicker(elem);
-        });
-    });
     // date
     $('[datepicker-container]').each(function(i, elem) {
         initDatepicker(elem);
     });
-    $('body').on('collection-added', '.add_date_link', function(event, elem) {
+    $(document).on('collection-added', '.work-form, .education-form, .date-form', function(event, elem) {
+        $(elem).find('[datetimepicker-container]').each(function(i, elem) {
+            initDatetimepicker(elem);
+        });
         $(elem).find('[datepicker-container]').each(function(i, elem) {
             initDatepicker(elem);
         });
@@ -283,7 +314,7 @@ $(function() {
     $('[gmap-canvas]').each(function(i) {
         google.maps.event.addDomListener(window, 'load', initializePlaces(i));
     });
-    $(document).on('collection-added', function(event) {
+    $(document).on('collection-added','.date-form', function(event) {
         google.maps.event.addDomListener(window, 'load', initializePlaces(-1));
     });
 

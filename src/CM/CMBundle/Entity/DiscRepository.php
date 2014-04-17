@@ -21,7 +21,6 @@ class DiscRepository extends BaseRepository
         return array_merge(array(
             'exclude'       => null,
             'userId'       => null,
-            'groupId'      => null,
             'pageId'       => null,
             'paginate'      => true,
             'categoryId' => null,
@@ -40,7 +39,7 @@ class DiscRepository extends BaseRepository
             ->join('d.post', 'p');
 
         $query = $this->createQueryBuilder('d')
-            ->select('d, dt, t, i, p, l, c, u, lu, cu, pg, gr')
+            ->select('d, dt, t, i, p, l, c, u, lu, cu, pg')
             ->leftJoin('d.discTracks','dt')
             ->leftJoin('d.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->setParameter('locales', $options['locales'])
@@ -51,8 +50,7 @@ class DiscRepository extends BaseRepository
             ->leftJoin('p.user', 'u')
             ->leftJoin('l.user', 'lu')
             ->leftJoin('c.user', 'cu')
-            ->leftJoin('p.page', 'pg')
-            ->leftJoin('p.group', 'gr');
+            ->leftJoin('p.page', 'pg');
             
         if ($options['protagonists']) {
             $query->addSelect('eu, us')
@@ -74,11 +72,6 @@ class DiscRepository extends BaseRepository
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
         
-        if ($options['groupId']) {
-            $count->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
-            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
-        }
-        
         if ($options['categoryId']) {
             $count->andWhere('d.category = :category_id')
                 ->setParameter(':category_id', $options['categoryId']);
@@ -96,7 +89,7 @@ class DiscRepository extends BaseRepository
         $options = self::getOptions($options);
         
         return $this->createQueryBuilder('d')
-            ->select('d, t, ec, ect, dt, i, p, u, pg, gr')
+            ->select('d, t, ec, ect, dt, i, p, u, pg')
             ->leftJoin('d.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->leftJoin('d.category', 'ec')
             ->leftJoin('ec.translations', 'ect', 'with', 'ect.locale = :locale')->setParameter('locale', $options['locale'])
@@ -105,7 +98,6 @@ class DiscRepository extends BaseRepository
             ->leftJoin('d.post', 'p')
             ->leftJoin('p.user', 'u')
             ->leftJoin('p.page', 'pg')
-            ->leftJoin('p.group', 'gr')
             ->andWhere('d.id = :id')->setParameter('id', $id)
             ->getQuery()
             ->getSingleResult();
@@ -141,10 +133,6 @@ class DiscRepository extends BaseRepository
             $count->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
-        if (!is_null($options['groupId'])) {
-            $count->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
-            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
-        }
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
@@ -165,10 +153,6 @@ class DiscRepository extends BaseRepository
         if (!is_null($options['pageId'])) {
             $query->andWhere('p.pageId = :page_id')
                 ->setParameter('page_id', $options['pageId']);
-        }
-        if (!is_null($options['groupId'])) {
-            $query->andWhere('p.groupId = :group_id')
-                ->setParameter('group_id', $options['groupId']);
         }
 
         return $query->getQuery()

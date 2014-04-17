@@ -20,7 +20,6 @@ class UserRepository extends BaseRepository
         ), $options);
         
         return array_merge(array(
-            'group_id'      => null,
             'page_id'       => null,
             'archive'       => null, 
             'paginate'      => true,
@@ -44,17 +43,6 @@ class UserRepository extends BaseRepository
         
         $query->andWhere('u.usernameCanonical = :slug')->setParameter('slug', $slug);
         return $query->getQuery()->getSingleResult();
-    }
-
-    public function getAdminGroupsIds($user_id)
-    {
-        $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('g.id')->from('CMBundle:Group', 'g')
-            ->leftJoin('g.groupUsers', 'gu')
-            ->where('gu.userId = :user_id')->setParameter('user_id', $user_id)
-            ->andWhere('gu.admin = '.true)
-            ->getQuery()->getArrayResult();
-        return array_map('current', $query);
     }
 
     public function getAdminPagesIds($user_id)

@@ -49,13 +49,9 @@ class MultimediaFixtures
         $manager->persist($multimedia);
 
         $page = null;
-        $group = null;
         if (array_key_exists('page', MultimediaFixtures::$urls[$i])) {
             $page = $manager->merge($fixture->getReference('page-'.MultimediaFixtures::$urls[$i]['page']));
             $user = $page->getCreator();
-        } elseif (array_key_exists('group', MultimediaFixtures::$urls[$i])) {
-            $group = $manager->merge($fixture->getReference('page-'.MultimediaFixtures::$urls[$i]['group']));
-            $user = $group->getCreator();
         }
         if (array_key_exists('user', MultimediaFixtures::$urls[$i])) {
             $user = $manager->merge($fixture->getReference('user-'.MultimediaFixtures::$urls[$i]['user']));
@@ -63,8 +59,7 @@ class MultimediaFixtures
 
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
         $manager->persist($post);
-        $post->setPage($page);
-        $post->setGroup($group);
+        $post->setPage($page);;
 
         $multimedia->setPost($post);
     }

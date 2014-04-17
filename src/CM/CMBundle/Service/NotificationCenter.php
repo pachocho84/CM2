@@ -34,8 +34,7 @@ class NotificationCenter
         $object,
         $objectId,
         $post = null,
-        $page = null,
-        $group = null
+        $page = null
     )
     {
         if ($toUser->getId() == $fromUser->getId()) {
@@ -55,8 +54,6 @@ class NotificationCenter
         }
         if (!is_null($page)) {
             $notification->setFromPage($page);
-        } elseif (!is_null($group)) {
-            $notification->setFromGroup($group);
         }
         $this->em->persist($notification);
         $this->flushNeeded = true;

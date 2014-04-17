@@ -42,24 +42,6 @@ class BiographyRepository extends BaseRepository
         return $biography;
     }
 
-    public function getGroupBiography($groupId, $options = array())
-    {
-        $options = self::getOptions($options);
-
-        try {
-            $biography = $this->createQueryBuilder('b')
-                ->select('b, t')
-                ->leftJoin('b.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
-                ->join('b.post', 'p', 'with', 'p.groupId = :group_id')->setParameter('group_id', $groupId)
-                ->setMaxResults(1)
-                ->getQuery()
-                ->getSingleResult();
-        } catch (\Exception $e) {
-            $biography = null;
-        }
-        return $biography;
-    }
-
     public function getPageBiography($pageId, $options = array())
     {
         $options = self::getOptions($options);

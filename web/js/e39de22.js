@@ -2892,7 +2892,7 @@ function infiniteScroll(target, container, condition, loop, callback) {
             } else {
                 target.replaceWith(data);
             }
-            target = parent.find('.load_more');
+            target = parent.find('[load_more]');
         }).success(function() {
             if (loop) {
                 infiniteScroll(target, container, condition, loop, callback);
@@ -3040,35 +3040,45 @@ $(function() {
     // });
 
     /* INFINITE SCROLL */
-    $('body').ready(function() {
-        $('.load_more').each(function() {
-            var container = $(this).closest('[load_more_container]').length > 0 ? $(this).closest('[load_more_container]') : $(window);
-            infiniteScroll($(this), container, function(target, container) {
+    $('[load_more]').each(function() {
+        var container = $(this).closest('[load_more_container]').length > 0 ? $(this).closest('[load_more_container]') : $(window);
+        infiniteScroll($(this), container, function(target, container) {
+            if (target.attr('load_more') == 'reverse') {
+                return target.is(':visible') && target.offset().top + target.height() > container.scrollTop();
+            } else {
                 return target.is(':visible') && target.offset().top - container.height() < container.scrollTop();
-            }, true);
-        });
+            }
+        }, true);
     });
 
-    $('body').on('click', '.load_more a, .load_more-reverse a', function(event) {
+    $('body').on('click', '[load_more] a', function(event) {
         event.preventDefault();
-        var target = $(event.target).closest('.load_more');
+        var target = $(event.target).closest('[load_more]');
         infiniteScroll(target, null, function() { return true; }, false, target.attr('load_more-callback')); 
     });
 
     $('[load_more_container]').on('scroll', function(event) {
         event.stopImmediatePropagation();
-        var target = $(this).find('.load_more');
+        var target = $(this).find('[load_more]');
         infiniteScroll(target, $(this), function(t, c) {
-            return t.length > 0 && t.is(':visible') && t.first().position().top - infiniteScrollOffset < c.height();
+            if (target.attr('load_more') == 'reverse') {
+                return t.length > 0 && t.is(':visible') && t.first().position().top + t.first().height() + infiniteScrollOffset > c.position().top;
+            } else {
+                return t.length > 0 && t.is(':visible') && t.first().position().top - infiniteScrollOffset < c.height();
+            }
         }, true, target.attr('load_more-callback'));
         return false;
     });
     $(document).on('scroll', function(event) {
-        $('.load_more').each(function() {
+        $('[load_more]').each(function() {
             var target = $(this);
             var container = $(this).closest('[load_more_container]').length > 0 ? $(this).closest('[load_more_container]') : $(window);
             infiniteScroll(target, container, function(t, c) {
-                return t.is(':visible') && t.offset().top - c.height() - infiniteScrollOffset < c.scrollTop();
+                if (target.attr('load_more') == 'reverse') {
+                    return t.is(':visible') && t.offset().top + t.height() + infiniteScrollOffset > c.scrollTop();
+                } else {
+                    return t.is(':visible') && t.offset().top - c.height() - infiniteScrollOffset < c.scrollTop();
+                }
             }, true, target.attr('load_more-callback'));
         });
     });

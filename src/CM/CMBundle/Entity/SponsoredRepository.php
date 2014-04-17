@@ -33,7 +33,7 @@ class SponsoredRepository extends BaseRepository
             ->select('count(s.id)');
 
         $query = $this->createQueryBuilder('s')
-            ->select('s, e, t, c, ct, i, p, pu, pg, pp, pl, pc, plu, pcu')
+            ->select('s, e, t, c, ct, i, p, pu, pp, pl, pc, plu, pcu')
             ->join('s.entity', 'e')
             ->leftJoin('e.translations', 't', 'with', 't.locale in (:locales)')->setParameter('locales', $options['locales'])
             ->leftJoin('e.category', 'c')
@@ -42,7 +42,6 @@ class SponsoredRepository extends BaseRepository
             ->join('e.post', 'p')
             ->leftJoin('p.user', 'pu')
             ->leftJoin('p.page', 'pp')
-            ->leftJoin('p.group', 'pg')
             ->leftJoin('p.likes', 'pl')
             ->leftJoin('p.comments', 'pc', '', '', 'pc.id')
             ->leftJoin('pl.user', 'plu')

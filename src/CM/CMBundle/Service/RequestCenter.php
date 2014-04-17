@@ -5,7 +5,7 @@ namespace CM\CMBundle\Service;
 use Doctrine\ORM\EntityManager;
 use CM\CMBundle\Entity\Request;
 use CM\CMBundle\Entity\EntityUser;
-use CM\CMBundle\Entity\GroupUser;
+use CM\CMBundle\Entity\PageUser;
 
 class RequestCenter
 {
@@ -34,8 +34,7 @@ class RequestCenter
         $object,
         $objectId,
         $entity = null,
-        $page = null,
-        $group = null
+        $page = null
     )
     {
         if ($toUser->getId() == $fromUser->getId()) {
@@ -52,8 +51,6 @@ class RequestCenter
         }
         if (!is_null($page)) {
             $request->setPage($page);
-        } elseif (!is_null($group)) {
-            $request->setGroup($group);
         }
         $this->em->persist($request);
         $this->flushNeeded = true;
@@ -81,10 +78,10 @@ class RequestCenter
             $this->em->persist($entityUser);
 
             $this->flushNeeded = true;
-        } elseif (!is_null($request->getGroup())) {
-            $groupUser = $this->em->getRepository('CMBundle:GroupUser')->findOneBy(array('userId' => $userId, 'groupId' => $request->getGroupId()));
-            $groupUser->setStatus(GroupUser::STATUS_ACTIVE);
-            $this->em->persist($groupUser);
+        } elseif (!is_null($request->getPage())) {
+            $pageUser = $this->em->getRepository('CMBundle:PageUser')->findOneBy(array('userId' => $userId, 'pageId' => $request->getPageId()));
+            $pageUser->setStatus(PageUser::STATUS_ACTIVE);
+            $this->em->persist($pageUser);
 
             $this->flushNeeded = true;
         } else {
@@ -92,7 +89,7 @@ class RequestCenter
                 case 'CM\CMBundle\Entity\Event':
 
                     break;
-                case 'CM\CMBundle\Entity\Group':
+                case 'CM\CMBundle\Entity\Page':
 
                     break;
             }
@@ -117,16 +114,16 @@ class RequestCenter
                 ->execute();
 
             $this->flushNeeded = true;
-        } elseif (!is_null($request->getGroup())) {
-            $groupUser = $this->em->getRepository('CMBundle:GroupUser')->findOneBy(array('userId' => $userId, 'groupId' => $request->getGroupId()));
-            $newGroupUserStatus = $groupUser->getStatus() == GroupUser::STATUS_PENDING ? GroupUser::STATUS_REFUSED_GROUP_USER : GroupUser::STATUS_REFUSED_ADMIN;
-            $groupUser->setStatus($newGroupUserStatus);
-            $this->em->persist($groupUser);
+        } elseif (!is_null($request->getPage())) {
+            $pageUser = $this->em->getRepository('CMBundle:PageUser')->findOneBy(array('userId' => $userId, 'pageId' => $request->getPageId()));
+            $newPageUserStatus = $pageUser->getStatus() == PageUser::STATUS_PENDING ? PageUser::STATUS_REFUSED_GROUP_USER : PageUser::STATUS_REFUSED_ADMIN;
+            $pageUser->setStatus($newPageUserStatus);
+            $this->em->persist($pageUser);
 
             $this->em->createQueryBuilder('r')
                 ->delete('CMBundle:Request', 'r')
                 ->where('r.fromUser = :user_id')->setParameter('user_id', $userId)
-                ->andWhere('r.groupId = :group_id')->setParameter('group_id', $options['groupId'])
+                ->andWhere('r.pageId = :page_id')->setParameter('page_id', $options['pageId'])
                 ->getQuery()
                 ->execute();
 
@@ -136,7 +133,7 @@ class RequestCenter
                 case 'CM\CMBundle\Entity\Event':
 
                     break;
-                case 'CM\CMBundle\Entity\Group':
+                case 'CM\CMBundle\Entity\Page':
 
                     break;
             }

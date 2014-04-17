@@ -41,7 +41,6 @@ class SearchController extends Controller
 
         $users = $em->getRepository('CMBundle:User')->search($query, 5);
         $pages = $em->getRepository('CMBundle:Page')->search($query, 5);
-        $groups = $em->getRepository('CMBundle:Group')->search($query, 5);
 
         if ($request->isXmlHttpRequest()) {
             $results = array();
@@ -64,22 +63,12 @@ class SearchController extends Controller
                 $results[] = $view;
             }
 
-            foreach($groups as $group)
-            {
-                $view['id'] = $group->getId();
-                $view['url'] = $this->generateUrl('group_show', array('slug' => $group->getSlug()));
-                $view['label'] = $group->__toString();
-                $view['view'] = $this->renderView('CMBundle:Search:group.html.twig', array('group' => $group));
-                $results[] = $view;
-            }
-
             return new JsonResponse($results);
         }
 
         return array(
             'users' => $users,
-            'pages' => $pages,
-            'groups' => $groups
+            'pages' => $pages
         );
     }
 }

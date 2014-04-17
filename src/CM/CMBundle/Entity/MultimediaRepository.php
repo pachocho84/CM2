@@ -17,7 +17,6 @@ class MultimediaRepository extends BaseRepository
         return array_merge(array(
             'userId' => null,
             'pageId' => null,
-            'groupId' => null,
             'entityId' => null,
             'paginate' => true,
             'limit' => null
@@ -49,14 +48,10 @@ class MultimediaRepository extends BaseRepository
 
         if (!is_null($options['userId'])) {
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
-                ->andWhere('p.pageId is NULL')
-                ->andWhere('p.groupId is NULL');
+                ->andWhere('p.pageId is NULL');
         }
         if (!is_null($options['pageId'])) {
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
-        }
-        if (!is_null($options['groupId'])) {
-            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
         if (!is_null($options['entityId'])) {
             $query->andWhere('m.entityId = :entity_id')->setParameter('entity_id', $options['entityId']);
@@ -85,14 +80,10 @@ class MultimediaRepository extends BaseRepository
 
         if (!is_null($options['userId'])) {
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
-                ->andWhere('p.pageId is NULL')
-                ->andWhere('p.groupId is NULL');
+                ->andWhere('p.pageId is NULL');
         }
         if (!is_null($options['pageId'])) {
             $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
-        }
-        if (!is_null($options['groupId'])) {
-            $query->andWhere('p.groupId = :group_id')->setParameter('group_id', $options['groupId']);
         }
 
         $multimedia = $query->setMaxResults(1)->getQuery()->getResult();

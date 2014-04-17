@@ -89,23 +89,13 @@ class MultimediaController extends Controller
 
         $user = $this->getUser();
         $page = null;
-        $group = null;
         if (!is_null($objectId)) {
-            switch ($object) {
-                case 'Page':
-                    $page = $em->getRepository('CMBundle:Page')->findOneById($objectId);
-                    if (!$this->get('cm.user_authentication')->isAdminOf($page)) {
-                        throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-                    }
-                    break;
-                case 'Group':
-                    $group = $em->getRepository('CMBundle:Group')->findOneById($objectId);
-                    if (!$this->get('cm.user_authentication')->isAdminOf($group)) {
-                        throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-                    }
-                    break;
+            $page = $em->getRepository('CMBundle:Page')->findOneById($objectId);
+
+            if (!$this->get('cm.user_authentication')->isAdminOf($page)) {
+                throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }
-            if (is_null($page) && is_null($group)) {
+            if (is_null($page)) {
                 throw new NotFoundHttpException($this->get('translator')->trans('Object not found.', array(), 'http-errors'));
             }
         }
@@ -120,8 +110,7 @@ class MultimediaController extends Controller
                 get_class($multimedia),
                 array(),
                 $multimedia,
-                $page,
-                $group
+                $page
             );
 
             $multimedia->addPost($post);
@@ -207,10 +196,6 @@ class MultimediaController extends Controller
             $multimedia->setPage($album->getPost()->getPage());
             $publisher = $album->getPost()->getPage();
             $link = 'page_multimedia';
-        } elseif (!is_null($album->getPost()->getGroup())) {
-            $multimedia->setGroup($album->getPost()->getGroup());
-            $publisher = $album->getPost()->getGroup();
-            $link = 'group_multimedia';
         } else {
             $publisher = $this->getUser();
             $link = 'user_multimedia';

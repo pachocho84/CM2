@@ -28,22 +28,6 @@ class FanFixtures extends AbstractFixture implements OrderedFixtureInterface
             }
         }
 
-        for ($i = 1; $i < 21; $i++) {
-            $ofGroup = $manager->merge($this->getReference('group-'.$i));
-
-            $numbers = range(1, UserFixtures::count());
-            unset($numbers[$i - 1]);
-            shuffle($numbers);
-            for ($j = 0; $j < rand(0, 7); $j++) {
-                $user = $manager->merge($this->getReference('user-'.$numbers[$j]));
-
-                $fan = new Fan;
-                $user->addFanOf($fan);
-                $ofGroup->addFan($fan);
-                $manager->persist($fan);
-            }
-        }
-
         for ($i = 1; $i < 4; $i++) {
             $ofPage = $manager->merge($this->getReference('page-'.$i));
 

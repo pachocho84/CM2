@@ -87,13 +87,9 @@ class ArticleFixtures
         $article->mergeNewTranslations();
         
         $page = null;
-        $group = null;
         if (array_key_exists('page', ArticleFixtures::$articles[$i])) {
             $page = $manager->merge($fixture->getReference('page-'.ArticleFixtures::$articles[$i]['page']));
             $user = $page->getCreator();
-        } elseif (array_key_exists('group', ArticleFixtures::$articles[$i])) {
-            $group = $manager->merge($fixture->getReference('page-'.ArticleFixtures::$articles[$i]['group']));
-            $user = $group->getCreator();
         }
         if (array_key_exists('user', ArticleFixtures::$articles[$i])) {
             $user = $manager->merge($fixture->getReference('user-'.ArticleFixtures::$articles[$i]['user']));
@@ -128,7 +124,6 @@ class ArticleFixtures
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
         $manager->persist($post);
         $post->setPage($page);
-        $post->setGroup($group);
 
         $article->setPost($post);
         

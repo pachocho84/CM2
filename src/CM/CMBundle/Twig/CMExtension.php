@@ -488,14 +488,6 @@ class CMExtension extends \Twig_Extension
                 $entityLink = $this->router->generate('article_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
                 return $this->translator->trans('%user% would like to add you as protagonist to the article %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
                 // return __('%user% would like to add you as protagonist to the article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
-            } elseif (!is_null($request->getGroup()) && $this->userAuthentication->isAdminOf($request->getGroup())) {
-                $group = $request->getGroup();
-                $groupLink = $this->router->generate('group_show', array('slug' => $group->getSlug()));
-                return $this->translator->trans('%user% would like to join the group %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
-            } elseif (!is_null($request->getGroup())) {
-                $group = $request->getGroup();
-                $groupLink = $this->router->generate('group_show', array('slug' => $group->getSlug()));
-                return $this->translator->trans('%user% would like you to join the group %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
             } elseif (!is_null($request->getPage()) && $this->userAuthentication->isAdminOf($request->getPage())) {
                 $page = $request->getPage();
                 $pageLink = $this->router->generate('page_show', array('slug' => $page->getSlug()));
@@ -519,14 +511,6 @@ class CMExtension extends \Twig_Extension
                 // return __('You requested %user% to be added as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Article') {
                 // return __('You requested %user% to be added as protagonist to the article %object%.', array('%user%' => link_to($this->getUserRelatedByUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
-            } elseif (!is_null($request->getGroup())) {
-                $group = $request->getGroup();
-                $groupLink = $this->router->generate('group_show', array('slug' => $group->getSlug()));
-                return $this->translator->trans('You requested %user% to join the group %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getUser().'</a>', '%object%' => '<a href="'.$groupLink.'">'.$group.'</a>'));
-            } elseif (!is_null($request->getPage())) {
-                $page = $request->getPage();
-                $pageLink = $this->router->generate('page_show', array('slug' => $page->getSlug()));
-                return $this->translator->trans('You requested %user% to join the page %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
             }
         }
     }
@@ -577,9 +561,6 @@ class CMExtension extends \Twig_Extension
                 return $this->translator->trans('%user% has commented your disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'user_like':
                 // return __('%user% likes your %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to(__('post'), $this->getPost()->getLinkShow())));
-            case 'Group_'.Notification::TYPE_REQUEST_ACCEPTED:
-                return $this->translator->trans('%user% joined the group %group%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>'));
-                break;
             case 'Fan_'.Notification::TYPE_FAN:
                 return $this->translator->trans('%user% became your fan.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>'));
                 // return __('%user% became your fan.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow())));
@@ -767,46 +748,6 @@ class CMExtension extends \Twig_Extension
                         '%count%' => '<a href="'.$countLink.'">'.count($post->getObjectIds()).'</a>'
                     ));
                 }
-            case 'Fan_'.Post::TYPE_FAN_GROUP:
-                switch (count($post->getObjectIds())) {
-                    default:
-                    case 3:
-                        $fan3Link = $this->router->generate('group_show', array('slug' => $relatedObjects[2]->getGroup()->getSlug()));
-                    case 2:
-                        $fan2Link = $this->router->generate('group_show', array('slug' => $relatedObjects[1]->getGroup()->getSlug()));
-                    case 1:
-                        $fan1Link = $this->router->generate('group_show', array('slug' => $relatedObjects[0]->getGroup()->getSlug()));
-                    case 0:
-                        break;
-                }
-                if (count($post->getObjectIds()) == 1) {
-                    return $this->translator->trans('%user% became fan of the group %fan1%.', array(
-                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                        '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getGroup().'</a>'
-                    ));
-                } elseif (count($post->getObjectIds()) == 2) {
-                    return $this->translator->trans('%user% became fan of the groups %fan1% and %fan2%.', array(
-                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                        '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getGroup().'</a>',
-                        '%fan2%' => '<a href="'.$fan2Link.'">'.$relatedObjects[1]->getGroup().'</a>'
-                    ));
-                } elseif (count($post->getObjectIds()) == 3) {
-                    return $this->translator->trans('%user% became fan of the groups %fan1%, %fan2% and %fan3%.', array(
-                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                        '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getGroup().'</a>',
-                        '%fan2%' => '<a href="'.$fan2Link.'">'.$relatedObjects[1]->getGroup().'</a>',
-                        '%fan3%' => '<a href="'.$fan3Link.'">'.$relatedObjects[2]->getGroup().'</a>'
-                    ));
-                } else {
-                    $countLink = $this->router->generate('wall__show', array('id' => $pst->getId()));
-                    return $this->translator->trans('%user% became fan of the groups %fan1%, %fan2%, %fan3% and %count% more.', array(
-                        '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>',
-                        '%fan1%' => '<a href="'.$fan1Link.'">'.$relatedObjects[0]->getGroup().'</a>',
-                        '%fan2%' => '<a href="'.$fan2Link.'">'.$relatedObjects[1]->getGroup().'</a>',
-                        '%fan3%' => '<a href="'.$fan3Link.'">'.$relatedObjects[2]->getGroup().'</a>',
-                        '%count%' => '<a href="'.$countLink.'">'.count($post->getObjectIds()).'</a>'
-                    ));
-                }
             case 'education_update':
                 // return __('%user% has updated '.$post->getPublisherSex('his').' %studies%.', array('%user%'     => link_to($post->getUser(), $post->getUser()->getLinkShow()), '%studies%' => link_to(__('studies'), '@work_education_user?user='.$post->getUser()->getUsername())));
             case 'education_masterclass_update':
@@ -902,13 +843,6 @@ class CMExtension extends \Twig_Extension
                 return $this->translator->trans('%user% registered on Circuito Musica..', array(
                     '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getPublisher().'</a>'
                 ));
-            case 'Group_'.Post::TYPE_CREATION:
-                $userLink = $this->router->generate('user_show', array('slug' => $post->getGroup()->getCreator()->getSlug()));
-                $objectLink = $this->router->generate('group_show', array('slug' => $post->getGroup()->getSlug()));
-                return $this->translator->trans('%user% opened the group %group%.', array(
-                    '%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$post->getGroup()->getCreator().'</a>',
-                    '%group%' => '<a href="'.$objectLink.'">'.$post->getGroup().'</a>'
-                ));
             case 'Page_'.Post::TYPE_CREATION:
                 $userLink = $this->router->generate('user_show', array('slug' => $post->getPage()->getCreator()->getSlug()));
                 $objectLink = $this->router->generate('page_show', array('slug' => $post->getPage()->getSlug()));
@@ -971,13 +905,11 @@ class CMExtension extends \Twig_Extension
             case 'Page':
             case 'Page_'.Post::TYPE_CREATION:
                 return '<span class="glyphicon glyphicon-list-alt"></span>';
-            case 'Group':
-            case 'Group_'.Post::TYPE_CREATION:
             case 'Users':
+            case 'Protagonist':
                 return '<span class="glyphicons group"></span>';
             case 'Fan':
             case 'Fan_'.Post::TYPE_FAN_USER:
-            case 'Fan_'.Post::TYPE_FAN_GROUP:
             case 'Fan_'.Post::TYPE_FAN_PAGE:
                 return '<span class="glyphicon glyphicon-flag"></span>';
             case 'User':
@@ -1043,8 +975,6 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-bell"></span>';
             case 'Request_out':
                 return '<span class="glyphicon glyphicon-share-alt"></span>';
-            case 'Protagonist':
-                return '<span class="glyphicons group"></span>';
             case 'Relation':
             case 'Relation_'.Post::TYPE_CREATION:
                 return '<span class="glyphicons user_add"></span>';

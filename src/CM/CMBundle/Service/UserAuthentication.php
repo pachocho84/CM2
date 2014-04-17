@@ -48,8 +48,6 @@ class UserAuthentication
     public function updateProfile()
     {
         $user = $this->securityContext->getToken()->getUser();
-        $groups = $this->em->getRepository('CMBundle:User')->getAdminGroupsIds($user->getId());
-        // $groups = GroupUserQuery::create()->filterByUserId($user->getId())->filterByAdmin(1)->select(array('GroupId'))->setFormatter('PropelSimpleArrayFormatter')->find()->toArray();
         $pages = $this->em->getRepository('CMBundle:User')->getAdminPagesIds($user->getId());
         // $pages = PageUserQuery::create()->filterByUserId($user->getId())->filterByAdmin(1)->select(array('PageId'))->setFormatter('PropelSimpleArrayFormatter')->find()->toArray();
         // $siti = SitiQuery::create()->filterByUserId($user->getId())->select(array('Id'))->setFormatter('PropelSimpleArrayFormatter')->find()->toArray();
@@ -61,7 +59,6 @@ class UserAuthentication
         $this->session->set('user/full_name', (string)$user);
         $this->session->set('user/img', $user->getImg());
         $this->session->set('user/img_offset', $user->getImgOffset());
-        $this->session->set('user/groups_admin', $groups);
         $this->session->set('user/pages_admin', $pages);
         $this->session->set('user/user_tags', $user->getUserTags());
         // $this->session->set('siti_admin', $siti, 'user');
@@ -109,9 +106,6 @@ class UserAuthentication
         }
 
         switch ($this->helper->className($object)) {
-            case 'Group':
-                return in_array($object->getId(), (array)$this->session->get('user/groups_admin'));
-                break;
             case 'Page':
                 return in_array($object->getId(), (array)$this->session->get('user/pages_admin'));
                 break;
@@ -160,25 +154,17 @@ class UserAuthentication
             }
 
             if ($object instanceof Post || $object instanceof Image) {
-                $group_id = $object->getGroup()->getId();
                 $page_id = $object->getPage()->getId();
-            } elseif ($object instanceof Groups) {
-                $group_id = $object->getId();
             } elseif ($object instanceof Pages) {
                 $page_id = $object->getId();
             }
 
-            // 4) GROUP
-            if (!is_null($group_id) && in_array($group_id, $this->session->get('user/groups_admin'))) {
-                return true;
-            }
-
-            // 5) PAGE
+            // 4) PAGE
             if (!is_null($page_id) && in_array($page_id, $this->session->get('user/pages_admin'))) {
                 return true;
             }
 
-            // 6) PROTAGONISTS
+            // 5) PROTAGONISTS
             if (method_exists($object, 'getEntityUsers') && !$object->getEntityUsers()->isEmpty()) {
                 $protagonists = $object->getEntityUsers();
                 foreach ($protagonists as $protagonist) {

@@ -17,7 +17,6 @@ class MessageThreadRepository extends BaseRepository
         return array_merge(array(
             'userId' => null,
             'pageId' => null,
-            'groupId' => null,
             'threadIds' => array(),
             'paginate' => true,
             'limit' => null
