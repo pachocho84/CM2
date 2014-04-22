@@ -251,7 +251,7 @@ Comune di Madesimo
             $event->addUser(
                 $otherUser,
                 !rand(0, 3), // admin
-                EntityUser::STATUS_ACTIVE,
+                EntityUser::STATUS_PENDING,
                 true, // notification
                 $tags
             );

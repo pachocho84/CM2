@@ -225,8 +225,8 @@ class DoctrineEventsListener
         $userId = $post->getUserId();
         $pageId = $post->getPageId();
 
-        $this->get('cm.notification_center')->removeNotifications($userId, $entity->className(), $entity->getId(), Notification::TYPE_REQUEST_ACCEPTED);
-        $this->get('cm.request_center')->removeRequests(null, array('fromUserId' => $userId, 'pageId' => $pageId, 'entityId' => $entity->getId()));
+        // $this->get('cm.notification_center')->removeNotifications($userId, $entity->className(), $entity->getId(), Notification::TYPE_REQUEST_ACCEPTED);
+        $this->get('cm.request_center')->removeRequests($entityUser->getUserId(), array('fromUserId' => $userId, 'pageId' => $pageId, 'entityId' => $entity->getId()));
     }
 
     private function pageUserPersistedRoutine(PageUser &$pageUser, EntityManager $em)
