@@ -220,27 +220,27 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+        $tags = $em->getRepository('CMBundle:Tag')->getUserTags(array('locale' => $request->getLocale()));
 
         $availableTags = $tags;
-        foreach ($this->getUser()->getUserUserTags() as $userTag) {
-            if (array_key_exists($userTag->getUserTag()->getId(), $tags)) {
-                unset($availableTags[$userTag->getUserTag()->getId()]);
+        foreach ($this->getUser()->getUserTags() as $userTag) {
+            if (array_key_exists($userTag->getTagId(), $tags)) {
+                unset($availableTags[$userTag->getTagId()]);
             }
         }
 
         if ($request->isMethod('post')) {
 
-            $userTags = explode(',', $request->get('userTagsVal'));
+            $tags = explode(',', $request->get('tagsVal'));
 
-            if (!empty($userTags)) {
-                foreach ($this->getUser()->getUserUserTags() as $userTag) {
+            if (!empty($tags)) {
+                foreach ($this->getUser()->getUserTags() as $userTag) {
                     $em->remove($userTag);
                 }
                 $em->flush();
 
-                foreach ($userTags as $key => $tag) {
-                    $this->getUser()->addUserTag($tags[intval($tag)], $key);
+                foreach ($tags as $key => $tag) {
+                    $this->getUser()->addTag($tags[intval($tag)], $key);
                 }
 
                 $em->persist($this->getUser());
@@ -463,7 +463,7 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $user = $em->getRepository('CMBundle:User')->getUserBySlug($slug, array('tags' => true));
+        $user = $em->getRepository('CMBundle:User')->getUserBySlug($slug, array('tags' => true, 'locale' => $request->getLocale()));
         
         if (!$user) {
             throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));

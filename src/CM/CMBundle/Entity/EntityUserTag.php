@@ -7,17 +7,17 @@ use Doctrine\ORM\Mapping as ORM;
 // TODO: reinsert unique constraint:
 /*
  *     uniqueConstraints={@ORM\UniqueConstraint(columns={
- *         "user_id", "user_tag_id"
+ *         "entity_id", "entity_tag_id"
  *     })}
  */
  
 /**
- * UserUserTag
+ * EntityEntityTag
  *
  * @ORM\Entity
- * @ORM\Table(name="user_tag")
+ * @ORM\Table(name="entity_user_tag")
  */
-class UserTag
+class EntityUserTag
 {     
     /**
      * @var integer
@@ -29,15 +29,15 @@ class UserTag
     protected $id;
 
     /**
-     * @ORM\Column(name="user_id", type="integer")
+     * @ORM\Column(name="entity_user_id", type="integer")
      */
-    private $userId;
+    private $entityUserId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CM\CMBundle\Entity\User", inversedBy="userTags")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\ManyToOne(targetEntity="EntityUser", inversedBy="entityUserTags")
+     * @ORM\JoinColumn(name="entity_user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
-    private $user;
+    private $entityUser;
 
     /**
      * @ORM\Column(name="tag_id", type="integer")
@@ -45,7 +45,7 @@ class UserTag
     private $tagId;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Tag", inversedBy="tagUsers")
+     * @ORM\ManyToOne(targetEntity="Tag", inversedBy="tagEntityUsers")
      * @ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $tag;
@@ -73,25 +73,27 @@ class UserTag
     }
 
     /**
-     * Get userId
+     * Get entityId
      *
      * @return integer 
      */
-    public function getUserId()
+    public function getEntityUserId()
     {
-        return $this->userId;
+        return $this->entityUserId;
     }
 
     /**
      * Set entity
      *
-     * @param User $entity
-     * @return EntityUser
+     * @param Entity $entity
+     * @return EntityEntity
      */
-    public function setUser(User $user = null)
+    public function setEntityUser(EntityUser $entityUser = null)
     {
-        $this->user = $user;
-        $this->userId = $user->getId();
+        $this->entityUser = $entityUser;
+        if (!is_null($entityUser)) {
+            $this->entityUserId = $entityUser->getId();
+        }
     
         return $this;
     }
@@ -99,18 +101,18 @@ class UserTag
     /**
      * Get entity
      *
-     * @return User 
+     * @return Entity 
      */
-    public function getUser()
+    public function getEntityUser()
     {
-        return $this->user;
+        return $this->entityUser;
     }
 
     /**
      * Set entity
      *
-     * @param UserTag $entity
-     * @return UserUserTag
+     * @param EntityTag $entity
+     * @return EntityEntityTag
      */
     public function setTag(Tag $tag = null)
     {
@@ -123,7 +125,7 @@ class UserTag
     }
 
     /**
-     * Get userId
+     * Get entityId
      *
      * @return integer 
      */
@@ -135,7 +137,7 @@ class UserTag
     /**
      * Get entity
      *
-     * @return UserTag
+     * @return EntityTag
      */
     public function getTag()
     {
@@ -146,7 +148,7 @@ class UserTag
      * Set order
      *
      * @param integer $order
-     * @return UserUserTag
+     * @return EntityEntityTag
      */
     public function setOrder($order)
     {

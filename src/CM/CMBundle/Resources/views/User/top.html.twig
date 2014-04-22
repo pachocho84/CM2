@@ -19,8 +19,8 @@
                 {{ show_img_box(user.img|imagine_filter('medium'), {width: 120, offset: user.imgOffset}) }}
             </div>
             <h2>{{ user }}</h2>
-            <h3 class="text-muted"{% if user.userTags|length > 3 %} {{ tooltip(user.userTags) }}{% endif %}>
-                {{ user.userTags[:3]|join(', ')|trim }}{% if user.userTags|length > 3 %}...{% endif %}
+            <h3 class="text-muted"{% if user.tags|length > 3 %} {{ tooltip(user.tags) }}{% endif %}>
+                {{ user.tags[:3]|join(', ')|trim }}{% if user.tags|length > 3 %}...{% endif %}
             </h3>
 
             <p>{{ icon('Map') }} {{ 'comes from'|trans }}: {{ user.cityBirth }} - {{ 'lives in'|trans }}: {{ user.cityCurrent }}</p>

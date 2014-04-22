@@ -60,7 +60,7 @@ class UserAuthentication
         $this->session->set('user/img', $user->getImg());
         $this->session->set('user/img_offset', $user->getImgOffset());
         $this->session->set('user/pages_admin', $pages);
-        $this->session->set('user/user_tags', $user->getUserTags());
+        $this->session->set('user/tags', $user->getTags());
         // $this->session->set('siti_admin', $siti, 'user');
         // $this->session->set('languages', explode(', ', $user->getSiti()->getLingue()), 'user');
 
@@ -78,7 +78,7 @@ class UserAuthentication
         $user = $this->securityContext->getToken()->getUser();
         // $biography = BiographyQuery::getUserBiography($user->getId()); // TODO: fix
 
-        if (($user->getBirthDate() || $user->getCityBirth() || $user->getCityCurrent() || $user->getSex()) && $user->getImg() /*&& $biography */&& $user->getUserUserTags()->count() >= 1) {
+        if (($user->getBirthDate() || $user->getCityBirth() || $user->getCityCurrent() || $user->getSex()) && $user->getImg() /*&& $biography */&& $user->getUserTags()->count() >= 1) {
             $this->session->set('user/profile_complete', true);
         } else {
             $this->session->set('user/profile_complete', false);

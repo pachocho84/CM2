@@ -9,9 +9,9 @@
                     {{ show_img_box(protagonist.user.img|imagine_filter('avatar'), {width: 32, link: path('user_show', {slug: protagonist.user.slug}), box_attributes: {class: 'pull-left img-rounded'}, publisher_box: protagonist.user}) }}
                     <div class="media-body">
                         <small><a href="{{ path('user_show', {slug: protagonist.user.slug}) }}" {{ publisher_box(protagonist.user) }}>{{ protagonist.user }}</a></small><br/>
-                        
-                        <small class="text-muted" {{ tooltip(protagonist.userTags, {closure: '$a[0][$v]', args: [tags], limit: 3}) }}>
-                            {% for userTag in protagonist.userTags[:3] %}{{ tags[userTag] }}{% if not loop.last %}, {% endif %}{% if loop.last and loop.index < protagonist.userTags|length %}...{% endif %}{% endfor %}
+
+                        <small class="text-muted"{% if protagonist.tags|length > 3 %} {{ tooltip(protagonist.tags) }}{% endif %}>
+                            {{ protagonist.tags[:3]|join(', ')|trim }}{% if protagonist.tags|length > 3 %}...{% endif %}
                         </small>
                     </div>
                 </li>
@@ -24,9 +24,9 @@
                         {{ show_img_box(protagonist.user.img|imagine_filter('avatar'), {width: 32, height: 32, link: path('user_show', {slug: protagonist.user.slug}), link_attributes: {class: 'pull-left img-rounded'}}) }}
                         <div class="media-body">
                             <small><a href="{{ path('user_show', {slug: protagonist.user.slug}) }}" {{ publisher_box(protagonist.user) }}>{{ protagonist.user }}</a></small><br/>
-                            
-                            <small class="text-muted" {{ tooltip(protagonist.userTags, {closure: '$a[0][$v]', args: [tags], limit: 3}) }}>
-                                {% for userTag in protagonist.userTags[:3] %}{{ tags[userTag] }}{% if not loop.last %}, {% endif %}{% if loop.last and loop.index < protagonist.userTags|length %}...{% endif %}{% endfor %}
+
+                            <small class="text-muted"{% if protagonist.tags|length > 3 %} {{ tooltip(protagonist.tags) }}{% endif %}>
+                                {{ protagonist.tags[:3]|join(', ')|trim }}{% if protagonist.tags|length > 3 %}...{% endif %}
                             </small>
                         </div>
                     </li>

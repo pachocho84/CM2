@@ -199,7 +199,12 @@ class EventController extends Controller
             $post = $this->get('cm.post_center')->getNewPost($user, $user);
             $event->setPost($post);
         } else {
-            $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('slug' => $slug, 'locale' => $request->getLocale(), 'protagonists' => true, 'mainImageOnly' => true));
+            $event = $em->getRepository('CMBundle:Event')->getEvent($id, array(
+                'slug' => $slug,
+                'locale' => $request->getLocale(),
+                'protagonists' => true,
+                'tags' => true
+            ));
             if (!$this->get('cm.user_authentication')->canManage($event)) {
                 throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }
@@ -223,7 +228,7 @@ class EventController extends Controller
             'error_bubbling' => false,
             'em' => $em,
             'roles' => $user->getRoles(),
-            'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ))->add('save', 'submit');

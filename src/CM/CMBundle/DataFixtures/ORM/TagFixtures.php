@@ -8,9 +8,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use CM\CMBundle\Entity\UserTag;
+use CM\CMBundle\Entity\Tag;
 
-class UserTagFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+class TagFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
     private $tags = array(
         array('name-en' => 'pianist', 'name-fr' => 'pianiste', 'name-it' => 'pianista'),
@@ -27,37 +27,37 @@ class UserTagFixtures extends AbstractFixture implements OrderedFixtureInterface
         array('name-en' => 'composer', 'name-fr' => 'compositeur', 'name-it' => 'compositore'),
         array('name-en' => 'director', 'name-fr' => 'directeur', 'name-it' => 'direttore'),
     );
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setContainer(ContainerInterface $container = null)
-	{
-	    $this->container = $container;
-	}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
 
-	public function load(ObjectManager $manager)
-	{
-		for ($i = 1; $i < 11; $i++) {
-		    $userTag = new UserTag;
-		    $userTag->setVisible(true)
+    public function load(ObjectManager $manager)
+    {
+        for ($i = 1; $i < 11; $i++) {
+            $tag = new Tag;
+            $tag->setVisible(true)
                 ->setIsUser(true)
-                ->setIsPage(true)
-                ->setIsProtagonist(true);
-            $userTag->setName($this->tags[$i - 1]['name-en']);
-            $userTag->translate('fr')->setName($this->tags[$i - 1]['name-fr']);
-            $userTag->translate('it')->setName($this->tags[$i - 1]['name-it']);
+                ->setIsPageUser(true)
+                ->setIsEntityUser(true);
+            $tag->setName($this->tags[$i - 1]['name-en']);
+            $tag->translate('fr')->setName($this->tags[$i - 1]['name-fr']);
+            $tag->translate('it')->setName($this->tags[$i - 1]['name-it']);
 
-            $manager->persist($userTag);
-            $userTag->mergeNewTranslations();
+            $manager->persist($tag);
+            $tag->mergeNewTranslations();
             $manager->flush();
 
-            $this->addReference('user_tag-'.$i, $userTag);
-		}
-	}
+            $this->addReference('tag-'.$i, $tag);
+        }
+    }
 
-	public function getOrder()
-	{
+    public function getOrder()
+    {
         return 10;
     }
 }

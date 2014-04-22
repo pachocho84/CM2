@@ -215,11 +215,11 @@ class RelationRepository extends BaseRepository
         $suggestions = array_slice($suggestions, $offset, $limit, true);
 
         $users = $this->getEntityManager()->createQueryBuilder()
-            ->select('u, uut, ut, utt')
+            ->select('u, ut, t, tt')
             ->from('CMBundle:User', 'u')
-            ->leftJoin('u.userUserTags', 'uut')
-            ->leftJoin('uut.userTag', 'ut')
-            ->leftJoin('ut.translations', 'utt')
+            ->leftJoin('u.userTags', 'ut')
+            ->leftJoin('ut.tag', 't')
+            ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
             ->where('u.id in (:ids)')->setParameter('ids', array_keys($suggestions))
             ->getQuery()
             ->getResult();

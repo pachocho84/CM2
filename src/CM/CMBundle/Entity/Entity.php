@@ -468,23 +468,21 @@ abstract class Entity
         $admin = false,
         $status = EntityUser::STATUS_PENDING,
         $notification = true,
-        $userTags = null
+        $tags = null
     )
     {
-        if (is_null($userTags)) {
-            $userTags = $user->getUserTags();
-        }
-        $userTagsIds = array();
-        foreach ($userTags as $userTag) {
-            $userTagsIds[] = $userTag->getId();
+        if (is_null($tags)) {
+            $tags = $user->getTags();
         }
         $entityUser = new EntityUser;
         $entityUser->setEntity($this)
             ->setUser($user)
             ->setAdmin($admin)
             ->setStatus($status)
-            ->addUserTags($userTagsIds)
             ->setNotification($notification);
+        foreach ($tags as $order => $tag) {
+            $entityUser->addTag($tag, $order);
+        }
         $this->entityUsers[] = $entityUser;
     
         return $this;

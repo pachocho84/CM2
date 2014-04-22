@@ -210,9 +210,9 @@ class User extends BaseUser implements ParticipantInterface
     private $notes;
 
     /**
-     * @ORM\OneToMany(targetEntity="UserUserTag", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="UserTag", mappedBy="user", cascade={"persist", "remove"})
      */
-    protected $userUserTags;
+    protected $userTags;
 
     /**
      * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="user", cascade={"persist", "remove"})
@@ -300,7 +300,7 @@ class User extends BaseUser implements ParticipantInterface
         
         $this->roles = array('ROLE_USER');
         
-        $this->userUserTags = new ArrayCollection;
+        $this->userTags = new ArrayCollection;
         $this->userEntities = new ArrayCollection;
         $this->userPages = new ArrayCollection;
         $this->posts = new ArrayCollection;
@@ -670,21 +670,21 @@ class User extends BaseUser implements ParticipantInterface
      * @param \CM\CMBundle\Entity\EntityUser $comment
      * @return Entity
      */
-    public function addUserTag(
-        UserTag $userTag,
+    public function addTag(
+        Tag $tag,
         $order = null
     )
     {
-        foreach ($this->userUserTags as $key => $userUserTag) {
-            if ($userUserTag->getUserTagId() == $userTag->getId()) {
+        foreach ($this->userTags as $key => $userTag) {
+            if ($userTag->getTagId() == $tag->getId()) {
                 return;
             }
         }
-        $userUserTag = new UserUserTag;
-        $userUserTag->setUser($this)
-            ->setUserTag($userTag)
+        $userTag = new UserTag;
+        $userTag->setUser($this)
+            ->setTag($tag)
             ->setOrder($order);
-        $this->userUserTags[] = $userUserTag;
+        $this->userTags[] = $userTag;
     
         return $this;
     }
@@ -692,25 +692,17 @@ class User extends BaseUser implements ParticipantInterface
     /**
      * @param \CM\CMBundle\Entity\EntityUser $users
      */
-    public function removeUserUserTag(UserUserTag $userUserTag)
+    public function removeUserTag(UserTag $userTag)
     {
-        $this->userUserTags->removeElement($userUserTag);
+        $this->userTags->removeElement($userTag);
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function clearUserTags()
+    public function clearTags()
     {
-        return $this->userUserTags->clear();
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getUserUserTags()
-    {
-        return $this->userUserTags;
+        return $this->userTags->clear();
     }
 
     /**
@@ -718,23 +710,31 @@ class User extends BaseUser implements ParticipantInterface
      */
     public function getUserTags()
     {
-        $userTags = array();
-        foreach ($this->userUserTags as $tag) {
-            $userTags[] = $tag->getUserTag();
-        }
-        return $userTags;
+        return $this->userTags;
     }
 
     /**
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getUserTagsIds()
+    public function getTags()
     {
-        $userTags = array();
-        foreach ($this->userUserTags as $tag) {
-            $userTags[] = $tag->getUserTag()->getId();
+        $tags = array();
+        foreach ($this->userTags as $userTag) {
+            $tags[] = $userTag->getTag();
         }
-        return $userTags;
+        return $tags;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTagsIds()
+    {
+        $tags = array();
+        foreach ($this->userTags as $userTag) {
+            $tags[] = $userTag->getTagId();
+        }
+        return $tags;
     }
 
     /**

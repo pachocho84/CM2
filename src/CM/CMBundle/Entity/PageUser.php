@@ -98,13 +98,11 @@ class PageUser
      * @ORM\Column(name="join_article", type="smallint", nullable=false)
      */
     private $joinArticle = self::JOIN_REQUEST;
-    
+
     /**
-     * @var array
-     *
-     * @ORM\Column(name="user_tags", type="simple_array", nullable=true)
+     * @ORM\OneToMany(targetEntity="PageUserTag", mappedBy="pageUser", cascade={"persist", "remove"})
      */
-    private $userTags = array();
+    protected $pageUserTags;
 
     /**
      * @var boolean
@@ -112,6 +110,11 @@ class PageUser
      * @ORM\Column(name="notification", type="boolean")
      */
     private $notification = true;
+
+    public function __construct()
+    {
+        $this->pageUserTags = new ArrayCollection;
+    }
 
     public static function className()
     {
@@ -310,68 +313,76 @@ class PageUser
     {
         return $this->joinArticle;
     }
-    
+
     /**
-     * Add userTag
-     *
-     * @param UserTag $userTag
-     * @return EntityUser
+     * @param \CM\CMBundle\Entity\EntityPageUser $comment
+     * @return Entity
      */
-    public function addUserTags(array $userTags)
+    public function addTag(
+        Tag $tag,
+        $order = null
+    )
     {
-        foreach ($userTags as $userTag) {
-            $this->addUserTag($userTag);
+        foreach ($this->pageUserTags as $key => $pageUserTag) {
+            if ($pageUserTag->getTagId() == $tag->getId()) {
+                return;
+            }
         }
-        
+        $pageUserTag = new PageUserTag;
+        $pageUserTag->setPageUser($this)
+            ->setTag($tag)
+            ->setOrder($order);
+        $this->pageUserTags[] = $pageUserTag;
+    
         return $this;
     }
-    
+
     /**
-     * Add userTag
-     *
-     * @param UserTag $userTag
-     * @return EntityUser
+     * @param \CM\CMBundle\Entity\EntityPageUser $pageUsers
      */
-    public function addUserTag($userTag)
+    public function removePageUserTag(PageUserTag $pageUserTag)
     {
-        if (!in_array($userTag, $this->userTags)) {
-            $this->userTags[] = $userTag;
+        $this->pageUserTags->removeElement($pageUserTag);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function clearTags()
+    {
+        return $this->pageUserTags->clear();
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPageUserTags()
+    {
+        return $this->pageUserTags;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTags()
+    {
+        $tags = array();
+        foreach ($this->pageUserTags as $pageUserTag) {
+            $tags[] = $pageUserTag->getTag();
         }
-        
-        return $this;
+        return $tags;
     }
-    
+
     /**
-     * Remove userTag
-     *
-     * @param UserTag $userTag
-     * return EntityUser
+     * @return \Doctrine\Common\Collections\Collection 
      */
-    public function removeUserTag($userTag)
+    public function getTagsIds()
     {
-        if(($key = array_search($userTag, $this->getUserTags())) !== false) {
-            unset($this->userTags[$key]);
+        $tags = array();
+        foreach ($this->pageUserTags as $pageUserTag) {
+            $tags[] = $pageUserTag->getTagId();
         }
-    }
-    
-    /**
-     * Get userTags
-     *
-     * @return array
-     */
-    public function getUserTags()
-    {
-        return $this->userTags;
-    }
-    /**
-     * Add userTag
-     *
-     * @param UserTag $userTag
-     * @return EntityUser
-     */
-    public function hasUserTag($userTag)
-    {
-        return in_array($userTag, $this->userTags);
+        return $tags;
     }
 
     /**

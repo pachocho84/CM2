@@ -29,10 +29,13 @@ class PageRepository extends BaseRepository
 
         $count = $this->createQueryBuilder('p')
             ->select('count(p.id)')
-            ->innerJoin('p.pageUsers', 'pu', '', '', 'pu.userId');
+            ->join('p.pageUsers', 'pu', '', '', 'pu.userId');
         $query = $this->createQueryBuilder('p')
-            ->select('p, pu, i')
-            ->innerJoin('p.pageUsers', 'pu', '', '', 'pu.userId')
+            ->select('p, pu, put, t, tt, i')
+            ->join('p.pageUsers', 'pu', '', '', 'pu.userId')
+            ->leftJoin('pu.pageUserTags', 'put')
+            ->leftJoin('ut.tag', 't')
+            ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
             ->leftJoin('p.images', 'i');
 
         if ($options['userId']) {
@@ -51,45 +54,53 @@ class PageRepository extends BaseRepository
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
-    public function getAdmins($pageId)
+    public function getAdmins($pageId, $options = array())
     {
+        $options = self::getOptions($options);
+
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('u')
+            ->select('u, pu, put, t, tt')
             ->from('CMBundle:User', 'u')
-            ->leftJoin('u.userPages', 'ug')
-            ->where('ug.admin = '.true)
-            ->andWhere('identity(ug.page) = :page_id')->setParameter('page_id', $pageId)
+            ->join('u.userPages', 'pu')
+            ->leftJoin('pu.pageUserTags', 'put')
+            ->leftJoin('ut.tag', 't')
+            ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
+            ->where('pu.admin = '.true)
+            ->andWhere('pu.pageId = :page_id')->setParameter('page_id', $pageId)
             ->getQuery()->getResult();
     }
 
     public function getCreationPost($pageId, $object) {
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('p, g, gu')
-            ->from('CMBundle:Post', 'p')
-            ->leftJoin('p.page', 'g')
-            ->leftJoin('g.pageUsers', 'gu')
+            ->select('po, p, pu')
+            ->from('CMBundle:Post', 'po')
+            ->join('po.page', 'p')
+            ->join('p.pageUsers', 'pu')
             ->where('p.type = '.Post::TYPE_CREATION)
-            ->andWhere('g.id = :page_id')->setParameter('page_id', $pageId)
+            ->andWhere('p.id = :page_id')->setParameter('page_id', $pageId)
             ->getQuery()->getSingleResult();
     }
 
     public function getPageExcludeUsers($pageId, $excludes)
     {
-        return $this->createQueryBuilder('g')
-            ->select('g, gu, u')
-            ->leftJoin('g.pageUsers', 'gu')
-            ->leftJoin('gu.user', 'u')
-            ->where('g.id = :page_id')->setParameter('page_id', $pageId)
+        return $this->createQueryBuilder('p')
+            ->select('p, pu, put, t, tt, u')
+            ->join('p.pageUsers', 'pu')
+            ->leftJoin('pu.pageUserTags', 'put')
+            ->leftJoin('ut.tag', 't')
+            ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
+            ->join('pu.user', 'u')
+            ->where('p.id = :page_id')->setParameter('page_id', $pageId)
             ->andWhere('u.id NOT IN (:excludes)')->setParameter('excludes', $excludes)
             ->getQuery()->getSingleResult();
     }
 
     public function filterPagesForUser($userId)
     {
-        return $this->createQueryBuilder('g')
-            ->select('g')
-            ->leftJoin('g.pageUsers', 'gu')
-            ->where('gu.user = :user_id')->setParameter('user_id', $userId);
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->leftJoin('p.pageUsers', 'pu')
+            ->where('pu.userId = :user_id')->setParameter('user_id', $userId);
     }
 
     public function getPagesForUser($userId)

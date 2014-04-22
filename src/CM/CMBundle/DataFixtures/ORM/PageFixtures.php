@@ -108,10 +108,10 @@ L'Orchestra è stata diretta, tra gli altri, da Riccardo Chailly, Georges Prêtr
             $biography->setPost($post);
 
             $manager->persist($biography);
-                        
-            $userTags = array();
-            for ($j = 1; $j < rand(1, 3); $j++) {
-                $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
+
+            $tags = array();
+            for ($k = 1; $k < rand(1, 3); $k++) {
+                $tags[] = $manager->merge($this->getReference('tag-'.rand(1, 10)));
             }
             $page->addUser(
                 $user,
@@ -121,7 +121,7 @@ L'Orchestra è stata diretta, tra gli altri, da Riccardo Chailly, Georges Prêtr
                 rand(0, 2), // join disc
                 rand(0, 2), // join article
                 rand(0, 1), // notification
-                $userTags
+                $tags
             );
 
             $numbers = range(1, UserFixtures::count());
@@ -130,9 +130,9 @@ L'Orchestra è stata diretta, tra gli altri, da Riccardo Chailly, Georges Prêtr
             for ($j = 0; $j < rand(0, 7); $j++) {
                 $otherUser = $manager->merge($this->getReference('user-'.$numbers[$j]));
                 
-                $userTags = array();
+                $tags = array();
                 for ($k = 1; $k < rand(1, 3); $k++) {
-                    $userTags[] = $manager->merge($this->getReference('user_tag-'.rand(1, 10)))->getId();
+                    $tags[] = $manager->merge($this->getReference('tag-'.rand(1, 10)));
                 }
 
                 $page->addUser(
@@ -143,7 +143,7 @@ L'Orchestra è stata diretta, tra gli altri, da Riccardo Chailly, Georges Prêtr
                     rand(0, 2), // join disc
                     rand(0, 2), // join article
                     rand(0, 1), // notification
-                    $userTags
+                    $tags
                 );
             }
             

@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormEvent;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\UserTagRepository;
 use CM\CMBundle\Form\DataTransformer\UserToIntTransformer;
+use CM\CMBundle\Form\DataTransformer\TagsToArrayTransformer;
 
 class EntityUserType extends AbstractType
 {
@@ -45,13 +46,20 @@ class EntityUserType extends AbstractType
                     )
                 ));
         }
-        $builder->add('userTags', 'choice', array(
+        $builder->add($builder->create('entityUserTags', 'choice', array(
                 'attr' => array('tags' => ''),
                 'choices' => $options['tags'],
                 'multiple' => true,
                 'by_reference' => false,
                 'label' => 'Roles'
-            ));
+            ))->addModelTransformer(new TagsToArrayTransformer($options['tags'])));
+        // $builder->add('entityUserTags', 'choice', array(
+        //         'attr' => array('tags' => ''),
+        //         'choices' => $options['tags'],
+        //         'multiple' => true,
+        //         'by_reference' => false,
+        //         'label' => 'Roles'
+        //     ));
         if ($options['is_admin']) {
             $builder->add('notification');
         }

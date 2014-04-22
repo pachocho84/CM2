@@ -235,9 +235,12 @@ class Page
         $joinDisc = PageUser::JOIN_REQUEST,
         $joinArticle = PageUser::JOIN_REQUEST,
         $notification = true,
-        $userTags = array()
+        $tags = null
     )
     {
+        if (is_null($tags)) {
+            $tags = $user->getTags();
+        }
         $pageUser = new PageUser;
         $pageUser->setPage($this)
             ->setUser($user)
@@ -246,8 +249,10 @@ class Page
             ->setJoinEvent($joinEvent)
             ->setJoinDisc($joinDisc)
             ->setJoinArticle($joinArticle)
-            ->addUserTags($userTags)
             ->setNotification($notification);
+        foreach ($tags as $order => $tag) {
+            $pageUser->addTag($tag, $order);
+        }
         $this->pageUsers[] = $pageUser;
     
         return $this;

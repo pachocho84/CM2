@@ -127,9 +127,10 @@ class ArticleFixtures
 
         $article->setPost($post);
         
-        $userTags = array();
-        for ($j = 1; $j < rand(1, 3); $j++) {
-            $userTags[] = $manager->merge($fixture->getReference('user_tag-'.rand(1, 10)));
+        /* Protagonists */
+        $tags = array();
+        for ($k = 1; $k < rand(1, 3); $k++) {
+            $tags[] = $manager->merge($fixture->getReference('tag-'.rand(1, 10)));
         }
         
         $article->addUser(
@@ -137,7 +138,7 @@ class ArticleFixtures
             true, // admin
             EntityUser::STATUS_ACTIVE,
             true, // notification
-            $userTags
+            $tags
         );
 
         $numbers = range(1, ORM\UserFixtures::count());
@@ -146,9 +147,9 @@ class ArticleFixtures
             $otherUser = $manager->merge($fixture->getReference('user-'.$numbers[$j]));
             if ($otherUser == $user) continue;
             
-            $userTags = array();
+            $tags = array();
             for ($k = 1; $k < rand(1, 3); $k++) {
-                $userTags[] = $manager->merge($fixture->getReference('user_tag-'.rand(1, 10)));
+                $tags[] = $manager->merge($fixture->getReference('tag-'.rand(1, 10)));
             }
 
             $article->addUser(
@@ -156,7 +157,7 @@ class ArticleFixtures
                 !rand(0, 3), // admin
                 EntityUser::STATUS_PENDING,
                 true, // notification
-                $userTags
+                $tags
             );
         }
 

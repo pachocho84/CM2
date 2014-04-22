@@ -7,17 +7,17 @@ use Doctrine\ORM\Mapping as ORM;
 // TODO: reinsert unique constraint:
 /*
  *     uniqueConstraints={@ORM\UniqueConstraint(columns={
- *         "user_id", "user_tag_id"
+ *         "pageUser_id", "pageUser_tag_id"
  *     })}
  */
  
 /**
- * UserUserTag
+ * PagePageTag
  *
  * @ORM\Entity
- * @ORM\Table(name="user_user_tag")
+ * @ORM\Table(name="page_user_tag")
  */
-class UserUserTag
+class PageUserTag
 {     
     /**
      * @var integer
@@ -29,26 +29,26 @@ class UserUserTag
     protected $id;
 
     /**
-     * @ORM\Column(name="user_id", type="integer")
+     * @ORM\Column(name="page_user_id", type="integer")
      */
-    private $userId;
+    private $pageUserId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="userUserTags")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\ManyToOne(targetEntity="PageUser", inversedBy="pageUserTags")
+     * @ORM\JoinColumn(name="page_user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
-    private $user;
+    private $pageUser;
 
     /**
-     * @ORM\Column(name="user_tag_id", type="integer")
+     * @ORM\Column(name="tag_id", type="integer")
      */
-    private $userTagId;
+    private $tagId;
     
     /**
-     * @ORM\ManyToOne(targetEntity="UserTag", inversedBy="userTagUsers")
-     * @ORM\JoinColumn(name="user_tag_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Tag", inversedBy="tagPageUsers")
+     * @ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
-    private $userTag;
+    private $tag;
 
     /**
      * @var integer
@@ -73,25 +73,25 @@ class UserUserTag
     }
 
     /**
-     * Get userId
+     * Get pageUserId
      *
      * @return integer 
      */
-    public function getUserId()
+    public function getPageUserId()
     {
-        return $this->userId;
+        return $this->pageUserId;
     }
 
     /**
      * Set entity
      *
-     * @param User $entity
-     * @return EntityUser
+     * @param Page $entity
+     * @return EntityPage
      */
-    public function setUser(User $user = null)
+    public function setPageUser(PageUser $pageUser = null)
     {
-        $this->user = $user;
-        $this->userId = $user->getId();
+        $this->pageUser = $pageUser;
+        $this->pageUserId = $pageUser->getId();
     
         return $this;
     }
@@ -99,52 +99,54 @@ class UserUserTag
     /**
      * Get entity
      *
-     * @return User 
+     * @return Page 
      */
-    public function getUser()
+    public function getPageUser()
     {
-        return $this->user;
+        return $this->pageUser;
     }
 
     /**
      * Set entity
      *
-     * @param UserTag $entity
-     * @return UserUserTag
+     * @param PageTag $entity
+     * @return PagePageTag
      */
-    public function setUserTag(UserTag $userTag = null)
+    public function setTag(Tag $tag = null)
     {
-        $this->userTag = $userTag;
-        $this->userTagId = $userTag->getId();
+        $this->tag = $tag;
+        if (!is_null($tag)) {
+            $this->tagId = $tag->getId();
+        }
     
         return $this;
     }
 
     /**
-     * Get userId
+     * Get pageUserId
      *
      * @return integer 
      */
-    public function getUserTagId()
+    public function getTagId()
     {
-        return $this->userTagId;
+        return $this->tagId;
     }
 
     /**
      * Get entity
      *
-     * @return UserTag
+     * @return PageTag
      */
-    public function getUserTag()
+    public function getTag()
     {
-        return $this->userTag;
+        return $this->Tag;
     }
 
     /**
      * Set order
      *
      * @param integer $order
-     * @return UserUserTag
+     * @return PagePageTag
      */
     public function setOrder($order)
     {

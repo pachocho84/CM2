@@ -60,11 +60,11 @@ class EntityType extends BaseEntityType
                 'type' => new EntityUserType,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'by_reference' => false,
+                'by_reference' => true,
                 'options' => array(
                     'em' => $options['em'],
                     'roles' => $options['roles'],
-                    'tags' => $options['user_tags'],
+                    'tags' => $options['tags'],
                     'locale' => $options['locale'],
                     'locales' => $options['locales'],
                 )
@@ -79,7 +79,7 @@ class EntityType extends BaseEntityType
         $resolver->setDefaults(array(
             'title' => true,
             'roles' => array(),
-            'user_tags' => array(),
+            'tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),
             'add_category' => true,

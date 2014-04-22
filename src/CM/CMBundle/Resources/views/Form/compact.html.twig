@@ -265,7 +265,7 @@
 {% endspaceless %}
 {% endblock  %}
 
-{% block cm_cmbundle_usertags_widget %}
+{% block cm_cmbundle_entityUserTags_widget %}
 {% spaceless %}
     <div class="hidden">{{ block('choice_widget') }}</div>
     {% set fake = true %}
@@ -273,21 +273,21 @@
 {% endspaceless %}
 {% endblock %}
 
-{% block _cm_cmbundle_event_entityUsers_entry_userTags_widget %}
+{% block _cm_cmbundle_event_entityUsers_entry_entityUserTags_widget %}
 {% spaceless %}
-    {{ block('cm_cmbundle_usertags_widget') }}
+    {{ block('cm_cmbundle_entityUserTags_widget') }}
 {% endspaceless %}
 {% endblock %}
 
-{% block _cm_cmbundle_disc_entityUsers_entry_userTags_widget %}
+{% block _cm_cmbundle_disc_entityUsers_entry_entityUserTags_widget %}
 {% spaceless %}
-    {{ block('cm_cmbundle_usertags_widget') }}
+    {{ block('cm_cmbundle_entityUserTags_widget') }}
 {% endspaceless %}
 {% endblock %}
 
-{% block _cm_cmbundle_article_entityUsers_entry_userTags_widget %}
+{% block _cm_cmbundle_article_entityUsers_entry_entityUserTags_widget %}
 {% spaceless %}
-    {{ block('cm_cmbundle_usertags_widget') }}
+    {{ block('cm_cmbundle_entityUserTags_widget') }}
 {% endspaceless %}
 {% endblock %}
 

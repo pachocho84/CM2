@@ -35,10 +35,10 @@ class UserRepository extends BaseRepository
             ->select('u'); 
                        
         if ($options['tags']) {
-            $query->addSelect('uut, ut, utt')
-            ->leftJoin('u.userUserTags', 'uut')
-            ->leftJoin('uut.userTag', 'ut')
-            ->leftJoin('ut.translations', 'utt');
+            $query->addSelect('ut, t, tt')
+            ->leftJoin('u.userTags', 'ut')
+            ->leftJoin('ut.tag', 't')
+            ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale']);
         }
         
         $query->andWhere('u.usernameCanonical = :slug')->setParameter('slug', $slug);
@@ -108,10 +108,10 @@ class UserRepository extends BaseRepository
     public function getWithTags($id, $options = array())
     {
         $query = $this->createQueryBuilder('u')
-            ->select('u, uut, ut, utt')
-            ->leftJoin('u.userUserTags', 'uut')
-            ->leftJoin('uut.userTag', 'ut')
-            ->leftJoin('ut.translations', 'utt', 'with', 'utt.locale = :locale')
+            ->select('u, ut, t, tt')
+            ->leftJoin('u.userTags', 'ut')
+            ->leftJoin('ut.tag', 't')
+            ->leftJoin('t.translations', 'tt', 'with', 'utt.locale = :locale')
             ->setParameter('locale', $options['locale'])
             ->andWhere('u.id = :id')->setParameter('id', $id);
         return $query->getQuery()->getSingleResult();

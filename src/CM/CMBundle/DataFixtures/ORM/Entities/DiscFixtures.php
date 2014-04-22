@@ -386,9 +386,9 @@ Angelo Formenti',
         $disc->setPost($post);
         
         /* Protagonists */
-        $userTags = array();
-        for ($j = 1; $j < rand(1, 3); $j++) {
-            $userTags[] = $manager->merge($fixture->getReference('user_tag-'.rand(1, 10)));
+        $tags = array();
+        for ($k = 1; $k < rand(1, 3); $k++) {
+            $tags[] = $manager->merge($fixture->getReference('tag-'.rand(1, 10)));
         }
         
         $disc->addUser(
@@ -396,7 +396,7 @@ Angelo Formenti',
             true, // admin
             EntityUser::STATUS_ACTIVE,
             true, // notification
-            $userTags
+            $tags
         );
 
         $numbers = range(1, ORM\UserFixtures::count());
@@ -405,9 +405,9 @@ Angelo Formenti',
             $otherUser = $manager->merge($fixture->getReference('user-'.$numbers[$j]));
             if ($otherUser == $user) continue;
             
-            $userTags = array();
+            $tags = array();
             for ($k = 1; $k < rand(1, 3); $k++) {
-                $userTags[] = $manager->merge($fixture->getReference('user_tag-'.rand(1, 10)));
+                $tags[] = $manager->merge($fixture->getReference('tag-'.rand(1, 10)));
             }
 
             $disc->addUser(
@@ -415,7 +415,7 @@ Angelo Formenti',
                 !rand(0, 3), // admin
                 EntityUser::STATUS_ACTIVE,
                 true, // notification
-                $userTags
+                $tags
             );
         }
         

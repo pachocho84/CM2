@@ -5,6 +5,7 @@ namespace CM\CMBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\Common\Collections\ArrayCollection;
+use CM\CMBundle\Model\ArrayContainer;
 
 //UNIQ_C55F6F6281257D5DA76ED395
 
@@ -75,13 +76,11 @@ class EntityUser
      * @ORM\Column(name="status", type="smallint", nullable=false)
      */
     private $status = self::STATUS_PENDING;
-    
+
     /**
-     * @var array
-     *
-     * @ORM\Column(name="user_tags", type="simple_array", nullable=true)
+     * @ORM\OneToMany(targetEntity="EntityUserTag", mappedBy="entityUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $userTags = array();
+    protected $entityUserTags;
 
     /**
      * @var boolean
@@ -89,6 +88,11 @@ class EntityUser
      * @ORM\Column(name="notification", type="boolean")
      */
     private $notification = true;
+
+    public function __construct()
+    {
+        $this->entityUserTags = new ArrayCollection;
+    }
 
     public static function className()
     {
@@ -124,8 +128,10 @@ class EntityUser
     public function setEntity(Entity $entity = null)
     {
         $this->entity = $entity;
-        $this->entityId = $entity->getId();
-    
+        if (!is_null($entity)) {
+            $this->entityId = $entity->getId();
+        }
+        
         return $this;
     }
 
@@ -158,8 +164,10 @@ class EntityUser
     public function setUser(User $user = null)
     {
         $this->user = $user;
-        $this->userId = $user->getId();
-    
+        if (!is_null($user)) {
+            $this->userId = $user->getId();
+        }
+
         return $this;
     }
 
@@ -218,58 +226,98 @@ class EntityUser
     {
         return $this->status;
     }
-    
+
     /**
-     * Add userTag
-     *
-     * @param UserTag $userTag
-     * @return EntityUser
+     * @param \CM\CMBundle\Entity\EntityEntityUser $comment
+     * @return Entity
      */
-    public function addUserTags(array $userTags)
+    public function addTag(
+        Tag $tag,
+        $order = null
+    )
     {
-        foreach ($userTags as $userTag) {
-            $this->addUserTag($userTag);
+        foreach ($this->entityUserTags as $key => $entityUserTag) {
+            if ($entityUserTag->getTagId() == $tag->getId()) {
+                return;
+            }
         }
-        
+        $entityUserTag = new EntityUserTag;
+        $entityUserTag->setEntityUser($this)
+            ->setTag($tag)
+            ->setOrder($order);
+        $this->entityUserTags[] = $entityUserTag;
+    
         return $this;
     }
-    
-    /**
-     * Add userTag
-     *
-     * @param UserTag $userTag
-     * @return EntityUser
-     */
-    public function addUserTag($userTag)
+
+    public function setEntityUserTags($entityUserTags = array())
     {
-        if (!in_array($userTag, $this->userTags)) {
-            $this->userTags[] = $userTag;
+        $this->clearTags();
+        foreach ($entityUserTags as $order => $entityUserTag) {
+            $entityUserTag->setEntityUser($this)
+                ->setOrder($order);
+            $this->entityUserTags[] = $entityUserTag;
         }
-        
+
         return $this;
     }
-    
-    /**
-     * Remove userTag
-     *
-     * @param UserTag $userTag
-     * return EntityUser
-     */
-    public function removeUserTag($userTag)
+
+    public function addEntityUserTag($entityUserTag)
     {
-        if(($key = array_search($userTag, $this->getUserTags())) !== false) {
-            unset($this->userTags[$key]);
+        if (!$this->entityUserTags->contains($entityUserTag)) {
+            $entityUserTag->setEntityUser($this);
+            $this->entityUserTags[] = $entityUserTag;
         }
+
+        return $this;
     }
-    
+
     /**
-     * Get userTags
-     *
-     * @return array
+     * @param \CM\CMBundle\Entity\EntityEntityUser $entityUsers
      */
-    public function getUserTags()
+    public function removeEntityUserTag(EntityUserTag $entityUserTag)
     {
-        return $this->userTags;
+        $this->entityUserTags->removeElement($entityUserTag);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function clearTags()
+    {
+        return $this->entityUserTags->clear();
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEntityUserTags()
+    {
+        return $this->entityUserTags;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTags()
+    {
+        $tags = array();
+        foreach ($this->entityUserTags as $entityUserTag) {
+            $tags[] = $entityUserTag->getTag();
+        }
+        return $tags;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTagsIds()
+    {
+        $tags = array();
+        foreach ($this->entityUserTags as $entityUserTag) {
+            $tags[] = $entityUserTag->getTagId();
+        }
+        return $tags;
     }
 
     /**

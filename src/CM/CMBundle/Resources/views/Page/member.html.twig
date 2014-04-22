@@ -1,10 +1,10 @@
 <div protagonist_new_id="0" class="collection-item protagonists_user media ajax-link-target alert alert-{% if member.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_ACTIVE') %}success{% else %}warning{% endif %}" user_id="{{ member.userId }}">
 
     <div class="immagine">
-        {{ show_img_box(member.user.img|imagine_filter('medium'), {'width': 75, 'height': 75, 'offset': member.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
+        {{ show_img_box(member.user.img|imagine_filter('medium'), {'width': 75, 'height': 75, 'offset': member.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) }}
     </div>
 
-    <div class="contenuto">
+    <div class="content">
 
         <h3><a href="{{ path('user_show', {'slug': member.user.slug}) }}">{{ member.user }}</a></h3>
 
@@ -20,12 +20,12 @@
             {#<?php if ($page->getUserId() != $member->getUserId()): ?>#}
 
                 {% if member.admin %}
-                    <a href="{{ path('page_remove_admin', {'id': member.id}) }}" class="btn btn-default ajax-link">{{ icon('Down')|raw }} {{ 'Remove as admin'|trans }}</a>
+                    <a href="{{ path('page_remove_admin', {'id': member.id}) }}" class="btn btn-default ajax-link">{{ icon('Down') }} {{ 'Remove as admin'|trans }}</a>
                 {% else %}
-                    <a href="{{ path('page_promote_admin', {'id': member.id}) }}" class="btn btn-default ajax-link">{{ icon('Up')|raw }} {{ 'Promote to admin'|trans }}</a>
+                    <a href="{{ path('page_promote_admin', {'id': member.id}) }}" class="btn btn-default ajax-link">{{ icon('Up') }} {{ 'Promote to admin'|trans }}</a>
                 {% endif %}
 
-                <a href="{{ path('page_remove_user', {'id': member.id})}}" class="btn btn-default ajax-link">{{ icon('Minus')|raw }} {{ 'Remove member'|trans }}</a>
+                <a href="{{ path('page_remove_user', {'id': member.id})}}" class="btn btn-default ajax-link">{{ icon('Minus') }} {{ 'Remove member'|trans }}</a>
 
             {% endif %}
 

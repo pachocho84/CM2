@@ -42,10 +42,9 @@ class EntityUserController extends Controller
     public function protagonistsAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-            
+        
         return array(
-            'protagonists' => $em->getRepository('CMBundle:EntityUser')->getActiveForEntity($id),
-            'tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()))
+            'protagonists' => $em->getRepository('CMBundle:EntityUser')->getActiveForEntity($id, array('locale' => $request->getLocale()))
         );
     }
 

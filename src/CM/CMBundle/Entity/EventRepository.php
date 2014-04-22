@@ -30,6 +30,7 @@ class EventRepository extends BaseRepository
             'paginate'      => true,
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'protagonists'  => false,
+            'tags'  => false,
             'limit'         => 25,
         ), $options);
     }
@@ -63,7 +64,7 @@ class EventRepository extends BaseRepository
             ->leftJoin('p.comments', 'c')
             ->leftJoin('l.user', 'lu')
             ->leftJoin('c.user', 'cu');
-            
+
         if ($options['protagonists']) {
             $query->addSelect('eu, us')
                 ->join('e.entityUsers', 'eu', '', '', 'eu.userId')
@@ -163,7 +164,7 @@ class EventRepository extends BaseRepository
         $options = self::getOptions($options);
         
         $query = $this->createQueryBuilder('e')
-            ->select('e, t, ec, ect, i, p, pl, plu, pc, pcu, u, pg, gr')
+            ->select('e, t, ec, ect, i, p, pl, plu, pc, pcu, u, pg')
             ->join('e.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
             ->join('e.category', 'ec')
             ->join('ec.translations', 'ect', 'with', 'ect.locale = :locale')->setParameter('locale', $options['locale'])
@@ -178,6 +179,17 @@ class EventRepository extends BaseRepository
             ->andWhere('e.id = :id')->setParameter('id', $id);
         if (!is_null($options['slug'])) {
             $query->andWhere('t.slug = :slug')->setParameter('slug', $options['slug']);
+        }
+        if ($options['protagonists']) {
+            $query->addSelect('eu, us')
+                ->join('e.entityUsers', 'eu')
+                ->join('eu.user', 'us');
+        }
+        if ($options['tags']) {
+            $query->addSelect('eut, ta, tat')
+                ->leftJoin('eu.entityUserTags', 'eut')
+                ->leftJoin('eut.tag', 'ta')
+                ->leftJoin('ta.translations', 'tat', 'with', 'tat.locale = :locale');
         }
         return $query->getQuery()->getSingleResult();
     }

@@ -6,16 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
- * UserTagTranslation
+ * TagTranslation
  *
  * @ORM\Entity
- * @ORM\Table(name="user_tag_translation",
+ * @ORM\Table(name="tag_translation",
  *     uniqueConstraints={@ORM\UniqueConstraint(columns={
  *         "translatable_id", "locale"
  *     })}
  * )
  */
-class UserTagTranslation
+class TagTranslation
 {
     use ORMBehaviors\Sluggable\Sluggable;
     use ORMBehaviors\Translatable\Translation;
@@ -26,6 +26,11 @@ class UserTagTranslation
      * @ORM\Column(name="name", type="string", length=50)
      */
     private $name;
+    
+    public function __toString()
+    {
+        return $this->getName();
+    }
 
     public static function className()
     {
