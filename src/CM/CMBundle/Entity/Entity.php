@@ -118,7 +118,7 @@ abstract class Entity
     private $posts;
 
     /**
-     * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity", cascade={"persist", "remove"}, orphanRemoval=true)
      * @Assert\Valid
      */
     private $entityUsers;
@@ -491,8 +491,8 @@ abstract class Entity
     public function addEntityUser(EntityUser $entityUser)
     {
         if (!$this->entityUsers->contains($entityUser)) {
-            $this->entityUsers[] = $entityUser;
             $entityUser->setEntity($this);
+            $this->entityUsers[] = $entityUser;
         }
 
         return $this;

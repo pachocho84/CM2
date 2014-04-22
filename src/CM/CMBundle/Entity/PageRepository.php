@@ -63,7 +63,7 @@ class PageRepository extends BaseRepository
             ->from('CMBundle:User', 'u')
             ->join('u.userPages', 'pu')
             ->leftJoin('pu.pageUserTags', 'put')
-            ->leftJoin('ut.tag', 't')
+            ->leftJoin('put.tag', 't')
             ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
             ->where('pu.admin = '.true)
             ->andWhere('pu.pageId = :page_id')->setParameter('page_id', $pageId)

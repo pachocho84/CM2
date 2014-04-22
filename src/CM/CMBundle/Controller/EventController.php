@@ -194,8 +194,6 @@ class EventController extends Controller
 
             // $event->addMultimedia(new Multimedia);
 
-            $event->addEventDate(new EventDate);
-
             $post = $this->get('cm.post_center')->getNewPost($user, $user);
             $event->setPost($post);
         } else {
@@ -205,21 +203,13 @@ class EventController extends Controller
                 'protagonists' => true,
                 'tags' => true
             ));
+
             if (!$this->get('cm.user_authentication')->canManage($event)) {
                 throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }
-            // TODO: retrieve images from event
         }
 
-        $oldEntityUsers = array();
-        foreach ($event->getEntityUsers() as $oldEntityUser) {
-            $oldEntityUsers[] = $oldEntityUser;
-        }
-
-        $oldEventDates = array();
-        foreach ($event->getEventDates() as $oldEventDate) {
-            $oldEventDates[] = $oldEventDate;
-        }
+        $event->addEventDate(new EventDate);
         
         // TODO: retrieve locales from user
  
@@ -236,47 +226,7 @@ class EventController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            foreach ($event->getEventDates() as $eventDate) {
-                foreach ($oldEventDates as $key => $toDel) {
-                    if ($toDel->getId() === $eventDate->getId()) {
-                        unset($oldEventDates[$key]);
-                    }
-                }
-            }
-    
-            // remove the relationship between the tag and the Task
-            foreach ($oldEventDates as $eventDate) {
-                // remove the Task from the Tag
-                $event->removeEventDate($eventDate);
-    
-                // if it were a ManyToOne relationship, remove the relationship like this
-                // $tag->setTask(null);
-    
-                // if you wanted to delete the Tag entirely, you can also do that
-                $em->remove($eventDate);
-            }
-
-            foreach ($event->getEntityUsers() as $entityUser) {
-                foreach ($oldEntityUsers as $key => $toDel) {
-                    if ($toDel->getId() === $entityUser->getId()) {
-                        unset($oldEntityUsers[$key]);
-                    }
-                }
-            }
-
-            // remove the relationship between the tag and the Task
-            foreach ($oldEntityUsers as $entityUser) {
-                // remove the Task from the Tag
-                $event->removeEntityUser($entityUser);
-
-                $entityUser->setEntity(null);
-                $entityUser->setUser(null);
-    
-                $em->remove($entityUser);
-            }
-
             $em->persist($event);
-
             $em->flush();
 
             return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));

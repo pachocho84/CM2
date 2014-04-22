@@ -140,8 +140,8 @@ class RequestCenter
         }
     }
 
-    public function removeRequest($user, $options = array())
+    public function removeRequests($userId, $options)
     {
-        $this->em->getRepository('CMBundle:Request')->delete($user, $options);
+        $this->em->getRepository('CMBundle:Request')->delete($userId, $options);
     }
 }

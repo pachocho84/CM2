@@ -222,10 +222,11 @@ class DoctrineEventsListener
     {
         $entity = $entityUser->getEntity();
         $post = $entity->getPost();
-        $user = $post->getUser();
-        $page = $post->getPage();
+        $userId = $post->getUserId();
+        $pageId = $post->getPageId();
 
-        $this->get('cm.request_center')->removeRequest($user, get_class($entity), $entity->getId(), 'sent');
+        $this->get('cm.notification_center')->removeNotifications($userId, $entity->className(), $entity->getId(), Notification::TYPE_REQUEST_ACCEPTED);
+        $this->get('cm.request_center')->removeRequests(null, array('fromUserId' => $userId, 'pageId' => $pageId, 'entityId' => $entity->getId()));
     }
 
     private function pageUserPersistedRoutine(PageUser &$pageUser, EntityManager $em)
@@ -285,7 +286,7 @@ class DoctrineEventsListener
         $user = $post->getUser();
         $page = $post->getPage();
 
-        $this->get('cm.request_center')->removeRequest($user, get_class($page), $page->getId(), 'sent');
+        $this->get('cm.request_center')->removeRequests($user, get_class($page), $page->getId(), 'sent');
     }
     
     private function postAggregatePersistedRoutine(Post &$post, EntityManager $em)
