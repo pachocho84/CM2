@@ -55,24 +55,41 @@ function initRecipients() {
 }
 
 $(function() {
-    /* MENU */
-    $('#menu ul.pull-right li.menu-tab.menu-tab-ajax a').on('click', function(event) {
-        if ($(this).parent('li.dropdown.menu-tab').hasClass('open')) {
-            return true;
-        }
 
-        $.get(event.currentTarget.href, function(data) {
-            $(event.target).closest('li.menu-tab').find('.dropdown-menu-body .dropdown-menu-loader').hide();
-            $(event.target).closest('li.menu-tab').find('.dropdown-menu-body .media-list').html(data);
-            $(event.target).closest('li.menu-tab').find('.countNew').empty();
-        });
+
+
+    /* MENU */
+    $('#menu ul.pull-left li.dropdown').hover(function (e) {
+        timeout = setTimeout(function(){
+            $(e.currentTarget).addClass('open'); 
+        }, 150); 
+    }, function (e) { 
+        clearTimeout(timeout);
+        $(e.currentTarget).removeClass('open'); 
     });
-    $('#menu ul.nav.pull-right').on('click', '.dropdown-menu', function(event) {
+    $('#menu ul.pull-right li.menu-tab.menu-tab-ajax a').on('click', function(event) {
+        if ($(document).width() > 767) {
+            if ($(this).parent('li.dropdown.menu-tab').hasClass('open')) {
+                return true;
+            }
+    
+            $.get(event.currentTarget.href, function(data) {
+                $(event.target).closest('li.menu-tab').find('.dropdown-menu-body .dropdown-menu-loader').hide();
+                $(event.target).closest('li.menu-tab').find('.dropdown-menu-body .media-list').html(data);
+                $(event.target).closest('li.menu-tab').find('.dropdown-menu-body .media-list .unread').removeClass('unread', 2000);
+                $(event.target).closest('li.menu-tab').find('.countNew').empty();
+            });
+        } else {
+            event.stopPropagation();
+            location.href = event.currentTarget.href;
+        }
+    });
+    $('#menu ul.pull-right').on('click', '.dropdown-menu', function(event) {
         if (!$(event.target).hasClass('ajax-link')) {
             event.stopPropagation();
         }
     });
-    $('#menu ul.nav.pull-right .dropdown-menu-body').on('mousewheel', function(event) {
+    $('#menu ul.pull-right .dropdown-menu-body').on('mousewheel', function(event) {
         totalHeight = 0;
         $(this).children().each(function(){
             totalHeight = totalHeight + $(this).outerHeight();
@@ -83,6 +100,34 @@ $(function() {
             event.preventDefault();
         }
     });
+    
+    
+
+    /* SCROLL FIXED */
+    var initialTop = $('#menu').position().top;
+    var oldTop = $(window).scrollTop();
+
+    if (oldTop > initialTop) {
+        $('#menu').addClass('fixed');
+    }
+
+    $(window).scroll(function(event) {
+        if ($('#body').hasClass('fixing')) return;
+
+        var currentTop = $(window).scrollTop();
+
+        if (oldTop < initialTop && currentTop > initialTop) {
+            $('#menu').addClass('fixed');
+        }
+        if (oldTop > initialTop && currentTop <= initialTop) {
+            $('#menu').removeClass('fixed');
+        }
+
+        oldTop = currentTop;
+    });
+    
+    
+    
     // search bar
     $('#search-bar').on('click', function(event) {
         event.preventDefault();
@@ -116,18 +161,6 @@ $(function() {
         var view = item.view || item.label;
         return $('<li><a href="' + url + '">' + view + '</a></li>').appendTo(ul);
     };
-    
-    // $('#menu').hcSticky({
-    //     noContainer: true
-    // });
-  
-  
-  
-    /* SIDEBAR */
-    // $('[sticky]').hcSticky({
-    //     top: 50,
-    //     bottom: 15
-    // });
     
     
     
@@ -232,31 +265,6 @@ $(function() {
                 $(event.target).closest('.ajax-form-target').replaceWith(data);
             }
         });
-    });
-    
-    
-
-    /* SCROLL FIXED */
-    var initialTop = $('#menu').position().top;
-    var oldTop = $(window).scrollTop();
-
-    if (oldTop > initialTop) {
-        $('#menu').addClass('fixed');
-    }
-
-    $(window).scroll(function(event) {
-        if ($('#body').hasClass('fixing')) return;
-
-        var currentTop = $(window).scrollTop();
-
-        if (oldTop < initialTop && currentTop > initialTop) {
-            $('#menu').addClass('fixed');
-        }
-        if (oldTop > initialTop && currentTop <= initialTop) {
-            $('#menu').removeClass('fixed');
-        }
-
-        oldTop = currentTop;
     });
 
 

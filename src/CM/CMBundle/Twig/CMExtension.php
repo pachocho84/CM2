@@ -858,36 +858,22 @@ class CMExtension extends \Twig_Extension
     function getIcon($object)
     {
         switch ($object) {
-            case 'Up':
-                return '<span class="glyphicon glyphicon-chevron-up"></span>';
-            case 'Down':
-                return '<span class="glyphicon glyphicon-chevron-down"></span>';
-            case 'Prev':
-            case 'Back':
-                return '<span class="glyphicon glyphicon-chevron-left"></span>';
-            case 'Next':
-                return '<span class="glyphicon glyphicon-chevron-right"></span>';
-            case 'Add':
-                return '<span class="glyphicon glyphicon-plus"></span>';
-            case 'Remove':
-            case 'Delete':
-                return '<span class="glyphicon glyphicon-remove"></span>';
-                break;
-            case 'Play':
-                return '<span class="glyphicon glyphicon-play-circle"></span>';
             case 'Home':
                 return '<span class="glyphicon glyphicon-home"></span>';
             case 'Event':
+            case 'Events':
             case 'Calendar':
             case 'Event_'.Post::TYPE_CREATION:
                 return '<span class="glyphicon glyphicon-calendar"></span>';
             case 'Disc':
+            case 'Discs':
             case 'Disc_'.Post::TYPE_CREATION:
                 return '<span class="glyphicons albums"></span>';
             case 'Track':
             case 'Track_'.Post::TYPE_CREATION:
                 return '<span class="glyphicon glyphicon-headphones"></span>';
             case 'Article':
+            case 'Articles':
             case 'Review':
             case 'Article_'.Post::TYPE_CREATION:
                 return '<span class="glyphicon glyphicon-file"></span>';
@@ -899,23 +885,28 @@ class CMExtension extends \Twig_Extension
             case 'ImageAlbum':
             case 'ImageAlbum_'.Post::TYPE_CREATION:
                 return '<span class="glyphicon glyphicon-picture"></span>';
+            case 'Photo':
+                return '<span class="glyphicons camera"></span>';
             case 'Multimedia':
             case 'Multimedia_'.Post::TYPE_CREATION:
                 return '<span class="glyphicon glyphicon-film"></span>';
             case 'Page':
+            case 'Pages':
             case 'Page_'.Post::TYPE_CREATION:
                 return '<span class="glyphicon glyphicon-list-alt"></span>';
+            case 'User':
+                return '<span class="glyphicon glyphicon-user"></span>';
             case 'Users':
             case 'Protagonist':
                 return '<span class="glyphicons group"></span>';
+            case 'User_add':
+            case 'User_'.Post::TYPE_REGISTRATION:
+                return '<span class="glyphicon-user-add"></span>';
             case 'Fan':
+            case 'Fans':
             case 'Fan_'.Post::TYPE_FAN_USER:
             case 'Fan_'.Post::TYPE_FAN_PAGE:
                 return '<span class="glyphicon glyphicon-flag"></span>';
-            case 'User':
-                return '<span class="glyphicon glyphicon-user"></span>';
-            case 'User_'.Post::TYPE_REGISTRATION:
-                return '<span class="glyphicon-user-add"></span>';
             case 'Biography':
             case 'Biography_'.Post::TYPE_CREATION:
             case 'Biography_'.Post::TYPE_UPDATE:
@@ -945,29 +936,10 @@ class CMExtension extends \Twig_Extension
             case 'Education':
             case 'Education_'.Post::TYPE_UPDATE:
                 return '<span class="glyphicons book_open"></span>';
-            case 'List':
-                return '<span class="glyphicon glyphicon-list"></span>';
-            case 'Plus':
-                return '<span class="glyphicon glyphicon-plus"></span>';
-            case 'Minus':
-                return '<span class="glyphicon glyphicon-minus"></span>';
-            case 'Crown':
-                return '<span class="glyphicons crown"></span>';
-            case 'Ok':
-                return '<span class="glyphicon glyphicon-ok"></span>';
-            case 'Archive':
-                return '<span class="glyphicon glyphicon-folder-close"></span>';
-            case 'Time':
-                return '<span class="glyphicon glyphicon-time"></span>';
-            case 'Map':
-                return '<span class="glyphicon glyphicon-map-marker"></span>';
-            case 'Edit':
-                return '<span class="glyphicon glyphicon-pencil"></span>';
             case 'Alert':
                 return '<span class="glyphicon glyphicon-exclamation-sign"></span>';
             case 'Message':
                 return '<span class="glyphicon glyphicon-envelope"></span>';
-            case 'Globe':
             case 'Notification':
                 return '<span class="glyphicon glyphicon-globe"></span>';
             case 'Request':
@@ -975,16 +947,22 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicon glyphicon-bell"></span>';
             case 'Request_out':
                 return '<span class="glyphicon glyphicon-share-alt"></span>';
+            case 'Relations':
+                return '<span class="glyphicons group"></span>';
             case 'Relation':
             case 'Relation_'.Post::TYPE_CREATION:
                 return '<span class="glyphicons user_add"></span>';
+            case 'Login':
+                return '<span class="glyphicons lock"></span>';
+            case 'Sponsored':
+                return '<span class="glyphicon glyphicon-bullhorn"></span>';
+            case 'Vip':
+                return '<span class="glyphicon glyphicon-fire"></span>';
             case 'Actions':
             case 'Options':
                 return '<span class="glyphicons cogwheels"></span>';
             case 'Search':
                 return '<span class="glyphicon glyphicon-search"></span>';
-            case 'Photo':
-                return '<span class="glyphicons camera"></span>';
             case 'Folder':
             case 'Folder_Close':
                 return '<span class="glyphicon glyphicon-folder-close"></span>';
@@ -994,12 +972,41 @@ class CMExtension extends \Twig_Extension
                 return '<span class="glyphicons pushpin"></span>';
             case 'Fullscreen':
                 return '<span class="glyphicon glyphicon-fullscreen"></span>';
-            case 'Login':
-                return '<span class="glyphicons lock"></span>';
-            case 'Sponsored':
-                return '<span class="glyphicon glyphicon-bullhorn"></span>';
-            case 'Vip':
-                return '<span class="glyphicon glyphicon-fire"></span>';
+            case 'List':
+                return '<span class="glyphicon glyphicon-list"></span>';
+            case 'Minus':
+                return '<span class="glyphicon glyphicon-minus"></span>';
+            case 'Ok':
+            case 'Check':
+                return '<span class="glyphicon glyphicon-ok"></span>';
+            case 'Archive':
+                return '<span class="glyphicon glyphicon-folder-close"></span>';
+            case 'Time':
+                return '<span class="glyphicon glyphicon-time"></span>';
+            case 'Map':
+                return '<span class="glyphicon glyphicon-map-marker"></span>';
+            case 'Up':
+                return '<span class="glyphicon glyphicon-chevron-up"></span>';
+            case 'Down':
+                return '<span class="glyphicon glyphicon-chevron-down"></span>';
+            case 'Prev':
+            case 'Back':
+                return '<span class="glyphicon glyphicon-chevron-left"></span>';
+            case 'Next':
+                return '<span class="glyphicon glyphicon-chevron-right"></span>';
+            case 'Add':
+            case 'Plus':
+                return '<span class="glyphicon glyphicon-plus"></span>';
+            case 'Remove':
+            case 'Delete':
+                return '<span class="glyphicon glyphicon-remove"></span>';
+            case 'Edit':
+            case 'Update':
+                return '<span class="glyphicon glyphicon-pencil"></span>';
+            case 'Play':
+                return '<span class="glyphicon glyphicon-play-circle"></span>';
+            case 'Logout':
+                return '<span class="glyphicon glyphicon-off"></span>';
             default:
                 return '<span style="color:red;">missing glyphicon for '.$object.'</span>';
         }

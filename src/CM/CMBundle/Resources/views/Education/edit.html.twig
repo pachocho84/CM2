@@ -1,6 +1,28 @@
 {% extends 'CMBundle:User:accountLayout.html.twig' %}
 
+
+
 {% block section %}{{ 'Education'|trans }}{% endblock %}
+
+{% block main %}
+    <div class="box">
+        <div class="box-heading">
+            <h2>{{ icon('Education') }} {{ block('section') }}</h2>
+        </div>
+
+        <div class="box-body">
+            {{ form_start(form) }}
+                {{ form_row(form) }}
+                <div class="text-right">
+                    <a href="{{ path(app.request.attributes.get('_route')) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+                    <button type="submit" name="commit" class="btn btn-primary">{{ 'Save'|trans }}</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+
 
 {% form_theme form _self %}
 
@@ -59,24 +81,6 @@
             <div class="col-sm-12">
                 {{ form_row(form.description) }}
             </div>
-        </div>
-    </div>
-{% endblock %}
-
-{% block main %}
-    <div class="box">
-        <div class="box-heading">
-            <h2>{{ icon('Education') }} {{ block('section') }}</h2>
-        </div>
-
-        <div class="box-body">
-            {{ form_start(form) }}
-                {{ form_row(form) }}
-                <div class="text-right">
-                    <a href="{{ path(app.request.attributes.get('_route')) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
-                    <button type="submit" name="commit" class="btn btn-primary">{{ 'Save'|trans }}</button>
-                </div>
-            {{ form_end(form) }}
         </div>
     </div>
 {% endblock %}

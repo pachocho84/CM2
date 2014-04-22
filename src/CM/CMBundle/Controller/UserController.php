@@ -265,7 +265,7 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $pageUsers = $em->getRepository('CMBundle:PageUser')->findBy(array('userId' => $this->getUser()->getId()));
+        $pageUsers = $em->getRepository('CMBundle:PageUser')->getWithPage($this->getUser()->getId(), array('paginate' => false));
 
         $form = $this->createForm(new PageUserCollectionType, array('pages' => $pageUsers), array(
             'cascade_validation' => true

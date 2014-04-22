@@ -5,7 +5,7 @@
         <span class="countNew" id="messagesCounter">{% if newMessages > 0 %}{{ newMessages }}{% endif %}</span>
     </a>
     
-    <div class="dropdown-menu dropdown-menu-right">
+    <div class="dropdown-menu">
 
         <div class="dropdown-menu-header">
             <h3>{{ 'Messages' | trans }}</h3>
@@ -31,7 +31,7 @@
         <span class="countNew" id="requestsCounter">{% if newRequests > 0 %}{{ newRequests }}{% endif %}</span>
     </a>
     
-    <div class="dropdown-menu dropdown-menu-right">
+    <div class="dropdown-menu">
 
         <div class="dropdown-menu-header">
             <h3>{{ 'Requests'|trans }}</h3>
@@ -57,7 +57,7 @@
         <span class="countNew" id="notificationsCounter">{% if newNotifications > 0 %}{{ newNotifications }}{% endif %}</span>
     </a>
     
-    <div class="dropdown-menu dropdown-menu-right">
+    <div class="dropdown-menu">
 
         <div class="dropdown-menu-header">
             <h3>{{ 'Notifications'|trans }}</h3>
@@ -76,6 +76,7 @@
 
 
 
+{#
 <li class="dropdown menu-tab">
 
     <a href="{{ path('user_show', {"slug": app.getUser.slug}) }}"  id="menu-user" class="dropdown-toggle" data-toggle="dropdown">{{ icon('User') }}</a>
@@ -94,3 +95,4 @@
         <li><a href="{{ path('fos_user_security_logout') }}">{{ 'Logout'|trans }}</a></li>
     </ul>
 </li>
+#}
