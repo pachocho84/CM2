@@ -10,7 +10,7 @@
         <div class="col-md-4 col-lg-3">
             <div class="heading-buttons">
                 {% block headingButtons %}{% endblock %}
-                <a href="{{ path('user_show', {'slug': app.user.slug}) }}" class="btn btn-default">{{ icon('User') }} {{ 'View profile'|trans }}</a>
+                <a href="{{ path('user_show', {'slug': app.user.slug}) }}" class="btn btn-default btn-sm">{{ icon('User') }} {{ 'View profile'|trans }}</a>
             </div>
         </div>
     </div>
@@ -43,7 +43,7 @@
                         <a href="{{ path('user_biography_edit') }}">{{ icon('Biography') }} {{ 'Biography'|trans }}</a>
                     </li>
                     <li{% if action_name() == 'tagsedit' %} class="active"{% endif %}>
-                        <a href="{{ path('user_tags_edit') }}"><span class="glyphicon glyphicon-tags"></span> {{ 'Tags'|trans }}</a>
+                        <a href="{{ path('user_tags_edit') }}">{{ icon('Tags') }} {{ 'Tags'|trans }}</a>
                     </li>
                     <li{% if action_name() == 'pages' %} class="active"{% endif %}>
                         <a href="{{ path('user_pages') }}">{{ icon('Page') }} {{ 'Pages'|trans }}</a>
@@ -55,8 +55,9 @@
                         <a href="{{ path('user_work') }}">{{ icon('Work') }} {{ 'Work'|trans }}</a>
                     </li>
                     <li{% if controller_name() == 'relation' %} class="active"{% endif %}>
-                        <a href="{{ path('relation_user') }}"><span class="glyphicons git_branch"></span> {{ 'Relations'|trans }}</a>
+                        <a href="{{ path('relation_user') }}">{{ icon('Relations') }} {{ 'Relations'|trans }}</a>
                     </li>
+                    <li><a href="{{ path('fos_user_security_logout') }}">{{ icon('Logout') }} {{ 'Logout'|trans }}</a></li>
                 </ul>
             </div>
         </div>

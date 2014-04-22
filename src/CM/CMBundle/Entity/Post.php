@@ -387,9 +387,9 @@ class Post
     }
 
     /**
-     * Get entity
+     * Get page_id
      *
-     * @return Entity 
+     * @return PageId 
      */
     public function getPageId()
     {
@@ -397,10 +397,10 @@ class Post
     }
 
     /**
-     * Set entity
+     * Set page
      *
-     * @param Entity $entity
-     * @return Image
+     * @param Page $page
+     * @return Page
      */
     public function setPage(Page $page = null)
     {
@@ -413,9 +413,9 @@ class Post
     }
 
     /**
-     * Get entity
+     * Get page
      *
-     * @return Entity 
+     * @return Page 
      */
     public function getPage()
     {

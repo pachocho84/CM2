@@ -66,6 +66,7 @@ function insertRelationItem(c, d, a) {
     $(c).closest('div').replaceWith(d.item);
 }
 
+/*
 function initPopoverPublisher($elem) {
     if ($elem.attr('popover-publisher') == 'init') return;
     $elem.attr('popover-publisher', 'init');
@@ -86,7 +87,6 @@ function initPopoverPublisher($elem) {
             });
         }
     };
-
     $elem.popover({
         selector: '[popover-publisher]',
         trigger: 'manual',
@@ -113,6 +113,7 @@ function initPopoverPublisher($elem) {
         hoverIn($elem);
     }
 }
+*/
 
 function initSlideshow($slideshow) {
     $slideshow.cycle({
@@ -141,10 +142,64 @@ $(function() {
     UserActive.begin();
 
     /* PUBLISHER POPOVER */
-    initPopoverPublisher($('[popover-publisher][popover-publisher!="init"]'));
+    $(document).on('mouseenter mouseleave', '[popover-publisher]', function(event) {
+        if (event.type == 'mouseenter') {
+            $popover = $(event.currentTarget).popover({
+                selector: '[popover-publisher]',
+                trigger: 'manual',
+                placement: 'auto top',
+                container: 'body',
+                html: true,
+            });
+            timeout = setTimeout(function() {
+                if ($popover.attr('popover-publisher') != 'loaded') {
+                    $.ajax({
+                        url: $popover.attr('data-href'),
+                        async: false
+                    }).done(function(data) {
+                        $('[popover-publisher][data-href="' + $popover.attr('data-href') + '"]').attr('popover-publisher', 'loaded').attr('data-content', data);
+                    });
+                } 
+                $popover.popover('show');
+            }, 250); 
+        } else {
+            clearTimeout(timeout);
+            $popover.popover('destroy');
+        }
+    });
+/*
+    popover.hover(function (e) {
+        timeout = setTimeout(function(e) {
+            popover.popover({
+                selector: '[popover-publisher]',
+                trigger: 'manual',
+                placement: 'auto top',
+                delay: {show: 700, hide: 250},
+                container: 'body',
+                html: true,
+                content: function() {
+                    var content;
+                    $.ajax({
+                        url: $(this).attr('data-href'),
+                        async: false
+                    }).done(function(data) {
+                        content = data;
+                    });
+                    return content;
+                }
+            }).popover('show'); 
+        }, 500); 
+    }, function (e) { 
+        clearTimeout(timeout);
+        popover.popover('hide'); 
+    });
+*/
+/*     initPopoverPublisher($('[popover-publisher][popover-publisher!="init"]')); */
+/*
     $(document).on('mouseenter', '[popover-publisher][popover-publisher!="init"]', function(event) {
         initPopoverPublisher($(event.currentTarget));
     });
+*/
     // function initPopoverPublisher($elem) {
     //     if ($elem.attr('popover-publisher') == 'active') return;
 

@@ -37,6 +37,21 @@ class PageUserRepository extends BaseRepository
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
+    public function getWithPage($userId, $options = array())
+    {
+        $options = self::getOptions($options);
+        
+        $query = $this->createQueryBuilder('pu')
+            ->select('pu, p, u')
+            ->leftJoin('pu.user', 'u')
+            ->leftJoin('pu.page', 'p')
+            ->where('pu.status in (:status)')->setParameter('status', $options['status'])
+            ->andWhere('pu.userId = :user_id')->setParameter('user_id', $userId)
+            ->orderBy('p.name');
+
+        return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+
     public function updateUserTags($id, array $userTags)
     {  
         $this->createQueryBuilder('pu')

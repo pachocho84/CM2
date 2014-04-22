@@ -9,12 +9,13 @@
             <h2>{{ icon('Biography') }} {{ block('section') }}</h2>
         </div>
         <div class="box-body">
-            {{ form(form) }}
-                
-            <div class="text-right">
-                <a href="{{ path(app.request.attributes.get('_route')) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
-                <button type="submit" name="commit" class="btn btn-primary">{{ 'Save'|trans }}</button>
-            </div>
+            {{ form_start(form) }}
+                {{ form_row(form) }}
+                <div class="text-right">
+                    <a href="{{ path(app.request.attributes.get('_route')) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+                    <button type="submit" name="commit" class="btn btn-primary">{{ 'Save'|trans }}</button>
+                </div>
+            {{ form_end(form) }}
         </div>
     </div>
     
