@@ -536,6 +536,7 @@ $(function() {
 
 
     /* TAGS */
+    initTags($(document));
     $(document).on('protagonist-added', '.protagonists_user', function(event) {
         initTags($(event.currentTarget));
     });

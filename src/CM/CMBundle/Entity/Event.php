@@ -26,6 +26,7 @@ class Event extends Entity
     /**
      * @ORM\OneToMany(targetEntity="EventDate", mappedBy="event", cascade={"persist", "remove"}, orphanRemoval=true)
      * @Assert\Valid
+     * @Assert\Count(min=1, minMessage="You must insert at least one date")
      */
     private $eventDates;
     

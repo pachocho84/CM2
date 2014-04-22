@@ -11,17 +11,17 @@ use CM\CMBundle\Model\ArrayContainer;
 
 class TagsToArrayTransformer implements DataTransformerInterface
 {
-    /**
-     * @var ObjectManager
-     */
     private $tags;
+
+    private $class;
 
     /**
      * @param ObjectManager $om
      */
-    public function __construct($tags)
+    public function __construct($tags, $class)
     {
         $this->tags = $tags;
+        $this->class = $class;
     }
 
     /**
@@ -50,7 +50,7 @@ class TagsToArrayTransformer implements DataTransformerInterface
         // $tags = new ArrayContainer;
         $tags = array();
         foreach ($array as $order => $id) {
-        	$entityUserTag = new EntityUserTag;
+        	$entityUserTag = new $this->class;
         	$entityUserTag->setTag($this->tags[$id])
         		->setOrder($order);
         	// $tags->add($entityUserTag);

@@ -100,7 +100,7 @@ class PageUser
     private $joinArticle = self::JOIN_REQUEST;
 
     /**
-     * @ORM\OneToMany(targetEntity="PageUserTag", mappedBy="pageUser", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="PageUserTag", mappedBy="pageUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     protected $pageUserTags;
 
@@ -315,8 +315,8 @@ class PageUser
     }
 
     /**
-     * @param \CM\CMBundle\Entity\EntityPageUser $comment
-     * @return Entity
+     * @param \CM\CMBundle\Page\PagePageUser $comment
+     * @return Page
      */
     public function addTag(
         Tag $tag,
@@ -337,8 +337,30 @@ class PageUser
         return $this;
     }
 
+    public function setPageUserTags($pageUserTags = array())
+    {
+        $this->clearTags();
+        foreach ($pageUserTags as $order => $pageUserTag) {
+            $pageUserTag->setPageUser($this)
+                ->setOrder($order);
+            $this->pageUserTags[] = $pageUserTag;
+        }
+
+        return $this;
+    }
+
+    public function addPageUserTag($pageUserTag)
+    {
+        if (!$this->pageUserTags->contains($pageUserTag)) {
+            $pageUserTag->setPageUser($this);
+            $this->pageUserTags[] = $pageUserTag;
+        }
+
+        return $this;
+    }
+
     /**
-     * @param \CM\CMBundle\Entity\EntityPageUser $pageUsers
+     * @param \CM\CMBundle\Page\PagePageUser $pageUsers
      */
     public function removePageUserTag(PageUserTag $pageUserTag)
     {

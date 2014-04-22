@@ -210,7 +210,7 @@ class User extends BaseUser implements ParticipantInterface
     private $notes;
 
     /**
-     * @ORM\OneToMany(targetEntity="UserTag", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="UserTag", mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     protected $userTags;
 
@@ -686,6 +686,28 @@ class User extends BaseUser implements ParticipantInterface
             ->setOrder($order);
         $this->userTags[] = $userTag;
     
+        return $this;
+    }
+
+    public function setUserTags($userTags = array())
+    {
+        $this->clearTags();
+        foreach ($userTags as $order => $userTag) {
+            $userTag->setUser($this)
+                ->setOrder($order);
+            $this->userTags[] = $userTag;
+        }
+
+        return $this;
+    }
+
+    public function addUserTag($userTag)
+    {
+        if (!$this->userTags->contains($userTag)) {
+            $userTag->setUser($this);
+            $this->userTags[] = $userTag;
+        }
+
         return $this;
     }
 

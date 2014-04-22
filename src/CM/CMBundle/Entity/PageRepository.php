@@ -34,7 +34,7 @@ class PageRepository extends BaseRepository
             ->select('p, pu, put, t, tt, i')
             ->join('p.pageUsers', 'pu', '', '', 'pu.userId')
             ->leftJoin('pu.pageUserTags', 'put')
-            ->leftJoin('ut.tag', 't')
+            ->leftJoin('put.tag', 't')
             ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
             ->leftJoin('p.images', 'i');
 
@@ -87,7 +87,7 @@ class PageRepository extends BaseRepository
             ->select('p, pu, put, t, tt, u')
             ->join('p.pageUsers', 'pu')
             ->leftJoin('pu.pageUserTags', 'put')
-            ->leftJoin('ut.tag', 't')
+            ->leftJoin('put.tag', 't')
             ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
             ->join('pu.user', 'u')
             ->where('p.id = :page_id')->setParameter('page_id', $pageId)

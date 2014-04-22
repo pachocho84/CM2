@@ -268,7 +268,8 @@ class UserController extends Controller
         $pageUsers = $em->getRepository('CMBundle:PageUser')->getWithPage($this->getUser()->getId(), array('paginate' => false));
 
         $form = $this->createForm(new PageUserCollectionType, array('pages' => $pageUsers), array(
-            'cascade_validation' => true
+            'cascade_validation' => true,
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('locale' => $request->getLocale())),
         ));
 
         $form->handleRequest($request);

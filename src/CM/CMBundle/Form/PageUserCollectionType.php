@@ -22,6 +22,7 @@ class PageUserCollectionType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'options' => array(
+                    'tags' => $options['tags'],
             )));
     }
     
@@ -31,7 +32,8 @@ class PageUserCollectionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => null
+            'data_class' => null,
+            'tags' => array(),
         ));
     }
 

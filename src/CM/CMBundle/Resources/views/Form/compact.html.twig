@@ -265,7 +265,7 @@
 {% endspaceless %}
 {% endblock  %}
 
-{% block cm_cmbundle_entityUserTags_widget %}
+{% block cm_cmbundle_tags_widget %}
 {% spaceless %}
     <div class="hidden">{{ block('choice_widget') }}</div>
     {% set fake = true %}
@@ -275,19 +275,25 @@
 
 {% block _cm_cmbundle_event_entityUsers_entry_entityUserTags_widget %}
 {% spaceless %}
-    {{ block('cm_cmbundle_entityUserTags_widget') }}
+    {{ block('cm_cmbundle_tags_widget') }}
 {% endspaceless %}
 {% endblock %}
 
 {% block _cm_cmbundle_disc_entityUsers_entry_entityUserTags_widget %}
 {% spaceless %}
-    {{ block('cm_cmbundle_entityUserTags_widget') }}
+    {{ block('cm_cmbundle_tags_widget') }}
 {% endspaceless %}
 {% endblock %}
 
 {% block _cm_cmbundle_article_entityUsers_entry_entityUserTags_widget %}
 {% spaceless %}
-    {{ block('cm_cmbundle_entityUserTags_widget') }}
+    {{ block('cm_cmbundle_tags_widget') }}
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_pageUser_collection_pages_entry_pageUserTags_widget %}
+{% spaceless %}
+    {{ block('cm_cmbundle_tags_widget') }}
 {% endspaceless %}
 {% endblock %}
 

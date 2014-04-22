@@ -52,14 +52,7 @@ class EntityUserType extends AbstractType
                 'multiple' => true,
                 'by_reference' => false,
                 'label' => 'Roles'
-            ))->addModelTransformer(new TagsToArrayTransformer($options['tags'])));
-        // $builder->add('entityUserTags', 'choice', array(
-        //         'attr' => array('tags' => ''),
-        //         'choices' => $options['tags'],
-        //         'multiple' => true,
-        //         'by_reference' => false,
-        //         'label' => 'Roles'
-        //     ));
+            ))->addModelTransformer(new TagsToArrayTransformer($options['tags'], 'CM\CMBundle\Entity\EntityUserTag')));
         if ($options['is_admin']) {
             $builder->add('notification');
         }
@@ -80,7 +73,8 @@ class EntityUserType extends AbstractType
 
         $resolver->setRequired(array(
             'em',
-            'roles'
+            'roles',
+            'tags'
         ));
 
         $resolver->setAllowedTypes(array(
