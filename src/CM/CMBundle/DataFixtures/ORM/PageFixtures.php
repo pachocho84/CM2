@@ -23,7 +23,8 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'img' => 'sony_classical.jpg',
             'imgOffset' => null,
             'cover' => 'sony_classical_cover.jpg',
-            'coverOffset' => null,
+            'coverOffset' => 34.16,
+            'background' => '',
             'vip' => true,
             'biography' => "Le origini della Sony Classical risalgono al 1927, anno in cui è stata fondata la Columbia Masterworks, una etichetta discografica americana sussidiaria della Columbia Records che, nel corso degli anni, ha realizzato dischi di importanti artisti quali Isaac Stern, Pablo Casals, Vladimir Horowitz, Eugene Ormandy, Vangelis, Elliot Goldenthal e Leonard Bernstein.
 Nel 1980 l'etichetta Columbia Masterworks è stata rinominata CBS Masterworks.
@@ -56,7 +57,8 @@ Tra le iniziative di risonanza internazionale si ricordano, in collaborazione co
             'img' => 'la_verdi.jpg',
             'imgOffset' => null,
             'cover' => 'laverdi_locatelli_vivaldi.jpg',
-            'coverOffset' => null,
+            'coverOffset' => 17,
+            'background' => '',
             'vip' => false,
             'biography' => "C'è a Milano un'orchestra sinfonica la quale non ha fatto che crescere di livello negli anni sì da divenire una grande orchestra. E' questa l'Orchestra Sinfonica di Milano Giuseppe Verdi.
 Con queste parole, nel settembre scorso, l'autorevole critico musicale Paolo Isotta definiva sulle pagine del Corriere della Sera l'Orchestra Sinfonica di Milano Giuseppe Verdi, sintetizzandone chiaramente il cammino di crescita.
@@ -92,13 +94,11 @@ L'Orchestra è stata diretta, tra gli altri, da Riccardo Chailly, Georges Prêtr
                 ->setDescription($p['description'])
                 ->setWebsite($p['website'])
                 ->setImg($p['img'])
-                ->setVip($p['vip']);
-            if (array_key_exists('cover', $p)) {
-                $page->setCoverImg($p['cover']);
-            }
-            if (array_key_exists('background', $p)) {
-                $page->setBackgroundImg($p['background']);
-            }
+                ->setImgOffset($p['imgOffset'])
+                ->setCoverImg($p['cover'])
+                ->setCoverImgOffset($p['coverOffset'])
+                ->setVip($p['vip'])
+                ->setBackgroundImg($p['background']);
 
             foreach ($p['tags'] as $order => $tag) {
                 $page->addTag($manager->merge($this->getReference('tag-'.$tag)), $order);

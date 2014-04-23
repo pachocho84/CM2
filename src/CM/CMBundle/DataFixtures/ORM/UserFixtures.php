@@ -20,6 +20,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'password' => 'pacho',
             'email' => 'ernesto@circuitomusica.it',
             'sex' => User::SEX_M,
+            'vip' => false,
             'city_birth' => 'Padua',
             'city_current' => 'Milan',
             'birth_date' => array(1984, 6, 17),
@@ -44,6 +45,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'password' => 'pacho',
             'email' => 'f.castellarin@gmail.it',
             'sex' => User::SEX_M,
+            'vip' => false,
             'city_birth' => 'Milan',
             'city_current' => 'Milan',
             'birth_date' => array(1990, 4, 19),
@@ -61,6 +63,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'password' => 'pacho',
             'email' => 'f.fontana@gmail.it',
             'sex' => User::SEX_F,
+            'vip' => false,
             'city_birth' => 'Taranto',
             'city_current' => 'Milan',
             'birth_date' => array(1900, 4, 15),
@@ -78,6 +81,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'password' => 'pacho',
             'email' => 'lucasareto@gmail.it',
             'sex' => User::SEX_M,
+            'vip' => false,
             'city_birth' => 'Milan',
             'city_current' => 'Milan',
             'birth_date' => array(1990, 5, 15),
@@ -95,6 +99,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'password' => 'pacho',
             'email' => 'vir@circuitomusica.it',
             'sex' => User::SEX_F,
+            'vip' => false,
             'city_birth' => 'Milan',
             'city_current' => 'Milan',
             'birth_date' => array(1994, 3, 29),
@@ -112,6 +117,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'password' => 'pacho',
             'email' => 'mamarcarini@circuitomusica.it',
             'sex' => User::SEX_M,
+            'vip' => false,
             'city_birth' => 'Milan',
             'city_current' => 'Milan',
             'birth_date' => array(1971, 3, 21),
@@ -129,6 +135,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'password' => 'pacho',
             'email' => 'doralberti@circuitomusica.it',
             'sex' => User::SEX_F,
+            'vip' => false,
             'city_birth' => 'Milan',
             'city_current' => 'Milan',
             'birth_date' => array(1971, 3, 12),
@@ -146,6 +153,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'password' => 'pacho',
             'email' => 'fracremonini@circuitomusica.it',
             'sex' => User::SEX_F,
+            'vip' => false,
             'city_birth' => 'Milan',
             'city_current' => 'Milan',
             'birth_date' => array(1964, 11, 17),
@@ -163,6 +171,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'password' => 'luca',
             'email' => 'lucadigiulio@circuitomusica.it',
             'sex' => User::SEX_M,
+            'vip' => false,
             'writer' => true,
             'city_birth' => 'Milan',
             'city_current' => 'Milan',
@@ -181,6 +190,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'password' => 'fabio',
             'email' => 'fabiorizzi@circuitomusica.it',
             'sex' => User::SEX_M,
+            'vip' => false,
             'writer' => true,
             'city_birth' => 'Milan',
             'city_current' => 'Milan',
@@ -189,7 +199,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'img' => 'fabio_rizzi.jpg',
             'imgOffset' => null,
             'cover' => 'fabio_rizzi_cover.jpg',
-            'coverOffset' => null,
+            'coverOffset' => 17,
             'tags' => array(6),
             'biography' => 'Nato nel 1975, si è diplomato al Conservatorio “Giuseppe Verdi” di Milano vincendo il “Premio speciale del Direttore”. Ha conseguito i Diplomi Accademici di II° Livello ad Indirizzo Solistico ed in Musica da Camera presso il Conservatorio di Piacenza, entrambi “Summa cum Laude”.
 Perfezionatosi all’Accademia del Teatro alla Scala e in Germania con Thomas Indermühle e Heinz Holliger, è stato Primo Oboe della Ferruccio Busoni Academische Orchester di Freiburg dal 1997 al 1999 e dal 1999 al 2001 ha suonato come Corno Inglese nella European Union Youth Orchestra, sotto la direzione di Vladimir Ashkenazy e Bernard Haitink.
@@ -255,7 +265,7 @@ Davide Formisano suona con un flauto Muramatsu 24k All Gold'
             'img' => 'fabrizio_meloni.jpg',
             'imgOffset' => null,
             'cover' => 'fabrizio_meloni_cover.jpg',
-            'coverOffset' => null,
+            'coverOffset' => 70,
             'tags' => array(7),
             'biography' => 'Primo clarinetto solista dell’Orchestra del Teatro e della Filarmonica della Scala dal 1984, ha compiuto gli studi musicali al Conservatorio “Giuseppe Verdi” di Milano diplomandosi con il massimo dei voti, la lode e la menzione d’onore. Vincitore di concorsi nazionali e internazionali: ARD, Monaco(1986),Primavera di Praga (1986).
 Ha collaborato con solisti di fama internazionale quali Bruno Canino, Alexander Lonquich, Michele Campanella, Heinrich Schiff, Friederich Gulda, Editha Gruberova, il Quartetto Hagen, Myung-Whun  Chung, Philip Moll e R. Muti D.Baremboin nella veste straordinaria di pianista.
@@ -304,18 +314,13 @@ Con L’etichetta  Limen Music  ha registrato cd e dvd dei quintetti per clarine
                ->setCityCurrent($person['city_current'])
                ->setBirthDate($date->setDate($person['birth_date'][0], $person['birth_date'][1], $person['birth_date'][2]))
                ->setBirthDateVisible($person['birth_date_visible'])
-               ->setImg($person['img']);
-            if (array_key_exists('vip', $person)) {
-                $user->setVip(true);
-            }
+               ->setImg($person['img'])
+               ->setImgOffset($person['imgOffset'])
+               ->setCoverImg($person['cover'])
+               ->setCoverImgOffset($person['coverOffset'])
+               ->setVip($person['vip']);
             if (array_key_exists('writer', $person)) {
                 $user->addRole('ROLE_WRITER');
-            }
-            if (array_key_exists('imgOffset', $person)) {
-                $user->setImgOffset($person['imgOffset']);
-            }
-            if (array_key_exists('cover', $person)) {
-                $user->setCoverImg($person['cover']);
             }
 
             $post = $this->container->get('cm.post_center')->getNewPost($user, $user);

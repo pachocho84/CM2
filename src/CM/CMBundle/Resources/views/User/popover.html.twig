@@ -14,7 +14,7 @@
     <h2><a href="{{ path('user_show', {slug: user.slug}) }}">{{ user }}</a></h2>
     
     {% if user.tags|length > 0 %}
-        <h3 class="text-muted"{% if user.tags|length > 3 %} {{ tooltip(user.tags) }}{% endif %}>
+        <h3{% if user.tags|length > 3 %} {{ tooltip(user.tags) }}{% endif %}>
             {{ user.tags[:3]|join(', ')|trim }}{% if user.tags|length > 3 %}...{% endif %}
         </h3>
     {% endif %}

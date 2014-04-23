@@ -1,25 +1,28 @@
-<div class="box profile-header">
-    <div class="clearfix">
+<div class="profile-header">
+    <div class="profile-header-row">
     
-        <div class="col-md-4 box-body profile-header-info text-center">
-            <div class="profile-header-picture thumbnail">
-                {{ show_img_box(page.img|imagine_filter('medium'), {width: 120, offset: page.imgOffset}) }}
-            </div>
-            <h2>{{ page }}</h2>
-        </div>
-        
-        <div class="col-md-8 profile-header-cover">
+        <div class="profile-header-cover">
             {% if page.coverImg != '' %}
-                {{ show_img_box(page.coverImg|imagine_filter('large'), {width: 780, height: 300, offset: page.coverImgOffset}) }}
+                {{ show_img_box(page.coverImg|imagine_filter('large'), {ratio: 2.4, offset: page.coverImgOffset}) }}
             {% endif %}
             <div class="profile-header-buttons btn-toolbar" role="toolbar">
                 {% if is_granted('ROLE_USER') %}
                     {{ render(controller('CMBundle:Fan:button', {userId: page.id, object: page|class_name})) }}
+{#                     <a href="{{ path('message_new', {userId: user.id}) }}" class="btn btn-default" {{ modal({remote: path('message_new', {userId: user.id}), callback: '$initRecipients()'}) }}>{{ icon('Message') }} {{ 'Send a message'|trans }}</a> #}
                 {% endif %}
-                {{ include('CMBundle:PageUser:requestAdd.html.twig') }}
             </div>
-            
         </div>
+        
+        <div class="profile-header-info">
+            <div class="profile-header-picture thumbnail">
+                {{ show_img_box(page.img|imagine_filter('medium'), {width: 120, offset: page.imgOffset}) }}
+            </div>
+            <h2>{{ page }}</h2>
+            <h3 class="text-muted"{% if page.tags|length > 3 %} {{ tooltip(page.tags) }}{% endif %}>
+                {{ page.tags[:3]|join(', ')|trim }}{% if page.tags|length > 3 %}...{% endif %}
+            </h3>
+        </div>
+
     </div>
     
     <div class="profile-menu">

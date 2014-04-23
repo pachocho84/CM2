@@ -166,16 +166,18 @@ $(function() {
                     template: '<div class="popover popover-publisher' + (logged ? ' logged' : '') + '"><div class="arrow"></div><div class="popover-content"></div></div>'
                 }).popover('show');
                 $('.popover').on('mouseleave', function () {
-                setTimeout(function () {
-/*                     $popover.popover('destroy'); */
-                }, 200);
+                    setTimeout(function () {
+                        $('[popover-publisher][data-href="' + $popover.attr('data-href') + '"]').attr('data-content', $('.popover-content').html());
+                        $popover.popover('destroy');
+                    }, 200);
                 });
             }, 200); 
         } else {
             clearTimeout(timeout);
             setTimeout(function () {
                 if (!$('.popover-publisher:hover').length) {
-/*                     $popover.popover('destroy'); */
+                    $('[popover-publisher][data-href="' + $popover.attr('data-href') + '"]').attr('data-content', $('.popover-content').html());
+                    $popover.popover('destroy');
                 }
             }, 200);
         }
