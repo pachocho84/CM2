@@ -114,7 +114,7 @@ class PageTag
      */
     public function setTag(Tag $tag = null)
     {
-        if (!$tag->isPage()) return;
+        if (!$tag->isPage()) throw new \Exception("Not a page tag (id: ".$tag->getId().')', 1);
         $this->tag = $tag;
         if (!is_null($tag)) {
             $this->tagId = $tag->getId();

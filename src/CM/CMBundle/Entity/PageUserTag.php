@@ -114,7 +114,7 @@ class PageUserTag
      */
     public function setTag(Tag $tag = null)
     {
-        if (!$tag->isUser()) return;
+        if (!$tag->isUser()) throw new \Exception("Not a user tag (id: ".$tag->getId().')', 1);
         $this->tag = $tag;
         if (!is_null($tag)) {
             $this->tagId = $tag->getId();

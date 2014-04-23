@@ -52,7 +52,7 @@ class TagFixtures extends AbstractFixture implements OrderedFixtureInterface, Co
     /*37*/    array('name-en' => 'reharsal room', 'name-fr' => 'directeur', 'name-it' => 'direttore', 'user' => false, 'page' => true),
     /*38*/    array('name-en' => 'studio', 'name-fr' => 'directeur', 'name-it' => 'direttore', 'user' => false, 'page' => true),
     /*39*/    array('name-en' => 'teacher', 'name-fr' => 'teacher', 'name-it' => 'insegnante', 'user' => true, 'page' => false),
-    /*40*/    array('name-en' => 'agent', 'name-fr' => 'agent', 'name-it' => 'agente', 'user' => false, 'page' => true),
+    /*40*/    array('name-en' => 'agent', 'name-fr' => 'agent', 'name-it' => 'agente', 'user' => true, 'page' => false),
     );
     
     /**
@@ -65,20 +65,20 @@ class TagFixtures extends AbstractFixture implements OrderedFixtureInterface, Co
 
     public function load(ObjectManager $manager)
     {
-        for ($i = 1; $i < count($this->tags); $i++) {
+        foreach ($this->tags as $i => $t) {
             $tag = new Tag;
             $tag->setVisible(true)
-                ->setIsUser($this->tags[$i - 1]['user'])
-                ->setIsPage($this->tags[$i - 1]['page']);
-            $tag->setName($this->tags[$i - 1]['name-en']);
-            $tag->translate('fr')->setName($this->tags[$i - 1]['name-fr']);
-            $tag->translate('it')->setName($this->tags[$i - 1]['name-it']);
+                ->setIsUser($t['user'])
+                ->setIsPage($t['page']);
+            $tag->setName($t['name-en']);
+            $tag->translate('fr')->setName($t['name-fr']);
+            $tag->translate('it')->setName($t['name-it']);
 
             $manager->persist($tag);
             $tag->mergeNewTranslations();
             $manager->flush();
 
-            $this->addReference('tag-'.$i, $tag);
+            $this->addReference('tag-'.($i + 1), $tag);
         }
     }
 
