@@ -1,6 +1,6 @@
 {% if user.coverImg is not null %}
     <div class="popover-cover">
-        {{ show_img_box(user.coverImg|imagine_filter('small'), {width: 274, height: 105, offset: user.coverImgOffset}) }}
+        {{ show_img_box(user.coverImg|imagine_filter('medium'), {width: 274, height: 105, offset: user.coverImgOffset}) }}
     </div>
 {% else %}
     <div class="popover-cover-background"></div>

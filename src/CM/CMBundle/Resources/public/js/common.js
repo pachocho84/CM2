@@ -144,13 +144,10 @@ $(function() {
     /* PUBLISHER POPOVER */
     $(document).on('mouseenter mouseleave', '[popover-publisher]', function(event) {
         if (event.type == 'mouseenter') {
-            $popover = $(event.currentTarget).popover({
-                selector: '[popover-publisher]',
-                trigger: 'manual',
-                placement: 'auto top',
-                container: 'body',
-                html: true,
-            });
+            if (typeof $popover !== 'undefined') {
+                $popover.popover('destroy');
+            }
+            $popover = $(event.currentTarget);
             timeout = setTimeout(function() {
                 if ($popover.attr('popover-publisher') != 'loaded') {
                     $.ajax({
@@ -159,12 +156,28 @@ $(function() {
                     }).done(function(data) {
                         $('[popover-publisher][data-href="' + $popover.attr('data-href') + '"]').attr('popover-publisher', 'loaded').attr('data-content', data);
                     });
-                } 
-                $popover.popover('show');
-            }, 250); 
+                }
+                $popover.popover({
+                    selector: '[popover-publisher]',
+                    trigger: 'manual',
+                    placement: 'auto top',
+                    container: 'body',
+                    html: true,
+                    template: '<div class="popover popover-publisher"><div class="arrow"></div><div class="popover-content"></div></div>'
+                }).popover('show');
+                $('.popover').on('mouseleave', function () {
+                setTimeout(function () {
+/*                     $popover.popover('destroy'); */
+                }, 200);
+                });
+            }, 200); 
         } else {
             clearTimeout(timeout);
-            $popover.popover('destroy');
+            setTimeout(function () {
+                if (!$('.popover-publisher:hover').length) {
+/*                     $popover.popover('destroy'); */
+                }
+            }, 200);
         }
     });
 /*
