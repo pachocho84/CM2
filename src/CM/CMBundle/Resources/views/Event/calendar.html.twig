@@ -1,18 +1,34 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
 {% block title %}{{ "Calendar"|trans }}{% endblock %}
+{#
+{% set meta = {
+    description: 'Find all the Classical Music events'|trans,
+    image: event.image|default_img|imagine_filter('full')
+} %}
+#}
+
+{% block heading %}
+    <div class="row">
+        <div class="col-md-4 col-lg-3">
+            <h2>{{ icon('Event') }} {{ block('title') }}</h2>
+        </div>
+        <div class="col-md-8 col-lg-9">
+            <div class="heading-buttons">
+                {{ include('CMBundle:Event:menu.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
 {% block body %}
-
-	<div class="row">
-		<div class="col-lg-5">
-			<h2>{{ block('title') }}</h2>
-		</div>
-		{{ include('CMBundle:Event:menu.html.twig') }}
-	</div>
-
-    <div data-ajax-url="{{ path('event_sponsored') }}"></div>
-	
-    <div data-ajax-url="{{ path('event_calendar_month', {year: year, month: month, loadMore: true}) }}"></div>
+    <div class="row">
+        <div class="col-md-8">
+            <div data-ajax-url="{{ path('event_calendar_month', {year: year, month: month, loadMore: true}) }}"></div>
+        </div>
+        <div class="col-md-4">
+            <div data-ajax-url="{{ path('event_sponsored') }}"></div>
+        </div>
+    </div>
 	
 {% endblock %} 

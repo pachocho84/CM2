@@ -1,5 +1,5 @@
 {% if month.timestamp|date('U') <= 'now'|date('U') %}
-	<div class="ajax-link-target text-center" style="margin-top: 20px;">
+	<div class="ajax-link-target text-center margin-bottom">
 	    <a href="{{ path('event_calendar', {year: month.prev_year, month: month.prev_month }) }}" class="btn btn-default ajax-link">{{ icon('Calendar') }} {{ month.timestamp|date_modify('-1 month')|format_date('MMMM Y', null, 'GMT')|capitalize }}</a>
 	</div>
 {% endif %}

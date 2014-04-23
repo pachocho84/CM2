@@ -2,25 +2,44 @@
 
 {% block title %}
     {% if app.request.get('_route') == 'event_index' %}
-        {{ "Events"|trans }}
+        {{ 'Events'|trans }}
     {% elseif app.request.get('_route') == 'event_archive' %}
-        {{ "Events Archive"|trans }}
+        {{ 'Events Archive'|trans }}
     {% elseif app.request.get('_route') == 'event_category' %}
         {{ category.getPlural|capitalize }}
     {% endif %}
+{% endblock %}
+{#
+{% set meta = {
+    description: 'Find all the Classical Music events'|trans,
+    image: event.image|default_img|imagine_filter('full')
+} %}
+#}
+
+{% block heading %}
+    <div class="row">
+        <div class="col-md-4 col-lg-3">
+            <h2>{{ icon('Event') }} {{ block('title') }}</h2>
+        </div>
+        <div class="col-md-8 col-lg-9">
+            <div class="heading-buttons">
+                {{ include('CMBundle:Event:menu.html.twig') }}
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 
 
 {% block body %}
     <div class="row">
-        <div class="col-lg-5">
-            <h2>{{ block('title') }}</h2>
+        <div class="col-md-8">
+            <div class='box'>
+                {{ include('CMBundle:Event:objects.html.twig') }}
+            </div>
         </div>
-        {{ include('CMBundle:Event:menu.html.twig') }}
-    </div>
-    
-    <div class='box'>
-        {{ include('CMBundle:Event:objects.html.twig') }}
+        <div class="col-md-4">
+            <div data-ajax-url="{{ path('event_sponsored') }}"></div>
+        </div>
     </div>
 {% endblock %}
