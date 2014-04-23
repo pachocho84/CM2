@@ -12,7 +12,7 @@
     <div class="popover-profile">{{ show_img_box(page.img|imagine_filter('xsmall'), {width: 90, offset: page.imgOffset}) }}</div>
     
     <h2><a href="{{ path('page_show', {slug: page.slug}) }}">{{ page }}</a></h2>
-    
+
     {% if page.tags|length > 0 %}
         <h3{% if page.tags|length > 3 %} {{ tooltip(page.tags) }}{% endif %}>
             {{ page.tags[:3]|join(', ')|trim }}{% if page.tags|length > 3 %}...{% endif %}

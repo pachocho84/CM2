@@ -22,10 +22,38 @@ class PageRepository extends BaseRepository
         return array_merge(array(
             'userId' => null,
             'pageId' => null,
+            'tags' => null,
+            'pageUsers' => null,
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate' => true,
             'limit'    => 25,
         ), $options);
+    }
+
+    public function getPage($slug, $options = array())
+    {
+        $options = self::getOptions($options);
+
+        $query = $this->createQueryBuilder('p')
+            ->select('p')
+            ->andWhere('p.slug = :slug')->setParameter('slug', $slug);
+
+        if (!is_null($options['tags'])) {
+            $query->addSelect('pt, t, tt')
+                ->leftJoin('p.pageTags', 'pt')
+                ->leftJoin('pt.tag', 't')
+                ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale']);
+        }
+        if (!is_null($options['pageUsers'])) {
+            $query->addSelect('pu, puu, put, t1, tt1')
+                ->join('p.pageUsers', 'pu', '', '', 'pu.userId')
+                ->join('pu.user', 'puu')
+                ->leftJoin('pu.pageUserTags', 'put')
+                ->leftJoin('put.tag', 't1')
+                ->leftJoin('t1.translations', 'tt1', 'with', 'tt1.locale = :locale1')->setParameter('locale1', $options['locale']);
+        }
+
+        return $query->getQuery()->getSingleResult();
     }
 
     public function getPages($options = array())

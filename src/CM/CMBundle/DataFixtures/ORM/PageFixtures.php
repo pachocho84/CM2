@@ -16,7 +16,7 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
 {
     private static $pages = array(
         array('name' => 'Sony Classical Italia',
-            'tags' => array(25),
+            'tags' => array(26),
             'creator' => 6,
             'description' => 'Sony Classical in Italia',
             'website' => 'www.sony.it',
@@ -34,7 +34,7 @@ All'interno della Sony Classical è stata prodotta una serie, la Vivarte, dedica
 La Sony Classical ha inoltre ripubblicato una serie di dischi della etichetta Seon fondata e prodotta da Wolf Erichson negli anni 1970-1980. Tra gli artisti presenti in catalogo troviamo la Capella Antiqua di Monaco diretta da Konrad Ruhland, Frans Brüggen, Gustav Leonhardt, Sigiswald Kuijken e Wieland Kuijken[1]. Tra i dischi ricordiamo la preziosa incisione del 1977 dei Concerti Brandeburghesi di Bach con il Leonhardt Ensemble, una delle prime incisioni su strumenti originali di quest'opera."
         ),
         array('name' => 'Società del Quartetto di Milano',
-            'tags' => array(13, 23),
+            'tags' => array(14, 24),
             'creator' => 7,
             'description' => '1° settembre 1863 il manifesto di Tito Ricordi per una società con il compito di “incoraggiare i cultori della buona musica”.',
             'website' => 'www.quartettomilano.it',
@@ -50,7 +50,7 @@ Innumerevoli "prime" ne hanno costellato il cammino: nei suoi annali le storiche
 Tra le iniziative di risonanza internazionale si ricordano, in collaborazione col Comune di Milano, il monumentale progetto di esecuzione integrale delle Cantate di Bach iniziato nel 1994 e concluso nel novembre del 2004; i grandi oratori e capolavori della musica sacra (l’Elias, il Vespro della Beata Vergine, La Creazione); in coproduzione col Teatro alla Scala, l’integrale dei quartetti (Quartetto di Tokyo) e dei concerti per pianoforte (Alfred Brendel) di Beethoven; il ciclo dei “Grandi pianisti alla Scala” (Schiff, Brendel, Perahia, Lupu) e la presentazione delle massime orchestre mondiali dirette dai più prestigiosi direttori in attività. Basterà ricordare, i Berliner Philharmoniker diretti da Claudio Abbado nel 1993 - unico concerto milanese del periodo della sua direzione musicale della compagine tedesca - e da Simon Rattle nel 2005.'
         ),
         array('name' => 'laVerdi',
-            'tags' => array(16, 23),
+            'tags' => array(17, 24),
             'creator' => 8,
             'description' => 'Fondazione Orchestra Sinfonica e Coro Sinfonico di Milano Giuseppe Verdi',
             'website' => 'www.laverdi.org',
