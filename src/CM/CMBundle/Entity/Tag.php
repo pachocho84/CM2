@@ -249,6 +249,9 @@ class Tag
      */
     public function setType($type)
     {
+        if (is_array($type)) {
+            $type = array_reduce($type, function($a, $b) { return $a | $b; });
+        }
         $this->type = $type;
     
         return $this;
