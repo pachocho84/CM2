@@ -32,7 +32,7 @@
 
 {% form_theme form _self %}
 
-{% block _cm_cmbundle_pageUser_collection_pages_entry_widget %}
+{% block _cm_cmbundle_pageuser_collection_pages_entry_widget %}
     
     <div class="well well-sm">
         <div class="object">
@@ -79,21 +79,21 @@
     </div>
 {% endblock %}
 
-{% block _cm_cmbundle_pageUser_collection_pages_entry_joinEvent_widget %}
+{% block _cm_cmbundle_pageuser_collection_pages_entry_joinEvent_widget %}
     <tr>
         <td>{{ 'When the page publishes an event'|trans }}</td>
         {% for child in form.children %}<td class="text-center">{{ form_widget(child) }}</td>{% endfor %}
     </tr>
 {% endblock %}
 
-{% block _cm_cmbundle_pageUser_collection_pages_entry_joinArticle_widget %}
+{% block _cm_cmbundle_pageuser_collection_pages_entry_joinArticle_widget %}
     <tr>
         <td>{{ 'When the page publishes an article'|trans }}</td>
         {% for child in form.children %}<td class="text-center">{{ form_widget(child) }}</td>{% endfor %}
     </tr>
 {% endblock %}
 
-{% block _cm_cmbundle_pageUser_collection_pages_entry_joinDisc_widget %}
+{% block _cm_cmbundle_pageuser_collection_pages_entry_joinDisc_widget %}
     <tr>
         <td>{{ 'When the page publishes a disc'|trans }}</td>
         {% for child in form.children %}<td class="text-center">{{ form_widget(child) }}</td>{% endfor %}
