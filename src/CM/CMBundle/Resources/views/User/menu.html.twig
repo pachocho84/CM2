@@ -73,26 +73,3 @@
     </div>
     
 </li>
-
-
-
-{#
-<li class="dropdown menu-tab">
-
-    <a href="{{ path('user_show', {"slug": app.getUser.slug}) }}"  id="menu-user" class="dropdown-toggle" data-toggle="dropdown">{{ icon('User') }}</a>
-
-    <ul class="dropdown-menu dropdown-menu-right media-list">
-        <li class="media dropdown-menu-header">
-            {{ show_img_box(app.getUser|default_img|imagine_filter('avatar'), {width: 50, offset: app.getUser.imgOffset, box_attributes: {class: 'pull-left img-rounded'}}) }}
-            <div class="media-body">
-                <h4 class="media-heading">{{ app.getUser }}</h4>
-            </div>
-        </li>
-        <li><a href="{{ path('user_show', {"slug": app.getUser.slug}) }}">{{ 'Profile'|trans }}</a></li>
-        <li><a href="{{ path('user_biography_edit') }}">{{ 'Biography'|trans }}</a></li>
-        <li><a href="{{ path('user_image_edit') }}">{{ 'Images'|trans }}</a></li>
-        <li><a href="{{ path('user_tags_edit') }}">{{ 'Tags'|trans }}</a></li>
-        <li><a href="{{ path('fos_user_security_logout') }}">{{ 'Logout'|trans }}</a></li>
-    </ul>
-</li>
-#}

@@ -1278,6 +1278,9 @@ form textarea[expandable] {
 .popover-publisher .popover-footer a:not(.text-success):not(.text-warning):not(.text-danger) {
     color: #333333;
 }
+.popover-publisher.top .arrow:after {
+    border-top-color: #f7f7f7 !important;
+}
 
 
 
