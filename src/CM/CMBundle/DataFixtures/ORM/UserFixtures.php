@@ -28,7 +28,7 @@ class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'imgOffset' => 0,
             'cover' => 'ernesto_casareto_cover.jpg',
             'coverOffset' => 10,
-            'tags' => array(1, 5),
+            'tags' => array(4, 38),
             'biography' => 'Ernesto Casareto, flautista, si è diplomato col massimo dei voti al Conservatorio “Giuseppe Verdi” di Milano.
 Si è poi perfezionato con Emilio Vapi prima all’Accademia G. Marziali di Seveso e poi all’Accademia Internazionale della Musica di Milano.
 Dopo aver conseguito la maturità presso il liceo musicale annesso al Conservatorio ha studiato Scienze e Tecnologie della Comunicazione Musicale presso l’Università degli Studi di Milano e si è poi laureato in Psicologia con indirizzo Comunicazione & Marketing presso l’Università Cattolica del Sacro Cuore di Milano.
@@ -172,7 +172,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'imgOffset' => null,
             'cover' => null,
             'coverOffset' => null,
-            'tags' => array(),
+            'tags' => array(39),
             'biography' => 'Luca Di Giulio, milanese. Dopo la laurea in Lettere Moderne, con una tesi in Storia della Musica, frequenta il Master in Management per lo Spettacolo organizzato dalla Business School dell’Università Commerciale Luigi Bocconi in collaborazione con l’Accademia Teatro alla Scala e il Piccolo Teatro di Milano. Svolge parallelamente importanti esperienze formative presso le più rilevanti realtà del settore, tra cui la casa discografica Stradivarius e il Teatro alla Scala, con cui collabora attivamente dalla stagione 2010-2011 e da cui viene richiamato a collaborare per le stagioni 2012/2013 e 2013/2014. A partire dal 2011 è autore dei programmi di sala per il Festival Concerti d’Autunno presso la Sala Greppi di Bergamo. Come frutto ultimo di questa costante ricerca in ambito musicale, nonché dell’approfondita conoscenza del settore, decide nel 2011 di intraprendere l’attività manageriale fondando la Di Giulio Management. In pochi mesi costruisce con cura e passione un eterogeneo portfolio di artisti di levatura internazionale, comune denominatore l’interesse per giovani emergenti, tutti selezionati personalmente con grandissima attenzione.'
         ),
         array('firstname' => 'Fabio', /* 10 */
@@ -190,7 +190,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'imgOffset' => null,
             'cover' => 'fabio_rizzi_cover.jpg',
             'coverOffset' => null,
-            'tags' => array(),
+            'tags' => array(5),
             'biography' => 'Nato nel 1975, si è diplomato al Conservatorio “Giuseppe Verdi” di Milano vincendo il “Premio speciale del Direttore”. Ha conseguito i Diplomi Accademici di II° Livello ad Indirizzo Solistico ed in Musica da Camera presso il Conservatorio di Piacenza, entrambi “Summa cum Laude”.
 Perfezionatosi all’Accademia del Teatro alla Scala e in Germania con Thomas Indermühle e Heinz Holliger, è stato Primo Oboe della Ferruccio Busoni Academische Orchester di Freiburg dal 1997 al 1999 e dal 1999 al 2001 ha suonato come Corno Inglese nella European Union Youth Orchestra, sotto la direzione di Vladimir Ashkenazy e Bernard Haitink.
 Ha vinto una borsa di studio per frequentare il Master of Music al New England Conservatory di Boston (USA), dove è stato scelto dal M.° Seiji Ozawa tra i migliori allievi per suonare con la Boston Symphony Orchestra.
@@ -218,7 +218,7 @@ Esibitosi come solista in Italia e all’estero, è stato più volte invitato ne
             'imgOffset' => null,
             'cover' => 'davide_formisano_cover.jpg',
             'coverOffset' => null,
-            'tags' => array(),
+            'tags' => array(4),
             'biography' => 'Davide Formisano è nato nel 1974 a Milano, dove si è diplomato col massimo dei voti e la lode sotto la guida del M° Carlo Tabarelli, perfezionandosi in seguito con i maestri Glauco Cambursano,Bruno Cavallo, Jean Claude Gerard presso la Musikhochschule di Stoccarda ed Aurele Nicolet a Basilea,Il quale influenzera\' fortemente il suo gusto musicale.
 A diciassette anni si pone all\'attenzione di Sir James Galway e Patrick Gallois,anche loro fondamentali nella sua formazione flautistica e musicale.
 Giovanissimo, si aggiudica il Primo Premio al Concorso “G. Galilei” di Firenze ed al Concorso Internazionale di Stresa, ottenendo successivamente prestigiosi riconoscimenti presso tutti i più autorevoli concorsi internazionali. Diciassettenne, si presenta al IV Concorso Jean-Pierre Rampal di Parigi e consegue il Prix Special du Jury, ottenendo negli anni seguenti il Primo Premio al Concorso Internazionale di Budapest ed il Secondo Premio, con primo non assegnato, al concorso ARD di Monaco di Baviera.
@@ -256,7 +256,7 @@ Davide Formisano suona con un flauto Muramatsu 24k All Gold'
             'imgOffset' => null,
             'cover' => 'fabrizio_meloni_cover.jpg',
             'coverOffset' => null,
-            'tags' => array(),
+            'tags' => array(6),
             'biography' => 'Primo clarinetto solista dell’Orchestra del Teatro e della Filarmonica della Scala dal 1984, ha compiuto gli studi musicali al Conservatorio “Giuseppe Verdi” di Milano diplomandosi con il massimo dei voti, la lode e la menzione d’onore. Vincitore di concorsi nazionali e internazionali: ARD, Monaco(1986),Primavera di Praga (1986).
 Ha collaborato con solisti di fama internazionale quali Bruno Canino, Alexander Lonquich, Michele Campanella, Heinrich Schiff, Friederich Gulda, Editha Gruberova, il Quartetto Hagen, Myung-Whun  Chung, Philip Moll e R. Muti D.Baremboin nella veste straordinaria di pianista.
 Ha tenuto tournée negli Stati Uniti e in Israele con il Quintetto a Fiati Italiano,  eseguendo brani dedicati a questa formazione da Berio e Sciarrino

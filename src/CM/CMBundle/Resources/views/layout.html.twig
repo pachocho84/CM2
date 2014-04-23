@@ -181,6 +181,7 @@
     <script>
         var script  = "{{ app.request.scriptname }}";
         var culture = "{{ app.request.locale }}";
+        var logged  = "{{ is_granted('ROLE_USER') }}";
         var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
         //i18n.init({lng: culture});
     </script>

@@ -1,6 +1,6 @@
 {% if page.coverImg is not null %}
     <div class="popover-cover">
-        {{ show_img_box(page.coverImg|imagine_filter('small'), {width: 274, height: 105, offset: page.coverImgOffset}) }}
+        {{ show_img_box(page.coverImg|imagine_filter('medium'), {width: 274, height: 105, offset: page.coverImgOffset}) }}
     </div>
 {% else %}
     <div class="popover-cover-background"></div>
@@ -13,9 +13,20 @@
     
     <h2><a href="{{ path('page_show', {slug: page.slug}) }}">{{ page }}</a></h2>
     
-    {% if biography is not null %}<div class="popover-publisher-biography">{{ biography|short_text({max: 150}) }}{% endif %}</div>
-    
-    {% if is_granted('ROLE_USER') %}
-        {{ render(controller('CMBundle:Fan:button', {'userId': page.id, 'object': page|class_name, btn: true})) }}
+    {% if page.tags|length > 0 %}
+        <h3 class="text-muted"{% if page.tags|length > 3 %} {{ tooltip(page.tags) }}{% endif %}>
+            {{ page.tags[:3]|join(', ')|trim }}{% if page.tags|length > 3 %}...{% endif %}
+        </h3>
     {% endif %}
+    
+    <div class="popover-publisher-biography">{{ biography|short_text({max: 120}) }}</div>
 </div>
+
+
+
+{% if is_granted('ROLE_USER') %}
+    <div class="popover-footer">
+        {{ render(controller('CMBundle:Fan:button', {userId: page.id, 'object': page|class_name, btn: false})) }}
+{#         <a href="{{ path('message_new', {pageId: page.id}) }}">{{ icon('Message') }}</a> #}
+    </div>
+{% endif %}

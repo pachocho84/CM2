@@ -20,8 +20,11 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
             'creator' => 6,
             'description' => 'Sony Classical in Italia',
             'website' => 'www.sony.it',
-            'img' => '650e5c4e916d35d9c4dd12f070f8c39f07ef26c9.jpg',
-            'vip' => false,
+            'img' => 'sony_classical.jpg',
+            'imgOffset' => null,
+            'cover' => 'sony_classical_cover.jpg',
+            'coverOffset' => null,
+            'vip' => true,
             'biography' => "Le origini della Sony Classical risalgono al 1927, anno in cui è stata fondata la Columbia Masterworks, una etichetta discografica americana sussidiaria della Columbia Records che, nel corso degli anni, ha realizzato dischi di importanti artisti quali Isaac Stern, Pablo Casals, Vladimir Horowitz, Eugene Ormandy, Vangelis, Elliot Goldenthal e Leonard Bernstein.
 Nel 1980 l'etichetta Columbia Masterworks è stata rinominata CBS Masterworks.
 Successivamente, nel 1990, dopo l'acquisizione della CBS Records da parte di Sony Music, è stata infine chiamata Sony Classical (il logo utilizzato con le note magiche riecheggia il logo utilizzato dalla Columbia fino al 1955).
@@ -30,25 +33,30 @@ All'interno della Sony Classical è stata prodotta una serie, la Vivarte, dedica
 La Sony Classical ha inoltre ripubblicato una serie di dischi della etichetta Seon fondata e prodotta da Wolf Erichson negli anni 1970-1980. Tra gli artisti presenti in catalogo troviamo la Capella Antiqua di Monaco diretta da Konrad Ruhland, Frans Brüggen, Gustav Leonhardt, Sigiswald Kuijken e Wieland Kuijken[1]. Tra i dischi ricordiamo la preziosa incisione del 1977 dei Concerti Brandeburghesi di Bach con il Leonhardt Ensemble, una delle prime incisioni su strumenti originali di quest'opera."
         ),
         array('name' => 'Società del Quartetto di Milano',
-            'tags' => array(13),
+            'tags' => array(13, 23),
             'creator' => 7,
             'description' => '1° settembre 1863 il manifesto di Tito Ricordi per una società con il compito di “incoraggiare i cultori della buona musica”.',
             'website' => 'www.quartettomilano.it',
-            'img' => '22bd92a5ada9b1d8184c980ea1e226f9ee7c5130.jpg',
-            'cover' => '2ce34d578aefc1b266fdd608b2c30090.jpeg',
-            'background' => 'aaa8c7e3cae78c8861e2549942537a34.jpeg',
-            'vip' => false,
+            'img' => 'societa_quartetto.jpg',
+            'imgOffset' => null,
+            'cover' => 'societa_quartetto_cover.jpg',
+            'coverOffset' => null,
+            'background' => '',
+            'vip' => true,
             'biography' => 'La Società del Quartetto di Milano è fra le associazioni concertistiche italiane quella che vanta la più lunga programmazione ininterrotta.
 Ha ospitato nella sua lunga storia i protagonisti della musica, da Hans von Bülow (primo ospite stabile di fama internazionale già nel 1870 con quattro concerti, quale pianista e direttore dei primi «esperimenti sinfonici») a Richard Strauss al suo debutto italiano, da Toscanini a Claudio Abbado, da Anton Rubinstein a Busoni a Rachmaninov a Schnabel, sino a Pollini, Brendel e Radu Lupu, Schiff; da Sarasate a Hubermann, Heifetz, sino a Milstein, Repin, Mullova; dal Quartetto Joachim ai Quartetti Busch e Budapest, sino al Quartetto Italiano, al Tokyo, al Cremona in residence; dal Trio Cortot-Thibaud-Casals a Fischer-Kulenkampff-Mainardi al Trio di Trieste; da Lotte Lehmann e Elisabeth Schumann a Elizabeth Schwarzkopf e Fischer-Dieskau; da Pablo Casals a Wanda Landowska, da Schönberg a Hindemith a Stravinskij, Berio, Vacchi.
 Innumerevoli "prime" ne hanno costellato il cammino: nei suoi annali le storiche prime esecuzioni italiane della Passione secondo Matteo di Bach, il 18 aprile 1878 la Nona sinfonia di Beethoven, in un memorabile concerto diretto da Franco Faccio. È il momento culminante del grande progetto di esecuzione integrale delle sinfonie di Beethoven iniziato nel 1867 con la Pastorale. Altro scopo sociale era la "fondazione di premi per concorsi": e, a partire dai concorsi di composizione originari, il Quartetto ha tenuto viva sino ad oggi la tradizione di commissionare opere nuove ai compositori contemporanei.
 Tra le iniziative di risonanza internazionale si ricordano, in collaborazione col Comune di Milano, il monumentale progetto di esecuzione integrale delle Cantate di Bach iniziato nel 1994 e concluso nel novembre del 2004; i grandi oratori e capolavori della musica sacra (l’Elias, il Vespro della Beata Vergine, La Creazione); in coproduzione col Teatro alla Scala, l’integrale dei quartetti (Quartetto di Tokyo) e dei concerti per pianoforte (Alfred Brendel) di Beethoven; il ciclo dei “Grandi pianisti alla Scala” (Schiff, Brendel, Perahia, Lupu) e la presentazione delle massime orchestre mondiali dirette dai più prestigiosi direttori in attività. Basterà ricordare, i Berliner Philharmoniker diretti da Claudio Abbado nel 1993 - unico concerto milanese del periodo della sua direzione musicale della compagine tedesca - e da Simon Rattle nel 2005.'
         ),
         array('name' => 'laVerdi',
-            'tags' => array(16),
+            'tags' => array(16, 23),
             'creator' => 8,
             'description' => 'Fondazione Orchestra Sinfonica e Coro Sinfonico di Milano Giuseppe Verdi',
             'website' => 'www.laverdi.org',
-            'img' => '9834dc0cc993aa4397bdb860cea2e4ac970a65f5.jpg',
+            'img' => 'la_verdi.jpg',
+            'imgOffset' => null,
+            'cover' => 'laverdi_locatelli_vivaldi.jpg',
+            'coverOffset' => null,
             'vip' => false,
             'biography' => "C'è a Milano un'orchestra sinfonica la quale non ha fatto che crescere di livello negli anni sì da divenire una grande orchestra. E' questa l'Orchestra Sinfonica di Milano Giuseppe Verdi.
 Con queste parole, nel settembre scorso, l'autorevole critico musicale Paolo Isotta definiva sulle pagine del Corriere della Sera l'Orchestra Sinfonica di Milano Giuseppe Verdi, sintetizzandone chiaramente il cammino di crescita.
