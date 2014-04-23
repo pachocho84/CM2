@@ -16,6 +16,7 @@ use CM\CMBundle\Entity\Page;
 use CM\CMBundle\Entity\PageUser;
 use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\EntityCategory;
+use CM\CMBundle\Entity\Tag;
 use CM\CMBundle\Form\PageType;
 use CM\CMBundle\Form\BiographyType;
 use CM\CMBundle\Form\PageImageType;
@@ -132,7 +133,7 @@ class PageController extends Controller
             'cascade_validation' => true,
             'error_bubbling' => false,
             'roles' => $user->getRoles(),
-            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => 'page', 'locale' => $request->getLocale())),
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_PAGE, 'locale' => $request->getLocale())),
         ))->add('save', 'submit');
         
         $form->handleRequest($request);
@@ -374,7 +375,7 @@ class PageController extends Controller
 
         $form = $this->createForm(new PageUserCollectionType, array('pages' => $pageUsers), array(
             'cascade_validation' => true,
-            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => 'user', 'locale' => $request->getLocale())),
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_USER, 'locale' => $request->getLocale())),
             'type' => 'CM\CMBundle\Form\PageUserType'
         ));
         
