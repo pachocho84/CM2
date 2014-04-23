@@ -18,6 +18,23 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
         array('name' => 'Sony Classical Italia',
             'tags' => array(26),
             'creator' => 6,
+            'users' => array(
+                array(
+                    'user' => 6, 
+                    'admin' => true,
+                    'tags' => array(43)
+                ),
+                array(
+                    'user' => 1, 
+                    'admin' => true,
+                    'tags' => array(41)
+                ),
+                array(
+                    'user' => 3, 
+                    'admin' => false,
+                    'tags' => array(44)
+                )
+            ),
             'description' => 'Sony Classical in Italia',
             'website' => 'www.sony.it',
             'img' => 'sony_classical.jpg',
@@ -36,6 +53,23 @@ La Sony Classical ha inoltre ripubblicato una serie di dischi della etichetta Se
         array('name' => 'Società del Quartetto di Milano',
             'tags' => array(14, 24),
             'creator' => 7,
+            'users' => array(
+                array(
+                    'user' => 7, 
+                    'admin' => true,
+                    'tags' => array(43)
+                ),
+                array(
+                    'user' => 1, 
+                    'admin' => true,
+                    'tags' => array(41)
+                ),
+                array(
+                    'user' => 3, 
+                    'admin' => false,
+                    'tags' => array(44)
+                )
+            ),
             'description' => '1° settembre 1863 il manifesto di Tito Ricordi per una società con il compito di “incoraggiare i cultori della buona musica”.',
             'website' => 'www.quartettomilano.it',
             'img' => 'societa_quartetto.jpg',
@@ -52,6 +86,19 @@ Tra le iniziative di risonanza internazionale si ricordano, in collaborazione co
         array('name' => 'laVerdi',
             'tags' => array(17, 24),
             'creator' => 8,
+            'users' => array(
+                array(
+                    'user' => 8, 
+                    'admin' => true,
+                    'tags' => array(43)
+                ),
+                array(
+                    'user' => 1, 
+                    'admin' => false,
+                    'tags' => array(41)
+                )
+            ),
+            'users' => array(),
             'description' => 'Fondazione Orchestra Sinfonica e Coro Sinfonico di Milano Giuseppe Verdi',
             'website' => 'www.laverdi.org',
             'img' => 'la_verdi.jpg',
@@ -119,22 +166,26 @@ L'Orchestra è stata diretta, tra gli altri, da Riccardo Chailly, Georges Prêtr
             $biography->setPost($post);
 
             $manager->persist($biography);
-
-            $tags = array();
-            for ($k = 1; $k < rand(1, 3); $k++) {
-                $tags[] = $manager->merge($this->getReference('tag-'.rand(1, 10)));
+            
+            /* Users */
+            foreach ($p['users'] as $p_user) {
+                $tags = array();
+                foreach ($p_user['tags'] as $tag) {
+                    $tags[] = $manager->merge($this->getReference('tag-'.$tag));
+                }
+                $page->addUser(
+                    $manager->merge($this->getReference('user-'.$p_user['user'])),
+                    $p_user['admin'], // admin
+                    PageUser::STATUS_ACTIVE,
+                    rand(0, 2), // join event
+                    rand(0, 2), // join disc
+                    rand(0, 2), // join article
+                    rand(0, 1), // notification
+                    $tags
+                );
             }
-            $page->addUser(
-                $user,
-                true, // admin
-                PageUser::STATUS_ACTIVE,
-                rand(0, 2), // join event
-                rand(0, 2), // join disc
-                rand(0, 2), // join article
-                rand(0, 1), // notification
-                $tags
-            );
 
+/*
             $numbers = range(1, UserFixtures::count());
             unset($numbers[$p['creator'] - 1]);
             shuffle($numbers);
@@ -157,6 +208,7 @@ L'Orchestra è stata diretta, tra gli altri, da Riccardo Chailly, Georges Prêtr
                     $tags
                 );
             }
+*/
             
             $this->addReference('page-'.($i + 1), $page);
         }
