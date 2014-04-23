@@ -1234,7 +1234,7 @@ form textarea[expandable] {
     padding: 0;
 }
 .popover-publisher .popover-publisher-content {
-    height: 180px;
+/*     height: 180px; */
     padding: 0 10px;
 }
 .popover-publisher h2 {
@@ -1245,7 +1245,7 @@ form textarea[expandable] {
     font-size: 14px;
     margin: 0 0 10px;
     color: #999999;
-    height: 15px;
+    height: 17px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;

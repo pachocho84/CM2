@@ -13,18 +13,21 @@
     
     <h2><a href="{{ path('user_show', {slug: user.slug}) }}">{{ user }}</a></h2>
     
-    {% if publisher.userTags is defined and publisher.userTags|length > 0 %}
-        <h3>{{ publisher.userTags|join(', ')|trim }}</h3>
+    {% if user.tags|length > 0 %}
+        <h3 class="text-muted"{% if user.tags|length > 3 %} {{ tooltip(user.tags) }}{% endif %}>
+            {{ user.tags[:3]|join(', ')|trim }}{% if user.tags|length > 3 %}...{% endif %}
+        </h3>
     {% endif %}
     
     <div class="popover-publisher-biography">{{ biography|short_text({max: 120}) }}</div>
 </div>
 
 
-<div class="popover-footer">
-    {% if is_granted('ROLE_USER') and user.id != app.user.id %}
+
+{% if is_granted('ROLE_USER') and user.id != app.user.id %}
+    <div class="popover-footer">
         {{ render(controller('CMBundle:Fan:button', {userId: user.id, btn: false})) }}
         {{ render(controller('CMBundle:Relation:button', {user: user, btn: false})) }}
         <a href="{{ path('message_new', {userId: user.id}) }}">{{ icon('Message') }}</a>
-    {% endif %}
-</div>
+    </div>
+{% endif %}

@@ -163,7 +163,7 @@ $(function() {
                     placement: 'auto top',
                     container: 'body',
                     html: true,
-                    template: '<div class="popover popover-publisher"><div class="arrow"></div><div class="popover-content"></div></div>'
+                    template: '<div class="popover popover-publisher' + (logged ? ' logged' : '') + '"><div class="arrow"></div><div class="popover-content"></div></div>'
                 }).popover('show');
                 $('.popover').on('mouseleave', function () {
                 setTimeout(function () {

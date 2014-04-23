@@ -50,7 +50,9 @@ class TagFixtures extends AbstractFixture implements OrderedFixtureInterface, Co
     /*34*/    array('name-en' => 'tuner', 'name-fr' => 'directeur', 'name-it' => 'direttore', 'user' => false, 'page' => true),
     /*35*/    array('name-en' => 'repairman', 'name-fr' => 'directeur', 'name-it' => 'direttore', 'user' => false, 'page' => true),
     /*36*/    array('name-en' => 'reharsal room', 'name-fr' => 'directeur', 'name-it' => 'direttore', 'user' => false, 'page' => true),
-    /*37*/    array('name-en' => 'studio', 'name-fr' => 'directeur', 'name-it' => 'direttore', 'user' => false, 'page' => true),
+    /*37*/    array('name-en' => 'recording studio', 'name-fr' => 'directeur', 'name-it' => 'direttore', 'user' => false, 'page' => true),
+    /*38*/    array('name-en' => 'teacher', 'name-fr' => 'teacher', 'name-it' => 'insegnante', 'user' => true, 'page' => false),
+    /*39*/    array('name-en' => 'agent', 'name-fr' => 'agent', 'name-it' => 'agente', 'user' => false, 'page' => true),
     );
     
     /**
