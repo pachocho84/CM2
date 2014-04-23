@@ -15,9 +15,8 @@ class TagRepository extends BaseRepository
     static protected function getOptions(array $options = array())
     {
         return array_merge(array(
-             // 'entity_type' => sfContext::getInstance()->getRequest()->getParameter('module'),
-             // 'category'    => sfContext::getInstance()->getRequest()->getParameter('category', null),
-            'locale'      => 'en'
+            'type' => null,
+            'locale' => 'en'
         ), $options);
     }
     
@@ -25,10 +24,21 @@ class TagRepository extends BaseRepository
     {
         $options = self::getOptions($options);
         
-        return $this->getEntityManager()->createQueryBuilder()->select('tg, t')
+        $query = $this->getEntityManager()->createQueryBuilder()->select('tg, t')
             ->from('CMBundle:Tag', 'tg', 'tg.id')
             ->leftJoin('tg.translations', 't')
             ->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale']);
+
+        switch ($options['type']) {
+             case 'user':
+                 $query->andWhere('t.isUser = '.true);
+                 break;
+             case 'page':
+                 $query->andWhere('t.isPage = '.true);
+                 break;
+         }
+
+        return $query;
     }
     
     public function getTags(array $options = array())

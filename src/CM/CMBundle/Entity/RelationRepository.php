@@ -15,10 +15,15 @@ class RelationRepository extends BaseRepository
 {
     static protected function getOptions(array $options = array())
     {
+        $options = array_merge(array(
+            'locale'        => 'en'
+        ), $options);
+
         return array_merge(array(
             'relationTypeId' => null,
             'indexBy' => null,
             'groupBy' => null,
+            'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate'      => true,
             'limit'         => null,
         ), $options);
@@ -141,8 +146,10 @@ class RelationRepository extends BaseRepository
             ->getArrayResult();
     }
 
-    public function getSuggestedUsers($userId, $offset, $limit, $rand = false)
+    public function getSuggestedUsers($userId, $offset, $limit, $rand = false, $options = array())
     {
+        $options = self::getOptions($options);
+
         $closest = $this->createQueryBuilder('r')
             ->select('partial r.{id, userId}')
             ->where('r.fromUser = :user_id')->setParameter('user_id', $userId)
@@ -155,11 +162,11 @@ class RelationRepository extends BaseRepository
                 ->executeQuery('SELECT u.id FROM user u LEFT JOIN relation r ON (r.from_user_id = '.$userId.' AND r.user_id = u.id) WHERE u.id != '.$userId.' AND r.id IS NULL ORDER BY RAND() LIMIT '.$limit)
                 ->fetchAll();
             return $this->getEntityManager()->createQueryBuilder()
-                ->select('u, uut, ut, utt')
+                ->select('u, ut, t, tt')
                 ->from('CMBundle:User', 'u')
-                ->leftJoin('u.userUserTags', 'uut')
-                ->leftJoin('uut.userTag', 'ut')
-                ->leftJoin('ut.translations', 'utt')
+                ->leftJoin('u.userTags', 'ut')
+                ->leftJoin('ut.tag', 't')
+                ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
                 ->where('u.id in (:ids)')->setParameter('ids', $randIds)
                 ->getQuery()
                 ->getResult();

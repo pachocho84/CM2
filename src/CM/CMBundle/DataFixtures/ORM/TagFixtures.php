@@ -42,8 +42,7 @@ class TagFixtures extends AbstractFixture implements OrderedFixtureInterface, Co
             $tag = new Tag;
             $tag->setVisible(true)
                 ->setIsUser(true)
-                ->setIsPageUser(true)
-                ->setIsEntityUser(true);
+                ->setIsPage(true);
             $tag->setName($this->tags[$i - 1]['name-en']);
             $tag->translate('fr')->setName($this->tags[$i - 1]['name-fr']);
             $tag->translate('it')->setName($this->tags[$i - 1]['name-it']);

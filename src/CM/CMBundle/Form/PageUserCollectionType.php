@@ -18,7 +18,7 @@ class PageUserCollectionType extends AbstractType
         $builder->add('pages', 'collection', array(
                 'label' => 'Pages',
                 'required' => false,
-                'type' => new PageUserType,
+                'type' => new $options['type'],
                 'allow_delete' => true,
                 'by_reference' => false,
                 'options' => array(
@@ -34,6 +34,7 @@ class PageUserCollectionType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => null,
             'tags' => array(),
+            'type' => null
         ));
     }
 
@@ -42,6 +43,6 @@ class PageUserCollectionType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_pageUser_collection';
+        return 'cm_cmbundle_pageuser_collection';
     }
 }

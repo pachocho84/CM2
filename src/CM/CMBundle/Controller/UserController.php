@@ -25,6 +25,7 @@ use CM\CMBundle\Entity\Education;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\BiographyType;
 use CM\CMBundle\Form\UserImageType;
+use CM\CMBundle\Form\UserTagsType;
 use CM\CMBundle\Form\EducationType;
 use CM\CMBundle\Form\PageUserCollectionType;
 
@@ -220,39 +221,25 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $tags = $em->getRepository('CMBundle:Tag')->getUserTags(array('locale' => $request->getLocale()));
+        $user = $this->getUser();
+ 
+        $form = $this->createForm(new UserTagsType, $user, array(
+            'cascade_validation' => true,
+            'error_bubbling' => false,
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => 'user', 'locale' => $request->getLocale()))
+        ))->add('save', 'submit');
+        
+        $form->handleRequest($request);
 
-        $availableTags = $tags;
-        foreach ($this->getUser()->getUserTags() as $userTag) {
-            if (array_key_exists($userTag->getTagId(), $tags)) {
-                unset($availableTags[$userTag->getTagId()]);
-            }
-        }
+        if ($form->isValid()) {
+            $em->persist($user);
+            $em->flush();
 
-        if ($request->isMethod('post')) {
-
-            $tags = explode(',', $request->get('tagsVal'));
-
-            if (!empty($tags)) {
-                foreach ($this->getUser()->getUserTags() as $userTag) {
-                    $em->remove($userTag);
-                }
-                $em->flush();
-
-                foreach ($tags as $key => $tag) {
-                    $this->getUser()->addTag($tags[intval($tag)], $key);
-                }
-
-                $em->persist($this->getUser());
-                $em->flush();
-            }
-
-            return new RedirectResponse($this->generateUrl('user_tags_edit'), 301);
+            return new RedirectResponse($this->generateUrl('user_tags_edit'));
         }
         
         return array(
-            'tags' => $tags,
-            'availableTags' => $availableTags
+            'form' => $form->createView()
         );
     }
 
@@ -269,14 +256,14 @@ class UserController extends Controller
 
         $form = $this->createForm(new PageUserCollectionType, array('pages' => $pageUsers), array(
             'cascade_validation' => true,
-            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('locale' => $request->getLocale())),
+            'type' => 'CM\CMBundle\Form\PageUserJoinType'
         ));
 
         $form->handleRequest($request);
         
         if ($form->isValid()) {
-            foreach ($pages as $page) {
-                $em->persist($page);
+            foreach ($pageUsers as $pageUser) {
+                $em->persist($pageUser);
             }
             $em->flush();
 

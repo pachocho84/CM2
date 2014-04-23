@@ -114,6 +114,7 @@ class UserTag
      */
     public function setTag(Tag $tag = null)
     {
+        if (!$tag->isUser()) return;
         $this->tag = $tag;
         if (!is_null($tag)) {
             $this->tagId = $tag->getId();

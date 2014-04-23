@@ -19,6 +19,7 @@ use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Form\PageType;
 use CM\CMBundle\Form\BiographyType;
 use CM\CMBundle\Form\PageImageType;
+use CM\CMBundle\Form\PageUserCollectionType;
 
 /**
  * @Route("/pages")
@@ -120,7 +121,7 @@ class PageController extends Controller
         
         if ($request->get('_route') == 'page_edit') {
             $formRoute = 'page_edit';
-            $formRouteArgs = array('id' => $event->getId(), 'slug' => $event->getSlug());
+            $formRouteArgs = array('id' => $page->getId(), 'slug' => $page->getSlug());
         } else {
             $formRoute = 'page_new';
             $formRouteArgs = array();
@@ -129,7 +130,9 @@ class PageController extends Controller
         $form = $this->createForm(new PageType, $page, array(
 /*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
             'cascade_validation' => true,
-            'error_bubbling' => false
+            'error_bubbling' => false,
+            'roles' => $user->getRoles(),
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => 'page', 'locale' => $request->getLocale())),
         ))->add('save', 'submit');
         
         $form->handleRequest($request);
@@ -344,7 +347,7 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/{slug}/account/members/{pageNum}", name="page_members_settings", requirements={"pageNum" = "\d+"})
+     * @Route("/{slug}/account/members", name="page_members_settings", requirements={"pageNum" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")1
      * @Template
      */
@@ -362,25 +365,33 @@ class PageController extends Controller
             throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
         }
 
-        if ($request->isMethod('post')) {
+        $pageUsers = $em->getRepository('CMBundle:PageUser')->getMembers($page->getId(), array(
+            'status' => array(PageUser::STATUS_ACTIVE, PageUser::STATUS_PENDING),
+            'userId' => $this->getUser()->getId(),
+            'paginate' => false,
+            'limit' => null,
+        ));
 
-            $tagsUsers = $request->get('tags');
-
-            foreach ($tagsUsers as $pageUserId => $userTags) {
-                $em->getRepository('CMBundle:PageUser')->updateUserTags($pageUserId, $userTags);
-            }
-        }
-
-        $members = $em->getRepository('CMBundle:PageUser')->getMembers($page->getId(), array('paginate' => false, 'limit' => 10, 'status' => array(PageUser::STATUS_ACTIVE, PageUser::STATUS_PENDING)));
-
-        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+        $form = $this->createForm(new PageUserCollectionType, array('pages' => $pageUsers), array(
+            'cascade_validation' => true,
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => 'user', 'locale' => $request->getLocale())),
+            'type' => 'CM\CMBundle\Form\PageUserType'
+        ));
         
-        $pagination = $this->get('knp_paginator')->paginate($members, $pageNum, 30);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            foreach ($pageUsers as $pageUser) {
+                $em->persist($pageUser);
+            }
+            $em->flush();
+
+            return new RedirectResponse($this->generateUrl('page_members_settings', array('slug' => $slug)));
+        }
 
         return array(
             'page' => $page,
-            'members' => $members,
-            'tags' => $tags
+            'form' => $form->createView()
         );
     }
 
@@ -403,11 +414,8 @@ class PageController extends Controller
         $em->persist($pageUser);
         $em->flush();
 
-        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
-
         return array(
-            'member' => $pageUser,
-            'tags' => $tags
+            'member' => $pageUser
         );
     }
 

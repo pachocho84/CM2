@@ -65,7 +65,9 @@ initDatepicker = function(elem) {
 
 function initializePlaces(index) {
     canvas = $('[gmap-canvas]').get(index);
-    input = $(canvas).parent().parent().parent().find('[places-autocomplete]').get(0);
+    input = $(canvas).closest('.date-form').find('[places-autocomplete]').get(0);
+
+    console.log(index, canvas, input);
 
     var mapOptions = {
         center: new google.maps.LatLng(45.4654542, 9.186515999999999),
@@ -82,7 +84,7 @@ function initializePlaces(index) {
         map: map
     });
 
-    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+    google.maps.event.addListener(autocomplete, 'place_changed', function(event) {
         infowindow.close();
         marker.setVisible(false);
         var place = autocomplete.getPlace();
@@ -119,9 +121,9 @@ function initializePlaces(index) {
         }
 
         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-        $(canvas).parent().parent().parent().find('[address-autocomplete]').val(address);
-        $(canvas).parent().parent().parent().find('[places-autocomplete]').val(place.name);
-        $(canvas).parent().parent().parent().find('[address-coordinates]').val(place.geometry.location.lat() + ',' + place.geometry.location.lng());
+        $(map.getDiv()).closest('.date-form').find('[address-autocomplete]').val(address);
+        $(map.getDiv()).closest('.date-form').find('[places-autocomplete]').val(place.name);
+        $(map.getDiv()).closest('.date-form').find('[address-coordinates]').val(place.geometry.location.lat() + ',' + place.geometry.location.lng());
         infowindow.open(map, marker);
     });
 }

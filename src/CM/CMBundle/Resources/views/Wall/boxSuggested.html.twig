@@ -10,7 +10,9 @@
             
                 <div class="media-body">
                     <h4 class="media-heading">{{ user }}</h4>
-                    <small>{{ user.userTags|join(', ')|trim }}</small>
+                    <small class="text-muted"{% if user.tags|length > 3 %} {{ tooltip(user.tags) }}{% endif %}>
+                        {{ user.tags[:3]|join(', ')|trim }}{% if user.tags|length > 3 %}...{% endif %}
+                    </small>
                     <div class="pull-right">
                         <div class="btn-group relations-menu">
                             <button type="button" class="btn btn-danger btn-sm dropdown-toggle relation-button" data-toggle="dropdown"><span>{{ icon('Relation') }} {{ 'Request a relation'|trans }}</span></button>

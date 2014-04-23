@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 // TODO: reinsert unique constraint:
 /*
  *     uniqueConstraints={@ORM\UniqueConstraint(columns={
- *         "pageUser_id", "pageUser_tag_id"
+ *         "page_id", "page_tag_id"
  *     })}
  */
  
@@ -15,9 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  * PagePageTag
  *
  * @ORM\Entity
- * @ORM\Table(name="page_user_tag")
+ * @ORM\Table(name="page_tag")
  */
-class PageUserTag
+class PageTag
 {     
     /**
      * @var integer
@@ -31,13 +31,13 @@ class PageUserTag
     /**
      * @ORM\Column(name="page_user_id", type="integer")
      */
-    private $pageUserId;
+    private $pageId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="PageUser", inversedBy="pageUserTags")
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="pageTags")
      * @ORM\JoinColumn(name="page_user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
-    private $pageUser;
+    private $page;
 
     /**
      * @ORM\Column(name="tag_id", type="integer")
@@ -45,7 +45,7 @@ class PageUserTag
     private $tagId;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Tag", inversedBy="tagPageUsers")
+     * @ORM\ManyToOne(targetEntity="Tag", inversedBy="tagPages")
      * @ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $tag;
@@ -73,13 +73,13 @@ class PageUserTag
     }
 
     /**
-     * Get pageUserId
+     * Get pageId
      *
      * @return integer 
      */
-    public function getPageUserId()
+    public function getPageId()
     {
-        return $this->pageUserId;
+        return $this->pageId;
     }
 
     /**
@@ -88,10 +88,10 @@ class PageUserTag
      * @param Page $entity
      * @return EntityPage
      */
-    public function setPageUser(PageUser $pageUser = null)
+    public function setPage(Page $page = null)
     {
-        $this->pageUser = $pageUser;
-        $this->pageUserId = $pageUser->getId();
+        $this->page = $page;
+        $this->pageId = $page->getId();
     
         return $this;
     }
@@ -101,9 +101,9 @@ class PageUserTag
      *
      * @return Page 
      */
-    public function getPageUser()
+    public function getPage()
     {
-        return $this->pageUser;
+        return $this->page;
     }
 
     /**
@@ -114,7 +114,7 @@ class PageUserTag
      */
     public function setTag(Tag $tag = null)
     {
-        if (!$tag->isUser()) return;
+        if (!$tag->isPage()) return;
         $this->tag = $tag;
         if (!is_null($tag)) {
             $this->tagId = $tag->getId();
@@ -124,7 +124,7 @@ class PageUserTag
     }
 
     /**
-     * Get pageUserId
+     * Get pageId
      *
      * @return integer 
      */

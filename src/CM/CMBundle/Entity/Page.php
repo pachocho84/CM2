@@ -22,8 +22,6 @@ class Page
     use \CM\CMBundle\Model\CoverImageTrait;
     use \CM\CMBundle\Model\BackgroundImageTrait;
 
-    const TYPE_ASSOCIATION = 0;
-
     /**
      * @var integer
      *
@@ -32,13 +30,6 @@ class Page
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="type", type="smallint")
-     */
-    private $type;
 
     /**
      * @var string
@@ -57,11 +48,6 @@ class Page
      * @ORM\JoinColumn(name="creator_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      **/
     private $creator;
-
-    /**
-     * @ORM\OneToMany(targetEntity="PageUser", mappedBy="page", cascade={"persist", "remove"})
-     */
-    private $pageUsers;
         
     /**
      * @ORM\OneToMany(targetEntity="Post", mappedBy="page", cascade={"persist", "remove"})
@@ -93,6 +79,16 @@ class Page
      * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Image", mappedBy="page", cascade={"persist", "remove"})
      */
     private $images;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PageUser", mappedBy="page", cascade={"persist", "remove"})
+     */
+    private $pageUsers;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PageTag", mappedBy="page", cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    protected $pageTags;
 	
 	/**
 	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="fromPage", cascade={"persist", "remove"})
@@ -112,8 +108,9 @@ class Page
     public function __construct()
     {
         $this->images = new ArrayCollection();
-        $this->pagesUsers = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->pagesUsers = new ArrayCollection();
+        $this->pageTags = new ArrayCollection();
 		$this->notificationsIncoming = new ArrayCollection;
 		$this->notificationsOutgoing = new ArrayCollection;
 		$this->requests = new ArrayCollection;
@@ -142,29 +139,6 @@ class Page
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set type
-     *
-     * @param integer $type
-     * @return Page
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer 
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
@@ -421,6 +395,101 @@ class Page
     public function getImages()
     {
         return $this->images;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityPage $comment
+     * @return Entity
+     */
+    public function addTag(
+        Tag $tag,
+        $order = null
+    )
+    {
+        if (!$tag->isPage()) return;
+
+        foreach ($this->pageTags as $key => $pageTag) {
+            if ($pageTag->getTagId() == $tag->getId()) {
+                return;
+            }
+        }
+        $pageTag = new PageTag;
+        $pageTag->setPage($this)
+            ->setTag($tag)
+            ->setOrder($order);
+        $this->pageTags[] = $pageTag;
+    
+        return $this;
+    }
+
+    public function setPageTags($pageTags = array())
+    {
+        $this->clearTags();
+        foreach ($pageTags as $order => $pageTag) {
+            $pageTag->setPage($this)
+                ->setOrder($order);
+            $this->pageTags[] = $pageTag;
+        }
+
+        return $this;
+    }
+
+    public function addPageTag($pageTag)
+    {
+        if (!$this->pageTags->contains($pageTag)) {
+            $pageTag->setPage($this);
+            $this->pageTags[] = $pageTag;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\EntityPage $pages
+     */
+    public function removePageTag(PageTag $pageTag)
+    {
+        $this->pageTags->removeElement($pageTag);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function clearTags()
+    {
+        return $this->pageTags->clear();
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPageTags()
+    {
+        return $this->pageTags;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTags()
+    {
+        $tags = array();
+        foreach ($this->pageTags as $pageTag) {
+            $tags[] = $pageTag->getTag();
+        }
+        return $tags;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTagsIds()
+    {
+        $tags = array();
+        foreach ($this->pageTags as $pageTag) {
+            $tags[] = $pageTag->getTagId();
+        }
+        return $tags;
     }
 
 	/**

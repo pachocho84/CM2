@@ -236,6 +236,7 @@ class EntityUser
         $order = null
     )
     {
+        if (!$tag->isUser()) return;
         foreach ($this->entityUserTags as $key => $entityUserTag) {
             if ($entityUserTag->getTagId() == $tag->getId()) {
                 return;

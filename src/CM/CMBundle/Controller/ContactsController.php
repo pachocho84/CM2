@@ -21,16 +21,6 @@ use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\Fan;
 use CM\CMBundle\Form\CommentType;
 
-function getAllErrors($form, &$errors = array()) {
-    foreach ($form->getErrors() as $error) {
-        $errors[] = $form->getName().': '.$error->getMessage();
-    }
-    foreach ($form->all() as $child) {
-        getAllErrors($child, $errors);
-    }
-    return $errors;
-}
-
 /**
  * @Route("/contacts")
  * @Template

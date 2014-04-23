@@ -47,13 +47,11 @@ class TagsToArrayTransformer implements DataTransformerInterface
             return null;
         }
         
-        // $tags = new ArrayContainer;
         $tags = array();
         foreach ($array as $order => $id) {
         	$entityUserTag = new $this->class;
         	$entityUserTag->setTag($this->tags[$id])
         		->setOrder($order);
-        	// $tags->add($entityUserTag);
             $tags[] = $entityUserTag;
         }
     
