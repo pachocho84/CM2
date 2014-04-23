@@ -4,7 +4,7 @@
     {% if app.request.get('_route') == 'page_new' %}
         {{ "Add a page"|trans }}
     {% elseif app.request.get('_route') == 'page_edit' %}
-        {{ "Edit page: %title%"|trans({'%title%': page.title}) }}
+        {{ "Edit page: %title%"|trans({'%title%': page}) }}
     {% endif %}
 {% endblock %}
 
