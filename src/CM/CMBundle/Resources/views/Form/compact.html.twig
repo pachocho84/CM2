@@ -285,13 +285,25 @@
 {% endspaceless %}
 {% endblock %}
 
-{% block _cm_cmbundle_article_entityUsers_entry_entityUserTags_widget %}
+{% block _cm_cmbundle_usertags_userTags_widget %}
 {% spaceless %}
     {{ block('cm_cmbundle_tags_widget') }}
 {% endspaceless %}
 {% endblock %}
 
-{% block _cm_cmbundle_pageUser_collection_pages_entry_pageUserTags_widget %}
+{% block _cm_cmbundle_page_pageTags_widget %}
+{% spaceless %}
+    {{ block('cm_cmbundle_tags_widget') }}
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_pageuser_collection_pages_entry_pageUserTags_widget %}
+{% spaceless %}
+    {{ block('cm_cmbundle_tags_widget') }}
+{% endspaceless %}
+{% endblock %}
+
+{% block _cm_cmbundle_article_entityUsers_entry_entityUserTags_widget %}
 {% spaceless %}
     {{ block('cm_cmbundle_tags_widget') }}
 {% endspaceless %}

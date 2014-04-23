@@ -10,52 +10,8 @@
         </div>
 
         <div class="box-body">
-            <form action="{{ path('user_tags_edit') }}" method="post">
-                
-                <legend>{{ 'My tags'|trans }}</legend>
-                <div id="tags" class="tag-list">
-                    {% for tag in app.user.tagsIds %}
-                        <label class="tag" title=" {{ tags[tag] }}"><input type="hidden" name="tag_{{ tag }}" value="{{ tag }}">{{ icon('Tag') }} {{ tags[tag] }}</label>
-                    {% endfor %}
-                </div>
-
-                <legend>{{ 'Available tags'|trans }}</legend>
-                <div id="tags" class="tag-list">
-                    {% for tag in availableTags %}
-                        <label class="tag" title="{{ tag }}"><input type="hidden" name="tag_{{ tag.id }}" value="{{ tag.id }}">{{ icon('Tag') }} {{ tag }}</label>
-                    {% endfor %}
-                </div>
-                
-                <input type="hidden" name="tagsVal" id="tagsVal" value="{{ app.user.tags|join(',') }}" />
-                
-                <div class="text-right">
-                    <a href="{{ path(app.request.attributes.get('_route')) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
-                    <button type="submit" name="commit" class="btn btn-primary">{{ 'Save'|trans }}</button>
-                </div>
-            
+            {{ form(form) }}
             </form>
         </div>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript">//<![CDATA[ 
-        $(function(){   
-            /* TAGS */
-            if ($('#tags').length > 0) {
-                $('#tags, #tags').sortable({ 
-                    connectWith:    '.tag-list', 
-                    stop:               function() {
-                        tags = new Array();
-                        $('#tags .tag').each(function(i, value) {
-                            var tag_id = $(this).find('input').val();
-                            tags.push(tag_id);
-                        });
-                        $('#tagsVal').val(tags);
-                    }
-                }).disableSelection();
-            }
-        });//]]>  
-    </script>
 {% endblock %}

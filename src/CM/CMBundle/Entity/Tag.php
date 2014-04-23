@@ -38,6 +38,11 @@ class Tag
     protected $tagUsers;
 
     /**
+     * @ORM\OneToMany(targetEntity="PageTag", mappedBy="tag", cascade={"persist", "remove"})
+     */
+    protected $tagPages;
+
+    /**
      * @ORM\OneToMany(targetEntity="PageUserTag", mappedBy="tag", cascade={"persist", "remove"})
      */
     protected $tagPageUsers;
@@ -57,20 +62,14 @@ class Tag
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_page_user", type="boolean")
+     * @ORM\Column(name="is_page", type="boolean")
      */
-    private $isPageUser;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_entity_user", type="boolean")
-     */
-    private $isEntityUser;
+    private $isPage;
 
     public function __construct()
     {
         $this->tagUsers = new ArrayCollection;
+        $this->tagPages = new ArrayCollection;
         $this->tagPageUsers = new ArrayCollection;
         $this->tagEntityUsers = new ArrayCollection;
     }
@@ -154,6 +153,36 @@ class Tag
     }
 
     /**
+     * @param \CM\CMBundle\Entity\Entity\EntityPage $comment
+     * @return Entity
+     */
+    public function addTagPage(PageTag $pageTag)
+    {
+        if (!$this->pageTags->contains($pageTag)) {
+            $this->pageTags[] = $pageTag;
+            $pageTag->setPage($this);
+        }
+    
+        return $this;
+    }
+
+    /**
+     * @param \CM\CMBundle\Entity\Entity\EntityPage $pages
+     */
+    public function removePageTag(PageTag $pageTag)
+    {
+        $this->pageTags->removeElement($pageTag);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPageTags()
+    {
+        return $this->pageTags;
+    }
+
+    /**
      * @param \CM\CMBundle\Entity\Entity\EntityPageUser $comment
      * @return Entity
      */
@@ -231,7 +260,7 @@ class Tag
      *
      * @return boolean 
      */
-    public function getIsUser()
+    public function isUser()
     {
         return $this->isUser;
     }
@@ -242,9 +271,9 @@ class Tag
      * @param boolean $isPage
      * @return UserTag
      */
-    public function setIsPageUser($isPageUser)
+    public function setIsPage($isPage)
     {
-        $this->isPageUser = $isPageUser;
+        $this->isPage = $isPage;
     
         return $this;
     }
@@ -254,31 +283,8 @@ class Tag
      *
      * @return boolean 
      */
-    public function getIsPageUser()
+    public function isPage()
     {
-        return $this->isPageUser;
-    }
-
-    /**
-     * Set isEntityUser
-     *
-     * @param boolean $isEntityUser
-     * @return UserTag
-     */
-    public function setIsEntityUser($isEntityUser)
-    {
-        $this->isEntityUser = $isEntityUser;
-    
-        return $this;
-    }
-
-    /**
-     * Get isEntityUser
-     *
-     * @return boolean 
-     */
-    public function getIsEntityUser()
-    {
-        return $this->isEntityUser;
+        return $this->isPage;
     }
 }

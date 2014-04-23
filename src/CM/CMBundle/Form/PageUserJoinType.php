@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use CM\CMBundle\Form\DataTransformer\TagsToArrayTransformer;
 use CM\CMBundle\Entity\PageUser;
 
-class PageUserType extends AbstractType
+class PageUserJoinType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -18,16 +18,15 @@ class PageUserType extends AbstractType
     {
         parent::buildForm($builder, $options);
     
-        $builder->add($builder->create('pageUserTags', 'choice', array(
-                    'attr' => array('tags' => ''),
-                    'choices' => $options['tags'],
-                    'multiple' => true,
-                    'by_reference' => false,
-                    'label' => 'Roles'
-                ))->addModelTransformer(new TagsToArrayTransformer($options['tags'], 'CM\CMBundle\Entity\PageUserTag')
-            ))->add('admin', 'checkbox', array(
-                'required' => false,
-                'label' => 'Make admin'
+        $builder->add('joinArticle', 'choice', array(
+                'expanded' => true,
+                'choices' => array(PageUser::JOIN_NO, PageUser::JOIN_YES, PageUser::JOIN_REQUEST)
+            ))->add('joinDisc', 'choice', array(
+                'expanded' => true,
+                'choices' => array(PageUser::JOIN_NO, PageUser::JOIN_YES, PageUser::JOIN_REQUEST)
+            ))->add('joinEvent', 'choice', array(
+                'expanded' => true,
+                'choices' => array(PageUser::JOIN_NO, PageUser::JOIN_YES, PageUser::JOIN_REQUEST)
             ));
     }
     
@@ -38,11 +37,7 @@ class PageUserType extends AbstractType
     {        
         $resolver->setDefaults(array(
             'data_class' => 'CM\CMBundle\Entity\PageUser',
-            'tags' => array(),
-        ));
-
-        $resolver->setRequired(array(
-            'tags'
+            'tags' => null
         ));
     }
 
@@ -51,6 +46,6 @@ class PageUserType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_pageusertags';
+        return 'cm_cmbundle_pageuser';
     }
 }

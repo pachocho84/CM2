@@ -107,7 +107,10 @@ class WallController extends Controller
                 // Suggested users
                 if ($this->get('security.context')->isGranted('ROLE_USER')) {
                     $relationTypes = $em->getRepository('CMBundle:RelationType')->findBy(array());
-                    $boxes['suggestedUsers;'.$order['sugg']] = $this->renderView('CMBundle:Wall:boxSuggested.html.twig', array('suggestions' => $em->getRepository('CMBundle:Relation')->getSuggestedUsers($this->getUser()->getId(), 0, 5, true), 'relationTypes' => $relationTypes));
+                    $boxes['suggestedUsers;'.$order['sugg']] = $this->renderView('CMBundle:Wall:boxSuggested.html.twig', array(
+                        'suggestions' => $em->getRepository('CMBundle:Relation')->getSuggestedUsers($this->getUser()->getId(), 0, 5, true),
+                        'relationTypes' => $relationTypes, array('locale' => $request->getLocale())
+                    ));
                 }
 
                 // Sponsored

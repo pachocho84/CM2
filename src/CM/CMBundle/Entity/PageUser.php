@@ -323,6 +323,7 @@ class PageUser
         $order = null
     )
     {
+        if (!$tag->isUser()) return;
         foreach ($this->pageUserTags as $key => $pageUserTag) {
             if ($pageUserTag->getTagId() == $tag->getId()) {
                 return;

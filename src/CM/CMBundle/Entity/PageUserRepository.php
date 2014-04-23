@@ -14,10 +14,15 @@ class PageUserRepository extends BaseRepository
 {
     static protected function getOptions(array $options = array())
     {
+        $options = array_merge(array(
+            'locale'        => 'en'
+        ), $options);
+
         return array_merge(array(
             'paginate'      => true,
             'limit'         => 25,
-            'status' => array(PageUser::STATUS_ACTIVE)
+            'status' => array(PageUser::STATUS_ACTIVE),
+            'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
         ), $options);
     }
 
@@ -25,14 +30,17 @@ class PageUserRepository extends BaseRepository
     {
         $options = self::getOptions($options);
         
-        $query = $this->createQueryBuilder('pu')
-            ->select('pu')
-            ->leftJoin('pu.user', 'u')
-            ->leftJoin('pu.page', 'g')
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('pu, put, t, tt')
+            ->from('CMBundle:PageUser', 'pu', 'pu.userId')
+            ->leftJoin('pu.pageUserTags', 'put', '', '', '', 't.order')
+            ->leftJoin('put.tag', 't')
+            ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
+            ->join('pu.user', 'u')
+            ->join('pu.page', 'p')
             ->where('pu.status in (:status)')->setParameter('status', $options['status'])
             ->andWhere('pu.pageId = :page_id')->setParameter('page_id', $pageId)
-            ->andWhere('pu.userId != g.creatorId')
-            ->orderBy('pu.admin', 'desc');
+            ->addOrderBy('pu.admin', 'desc');
 
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
@@ -50,15 +58,6 @@ class PageUserRepository extends BaseRepository
             ->orderBy('p.name');
 
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();
-    }
-
-    public function updateUserTags($id, array $userTags)
-    {  
-        $this->createQueryBuilder('pu')
-            ->update('CMBundle:PageUser', 'pu')
-            ->where('pu.id = :id')->setParameter('id', $id)
-            ->set('pu.userTags', '\''.implode(',', $userTags).'\'')
-            ->getQuery()->execute();
     }
 
     public function delete($userId, $pageId)

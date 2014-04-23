@@ -26,6 +26,16 @@ use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\ImageCollectionType;
 use CM\CMBundle\Utility\UploadHandler;
 
+function getAllErrors($form, &$errors = array()) {
+    foreach ($form->getErrors() as $error) {
+        $errors[] = $form->getName().': '.$error->getMessage();
+    }
+    foreach ($form->all() as $child) {
+        getAllErrors($child, $errors);
+    }
+    return $errors;
+}
+
 /**
  * @Route("/events")
  */
@@ -210,15 +220,13 @@ class EventController extends Controller
         }
 
         $event->addEventDate(new EventDate);
-        
-        // TODO: retrieve locales from user
  
         $form = $this->createForm(new EventType, $event, array(
             'cascade_validation' => true,
             'error_bubbling' => false,
             'em' => $em,
             'roles' => $user->getRoles(),
-            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('locale' => $request->getLocale())),
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => 'user', 'locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ))->add('save', 'submit');
@@ -230,11 +238,6 @@ class EventController extends Controller
             $em->flush();
 
             return new RedirectResponse($this->generateUrl('event_show', array('id' => $event->getId(), 'slug' => $event->getSlug())));
-        }
-
-        $users = array();
-        foreach ($event->getEntityUsers() as $entityUser) {
-            $users[] = $entityUser->getUser();
         }
         
         return array(

@@ -265,6 +265,7 @@ class EventRepository extends BaseRepository
             ->select('d')
             ->from('CMBundle:EventDate','d')
             ->where('d.eventId = :id')->setParameter('id', $id)
+            ->orderBy('d.start')
             ->getQuery()
             ->getResult();
     }

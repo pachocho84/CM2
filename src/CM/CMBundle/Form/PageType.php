@@ -5,40 +5,47 @@ namespace CM\CMBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use CM\CMBundle\Entity\Page;
 use CM\CMBundle\Form\DataTransformer\TagsToArrayTransformer;
-use CM\CMBundle\Entity\PageUser;
 
-class PageUserType extends AbstractType
+class PageType extends AbstractType
 {
-    /**
+        /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-    
-        $builder->add($builder->create('pageUserTags', 'choice', array(
+        $builder->add('name');
+        $builder->add($builder->create('pageTags', 'choice', array(
                     'attr' => array('tags' => ''),
                     'choices' => $options['tags'],
                     'multiple' => true,
                     'by_reference' => false,
-                    'label' => 'Roles'
-                ))->addModelTransformer(new TagsToArrayTransformer($options['tags'], 'CM\CMBundle\Entity\PageUserTag')
-            ))->add('admin', 'checkbox', array(
-                'required' => false,
-                'label' => 'Make admin'
+                    'label' => 'Types'
+                ))->addModelTransformer(new TagsToArrayTransformer($options['tags'], 'CM\CMBundle\Entity\PageTag')))
+            ->add('description')
+            ->add('website')
+            ->add('imgFile', 'file', array(
+                'attr' => array('image' => ''),
+                'label'  => 'Image'
+            ))->add('imgOffset', 'hidden', array(
+                'attr' => array('img-offset-field' => '')
             ));
+        if (in_array('ROLE_ADMIN', $options['roles'])) {
+            $builder->add('post', new PostType, array('label' => 'Post'));
+        }
     }
     
     /**
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {        
+    {
         $resolver->setDefaults(array(
-            'data_class' => 'CM\CMBundle\Entity\PageUser',
-            'tags' => array(),
+            'data_class' => 'CM\CMBundle\Entity\Page',
+            'roles' => array(),
+            'tags' => array()
         ));
 
         $resolver->setRequired(array(
@@ -51,6 +58,6 @@ class PageUserType extends AbstractType
      */
     public function getName()
     {
-        return 'cm_cmbundle_pageusertags';
+        return 'cm_cmbundle_page';
     }
 }

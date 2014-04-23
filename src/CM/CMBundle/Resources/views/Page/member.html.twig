@@ -1,36 +1,31 @@
-<div protagonist_new_id="0" class="collection-item protagonists_user media ajax-link-target alert alert-{% if member.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_ACTIVE') %}success{% else %}warning{% endif %}" user_id="{{ member.userId }}">
-
-    <div class="immagine">
-        {{ show_img_box(member.user.img|imagine_filter('medium'), {'width': 75, 'height': 75, 'offset': member.user.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}}) }}
-    </div>
-
-    <div class="content">
-
-        <h3><a href="{{ path('user_show', {'slug': member.user.slug}) }}">{{ member.user }}</a></h3>
-
-        <select name="tags[{{ member.id }}][]" multiple id="roles_{{ member.userId }}" style="width: 500px;" class="form-control col-lg-offset-2 col-lg-10">
-            {% for tag in tags %}
-                <option value="{{ tag.id }}"{% if member.hasUserTag(tag.id) %} selected{% endif %}>{{ tag }}</option>
-            {% endfor %}
-        </select>
-
-        <div class="btn-page">
-
-            {% if app.user.id != member.userId %}
-            {#<?php if ($page->getUserId() != $member->getUserId()): ?>#}
-
-                {% if member.admin %}
-                    <a href="{{ path('page_remove_admin', {'id': member.id}) }}" class="btn btn-default ajax-link">{{ icon('Down') }} {{ 'Remove as admin'|trans }}</a>
-                {% else %}
-                    <a href="{{ path('page_promote_admin', {'id': member.id}) }}" class="btn btn-default ajax-link">{{ icon('Up') }} {{ 'Promote to admin'|trans }}</a>
-                {% endif %}
-
-                <a href="{{ path('page_remove_user', {'id': member.id})}}" class="btn btn-default ajax-link">{{ icon('Minus') }} {{ 'Remove member'|trans }}</a>
-
-            {% endif %}
-
-        </div><!-- end bottom -->
-
-    </div><!-- end contenuto -->
-
-</div><!-- end oggetto elemento -->
+{% if protagonist_new_id is not defined %}
+    {% set protagonist_new_id = 0 %}
+{% endif %}
+{% for field in pageUsers %}
+    {% if skip is not defined or loop.index0 >= protagonist_new_id %}
+        {% set pageUser = field.vars.data %}
+        {% set user = pageUser.user %}
+        <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user media ajax-link-target alert alert-{% if pageUser.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_ACTIVE') %}success{% else %}warning{% endif %}" user_id="{{ user.id }}">
+            {{ form_errors(field) }}
+            {{ show_img_box(user.img|imagine_filter('medium'), {width: 58, offset: user.imgOffset, box_attributes: {class: 'img-thumbnail pull-left'}})|raw }}
+            <div class="media-body">
+                {% if user.id != app.security.token.user.id %}<a class="protagonists_remove close" aria-hidden="true" id="protagonists_remove_{{ loop.index0 }}">&times;</a>{% endif %}
+                <h4 class="media-heading">{{ user }}</h4>
+                <div class="row">
+                    <div class="col-md-9">
+                        {{ form_widget(field.pageUserTags) }}
+                    </div>
+                    <div class="col-md-3">
+                        {% if user.id == app.security.token.user.id %}
+                            <label class="checkbox-inline control-label"><input type="checkbox" disabled checked>{{ 'You are admin'|trans }}</label>
+                            {% do field.admin.setRendered %}
+                        {% else %}
+                            {{ form_widget(field.admin) }}
+                        {% endif %}
+                    </div>
+                    {{ form_rest(field) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}

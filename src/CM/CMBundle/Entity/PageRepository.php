@@ -15,9 +15,14 @@ class PageRepository extends BaseRepository
 {
     static protected function getOptions(array $options = array())
     {
+        $options = array_merge(array(
+            'locale'        => 'en'
+        ), $options);
+
         return array_merge(array(
             'userId' => null,
             'pageId' => null,
+            'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate' => true,
             'limit'    => 25,
         ), $options);

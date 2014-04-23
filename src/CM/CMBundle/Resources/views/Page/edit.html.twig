@@ -1,0 +1,32 @@
+{% extends 'CMBundle:Form:layout.html.twig' %}
+
+{% block title %}
+    {% if app.request.get('_route') == 'page_new' %}
+        {{ "Add a page"|trans }}
+    {% elseif app.request.get('_route') == 'page_edit' %}
+        {{ "Edit page: %title%"|trans({'%title%': page.title}) }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-5">
+            <h2>{{ block('title') }}</h2>
+        </div>
+    </div>
+    
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-4">
+                {{ form_row(form.imgFile) }}
+                {{ form_row(form.imgOffset) }}
+            </div>
+            <div class="col-md-8">
+                {{ form_row(form.name) }}
+                {{ form_row(form.pageTags) }}
+                {{ form_row(form.website) }}
+                {% if form.posts is defined %}{{ form_row(form.posts) }}{% endif %}
+            </div>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

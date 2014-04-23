@@ -59,6 +59,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
+                {{ form_row(form.coordinates) }}
                 <div gmap-canvas></div>
             </div>
         </div>
@@ -158,8 +159,8 @@
             </div>
             <div class="col-md-8">
                 {{ form_row(form.translations) }}
-                {% if form.posts is defined %}{{ form_row(form.posts) }}{% endif %}
                 {{ form_row(form.category) }}
+                {% if form.posts is defined %}{{ form_row(form.posts) }}{% endif %}
             </div>
         </div>
     {{ form_end(form) }}
