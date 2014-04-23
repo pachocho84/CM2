@@ -147,6 +147,7 @@ class PageController extends Controller
         }
         
         return array(
+            'page' => $page,
             'form' => $form->createView()
         );
     }

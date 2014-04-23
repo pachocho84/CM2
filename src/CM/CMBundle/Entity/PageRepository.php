@@ -41,7 +41,7 @@ class PageRepository extends BaseRepository
         if (!is_null($options['tags'])) {
             $query->addSelect('pt, t, tt')
                 ->leftJoin('p.pageTags', 'pt')
-                ->leftJoin('pt.tag', 't')
+                ->leftJoin('pt.tag', 't', '', '', 't.order')
                 ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale']);
         }
         if (!is_null($options['pageUsers'])) {
@@ -49,7 +49,7 @@ class PageRepository extends BaseRepository
                 ->join('p.pageUsers', 'pu', '', '', 'pu.userId')
                 ->join('pu.user', 'puu')
                 ->leftJoin('pu.pageUserTags', 'put')
-                ->leftJoin('put.tag', 't1')
+                ->leftJoin('put.tag', 't1', '', '', 't1.order')
                 ->leftJoin('t1.translations', 'tt1', 'with', 'tt1.locale = :locale1')->setParameter('locale1', $options['locale']);
         }
 
@@ -67,7 +67,7 @@ class PageRepository extends BaseRepository
             ->select('p, pu, put, t, tt, i')
             ->join('p.pageUsers', 'pu', '', '', 'pu.userId')
             ->leftJoin('pu.pageUserTags', 'put')
-            ->leftJoin('put.tag', 't')
+            ->leftJoin('put.tag', 't', '', '', 't.order')
             ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
             ->leftJoin('p.images', 'i');
 
@@ -96,7 +96,7 @@ class PageRepository extends BaseRepository
             ->from('CMBundle:User', 'u')
             ->join('u.userPages', 'pu')
             ->leftJoin('pu.pageUserTags', 'put')
-            ->leftJoin('put.tag', 't')
+            ->leftJoin('put.tag', 't', '', '', 't.order')
             ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
             ->where('pu.admin = '.true)
             ->andWhere('pu.pageId = :page_id')->setParameter('page_id', $pageId)
@@ -120,7 +120,7 @@ class PageRepository extends BaseRepository
             ->select('p, pu, put, t, tt, u')
             ->join('p.pageUsers', 'pu')
             ->leftJoin('pu.pageUserTags', 'put')
-            ->leftJoin('put.tag', 't')
+            ->leftJoin('put.tag', 't', '', '', 't.order')
             ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
             ->join('pu.user', 'u')
             ->where('p.id = :page_id')->setParameter('page_id', $pageId)

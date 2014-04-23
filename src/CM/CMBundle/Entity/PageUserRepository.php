@@ -34,7 +34,7 @@ class PageUserRepository extends BaseRepository
             ->select('pu, put, t, tt')
             ->from('CMBundle:PageUser', 'pu', 'pu.userId')
             ->leftJoin('pu.pageUserTags', 'put', '', '', '', 't.order')
-            ->leftJoin('put.tag', 't')
+            ->leftJoin('put.tag', 't', '', '', 't.order')
             ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
             ->join('pu.user', 'u')
             ->join('pu.page', 'p')
