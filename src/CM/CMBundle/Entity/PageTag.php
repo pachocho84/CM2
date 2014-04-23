@@ -29,13 +29,13 @@ class PageTag
     protected $id;
 
     /**
-     * @ORM\Column(name="page_user_id", type="integer")
+     * @ORM\Column(name="page_id", type="integer")
      */
     private $pageId;
 
     /**
      * @ORM\ManyToOne(targetEntity="Page", inversedBy="pageTags")
-     * @ORM\JoinColumn(name="page_user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $page;
 
