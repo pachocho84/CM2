@@ -1220,6 +1220,11 @@ form textarea[expandable] {
     width: 100%;
 }*/
 .ui-autocomplete.ui-menu {
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    height: 150px;
+    overflow-y: auto;
     z-index: 99999;
 }
 

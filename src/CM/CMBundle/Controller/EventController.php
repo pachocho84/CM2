@@ -22,6 +22,7 @@ use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Multimedia;
 use CM\CMBundle\Entity\Sponsored;
+use CM\CMBundle\Entity\Tag;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\ImageCollectionType;
 use CM\CMBundle\Utility\UploadHandler;
@@ -226,7 +227,7 @@ class EventController extends Controller
             'error_bubbling' => false,
             'em' => $em,
             'roles' => $user->getRoles(),
-            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => 'user', 'locale' => $request->getLocale())),
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_USER, 'locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ))->add('save', 'submit');

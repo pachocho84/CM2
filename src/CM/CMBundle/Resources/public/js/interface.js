@@ -111,7 +111,7 @@ $(function() {
         $('#menu').addClass('fixed');
     }
 
-    $(window).scroll(function(event) {
+    $(window).on('mousewheel scroll mouseup DOMMouseScroll', function(event) {
         if ($('#body').hasClass('fixing')) return;
 
         var currentTop = $(window).scrollTop();

@@ -24,18 +24,13 @@ class TagRepository extends BaseRepository
     {
         $options = self::getOptions($options);
         
-        $query = $this->getEntityManager()->createQueryBuilder()->select('tg, t')
-            ->from('CMBundle:Tag', 'tg', 'tg.id')
-            ->leftJoin('tg.translations', 't')
-            ->andWhere('t.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale']);
+        $query = $this->getEntityManager()->createQueryBuilder()->select('t, tt')
+            ->from('CMBundle:Tag', 't', 't.id')
+            ->leftJoin('t.translations', 'tt')
+            ->andWhere('tt.locale IN (:locale, \'en\')')->setParameter('locale', $options['locale']);
 
-        switch ($options['type']) {
-             case 'user':
-                 $query->andWhere('t.isUser = '.true);
-                 break;
-             case 'page':
-                 $query->andWhere('t.isPage = '.true);
-                 break;
+        if (!is_null($options['type'])) {
+             $query->andWhere('bit_and(t.type, :type) > 0')->setParameter('type', $options['type']);
          }
 
         return $query;
@@ -43,6 +38,6 @@ class TagRepository extends BaseRepository
     
     public function getTags(array $options = array())
     {
-        return $this->filterTags()->getQuery()->getResult();
+        return $this->filterTags($options)->getQuery()->getResult();
     }
 }

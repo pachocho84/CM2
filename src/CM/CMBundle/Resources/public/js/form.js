@@ -130,7 +130,7 @@ function initializePlaces(index) {
 
 function initTags($protagonist) {
     $protagonist.find('input[tags]').each(function(i, elem) {
-        var source = $.map($(elem).closest('.row').find('select[tags] option'), function(e) { return {label: $(e).html(), value: $(e).attr('value')}; } );
+        var source = $.map($(elem).closest('.row').find('select[tags] option:not([disabled])'), function(e) { return {label: $(e).html(), value: $(e).attr('value')}; } );
         $(elem).tokenfield({
             autocomplete: {
                 source: source,

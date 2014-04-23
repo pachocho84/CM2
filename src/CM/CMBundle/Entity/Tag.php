@@ -15,6 +15,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Tag
 {
     use ORMBehaviors\Translatable\Translatable;
+
+    const TYPE_USER = 1;
+    const TYPE_PAGE = 2;
+    const TYPE_PAGE_USER = 4;
+    const TYPE_ENTITY = 8;
+    const TYPE_ENTITY_USER = 16;
     
     /**
      * @var integer
@@ -55,16 +61,9 @@ class Tag
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_user", type="boolean")
+     * @ORM\Column(name="type", type="smallint")
      */
-    private $isUser;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_page", type="boolean")
-     */
-    private $isPage;
+    private $type;
 
     public function __construct()
     {
@@ -248,11 +247,48 @@ class Tag
      * @param boolean $isUser
      * @return UserTag
      */
-    public function setIsUser($isUser)
+    public function setType($type)
     {
-        $this->isUser = $isUser;
+        $this->type = $type;
     
         return $this;
+    }
+
+    /**
+     * Set isUser
+     *
+     * @param boolean $isUser
+     * @return UserTag
+     */
+    public function addType($type)
+    {
+        $this->type |= $type;
+    
+        return $this;
+    }
+
+    /**
+     * Set isUser
+     *
+     * @param boolean $isUser
+     * @return UserTag
+     */
+    public function removeType($type)
+    {
+        $this->type = $this->type && (-$type);
+    
+        return $this;
+    }
+
+    /**
+     * Set isUser
+     *
+     * @param boolean $isUser
+     * @return UserTag
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -262,20 +298,7 @@ class Tag
      */
     public function isUser()
     {
-        return $this->isUser;
-    }
-
-    /**
-     * Set isPage
-     *
-     * @param boolean $isPage
-     * @return UserTag
-     */
-    public function setIsPage($isPage)
-    {
-        $this->isPage = $isPage;
-    
-        return $this;
+        return $this->type & self::TYPE_USER;
     }
 
     /**
@@ -285,6 +308,36 @@ class Tag
      */
     public function isPage()
     {
-        return $this->isPage;
+        return $this->type & self::TYPE_PAGE;
+    }
+
+    /**
+     * Get isPage
+     *
+     * @return boolean 
+     */
+    public function isPageUser()
+    {
+        return $this->type & self::TYPE_PAGE_USER;
+    }
+
+    /**
+     * Get isPage
+     *
+     * @return boolean 
+     */
+    public function isEntity()
+    {
+        return $this->type & self::TYPE_ENTITY;
+    }
+
+    /**
+     * Get isPage
+     *
+     * @return boolean 
+     */
+    public function isEntityUser()
+    {
+        return $this->type & self::TYPE_ENTITY_USER;
     }
 }

@@ -144,16 +144,13 @@
                     {% endif %}
                 </ul>
                 
-                <form class="pull-right hidden-xs" role="search">
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input id="search-bar" type="text" class="form-control" data-url="{{ path('search_bar') }}" placeholder="{{ 'Search for people and pages'|trans }}"></input>
-                            <a href="#" class="btn btn-default input-group-addon">{{ icon('Search') }}</a>
-                        </div>
+                <form class="pull-right hidden-xs" role="search" style="display:table;">
+                    <div class="input-group">
+                        <input id="search-bar" type="text" class="form-control pull-right" data-url="{{ path('search_bar') }}" placeholder="{{ 'Search for people and pages'|trans }}"></input>
+                        <span href="#" class="btn btn-default input-group-addon">{{ icon('Search') }}</span>
                     </div>
                 </form>
 
-{#             </div> #}
         </div>
     </nav>
 {% endblock %}

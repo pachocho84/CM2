@@ -22,6 +22,7 @@ use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\Notification;
 use CM\CMBundle\Entity\Education;
+use CM\CMBundle\Entity\Tag;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\BiographyType;
 use CM\CMBundle\Form\UserImageType;
@@ -226,7 +227,7 @@ class UserController extends Controller
         $form = $this->createForm(new UserTagsType, $user, array(
             'cascade_validation' => true,
             'error_bubbling' => false,
-            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => 'user', 'locale' => $request->getLocale()))
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_USER, 'locale' => $request->getLocale()))
         ))->add('save', 'submit');
         
         $form->handleRequest($request);
