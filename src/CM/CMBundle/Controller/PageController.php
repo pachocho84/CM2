@@ -530,14 +530,14 @@ class PageController extends Controller
      */
     public function popoverAction(Request $request, $slug)
     {
-        if (!$request->isXmlHttpRequest()) {
-            throw new NotFoundHttpException($this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
-        }
+        // if (!$request->isXmlHttpRequest()) {
+        //     throw new NotFoundHttpException($this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        // }
 
         $em = $this->getDoctrine()->getManager();
         
-        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
-        
+        $page = $em->getRepository('CMBundle:Page')->getPage($slug, array('tags' => true));
+
         if (!$page) {
             throw new NotFoundHttpException($this->get('translator')->trans('Page not found.', array(), 'http-errors'));
         }

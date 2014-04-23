@@ -140,7 +140,7 @@ class PageUserTag
      */
     public function getTag()
     {
-        return $this->Tag;
+        return $this->tag;
     }
 
     /**
