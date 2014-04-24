@@ -1870,6 +1870,11 @@ initDatepicker = function(elem) {
 function initializePlaces(index) {
     canvas = $('[gmap-canvas]').get(index);
     input = $(canvas).closest('.date-form').find('[places-autocomplete]').get(0);
+<<<<<<< HEAD
+=======
+
+    console.log(index, canvas, input);
+>>>>>>> 6af5c92625cedb2832447abc6997da9696d1b017
 
     var mapOptions = {
         center: new google.maps.LatLng(45.4654542, 9.186515999999999),
@@ -1886,11 +1891,14 @@ function initializePlaces(index) {
         map: map
     });
 
+<<<<<<< HEAD
     $(input).keydown(function(event) {
         if (event.keyCode == 13) {
             event.preventDefault();
         }
     });
+=======
+>>>>>>> 6af5c92625cedb2832447abc6997da9696d1b017
     google.maps.event.addListener(autocomplete, 'place_changed', function(event) {
         infowindow.close();
         marker.setVisible(false);

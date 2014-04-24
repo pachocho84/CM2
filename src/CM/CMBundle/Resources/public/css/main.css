@@ -869,9 +869,3 @@ span.checkbox[checked="true"] > span:before {
         height: 46px;
     } 
 }
-/* iPad fixies */
-@media (max-width: 768px) {
-    #menu.navbar {
-        min-height: 50px;
-    }
-}

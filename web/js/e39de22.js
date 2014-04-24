@@ -3016,6 +3016,10 @@ $(function() {
                 $('.popover').on('mouseleave', function () {
                     setTimeout(function () {
                         $('[popover-publisher][data-href="' + $popover.attr('data-href') + '"]').attr('data-content', $('.popover-content').html());
+<<<<<<< HEAD
+=======
+                        console.log($('.popover-content').html());
+>>>>>>> 6af5c92625cedb2832447abc6997da9696d1b017
                         $popover.popover('destroy');
                     }, 200);
                 });

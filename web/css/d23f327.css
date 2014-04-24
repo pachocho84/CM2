@@ -3145,6 +3145,13 @@ a.text-danger:focus {
     border-bottom-color: transparent;
     background: #ffffff;
 }
+.nav > li > a {
+    color: #404040;
+}
+.nav > li > a > span.glyphicon,
+.nav > li > a > span.glyphicons {
+    width: 20px;
+}
 .dropdown-menu .disabled > span {
     color:#999999;
 }
@@ -3307,7 +3314,9 @@ form .fileinput {
 form textarea[expandable] {
     resize: none;
 }
-
+.margin-bottom {
+    margin-bottom: 20px;
+}
 
 
 /* TOGGLE HIDDEN  DATA-TOGGLE */
@@ -5218,7 +5227,7 @@ span.checkbox[checked="true"] > span:before {
 }
 /* iPad fixies */
 @media (max-width: 768px) {
-    #menu.navbar {
+    #menu {
         min-height: 50px;
     }
 }

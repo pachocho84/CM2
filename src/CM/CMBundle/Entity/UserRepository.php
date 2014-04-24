@@ -36,8 +36,8 @@ class UserRepository extends BaseRepository
                        
         if ($options['tags']) {
             $query->addSelect('ut, t, tt')
-            ->leftJoin('u.userTags', 'ut')
-            ->leftJoin('ut.tag', 't', '', '', 't.order')
+            ->leftJoin('u.userTags', 'ut', '', '', 'ut.order')
+            ->leftJoin('ut.tag', 't')
             ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale']);
         }
         
@@ -109,8 +109,8 @@ class UserRepository extends BaseRepository
     {
         $query = $this->createQueryBuilder('u')
             ->select('u, ut, t, tt')
-            ->leftJoin('u.userTags', 'ut')
-            ->leftJoin('ut.tag', 't', '', '', 't.order')
+            ->leftJoin('u.userTags', 'ut', '', '', 'ut.order')
+            ->leftJoin('ut.tag', 't')
             ->leftJoin('t.translations', 'tt', 'with', 'utt.locale = :locale')
             ->setParameter('locale', $options['locale'])
             ->andWhere('u.id = :id')->setParameter('id', $id);
