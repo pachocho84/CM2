@@ -168,6 +168,7 @@ $(function() {
                 $('.popover').on('mouseleave', function () {
                     setTimeout(function () {
                         $('[popover-publisher][data-href="' + $popover.attr('data-href') + '"]').attr('data-content', $('.popover-content').html());
+                        console.log($('.popover-content').html());
                         $popover.popover('destroy');
                     }, 200);
                 });
