@@ -31,6 +31,12 @@ class PageType extends AbstractType
                 'label'  => 'Image'
             ))->add('imgOffset', 'hidden', array(
                 'attr' => array('img-offset-field' => '')
+            ))
+            ->add('coverImgFile', 'file', array(
+                'attr' => array('image' => ''),
+                'label'  => 'Image'
+            ))->add('coverImgOffset', 'hidden', array(
+                'attr' => array('img-offset-field' => '')
             ));
         if (in_array('ROLE_ADMIN', $options['roles'])) {
             $builder->add('post', new PostType, array('label' => 'Post'));

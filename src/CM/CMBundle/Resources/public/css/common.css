@@ -1232,7 +1232,7 @@ form textarea[expandable] {
     overflow-x: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    height: 150px;
+    max-height: 150px;
     overflow-y: auto;
     z-index: 99999;
 }
