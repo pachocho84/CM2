@@ -187,8 +187,8 @@ class EventRepository extends BaseRepository
         }
         if ($options['tags']) {
             $query->addSelect('eut, ta, tat')
-                ->leftJoin('eu.entityUserTags', 'eut')
-                ->leftJoin('eut.tag', 'ta', '', '', 'ta.order')
+                ->leftJoin('eu.entityUserTags', 'eut', '', '', 'eut.order')
+                ->leftJoin('eut.tag', 'ta')
                 ->leftJoin('ta.translations', 'tat', 'with', 'tat.locale = :locale');
         }
         return $query->getQuery()->getSingleResult();
