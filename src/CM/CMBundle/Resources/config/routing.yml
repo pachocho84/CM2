@@ -38,6 +38,10 @@ cm_cmbundle_message:
     resource: "CM\\CMBundle\\Controller\\MessageController"
     type:     annotation
 
+cm_cmbundle_notification:
+    resource: "CM\\CMBundle\\Controller\\NotificationController"
+    type:     annotation
+
 cm_cmbundle_event:
     resource: "CM\\CMBundle\\Controller\\EventController"
     type:     annotation

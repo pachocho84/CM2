@@ -1,18 +1,18 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
 {% block heading %}
-    {{ include('CMBundle:User:top.html.twig') }}
+    {#{{ include('CMBundle:User:top.html.twig') }}#}
 {% endblock %}
 
 {% block body %}
     <h2>
-        {{ icon('Notification') }}
+        {{ icon('Notification') }} {{ 'Notifications'|trans }}
     </h2>                                                                    
 
     <div class="objects-container">
         <div class="objects">
             <ul class="media-list">
-                {{ include('CMBundle:User:notificationList.html.twig') }}
+                {{ include('CMBundle:Notification:objects.html.twig') }}
             </ul>
         </div>
     </div>

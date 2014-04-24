@@ -105,6 +105,7 @@ trait ImageTrait
     public function setImgFile(UploadedFile $imgFile)
     {
         $this->imgFile = $imgFile;
+        $this->removeUpload();
         $this->setImg($this->img.'.old'); // trigger update
     }
 
@@ -177,8 +178,9 @@ trait ImageTrait
      */
     public function removeUpload()
     {
-        if ($imgFile = $this->getAbsolutePath()) {
+        if ($imgFile = $this->getImgAbsolutePath()) {
             unlink($imgFile);
+            // var_dump($imgFile);die;
         }
     }
 }

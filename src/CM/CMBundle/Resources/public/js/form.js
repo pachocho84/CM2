@@ -73,7 +73,7 @@ function initializePlaces(index) {
             event.preventDefault();
         }
     });
-    google.maps.event.addListener(autocomplete, 'place_changed', function(event) {
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
         infowindow.close();
         marker.setVisible(false);
         var place = autocomplete.getPlace();
@@ -113,7 +113,7 @@ function initializePlaces(index) {
         $(map.getDiv()).closest('.date-form').find('[places-autocomplete]').val(place.name);
         var $address = $(map.getDiv()).closest('.date-form').find('[address-autocomplete]');
         if ($address.val() == '' || $address.attr('address-autocomplete') != 'set') {
-            $(map.getDiv()).closest('.date-form').find('[places-autocomplete]').val(address);
+            $address.val(address);
             $(map.getDiv()).closest('.date-form').find('[address-latitude]').val(place.geometry.location.lat());
             $(map.getDiv()).closest('.date-form').find('[address-longitude]').val(place.geometry.location.lng());
         }
@@ -200,6 +200,15 @@ function initTags($protagonist) {
                 }
             },
             showAutocompleteOnFocus: true
+        });
+
+        var $input = $(elem).siblings('.token-input.ui-autocomplete-input');
+        $(document).on('tokenfield:createtoken', function(event) {
+            $input.attr('placeholder', '');
+        }).on('tokenfield:removetoken', function(event) {
+            if ($(elem).tokenfield('getTokens', 'active').length == 0 && $input.attr('placeholder') == '') {
+                $input.attr('placeholder', $(elem).attr('placeholder'));
+            }
         });
 
         $(elem).closest('.row').find('select[tags] option[selected]').each(function(i, e) {
