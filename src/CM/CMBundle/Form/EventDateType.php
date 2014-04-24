@@ -38,7 +38,8 @@ class EventDateType extends AbstractType
             ->add('address', 'text', array(
                 'attr' => array('address-autocomplete' => '')
             ))
-            ->add('coordinates', 'hidden', array('attr' => array('address-coordinates' => '')));
+            ->add('latitude', 'hidden', array('attr' => array('address-latitude' => '')))
+            ->add('longitude', 'hidden', array('attr' => array('address-longitude' => '')));
     }
     
     /**

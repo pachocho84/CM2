@@ -138,11 +138,11 @@ Comune di Madesimo
     );
     
     private $locations = array(
-        array('Auditorium di Milano', 'Largo Mahler, 10136 Milano', '45.446592,9.179087'),
-        array('Teatro alla Scala', 'Via Filodrammatici, 2, 10121 Milano', '45.467402,9.189551'),
-        array('Teatro dell\'Elfo', 'Corso Buenos Aires, 33, 10124 Milano', '45.479404,9.209745'),
-        array('Piccolo Teatro', 'Largo Antonio Greppi, 1, 10121 Milano', '45.472337,9.182449'),
-        array('Teatro degli Arcimboldi', 'Viale dell\'Innovazione, 20, 10125 Milano', '45.51170,9.21109'),
+        array('Auditorium di Milano', 'Largo Mahler, 10136 Milano', '45.446592', '9.179087'),
+        array('Teatro alla Scala', 'Via Filodrammatici, 2, 10121 Milano', '45.467402', '9.189551'),
+        array('Teatro dell\'Elfo', 'Corso Buenos Aires, 33, 10124 Milano', '45.479404', '9.209745'),
+        array('Piccolo Teatro', 'Largo Antonio Greppi, 1, 10121 Milano', '45.472337', '9.182449'),
+        array('Teatro degli Arcimboldi', 'Viale dell\'Innovazione, 20, 10125 Milano', '45.51170', '9.21109'),
     );
 
     public static function count()
@@ -202,9 +202,10 @@ Comune di Madesimo
             }
         
             $locNum = rand(0, 4);
-            $eventDate->setLocation($this->locations[$locNum][0]);
-            $eventDate->setAddress($this->locations[$locNum][1]);
-            $eventDate->setCoordinates($this->locations[$locNum][2]);
+            $eventDate->setLocation($this->locations[$locNum][0])
+                ->setAddress($this->locations[$locNum][1])
+                ->setLatitude($this->locations[$locNum][2])
+                ->setLongitude($this->locations[$locNum][3]);
             $event->addEventDate($eventDate);
         }
 
