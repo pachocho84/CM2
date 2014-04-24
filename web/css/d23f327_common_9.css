@@ -1220,6 +1220,11 @@ form textarea[expandable] {
     width: 100%;
 }*/
 .ui-autocomplete.ui-menu {
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    height: 150px;
+    overflow-y: auto;
     z-index: 99999;
 }
 
@@ -1230,11 +1235,10 @@ form textarea[expandable] {
     padding: 0;
 }
 .popover-publisher .popover-content {
-    text-align: center;
     padding: 0;
+    text-align: center;
 }
 .popover-publisher .popover-publisher-content {
-    height: 180px;
     padding: 0 10px;
 }
 .popover-publisher h2 {
@@ -1243,16 +1247,18 @@ form textarea[expandable] {
 }
 .popover-publisher h3 {
     font-size: 14px;
-    margin: 0 0 10px;
+    margin: 0 0 5px;
     color: #999999;
-    height: 15px;
+    height: 17px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    font-style: italic;
 }
+.popover-publisher .popover-cover,
 .popover-publisher .popover-cover-background {
     width: 274px;
-    height: 105px;
+    height: 106px;
     background: url(../../bundles/cm/images/layout/damascato_silver.jpg) repeat;
     border-bottom: 1px solid #cccccc;
 }
@@ -1265,7 +1271,7 @@ form textarea[expandable] {
     top: -45px;
     position: relative;
     padding: 4px;
-    border: 1px solid #bbbbbb;
+    border: 1px solid #cccccc;
     background: #ffffff;
 }
 .popover-publisher-biography {
@@ -1277,6 +1283,9 @@ form textarea[expandable] {
 }
 .popover-publisher .popover-footer a:not(.text-success):not(.text-warning):not(.text-danger) {
     color: #333333;
+}
+.popover-publisher.top.logged .arrow:after {
+    border-top-color: #f7f7f7 !important;
 }
 
 

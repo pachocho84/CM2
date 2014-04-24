@@ -65,7 +65,7 @@ initDatepicker = function(elem) {
 
 function initializePlaces(index) {
     canvas = $('[gmap-canvas]').get(index);
-    input = $(canvas).parent().parent().parent().find('[places-autocomplete]').get(0);
+    input = $(canvas).closest('.date-form').find('[places-autocomplete]').get(0);
 
     var mapOptions = {
         center: new google.maps.LatLng(45.4654542, 9.186515999999999),
@@ -82,7 +82,12 @@ function initializePlaces(index) {
         map: map
     });
 
-    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+    $(input).keydown(function(event) {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+        }
+    });
+    google.maps.event.addListener(autocomplete, 'place_changed', function(event) {
         infowindow.close();
         marker.setVisible(false);
         var place = autocomplete.getPlace();
@@ -119,16 +124,50 @@ function initializePlaces(index) {
         }
 
         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-        $(canvas).parent().parent().parent().find('[address-autocomplete]').val(address);
-        $(canvas).parent().parent().parent().find('[places-autocomplete]').val(place.name);
-        $(canvas).parent().parent().parent().find('[address-coordinates]').val(place.geometry.location.lat() + ',' + place.geometry.location.lng());
+        $(map.getDiv()).closest('.date-form').find('[address-autocomplete]').val(address);
+        $(map.getDiv()).closest('.date-form').find('[places-autocomplete]').val(place.name);
+        $(map.getDiv()).closest('.date-form').find('[address-coordinates]').val(place.geometry.location.lat() + ',' + place.geometry.location.lng());
         infowindow.open(map, marker);
+    });
+}
+
+function initAddress(container) {
+    $.each($(container).find('[address-autocomplete]'), function(i, elem) {
+        console.log(elem);
+        $(elem).keydown(function(event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+            }
+        });
+        $(elem).typeahead({
+            name: 'address',
+            // minLength: 3,
+            valueKey: 'val',
+            template: '<div>{{ val }}</div>',
+            engine: Handlebars,
+            remote: {
+                url: 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&culture=' + culture + '&address=%QUERY',
+                replace: function (url, uriEncodedQuery) {
+                    return url.replace('%QUERY', uriEncodedQuery);
+                },
+                filter: function(data) {
+                    if (data.status == 'OK') {
+                        return $.map(data.results, function(address) {
+                            value = new Object();
+                            value.val = address.formatted_address;
+                            value.coords = address.geometry.location.lat + ',' + address.geometry.location.lng;
+                            return value;
+                        });
+                    }
+                }
+            }
+        });
     });
 }
 
 function initTags($protagonist) {
     $protagonist.find('input[tags]').each(function(i, elem) {
-        var source = $.map($(elem).closest('.row').find('select[tags] option'), function(e) { return {label: $(e).html(), value: $(e).attr('value')}; } );
+        var source = $.map($(elem).closest('.row').find('select[tags] option:not([disabled])'), function(e) { return {label: $(e).html(), value: $(e).attr('value')}; } );
         $(elem).tokenfield({
             autocomplete: {
                 source: source,
@@ -309,7 +348,6 @@ $(function() {
     
     
     /* AUTOCOMPLETE */
-
     // Places autocomplete
     $('[gmap-canvas]').each(function(i) {
         google.maps.event.addDomListener(window, 'load', initializePlaces(i));
@@ -317,7 +355,6 @@ $(function() {
     $(document).on('collection-added','.date-form', function(event) {
         google.maps.event.addDomListener(window, 'load', initializePlaces(-1));
     });
-
     $(document).on('keydown', '[gmap-canvas]', function(event) {
         if (event.which == 13) {
             event.preventDefault();
@@ -325,28 +362,9 @@ $(function() {
     });
 
     // Address autocomplete
-    $('[address-autocomplete]').typeahead({
-        name: 'address',
-        // minLength: 3,
-        valueKey: 'val',
-        template: '<div>{{ val }}</div>',
-        engine: Handlebars,
-        remote: {
-            url: 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&culture=' + culture + '&address=%QUERY',
-            replace: function (url, uriEncodedQuery) {
-                return url.replace('%QUERY', uriEncodedQuery);
-            },
-            filter: function(data) {
-                if (data.status == 'OK') {
-                    return $.map(data.results, function(address) {
-                        value = new Object();
-                        value.val = address.formatted_address;
-                        value.coords = address.geometry.location.lat + ',' + address.geometry.location.lng;
-                        return value;
-                    });
-                }
-            }
-        }
+    initAddress($(document));
+    $(document).on('collection-added','.date-form', function(event) {
+        initAddress($(event.currentTarget));
     });
     $(document).on('typeahead:autocompleted typeahead:selected', '.event_date', function (event, datum) {
         $(event.currentTarget).find('[address-coordinates]').val(datum.coords);
@@ -536,6 +554,7 @@ $(function() {
 
 
     /* TAGS */
+    initTags($(document));
     $(document).on('protagonist-added', '.protagonists_user', function(event) {
         initTags($(event.currentTarget));
     });
