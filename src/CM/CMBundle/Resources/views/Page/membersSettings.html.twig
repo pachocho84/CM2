@@ -1,57 +1,24 @@
-{% extends 'CMBundle:Form:layout.html.twig' %}
+{% extends "CMBundle:User:accountLayout.html.twig" %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <style type="text/css"> #columnMask, #columnCenter { overflow: visible; } </style>
+
+
+{% block section %}
+    {{ page }} &gt; {{ 'Members'|trans }}
 {% endblock %}
 
-{% block body %}
-
-    {#<?php include_partial('colonnaProfiloEdit', array('page' => $page)) ?>#}
-
-    <div id="columnCenterTop">
-        <div class="profiloTopButtons">
-            <a href="{{ path('page_show', {'slug': page.slug}) }}" class="pulsante">{{ icon('Back')|raw }} {{ 'Back to the page'|trans }}</a>                    
-        </div> 
-        <h3>
-            {{ icon('Page')|raw }}
-            <span>{{ page }} <img src="/images/layout/triangolino_sx.png" /> {{ 'Members'|trans }}</span>
-        </h3>
-    </div>
 
 
-    <div id="columnCenter">
-
-
-        {#<div class="navigazione">
-            <div class="breadcrumbs">
-                <?php echo link_to('Home', '@homepage') ?> &gt; 
-                <?php echo link_to(__('Pages'), '@page_list') ?> &gt; 
-                <?php echo link_to($page, $page->getLinkShow()) ?> &gt; 
-                <?php echo __('Members') ?>
-            </div>
-        </div>#}
-
-
-        <div class="object element form-group">
-
-            {{ 'Founder'|trans }}:
-            <div class="immagine">
-                {{ show_img_box(page.creator.img|imagine_filter('medium'), {'width': 75, 'height': 75, 'offset': page.creator.imgOffset, 'default': 'user', 'box_attributes': {'class': 'pull-left'}})|raw }}
-            </div>
-
-            <div class="contenuto">
-                <h3><a href="{{ path('user_show', {'slug': page.creator.slug}) }}" title="{{ 'Founder'|trans }}">{{ page.creator }}</a></h3>
-            </div>
+{% block main %}
+    <div class="box">
+        <div class="box-body">
+            {{ form_start(form) }}
+                {{ form_row(form) }}
+                <div class="text-right">
+                    <a href="{{ path(app.request.attributes.get('_route'), {slug: page.slug}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+                    <button type="submit" name="commit" class="btn btn-primary">{{ 'Save'|trans }}</button>
+                </div>
+            {{ form_end(form) }}
         </div>
-
-        {{ form_start(form) }}
-            {{ form_row(form) }}
-            <a href="{#{{ path('page_invite_email', {'slug': page.slug}) }}#}" class="btn btn-default">{{ 'Invite members to page by email?'|trans }}</a>
-
-            <input class="btn btn-default" type="submit" value="{{ 'Save page settings'|trans }}" />
-        {{ form_start(form) }}
-
     </div>
 
 {% endblock %}
@@ -62,10 +29,10 @@
 
 {% block _cm_cmbundle_pageuser_collection_pages_row %}
     <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('page_member_add', {'pageId': 1, 'user_id': 'USER_ID'}) }}">
-        <div class="col-lg-12 collection-items">
+        <div class="collection-items">
             <div id="protagonists_finder_container" class="form-group">
-                <label class="control-label col-lg-3">{{ 'Add new member'|trans }}</label>
-                <div class="col-lg-9"><input type="text" id="protagonists_finder" class="form-control" /></div>
+                <label class="control-label col-md-3">{{ 'Add new member'|trans }}</label>
+                <div class="col-md-9"><input type="text" id="protagonists_finder" class="form-control" /></div>
             </div>
             {{ include('CMBundle:Page:member.html.twig', {pageUsers: form}) }}
         </div>

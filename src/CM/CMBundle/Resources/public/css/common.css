@@ -352,6 +352,12 @@ form .fileinput {
     background: #efefef;
     border: 1px solid #bbbbbb;
 }
+.ui-menu .ui-menu-item a.ui-state-focus, 
+.ui-menu .ui-menu-item a.ui-state-active {
+    background: #f7f7f7;
+    border: none;
+    margin: 0;
+}
 
 
 /* LAYOUT */
