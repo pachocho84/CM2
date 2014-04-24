@@ -83,9 +83,16 @@ class EventDate
     /**
      * @var string
      *
-     * @ORM\Column(name="coordinates", type="string", length=150)
+     * @ORM\Column(name="latitude", type="float")
      */
-    private $coordinates;
+    private $latitude;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="longitude", type="float")
+     */
+    private $longitude;
 
     public static function className()
     {
@@ -229,25 +236,48 @@ class EventDate
     }
 
     /**
-     * Set coordinates
+     * Set latitude
      *
-     * @param string $coordinates
+     * @param string $latitude
      * @return EventDate
      */
-    public function setCoordinates($coordinates)
+    public function setLatitude($latitude)
     {
-        $this->coordinates = $coordinates;
+        $this->latitude = $latitude;
     
         return $this;
     }
 
     /**
-     * Get coordinates
+     * Get latitude
      *
      * @return string 
      */
-    public function getCoordinates()
+    public function getLatitude()
     {
-        return $this->coordinates;
+        return $this->latitude;
+    }
+
+    /**
+     * Set longitude
+     *
+     * @param string $longitude
+     * @return EventDate
+     */
+    public function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
+    
+        return $this;
+    }
+
+    /**
+     * Get longitude
+     *
+     * @return string 
+     */
+    public function getLongitude()
+    {
+        return $this->longitude;
     }
 }
