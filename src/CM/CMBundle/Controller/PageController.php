@@ -4,6 +4,7 @@ namespace CM\CMBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -115,7 +116,7 @@ class PageController extends Controller
         } else {
             $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
           
-            if (!$this->get('cm.user_authentication')->canManage($page)) {
+            if (!$this->get('cm.user_authentication')->isAdminOf($page)) {
                 throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }
         }
@@ -129,7 +130,6 @@ class PageController extends Controller
         }
  
         $form = $this->createForm(new PageType, $page, array(
-/*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
             'cascade_validation' => true,
             'error_bubbling' => false,
             'roles' => $user->getRoles(),
