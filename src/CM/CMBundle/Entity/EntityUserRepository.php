@@ -40,7 +40,7 @@ class EntityUserRepository extends BaseRepository
         return $this->createQueryBuilder('eu')
             ->select('eu, eut, t, tt, u')
             ->leftJoin('eu.entityUserTags', 'eut')
-            ->leftJoin('eut.tag', 't')
+            ->leftJoin('eut.tag', 't', '', '', 't.order')
             ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
             ->join('eu.user', 'u')
             ->andWhere('eu.status = :status')->setParameter('status', EntityUser::STATUS_ACTIVE)
