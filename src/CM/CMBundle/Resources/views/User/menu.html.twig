@@ -52,7 +52,7 @@
 
 <li class="dropdown menu-tab{% if controller_name() == 'notification' %} active{% endif %} menu-tab-ajax">
     
-    <a href="{{ path('user_notifications') }}" id="menu-notifications" class="dropdown-toggle" data-toggle="dropdown">
+    <a href="{{ path('notification_show') }}" id="menu-notifications" class="dropdown-toggle" data-toggle="dropdown">
         {{ icon('Notification') }}
         <span class="countNew" id="notificationsCounter">{% if newNotifications > 0 %}{{ newNotifications }}{% endif %}</span>
     </a>
@@ -68,7 +68,7 @@
             <div class="dropdown-menu-loader"><img src="{{ asset('images/loader.gif') }}" /></div>
         </div>
     
-        <div class="dropdown-menu-footer"><a href="{{ path('user_notifications') }}">{{ 'View all notifications'|trans }}</a></div>
+        <div class="dropdown-menu-footer"><a href="{{ path('notification_show') }}">{{ 'View all notifications'|trans }}</a></div>
     
     </div>
     

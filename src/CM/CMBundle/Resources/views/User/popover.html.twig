@@ -28,6 +28,6 @@
     <div class="popover-footer">
         {{ render(controller('CMBundle:Fan:button', {userId: user.id, btn: false})) }}
         {{ render(controller('CMBundle:Relation:button', {user: user, btn: false})) }}
-        <a href="{{ path('message_new', {userId: user.id}) }}">{{ icon('Message') }}</a>
+        <a href="{{ path('message_new', {userId: user.id}) }}" {{ modal({remote: path('message_new', {userId: user.id}), callback: '$initRecipients()'}) }}>{{ icon('Message') }}</a>
     </div>
 {% endif %}
