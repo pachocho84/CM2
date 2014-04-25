@@ -3,7 +3,21 @@
 
 
 {% block section %}
-    {{ page }} &gt; {{ 'Members'|trans }}
+    {{ 'Members of "%page%"'|trans({'%page%': page}) }}
+{% endblock %}
+
+
+
+{% block headingButtons %}
+    <a href="{{ path('page_show', {slug: page.slug}) }}" class="btn btn-default btn-sm">{{ icon('Page') }} {{ 'View page'|trans }}</a>
+{% endblock %}
+
+
+
+{% block breadcrumbs %}
+    <li><a href="{{ path('user_pages') }}">{{ 'Pages'|trans }}</a></li>
+    <li><a href="{{ path('page_show', {slug: page.slug}) }}">{{ page }}</a></li>
+    <li class="active">{{ 'Members'|trans }}</li>
 {% endblock %}
 
 
@@ -20,7 +34,6 @@
             {{ form_end(form) }}
         </div>
     </div>
-
 {% endblock %}
 
 

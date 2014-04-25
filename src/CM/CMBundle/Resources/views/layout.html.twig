@@ -64,7 +64,7 @@
                         {% if controller_name() == 'user' %}
                             <a href="{{ path('wall_index') }}">{{ icon('User') }} {{ 'Users'|trans }} <span class="caret"></span></a>
                         {% else %}
-                            <a href="{{ path('wall_index') }}">{{ icon('Home') }} {{ 'Home'|trans }} <span class="caret"></span></a>
+                            <a href="{{ path('home') }}">{{ icon('Home') }} {{ 'Home'|trans }} <span class="caret"></span></a>
                         {% endif %}
                         <ul id="menu-popup" class="dropdown-menu">
                             <li><a href="{{ path('wall_index') }}">{{ icon('Home') }} {{ 'Home'|trans }}</a></li>
@@ -194,7 +194,6 @@
         'lib/typeahead/handlebars-v1.3.0.js'
         'lib/typeahead/typeahead.min.js'
         'lib/tokenfield/js/bootstrap-tokenfield.min.js'
-        'js/jquery.hcsticky-min.js'
         'js/jquery.cycle2.min.js'
         'js/jquery.cycle2.scrollVert.min.js'
         'js/jquery.form.min.js'

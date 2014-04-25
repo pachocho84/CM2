@@ -5,7 +5,7 @@
 {% block heading %}
     <div class="row">
         <div class="col-md-8 col-lg-9">
-            <h2>{{ block('title') }}</h2>
+            <h2>{{ block('section') }}</h2>
         </div>
         <div class="col-md-4 col-lg-3">
             <div class="heading-buttons">
@@ -14,6 +14,11 @@
             </div>
         </div>
     </div>
+    <ol class="breadcrumb">
+        <li><a href="{{ path('home') }}">{{ 'Home'|trans }}</a></li>
+        <li><a href="{{ path('fos_user_profile') }}">{{ 'Account'|trans }}</a></li>
+        {% block breadcrumbs %}<li class="active">{{ block('section') }}</li>{% endblock %}
+    </ol>
 {% endblock %}
 
 {% block body %}
@@ -45,7 +50,7 @@
                     <li{% if action_name() == 'tagsedit' %} class="active"{% endif %}>
                         <a href="{{ path('user_tags_edit') }}">{{ icon('Tags') }} {{ 'Tags'|trans }}</a>
                     </li>
-                    <li{% if action_name() == 'pages' %} class="active"{% endif %}>
+                    <li{% if controller_name() ~ '_' ~ action_name() in ['user_pages', 'page_edit', 'page_membersSettings'] %} class="active"{% endif %}>
                         <a href="{{ path('user_pages') }}">{{ icon('Page') }} {{ 'Pages'|trans }}</a>
                     </li>
                     <li{% if controller_name() == 'education' %} class="active"{% endif %}>
