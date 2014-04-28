@@ -3761,9 +3761,6 @@ function initRecipients() {
 }
 
 $(function() {
-
-
-
     /* MENU */
     $('#menu ul.pull-left li.dropdown').hover(function (e) {
         timeout = setTimeout(function(){
@@ -3842,7 +3839,7 @@ $(function() {
         source: function(request, response) {
             var url = $('#search-bar').data('url') + '?q=' + request.term;
 
-            $('#search-bar').siblings('a').attr('href', url);
+            $('#search-bar').siblings('span[href]').attr('href', url);
 
             $.ajax(url, {
                 success: function(data) {
@@ -3862,12 +3859,24 @@ $(function() {
             window.location = ui.item.url;
         }
     });
+    $('#search-bar').on('keyup', function() {
+        if ($('#search-bar').val() == '') {
+            $('#search-bar').siblings('span[href]').attr('href', '#');
+        }
+    });
+    $('#search-bar').siblings('span[href]').on('click', function() {
+        if ($('#search-bar').siblings('span[href]').attr('href') == '#') {
+            $('#search-bar').focus();
+        } else {
+            window.location = $('#search-bar').siblings('span[href]').attr('href');
+        }
+    });
+    
     $('.ui-autocomplete-input').data('ui-autocomplete')._renderItem = function(ul, item) {
         var url = item.url || '#';
         var view = item.view || item.label;
         return $('<li><a href="' + url + '">' + view + '</a></li>').appendTo(ul);
     };
-    
     
     
     // /* MODAL */

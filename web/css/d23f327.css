@@ -3109,8 +3109,10 @@ body {
 a {
     color: #aa0000;
 }
-a:hover {
+a:hover,
+a:focus {
     color: #333333;
+    text-decoration: none;
 }
 .btn-toolbar {
     margin-top: 0px;
@@ -3283,6 +3285,12 @@ form .fileinput {
 .ui-menu .ui-menu-item a:hover {
     background: #efefef;
     border: 1px solid #bbbbbb;
+}
+.ui-menu .ui-menu-item a.ui-state-focus, 
+.ui-menu .ui-menu-item a.ui-state-active {
+    background: #f7f7f7;
+    border: none;
+    margin: 0;
 }
 
 
@@ -4164,7 +4172,7 @@ form textarea[expandable] {
     overflow-x: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    height: 150px;
+    max-height: 150px;
     overflow-y: auto;
     z-index: 99999;
 }
@@ -4420,7 +4428,7 @@ h3 small a {
 #menu {
     border-top: 1px solid #cccccc;
     border-bottom: 1px solid #cccccc;
-    z-index:100; 
+    z-index:1001; 
     background-image: -webkit-linear-gradient(top, #ffffff 0%, #f8f8f8 100%);
     background-image: linear-gradient(to bottom, #ffffff 0%, #f8f8f8 100%);
     background-repeat: repeat-x;
@@ -4465,13 +4473,10 @@ h3 small a {
     color: #990000;
 }
 /* Search bar */
-#menu form {
-    padding: 2px 14px;
+#menu form.pull-right {
+    padding: 2px 0;
 }
-#menu form .form-group {
-    margin: 0;
-}
-#menu form #search-bar {
+#menu form.pull-right #search-bar {
     height: 32px;
     width: 350px;
 }
@@ -4512,6 +4517,7 @@ h3 small a {
 #menu ul.pull-left li.dropdown #menu-popup {
     border: none;
     margin: 0;
+    z-index: 1001;
 }
 #menu ul.pull-left li.dropdown.open #menu-popup {
     padding: 9px 0;
@@ -4539,6 +4545,9 @@ h3 small a {
     color: #333333;
 }
 /* Menu Right */
+#menu ul.pull-right {
+    margin-left: 14px;
+}
 #menu ul.pull-right li.dropdown.open > a {
     background-color: #f2f2f2;
     border-bottom: transparent;
@@ -4620,22 +4629,28 @@ h3 small a {
     display: none;
 }
 /* Menu Login */ 
+#menu ul.pull-right li.dropdown.open a {
+    background: #ffffff;
+}
+#menu ul.pull-right li.dropdown .login-dropdown-menu {
+    padding: 14px;
+}
 @media (min-width: 992px) {
-    #menu ul.pull-right .login-dropdown {
+    #menu ul.pull-right li.dropdown .login-dropdown-menu {
         width: 960px;
     }
 }
 @media (min-width: 1200px) {
-    #menu ul.pull-right .login-dropdown {
+    #menu ul.pull-right li.dropdown .login-dropdown-menu {
         width: 1180px;
     }
 }
 @media (min-width: 1500px) {
-    #menu ul.pull-right .login-dropdown {
+    #menu ul.pull-right li.dropdown .login-dropdown-menu {
         width: 1480px;
     }
 }
-#menu ul.pull-right .login-dropdown .dropdown-menu-body {
+#menu ul.pull-right li.dropdown .login-dropdown-menu .dropdown-menu-body {
     max-height: initial;
 }              
 /*.menuTab ul li.menuTab-element-new

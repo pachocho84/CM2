@@ -4,21 +4,15 @@
     </div>
 
     <div class="box-body">
+        {{ render(controller('CMUserBundle:Security:login', {'template': 'CMUserBundle:Security:form.html.twig'})) }}
+    </div>
 
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#login">{{ 'Login'|trans }}</a></li>
-            <li><a href="#register">{{ 'Register'|trans }}</a></li>
-        </ul>
+    <div class="box-heading">
+        <h2>{{ icon('Register') }} {{ 'Register'|trans }}</h2>
+    </div>
 
-        <div class="tab-content">
-            <div class="tab-pane active" id="login">
-                {{ render(controller('CMUserBundle:Security:login', {'template': 'CMUserBundle:Security:form.html.twig'})) }}
-            </div>
-            <div class="tab-pane" id="register">
-                {{ render(controller('FOSUserBundle:Registration:register', {'template': null})) }}
-            </div>
-        </div>
-
+    <div class="box-body">
+        {{ render(controller('FOSUserBundle:Registration:register', {'template': null})) }}
     </div>
 </div>
 
