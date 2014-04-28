@@ -35,7 +35,7 @@
                 <legend>{{ 'Profile picture'|trans }}</legend>
 
                 <div id="profile-pic">
-                    {{ form_row(form.imgFile, {imgEdit: {box: show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.img), {width: 150, offset: user.imgOffset, box_attributes: {class: 'fileinput-new', style: 'border: 1px solid #bbbbbb; margin-bottom: 10px;'}}), width: 152}}) }}
+                    {{ form_row(form.imgFile) }}
                 </div>
 
                 {{ form_row(form.imgOffset, {attr: {'img-offset-field': null}}) }}
@@ -47,12 +47,9 @@
                 
                 <legend>{{ 'Cover picture'|trans }}</legend>
 
-                {% if user.coverImg is not null %}
-                    <div id="cover-pic">
-                        {{ form_row(form.coverImgFile, {imgEdit: {box: show_img_box(asset(uploaded_images_full_dir ~ '/' ~ user.coverImg), {width: 360, height: 150, offset: user.coverImgOffset, box_attributes: {class: 'fileinput-new', style: 'border: 1px solid #bbbbbb; margin-bottom: 10px;' }}), width: 362, height: 152}}) }}
-                    </div>
-                    {{ form_row(form.coverImgOffset, {attr: {'cover-img-offset-field': null}}) }}
-                {% endif %}
+                <div id="cover-pic">
+                    {{ form_row(form.coverImgFile) }}
+                </div>
             
                 <div class="text-right">
                     {{ form_row(form.save) }}

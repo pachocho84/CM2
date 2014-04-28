@@ -16,22 +16,6 @@
             <div class="fileinput fileinput-new" data-provides="fileinput">
                 {{ imgEdit.box|raw }}
                 <div class="fileinput-preview fileinput-exists image_box" data-trigger="fileinput" style="width: {{ imgEdit.width }}px; height: {{ imgEdit.height|default(imgEdit.width) }}px;"></div>
-        {% elseif imgOffset is defined and imgOffset is not null %}
-            {% set label = 'Browse image' %}
-            <div class="fileinput fileinput-new" data-provides="fileinput">
-                {% if attribute(form.parent.vars.data, imgKind|default('img')) is not null %}
-                    {{ show_img_box(attribute(form.parent.vars.data, imgKind|default('img'))|imagine_filter('medium'), {width: 200, height: 113, offset: imgOffset, box_attributes: {class: 'fileinput-new', style: 'border: 1px solid #bbbbbb; margin-bottom: 10px;'}}) }}
-                {% endif %}
-                <div class="fileinput-preview fileinput-exists image_box" data-trigger="fileinput" style="width: 200px; height: 113px; border: 1px solid #bbbbbb; margin-bottom: 10px;"></div>
-        {% elseif subtype|default('') == 'image' %}
-            {% set label = 'Browse image' %}
-            <div class="fileinput fileinput-new" data-provides="fileinput">
-                {% if form.parent.vars.data is not null and form.parent.vars.data.img is not null %}
-                    <div class="fileinput-new" data-trigger="fileinput" style="width: 200px; height: 150px;">
-                        <img src="{{ form.parent.vars.data.img|imagine_filter('medium') }}" style="height: 100%" />
-                    </div>
-                {% endif %}
-                <div class="fileinput-preview fileinput-exists" data-trigger="fileinput" style="width: 200px; height: 150px; border: 1px solid #bbbbbb; margin-bottom: 10px;"></div>
         {% else %}
             <div class="fileinput fileinput-new input-group" data-provides="fileinput">
 
@@ -315,52 +299,83 @@
 {% endspaceless %}
 {% endblock %}
 
-{% block _cm_cmbundle_page_imgFile_widget %}
-    {% set imgOffset = form.parent.children.imgOffset.vars.value %}
+{% block imageBox_widget %}
+    {% set imgEdit = {box: show_img_box(img|default(null)|imagine_filter('full'), {width: width, height: height|default(width), offset: offset|default(null), box_attributes: {class: 'fileinput-new', style: 'border: 1px solid #bbbbbb; margin-bottom: 10px;' }}), width: width, height: height|default(width)} %}
     {{ block('form_widget_simple')}}
-    {{ form_widget(form.parent.children.imgOffset) }}
-    {% set imgOffset = null %}
+    {% if offsetForm is not null %}{{ form_widget(offsetForm) }}{% endif %}
 {% endblock %}
 
-{% block _cm_cmbundle_page_coverImgFile_widget %}
-    {% set imgOffset = form.parent.children.coverImgOffset.vars.value %}
-    {% set imgKind = 'coverImg' %}
-    {{ block('form_widget_simple')}}
-    {{ form_widget(form.parent.children.coverImgOffset) }}
-    {% set imgKind = null %}
-{% endblock %}
-
-{% block _cm_cmbundle_event_image_imgFile_widget %}
-    {% set imgOffset = form.parent.parent.imgOffset.vars.value %}
-    {{ block('form_widget_simple')}}
-    {{ form_widget(form.parent.parent.imgOffset) }}
-    {% set imgOffset = null %}
-{% endblock %}
-
-{% block _cm_cmbundle_disc_image_imgFile_widget %}
-    {% set imgOffset = form.parent.parent.imgOffset.vars.value %}
-    {{ block('form_widget_simple')}}
-    {{ form_widget(form.parent.parent.imgOffset) }}
-    {% set imgOffset = null %}
-{% endblock %}
-
-{% block _cm_cmbundle_article_image_imgFile_widget %}
-    {% set imgOffset = form.parent.parent.imgOffset.vars.value %}
-    {{ block('form_widget_simple')}}
-    {{ form_widget(form.parent.parent.imgOffset) }}
-    {% set imgOffset = null %}
-{% endblock %}
-
-{% block _cm_cmbundle_imagealbum_image_imgFile_widget %}
-    {% set subtype = 'image' %}
-    {{ block('form_widget_simple')}}
-    {% set subtype = null %}
+{% block profile_image_widget %}
+    {% set img = form.parent.vars.value.img %}
+    {% set offset = form.parent.vars.value.imgOffset %}
+    {% set width = 300 %}
+    {% set offsetForm = form.parent.children.imgOffset %}
+    {{ block('imageBox_widget') }}
 {% endblock %}
 
 {% block _fos_user_registration_form_imgFile_widget %}
-    {% set subtype = 'image' %}
-    {{ block('form_widget_simple')}}
-    {% set subtype = null %}
+    {{ block('profile_image_widget') }}
+{% endblock %}
+
+{% block _cm_cmbundle_user_imgFile_widget %}
+    {{ block('profile_image_widget') }}
+{% endblock %}
+
+{% block _cm_cmbundle_user_image_imgFile_widget %}
+    {{ block('profile_image_widget') }}
+{% endblock %}
+
+{% block _cm_cmbundle_page_imgFile_widget %}
+    {{ block('profile_image_widget') }}
+{% endblock %}
+
+{% block cover_image_widget %}
+    {% set img = form.parent.vars.value.coverImg %}
+    {% set offset = form.parent.vars.value.coverImgOffset %}
+    {% set width = 300 %}
+    {% set height = 126 %}
+    {% set offsetForm = form.parent.children.coverImgOffset %}
+    {{ block('imageBox_widget') }}
+{% endblock %}
+
+{% block _cm_cmbundle_user_coverImgFile_widget %}
+    {{ block('cover_image_widget') }}
+{% endblock %}
+
+{% block _cm_cmbundle_user_image_coverImgFile_widget %}
+    {{ block('cover_image_widget') }}
+{% endblock %}
+
+{% block _cm_cmbundle_page_coverImgFile_widget %}
+    {{ block('cover_image_widget') }}
+{% endblock %}
+
+{% block entity_image_widget %}
+    {% set img = form.parent.parent.vars.value.img %}
+    {% set offset = form.parent.parent.vars.value.imgOffset %}
+    {% set width = 300 %}
+    {% set height = 200 %}
+    {% set offsetForm = form.parent.parent.imgOffset %}
+    {{ block('imageBox_widget') }}
+{% endblock %}
+
+{% block _cm_cmbundle_event_image_imgFile_widget %}
+    {{ block('entity_image_widget') }}
+{% endblock %}
+
+{% block _cm_cmbundle_disc_image_imgFile_widget %}
+    {{ block('entity_image_widget') }}
+{% endblock %}
+
+{% block _cm_cmbundle_article_image_imgFile_widget %}
+    {{ block('entity_image_widget') }}
+{% endblock %}
+
+{% block _cm_cmbundle_imagealbum_image_imgFile_widget %}
+    {% set img = form.parent.vars.value.img %}
+    {% set width = 300 %}
+    {% set offsetForm = null %}
+    {{ block('imageBox_widget') }}
 {% endblock %}
 
 {# Labels #}

@@ -25,6 +25,7 @@ class RegistrationType extends BaseType
                 'expanded' => true
             ))
             ->add('imgFile')
+            ->add('imgOffset', 'hidden')
             ->add('recaptcha', 'ewz_recaptcha', array(
                 'mapped' => false,
                 'constraints'   => array(
