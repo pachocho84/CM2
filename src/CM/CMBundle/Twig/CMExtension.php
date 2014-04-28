@@ -394,11 +394,11 @@ class CMExtension extends \Twig_Extension
         $options['box_attributes']['class'] = 'image_box'.(isset($options['box_attributes']['class']) ? ' '.$options['box_attributes']['class'] : '');
 
         if ($ratio == 1) {
-            $imgStyle[] = 'height: 100%';
+            $imgStyle[] = 'height: 100%; min-height: 100%';
         } elseif (($ratio > 1 && is_null($options['ratio'])) || ($ratio > 1 && !is_null($options['ratio']))) {
-            $imgStyle[] = 'height: 100%';
+            $imgStyle[] = 'height: 100%; min-height: 100%';
         } else {
-            $imgStyle[] = 'width: 100%';
+            $imgStyle[] = 'width: 100%; min-width: 100%';
         }
 
         if (isset($options['img_attributes']['style'])) {
@@ -453,13 +453,13 @@ class CMExtension extends \Twig_Extension
         return 'lightbox="image" lightbox-src="'.$img.'" lightbox-json="'.$link.'"';
     }
 
-    public function getRequestTag(Request $request)
+    public function getRequestTag(Request $request, $box = true)
     {
         $user = $this->securityContext->getToken()->getUser();
 
         if ($user->getId() == $request->getUser()->getId()) {
             $userLink = $this->router->generate('user_show', array('slug' => $request->getFromUser()->getSlug()));
-            $userBox = $this->getPublisherBox($request->getFromUser());
+            $userBox = $box ? $this->getPublisherBox($request->getFromUser()) : null;
             if (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
                 $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
                 return $this->translator->trans('%user% would like to be added as protagonist to your event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
@@ -501,7 +501,7 @@ class CMExtension extends \Twig_Extension
             }
         } elseif ($user->getId() == $request->getFromUser()->getId()) {
             $userLink = $this->router->generate('user_show', array('slug' => $request->getUser()->getSlug()));
-            $userBox = $this->getPublisherBox($request->getUser());
+            $userBox = $box ? $this->getPublisherBox($request->getUser()) : null;
             if (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event') {
                 $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
                 return $this->translator->trans('You requested %user% to be added as protagonist to the event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
@@ -534,42 +534,44 @@ class CMExtension extends \Twig_Extension
                 <a href="'.$refusePath.'" class="btn btn-default btn-sm ajax-link" data-loading-text="'.$loading.'">'.$this->getIcon('Remove').' '.$refuse.'</a>';
     }
 
-    public function getNotificationTag(Notification $notification)
+    public function getNotificationTag(Notification $notification, $box = true)
     {
         $userLink = $this->router->generate('user_show', array('slug' => $notification->getFromUser()->getSlug()));
+        $userBox = $box ? $this->getPublisherBox($notification->getFromUser()) : null;
         switch ($this->getClassName($notification->getPost()->getObject()).'_'.$notification->getType()) {
             case 'Event_'.Notification::TYPE_REQUEST_ACCEPTED:
                 $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% joined your event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% joined your event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'Event_'.Notification::TYPE_LIKE:
                 $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% likes your event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% likes your event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'Event_'.Notification::TYPE_COMMENT:
                 $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% has commented your event %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% has commented your event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'Disc_'.Notification::TYPE_REQUEST_ACCEPTED:
                 $entityLink = $this->router->generate('disc_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% joined your disc %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% joined your disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'Disc_'.Notification::TYPE_LIKE:
                 $entityLink = $this->router->generate('disc_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% likes your disc %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% likes your disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'Disc_'.Notification::TYPE_COMMENT:
                 $entityLink = $this->router->generate('disc_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% has commented your disc %object%.', array('%user%' => '<a href="'.$userLink.'">'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% has commented your disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'user_like':
                 // return __('%user% likes your %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to(__('post'), $this->getPost()->getLinkShow())));
             case 'Fan_'.Notification::TYPE_FAN:
                 return $this->translator->trans('%user% became your fan.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>'));
+                // return __('%user% became your fan.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow())));
             default:
                 return $this->getClassName($notification->getPost()->getObject()).'_'.$notification->getType();
                 // return 'Case: '.$notification->getPost()->getObject().'_'.$notification->getType().', PostId: '.$notification->getPostId().', From: '.$notification->getFromUser().', Type: '.$notification->getType().', Object: '.$notification->getObject();
         }
     }
 
-    public function getPostText(Post $post, $relatedObjects = null)
+    public function getPostText(Post $post, $relatedObjects = null, $box = true)
     {
         $userLink = $this->router->generate($post->getPublisherType().'_show', array('slug' => $post->getPublisher()->getSlug()));
-        $userBox = $this->getPublisherBox($post->getPublisher());
+        $userBox = $box ? $this->getPublisherBox($post->getPublisher()) : null;;
         switch ($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Comment_'.Post::TYPE_CREATION:
             case 'Comment_'.Post::TYPE_AGGREGATE:
@@ -755,10 +757,10 @@ class CMExtension extends \Twig_Extension
         }
     }
 
-    public function getEntityPostText(Post $post)
+    public function getEntityPostText(Post $post, $box = true)
     {
         $userLink = $this->router->generate($post->getPublisherType().'_show', array('slug' => $post->getPublisher()->getSlug()));
-        $userBox = $this->getPublisherBox($post->getPublisher());
+        $userBox = $box ? $this->getPublisherBox($post->getPublisher()) : null;
         switch($this->getClassName($post->getObject()).'_'.$post->getType()) {
             case 'Comment_'.Post::TYPE_CREATION:
             case 'Like_'.Post::TYPE_CREATION:

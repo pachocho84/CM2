@@ -15,14 +15,14 @@
             {% set label = 'Browse image' %}
             <div class="fileinput fileinput-new" data-provides="fileinput">
                 {{ imgEdit.box|raw }}
-                <div class="fileinput-preview fileinput-exists image_box" data-trigger="fileinput" style="width: {{ imgEdit.width }}px; height: {{ imgEdit.width }}px;"></div>
+                <div class="fileinput-preview fileinput-exists image_box" data-trigger="fileinput" style="width: {{ imgEdit.width }}px; height: {{ imgEdit.height|default(imgEdit.width) }}px;"></div>
         {% elseif imgOffset is defined and imgOffset is not null %}
             {% set label = 'Browse image' %}
             <div class="fileinput fileinput-new" data-provides="fileinput">
                 {% if attribute(form.parent.vars.data, imgKind|default('img')) is not null %}
                     {{ show_img_box(attribute(form.parent.vars.data, imgKind|default('img'))|imagine_filter('medium'), {width: 200, height: 113, offset: imgOffset, box_attributes: {class: 'fileinput-new', style: 'border: 1px solid #bbbbbb; margin-bottom: 10px;'}}) }}
                 {% endif %}
-                <div class="fileinput-preview fileinput-exists image_box" data-trigger="fileinput" style="width: 190px; height: 126px; border: 1px solid #bbbbbb; margin-bottom: 10px;"></div>
+                <div class="fileinput-preview fileinput-exists image_box" data-trigger="fileinput" style="width: 200px; height: 113px; border: 1px solid #bbbbbb; margin-bottom: 10px;"></div>
         {% elseif subtype|default('') == 'image' %}
             {% set label = 'Browse image' %}
             <div class="fileinput fileinput-new" data-provides="fileinput">
@@ -31,7 +31,7 @@
                         <img src="{{ form.parent.vars.data.img|imagine_filter('medium') }}" style="height: 100%" />
                     </div>
                 {% endif %}
-                <div class="fileinput-preview fileinput-exists" data-trigger="fileinput" style="width: 190px; height: 126px; border: 1px solid #bbbbbb; margin-bottom: 10px;"></div>
+                <div class="fileinput-preview fileinput-exists" data-trigger="fileinput" style="width: 200px; height: 150px; border: 1px solid #bbbbbb; margin-bottom: 10px;"></div>
         {% else %}
             <div class="fileinput fileinput-new input-group" data-provides="fileinput">
 
@@ -41,6 +41,7 @@
             {% set inputGroup = true %}
             {% set label = 'Browse' %}
         {% endif %}
+        <div>
         <span class="{% if inputGroup|default(false) %}input-group-addon {% endif %}btn btn-default btn-file">
             <span class="fileinput-new">{{ label|trans({}, translation_domain) }}</span>
             <span class="fileinput-exists">{{ 'Change'|trans({}, translation_domain) }}</span>
@@ -68,6 +69,7 @@
     {% if type == 'file' %}
             </span>
             <a href="#" class="{% if inputGroup|default(false) %}input-group-addon {% endif %}btn btn-default fileinput-exists" data-dismiss="fileinput">{{ 'Remove'|trans({}, translation_domain) }}</a>
+        </div>
         </div>
     {% endif %}
 {% endspaceless %}

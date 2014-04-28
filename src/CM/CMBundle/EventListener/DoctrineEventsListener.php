@@ -823,7 +823,7 @@ class DoctrineEventsListener
         $inverse = new Relation;
         $inverse->setUser($relation->getFromUser())
             ->setFromUser($relation->getUser())
-            ->setAccepted(Relation::ACCEPTED_NO);
+            ->setAccepted($relation->getAccepted() == Relation::ACCEPTED_BOTH ? Relation::ACCEPTED_BOTH : Relation::ACCEPTED_NO);
 
         $relation->getRelationType()->getInverseType()->addRelation($inverse);
 

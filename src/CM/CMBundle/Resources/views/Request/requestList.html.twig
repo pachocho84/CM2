@@ -11,7 +11,7 @@
 
             <div class="media-body ajax-link-target">
                 
-                <p>{{ request_tag(request) }}</p>
+                <p>{{ request_tag(request, box|default(false)) }}</p>
 
                 {% if request.isNewOrPending %}
                     <div>
