@@ -177,8 +177,10 @@ body {
 a {
     color: #aa0000;
 }
-a:hover {
+a:hover,
+a:focus {
     color: #333333;
+    text-decoration: none;
 }
 .btn-toolbar {
     margin-top: 0px;
@@ -351,6 +353,12 @@ form .fileinput {
 .ui-menu .ui-menu-item a:hover {
     background: #efefef;
     border: 1px solid #bbbbbb;
+}
+.ui-menu .ui-menu-item a.ui-state-focus, 
+.ui-menu .ui-menu-item a.ui-state-active {
+    background: #f7f7f7;
+    border: none;
+    margin: 0;
 }
 
 

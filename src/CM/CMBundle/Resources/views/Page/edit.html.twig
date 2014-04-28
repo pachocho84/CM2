@@ -1,20 +1,36 @@
-{% extends 'CMBundle:Form:layout.html.twig' %}
+{% extends "CMBundle:User:accountLayout.html.twig" %}
 
-{% block title %}
+
+
+{% block section %}
     {% if app.request.get('_route') == 'page_new' %}
-        {{ "Add a page"|trans }}
+        {{ 'Add a page'|trans }}
     {% elseif app.request.get('_route') == 'page_edit' %}
-        {{ "Edit page: %title%"|trans({'%title%': page}) }}
+        {{ 'Basic information for "%page%"'|trans({'%page%': page}) }}
     {% endif %}
 {% endblock %}
 
-{% block body %}
-    <div class="row">
-        <div class="col-lg-5">
-            <h2>{{ block('title') }}</h2>
-        </div>
-    </div>
-    
+
+
+{% block headingButtons %}
+    <a href="{{ path('page_show', {slug: page.slug}) }}" class="btn btn-default btn-sm">{{ icon('Page') }} {{ 'View page'|trans }}</a>
+{% endblock %}
+
+
+
+{% block breadcrumbs %}
+    <li><a href="{{ path('user_pages') }}">{{ 'Pages'|trans }}</a></li> 
+    {% if app.request.get('_route') == 'page_new' %}
+        <li class="active">{{ 'Add a page'|trans }}</li>
+    {% elseif app.request.get('_route') == 'page_edit' %}
+        <li><a href="{{ path('page_show', {slug: page.slug}) }}">{{ page }}</a></li>
+        <li class="active">{{ 'Edit'|trans }}</li>
+    {% endif %}
+{% endblock %}
+
+
+
+{% block main %}
     {{ form_start(form) }}
         <div class="row">
             <div class="col-md-4">

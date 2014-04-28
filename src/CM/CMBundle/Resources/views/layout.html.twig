@@ -46,25 +46,12 @@
     <nav id="menu">
         <div class="container">
         
-{#
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">{{ 'Toggle navigation'|trans }}</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-#}
-    
-{#             <div class="collapse navbar-collapse"> #}
-
                 <ul class="pull-left">
                     <li id="menu-popup-trigger" class="dropdown">
                         {% if controller_name() == 'user' %}
                             <a href="{{ path('wall_index') }}">{{ icon('User') }} {{ 'Users'|trans }} <span class="caret"></span></a>
                         {% else %}
-                            <a href="{{ path('wall_index') }}">{{ icon('Home') }} {{ 'Home'|trans }} <span class="caret"></span></a>
+                            <a href="{{ path('home') }}">{{ icon('Home') }} {{ 'Home'|trans }} <span class="caret"></span></a>
                         {% endif %}
                         <ul id="menu-popup" class="dropdown-menu">
                             <li><a href="{{ path('wall_index') }}">{{ icon('Home') }} {{ 'Home'|trans }}</a></li>
@@ -107,42 +94,44 @@
                             <li class="dropdown">
                                 <a href="{{ path('user_locale') }}">{{ 'Locales'|trans }}</a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{{ path('user_locale', {'_locale': "en" }) }}">En</a></li>
-                                    <li><a href="{{ path('user_locale', {'_locale': "fr" }) }}">Fr</a></li>
-                                    <li><a href="{{ path('user_locale', {'_locale': "it" }) }}">It</a></li>
+                                    <li><a href="{{ path('user_locale', {_locale: "en" }) }}">En</a></li>
+                                    <li><a href="{{ path('user_locale', {_locale: "fr" }) }}">Fr</a></li>
+                                    <li><a href="{{ path('user_locale', {_locale: "it" }) }}">It</a></li>
                                 </ul>
                             </li>
 #}
                 </ul>
-
-                <ul class="pull-right">
-                    {% if is_granted('ROLE_USER') %}
-                        {{ render(controller('CMBundle:User:menu', {path: app.request.pathInfo} )) }}
-                    {% else %}
-                        <li class="dropdown menu-tab">
-                            <a href="{{ path('fos_user_security_login') }}" class="dropdown-toggle" data-toggle="dropdown">{{ 'Login'|trans }}</a>
-                            <div class="dropdown-menu dropdown-menu-right login-dropdown">
-                                <div class="dropdown-menu-body">
-                                    {% if action_name() != 'register' and app.request.get('_route') != 'wall_index' %}
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <h3>{{ 'Login'|trans }}</h3>
-                                                {{ render(controller('FOSUserBundle:Security:login', {'template': 'CMUserBundle:Security:form.html.twig'})) }}
+                
+                {% if app.request.get('_route') != 'wall_index' %}
+                    <ul class="pull-right">
+                        {% if is_granted('ROLE_USER') %}
+                            {{ render(controller('CMBundle:User:menu', {path: app.request.pathInfo} )) }}
+                        {% else %}
+                            <li class="dropdown login-dropdown menu-tab">
+                                <a href="{{ path('fos_user_security_login') }}" class="dropdown-toggle" data-toggle="dropdown">{{ 'Login'|trans }}</a>
+                                <div class="dropdown-menu dropdown-menu-right login-dropdown-menu">
+                                    <div class="dropdown-menu-body">
+                                        {% if action_name() != 'register' %}
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h3>{{ 'Login'|trans }}</h3>
+                                                    {{ render(controller('FOSUserBundle:Security:login', {'template': 'CMUserBundle:Security:form.html.twig'})) }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h3>{{ 'Registration'|trans }}</h3>
+                                                    {{ render(controller('FOSUserBundle:Registration:register', {'template': null})) }}
+                                                </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <h3>{{ 'Registration'|trans }}</h3>
-                                                {{ render(controller('FOSUserBundle:Registration:register', {'template': null})) }}
-                                            </div>
-                                        </div>
-                                    {% else %}
-                                        <h3>{{ 'Login'|trans }}</h3>
-                                        {{ render(controller('FOSUserBundle:Security:login', {'template': 'CMUserBundle:Security:form.html.twig'})) }}
-                                    {% endif %}
+                                        {% else %}
+                                            <h3>{{ 'Login'|trans }}</h3>
+                                            {{ render(controller('FOSUserBundle:Security:login', {'template': 'CMUserBundle:Security:form.html.twig'})) }}
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                    {% endif %}
-                </ul>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
                 
                 <form class="pull-right hidden-xs" role="search" style="display:table;">
                     <div class="input-group">
@@ -194,7 +183,6 @@
         'lib/typeahead/handlebars-v1.3.0.js'
         'lib/typeahead/typeahead.min.js'
         'lib/tokenfield/js/bootstrap-tokenfield.min.js'
-        'js/jquery.hcsticky-min.js'
         'js/jquery.cycle2.min.js'
         'js/jquery.cycle2.scrollVert.min.js'
         'js/jquery.form.min.js'
