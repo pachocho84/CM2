@@ -177,8 +177,10 @@ body {
 a {
     color: #aa0000;
 }
-a:hover {
+a:hover,
+a:focus {
     color: #333333;
+    text-decoration: none;
 }
 .btn-toolbar {
     margin-top: 0px;

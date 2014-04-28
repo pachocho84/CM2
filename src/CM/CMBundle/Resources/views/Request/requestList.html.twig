@@ -1,5 +1,5 @@
 {% if requests|length == 0 %}
-    {{ "There are no requests."|trans }}
+    <li class="object">{{ "There are no requests."|trans }}</li>
 {% else %}
     {% for request in requests %}
         <li class="media object">

@@ -30,7 +30,7 @@
         </a>
     </li>
 {% else %}
-    {{ 'There are no messages.'|trans }}
+    <li class="object">{{ 'There are no messages.'|trans }}</li>
 {% endfor %}
 
 {% if messages.paginationData.current < messages.paginationData.last %}
