@@ -280,4 +280,14 @@ class EventDate
     {
         return $this->longitude;
     }
+
+    /**
+     * Get longitude
+     *
+     * @return string 
+     */
+    public function getCoordinates()
+    {
+        return $this->latitude.','.$this->longitude;
+    }
 }

@@ -265,8 +265,6 @@ class EventController extends Controller
         $em->remove($event);
         $em->flush();
 
-        die;
-
         return new RedirectResponse($this->generateUrl('event_index'));
     }
     

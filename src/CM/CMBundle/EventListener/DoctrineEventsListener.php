@@ -24,19 +24,19 @@ use CM\CMBundle\Entity\Multimedia;
 
 class DoctrineEventsListener
 {
-    private $serviceContainer;
+    private $container;
 
     private $flushNeeded = false;
     private $wtf = '';
 
-    public function __construct(ContainerInterface $serviceContainer)
+    public function __construct(ContainerInterface $container)
     {
-        $this->serviceContainer = $serviceContainer;
+        $this->container = $container;
     }
 
     private function get($service)
     {
-        return $this->serviceContainer->get($service);
+        return $this->container->get($service);
     }
 
     private function getUser()
@@ -45,6 +45,24 @@ class DoctrineEventsListener
             return null;
         }
         return $this->get('security.context')->getToken()->getUser();
+    }
+
+    public function prePersist(LifecycleEventArgs $args)
+    {
+        $object = $args->getEntity();
+
+        if ($object instanceof Image || $object instanceof User || $object instanceof Page) {
+            $this->imagePersistingOrUpdatingRoutine($object);
+        }
+    }
+
+    public function preUpdate(LifecycleEventArgs $args)
+    {      
+        $object = $args->getEntity();
+
+        if ($object instanceof Image || $object instanceof User || $object instanceof Page) {
+            $this->imagePersistingOrUpdatingRoutine($object, $args);
+        }
     }
 
     public function postPersist(LifecycleEventArgs $args)
@@ -86,6 +104,9 @@ class DoctrineEventsListener
         if ($object instanceof Multimedia && !is_null($object->getEntity())) {
             $this->entityMultimediaPersistedRoutine($object, $em);
         }
+        if ($object instanceof Image || $object instanceof User || $object instanceof Page) {
+            $this->imagePersistedOrUpdatedRoutine($object);
+        }
     }
 
     public function postUpdate(LifecycleEventArgs $args)
@@ -113,6 +134,9 @@ class DoctrineEventsListener
         }
         if ($object instanceof User && !is_null($this->get('security.context')->getToken())) {
             $this->get('cm.user_authentication')->updateProfile();
+        }
+        if ($object instanceof Image || $object instanceof User || $object instanceof Page) {
+            $this->imagePersistedOrUpdatedRoutine($object);
         }
     }
 
@@ -153,6 +177,9 @@ class DoctrineEventsListener
         }
         if ($object instanceof Multimedia) {
             $this->entityMultimediaRemovedRoutine($object, $em);
+        }
+        if ($object instanceof Image || $object instanceof User || $object instanceof Page) {
+            $this->imageRemovedRoutine($object);
         }
     }
 
@@ -294,7 +321,7 @@ class DoctrineEventsListener
         switch ($post->getObject()) {
             case Comment::className():
             case Like::className():
-                $type = $em->getRepository('CMBundle:'.$this->serviceContainer->get('cm.helper')->className($post->getObject()))->findOneById($post->getObjectIds()[0])->getImageId();
+                $type = $em->getRepository('CMBundle:'.$this->container->get('cm.helper')->className($post->getObject()))->findOneById($post->getObjectIds()[0])->getImageId();
                 break;
         }
         $arrayPost = $em->getRepository('CMBundle:Post')->getLastPosts(array(
@@ -903,6 +930,87 @@ class DoctrineEventsListener
                 array($multimedia->getId())
             );
         } catch (\Exception $e) {
+        }
+    }
+
+    private function imagePersistingOrUpdatingRoutine(&$image, LifecycleEventArgs $args = null)
+    {
+        if (method_exists($image, 'getImgFile')) {
+            if (!is_null($image->getOldImg())) {
+                $this->imageRemovedRoutine($image, $image->getOldImg());
+            }
+            $fileName = md5(uniqid().$image->getImgFile()->getClientOriginalName().time()).'.'.$image->getImgFile()->guessExtension();
+            $image->setImg($fileName);
+            if (!is_null($args)) {
+                $args->setNewValue('img', $fileName);
+            }
+        }
+        if (method_exists($image, 'getCoverImgFile')) {
+            if (!is_null($image->getOldCoverImg())) {
+                $this->imageRemovedRoutine($image, $image->getOldCoverImg());
+            }
+            $fileName = md5(uniqid().$image->getCoverImgFile()->getClientOriginalName().time()).'.'.$image->getImgFile()->guessExtension();
+            $image->setCoverImg($fileName);
+            if (!is_null($args)) {
+                $args->setNewValue('coverImg', $fileName);
+            }
+        }
+        if (method_exists($image, 'getBackgroundImgFile')) {
+            if (!is_null($image->getOldBackgroundImg())) {
+                $this->imageRemovedRoutine($image, $image->getOldBackgroundImg());
+            }
+            $fileName = md5(uniqid().$image->getBackgroundImgFile()->getClientOriginalName().time()).'.'.$image->getImgFile()->guessExtension();
+            $image->setBackgroundImg($fileName);
+            if (!is_null($args)) {
+                $args->setNewValue('backgroundImg', $fileName);
+            }
+        }
+    }
+
+    private function imagePersistedOrUpdatedRoutine(&$image)
+    {
+        $dir = getcwd().$this->container->getParameter('images.dir').'/full';
+
+        if (method_exists($image, 'getImgFile') && !is_null($image->getImgFile())) {
+            $image->getImgFile()->move($dir, $image->getImg());
+            $this->container->get('logger')->info($image->getImg());
+        }
+        if (method_exists($image, 'getCoverImgFile') && !is_null($image->getCoverImgFile())) {
+            $image->getImgFile()->move($dir, $image->getCoverImg());
+        }
+        if (method_exists($image, 'getBackgroundImgFile') && !is_null($image->getBackgroundImgFile())) {
+            $image->getImgFile()->move($dir, $image->getBackgroundImg());
+        }
+    }
+
+    private function imageRemovedRoutine(&$image, $old = null)
+    {
+        $dir = getcwd().$this->container->getParameter('images.dir');
+        $folders = array_keys($this->container->getParameter('liip_imagine.filter_sets'));
+
+        $fileNames = array();
+        if (is_null($old)) {
+            if (method_exists($image, 'getImg')) {
+                $fileNames[] = $image->getImg();
+            }
+            if (method_exists($image, 'getCoverImg')) {
+                $fileNames[] = $image->getCoverImg();
+            }
+            if (method_exists($image, 'getBackgroundImg')) {
+                $fileNames[] = $image->getBackgroundImg();
+            }
+        } else {
+            $fileNames[] = $old;
+        }
+
+        foreach ($fileNames as $fileName) {
+            foreach ($folders as $folder) {
+                $file = $dir.'/'.$folder.'/'.$fileName;
+
+                if (file_exists($file)) {
+                    unlink($file);
+                }
+            }
         }
     }
 }

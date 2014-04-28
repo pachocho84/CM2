@@ -9,9 +9,9 @@
             <div class="media-body">
                 <h4 class="media-heading"><a href="{{ path(type ~ '_show', {slug: publisher.slug}) }}">{{ publisher }}</a></h4>
 
-                {% if publisher.userTags is defined and publisher.userTags|length > 0 %}
-                    <small>{{ publisher.userTags|join(', ')|trim }}</small>
-                {% endif %}
+                <small class="text-muted"{% if publisher.tags|length > 3 %} {{ tooltip(publisher.tags) }}{% endif %}>
+                    {{ publisher.tags[:3]|join(', ')|trim }}{% if publisher.tags|length > 3 %}...{% endif %}
+                </small>
             </div>
         </div>
 

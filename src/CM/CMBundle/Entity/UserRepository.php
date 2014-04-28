@@ -111,7 +111,7 @@ class UserRepository extends BaseRepository
             ->select('u, ut, t, tt')
             ->leftJoin('u.userTags', 'ut', '', '', 'ut.order')
             ->leftJoin('ut.tag', 't')
-            ->leftJoin('t.translations', 'tt', 'with', 'utt.locale = :locale')
+            ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')
             ->setParameter('locale', $options['locale'])
             ->andWhere('u.id = :id')->setParameter('id', $id);
         return $query->getQuery()->getSingleResult();
