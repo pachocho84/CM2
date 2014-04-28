@@ -25,8 +25,8 @@ class RelationTypeFixtures extends AbstractFixture implements OrderedFixtureInte
     private $relations = array(
         1 => array(
             array('user' => 2, 'type' => 4),
-            array('user' => 3, 'type' => 4)
-        )
+            array('user' => 3, 'type' => 4),
+        ),
     );
 
     public function load(ObjectManager $manager)
@@ -48,15 +48,27 @@ class RelationTypeFixtures extends AbstractFixture implements OrderedFixtureInte
     
         $manager->flush();
         
-        foreach ($this->relations as $user => $relation) {
-            $relation = new Relation;
-            $relation->setUser($manager->merge($this->getReference('user-'.$user)))
-                ->setFromUser($manager->merge($this->getReference('user-'.$relation['user'])))
-                ->setAccepted(Relation::ACCEPTED_BOTH);
-    
-            $manager->merge($this->getReference('relationType-'.$relation['type']))->addRelation($relation);
-    
-            $em->persist($relation);
+        foreach ($this->relations as $user => $relArray) {
+            foreach ($relArray as $rel) {
+                $relation = new Relation;
+                $relation->setUser($manager->merge($this->getReference('user-'.$user)))
+                    ->setFromUser($manager->merge($this->getReference('user-'.$rel['user'])))
+                    ->setAccepted(Relation::ACCEPTED_BOTH);
+        
+                $relationType = $manager->merge($this->getReference('relationType-'.$rel['type']));
+                $relationType->addRelation($relation);
+        
+                $manager->persist($relation);
+                
+                $inverse = new Relation;
+                $inverse->setUser($manager->merge($this->getReference('user-'.$rel['user'])))
+                    ->setFromUser($manager->merge($this->getReference('user-'.$user)))
+                    ->setAccepted(Relation::ACCEPTED_BOTH);
+        
+                $relationType->getInverseType()->addRelation($inverse);
+                
+                $manager->persist($inverse);
+            }
         }
     
         $manager->flush();
