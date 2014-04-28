@@ -95,7 +95,7 @@ class DoctrineEventsListener
             && ($object->getImg() || $object->getCoverImg() || (property_exists($object, 'backgroundImg') && $object->getBackgroundImg()))) {
             $this->imgPersistedRoutine($object, $em);
         }
-        if ($object instanceof Relation && in_array($object->getAccepted(), array(Relation::ACCEPTED_UNI, Relation::ACCEPTED_BOTH))) {
+        if ($object instanceof Relation && $object->getAccepted() == Relation::ACCEPTED_UNI) {
             $this->relationOutPersistedRoutine($object, $em);
         }
         if ($object instanceof Relation && $object->getAccepted() == Relation::ACCEPTED_NO) {
@@ -823,7 +823,7 @@ class DoctrineEventsListener
         $inverse = new Relation;
         $inverse->setUser($relation->getFromUser())
             ->setFromUser($relation->getUser())
-            ->setAccepted($relation->getAccepted() == Relation::ACCEPTED_BOTH ? Relation::ACCEPTED_BOTH : Relation::ACCEPTED_NO);
+            ->setAccepted(Relation::ACCEPTED_NO);
 
         $relation->getRelationType()->getInverseType()->addRelation($inverse);
 
