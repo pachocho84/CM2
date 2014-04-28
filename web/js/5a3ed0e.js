@@ -3762,13 +3762,13 @@ function initRecipients() {
 
 $(function() {
     /* MENU */
-    $('#menu ul.pull-left li.dropdown').hover(function (e) {
+    $('#menu ul.pull-left li.dropdown').hover(function(event) {
         timeout = setTimeout(function(){
-            $(e.currentTarget).addClass('open'); 
+            $(event.currentTarget).addClass('open'); 
         }, 150); 
-    }, function (e) { 
+    }, function(event) { 
         clearTimeout(timeout);
-        $(e.currentTarget).removeClass('open'); 
+        $(event.currentTarget).removeClass('open'); 
     });
     $('#menu ul.pull-right li.menu-tab.menu-tab-ajax a').on('click', function(event) {
         if ($(document).width() > 767) {

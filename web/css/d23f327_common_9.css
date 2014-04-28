@@ -288,10 +288,12 @@ a.text-danger:focus {
     margin-top: 0px;
     margin-bottom: 20px;
 }
+/*
 .btn.btn-default.active span.glyphicon,
 .btn.btn-default.active span.glyphicons {
     color: #990000;
 }
+*/
 a.btn:hover {
     text-decoration: none !important;
 }
@@ -854,7 +856,7 @@ form textarea[expandable] {
 }
 .post .post-image-container img {
     margin: 0 auto;
-    max-height: 600px;
+    max-height: 720px;
 }
 .post:hover a {
     color: #aa0000;    

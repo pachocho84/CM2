@@ -122,7 +122,6 @@ class ArticleFixtures
         $category->addEntity($article);
 
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
-        $manager->persist($post);
         $post->setPage($page);
 
         $article->setPost($post);

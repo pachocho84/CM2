@@ -74,7 +74,7 @@ class Post
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="Entity", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Entity", inversedBy="posts", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)    
      */
     private $entity;

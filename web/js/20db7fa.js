@@ -2030,8 +2030,8 @@ function imagePosition($img, $target) {
         drag: function(event, ui) {
             if (ui.position.top > 0) {
                 ui.position.top = 0;
-            } else if (ui.position.top < $box.outerHeight() - $img.outerHeight()) {
-                ui.position.top = $box.outerHeight() - $img.outerHeight();
+            } else if (ui.position.top < $box.height() - $img.outerHeight()) {
+                ui.position.top = $box.height() - $img.outerHeight();
             }
             if (ui.position.left > 0) {
                 ui.position.left = 0;
@@ -2042,7 +2042,6 @@ function imagePosition($img, $target) {
         stop: function(event, ui) {
             offsetX = - $img.position().left;
             offsetY = - $img.position().top;
-/*             console.log(offsetX, offsetY, $box.width(), Math.abs(100 * Math.max(offsetX, offsetY) / $box.width()).toFixed(2)); */
             $target.val(Math.abs(100 * Math.max(offsetX, offsetY) / $box.width()).toFixed(2));
         }
     });

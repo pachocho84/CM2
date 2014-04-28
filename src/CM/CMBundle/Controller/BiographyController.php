@@ -44,7 +44,7 @@ class BiographyController extends Controller
 
             $post = $this->get('cm.post_center')->getNewPost($user, $user);
 
-            $biography->addPost($post);
+            $biography->setPost($post);
         }
  
         $form = $this->createForm(new BiographyType, $biography, array(
@@ -115,49 +115,48 @@ class BiographyController extends Controller
      */
     public function pageEditAction(Request $request, $slug)
     {
-        $em = $this->getDoctrine()->getManager();
+        // $em = $this->getDoctrine()->getManager();
         
-        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+        // $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
         
-        if (!$page) {
-            throw new NotFoundHttpException('Page not found.');
-        }
+        // if (!$page) {
+        //     throw new NotFoundHttpException('Page not found.');
+        // }
 
-        $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($page->getId());
-        if (is_null($biography) || !$biography) {
-            $biography = new Biography;
+        // $biography = $em->getRepository('CMBundle:Biography')->getUserBiography($page->getId());
+        // if (is_null($biography) || !$biography) {
+        //     $biography = new Biography;
 
-            $post = $this->get('cm.post_center')->getNewPost($this->getUser(), $this->getUser());
-            $post->setPage($page);
+        //     $post = $this->get('cm.post_center')->getNewPost($this->getUser(), $this->getUser());
+        //     $post->setPage($page);
 
-            $biography->addPost($post);
-        } else {
-            $biography = $biography[0];
-        }
+        //     $biography->addPost($post);
+        // } else {
+        //     $biography = $biography[0];
+        // }
  
-        $form = $this->createForm(new BiographyType, $biography, array(
-/*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
-            'cascade_validation' => true,
-            'error_bubbling' => false,
-            'roles' => $this->getUser()->getRoles(),
-            'em' => $em,
-            'locales' => array('en'/* , 'fr', 'it' */),
-            'locale' => $request->getLocale()
-        ))->add('save', 'submit');
+        // $form = $this->createForm(new BiographyType, $biography, array(
+        //     'cascade_validation' => true,
+        //     'error_bubbling' => false,
+        //     'roles' => $this->getUser()->getRoles(),
+        //     'em' => $em,
+        //     'locales' => array('en'/* , 'fr', 'it' */),
+        //     'locale' => $request->getLocale()
+        // ))->add('save', 'submit');
         
-        $form->handleRequest($request);
+        // $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $biography->setTitle('b');
-            $em->persist($biography);
-            $em->flush();
+        // if ($form->isValid()) {
+        //     $biography->setTitle('b');
+        //     $em->persist($biography);
+        //     $em->flush();
 
-            return new RedirectResponse($this->generateUrl('page_biography', array('slug' => $page->getSlug())));
-        }
+        //     return new RedirectResponse($this->generateUrl('page_biography', array('slug' => $page->getSlug())));
+        // }
         
-        return array(
-            'form' => $form->createView()
-        );
+        // return array(
+        //     'form' => $form->createView()
+        // );
     }
 
     /**

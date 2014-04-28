@@ -428,8 +428,10 @@ class Image
      */
     public function addComment(Comment $comment)
     {
-        $this->comments[] = $comment;
-        $comment->setPost($this);
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setImage($this);
+        }
     
         return $this;
     }

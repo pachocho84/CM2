@@ -20,6 +20,7 @@
             <div class='box'>
                 <div class="box-body">
                     {{ include('CMUserBundle:Security:form.html.twig') }}
+                    {{ render(controller('FOSUserBundle:Registration:register', {'template': null})) }}
                 </div>
             </div>
         </div>

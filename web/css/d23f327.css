@@ -3220,10 +3220,12 @@ a.text-danger:focus {
     margin-top: 0px;
     margin-bottom: 20px;
 }
+/*
 .btn.btn-default.active span.glyphicon,
 .btn.btn-default.active span.glyphicons {
     color: #990000;
 }
+*/
 a.btn:hover {
     text-decoration: none !important;
 }
@@ -3786,7 +3788,7 @@ form textarea[expandable] {
 }
 .post .post-image-container img {
     margin: 0 auto;
-    max-height: 600px;
+    max-height: 720px;
 }
 .post:hover a {
     color: #aa0000;    
@@ -4384,14 +4386,18 @@ h2 a {
 h2 a:hover {
     text-decoration: none;
 }
-h2 .glyphicon {
-    font-size: 26px;
+h2 .glyphicon,
+h2 .glyphicons {
+    font-size: 22px;
+}
+h2 .glyphicons {
+    vertical-align: 2px;
 }
 #header {
     background: url(../../bundles/cm/images/layout/header_bg.jpg) repeat-x;
     height:66px;
     position: relative;
-    z-index: 1001; /* to hide menu transform animation */
+    z-index: 1002; /* to hide menu transform animation */
 }  
 #footer {
     clear: both;
@@ -4518,11 +4524,11 @@ h3 small a {
     border: none;
     margin: 0;
     z-index: 1001;
+    top: -1px;
 }
 #menu ul.pull-left li.dropdown.open #menu-popup {
     padding: 9px 0;
     border: 1px solid #cccccc;
-    top: -1px;
 }
 #menu ul.pull-left li.dropdown #menu-popup > li > a {
     width: 213px;
@@ -4725,9 +4731,6 @@ form .well {
     font-size: 16px;
     font-weight: normal;
     margin: 0 0 15px;
-}
-.profile-header .profile-header-row .profile-header-cover img {
-    height: auto !important;
 }
 .profile-header .profile-header-row .profile-header-cover .profile-header-buttons {
     position: absolute;

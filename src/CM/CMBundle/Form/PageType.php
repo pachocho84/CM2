@@ -24,7 +24,7 @@ class PageType extends AbstractType
                     'by_reference' => false,
                     'label' => 'Types'
                 ))->addModelTransformer(new TagsToArrayTransformer($options['tags'], 'CM\CMBundle\Entity\PageTag')))
-            ->add('description')
+            ->add('biography', new BiographyType)
             ->add('website')
             ->add('imgFile', 'file', array(
                 'attr' => array('image' => ''),

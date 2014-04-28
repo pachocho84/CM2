@@ -54,11 +54,16 @@ class Page
 	private $posts;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="string", length=250, nullable=false)
+     * @ORM\Column(name="biography_id", type="integer", nullable=true)
      */
-    private $description;
+    private $biographyId;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Biography", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="biography_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @Assert\Valid
+     */
+    private $biography;
 
     /**
      * @var string
@@ -75,7 +80,7 @@ class Page
     private $vip = false;
         
     /**
-     * @ORM\OneToMany(targetEntity="CM\CMBundle\Entity\Image", mappedBy="page", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Image", mappedBy="page", cascade={"persist", "remove"})
      */
     private $images;
 
@@ -177,6 +182,9 @@ class Page
     public function setCreator(User $creator = null)
     {
         $this->creator = $creator;
+        if (!is_null($creator)) {
+            $this->creatorId = $creator->getId();
+        }
     
         return $this;
     }
@@ -293,26 +301,39 @@ class Page
     }
 
     /**
-     * Set description
+     * Get entity
      *
-     * @param string $description
+     * @return User 
+     */
+    public function setBiographyId()
+    {
+        return $this->biographyId;
+    }
+
+    /**
+     * Set biography
+     *
+     * @param string $biography
      * @return Page
      */
-    public function setDescription($description)
+    public function setBiography($biography)
     {
-        $this->description = $description;
+        $this->biography = $biography;
+        if (!is_null($biography)) {
+            $this->biographyId = $biography->getId();
+        }
     
         return $this;
     }
 
     /**
-     * Get description
+     * Get biography
      *
      * @return string 
      */
-    public function getDescription()
+    public function getBiography()
     {
-        return $this->description;
+        return $this->biography;
     }
 
     /**

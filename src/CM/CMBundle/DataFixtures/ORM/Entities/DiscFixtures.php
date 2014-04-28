@@ -380,7 +380,6 @@ Angelo Formenti',
         }
 
         $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
-        $manager->persist($post);
         $post->setPage($page);
 
         $disc->setPost($post);

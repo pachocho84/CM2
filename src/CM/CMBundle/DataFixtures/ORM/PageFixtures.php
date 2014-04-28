@@ -35,7 +35,6 @@ class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, C
                     'tags' => array(44)
                 )
             ),
-            'description' => 'Sony Classical in Italia',
             'website' => 'www.sony.it',
             'img' => 'sony_classical.jpg',
             'imgOffset' => null,
@@ -70,7 +69,6 @@ La Sony Classical ha inoltre ripubblicato una serie di dischi della etichetta Se
                     'tags' => array(44)
                 )
             ),
-            'description' => '1° settembre 1863 il manifesto di Tito Ricordi per una società con il compito di “incoraggiare i cultori della buona musica”.',
             'website' => 'www.quartettomilano.it',
             'img' => 'societa_quartetto.jpg',
             'imgOffset' => null,
@@ -99,7 +97,6 @@ Tra le iniziative di risonanza internazionale si ricordano, in collaborazione co
                 )
             ),
             'users' => array(),
-            'description' => 'Fondazione Orchestra Sinfonica e Coro Sinfonico di Milano Giuseppe Verdi',
             'website' => 'www.laverdi.org',
             'img' => 'la_verdi.jpg',
             'imgOffset' => null,
@@ -138,7 +135,6 @@ L'Orchestra è stata diretta, tra gli altri, da Riccardo Chailly, Georges Prêtr
             $page = new Page;
             $page->setName($p['name'])
                 ->setCreator($user)
-                ->setDescription($p['description'])
                 ->setWebsite($p['website'])
                 ->setImg($p['img'])
                 ->setImgOffset($p['imgOffset'])
@@ -156,16 +152,14 @@ L'Orchestra è stata diretta, tra gli altri, da Riccardo Chailly, Georges Prêtr
             $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
             $page->addPost($post);
 
-            $biography = new Biography;
-            $biography->setTitle('b')
-                ->setText($p['biography']);
+            // $biography = new Biography;
+            // $biography->setTitle('b')
+            //     ->setText($p['biography']);
 
-            $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
-            $page->addPost($post);
-            $manager->persist($post);
-            $biography->setPost($post);
+            // $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+            // $biography->setPost($post);
 
-            $manager->persist($biography);
+            // $page->setBiography($biography);
             
             /* Users */
             foreach ($p['users'] as $p_user) {
