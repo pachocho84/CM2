@@ -87,7 +87,8 @@ trait CoverImageTrait
     public function setCoverImgFile(UploadedFile $file = null)
     {
         $this->coverImgFile = $file;
-        $this->setCoverImg($this->img.'.old'); // trigger update
+        $this->oldCoverImg = $this->coverImg;
+        $this->setCoverImg(uniqid()); // trigger update
     }
 
     /**
@@ -98,51 +99,5 @@ trait CoverImageTrait
     public function getCoverImgFile()
     {
         return $this->coverImgFile;
-    }    
-
-    public function getCoverAbsolutePath()
-    {
-        return is_null($this->coverImg) ? null : $this->getUploadRootDir().'/'.$this->coverImg;
-    }
-
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function sanitizeCoverFileName()
-    {
-        if (null !== $this->getCoverImgFile()) {
-            $fileName = md5(uniqid().$this->getCoverImgFile()->getClientOriginalName().time());
-            $this->coverImg = $fileName.'.'.$this->getCoverImgFile()->guessExtension(); // FIXME: doesn't work with bmp files
-        }
-    }
-
-    /**
-     * @ORM\PostPersist()
-     * @ORM\PostUpdate()
-     */
-    public function uploadCover()
-    {
-        if (is_null($this->getCoverImgFile())) {
-            return;
-        }
-
-        // if there is an error when moving the file, an exception will
-        // be automatically thrown by move(). This will properly prevent
-        // the entity from being persisted to the database on error
-        $this->getCoverImgFile()->move($this->getUploadRootDir(), $this->coverImg);
-
-        // clean up the file property as you won't need it anymore
-        $this->coverImgFile = null;
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeCoverUpload()
-    {
-        if ($file = $this->getCoverAbsolutePath()) {
-            unlink($file);
-        }
     }
 }

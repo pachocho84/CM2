@@ -12,7 +12,6 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  *
  * @ORM\Entity(repositoryClass="ImageRepository")
  * @ORM\Table(name="image")
- * @ORM\HasLifecycleCallbacks
  */
 class Image
 {
@@ -111,11 +110,6 @@ class Image
     public static function className()
     {
         return get_class();
-    }
-
-    protected function getRootDir()
-    {
-        return __DIR__.'/../Resources/public/';
     }
     
     /**

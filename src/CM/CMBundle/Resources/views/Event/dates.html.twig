@@ -39,7 +39,7 @@
                     <p>{{ icon('Map') }} {{ date.location }}, <small class="text-muted">{{ date.address }}</small></p>
                     <div class="event-date-map">
                         <div class="event-date-map-img">
-                            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates|e }}&zoom=14&size=640x125&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" class="img-responsive" />
+                            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ date.coordinates }}&zoom=14&size=640x125&markers={{ date.coordinates|e }}&sensor=false&hl={{ app.request.locale }}" class="img-responsive" />
                         </div>
                         <a href="https://maps.google.com/maps?daddr={{ date.coordinates|e }}&hl={{ app.request.locale }}&sll={{ date.coordinates|e }}&sz=14&z=14" target="_blank" class="btn btn-lg btn-default" {{ tooltip('Get directions'|trans, {placement: 'left'}) }}><span class="glyphicon glyphicon-road"></span></a>
                     </div>

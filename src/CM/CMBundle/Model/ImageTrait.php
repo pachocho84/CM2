@@ -22,6 +22,8 @@ trait ImageTrait
      */
     private $img;
 
+    private $oldImg;
+
     /**
      * @var integer
      *
@@ -71,7 +73,17 @@ trait ImageTrait
      */
     public function getImg()
     {
-        return /*empty($this->img) ? $this->defaultImg() :*/ $this->img;
+        return $this->img;
+    }
+
+    /**
+     * Get img
+     *
+     * @return string 
+     */
+    public function getOldImg()
+    {
+        return $this->oldImg;
     }
 
     /**
@@ -105,8 +117,8 @@ trait ImageTrait
     public function setImgFile(UploadedFile $imgFile)
     {
         $this->imgFile = $imgFile;
-        $this->removeUpload();
-        $this->setImg($this->img.'.old'); // trigger update
+        $this->oldImg = $this->img;
+        $this->setImg(uniqid()); // trigger update
     }
 
     /**
@@ -117,70 +129,5 @@ trait ImageTrait
     public function getImgFile()
     {
         return $this->imgFile;
-    }
-
-    public static function getUploadDir()
-    {
-        // if you change this, change it also in the config.yml file!
-        return 'uploads/images/';
-    }
-
-    public static function getImageDir()
-    {
-        // if you change this, change it also in the config.yml file!
-        return self::getUploadDir().'full/';
-    }
-
-    public function getUploadRootDir()
-    {
-        // the absolute directory path where uploaded images should be saved
-        return $this->getRootDir().$this->getImageDir();
-    }
-
-    public function getImgAbsolutePath()
-    {
-        return is_null($this->img) ? null : $this->getUploadRootDir().$this->img;
-    }
-
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function sanitizeFileName()
-    {
-        if (!is_null($this->getImgFile())) {
-            $fileName = md5(uniqid().$this->getImgFile()->getClientOriginalName().time());
-            $this->img = $fileName.'.'.$this->getImgFile()->guessExtension(); // FIXME: doesn't work with bmp files
-        }
-    }
-
-    /**
-     * @ORM\PostPersist()
-     * @ORM\PostUpdate()
-     */
-    public function upload()
-    {
-        if (is_null($this->getImgFile())) {
-            return;
-        }
-
-        // if there is an error when moving the file, an exception will
-        // be automatically thrown by move(). This will properly prevent
-        // the entity from being persisted to the database on error
-        $this->getImgFile()->move($this->getUploadRootDir(), $this->img);
-
-        // clean up the file property as you won't need it anymore
-        $this->imgFile = null;
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeUpload()
-    {
-        if ($imgFile = $this->getImgAbsolutePath()) {
-            unlink($imgFile);
-            // var_dump($imgFile);die;
-        }
     }
 }

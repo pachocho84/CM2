@@ -12,9 +12,15 @@
 
   * Install [less][1] via [npm][2] running `npm install less --prefix app/Resources/node_modules`
 
+  * Install [inotify-tools][3] and run
+
   * Install [wkhtmltopdf][3] via doc. Installation endpoint needed in "/usr/bin/wkhtmltopdf"
 
   * Add the cronjobs `sudo ./install-cronjobs.sh`
+
+  * Run
+
+  * Modify data in app/config/parameters.yml
 
   * Execute the migration `php app/console doctrine:migrations:migrate`
 
@@ -33,4 +39,5 @@ If you want to remove also verbose junk use `rm -fr app/logs/<env>.log; touch -f
 
 [1]: http://lesscss.org/
 [2]: http://nodejs.org/
-[3]: https://code.google.com/p/wkhtmltopdf/
+[3]: https://github.com/rvoicilas/inotify-tools/wiki
+[4]: https://code.google.com/p/wkhtmltopdf/

@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * @ORM\Entity(repositoryClass="UserRepository")
  * @ORM\Table(name="user")
- * @ORM\HasLifecycleCallbacks
  */
 class User extends BaseUser implements ParticipantInterface
 {
@@ -325,11 +324,6 @@ class User extends BaseUser implements ParticipantInterface
     public static function className()
     {
         return get_class();
-    }
-
-    protected function getRootDir()
-    {
-        return __DIR__.'/../Resources/public/';
     }
 
     public function getFullname()

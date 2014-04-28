@@ -12,7 +12,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Entity(repositoryClass="PageRepository")
  * @ORM\Table(name="page")
- * @ORM\HasLifecycleCallbacks
  */
 class Page
 {
@@ -124,11 +123,6 @@ class Page
     public static function className()
     {
         return get_class();
-    }
-
-    protected function getRootDir()
-    {
-        return __DIR__.'/../Resources/public/';
     }
 
     /**

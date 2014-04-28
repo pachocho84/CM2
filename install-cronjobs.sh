@@ -1,10 +1,8 @@
 #!/bin/bash
 
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
 # create useful files and directories
-if [ ! -d "$dir/src/CM/CMBundle/Resources/public/temp" ]; then
-   mkdir $dir/src/CM/CMBundle/Resources/public/temp
+if [ ! -d "$(dirname $0)/src/CM/CMBundle/Resources/public/temp" ]; then
+   mkdir $(dirname $0)/src/CM/CMBundle/Resources/public/temp
 fi
 sudo touch /etc/cron.hourly/cm2
 

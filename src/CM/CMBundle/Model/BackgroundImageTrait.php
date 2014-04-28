@@ -55,7 +55,8 @@ trait BackgroundImageTrait
     public function setBackgroundImgFile(UploadedFile $file = null)
     {
         $this->backgroundImgFile = $file;
-        $this->setBackgroundImg($this->img.'.old'); // trigger update
+        $this->oldBackgroundImg = $this->backgroundImg;
+        $this->setBackgroundImg(uniqid()); // trigger update
         
     }
 
@@ -72,46 +73,5 @@ trait BackgroundImageTrait
     public function getBackgroundAbsolutePath()
     {
         return is_null($this->backgroundImg) ? null : $this->getUploadRootDir().$this->backgroundImg;
-    }
-
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function sanitizeBackgroundFileName()
-    {
-        if (!is_null($this->getBackgroundImgFile())) {
-            $fileName = md5(uniqid().$this->getBackgroundImgFile()->getClientOriginalName().time());
-            $this->backgroundImg = $fileName.'.'.$this->getBackgroundImgFile()->guessExtension(); // FIXME: doesn't work with bmp files
-        }
-    }
-
-    /**
-     * @ORM\PostPersist()
-     * @ORM\PostUpdate()
-     */
-    public function uploadBackground()
-    {
-        if (is_null($this->getBackgroundImgFile())) {
-            return;
-        }
-
-        // if there is an error when moving the file, an exception will
-        // be automatically thrown by move(). This will properly prevent
-        // the entity from being persisted to the database on error
-        $this->getBackgroundImgFile()->move($this->getUploadRootDir(), $this->backgroundImg);
-
-        // clean up the file property as you won't need it anymore
-        $this->backgroundImgFile = null;
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeBackgroundUpload()
-    {
-        if ($file = $this->getBackgroundAbsolutePath()) {
-            unlink($file);
-        }
     }
 }
