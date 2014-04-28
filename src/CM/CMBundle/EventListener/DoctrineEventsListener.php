@@ -95,7 +95,7 @@ class DoctrineEventsListener
             && ($object->getImg() || $object->getCoverImg() || (property_exists($object, 'backgroundImg') && $object->getBackgroundImg()))) {
             $this->imgPersistedRoutine($object, $em);
         }
-        if ($object instanceof Relation && $object->getAccepted() == Relation::ACCEPTED_UNI) {
+        if ($object instanceof Relation && in_array($object->getAccepted(), array(Relation::ACCEPTED_UNI, Relation::ACCEPTED_BOTH))) {
             $this->relationOutPersistedRoutine($object, $em);
         }
         if ($object instanceof Relation && $object->getAccepted() == Relation::ACCEPTED_NO) {
