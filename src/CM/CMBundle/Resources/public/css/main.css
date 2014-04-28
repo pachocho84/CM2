@@ -362,9 +362,6 @@ form .well {
     font-weight: normal;
     margin: 0 0 15px;
 }
-.profile-header .profile-header-row .profile-header-cover img {
-    height: auto !important;
-}
 .profile-header .profile-header-row .profile-header-cover .profile-header-buttons {
     position: absolute;
     bottom: 10px;
