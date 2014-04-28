@@ -1,5 +1,29 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+
+
+{% block title %}
+    {{ 'Login'|trans }}
+{% endblock %}
+
+
+
+{% block heading %}
+    <h2>{{ icon('Login') }} {{ block('title') }}</h2>
+{% endblock %}
+
+
+
 {% block body %}
-    {{ include('CMUserBundle:Security:form.html.twig') }}
+    <div class="row">
+        <div class="col-md-8">
+            <div class='box'>
+                <div class="box-body">
+                    {{ include('CMUserBundle:Security:form.html.twig') }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+        </div>
+    </div>
 {% endblock %}

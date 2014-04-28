@@ -20,14 +20,18 @@ h2 a {
 h2 a:hover {
     text-decoration: none;
 }
-h2 .glyphicon {
-    font-size: 26px;
+h2 .glyphicon,
+h2 .glyphicons {
+    font-size: 22px;
+}
+h2 .glyphicons {
+    vertical-align: 2px;
 }
 #header {
     background: url(../images/layout/header_bg.jpg) repeat-x;
     height:66px;
     position: relative;
-    z-index: 1001; /* to hide menu transform animation */
+    z-index: 1002; /* to hide menu transform animation */
 }  
 #footer {
     clear: both;
@@ -154,11 +158,11 @@ h3 small a {
     border: none;
     margin: 0;
     z-index: 1001;
+    top: -1px;
 }
 #menu ul.pull-left li.dropdown.open #menu-popup {
     padding: 9px 0;
     border: 1px solid #cccccc;
-    top: -1px;
 }
 #menu ul.pull-left li.dropdown #menu-popup > li > a {
     width: 213px;

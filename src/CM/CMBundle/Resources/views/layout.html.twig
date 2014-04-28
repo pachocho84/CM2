@@ -102,7 +102,7 @@
 #}
                 </ul>
                 
-                {% if app.request.get('_route') != 'wall_index' %}
+                {% if app.request.get('_route') not in ['wall_index', 'fos_user_security_login', 'fos_user_registration_register'] or is_granted('ROLE_USER') %}
                     <ul class="pull-right">
                         {% if is_granted('ROLE_USER') %}
                             {{ render(controller('CMBundle:User:menu', {path: app.request.pathInfo} )) }}

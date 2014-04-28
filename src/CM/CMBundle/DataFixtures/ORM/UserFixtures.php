@@ -72,7 +72,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'imgOffset' => null,
             'cover' => 'federica_fontana_cover.jpg',
             'coverOffset' => null,
-            'tags' => array(2),
+            'tags' => array(1),
             'biography' => 'Federica Fontana, Avvocato e Responsabile partner e sponsor di Circuito Musica. Diplomata in pianoforte con il massimo dei voti e la lode presso il Conservatorio “Duni” di Matera e laureata in Giurisprudenza all’Università degli Studi di Bari con tesi in Filosofia del diritto "Paradigmi sinfonici della scienza giuridica", ottenendo la votazione di 110 e lode. Ha completato il suo percorso formativo conseguendo il Master SIS in Spettacolo Impresa e Società presso l\'Università degli Studi di Milano Bicocca. Una pianista-giurista, come ama definirsi, che mette a disposizione di Circuito Musica le sue competenze musicali, giuridiche e organizzative in ambito musicale maturate anche durante l\'esperienza nella Produzione del Festival MITO Settembremusica. Scrive e registra recensioni video per Sky Classica, il canale di Sky dedicato interamente alla musica classica.'
         ),
         array('firstname' => 'Luca', /* 4 */
@@ -342,7 +342,7 @@ Con L’etichetta  Limen Music  ha registrato cd e dvd dei quintetti per clarine
             foreach ($person['tags'] as $order => $tag) {
                 $user->addTag($manager->merge($this->getReference('tag-'.$tag)), $order);
             }
-
+            
             $manager->persist($user);
             $this->addReference('user-'.($i + 1), $user);
         

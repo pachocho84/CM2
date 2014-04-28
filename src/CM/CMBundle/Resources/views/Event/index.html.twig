@@ -1,5 +1,7 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
+
+
 {% block title %}
     {% if app.request.get('_route') == 'event_index' %}
         {{ 'Events'|trans }}
@@ -9,12 +11,17 @@
         {{ category.getPlural|capitalize }}
     {% endif %}
 {% endblock %}
+
+
+
 {#
 {% set meta = {
     description: 'Find all the Classical Music events'|trans,
     image: event.image|default_img|imagine_filter('full')
 } %}
 #}
+
+
 
 {% block heading %}
     <div class="row">
