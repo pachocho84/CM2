@@ -935,7 +935,7 @@ class DoctrineEventsListener
 
     private function imagePersistingOrUpdatingRoutine(&$image, LifecycleEventArgs $args = null)
     {
-        if (method_exists($image, 'getImgFile')) {
+        if (method_exists($image, 'getImgFile') && !is_null($image->getImgFile())) {
             if (!is_null($image->getOldImg())) {
                 $this->imageRemovedRoutine($image, $image->getOldImg());
             }
@@ -945,7 +945,7 @@ class DoctrineEventsListener
                 $args->setNewValue('img', $fileName);
             }
         }
-        if (method_exists($image, 'getCoverImgFile')) {
+        if (method_exists($image, 'getCoverImgFile') && !is_null($image->getCoverImgFile())) {
             if (!is_null($image->getOldCoverImg())) {
                 $this->imageRemovedRoutine($image, $image->getOldCoverImg());
             }
@@ -955,7 +955,7 @@ class DoctrineEventsListener
                 $args->setNewValue('coverImg', $fileName);
             }
         }
-        if (method_exists($image, 'getBackgroundImgFile')) {
+        if (method_exists($image, 'getBackgroundImgFile') && !is_null($image->getBackgroundImgFile())) {
             if (!is_null($image->getOldBackgroundImg())) {
                 $this->imageRemovedRoutine($image, $image->getOldBackgroundImg());
             }
@@ -990,13 +990,13 @@ class DoctrineEventsListener
 
         $fileNames = array();
         if (is_null($old)) {
-            if (method_exists($image, 'getImg')) {
+            if (method_exists($image, 'getImg') && !is_null($image->getImgFile())) {
                 $fileNames[] = $image->getImg();
             }
-            if (method_exists($image, 'getCoverImg')) {
+            if (method_exists($image, 'getCoverImg') && !is_null($image->getCoverImg())) {
                 $fileNames[] = $image->getCoverImg();
             }
-            if (method_exists($image, 'getBackgroundImg')) {
+            if (method_exists($image, 'getBackgroundImg') && !is_null($image->getBackgroundImg())) {
                 $fileNames[] = $image->getBackgroundImg();
             }
         } else {

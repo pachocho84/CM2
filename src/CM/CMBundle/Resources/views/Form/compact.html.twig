@@ -12,22 +12,25 @@
         {% set required = false %}
         {% set notFormControl = true %}
         {% if imgEdit is defined %}
+            {% set label = 'Browse image' %}
             <div class="fileinput fileinput-new" data-provides="fileinput">
                 {{ imgEdit.box|raw }}
                 <div class="fileinput-preview fileinput-exists image_box" data-trigger="fileinput" style="width: {{ imgEdit.width }}px; height: {{ imgEdit.width }}px;"></div>
         {% elseif imgOffset is defined and imgOffset is not null %}
+            {% set label = 'Browse image' %}
             <div class="fileinput fileinput-new" data-provides="fileinput">
                 {% if attribute(form.parent.vars.data, imgKind|default('img')) is not null %}
                     {{ show_img_box(attribute(form.parent.vars.data, imgKind|default('img'))|imagine_filter('medium'), {width: 200, height: 113, offset: imgOffset, box_attributes: {class: 'fileinput-new', style: 'border: 1px solid #bbbbbb; margin-bottom: 10px;'}}) }}
                 {% endif %}
                 <div class="fileinput-preview fileinput-exists image_box" data-trigger="fileinput" style="width: 190px; height: 126px; border: 1px solid #bbbbbb; margin-bottom: 10px;"></div>
         {% elseif subtype|default('') == 'image' %}
+            {% set label = 'Browse image' %}
             <div class="fileinput fileinput-new" data-provides="fileinput">
-                <div class="fileinput-new" data-trigger="fileinput" style="width: 200px; height: 150px;">
-                    {% if form.parent.vars.data is not null %}
-                        <img src="{{ form.parent.vars.data|default_img|imagine_filter('medium') }}" style="height: 100%" />
-                    {% endif %}
-                </div>
+                {% if form.parent.vars.data is not null and form.parent.vars.data.img is not null %}
+                    <div class="fileinput-new" data-trigger="fileinput" style="width: 200px; height: 150px;">
+                        <img src="{{ form.parent.vars.data.img|imagine_filter('medium') }}" style="height: 100%" />
+                    </div>
+                {% endif %}
                 <div class="fileinput-preview fileinput-exists" data-trigger="fileinput" style="width: 190px; height: 126px; border: 1px solid #bbbbbb; margin-bottom: 10px;"></div>
         {% else %}
             <div class="fileinput fileinput-new input-group" data-provides="fileinput">
@@ -36,9 +39,10 @@
                     <i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename">{{ label|trans({}, translation_domain) }}</span>
                 </div>
             {% set inputGroup = true %}
+            {% set label = 'Browse' %}
         {% endif %}
         <span class="{% if inputGroup|default(false) %}input-group-addon {% endif %}btn btn-default btn-file">
-            <span class="fileinput-new">{{ 'Browse'|trans({}, translation_domain) }}</span>
+            <span class="fileinput-new">{{ label|trans({}, translation_domain) }}</span>
             <span class="fileinput-exists">{{ 'Change'|trans({}, translation_domain) }}</span>
     {% elseif type == 'date' %}
         <div class="input-group input-append date" datepicker-container datepicker-format="{{ date_format() }}">
@@ -346,6 +350,12 @@
 {% endblock %}
 
 {% block _cm_cmbundle_imagealbum_image_imgFile_widget %}
+    {% set subtype = 'image' %}
+    {{ block('form_widget_simple')}}
+    {% set subtype = null %}
+{% endblock %}
+
+{% block _fos_user_registration_form_imgFile_widget %}
     {% set subtype = 'image' %}
     {{ block('form_widget_simple')}}
     {% set subtype = null %}

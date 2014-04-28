@@ -1820,22 +1820,8 @@ function initCollectionForm(type) {
         $(event.currentTarget).closest('.' + type + '-form').remove();
     });
     $(document).on('submit', 'form', function(event) {
-        $(event.currentTarget).find('.' + type + '-form:last [name]').attr('name', '');
-    });
-    $(document).on('change', '.current-input', function(event) {
-        var datetimepicker = $(event.currentTarget).closest('.' + type + '-form').find('.current-input-target [datepicker-container]').data('datetimepicker');
-        var $button = $(event.currentTarget).closest('.' + type + '-form').find('.current-input-target [datepicker-container] .btn');
-        if ($(event.currentTarget).is(':checked')) {
-            $button.attr('disabled', 'disabled');
-            var date = new Date();
-            date = new Date(Date.UTC.apply(Date, [date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), 0]));
-            datetimepicker.viewMode = datetimepicker.startViewMode;
-            datetimepicker.showMode(0);
-            datetimepicker._setDate(date);
-            datetimepicker.fill();
-        } else {
-            datetimepicker.reset();
-            $button.removettr('disabled');
+        if ($('.' + type + '-form').length > 1) {
+            $(event.currentTarget).find('.' + type + '-form:last [name]').attr('name', '');
         }
     });
 }
@@ -1891,7 +1877,7 @@ function initializePlaces(index) {
             event.preventDefault();
         }
     });
-    google.maps.event.addListener(autocomplete, 'place_changed', function(event) {
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
         infowindow.close();
         marker.setVisible(false);
         var place = autocomplete.getPlace();
@@ -1928,44 +1914,76 @@ function initializePlaces(index) {
         }
 
         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-        $(map.getDiv()).closest('.date-form').find('[address-autocomplete]').val(address);
         $(map.getDiv()).closest('.date-form').find('[places-autocomplete]').val(place.name);
-        $(map.getDiv()).closest('.date-form').find('[address-coordinates]').val(place.geometry.location.lat() + ',' + place.geometry.location.lng());
+        var $address = $(map.getDiv()).closest('.date-form').find('[address-autocomplete]');
+        if ($address.val() == '' || $address.attr('address-autocomplete') != 'set') {
+            $address.val(address);
+            $(map.getDiv()).closest('.date-form').find('[address-latitude]').val(place.geometry.location.lat());
+            $(map.getDiv()).closest('.date-form').find('[address-longitude]').val(place.geometry.location.lng());
+        }
         infowindow.open(map, marker);
     });
 }
 
 function initAddress(container) {
     $.each($(container).find('[address-autocomplete]'), function(i, elem) {
-        console.log(elem);
         $(elem).keydown(function(event) {
             if (event.keyCode == 13) {
                 event.preventDefault();
             }
         });
-        $(elem).typeahead({
-            name: 'address',
-            // minLength: 3,
-            valueKey: 'val',
-            template: '<div>{{ val }}</div>',
-            engine: Handlebars,
-            remote: {
-                url: 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&culture=' + culture + '&address=%QUERY',
-                replace: function (url, uriEncodedQuery) {
-                    return url.replace('%QUERY', uriEncodedQuery);
-                },
-                filter: function(data) {
-                    if (data.status == 'OK') {
-                        return $.map(data.results, function(address) {
-                            value = new Object();
-                            value.val = address.formatted_address;
-                            value.coords = address.geometry.location.lat + ',' + address.geometry.location.lng;
-                            return value;
-                        });
+        $(elem).autocomplete({
+            minLength: 1,
+            source: function(request, response) {
+                $.ajax('https://maps.googleapis.com/maps/api/geocode/json?sensor=false&culture=' + culture + '&address=' + request.term, {
+                    success: function(data) {
+                        response($.map(data.results, function(address) {
+                            return {label: address.formatted_address, value: address.formatted_address, coords: address.geometry.location}
+                        }));
                     }
-                }
+                });
+            },
+            focus: function() {
+              // prevent value inserted on focus
+              return false;
+            },
+            select: function(event, ui) {
+                console.log(ui.item);
+                $(elem).attr('address-autocomplete', 'set');
+                $(elem).closest('.date-form').find('[address-latitude]').val(ui.item.coords.lat);
+                $(elem).closest('.date-form').find('[address-longitude]').val(ui.item.coords.lng);
             }
         });
+        $(elem).on('change', function(event) {
+            if ($(elem).val() == '') {
+                $(elem).attr('address-autocomplete', '');
+                $(elem).closest('.date-form').find('[address-latitude]').val('');
+                $(elem).closest('.date-form').find('[address-longitude]').val('');
+            }
+        });
+        // $(elem).typeahead({
+        //     name: 'address',
+        //     // minLength: 3,
+        //     valueKey: 'val',
+        //     template: '<div>{{ val }}</div>',
+        //     engine: Handlebars,
+        //     remote: {
+        //         url: 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&culture=' + culture + '&address=%QUERY',
+        //         replace: function (url, uriEncodedQuery) {
+        //             return url.replace('%QUERY', uriEncodedQuery);
+        //         },
+        //         filter: function(data) {
+        //             if (data.status == 'OK') {
+        //                 return $.map(data.results, function(address) {
+        //                     value = new Object();
+        //                     value.val = address.formatted_address;
+        //                     value.coords = address.geometry.location.lat + ',' + address.geometry.location.lng;
+        //                     return value;
+        //                 });
+        //             }
+        //         }
+        //     }
+        // });
     });
 }
 
@@ -1986,6 +2004,15 @@ function initTags($protagonist) {
                 }
             },
             showAutocompleteOnFocus: true
+        });
+
+        var $input = $(elem).siblings('.token-input.ui-autocomplete-input');
+        $(document).on('tokenfield:createtoken', function(event) {
+            $input.attr('placeholder', '');
+        }).on('tokenfield:removetoken', function(event) {
+            if ($(elem).tokenfield('getTokens', 'active').length == 0 && $input.attr('placeholder') == '') {
+                $input.attr('placeholder', $(elem).attr('placeholder'));
+            }
         });
 
         $(elem).closest('.row').find('select[tags] option[selected]').each(function(i, e) {
@@ -2127,7 +2154,7 @@ $(function() {
     initCollectionForm('work');
     initCollectionForm('education');
     initCollectionForm('date');
-    initCollectionForm('trak');
+    initCollectionForm('track');
 
 
 
@@ -2147,6 +2174,23 @@ $(function() {
         $(elem).find('[datepicker-container]').each(function(i, elem) {
             initDatepicker(elem);
         });
+    });
+    // current
+    $(document).on('change', '.current-input', function(event) {
+        var datetimepicker = $(event.currentTarget).closest('.' + type + '-form').find('.current-input-target [datepicker-container]').data('datetimepicker');
+        var $button = $(event.currentTarget).closest('.' + type + '-form').find('.current-input-target [datepicker-container] .btn');
+        if ($(event.currentTarget).is(':checked')) {
+            $button.attr('disabled', 'disabled');
+            var date = new Date();
+            date = new Date(Date.UTC.apply(Date, [date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), 0]));
+            datetimepicker.viewMode = datetimepicker.startViewMode;
+            datetimepicker.showMode(0);
+            datetimepicker._setDate(date);
+            datetimepicker.fill();
+        } else {
+            datetimepicker.reset();
+            $button.removettr('disabled');
+        }
     });
     
     
