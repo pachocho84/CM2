@@ -173,10 +173,10 @@ class CMExtension extends \Twig_Extension
             'path' => ''
         ), $options);
 
-        if (is_null($image) || empty($image->getImg())) {
+        if (is_null($image) || (is_array($image) && empty($image['img'])) || (is_object($image) && empty($image->getImg()))) {
             $img = $options['default'];
         } else {
-            $img = $image->getImg();
+            $img = is_array($image) ? $image['img'] : $image->getImg();
         }
 
         return $options['path'].$img;
