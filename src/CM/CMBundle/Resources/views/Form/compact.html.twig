@@ -504,8 +504,7 @@
     <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('page_member_add', {pageId: form.parent.vars.data.id, user_id: 'USER_ID', protagonist_new_id: 'NEW_ID'}) }}">
         <div class="collection-items">
             <div id="protagonists_finder_container" class="form-group">
-                <label class="control-label col-md-3">{{ 'Add new member'|trans }}</label>
-                <div class="col-md-9"><input type="text" id="protagonists_finder" class="form-control" /></div>
+                <input type="text" id="protagonists_finder" class="form-control" placeholder="{{ 'Add members'|trans }}" />
             </div>
             {{ include('CMBundle:Page:member.html.twig', {pageUsers: form, page: form.parent.vars.data, newEntry: form.parent.vars.data == null}) }}
         </div>
