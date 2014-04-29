@@ -50,8 +50,8 @@ class Page
         
     /**
      * @ORM\OneToMany(targetEntity="Post", mappedBy="page", cascade={"persist", "remove"})
-	 */
-	private $posts;
+     */
+    private $posts;
 
     /**
      * @ORM\Column(name="biography_id", type="integer", nullable=true)
@@ -93,16 +93,16 @@ class Page
      * @ORM\OneToMany(targetEntity="PageTag", mappedBy="page", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     protected $pageTags;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="fromPage", cascade={"persist", "remove"})
-	 */
-	private $notificationsOutgoing;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="Request", mappedBy="page", cascade={"persist", "remove"})
-	 */
-	private $requests;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Notification", mappedBy="fromPage", cascade={"persist", "remove"})
+     */
+    private $notificationsOutgoing;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Request", mappedBy="page", cascade={"persist", "remove"})
+     */
+    private $requests;
     
     /**
      * @ORM\OneToMany(targetEntity="Fan", mappedBy="page", cascade={"persist", "remove"})
@@ -115,15 +115,15 @@ class Page
         $this->posts = new ArrayCollection();
         $this->pagesUsers = new ArrayCollection();
         $this->pageTags = new ArrayCollection();
-		$this->notificationsIncoming = new ArrayCollection;
-		$this->notificationsOutgoing = new ArrayCollection;
-		$this->requests = new ArrayCollection;
+        $this->notificationsIncoming = new ArrayCollection;
+        $this->notificationsOutgoing = new ArrayCollection;
+        $this->requests = new ArrayCollection;
     }
-	
-	public function __toString()
-	{
-    	return $this->getName();
-	}
+    
+    public function __toString()
+    {
+        return $this->getName();
+    }
 
     public static function className()
     {
@@ -507,149 +507,149 @@ class Page
         return $tags;
     }
 
-	/**
-	 * Add notificationIncoming
-	 *
-	 * @param NotificationIncoming $notificationIncoming
-	 * @return Post
-	 */
-	public function addNotificationIncoming(Notification $notificationIncoming)
-	{
+    /**
+     * Add notificationIncoming
+     *
+     * @param NotificationIncoming $notificationIncoming
+     * @return Post
+     */
+    public function addNotificationIncoming(Notification $notificationIncoming)
+    {
         if (!$this->notificationsIncoming->contains($notificationIncoming)) {
-	        $this->notificationsIncoming[] = $notificationIncoming;
-	        return true;
-	    }
-	
-	    return false;
-	}
+            $this->notificationsIncoming[] = $notificationIncoming;
+            return true;
+        }
+    
+        return false;
+    }
 
-	/**
-	 * Remove notificationsIncoming
-	 *
-	 * @param NotificationIncoming $notificationIncoming
-	 */
-	public function removeNotificationIncoming(Notification $notificationIncoming)
-	{
-	    $this->notificationsIncoming->removeElement($notificationIncoming);
-	}
+    /**
+     * Remove notificationsIncoming
+     *
+     * @param NotificationIncoming $notificationIncoming
+     */
+    public function removeNotificationIncoming(Notification $notificationIncoming)
+    {
+        $this->notificationsIncoming->removeElement($notificationIncoming);
+    }
 
-	/**
-	 * Get notificationIncoming
-	 *
-	 * @return \Doctrine\Common\Collections\Collection 
-	 */
-	public function getNotificationsIncoming()
-	{
-	    return $this->notificationsIncoming;
-	}
+    /**
+     * Get notificationIncoming
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getNotificationsIncoming()
+    {
+        return $this->notificationsIncoming;
+    }
 
-	/**
-	 * Add notificationOutcoming
-	 *
-	 * @param NotificationOutcoming $notificationOutcoming
-	 * @return Post
-	 */
-	public function addNotificationOutgoing(Notification $notificationOutgoing)
-	{
+    /**
+     * Add notificationOutcoming
+     *
+     * @param NotificationOutcoming $notificationOutcoming
+     * @return Post
+     */
+    public function addNotificationOutgoing(Notification $notificationOutgoing)
+    {
         if (!$this->notificationOutgoing->contains($notificationOutgoing)) {
-	        $this->notificationOutgoing[] = $notificationOutgoing;
-	        return true;
-	    }
-	
-	    return false;
-	}
+            $this->notificationOutgoing[] = $notificationOutgoing;
+            return true;
+        }
+    
+        return false;
+    }
 
-	/**
-	 * Remove notificationsOutcoming
-	 *
-	 * @param NotificationOutcoming $notificationOutcoming
-	 */
-	public function removeNotificationOutgoing(Notification $notificationOutcoming)
-	{
-	    $this->notificationOutcoming->removeElement($notificationOutcoming);
-	}
+    /**
+     * Remove notificationsOutcoming
+     *
+     * @param NotificationOutcoming $notificationOutcoming
+     */
+    public function removeNotificationOutgoing(Notification $notificationOutcoming)
+    {
+        $this->notificationOutcoming->removeElement($notificationOutcoming);
+    }
 
-	/**
-	 * Get notificationOutcoming
-	 *
-	 * @return \Doctrine\Common\Collections\Collection 
-	 */
-	public function getNotificationsOutgoing()
-	{
-	    return $this->notificationOutcoming;
-	}
+    /**
+     * Get notificationOutcoming
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getNotificationsOutgoing()
+    {
+        return $this->notificationOutcoming;
+    }
 
-	/**
-	 * Add request
-	 *
-	 * @param Request $request
-	 * @return Post
-	 */
-	public function addRequest(Request $request)
-	{
+    /**
+     * Add request
+     *
+     * @param Request $request
+     * @return Post
+     */
+    public function addRequest(Request $request)
+    {
         if (!$this->requests->contains($request)) {
-	        $this->requests[] = $request;
-	        return true;
-	    }
-	
-	    return false;
-	}
+            $this->requests[] = $request;
+            return true;
+        }
+    
+        return false;
+    }
 
-	/**
-	 * Remove requests
-	 *
-	 * @param Request $request
-	 */
-	public function removeRequest(Request $request)
-	{
-	    $this->requests->removeElement($request);
-	}
+    /**
+     * Remove requests
+     *
+     * @param Request $request
+     */
+    public function removeRequest(Request $request)
+    {
+        $this->requests->removeElement($request);
+    }
 
-	/**
-	 * Get request
-	 *
-	 * @return \Doctrine\Common\Collections\Collection 
-	 */
-	public function getRequests()
-	{
-	    return $this->requests;
-	}
+    /**
+     * Get request
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRequests()
+    {
+        return $this->requests;
+    }
 
-	/**
-	 * Add requestOutcoming
-	 *
-	 * @param RequestOutcoming $requestOutcoming
-	 * @return Post
-	 */
-	public function addRequestOutgoing(Request $requestOutgoing)
-	{
+    /**
+     * Add requestOutcoming
+     *
+     * @param RequestOutcoming $requestOutcoming
+     * @return Post
+     */
+    public function addRequestOutgoing(Request $requestOutgoing)
+    {
         if ($this->requestsOutgoing->contains($requestOutgoing)) {
-	        $this->requestsOutgoing[] = $requestOutgoing;
-	        return true;
-	    }
-	
-	    return false;
-	}
+            $this->requestsOutgoing[] = $requestOutgoing;
+            return true;
+        }
+    
+        return false;
+    }
 
-	/**
-	 * Remove requestsOutcoming
-	 *
-	 * @param RequestOutcoming $requestOutcoming
-	 */
-	public function removeRequestOutgoing(Request $requestOutgoing)
-	{
-	    $this->requestsOutcoming->removeElement($requestOutgoing);
-	}
+    /**
+     * Remove requestsOutcoming
+     *
+     * @param RequestOutcoming $requestOutcoming
+     */
+    public function removeRequestOutgoing(Request $requestOutgoing)
+    {
+        $this->requestsOutcoming->removeElement($requestOutgoing);
+    }
 
-	/**
-	 * Get requestOutcoming
-	 *
-	 * @return \Doctrine\Common\Collections\Collection 
-	 */
-	public function getRequestsOutgoing()
-	{
-	    return $this->$requestOutgoing;
-	}
+    /**
+     * Get requestOutcoming
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRequestsOutgoing()
+    {
+        return $this->$requestOutgoing;
+    }
 
     /**
      * Add requestOutcoming

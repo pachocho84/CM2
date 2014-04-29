@@ -2,15 +2,13 @@
 
     <div class="media">
 
-        {% if page.images|length > 0 %}
-            {{ show_img_box(page.images[0].img|imagine_filter('medium'), {'width': 150, 'height': 150, 'link': '', 'link_attributes': {'class': 'pull-left img-thumbnail'}})|raw }} {# TODO: add image show link #}
-        {% endif %}
+        {{ show_img_box(page|default_img|imagine_filter('medium'), {width: 150, box_attributes: {class: 'pull-left img-thumbnail'}}) }}
 
         <div class="media-body">
         
-            <h4><a href="{{ path('page_show', {'slug': page.getSlug}) }}">{{ page }}</a></h4>
+            <h4><a href="{{ path('page_show', {slug: page.getSlug}) }}">{{ page }}</a></h4>
 
-            {{ page.description }}
+            {{ page.biography|short_text({more: true}) }}
 
         </div><!-- END Media Body -->
 

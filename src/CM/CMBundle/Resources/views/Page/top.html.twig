@@ -2,13 +2,12 @@
     <div class="profile-header-row">
     
         <div class="profile-header-cover">
-            {% if page.coverImg != '' %}
+            {% if page.coverImg is not null %}
                 {{ show_img_box(page.coverImg|imagine_filter('large'), {ratio: 2.4, offset: page.coverImgOffset}) }}
             {% endif %}
             <div class="profile-header-buttons btn-toolbar" role="toolbar">
                 {% if is_granted('ROLE_USER') %}
                     {{ render(controller('CMBundle:Fan:button', {userId: page.id, object: page|class_name})) }}
-                    <a href="{{ path('message_new', {userId: user.id}) }}" class="btn btn-default" {{ modal({remote: path('message_new', {userId: user.id}), callback: '$initRecipients()'}) }}>{{ icon('Message') }} {{ 'Send a message'|trans }}</a>
                 {% endif %}
             </div>
         </div>

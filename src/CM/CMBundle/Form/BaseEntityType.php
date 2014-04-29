@@ -60,24 +60,27 @@ class BaseEntityType extends AbstractType
                     )
                 ));
         } else {
-            $builder->add($builder->create('translations', new EntityTranslationType, array('error_bubbling' => false, 'articleWriter' => $options['articleWriter']))
-                ->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 'en')))
-                ->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
-                    $data = $event->getData();
-                    if (isset($data['translations']['title'])) {
-                        $data['translations']['title'] = htmlentities($data['translations']['title']);
-                    }
-                    if (isset($data['translations']['subtitle'])) {
-                        $data['translations']['subtitle'] = htmlentities($data['translations']['subtitle']);
-                    }
-                    if (isset($data['translations']['extract'])) {
-                        $data['translations']['extract'] = htmlentities($data['translations']['extract']);
-                    }
-                    if (isset($data['translations']['text'])) {
-                        $data['translations']['text'] = htmlentities($data['translations']['text']);
-                    }
-                    $event->setData($data);
-                });
+            $builder->add($builder->create('translations', new EntityTranslationType, array(
+                    'error_bubbling' => false,
+                    'articleWriter' => $options['articleWriter'],
+                    'title' => $options['title']
+                ))->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 'en'))
+            )->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
+                $data = $event->getData();
+                if (isset($data['translations']['title'])) {
+                    $data['translations']['title'] = htmlentities($data['translations']['title']);
+                }
+                if (isset($data['translations']['subtitle'])) {
+                    $data['translations']['subtitle'] = htmlentities($data['translations']['subtitle']);
+                }
+                if (isset($data['translations']['extract'])) {
+                    $data['translations']['extract'] = htmlentities($data['translations']['extract']);
+                }
+                if (isset($data['translations']['text'])) {
+                    $data['translations']['text'] = htmlentities($data['translations']['text']);
+                }
+                $event->setData($data);
+            });
         }
         if (in_array('ROLE_ADMIN', $options['roles'])) {
             $builder->add('post', new PostType, array('label' => 'Post'));
@@ -91,9 +94,8 @@ class BaseEntityType extends AbstractType
     {
         $resolver->setDefaults(array(
             'title' => true,
-        	'em' => null,
+            'em' => null,
             'roles' => array(),
-            'user_tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),
             'articleWriter' => false,

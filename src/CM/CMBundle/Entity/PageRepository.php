@@ -22,8 +22,9 @@ class PageRepository extends BaseRepository
         return array_merge(array(
             'userId' => null,
             'pageId' => null,
-            'tags' => null,
-            'pageUsers' => null,
+            'tags' => false,
+            'pageUsers' => false,
+            'biography' => false,
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate' => true,
             'limit'    => 25,
@@ -38,19 +39,24 @@ class PageRepository extends BaseRepository
             ->select('p')
             ->andWhere('p.slug = :slug')->setParameter('slug', $slug);
 
-        if (!is_null($options['tags'])) {
+        if ($options['tags']) {
             $query->addSelect('pt, t, tt')
                 ->leftJoin('p.pageTags', 'pt', '', '', 'pt.order')
                 ->leftJoin('pt.tag', 't')
                 ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale']);
         }
-        if (!is_null($options['pageUsers'])) {
+        if ($options['pageUsers']) {
             $query->addSelect('pu, puu, put, t1, tt1')
                 ->join('p.pageUsers', 'pu', '', '', 'pu.userId')
                 ->join('pu.user', 'puu')
                 ->leftJoin('pu.pageUserTags', 'put', '', '', 'put.order')
                 ->leftJoin('put.tag', 't1')
                 ->leftJoin('t1.translations', 'tt1', 'with', 'tt1.locale = :locale1')->setParameter('locale1', $options['locale']);
+        }
+        if ($options['biography']) {
+            $query->addSelect('b, bt')
+                ->leftJoin('p.biography', 'b')
+                ->leftJoin('b.translations', 'bt', 'with', 'bt.locale in (:locales)')->setParameter('locales', $options['locales']);
         }
 
         return $query->getQuery()->getSingleResult();
@@ -64,12 +70,17 @@ class PageRepository extends BaseRepository
             ->select('count(p.id)')
             ->join('p.pageUsers', 'pu', '', '', 'pu.userId');
         $query = $this->createQueryBuilder('p')
-            ->select('p, pu, put, t, tt, i')
+            ->select('p, pu, put, t, tt')
             ->join('p.pageUsers', 'pu', '', '', 'pu.userId')
             ->leftJoin('pu.pageUserTags', 'put', '', '', 'put.order')
             ->leftJoin('put.tag', 't')
-            ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
-            ->leftJoin('p.images', 'i');
+            ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale']);
+
+        if ($options['biography']) {
+            $query->addSelect('b, bt')
+                ->leftJoin('p.biography', 'b')
+                ->leftJoin('b.translations', 'bt', 'with', 'bt.locale in (:locales)')->setParameter('locales', $options['locales']);
+        }
 
         if ($options['userId']) {
             $count->andWhere('pu.userId = :user_id')->setParameter('user_id', $options['userId'])

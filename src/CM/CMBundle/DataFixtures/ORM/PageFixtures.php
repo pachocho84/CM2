@@ -96,7 +96,6 @@ Tra le iniziative di risonanza internazionale si ricordano, in collaborazione co
                     'tags' => array(41)
                 )
             ),
-            'users' => array(),
             'website' => 'www.laverdi.org',
             'img' => 'la_verdi.jpg',
             'imgOffset' => null,
@@ -146,20 +145,20 @@ L'Orchestra è stata diretta, tra gli altri, da Riccardo Chailly, Georges Prêtr
             foreach ($p['tags'] as $order => $tag) {
                 $page->addTag($manager->merge($this->getReference('tag-'.$tag)), $order);
             }
-            
-            $manager->persist($page);
 
             $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
             $page->addPost($post);
 
-            // $biography = new Biography;
-            // $biography->setTitle('b')
-            //     ->setText($p['biography']);
+            $biography = new Biography;
+            $biography->setTitle('b')
+                ->setText($p['biography']);
 
-            // $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
-            // $biography->setPost($post);
+            $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+            $biography->setPost($post);
 
-            // $page->setBiography($biography);
+            $page->setBiography($biography);
+            
+            $manager->persist($page);
             
             /* Users */
             foreach ($p['users'] as $p_user) {

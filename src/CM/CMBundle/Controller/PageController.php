@@ -36,11 +36,12 @@ class PageController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $pages = $em->getRepository('CMBundle:Page')->getPages();
+        $pages = $em->getRepository('CMBundle:Page')->getPages(array('biography' => true, 'locale' => $request->getLocale()));
         $pagination = $this->get('knp_paginator')->paginate($pages, $page, 15);
 
         return array('pages' => $pagination);
     }
+
     /**
      * @Route("/{slug}/wall/{pageNum}", name="page_wall", requirements={"pageNum" = "\d+"})
      * @Template
@@ -114,25 +115,20 @@ class PageController extends Controller
 
             $page->addPost($post);
         } else {
-            $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
-          
+            $page = $em->getRepository('CMBundle:Page')->getPage($slug, array('tags' => true, 'pageUsers' => true, 'biography' => true));
+
             if (!$this->get('cm.user_authentication')->isAdminOf($page)) {
                 throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }
-        }
-        
-        if ($request->get('_route') == 'page_edit') {
-            $formRoute = 'page_edit';
-            $formRouteArgs = array('id' => $page->getId(), 'slug' => $page->getSlug());
-        } else {
-            $formRoute = 'page_new';
-            $formRouteArgs = array();
         }
  
         $form = $this->createForm(new PageType, $page, array(
             'cascade_validation' => true,
             'error_bubbling' => false,
-            'roles' => $user->getRoles(),
+            'roles' => $this->getUser()->getRoles(),
+            'em' => $em,
+            'locales' => array('en'/* , 'fr', 'it' */),
+            'locale' => $request->getLocale(),
             'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_PAGE, 'locale' => $request->getLocale())),
         ))->add('save', 'submit');
         

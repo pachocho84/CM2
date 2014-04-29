@@ -16,16 +16,20 @@ class PageType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name');
-        $builder->add($builder->create('pageTags', 'choice', array(
+        $builder->add('name')
+            ->add($builder->create('pageTags', 'choice', array(
                     'attr' => array('tags' => ''),
                     'choices' => $options['tags'],
                     'multiple' => true,
                     'by_reference' => false,
                     'label' => 'Types'
                 ))->addModelTransformer(new TagsToArrayTransformer($options['tags'], 'CM\CMBundle\Entity\PageTag')))
-            // ->add('biography', new BiographyType)
-            ->add('website')
+            ->add('biography', new BiographyType, array(
+                'roles' => $options['roles'],
+                'em' => $options['em'],
+                'locale' => $options['locale'],
+                'locales' => $options['locales']
+            ))->add('website')
             ->add('imgFile', 'file', array(
                 'attr' => array('image' => ''),
                 'label'  => 'Image'
@@ -50,8 +54,11 @@ class PageType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'CM\CMBundle\Entity\Page',
+            'tags' => array(),
+            'em' => null,
             'roles' => array(),
-            'tags' => array()
+            'locale' => 'en',
+            'locales' => array('en'),
         ));
 
         $resolver->setRequired(array(
