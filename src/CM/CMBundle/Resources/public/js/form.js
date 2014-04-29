@@ -255,7 +255,7 @@ $(function() {
         }).autocomplete({
             minLength: 1,
             source: function(request, response) {
-                var url = typeaheadHintRoute + '?query=' + request.term + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user'); }).get().join(',');
+                var url = typeaheadHintRoute + '?query=' + request.term + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',');
                 $.ajax(url, {
                     success: function(data) {
                         console.log(data);

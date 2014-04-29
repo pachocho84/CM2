@@ -73,7 +73,7 @@ class UserRepository extends BaseRepository
         $qb = $this->createQueryBuilder('u');
         return $qb->select('partial u.{id, username, usernameCanonical, firstName, lastName, img, imgOffset}')
             ->andWhere('u.id IN (:relations)')->setParameter('relations', $relations)
-            ->andWhere('u.usernameCanonical NOT IN (:exclude)')->setParameter('exclude', $exclude)
+            ->andWhere('u.id NOT IN (:exclude)')->setParameter('exclude', $exclude)
             // ->where('u.IsActive = ?', true)
             ->andWhere('u.enabled = '.true)
             ->andWhere(
