@@ -231,7 +231,7 @@ class EventController extends Controller
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ))->add('save', 'submit');
-        
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {

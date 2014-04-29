@@ -54,7 +54,7 @@ Suona un flauto Yamaha 18 carati all gold.
             'imgOffset' => null,
             'cover' => 'fabrizio_castellarin_cover.jpg',
             'coverOffset' => null,
-            'tags' => array(5),
+            'tags' => array(4),
             'biography' => null
         ),
         array('firstname' => 'Federica', /* 3 */

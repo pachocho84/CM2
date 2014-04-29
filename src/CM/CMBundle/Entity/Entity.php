@@ -125,11 +125,11 @@ abstract class Entity
     
     public function __construct()
     {
-        $this->images = new ArrayCollection();
-        $this->multimedia = new ArrayCollection();
-        $this->posts = new ArrayCollection();
-        $this->entityUsers = new ArrayCollection();
-        $this->requests = new ArrayCollection();
+        $this->images = new ArrayCollection;
+        $this->multimedia = new ArrayCollection;
+        $this->posts = new ArrayCollection;
+        $this->entityUsers = new ArrayCollection;
+        $this->requests = new ArrayCollection;
     }
 
     /**

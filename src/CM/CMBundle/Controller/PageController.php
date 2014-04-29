@@ -349,7 +349,7 @@ class PageController extends Controller
      * @JMS\Secure(roles="ROLE_USER")1
      * @Template
      */
-    public function membersSettingsAction(Request $request, $slug, $pageNum = 1)
+    public function membersSettingsAction(Request $request, $slug)
     {
         $em = $this->getDoctrine()->getManager();
         
@@ -366,14 +366,14 @@ class PageController extends Controller
         $form = $this->createForm(new PageMembersType, $page, array(
             'cascade_validation' => true,
             'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_USER, 'locale' => $request->getLocale())),
-            'type' => 'CM\CMBundle\Form\PageUserType'
+            'type' => 'CM\CMBundle\Form\PageUserType',
+            'em' => $em
         ));
-        
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em->persist($page);
-
             $em->flush();
 
             return new RedirectResponse($this->generateUrl('page_members_settings', array('slug' => $slug)));
@@ -460,7 +460,8 @@ class PageController extends Controller
         $form = $this->createForm(new PageMembersType, $page, array(
             'cascade_validation' => true,
             'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_USER, 'locale' => $request->getLocale())),
-            'type' => 'CM\CMBundle\Form\PageUserType'
+            'type' => 'CM\CMBundle\Form\PageUserType',
+            'em' => $em
         ));
         
         return array(

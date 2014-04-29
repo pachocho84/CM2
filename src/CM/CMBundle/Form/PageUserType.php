@@ -5,6 +5,7 @@ namespace CM\CMBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use CM\CMBundle\Form\DataTransformer\UserToIntTransformer;
 use CM\CMBundle\Form\DataTransformer\TagsToArrayTransformer;
 use CM\CMBundle\Entity\PageUser;
 
@@ -18,7 +19,8 @@ class PageUserType extends AbstractType
     {
         parent::buildForm($builder, $options);
     
-        $builder->add($builder->create('pageUserTags', 'choice', array(
+        $builder->add($builder->create('user', 'hidden')->addModelTransformer(new UserToIntTransformer($options['em'])))
+            ->add($builder->create('pageUserTags', 'choice', array(
                     'attr' => array('tags' => ''),
                     'choices' => $options['tags'],
                     'multiple' => true,
@@ -42,7 +44,12 @@ class PageUserType extends AbstractType
         ));
 
         $resolver->setRequired(array(
+            'em',
             'tags'
+        ));
+
+        $resolver->setAllowedTypes(array(
+            'em' => 'Doctrine\Common\Persistence\ObjectManager',
         ));
     }
 

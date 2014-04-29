@@ -22,6 +22,7 @@ class PageMembersType extends AbstractType
                 'by_reference' => false,
                 'options' => array(
                     'tags' => $options['tags'],
+                    'em' => $options['em']
             )));
     }
     
@@ -34,6 +35,11 @@ class PageMembersType extends AbstractType
             'data_class' => 'CM\CMBundle\Entity\Page',
             'tags' => array(),
             'type' => null
+        ));
+
+        $resolver->setRequired(array(
+            'em',
+            'tags'
         ));
     }
 
