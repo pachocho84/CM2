@@ -22,7 +22,7 @@
                 {% set requestText = ('this element appears on your profile') %}
                 {% set alertClass = 'alert-success' %}
             {% elseif pageUser.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_ACTIVE') %}
-                {% set requestText = ('this element appears on' ~ user.sexArray('his') ~ ' profile') %}
+                {% set requestText = ('this element appears on ' ~ user.sexArray('his') ~ ' profile') %}
                 {% set alertClass = 'alert-success' %}
             {% elseif pageUser.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_REQUESTED') %}
                 {% set requestText = (user.sexArray('he') ~ ' has sent a request to be added to the protagonists') %}
