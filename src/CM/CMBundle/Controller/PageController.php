@@ -21,7 +21,7 @@ use CM\CMBundle\Entity\Tag;
 use CM\CMBundle\Form\PageType;
 use CM\CMBundle\Form\BiographyType;
 use CM\CMBundle\Form\PageImageType;
-use CM\CMBundle\Form\PageUserCollectionType;
+use CM\CMBundle\Form\PageMembersType;
 
 /**
  * @Route("/pages")
@@ -353,7 +353,7 @@ class PageController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $page = $em->getRepository('CMBundle:Page')->findOneBy(array('slug' => $slug));
+        $page = $em->getRepository('CMBundle:Page')->getPage($slug, array('pageUsers' => true));
         
         if (!$page) {
             throw new NotFoundHttpException('Page not found.');
@@ -363,14 +363,7 @@ class PageController extends Controller
             throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
         }
 
-        $pageUsers = $em->getRepository('CMBundle:PageUser')->getMembers($page->getId(), array(
-            'status' => array(PageUser::STATUS_ACTIVE, PageUser::STATUS_PENDING),
-            'userId' => $this->getUser()->getId(),
-            'paginate' => false,
-            'limit' => null,
-        ));
-
-        $form = $this->createForm(new PageUserCollectionType, array('pages' => $pageUsers), array(
+        $form = $this->createForm(new PageMembersType, $page, array(
             'cascade_validation' => true,
             'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_USER, 'locale' => $request->getLocale())),
             'type' => 'CM\CMBundle\Form\PageUserType'
@@ -379,9 +372,8 @@ class PageController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            foreach ($pageUsers as $pageUser) {
-                $em->persist($pageUser);
-            }
+            $em->persist($page);
+
             $em->flush();
 
             return new RedirectResponse($this->generateUrl('page_members_settings', array('slug' => $slug)));
@@ -428,19 +420,55 @@ class PageController extends Controller
 
         $userId = $request->get('user_id');
 
-        $this->forward('CMBundle:Request:add', array('object' => 'Page', 'objectId' => $pageId, 'userId' => $userId));
-
-        $pageUser = $em->getRepository('CMBundle:PageUser')->findOneBy(array('pageId' => $pageId, 'userId' => $userId));
-
-        if (!$this->get('cm.user_authentication')->isAdminOf($pageUser->getPage())) {
+        if (count($em->getRepository('CMBundle:PageUser')->findBy(array('pageId' => $pageId, 'userId' => $userId))) > 0) {
             throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
         }
 
-        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+        $page = $em->getRepository('CMBundle:Page')->findOneById($pageId);
+        if (!$page) {
+            throw new NotFoundHttpException('Page not found.');
+        }
 
+        if ($userId != $this->getUser()->getId()) {
+            if (!$this->get('cm.user_authentication')->isAdminOf($page)) {
+                throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+            }
+
+            $user = $em->getRepository('CMBundle:User')->findOneById($userId);
+            if (!$user) {
+                throw new NotFoundHttpException($this->get('translator')->trans('User not found.', array(), 'http-errors'));
+            }
+        } else {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $page = new Page;
+
+        $protagonist_new_id = $request->query->get('protagonist_new_id');
+
+        // add dummies
+        foreach (range(0, $protagonist_new_id - 1) as $i) {
+            $page->addUser($this->getUser());
+        }
+
+        $page->addUser(
+            $user,
+            false, // admin
+            PageUser::STATUS_PENDING
+        );
+
+        $form = $this->createForm(new PageMembersType, $page, array(
+            'cascade_validation' => true,
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_USER, 'locale' => $request->getLocale())),
+            'type' => 'CM\CMBundle\Form\PageUserType'
+        ));
+        
         return array(
-            'member' => $pageUser,
-            'tags' => $tags
+            'skip' => true,
+            'newEntry' => true,
+            'page' => $page,
+            'pageUsers' => $form->createView()['pageUsers'],
+            'protagonist_new_id' => $protagonist_new_id
         );
     }
 

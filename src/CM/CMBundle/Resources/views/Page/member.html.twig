@@ -5,12 +5,44 @@
     {% if skip is not defined or loop.index0 >= protagonist_new_id %}
         {% set pageUser = field.vars.data %}
         {% set user = pageUser.user %}
-        <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user media ajax-link-target alert alert-{% if pageUser.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_ACTIVE') %}success{% else %}warning{% endif %}" user_id="{{ user.id }}">
+
+        {% if newEntry|default(false) %}
+            {% if user.id == app.security.token.user.id %}
+                {% set requestText = ('this element will appear on your profile') %}
+                {% set alertClass = 'alert-success' %}
+            {% else %}
+                {% set requestText = (user.sexArray('he') ~ ' will recive a request to add this element to ' ~ user.sexArray('his') ~ ' profile') %}
+                {% set alertClass = 'alert-warning' %}
+            {% endif %}
+        {% else %}
+            {% if pageUser.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_PENDING') %}
+                {% set requestText = (user.sexArray('he') ~ ' has not accepted the request yet') %}
+                {% set alertClass = 'alert-warning' %}
+            {% elseif pageUser.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_ACTIVE') and user.id == app.security.token.user.id %}
+                {% set requestText = ('this element appears on your profile') %}
+                {% set alertClass = 'alert-success' %}
+            {% elseif pageUser.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_ACTIVE') %}
+                {% set requestText = ('this element appears on' ~ user.sexArray('his') ~ ' profile') %}
+                {% set alertClass = 'alert-success' %}
+            {% elseif pageUser.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_REQUESTED') %}
+                {% set requestText = (user.sexArray('he') ~ ' has sent a request to be added to the protagonists') %}
+                {% set alertClass = 'alert-info' %}
+            {% elseif pageUser.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_REFUSED_ADMIN') %}
+                {% set requestText = (user.sexArray('his') ~ ' request has been denied and this element does not appear on ' ~ user.sexArray('his') ~ ' profile') %}
+                {% set alertClass = 'alert-danger' %}
+            {% elseif pageUser.status == constant('CM\\CMBundle\\Entity\\PageUser::STATUS_REFUSED_ENTITY_USER') %}
+                {% set requestText = (user.sexArray('he') ~ ' has denied the request and this element does not appear on ' ~ user.sexArray('his') ~ ' profile') %}
+                {% set alertClass = 'alert-danger' %}
+            {% endif %}
+        {% endif %}
+
+        <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user media ajax-link-target alert {{ alertClass }}" user_id="{{ user.id }}">
             {{ form_errors(field) }}
             {{ show_img_box(user.img|imagine_filter('medium'), {width: 58, offset: user.imgOffset, box_attributes: {class: 'img-thumbnail pull-left'}})|raw }}
             <div class="media-body">
                 {% if user.id != app.security.token.user.id %}<a class="protagonists_remove close" aria-hidden="true" id="protagonists_remove_{{ loop.index0 }}">&times;</a>{% endif %}
-                <h4 class="media-heading">{{ user }}</h4>
+                {{ protagonist_new_id }} : {{ loop.index0 }}
+                <h4 class="media-heading">{{ user }} <small>({{ requestText|trans }})</small></h4>
                 <div class="row">
                     <div class="col-md-9">
                         {{ form_widget(field.pageUserTags) }}

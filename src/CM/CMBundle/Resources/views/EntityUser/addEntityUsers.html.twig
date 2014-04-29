@@ -6,7 +6,7 @@
         {% set entityUser = entity.entityUsers[loop.index0] %}
         {% set user = entityUser.user %}
 
-        {% if newEntry %}
+        {% if newEntry|default(false) %}
             {% if target is defined and target|length == 2 and target.type == 'page' %}
                 {% if attribute(target.obj.pageUsers[loop.index0 - protagonist_new_id], joinEntityType) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_NO') %}
                     {% set requestText = (user.sexArray('he') ~ ' will not recive a request and this element will not be visible to ' ~ user.sexArray('his') ~ ' profile due to ' ~ user.sexArray('his') ~ ' page settings') %}
@@ -27,7 +27,7 @@
                     {% set alertClass = 'alert-warning' %}
                 {% endif %}
             {% endif %}
-        {% elseif not newEntry %}
+        {% else %}
             {% if entityUser.status == constant('CM\\CMBundle\\Entity\\EntityUser::STATUS_PENDING') %}
                 {% set requestText = (user.sexArray('he') ~ ' has not accepted the request yet') %}
                 {% set alertClass = 'alert-warning' %}
@@ -47,12 +47,9 @@
                 {% set requestText = (user.sexArray('he') ~ ' has denied the request and this element does not appear on ' ~ user.sexArray('his') ~ ' profile') %}
                 {% set alertClass = 'alert-danger' %}
             {% endif %}
-        {% else %}
-            {% set requestText = '' %}
-            {% set alertClass = '' %}
         {% endif %}
 
-        <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user media alert {{ alertClass }}" user_id="{{ user.id }}" user="{{ user.slug }}" {% if target is defined and target|length == 2 %}{{ target.type }}_id="{{ target.obj.id }}"{% endif %}>
+        <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user media alert {{ alertClass }}" user_id="{{ user.id }}" {% if target is defined and target|length == 2 %}{{ target.type }}_id="{{ target.obj.id }}"{% endif %}>
             {{ form_errors(field) }}
             {{ show_img_box(user.img|imagine_filter('medium'), {width: 58, offset: user.imgOffset, box_attributes: {class: 'img-thumbnail pull-left'}})|raw }}
             <div class="media-body">

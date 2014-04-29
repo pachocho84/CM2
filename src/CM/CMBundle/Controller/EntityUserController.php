@@ -24,6 +24,7 @@ use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Sponsored;
+use CM\CMBundle\Entity\Tag;
 use CM\CMBundle\Form\EventType;
 use CM\CMBundle\Form\DiscType;
 use CM\CMBundle\Form\MultimediaType;
@@ -153,7 +154,7 @@ class EntityUserController extends Controller
             'entity' => $entity,
             'entityUsers' => $form->createView()['entityUsers'],
             'target' => $target,
-            'joinEntityType' => 'joinEvent', // TODO: caluculate it
+            'joinEntityType' => 'join'.$this->get('cm.helper')->className($entity->className()), // TODO: caluculate it
             'protagonist_new_id' => $protagonist_new_id
         );
     }

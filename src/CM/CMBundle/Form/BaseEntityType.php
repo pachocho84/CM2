@@ -99,8 +99,6 @@ class BaseEntityType extends AbstractType
             'locale' => 'en',
             'locales' => array('en'),
             'articleWriter' => false,
-            'add_category' => true,
-            'add_users' => true,
             'data_class' => 'CM\CMBundle\Entity\Entity'
         ));
     }

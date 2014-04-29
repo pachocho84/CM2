@@ -25,8 +25,6 @@ class LikeCommentFixtures extends AbstractFixture implements OrderedFixtureInter
                 $user = $manager->merge($this->getReference('user-'.rand(1, UserFixtures::count())));
                 $like->setUser($user);
                 $post->addLike($like);
-
-                var_dump($user.' p:'.$post->getId());
             }
 
             for ($j = 1; $j < rand(1, 11); $j++) {

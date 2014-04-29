@@ -150,7 +150,9 @@ class PageUser
     public function setPage(Page $page = null)
     {
         $this->page = $page;
-        $this->pageId = $page->getId();
+        if (!is_null($page)) {
+            $this->pageId = $page->getId();
+        }
     
         return $this;
     }
@@ -184,7 +186,9 @@ class PageUser
     public function setUser(User $user = null)
     {
         $this->user = $user;
-        $this->userId = $user->getId();
+        if (!is_null($user)) {
+            $this->userId = $user->getId();
+        }
     
         return $this;
     }

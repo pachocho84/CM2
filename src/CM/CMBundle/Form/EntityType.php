@@ -60,7 +60,7 @@ class EntityType extends BaseEntityType
                 'type' => new EntityUserType,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'by_reference' => true,
+                'by_reference' => false,
                 'options' => array(
                     'em' => $options['em'],
                     'roles' => $options['roles'],
@@ -82,8 +82,6 @@ class EntityType extends BaseEntityType
             'tags' => array(),
             'locale' => 'en',
             'locales' => array('en'),
-            'add_category' => true,
-            'add_users' => true,
             'data_class' => 'CM\CMBundle\Entity\Entity'
         ));
 

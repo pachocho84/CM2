@@ -85,7 +85,7 @@ class Page
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity="PageUser", mappedBy="page", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="PageUser", mappedBy="page", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $pageUsers;
 
@@ -237,8 +237,8 @@ class Page
     public function addPageUser(PageUser $pageUser)
     {
         if (!$this->pageUsers->contains($pageUser)) {
-            $this->pageUsers[] = $pageUser;
             $pageUser->setPage($this);
+            $this->pageUsers[] = $pageUser;
         }
 
         return $this;

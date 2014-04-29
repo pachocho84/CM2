@@ -31,13 +31,17 @@ class PageRepository extends BaseRepository
         ), $options);
     }
 
-    public function getPage($slug, $options = array())
+    public function getPage($id, $options = array())
     {
         $options = self::getOptions($options);
 
         $query = $this->createQueryBuilder('p')
-            ->select('p')
-            ->andWhere('p.slug = :slug')->setParameter('slug', $slug);
+            ->select('p');
+        if (is_string($id)) {
+            $query->andWhere('p.slug = :id')->setParameter('id', $id);
+        } else {
+            $query->andWhere('p.id = :id')->setParameter('id', $id);
+        }
 
         if ($options['tags']) {
             $query->addSelect('pt, t, tt')
