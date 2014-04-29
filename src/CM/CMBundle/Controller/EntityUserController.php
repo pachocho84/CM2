@@ -120,7 +120,6 @@ class EntityUserController extends Controller
                 $formType = new ArticleType;
                 break;
         }
-        
 
         $protagonist_new_id = $request->query->get('protagonist_new_id');
 
@@ -143,7 +142,7 @@ class EntityUserController extends Controller
             'error_bubbling' => false,
             'em' => $em,
             'roles' => $user->getRoles(),
-            'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_USER, 'locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ));
