@@ -111,11 +111,11 @@ class RequestRepository extends BaseRepository
         $query = $this->createQueryBuilder('r')
             ->select('r, u, e, eu, t, p, pu, po, pou, pop')
             ->leftJoin('r.entity', 'e')
-            ->leftJoin('e.entityUsers', 'eu', 'WITH', 'eu.userId = :user_id', 'eu.userId')
+            ->leftJoin('e.entityUsers', 'eu', 'with', 'eu.userId = r.userId or eu.userId = r.fromUserId', 'eu.userId')
             ->leftJoin('e.translations', 't')
-            ->leftJoin('e.posts', 'po', 'WITH', 'po.type = '.Post::TYPE_CREATION)
+            ->leftJoin('e.posts', 'po', 'with', 'po.type = '.Post::TYPE_CREATION)
             ->leftJoin('r.page', 'p')
-            ->leftJoin('p.pageUsers', 'pu', 'WITH', 'pu.userId = :user_id', 'pu.userId')
+            ->leftJoin('p.pageUsers', 'pu', 'with', 'pu.userId = :user_id', 'pu.userId')
             ->leftJoin('po.user', 'pou')
             ->leftJoin('po.page', 'pop');
         if ($direction == 'incoming') {
@@ -139,13 +139,13 @@ class RequestRepository extends BaseRepository
         if (!is_null($options['entityId'])) {
             $query->addSelect('e, eu')
                 ->leftJoin('r.entity', 'e')
-                ->leftJoin('e.entityUsers', 'eu', 'WITH', 'eu.userId = :user_id', 'eu.userId')
+                ->leftJoin('e.entityUsers', 'eu', 'with', 'eu.userId = :user_id', 'eu.userId')
                 ->andWhere('e.id = :entity_id')->setParameter('entity_id', $options['entityId']);
         }
         if (!is_null($options['pageId'])) {
             $query->addSelect('p, pu')
                 ->leftJoin('r.page', 'p')
-                ->leftJoin('p.pageUsers', 'pu', 'WITH', 'pu.userId = :user_id', 'pu.userId')
+                ->leftJoin('p.pageUsers', 'pu', 'with', 'pu.userId = :user_id', 'pu.userId')
                 ->andWhere('p.id = :page_id')->setParameter('page_id', $options['pageId']);
         }
         if ($direction == 'incoming') {

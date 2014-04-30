@@ -458,59 +458,65 @@ class CMExtension extends \Twig_Extension
         $user = $this->securityContext->getToken()->getUser();
 
         if ($user->getId() == $request->getUser()->getId()) {
-            $userLink = $this->router->generate('user_show', array('slug' => $request->getFromUser()->getSlug()));
-            $userBox = $box ? $this->getPublisherBox($request->getFromUser()) : null;
-            if (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
+            if (!is_null($request->getEntity()) && $request->getEntity()->getEntityUsers()[$request->getFromUser()->getId()]->getStatus() != EntityUser::STATUS_REQUESTED && !is_null($request->getPage())){
+                $sender = $request->getPage();
+            } else {
+                $sender = $request->getFromUser();
+            }
+            $senderLink = $this->router->generate(strtolower($this->getClassName($sender)).'_show', array('slug' => $sender->getSlug()));
+            $senderBox = $box ? $this->getPublisherBox($request->getFromsender()) : null;
+            if (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event' && $request->getEntity()->getEntityUsers()[$request->getFromUser()->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
                 $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to be added as protagonist to your event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                return $this->translator->trans('%sender% would like to be added as protagonist to your event %object%.', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event') {
                 $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to add you as protagonist to the event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
-            } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Disc' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
+                return $this->translator->trans('%sender% would like to add you as protagonist to the event %object%.', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+            } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Disc' && $request->getEntity()->getEntityUsers()[$request->getFromUser()->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
                 $entityLink = $this->router->generate('disc_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to be added as protagonist to your disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
-                // return __('%user% would like to be added as protagonist to your disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                return $this->translator->trans('%sender% would like to be added as protagonist to your disc %object%.', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Disc') {
                 $entityLink = $this->router->generate('disc_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to add you as protagonist to the disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
-                // return __('%user% would like to add you as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
-            } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Multimedia' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
+                return $this->translator->trans('%sender% would like to add you as protagonist to the disc %object%.', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+            } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Multimedia' && $request->getEntity()->getEntityUsers()[$request->getFromUser()->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
                 $entityLink = $this->router->generate('multimedia_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to be added as protagonist to your multimedia %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                return $this->translator->trans('%sender% would like to be added as protagonist to your multimedia %object%.', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Multimedia') {
                 $entityLink = $this->router->generate('multimedia_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to add you as protagonist to the multimedia %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
-            } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Article' && $request->getEntity()->getEntityUsers()[$user->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
+                return $this->translator->trans('%sender% would like to add you as protagonist to the multimedia %object%.', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+            } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Article' && $request->getEntity()->getEntityUsers()[$request->getFromUser()->getId()]->getStatus() == EntityUser::STATUS_REQUESTED) {
                 $entityLink = $this->router->generate('article_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to be added as protagonist to your article %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
-                // return __('%user% would like to be added as protagonist to your article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                return $this->translator->trans('%sender% would like to be added as protagonist to your article %object%.', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Article') {
                 $entityLink = $this->router->generate('article_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('%user% would like to add you as protagonist to the article %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
-                // return __('%user% would like to add you as protagonist to the article %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                return $this->translator->trans('%sender% would like to add you as protagonist to the article %object%.', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getPage()) && $this->userAuthentication->isAdminOf($request->getPage())) {
                 $page = $request->getPage();
                 $pageLink = $this->router->generate('page_show', array('slug' => $page->getSlug()));
-                return $this->translator->trans('%user% would like to join the page %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
+                return $this->translator->trans('%sender% would like to join your page %page%.', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>', '%page%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
             } elseif (!is_null($request->getPage())) {
                 $page = $request->getPage();
                 $pageLink = $this->router->generate('page_show', array('slug' => $page->getSlug()));
-                return $this->translator->trans('%user% would like you to join the page %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>', '%object%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
+                return $this->translator->trans('%sender% would like you to join the page %page%.', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>', '%page%' => '<a href="'.$pageLink.'">'.$page.'</a>'));
             } elseif ($request->getObject() == 'Relation') {
-                return $this->translator->trans('%user% requested you a relation. TODO: relation type!', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getFromUser().'</a>'));
+                return $this->translator->trans('%sender% requested you a relation. TODO: relation type!', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>'));
             }
         } elseif ($user->getId() == $request->getFromUser()->getId()) {
-            $userLink = $this->router->generate('user_show', array('slug' => $request->getUser()->getSlug()));
-            $userBox = $box ? $this->getPublisherBox($request->getUser()) : null;
+            if (!is_null($request->getPage())){
+                $sender = $request->getPage();
+            } else {
+                $sender = $request->getUser();
+            }
+            $senderLink = $this->router->generate(strtolower($this->getClassName($sender)).'_show', array('slug' => $sender->getSlug()));
+            $senderBox = $box ? $this->getPublisherBox($request->getFromsender()) : null;
             if (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Event') {
                 $entityLink = $this->router->generate('event_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('You requested %user% to be added as protagonist to the event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
+                return $this->translator->trans('You requested %sender% to be added as protagonist to the event %object%.', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Disc') {
                 $entityLink = $this->router->generate('disc_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
-                return $this->translator->trans('You requested %user% to be added as protagonist to the disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$request->getUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
-                // return __('You requested %user% to be added as protagonist to the disc %object%.', array('%user%' => link_to($this->getUserRelatedByUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                return $this->translator->trans('You requested %sender% to be added as protagonist to the disc %object%.', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             } elseif (!is_null($request->getEntity()) && $this->getClassName($request->getEntity()) == 'Article') {
-                // return __('You requested %user% to be added as protagonist to the article %object%.', array('%user%' => link_to($this->getUserRelatedByUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to($this->getEntity(), $this->getEntity()->getLinkShow())));
+                $entityLink = $this->router->generate('article_show', array('id' => $request->getEntity()->getId(), 'slug' => $request->getEntity()->getSlug()));
+                return $this->translator->trans('You requested %sender% to be added as protagonist to the article %object%.', array('%sender%' => '<a href="'.$senderLink.'" '.$senderBox.'>'.$sender.'</a>', '%object%' => '<a href="'.$entityLink.'">'.$request->getEntity()->getTitle().'</a>'));
             }
         }
     }
@@ -520,10 +526,19 @@ class CMExtension extends \Twig_Extension
         $loading = $this->translator->trans('Loading');
         $accept = $this->translator->trans('Accept');
         $refuse = $this->translator->trans('Refuse');
-        switch ($request->getObject()) {
+
+        switch ($this->helper->className($request->getObject())) {
             case 'Relation':
-                $acceptPath = $this->router->generate('relation_update', array('choice' => 'accept', 'id' => $request->getId()));
-                $refusePath = $this->router->generate('relation_update', array('choice' => 'refuse', 'id' => $request->getId()));
+                $acceptPath = $this->router->generate('relation_update', array('choice' => 'accept', 'id' => $request->getObjectId()));
+                $refusePath = $this->router->generate('relation_update', array('choice' => 'refuse', 'id' => $request->getObjectId()));
+                break;
+            case 'EntityUser':
+                $acceptPath = $this->router->generate('entityuser_update', array('choice' => 'accept', 'id' => $request->getObjectId()));
+                $refusePath = $this->router->generate('entityuser_update', array('choice' => 'refuse', 'id' => $request->getObjectId()));
+                break;
+            case 'PageUser':
+                $acceptPath = $this->router->generate('pageuser_update', array('choice' => 'accept', 'id' => $request->getObjectId()));
+                $refusePath = $this->router->generate('pageuser_update', array('choice' => 'refuse', 'id' => $request->getObjectId()));
                 break;
             default:
                 $acceptPath = $this->router->generate('request_update', array('choice' => 'accept', 'id' => $request->getId()));
@@ -538,33 +553,48 @@ class CMExtension extends \Twig_Extension
     {
         $userLink = $this->router->generate('user_show', array('slug' => $notification->getFromUser()->getSlug()));
         $userBox = $box ? $this->getPublisherBox($notification->getFromUser()) : null;
-        switch ($this->getClassName($notification->getPost()->getObject()).'_'.$notification->getType()) {
-            case 'Event_'.Notification::TYPE_REQUEST_ACCEPTED:
+        $your = 'your';
+        if (!is_null($notification->getPage())) {
+            $pageLink = $this->router->generate('page_show', array('slug' => $notification->getPage()->getSlug()));
+            $pageBox = $box ? $this->getPublisherBox($notification->getPage()) : null;
+            $your = 'your page %page%\'s';
+        }
+
+        switch ($this->getClassName(is_null($notification->getObject()) ? $notification->getPost()->getObject() : $notification->getObject()).'_'.$notification->getType()) {
+            case 'Event_'.Notification::TYPE_REQUEST_ACCEPTED_BY_USER:
                 $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% joined your event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% joined '.$your.' event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%page%' => '<a href="'.$pageLink.'" '.$pageBox.'>'.$notification->getPage().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+            case 'Event_'.Notification::TYPE_REQUEST_ACCEPTED_BY_ADMIN:
+                $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
+                return $this->translator->trans('You joined %user%\'s event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%page%' => '<a href="'.$pageLink.'" '.$pageBox.'>'.$notification->getPage().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'Event_'.Notification::TYPE_LIKE:
                 $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% likes your event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% likes '.$your.' event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%page%' => '<a href="'.$pageLink.'" '.$pageBox.'>'.$notification->getPage().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'Event_'.Notification::TYPE_COMMENT:
                 $entityLink = $this->router->generate('event_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% has commented your event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
-            case 'Disc_'.Notification::TYPE_REQUEST_ACCEPTED:
+                return $this->translator->trans('%user% has commented '.$your.' event %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%page%' => '<a href="'.$pageLink.'" '.$pageBox.'>'.$notification->getPage().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+            case 'Disc_'.Notification::TYPE_REQUEST_ACCEPTED_BY_USER:
                 $entityLink = $this->router->generate('disc_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% joined your disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('You joined %user%\'s disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%page%' => '<a href="'.$pageLink.'" '.$pageBox.'>'.$notification->getPage().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+            case 'Disc_'.Notification::TYPE_REQUEST_ACCEPTED_BY_ADMIN:
+                $entityLink = $this->router->generate('disc_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
+                return $this->translator->trans('%user% joined '.$your.' disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%page%' => '<a href="'.$pageLink.'" '.$pageBox.'>'.$notification->getPage().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'Disc_'.Notification::TYPE_LIKE:
                 $entityLink = $this->router->generate('disc_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% likes your disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+                return $this->translator->trans('%user% likes '.$your.' disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%page%' => '<a href="'.$pageLink.'" '.$pageBox.'>'.$notification->getPage().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
             case 'Disc_'.Notification::TYPE_COMMENT:
                 $entityLink = $this->router->generate('disc_show', array('id' => $notification->getPost()->getEntity()->getId(), 'slug' => $notification->getPost()->getEntity()->getSlug()));
-                return $this->translator->trans('%user% has commented your disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
-            case 'user_like':
-                // return __('%user% likes your %object%.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow()), '%object%' => link_to(__('post'), $this->getPost()->getLinkShow())));
-            case 'Fan_'.Notification::TYPE_FAN:
-                return $this->translator->trans('%user% became your fan.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>'));
-                // return __('%user% became your fan.', array('%user%' => link_to($this->getUserRelatedByFromUserId(), $this->getUserRelatedByFromUserId()->getLinkShow())));
+                return $this->translator->trans('%user% has commented '.$your.' disc %object%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%page%' => '<a href="'.$pageLink.'" '.$pageBox.'>'.$notification->getPage().'</a>', '%object%' => '<a href="'.$entityLink.'">'.$notification->getPost()->getEntity().'</a>'));
+            case 'User_'.Notification::TYPE_FAN:
+                return $this->translator->trans('%user% became '.$your.' fan.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>'));
+            case 'Page_'.Notification::TYPE_FAN:
+                return $this->translator->trans('%user% became '.$your.' fan.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%page%' => '<a href="'.$pageLink.'" '.$pageBox.'>'.$notification->getPage().'</a>'));
+            case 'Page_'.Notification::TYPE_REQUEST_ACCEPTED_BY_USER:
+                return $this->translator->trans('You joined %page%.', array('%page%' => '<a href="'.$pageLink.'" '.$pageBox.'>'.$notification->getPage().'</a>'));
+            case 'Page_'.Notification::TYPE_REQUEST_ACCEPTED_BY_ADMIN:
+                return $this->translator->trans('%user% joined your page %page%.', array('%user%' => '<a href="'.$userLink.'" '.$userBox.'>'.$notification->getFromUser().'</a>', '%page%' => '<a href="'.$pageLink.'" '.$pageBox.'>'.$notification->getPage().'</a>'));
             default:
-                return $this->getClassName($notification->getPost()->getObject()).'_'.$notification->getType();
-                // return 'Case: '.$notification->getPost()->getObject().'_'.$notification->getType().', PostId: '.$notification->getPostId().', From: '.$notification->getFromUser().', Type: '.$notification->getType().', Object: '.$notification->getObject();
+                return $this->getClassName(is_null($notification->getObject()) ? $notification->getPost()->getObject() : $notification->getObject()).'_'.$notification->getType();
         }
     }
 

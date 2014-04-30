@@ -40,7 +40,6 @@ class PageUserRepository extends BaseRepository
             ->join('pu.page', 'p')
             ->where('pu.status in (:status)')->setParameter('status', $options['status'])
             ->andWhere('pu.pageId = :page_id')->setParameter('page_id', $pageId)
-            ->orderBy('pu.admin', 'desc')
             ->addOrderBy('u.firstName');
 
         return $options['paginate'] ? $query->getQuery() : $query->setMaxResults($options['limit'])->getQuery()->getResult();

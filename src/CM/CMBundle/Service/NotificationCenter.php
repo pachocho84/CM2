@@ -38,7 +38,7 @@ class NotificationCenter
     )
     {
         if ($toUser->getId() == $fromUser->getId()) {
-            return;
+            return 666;
         }
 
         $notification = new Notification;
@@ -53,10 +53,12 @@ class NotificationCenter
                 ->setObjectId($objectId);
         }
         if (!is_null($page)) {
-            $notification->setFromPage($page);
+            $notification->setPage($page);
         }
         $this->em->persist($notification);
         $this->flushNeeded = true;
+
+        return is_object($notification) ? 'true' : 'false';
     }
 
 public function getNewNotificationsNumber($userId)

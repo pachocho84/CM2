@@ -20,6 +20,7 @@ use CM\CMBundle\Entity\Disc;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\DiscTrack;
 use CM\CMBundle\Entity\Image;
+use CM\CMBundle\Entity\Tag;
 use CM\CMBundle\Form\DiscType;
 use CM\CMBundle\Form\DiscTrackType;
 use CM\CMBundle\Form\ImageCollectionType;
@@ -102,24 +103,13 @@ class DiscController extends Controller
             $disc->addDiscTrack(new DiscTrack);
 
             $post = $this->get('cm.post_center')->getNewPost($user, $user);
-
-            $disc->addPost($post);
+            $disc->setPost($post);
         } else {
             $disc = $em->getRepository('CMBundle:Disc')->getDisc($id, array('locale' => $request->getLocale(), 'protagonists' => true));
             if (!$this->get('cm.user_authentication')->canManage($disc)) {
                 throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
             }
             // TODO: retrieve images from disc
-        }
-
-        $oldEntityUsers = array();
-        foreach ($disc->getEntityUsers() as $oldEntityUser) {
-            $oldEntityUsers[] = $oldEntityUser;
-        }
-
-        $oldDiscTracks = array();
-        foreach ($disc->getDiscTracks() as $oldDiscTrack) {
-            $oldDiscTracks[] = $oldDiscTrack;
         }
         
         // TODO: retrieve locales from user
@@ -138,68 +128,19 @@ class DiscController extends Controller
             'error_bubbling' => false,
             'em' => $em,
             'roles' => $user->getRoles(),
-            'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_ENTITY_USER, 'locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ))->add('save', 'submit');
         
+        // var_dump($request->request->get('cm_cmbundle_disc')['discTracks']);die;
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            foreach ($disc->getDiscTracks() as $discDate) {
-                foreach ($oldDiscTracks as $key => $toDel) {
-                    if ($toDel->getId() === $discDate->getId()) {
-                        unset($oldDiscTracks[$key]);
-                    }
-                }
-            }
-    
-            // remove the relationship between the tag and the Task
-            foreach ($oldDiscTracks as $discDate) {
-                // remove the Task from the Tag
-                $disc->removeDiscTrack($discDate);
-    
-                // if it were a ManyToOne relationship, remove the relationship like this
-                // $tag->setTask(null);
-    
-                // if you wanted to delete the Tag entirely, you can also do that
-                $em->remove($discDate);
-            }
-
-            foreach ($disc->getEntityUsers() as $entityUser) {
-                foreach ($oldEntityUsers as $key => $toDel) {
-                    if ($toDel->getId() === $entityUser->getId()) {
-                        unset($oldEntityUsers[$key]);
-                    }
-                }
-            }
-
-            // remove the relationship between the tag and the Task
-            foreach ($oldEntityUsers as $entityUser) {
-                // remove the Task from the Tag
-                $disc->removeEntityUser($entityUser);
-
-                $entityUser->setEntity(null);
-                $entityUser->setUser(null);
-    
-                $em->remove($entityUser);
-            }
-
             $em->persist($disc);
-
             $em->flush();
 
-            // foreach ($disc->getEntityUsers() as $entityUser) {
-            //     echo $entityUser->getUser().' -> i: '.count($entityUser->getUser()->getRequestsIncoming()).', o: '.'<br/>';
-            // }
-            // die;
-
             return new RedirectResponse($this->generateUrl('disc_show', array('id' => $disc->getId(), 'slug' => $disc->getSlug())));
-        }
-
-        $users = array();
-        foreach ($disc->getEntityUsers() as $entityUser) {
-            $users[] = $entityUser->getUser();
         }
 
         $categories = $em->getRepository('CMBundle:EntityCategory')->getEntityCategories(EntityCategory::DISC, array('locale' => $request->getLocale()));
@@ -280,7 +221,7 @@ class DiscController extends Controller
         $em = $this->getDoctrine()->getManager();
         
         $disc = $em->getRepository('CMBundle:Disc')->getDisc($id, array('locale' => $request->getLocale(), 'protagonists' => true));
-        $tags = $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale()));
+        $tags = $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_ENTITY_USER, 'locale' => $request->getLocale()));
         
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:Disc:object.html.twig', array('disc' => $disc, 'tags' => $tags));
@@ -290,6 +231,6 @@ class DiscController extends Controller
             $req = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('entityId' => $disc->getId()));
         }
         
-        return array('disc' => $disc, 'request' => $req, 'tags' => $tags);
+        return array('disc' => $disc, 'request' => $req);
     }
 }

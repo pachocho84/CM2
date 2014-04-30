@@ -227,7 +227,7 @@ class EventController extends Controller
             'error_bubbling' => false,
             'em' => $em,
             'roles' => $user->getRoles(),
-            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_USER, 'locale' => $request->getLocale())),
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_ENTITY_USER, 'locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ))->add('save', 'submit');
@@ -265,6 +265,8 @@ class EventController extends Controller
         $em->remove($event);
         $em->flush();
 
+        die;
+
         return new RedirectResponse($this->generateUrl('event_index'));
     }
     
@@ -293,15 +295,14 @@ class EventController extends Controller
             return $this->render('CMBundle:Event:object.html.twig', array('date' => $date));
         }
         
-        $event = $em->getRepository('CMBundle:Event')->getEvent($id, array('slug' => $slug, 'locale' => $request->getLocale()));
-               
-        if ($this->get('security.context')->isGranted('ROLE_USER')) {
-            $req = $em->getRepository('CMBundle:Request')->getRequestWithUserStatus($this->getUser()->getId(), 'any', array('entityId' => $event->getId()));
-        }
-       
+        $event = $em->getRepository('CMBundle:Event')->getEvent($id, array(
+            'slug' => $slug,
+            'protagonist' => is_null($this->getUser()) ?: $this->getUser()->getId(),
+            'locale' => $request->getLocale()
+        ));
+
         return array(
-            'event' => $event,
-            'request' => $req
+            'event' => $event
         );
     }
 }

@@ -29,6 +29,7 @@ class DateTimeToYearTransformer implements DataTransformerInterface
             return null;
         }
         
-        return DateTime::setDate($year, 1, 1);
+        $date = new \DateTime;
+        return $date->setDate($year, 1, 1);
     }
 }

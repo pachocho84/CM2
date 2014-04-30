@@ -19,6 +19,7 @@ use CM\CMBundle\Entity\Fan;
 use CM\CMBundle\Entity\ImageAlbum;
 use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\Page;
+use CM\CMBundle\Entity\PageUser;
 use CM\CMBundle\Entity\Relation;
 use CM\CMBundle\Entity\Multimedia;
 
@@ -114,6 +115,12 @@ class DoctrineEventsListener
         $object = $args->getEntity();
         $em = $args->getEntityManager();
 
+        if ($object instanceof EntityUser) {
+            $this->entityUserUpdatedRoutine($object, $em);
+        }
+        if ($object instanceof PageUser) {
+            $this->pageUserUpdatedRoutine($object, $em);
+        }
         if ($object instanceof EntityTranslation && $object->getEntity() instanceof Biography) {   
             $this->biographyUpdatedRoutine($object->getEntity(), $em);
         }
@@ -207,27 +214,15 @@ class DoctrineEventsListener
         $page = $post->getPage();
 
         $requestCenter = $this->get('cm.request_center');
-        $notificationCenter = $this->get('cm.notification_center');
 
         switch ($entityUser->getStatus()) {
             case EntityUser::STATUS_PENDING:
                 $requestCenter->newRequest(
                     $entityUser->getUser(),
                     $user,
-                    null,
-                    null,
+                    $entityUser->className(),
+                    $entityUser->getId(),
                     $entity,
-                    $page
-                );
-                break;
-            case EntityUser::STATUS_ACTIVE:
-                $notificationCenter->newNotification(
-                    Notification::TYPE_REQUEST_ACCEPTED,
-                    $entityUser->getUser(),
-                    $user,
-                    null,
-                    null,
-                    $post,
                     $page
                 );
                 break;
@@ -236,24 +231,50 @@ class DoctrineEventsListener
                     $requestCenter->newRequest(
                         $admin,
                         $entityUser->getUser(),
-                        null,
-                        null,
-                        $entity
+                        $entityUser->className(),
+                        $entityUser->getId(),
+                        $entity,
+                        $page
                     );
                 }
                 break;
         }
     }
 
+    private function entityUserUpdatedRoutine(EntityUser &$entityUser, EntityManager $em)
+    {
+        if ($entityUser->getStatus() == EntityUser::STATUS_ACTIVE) {
+            $entity = $entityUser->getEntity();
+            $post = $entity->getPost();
+            $page = $post->getPage();
+            
+            if ($entityUser->getUserId() == $this->getUser()->getId()) {
+                $toNotify = $em->getRepository('CMBundle:Entity')->getAdmins($entity->getId());
+                $type = Notification::TYPE_REQUEST_ACCEPTED_BY_USER;
+            } else {
+                $toNotify = array($entityUser->getUser());
+                $type = Notification::TYPE_REQUEST_ACCEPTED_BY_ADMIN;
+            }
+
+            foreach ($toNotify as $toUser) {
+                $this->get('cm.notification_center')->newNotification(
+                    $type,
+                    $toUser,
+                    $this->getUser(),
+                    null,
+                    null,
+                    $post,
+                    $page
+                );
+            }
+        }
+
+        $this->get('cm.request_center')->removeRequests(null, array('object' => $entityUser->className(), 'objectId' => $entityUser->getId()));
+    }
+
     private function entityUserRemovedRoutine(EntityUser &$entityUser, EntityManager $em)
     {
-        $entity = $entityUser->getEntity();
-        $post = $entity->getPost();
-        $userId = $post->getUserId();
-        $pageId = $post->getPageId();
-
-        // $this->get('cm.notification_center')->removeNotifications($userId, $entity->className(), $entity->getId(), Notification::TYPE_REQUEST_ACCEPTED);
-        $this->get('cm.request_center')->removeRequests($entityUser->getUserId(), array('fromUserId' => $userId, 'pageId' => $pageId, 'entityId' => $entity->getId()));
+        $this->get('cm.request_center')->removeRequests(null, array('object' => $entityUser->className(), 'objectId' => $entityUser->getId()));
     }
 
     private function pageUserPersistedRoutine(PageUser &$pageUser, EntityManager $em)
@@ -261,32 +282,17 @@ class DoctrineEventsListener
         $page = $pageUser->getPage();
         $post = $page->getPost();
         $user = $post->getUser();
-        $page = $post->getPage();
 
         $requestCenter = $this->get('cm.request_center');
-        $notificationCenter = $this->get('cm.notification_center');
 
         switch ($pageUser->getStatus()) {
             case PageUser::STATUS_PENDING:
                 $requestCenter->newRequest(
                     $pageUser->getUser(),
                     $user,
+                    $pageUser->className(),
+                    $pageUser->getId(),
                     null,
-                    null,
-                    null,
-                    null,
-                    $page
-                );
-                break;
-            case PageUser::STATUS_ACTIVE:
-                $notificationCenter->newNotification(
-                    Notification::TYPE_REQUEST_ACCEPTED,
-                    $pageUser->getUser(),
-                    $user,
-                    null,
-                    nulll,
-                    $post,
-                    $page,
                     $page
                 );
                 break;
@@ -295,10 +301,9 @@ class DoctrineEventsListener
                     $requestCenter->newRequest(
                         $admin,
                         $pageUser->getUser(),
+                        $pageUser->className(),
+                        $pageUser->getId(),
                         null,
-                        null,
-                        null,
-                        $page,
                         $page
                     );
                 }
@@ -306,14 +311,39 @@ class DoctrineEventsListener
         }
     }
 
+    private function pageUserUpdatedRoutine(PageUser &$pageUser, EntityManager $em)
+    {
+        if ($pageUser->getStatus() == PageUser::STATUS_ACTIVE) {
+            $page = $pageUser->getPage();
+            $post = $page->getPost();
+
+            if ($pageUser->getUserId() == $this->getUser()->getId()) {
+                $toNotify = $em->getRepository('CMBundle:Page')->getAdmins($fan->getPage()->getId());;
+                $type = Notification::TYPE_REQUEST_ACCEPTED_BY_USER;
+            } else {
+                $toNotify = array($pageUser->getUser());
+                $type = Notification::TYPE_REQUEST_ACCEPTED_BY_ADMIN;
+            }
+
+            foreach ($toNotify as $toUser) {
+                $this->get('cm.notification_center')->newNotification(
+                    $type,
+                    $toUser,
+                    $this->getUser(),
+                    null,
+                    nulll,
+                    $post,
+                    $page
+                );
+            }
+        }
+
+        $this->get('cm.request_center')->removeRequests(null, array('object' => $pageUser->className(), 'objectId' => $pageUser->getId()));
+    }
+
     private function pageUserRemovedRoutine(PageUser &$pageUser, EntityManager $em)
     {
-        $page = $pageUser->getPage();
-        $post = $page->getPost();
-        $user = $post->getUser();
-        $page = $post->getPage();
-
-        $this->get('cm.request_center')->removeRequests($user, get_class($page), $page->getId(), 'sent');
+        $this->get('cm.request_center')->removeRequests(null, array('object' => $pageUser->className(), 'objectId' => $pageUser->getId()));
     }
     
     private function postAggregatePersistedRoutine(Post &$post, EntityManager $em)
@@ -362,12 +392,14 @@ class DoctrineEventsListener
             $post = $comment->getPost();
             $entity = $post->getEntity();
             $object = $post;
+            $objectType = $entity->className();
             $toUser = $post->getUser();
             $toCreator = $post->getCreator();
         } else {
             $post = null;
-            $object = $comment->getImage();
             $entity = null;
+            $object = $comment->getImage();
+            $objectType = $object->className();
             $toUser = $object->getUser();
             $toCreator = $object->getUser();
         }
@@ -376,20 +408,21 @@ class DoctrineEventsListener
             $comment->getUser(),
             $comment->getUser(),
             Post::TYPE_CREATION,
-            get_class($comment),
+            $comment->className(),
             array($comment->getId()),
             $entity
         );
 
-        $notifiedUserIds = array($comment->getUser()->getID());
+        $notifiedUserIds = array($comment->getUser()->getId());
 
         $this->get('cm.notification_center')->newNotification(
             Notification::TYPE_COMMENT,
             $toUser,
             $comment->getUser(),
-            get_class($comment),
+            $objectType,
             $comment->getId(),
-            $post
+            $post,
+            $object->getPage()
         );
         $notifiedUserIds[] = $toUser->getId();
 
@@ -398,9 +431,10 @@ class DoctrineEventsListener
                 Notification::TYPE_COMMENT,
                 $toCreator,
                 $comment->getUser(),
-                get_class($comment),
+                $objectType,
                 $comment->getId(),
-                $post
+                $post,
+                $object->getPage()
             );
             $notifiedUserIds[] = $toCreator->getId();
         }
@@ -415,9 +449,10 @@ class DoctrineEventsListener
                 Notification::TYPE_COMMENT,
                 $toNotify->getUser(),
                 $comment->getUser(),
-                get_class($comment),
+                $objectType,
                 $comment->getId(),
-                $comment->getPost()
+                $comment->getPost(),
+                $object->getPage()
             );
         }
     }
@@ -439,7 +474,7 @@ class DoctrineEventsListener
             }
         }
 
-        $this->get('cm.notification_center')->removeNotifications($comment->getUser()->getId(), get_class($comment), $comment->getId(), Notification::TYPE_COMMENT);
+        $this->get('cm.notification_center')->removeNotifications($comment->getUser()->getId(), null, $comment->getId(), Notification::TYPE_COMMENT);
     }
 
     private function likePersistedRoutine(Like &$like, EntityManager $em)
@@ -448,12 +483,14 @@ class DoctrineEventsListener
             $post = $like->getPost();
             $entity = $post->getEntity();
             $object = $post;
+            $objectType = $entity->className();
             $toUser = $post->getUser();
             $toCreator = $post->getCreator();
         } else {
             $post = null;
-            $object = $like->getImage();
             $entity = null;
+            $object = $like->getImage();
+            $objectType = $object->className();
             $toUser = $object->getUser();
             $toCreator = $object->getUser();
         }
@@ -462,7 +499,7 @@ class DoctrineEventsListener
                 $like->getUser(),
                 $like->getUser(),
                 Post::TYPE_CREATION,
-                get_class($like),
+                $like->className(),
                 array($like->getId()),
                 $entity
             );
@@ -471,9 +508,10 @@ class DoctrineEventsListener
             Notification::TYPE_LIKE,
             $toUser,
             $like->getUser(),
-            get_class($like),
+            $objectType,
             $like->getId(),
-            $post
+            $post,
+            $object->getPage()
         );
 
         if ($toCreator->getId() != $toUser->getId()) {
@@ -481,9 +519,10 @@ class DoctrineEventsListener
                 Notification::TYPE_LIKE,
                 $toCreator,
                 $like->getUser(),
-                get_class($like),
+                $objectType,
                 $like->getId(),
-                $post
+                $post,
+                $object->getPage()
             );
         }
     }
@@ -506,7 +545,7 @@ class DoctrineEventsListener
             }
         }
 
-        $this->get('cm.notification_center')->removeNotifications($like->getUser()->getId(), get_class($like), $like->getId(), Notification::TYPE_LIKE);
+        $this->get('cm.notification_center')->removeNotifications($like->getUser()->getId(), null, $like->getId(), Notification::TYPE_LIKE);
     }
 
     private function biographyUpdatedRoutine(Biography &$biography, EntityManager $em)
@@ -561,7 +600,7 @@ class DoctrineEventsListener
                 $fan->getFromUser(),
                 $fan->getFromUser(),
                 $postType,
-                get_class($fan),
+                $fan->className(),
                 array($fan->getId())
             );
         }
@@ -578,9 +617,10 @@ class DoctrineEventsListener
                 Notification::TYPE_FAN,
                 $user,
                 $fan->getFromUser(),
-                get_class($fan),
+                !is_null($fan->getUser()) ? $fan->getUser()->className() : $fan->getPage()->className(),
                 $fan->getId(),
-                $post
+                $post,
+                $fan->getPage()
             );
         }
     }
@@ -607,7 +647,7 @@ class DoctrineEventsListener
             $this->flushNeeded = true;
         }
 
-        $this->get('cm.notification_center')->removeNotifications($fan->getFromUser()->getId(), get_class($fan), $fan->getId(), Notification::TYPE_FAN);
+        $this->get('cm.notification_center')->removeNotifications($fan->getFromUser()->getId(), null, $fan->getId(), Notification::TYPE_FAN);
     }
 
     private function imagePersistedRoutine(Image &$image, EntityManager $em)
@@ -990,7 +1030,7 @@ class DoctrineEventsListener
 
         $fileNames = array();
         if (is_null($old)) {
-            if (method_exists($image, 'getImg') && !is_null($image->getImgFile())) {
+            if (method_exists($image, 'getImg') && !is_null($image->getImg())) {
                 $fileNames[] = $image->getImg();
             }
             if (method_exists($image, 'getCoverImg') && !is_null($image->getCoverImg())) {

@@ -8,6 +8,7 @@
             <div class="profile-header-buttons btn-toolbar" role="toolbar">
                 {% if is_granted('ROLE_USER') %}
                     {{ render(controller('CMBundle:Fan:button', {userId: page.id, object: page|class_name})) }}
+                    {{ include('CMBundle:PageUser:requestAdd.html.twig') }}
                 {% endif %}
             </div>
         </div>

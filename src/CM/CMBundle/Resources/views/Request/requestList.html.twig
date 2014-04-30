@@ -2,14 +2,14 @@
     <li class="object">{{ "There are no requests."|trans }}</li>
 {% else %}
     {% for request in requests %}
-        <li class="media object">
+        <li class="media object ajax-link-target">
             {% if request.entity is not null %}
-                {{ show_img_box(request.entity.image.img|imagine_filter('avatar'), {width: 50, offset: request.entity.image.imgOffset, link: request.entity.image.id is not null ? path('image_show', {id: request.entity.image.id}) : null, box_attributes: {class: 'pull-left'}}) }}
+                {{ show_img_box(request.entity.image|default_img|imagine_filter('avatar'), {width: 50, offset: request.entity.image.imgOffset|default(null), link: request.entity.image is not null ? path('image_show', {id: request.entity.image.id}) : null, box_attributes: {class: 'pull-left'}}) }}
             {% else %}
-                {{ show_img_box(request.fromUser.img|imagine_filter('avatar'), {width: 50, offset: request.fromUser.imgOffset, link: path('user_show', {slug: request.fromUser.slug}), default: 'user', box_attributes: {class: 'pull-left'}}) }}
+                {{ show_img_box(request.fromUser|default_img|imagine_filter('avatar'), {width: 50, offset: request.fromUser.imgOffset|default(null), link: path('user_show', {slug: request.fromUser.slug}), default: 'user', box_attributes: {class: 'pull-left'}}) }}
             {% endif %}
 
-            <div class="media-body ajax-link-target">
+            <div class="media-body">
                 
                 <p>{{ request_tag(request, box|default(false)) }}</p>
 

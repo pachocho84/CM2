@@ -131,30 +131,7 @@ class MultimediaController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-        //     switch (substr(preg_split('/(www|m)\./', parse_url($multimedia->getLink(), PHP_URL_HOST), null, PREG_SPLIT_NO_EMPTY)[0], 0, 4)) {
-        //         case 'yout':
-        //             $info = json_decode(file_get_contents($request->getScheme().'://www.youtube.com/oembed?format=json&url='.urlencode($multimedia->getLink())));
-        //             $multimedia->setType(Multimedia::TYPE_YOUTUBE)
-        //                 ->setLink(preg_replace('/^.*embed\/(.*)\?.*/', '$1', $info->html));
-        //             $info = json_decode(file_get_contents($request->getScheme().'://gdata.youtube.com/feeds/api/videos/'.$multimedia->getLink().'?v=2&alt=jsonc'))->data;
-        //             break;
-        //         case 'vime':
-        //             $info = json_decode(file_get_contents($request->getScheme().'://vimeo.com/api/oembed.json?url='.urlencode($multimedia->getLink())));
-        //             $multimedia->setType(Multimedia::TYPE_VIMEO)
-        //                 ->setLink($info->video_id);
-        //             break;
-        //         case 'soun':
-        //             $info = json_decode(file_get_contents($request->getScheme().'://soundcloud.com/oembed.json?url='.urlencode($multimedia->getLink())));
-        //             $multimedia->setType(Multimedia::TYPE_SOUNDCLOUD)
-        //                 ->setLink(preg_replace('/^.*tracks%2F(.*)&.*/', '$1', $info->html));
-        //             break;
-        //     }
-
-        //     $multimedia->setTitle($info->title)
-                // ->setText($info->description);
-
             $em->persist($multimedia);
-
             $em->flush();
 
             return new RedirectResponse($this->generateUrl($multimedia->getPost()->getPublisherType().'_multimedia_show', array('id' => $multimedia->getId(), 'slug' => $multimedia->getPost()->getPublisher()->getSlug())));

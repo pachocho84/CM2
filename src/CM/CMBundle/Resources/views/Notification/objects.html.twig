@@ -9,8 +9,8 @@
         
         <div class="media-body ajax-link-target">
             {{ notification_tag(notification, box|default(false)) }}
-            {#<?php echo $notification->getRawValue()->getText() ?>#}
-            <div class="small text-muted">{{ icon(notification.object|class_name) }} {{ '%date% at %time%'|trans({'%date%': notification.createdAt|humanize_day, '%time%': notification.createdAt|format_date('HH:mm')}) }}</div>
+
+            <div class="small text-muted">{{ icon((notification.object is null ? notification.post.object : notification.object)|class_name) }} {{ '%date% at %time%'|trans({'%date%': notification.createdAt|humanize_day, '%time%': notification.createdAt|format_date('HH:mm')}) }}</div>
         </div> 
     </li>
 {% else %}

@@ -45,7 +45,8 @@ class RequestCenter
             ->setFromUser($fromUser);
         if (!is_null($entity)) {
             $request->setEntity($entity);
-        } else {
+        }
+        if (!is_null($object)) {
             $request->setObject($object)
                 ->setObjectId($objectId);
         }

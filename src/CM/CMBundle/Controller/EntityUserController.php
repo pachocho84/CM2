@@ -8,10 +8,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
 use CM\CMBundle\Entity\Post;
@@ -76,7 +78,7 @@ class EntityUserController extends Controller
     }
     
     /**
-     * @Route("/add/{object}", name="entityuser_add")
+     * @Route("/add/{object}", name="entityuser_add_entityusers")
      * @Route("/addPage/{object}", name="entityuser_add_page")
      * @Template
      */
@@ -143,7 +145,7 @@ class EntityUserController extends Controller
             'error_bubbling' => false,
             'em' => $em,
             'roles' => $user->getRoles(),
-            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_USER, 'locale' => $request->getLocale())),
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_ENTITY_USER, 'locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ));
@@ -162,11 +164,92 @@ class EntityUserController extends Controller
     /**
      * @Route("/removePage", name="entityuser_remove_page")
      */
-    public function removeProtagonistAction(Request $request)
+    public function removePageAction(Request $request)
     {
         $pageIds = explode(',', $request->query->get('page_id'));
         $userIds = $em->getRepository('CMBundle:Page')->getUserIdsFor($pageIds);
 
         return new JsonResponse($user_ids);
+    }
+
+    /**
+     * @Route("/add/{entityType}/{entityId}", name="entityuser_add", requirements={"entityType"="article|disc|event", "entityId"="\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     */
+    public function addAction(Request $request, $entityType, $entityId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        if (count($em->getRepository('CMBundle:EntityUser')->findBy(array('entityId' => $objectId, 'userId' => $this->getUser()->getId()))) > 0) {
+             throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $entity = $em->getRepository('CMBundle:'.ucfirst($entityType))->findOneById($entityId);
+        if (!$entity) {
+            throw new NotFoundHttpException($this->get('translator')->trans(ucfirst($entityType).' not found.', array(), 'http-errors'));
+        }
+
+        $entityUser = new EntityUser;
+        $entityUser->setUser($this->getUser())
+            ->setStatus(EntityUser::STATUS_REQUESTED);
+        $entity->addEntityUser($entityUser);
+        $em->persist($entity);
+        $em->flush();
+
+        return $this->render('CMBundle:EntityUser:requestAdd.html.twig', array('entity' => $entity, 'entityUser' => $entityUser));
+    }
+
+    /**
+     * @Route("/{choice}/{id}", name="entityuser_update", requirements={"id" = "\d+", "choice"="accept|refuse"})
+     * @JMS\Secure(roles="ROLE_USER")
+     */
+    public function updateAction(Request $request, $id, $choice)
+    {
+        $em = $this->getDoctrine()->getManager();
+     
+        $entityUser = $em->getRepository('CMBundle:EntityUser')->findOneById($id);
+
+        if (!$entityUser) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Protagonist not found.', array(), 'http-errors'));
+        }
+
+        if ($entityUser->getUserId() != $this->getUser()->getId() && !$this->get('cm.user_authentication')->canManage($entityUser->getEntity())) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        if ($choice == 'accept') {
+            $entityUser->setStatus(EntityUser::STATUS_ACTIVE);
+        } elseif ($choice == 'refuse') {
+            $entityUser->setStatus($entityUser->getStatus() == EntityUser::STATUS_PENDING ? EntityUser::STATUS_REFUSED_ENTITY_USER : EntityUser::STATUS_REFUSED_ADMIN);
+        }
+        $em->persist($entityUser);
+        $em->flush();
+        die;
+
+        return $this->render('CMBundle:EntityUser:requestAdd.html.twig', array('entity' => $entityUser->getEntity(), 'entityUser' => $entityUser));
+    }
+
+    /**
+     * @Route("/delete/{id}", name="entityuser_delete", requirements={"id" = "\d+"})
+     * @JMS\Secure(roles="ROLE_USER")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+     
+        $entityUser = $em->getRepository('CMBundle:EntityUser')->findOneById($id);
+
+        if (!$entityUser) {
+            throw new NotFoundHttpException($this->get('translator')->trans('Protagonist not found.', array(), 'http-errors'));
+        }
+
+        if ($entityUser->getUserId() != $this->getUser()->getId() && !$this->get('cm.user_authentication')->canManage($entityUser->getEntity())) {
+            throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+        }
+
+        $em->remove($entityUser);
+        $em->flush();
+
+        return $this->render('CMBundle:EntityUser:requestAdd.html.twig', array('entity' => $entityUser->getEntity(), 'entityUser' => null));
     }
 }

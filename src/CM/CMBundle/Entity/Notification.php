@@ -18,7 +18,8 @@ class Notification
     const TYPE_LIKE = 0;
     const TYPE_COMMENT = 1;
     const TYPE_FAN = 2;
-    const TYPE_REQUEST_ACCEPTED = 3;
+    const TYPE_REQUEST_ACCEPTED_BY_USER = 3;
+    const TYPE_REQUEST_ACCEPTED_BY_ADMIN = 3;
 
     const STATUS_NEW = 0;
     const STATUS_NOTIFIED = 1;
@@ -71,13 +72,13 @@ class Notification
     /**
      * @ORM\Column(name="from_page_id", type="integer", nullable=true)
      **/
-    private $fromPageId;
+    private $pageId;
 
     /**
      * @ORM\ManyToOne(targetEntity="Page", inversedBy="notificationsOutgoing")
      * @ORM\JoinColumn(name="from_page_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
-    private $fromPage;
+    private $page;
 
     /**
      * @ORM\Column(name="post_id", type="integer", nullable=true)
@@ -248,9 +249,9 @@ class Notification
      *
      * @return User 
      */
-    public function getFromPageId()
+    public function getPageId()
     {
-        return $this->fromPageId;
+        return $this->pageId;
     }
 
     /**
@@ -259,10 +260,10 @@ class Notification
      * @param User $fromUser
      * @return Notification
      */
-    public function setFromPage(Page $fromPage = null)
+    public function setPage(Page $page = null)
     {
-        $this->fromPage = $fromPage;
-        $this->fromPageId = $fromPage->getId();
+        $this->page = $page;
+        $this->pageId = $page->getId();
     
         return $this;
     }
@@ -272,9 +273,9 @@ class Notification
      *
      * @return User 
      */
-    public function getFromPage()
+    public function getPage()
     {
-        return $this->fromPage;
+        return $this->page;
     }
 
     /**

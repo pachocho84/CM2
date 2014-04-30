@@ -118,7 +118,7 @@ abstract class Entity
     private $posts;
 
     /**
-     * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity", cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="userId", orphanRemoval=true)
      * @Assert\Valid
      */
     private $entityUsers;
@@ -483,7 +483,7 @@ abstract class Entity
         foreach ($tags as $order => $tag) {
             $entityUser->addTag($tag, $order);
         }
-        $this->entityUsers[] = $entityUser;
+        $this->entityUsers[$user->getId()] = $entityUser;
     
         return $this;
     }
@@ -492,7 +492,7 @@ abstract class Entity
     {
         if (!$this->entityUsers->contains($entityUser)) {
             $entityUser->setEntity($this);
-            $this->entityUsers[] = $entityUser;
+            $this->entityUsers[$entityUser->getUserId()] = $entityUser;
         }
 
         return $this;

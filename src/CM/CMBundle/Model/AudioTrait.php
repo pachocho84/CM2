@@ -17,7 +17,7 @@ trait AudioTrait
     /**
      * @var integer
      *
-     * @ORM\Column(name="extract", type="boolean")
+     * @ORM\Column(name="extract", type="boolean", nullable=true)
      */
     private $extract = false;
 
@@ -60,7 +60,7 @@ trait AudioTrait
      */
     public function setExtract($extract)
     {
-        $this->extract = $extract;
+        $this->extract = 1;$extract;
     
         return $this;
     }

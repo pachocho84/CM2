@@ -51,11 +51,17 @@ class PageRepository extends BaseRepository
         }
         if ($options['pageUsers']) {
             $query->addSelect('pu, puu, put, t1, tt1')
-                ->join('p.pageUsers', 'pu', '', '', 'pu.userId')
+                ->join('p.pageUsers', 'pu')
                 ->join('pu.user', 'puu')
                 ->leftJoin('pu.pageUserTags', 'put', '', '', 'put.order')
                 ->leftJoin('put.tag', 't1')
-                ->leftJoin('t1.translations', 'tt1', 'with', 'tt1.locale = :locale1')->setParameter('locale1', $options['locale']);
+                ->leftJoin('t1.translations', 'tt1', 'with', 'tt1.locale = :locale1')->setParameter('locale1', $options['locale'])
+                ->addOrderBy('puu.firstName');
+        }
+        if (!is_null($options['pageUser'])) {
+            $query->addSelect('pu')
+                ->leftJoin('p.pageUsers', 'pu', 'with', 'pu.userId = :user_id', 'pu.userId')
+                ->setParameter('user_id', $options['pageUser']);
         }
         if ($options['biography']) {
             $query->addSelect('b, bt')
@@ -106,14 +112,17 @@ class PageRepository extends BaseRepository
     {
         $options = self::getOptions($options);
 
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select('u, pu, put, t, tt')
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('u, pu')
             ->from('CMBundle:User', 'u')
-            ->join('u.userPages', 'pu')
-            ->leftJoin('pu.pageUserTags', 'put', '', '', 'put.order')
-            ->leftJoin('put.tag', 't')
-            ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
-            ->where('pu.admin = '.true)
+            ->join('u.userPages', 'pu');
+        if ($options['tags']) {
+            $query->addSelect('put, t, tt')
+                ->leftJoin('pu.pageUserTags', 'put', '', '', 'put.order')
+                ->leftJoin('put.tag', 't')
+                ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale']);
+        }
+        return $query->where('pu.admin = '.true)
             ->andWhere('pu.pageId = :page_id')->setParameter('page_id', $pageId)
             ->getQuery()->getResult();
     }

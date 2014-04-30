@@ -351,8 +351,8 @@
 {% endblock %}
 
 {% block entity_image_widget %}
-    {% set img = form.parent.parent.vars.value.img %}
-    {% set offset = form.parent.parent.vars.value.imgOffset %}
+    {% set img = form.parent.vars.value.img %}
+    {% set offset = form.parent.vars.value.imgOffset %}
     {% set width = 300 %}
     {% set height = 200 %}
     {% set offsetForm = form.parent.parent.imgOffset %}
@@ -483,7 +483,7 @@
             </div>
             <div id="collapse-protagonists" class="panel-collapse collapse in">
                 <div class="panel-body" {{ block('widget_container_attributes') }}>            
-                    <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('entityuser_add', {object: form.parent.vars.data.className|class_name, user_id: 'USER_ID', protagonist_new_id: 'NEW_ID', entity_type: 'ENTITY_TYPE'}) }}">
+                    <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('entityuser_add_entityusers', {object: form.parent.vars.data.className|class_name, user_id: 'USER_ID', protagonist_new_id: 'NEW_ID', entity_type: 'ENTITY_TYPE'}) }}">
                         <div class="collection-items">
                             <div class="{{ form.vars.id }}_control_group">
                                 <div id="protagonists_finder_container" class="form-group">
@@ -501,7 +501,7 @@
 {% endblock %}
 
 {% block _cm_cmbundle_pagemembers_pageUsers_row %}
-    <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('page_member_add', {pageId: form.parent.vars.data.id, user_id: 'USER_ID', protagonist_new_id: 'NEW_ID'}) }}">
+    <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('pageuser_add_pageusers', {pageId: form.parent.vars.data.id, user_id: 'USER_ID', protagonist_new_id: 'NEW_ID'}) }}">
         <div class="collection-items">
             <div id="protagonists_finder_container" class="form-group">
                 <input type="text" id="protagonists_finder" class="form-control" placeholder="{{ 'Add members'|trans }}" />

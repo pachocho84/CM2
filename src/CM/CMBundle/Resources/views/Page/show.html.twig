@@ -8,7 +8,7 @@
     {{ include('CMBundle:Page:membersMini.html.twig') }}
 
     {% if is_admin(page) %}
-        <a href="{{ path('page_members_settings', {slug: page.slug}) }}">{{ 'Manage members'|trans }}</a>
+        <a href="{{ path('pageuser_members_settings', {slug: page.slug}) }}">{{ 'Manage members'|trans }}</a>
     {% endif %}
 
     <div class="row" id="wall"></div>

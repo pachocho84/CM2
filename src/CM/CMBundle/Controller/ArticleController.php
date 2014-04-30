@@ -158,11 +158,6 @@ class ArticleController extends Controller
             }
             // TODO: retrieve images from article
         }
-
-        $oldEntityUsers = array();
-        foreach ($article->getEntityUsers() as $oldEntityUser) {
-            $oldEntityUsers[] = $oldEntityUser;
-        }
         
         // TODO: retrieve locales from user
 
@@ -180,7 +175,7 @@ class ArticleController extends Controller
             'error_bubbling' => false,
             'em' => $em,
             'roles' => $user->getRoles(),
-            'user_tags' => $em->getRepository('CMBundle:UserTag')->getUserTags(array('locale' => $request->getLocale())),
+            'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_ENTITY_USER, 'locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),
             'locale' => $request->getLocale()
         ))->add('save', 'submit');
@@ -188,35 +183,10 @@ class ArticleController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            foreach ($article->getEntityUsers() as $entityUser) {
-                foreach ($oldEntityUsers as $key => $toDel) {
-                    if ($toDel->getId() === $entityUser->getId()) {
-                        unset($oldEntityUsers[$key]);
-                    }
-                }
-            }
-
-            // remove the relationship between the tag and the Task
-            foreach ($oldEntityUsers as $entityUser) {
-                // remove the Task from the Tag
-                $article->removeEntityUser($entityUser);
-
-                $entityUser->setEntity(null);
-                $entityUser->setUser(null);
-    
-                $em->remove($entityUser);
-            }
-
             $em->persist($article);
-
             $em->flush();
 
             return new RedirectResponse($this->generateUrl('article_show', array('id' => $article->getId(), 'slug' => $article->getSlug())));
-        }
-
-        $users = array();
-        foreach ($article->getEntityUsers() as $entityUser) {
-            $users[] = $entityUser->getUser();
         }
             
         if (!$request->isXmlHttpRequest()) {

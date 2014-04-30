@@ -3,7 +3,7 @@
 {% endif %}
 {% for field in entityUsers %}
     {% if skip is not defined or loop.index0 >= protagonist_new_id %}
-        {% set entityUser = entity.entityUsers[loop.index0] %}
+        {% set entityUser = entity.entityUsers[(entity.entityUsers|keys)[loop.index0]] %}
         {% set user = entityUser.user %}
 
         {% if newEntry|default(false) %}

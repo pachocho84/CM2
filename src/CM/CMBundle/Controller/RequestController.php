@@ -65,9 +65,12 @@ class RequestController extends Controller
      */
     public function addAction(Request $request, $object, $objectId = null, $userId = null)
     {
+        throw new HttpException(501, $this->get('translator')->trans('Change this!', array(), 'http-errors'));
+
         $em = $this->getDoctrine()->getManager();
 
         switch ($object) {
+
             case 'Event':
                 if (count($em->getRepository('CMBundle:EntityUser')->findBy(array('entityId' => $objectId, 'userId' => $userId))) > 0) {
                      throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
@@ -215,6 +218,8 @@ class RequestController extends Controller
      */
     public function updateAction($id, $choice, $object = null)
     {
+        throw new HttpException(501, $this->get('translator')->trans('Change this!', array(), 'http-errors'));
+
         $em = $this->getDoctrine()->getManager();
 
         if (is_null($object)) {
@@ -275,6 +280,8 @@ class RequestController extends Controller
      */
     public function deleteAction($id, $object = null)
     {
+        throw new HttpException(501, $this->get('translator')->trans('Change this!', array(), 'http-errors'));
+
         $em = $this->getDoctrine()->getManager();
 
         $request = $em->getRepository('CMBundle:Request')->getRequest($id);

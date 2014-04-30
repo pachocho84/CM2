@@ -31,7 +31,7 @@ class Disc extends Entity
     private $label;
     
     /**
-     * @ORM\OneToMany(targetEntity="DiscTrack", mappedBy="disc", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="DiscTrack", mappedBy="disc", cascade={"persist", "remove"}, orphanRemoval=true)
      * @Assert\Valid
      */
     private $discTracks;
@@ -42,6 +42,9 @@ class Disc extends Entity
     public function __construct()
     {
         parent::__construct();
+        
+        $this->translate('en');
+        $this->mergeNewTranslations();
         
         $this->discTracks = new ArrayCollection();
     }

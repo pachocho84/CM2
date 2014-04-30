@@ -85,7 +85,7 @@ class Page
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity="PageUser", mappedBy="page", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="PageUser", mappedBy="page", cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="userId", orphanRemoval=true)
      */
     private $pageUsers;
 
@@ -95,7 +95,7 @@ class Page
     protected $pageTags;
     
     /**
-     * @ORM\OneToMany(targetEntity="Notification", mappedBy="fromPage", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Notification", mappedBy="page", cascade={"persist", "remove"})
      */
     private $notificationsOutgoing;
     

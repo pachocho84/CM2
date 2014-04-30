@@ -90,6 +90,10 @@ cm_cmbundle_page:
     resource: "CM\\CMBundle\\Controller\\PageController"
     type:     annotation
 
+cm_cmbundle_pageuser:
+    resource: "CM\\CMBundle\\Controller\\PageUserController"
+    type:     annotation
+
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 

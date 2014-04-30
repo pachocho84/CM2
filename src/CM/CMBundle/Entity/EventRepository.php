@@ -29,6 +29,7 @@ class EventRepository extends BaseRepository
             'mainImageOnly' => false,
             'paginate'      => true,
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
+            'protagonist'  => null,
             'protagonists'  => false,
             'tags'  => false,
             'limit'         => 25,
@@ -182,8 +183,15 @@ class EventRepository extends BaseRepository
         }
         if ($options['protagonists']) {
             $query->addSelect('eu, us')
-                ->join('e.entityUsers', 'eu')
-                ->join('eu.user', 'us');
+                ->join('e.entityUsers', 'eu', '', '', 'eu.userId')
+                ->join('eu.user', 'us')
+                ->addOrderBy('us.firstName');
+
+        }
+        if (!is_null($options['protagonist'])) {
+            $query->addSelect('eu')
+                ->leftJoin('e.entityUsers', 'eu', 'with', 'eu.userId = :user_id', 'eu.userId')
+                ->setParameter('user_id', $options['protagonist']);
         }
         if ($options['tags']) {
             $query->addSelect('eut, ta, tat')

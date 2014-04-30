@@ -165,7 +165,7 @@ class UserAuthentication
             }
 
             // 5) PROTAGONISTS
-            if (method_exists($object, 'getEntityUsers') && !$object->getEntityUsers()->isEmpty()) {
+            if (method_exists($object, 'getEntityUsers') && count($object->getEntityUsers()) > 0) {
                 $protagonists = $object->getEntityUsers();
                 foreach ($protagonists as $protagonist) {
                     if ($protagonist->getUserId() == $user_id && $protagonist->isAdmin() && $protagonist->getStatus() == EntityUser::STATUS_ACTIVE) {
