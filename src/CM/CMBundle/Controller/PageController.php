@@ -114,6 +114,14 @@ class PageController extends Controller
             $post = $this->get('cm.post_center')->getNewPost($user, $user);
 
             $page->addPost($post);
+
+            $biography = new Biography;
+
+            $bioPost = $this->get('cm.post_center')->getNewPost($user, $user);
+            $bioPost->setPage($page);
+            $biography->setPost($bioPost);
+
+            $page->setBiography($biography);
         } else {
             $page = $em->getRepository('CMBundle:Page')->getPage($slug, array('tags' => true, 'pageUsers' => true, 'biography' => true));
 

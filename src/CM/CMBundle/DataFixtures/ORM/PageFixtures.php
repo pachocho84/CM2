@@ -153,8 +153,9 @@ L'Orchestra è stata diretta, tra gli altri, da Riccardo Chailly, Georges Prêtr
             $biography->setTitle('b')
                 ->setText($p['biography']);
 
-            $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
-            $biography->setPost($post);
+            $bioPost = $this->container->get('cm.post_center')->getNewPost($user, $user);
+            $bioPost->setPage($page);
+            $biography->setPost($bioPost);
 
             $page->setBiography($biography);
             

@@ -78,7 +78,7 @@ class EntityUserController extends Controller
     }
     
     /**
-     * @Route("/add/{object}", name="entityuser_add_entityusers")
+     * @Route("/add/{object}", name="entityuser_add_entityusers", requirements={"type"="article|disc|event|multimedia"})
      * @Route("/addPage/{object}", name="entityuser_add_page")
      * @Template
      */
@@ -91,43 +91,43 @@ class EntityUserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if (!is_null($request->query->get('user_id'))) {
-            $user_id = intval($request->query->get('user_id'));
+            $userId = intval($request->query->get('user_id'));
 
-            $users = array($em->getRepository('CMBundle:User')->findOneById($user_id));
+            $users = array($em->getRepository('CMBundle:User')->findOneById($userId));
         } elseif (!is_null($request->query->get('page_id'))) {
-            $page_id = $request->query->get('page_id');
+            $pageId = $request->query->get('page_id');
 
             $excludes = explode(',', $request->query->get('exclude'));
-            $user_ids = $em->getRepository('CMBundle:Page')->getUserIdsFor($page_id, $excludes);
+            $users = $em->getRepository('CMBundle:Page')->getUsersFor($pageId, $excludes);
 
-            $target = array('page_id', $page_id);
+            $target = array('page_id', $pageId);
         } else {
             throw new HttpException(401, 'Unauthorized access.');
         }
 
         switch ($object) {
-            case 'Event':
+            case 'event':
                 $entity = new Event;
                 $formType = new EventType;
                 break;
-            case 'Disc':
+            case 'disc':
                 $entity = new Disc;
                 $formType = new DiscType;
                 break;
-            case 'Multimedia':
+            case 'multimedia':
                 $entity = new Multimedia;
                 $formType = new MultimediaType;
                 break;
-            case 'Article':
+            case 'article':
                 $entity = new Article;
                 $formType = new ArticleType;
                 break;
         }
 
-        $protagonist_new_id = $request->query->get('protagonist_new_id');
+        $protagonistNewId = $request->query->get('protagonist_new_id');
 
         // add dummies
-        foreach (range(0, $protagonist_new_id - 1) as $i) {
+        foreach (range(0, $protagonistNewId - 1) as $i) {
             $entity->addUser($this->getUser());
         }
 
@@ -157,7 +157,7 @@ class EntityUserController extends Controller
             'entityUsers' => $form->createView()['entityUsers'],
             'target' => $target,
             'joinEntityType' => 'join'.$this->get('cm.helper')->className($entity->className()), // TODO: caluculate it
-            'protagonist_new_id' => $protagonist_new_id
+            'protagonistNewId' => $protagonistNewId
         );
     }
 

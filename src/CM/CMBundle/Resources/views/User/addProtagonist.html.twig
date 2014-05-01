@@ -1,9 +1,9 @@
-{% if protagonist_new_id is not defined %}
-    {% set protagonist_new_id = 0 %}
+{% if protagonistNewId is not defined %}
+    {% set protagonistNewId = 0 %}
 {% endif %}
 {% for field in entityUsers %}
-    {% if skip is not defined or loop.index0 >= protagonist_new_id %}
-        <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user" user_id="{{ user_ids[loop.index0 - protagonist_new_id] }}" {% if target is defined %}{{ target[0] }}="{{target[1] }}"{% endif %}>
+    {% if skip is not defined or loop.index0 >= protagonistNewId %}
+        <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user" user_id="{{ user_ids[loop.index0 - protagonistNewId] }}" {% if target is defined %}{{ target[0] }}="{{target[1] }}"{% endif %}>
             <div class="form-group"><a class="pull-right btn btn-default protagonists_remove" id="protagonists_remove_{{ loop.index0 }}">{{ "Remove" | trans }}</a></div>
             {{ form_errors(field) }}
             {{ form_widget(field) }}

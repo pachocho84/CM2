@@ -10,18 +10,26 @@
     {% endstylesheets %}
 {% endblock %}
 
-{% block javascripts %}
+{% block initialJavascripts %}
     {{ parent() }}
     {% javascripts
         'lib/datetimepicker/js/bootstrap-datetimepicker.js'
         'lib/jasny-bootstrap/js/jasny-bootstrap.min.js'
         'lib/select2/select2.min.js'
-        '@CMBundle/Resources/public/js/uploadCollection.js'
-        '@CMBundle/Resources/public/js/form.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {% if app.request.locale != 'en' %}
         <script type="text/javascript" src="{{ asset('lib/datetimepicker/js/bootstrap-datetimepicker.' ~ app.request.locale ~ '.js') }}"></script>
     {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+        '@CMBundle/Resources/public/js/uploadCollection.js'
+        '@CMBundle/Resources/public/js/form.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

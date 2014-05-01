@@ -12,13 +12,15 @@
 /src/CM/CMBundle/Document/
 /src/CM/CMBundle/Resources/public/uploads/*
 !/src/CM/CMBundle/Resources/public/uploads/audio/
+/src/CM/CMBundle/Resources/public/uploads/audio/*
 !/src/CM/CMBundle/Resources/public/uploads/banners/
 !/src/CM/CMBundle/Resources/public/uploads/boxes/
 !/src/CM/CMBundle/Resources/public/uploads/images/
 /src/CM/CMBundle/Resources/public/uploads/images/*
-!/src/CM/CMBundle/Resources/public/uploads/images/full/
 /vendor/
 /web/bundles/
+/web/css/
+/web/js/
 *.DS_Store
 UPGRADE*
 *~*

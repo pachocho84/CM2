@@ -52,7 +52,7 @@
                         <div class="heading-buttons">
                             <div class="btn-group btn-group-sm">
                                 <a href="{{ path('page_edit', {slug: form.vars.data.page.slug})}}" class="btn btn-default">{{ icon('Edit') }} {{ 'Edit page'|trans }}</a>
-                                <a href="{{ path('page_members_settings', {slug: form.vars.data.page.slug}) }}" class="btn btn-default">{{ icon('Users') }} {{ 'Manage members'|trans }}</a>
+                                <a href="{{ path('pageuser_members_settings', {slug: form.vars.data.page.slug}) }}" class="btn btn-default">{{ icon('Users') }} {{ 'Manage members'|trans }}</a>
                                 <a href="{{ path('page_delete', {slug: form.vars.data.page.slug})}}" class="btn btn-default">{{ icon('Delete') }} {{ 'Delete page'|trans }}</a>
                             </div>
                         </div>

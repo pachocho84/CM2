@@ -1,8 +1,8 @@
-{% if protagonist_new_id is not defined %}
-    {% set protagonist_new_id = 0 %}
+{% if protagonistNewId is not defined %}
+    {% set protagonistNewId = 0 %}
 {% endif %}
 {% for field in pageUsers %}
-    {% if skip is not defined or loop.index0 >= protagonist_new_id %}
+    {% if skip is not defined or loop.index0 >= protagonistNewId %}
         {% set pageUser = field.vars.data %}
         {% set user = pageUser.user %}
 
@@ -41,7 +41,7 @@
             {{ show_img_box(user.img|imagine_filter('medium'), {width: 58, offset: user.imgOffset, box_attributes: {class: 'img-thumbnail pull-left'}})|raw }}
             <div class="media-body">
                 {% if user.id != app.security.token.user.id %}<a class="protagonists_remove close" aria-hidden="true" id="protagonists_remove_{{ loop.index0 }}">&times;</a>{% endif %}
-                {{ protagonist_new_id }} : {{ loop.index0 }}
+                {{ protagonistNewId }} : {{ loop.index0 }}
                 <h4 class="media-heading">{{ user }} <small>({{ requestText|trans }})</small></h4>
                 <div class="row">
                     <div class="col-md-9">

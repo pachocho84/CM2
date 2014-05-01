@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    {{ include('CMBundle:Page:membersMini.html.twig') }}
+    {{ include('CMBundle:PageUser:membersMini.html.twig') }}
 
     {% if is_admin(page) %}
         <a href="{{ path('pageuser_members_settings', {slug: page.slug}) }}">{{ 'Manage members'|trans }}</a>
