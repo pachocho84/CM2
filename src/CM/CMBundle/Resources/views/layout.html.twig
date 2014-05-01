@@ -19,7 +19,7 @@
 {% block stylesheets %}
     <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Roboto:400,300,700,400italic'>
     {% stylesheets filter='cssrewrite'
-        'css/jquery-ui.min.css'
+        'lib/jquery-ui/css/jquery-ui.min.css'
         'lib/bootstrap/css/bootstrap.min.css'
         'lib/bootstrap/css/bootstrap-theme.min.css'
         'lib/glyphicons/css/glyphicons.css'
@@ -163,7 +163,7 @@
     {% endif %}
 {% endblock %}
 
-{% block javascripts %}
+{% block initialJavascripts %}
     <script>
         var script  = "{{ app.request.scriptname }}";
         var culture = "{{ app.request.locale }}";
@@ -172,9 +172,9 @@
         //i18n.init({lng: culture});
     </script>
     {% javascripts
-        'js/jquery-2.0.3.min.js'
-        'js/jquery-ui.min.js'
-        'js/i18n/jquery-ui-i18n.min.js'
+        'bundles/cm/js/jquery-2.0.3.min.js'
+        'lib/jquery-ui/js/jquery-ui.min.js'
+        'bundles/cm/js/jquery-ui-i18n.min.js'
         'lib/bootstrap/js/bootstrap.min.js'
         'lib/autosize/jquery.autosize.min.js'
         'lib/blueimp-gallery/js/jquery.blueimp-gallery.min.js'
@@ -183,11 +183,9 @@
         'lib/typeahead/handlebars-v1.3.0.js'
         'lib/typeahead/typeahead.min.js'
         'lib/tokenfield/js/bootstrap-tokenfield.min.js'
-        'js/jquery.cycle2.min.js'
-        'js/jquery.cycle2.scrollVert.min.js'
-        'js/jquery.form.min.js'
-        'bundles/cm/js/common.js'
-        'bundles/cm/js/interface.js'
+        'bundles/cm/js/jquery.cycle2.min.js'
+        'bundles/cm/js/jquery.cycle2.scrollVert.min.js'
+        'bundles/cm/js/jquery.form.min.js'
     %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -201,4 +199,13 @@
             <script src="{{ asset_url }}"></script>
         {% endjavascripts %}
     {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'bundles/cm/js/common.js'
+        'bundles/cm/js/interface.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

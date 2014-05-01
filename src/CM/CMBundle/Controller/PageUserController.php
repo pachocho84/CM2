@@ -147,10 +147,10 @@ class PageUserController extends Controller
 
         $page = new Page;
 
-        $protagonist_new_id = $request->query->get('protagonist_new_id');
+        $protagonistNewId = $request->query->get('protagonist_new_id');
 
         // add dummies
-        foreach (range(0, $protagonist_new_id - 1) as $i) {
+        foreach (range(0, $protagonistNewId - 1) as $i) {
             $page->addUser($this->getUser());
         }
 
@@ -172,7 +172,7 @@ class PageUserController extends Controller
             'newEntry' => true,
             'page' => $page,
             'pageUsers' => $form->createView()['pageUsers'],
-            'protagonist_new_id' => $protagonist_new_id
+            'protagonistNewId' => $protagonistNewId
         );
     }
 

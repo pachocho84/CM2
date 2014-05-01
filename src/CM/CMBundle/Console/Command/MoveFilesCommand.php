@@ -18,13 +18,30 @@ class MoveFilesCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $images = getcwd().$this->getContainer()->getParameter('images_full.dir');
-        $audio = getcwd().$this->getContainer()->getParameter('audio.dir');
-        $files = array_keys($this->getContainer()->getParameter('liip_imagine.filter_sets'));
+        $imagesDir = getcwd().'/src/CM/CMBundle/Resources/public'.$this->getContainer()->getParameter('images_full.dir');
+        $audioDir = getcwd().'/src/CM/CMBundle/Resources/public'.$this->getContainer()->getParameter('audio.dir');
+        $filesDir = getcwd().'/src/CM/CMBundle/Resources/test_files';
 
         $output->writeln('Moving images...');
+        if (!file_exists($imagesDir)) {
+            mkdir($imagesDir, 0777, true);
+        }
+        $files = scandir($filesDir.'/images');
         foreach ($files as $file) {
-            $output->writeln('')
+            if (!is_file($filesDir.'/images'.'/'.$file)) continue;
+            copy($filesDir.'/images'.'/'.$file, $imagesDir.'/'.$file);
+            $output->writeln($file.' -> '.$imagesDir.'/'.$file);
+        }
+
+        $output->writeln('Moving audio files...');
+        if (!file_exists($audioDir)) {
+            mkdir($audioDir, 0777, true);
+        }
+        $files = scandir($filesDir.'/audio');
+        foreach ($files as $file) {
+            if (!is_file($filesDir.'/audio'.'/'.$file)) continue;
+            copy($filesDir.'/audio'.'/'.$file, $audioDir.'/'.$file);
+            $output->writeln($file.' -> '.$audioDir.'/'.$file);
         }
 
     }

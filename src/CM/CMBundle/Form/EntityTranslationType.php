@@ -19,7 +19,7 @@ class EntityTranslationType extends AbstractType
         }
         $builder->add('text', 'textarea', array(
             'error_bubbling' => false,
-            'attr' => array('class' => $options['articleWriter'] ? 'tinymce-advanced' : '', 'expandable' => is_null($builder->getData()) ? 'small' : ''),
+            'attr' => array('class' => $options['articleWriter'] ? 'tinymce-advanced' : '', 'expandable' => is_null($builder->getData()) ? $options['expandable_small'] : ''),
             'label' => 'Description'
         ));
         if ($options['articleWriter']) {
@@ -36,7 +36,8 @@ class EntityTranslationType extends AbstractType
             'articleWriter' => false,
             'error_bubbling' => false,
             'data_class' => 'CM\CMBundle\Entity\EntityTranslation',
-            'title' => true
+            'title' => true,
+            'expandable_small' => 'small'
         ));
     }
 

@@ -165,10 +165,10 @@ class PageRepository extends BaseRepository
         return $this->filterPagesForUser($userId)->getQuery()->getResult();
     }
 
-    public function getUserIdsFor($pageId, $excludes = array())
+    public function getUsersFor($pageId, $excludes = array())
     {
         $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('DISTINCT u.id')
+            ->select('u')
             ->from('CMBundle:User', 'u')
             ->leftJoin('u.userPages', 'ug')
             ->where('ug.page = :page_id')->setParameter('page_id', $pageId);

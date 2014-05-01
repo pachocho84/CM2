@@ -1,20 +1,20 @@
-{% if protagonist_new_id is not defined %}
-    {% set protagonist_new_id = 0 %}
+{% if protagonistNewId is not defined %}
+    {% set protagonistNewId = 0 %}
 {% endif %}
 {% for field in entityUsers %}
-    {% if skip is not defined or loop.index0 >= protagonist_new_id %}
+    {% if skip is not defined or loop.index0 >= protagonistNewId %}
         {% set entityUser = entity.entityUsers[(entity.entityUsers|keys)[loop.index0]] %}
         {% set user = entityUser.user %}
 
         {% if newEntry|default(false) %}
             {% if target is defined and target|length == 2 and target.type == 'page' %}
-                {% if attribute(target.obj.pageUsers[loop.index0 - protagonist_new_id], joinEntityType) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_NO') %}
+                {% if attribute(target.obj.pageUsers[loop.index0 - protagonistNewId], joinEntityType) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_NO') %}
                     {% set requestText = (user.sexArray('he') ~ ' will not recive a request and this element will not be visible to ' ~ user.sexArray('his') ~ ' profile due to ' ~ user.sexArray('his') ~ ' page settings') %}
                     {% set alertClass = 'alert-danger' %}
-                {% elseif attribute(target.obj.pageUsers[loop.index0 - protagonist_new_id], joinEntityType) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_YES') %}
+                {% elseif attribute(target.obj.pageUsers[loop.index0 - protagonistNewId], joinEntityType) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_YES') %}
                     {% set requestText = ('this element will be automatically added to ' ~ user.sexArray('his') ~ ' profile due to ' ~ user.sexArray('his') ~ ' page settings') %}
                     {% set alertClass = 'alert-success' %}
-                {% elseif attribute(target.obj.pageUsers[loop.index0 - protagonist_new_id], joinEntityType) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_REQUEST') %}
+                {% elseif attribute(target.obj.pageUsers[loop.index0 - protagonistNewId], joinEntityType) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_REQUEST') %}
                     {% set requestText = (user.sexArray('he') ~ ' will recive a request to add this element to ' ~ user.sexArray('his') ~ ' profile') %}
                     {% set alertClass = 'alert-warning' %}
                 {% endif %}

@@ -31,21 +31,32 @@
 
 
 {% block main %}
-    {{ form_start(form) }}
-        <div class="row">
-            <div class="col-md-4">
-                {{ form_row(form.imgFile) }}
-                {{ form_row(form.imgOffset) }}
-
-                {{ form_row(form.coverImgFile) }}
-                {{ form_row(form.coverImgOffset) }}
-            </div>
-            <div class="col-md-8">
+    <div class="box">
+        <div class="box-body">
+            {{ form_start(form) }}
+                <legend>{{ 'Basic informations'|trans }}</legend>
                 {{ form_row(form.name) }}
                 {{ form_row(form.pageTags) }}
                 {{ form_row(form.website) }}
-                {% if form.posts is defined %}{{ form_row(form.posts) }}{% endif %}
-            </div>
+
+                <legend>{{ 'Images'|trans }}</legend>
+                <div class="row">
+                    <div class="col-md-4">
+                        {{ form_row(form.imgFile) }}
+                    </div>
+                    <div class="col-md-8">
+                        {{ form_row(form.coverImgFile) }}
+                    </div>
+                </div>
+
+                <legend>{{ 'Biography'|trans }}</legend>
+                {{ form_row(form.biography) }}
+
+                {% if form.post is defined %}
+                    <legend>{{ 'Additional informations'|trans }}</legend>
+                    {{ form_row(form.post) }}
+                {% endif %}
+            {{ form_end(form) }}
         </div>
-    {{ form_end(form) }}
+    </div>
 {% endblock %}

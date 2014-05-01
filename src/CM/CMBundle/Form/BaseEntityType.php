@@ -16,8 +16,6 @@ use CM\CMBundle\Form\DataTransformer\ArrayCollectionToEntityTransformer;
 
 class BaseEntityType extends AbstractType
 {
-    protected $options;
-
     public function __construct(array $options = array())
     {
         $resolver = new OptionsResolver();
@@ -63,7 +61,8 @@ class BaseEntityType extends AbstractType
             $builder->add($builder->create('translations', new EntityTranslationType, array(
                     'error_bubbling' => false,
                     'articleWriter' => $options['articleWriter'],
-                    'title' => $options['title']
+                    'title' => $options['title'],
+                    'expandable_small' => $options['expandable_small']
                 ))->addModelTransformer(new ArrayCollectionToEntityTransformer($options['em'], 'en'))
             )->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
                 $data = $event->getData();
@@ -94,6 +93,7 @@ class BaseEntityType extends AbstractType
     {
         $resolver->setDefaults(array(
             'title' => true,
+            'expandable_small' => 'small',
             'em' => null,
             'roles' => array(),
             'locale' => 'en',

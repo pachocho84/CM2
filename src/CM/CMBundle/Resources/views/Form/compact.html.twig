@@ -67,7 +67,9 @@
     {% if type == 'submit' %}
         {% set attr = attr|merge({class: (attr.class|default('') ~ ' btn btn-primary')|trim}) %}
     {% endif %}
-    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ label|trans({}, translation_domain) }}</button>
+    <div class="text-right">
+        <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ label|trans({}, translation_domain) }}</button>
+    </div>
 {% endspaceless %}
 {% endblock button_widget %}
 
@@ -308,7 +310,7 @@
 {% block profile_image_widget %}
     {% set img = form.parent.vars.value.img %}
     {% set offset = form.parent.vars.value.imgOffset %}
-    {% set width = 300 %}
+    {% set width = 150 %}
     {% set offsetForm = form.parent.children.imgOffset %}
     {{ block('imageBox_widget') }}
 {% endblock %}
@@ -332,8 +334,8 @@
 {% block cover_image_widget %}
     {% set img = form.parent.vars.value.coverImg %}
     {% set offset = form.parent.vars.value.coverImgOffset %}
-    {% set width = 300 %}
-    {% set height = 126 %}
+    {% set width = 360 %}
+    {% set height = 150 %}
     {% set offsetForm = form.parent.children.coverImgOffset %}
     {{ block('imageBox_widget') }}
 {% endblock %}
@@ -483,7 +485,7 @@
             </div>
             <div id="collapse-protagonists" class="panel-collapse collapse in">
                 <div class="panel-body" {{ block('widget_container_attributes') }}>            
-                    <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('entityuser_add_entityusers', {object: form.parent.vars.data.className|class_name, user_id: 'USER_ID', protagonist_new_id: 'NEW_ID', entity_type: 'ENTITY_TYPE'}) }}">
+                    <div class="form-group protagonist_typeahead" typeahead-callback="{{ path('entityuser_add_entityusers', {object: form.parent.vars.data.className|class_name|lower, user_id: 'USER_ID', protagonist_new_id: 'NEW_ID', entity_type: 'ENTITY_TYPE'}) }}">
                         <div class="collection-items">
                             <div class="{{ form.vars.id }}_control_group">
                                 <div id="protagonists_finder_container" class="form-group">
