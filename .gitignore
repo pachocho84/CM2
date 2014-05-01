@@ -19,6 +19,8 @@
 /src/CM/CMBundle/Resources/public/uploads/images/*
 /vendor/
 /web/bundles/
+/web/css/
+/web/js/
 *.DS_Store
 UPGRADE*
 *~*
