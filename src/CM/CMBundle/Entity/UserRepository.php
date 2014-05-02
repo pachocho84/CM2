@@ -134,4 +134,14 @@ class UserRepository extends BaseRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getFaces($options = array())
+    {
+        $query = $this->createQueryBuilder('u')
+            ->select('u')
+            ->where('u.img is not null')
+            ->orderBy('u.id', 'desc');
+            
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
 }

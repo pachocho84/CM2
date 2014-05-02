@@ -4,12 +4,15 @@
 
 {% block section %}{{ 'Pages'|trans }}{% endblock %}
 
+
+
 {% block headingButtons %}
     <a href="{{ path('page_new') }}" class="btn btn-default btn-sm">{{ icon('Add') }} {{ 'Create a page'|trans }}</a>
 {% endblock %}
 
-{% block main %}
 
+
+{% block main %}
     <div class="box">
         <div class="box-heading">
             <h2>{{ icon('Page') }} {{ block('section') }}</h2>
@@ -25,7 +28,6 @@
             {{ form_end(form) }}
         </div>
     </div>
-  
 {% endblock %}
 
 

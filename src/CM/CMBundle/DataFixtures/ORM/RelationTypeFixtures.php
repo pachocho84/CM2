@@ -23,9 +23,27 @@ class RelationTypeFixtures extends AbstractFixture implements OrderedFixtureInte
     );
     
     private $relations = array(
-        1 => array(
-            array('user' => 2, 'type' => 4),
-            array('user' => 3, 'type' => 4),
+        1 => array( /* Ernesto Casareto */
+            array('user' => 2, 'type' => 4), /* Fabrizio Castellarin - Colleagues */
+            array('user' => 2, 'type' => 5), /* Fabrizio Castellarin - Friends */
+            array('user' => 3, 'type' => 4), /* Federica Fontana - Colleagues */
+            array('user' => 3, 'type' => 6), /* Federica Fontana - Family */
+            array('user' => 4, 'type' => 6), /* Luca Casareto - Family */
+            array('user' => 6, 'type' => 4), /* Mario Marcarini - Colleagues */
+            array('user' => 7, 'type' => 5), /* Dora Alberti - Colleagues */
+            array('user' => 8, 'type' => 5), /* Francesca Cremonini - Colleagues */
+            array('user' => 9, 'type' => 5), /* Luca Di Giulio - Colleagues */
+        ),
+        2 => array( /* Fabrizio Castellarin */
+            array('user' => 3, 'type' => 4), /* Federica Fontana - Colleagues */
+            array('user' => 5, 'type' => 5), /* Virginia Nolte - Friends */
+            array('user' => 4, 'type' => 5), /* Luca Casareto - Friends */
+        ),
+        3 => array( /* Federica Fontana */
+            array('user' => 4, 'type' => 5), /* Luca Casareto - Family */
+            array('user' => 7, 'type' => 5), /* Dora Alberti - Colleagues */
+            array('user' => 8, 'type' => 5), /* Francesca Cremonini - Colleagues */
+            array('user' => 9, 'type' => 5), /* Luca Di Giulio - Colleagues */
         ),
     );
 
