@@ -188,7 +188,6 @@ function initTags($protagonist) {
         var $tagsInput = $(elem).siblings('input[tags]');
 
         var source = $.map($tagsInput.attr('tags').split(';'), function(e) { e = e.split(','); return {label: e[1], value: e[0]}; } );
-        console.log($tagsInput.attr('tags').split(';'), source);
 
         $(elem).tokenfield({
             autocomplete: {
@@ -206,14 +205,14 @@ function initTags($protagonist) {
             showAutocompleteOnFocus: true
         });
 
-        // var $input = $(elem).siblings('.token-input.ui-autocomplete-input');
-        // $(document).on('tokenfield:createtoken', function(event) {
-        //     $input.attr('placeholder', '');
-        // }).on('tokenfield:removetoken', function(event) {
-        //     if ($tagsInput.tokenfield('getTokens', 'active').length == 0 && $input.attr('placeholder') == '') {
-        //         $input.attr('placeholder', $tagsInput.attr('placeholder'));
-        //     }
-        // });
+        var $input = $(elem).siblings('.token-input.ui-autocomplete-input');
+        $(elem).on('tokenfield:createtoken', function(event) {
+            $input.attr('placeholder', '');
+        }).on('tokenfield:removetoken', function(event) {
+            if ($(elem).tokenfield('getTokens').length == 0 && $input.attr('placeholder') == '') {
+                $input.attr('placeholder', $tagsInput.attr('placeholder'));
+            }
+        });
 
         $.each($tagsInput.val().split(';'), function(i, e) {
             e = e.split(',');

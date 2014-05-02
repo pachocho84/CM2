@@ -64,8 +64,8 @@ class EntityUserType extends AbstractType
                     'multiple' => false,
                     'choices' => array(
                         EntityUser::STATUS_REQUESTED => 'requested',
-                        EntityUser::STATUS_ACTIVE => 'active',
-                        EntityUser::STATUS_REFUSED_ADMIN => 'refused',
+                        EntityUser::STATUS_ACTIVE => 'accept',
+                        EntityUser::STATUS_REFUSED_ADMIN => 'refuse',
                     )
                 ));
             }
