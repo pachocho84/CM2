@@ -332,8 +332,13 @@ $(function() {
 
         if (pageId !== null) {
             $.get($(event.currentTarget).attr('callback').replace(/PAGE_ID/, pageId).replace(/NEW_ID/, protagonist_new_id).replace(/EXCLUDE/, $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',')), function(data) {
-                $('.protagonists_user:last').after(data);
+                $.each($('<div>' + data + '</div>').find('.protagonists_user'), function(i, elem) {
+                    $('.protagonists_user:last').after($(elem));
+                    $('.protagonists_user:last').trigger('protagonist-added');
+                });
             });
+        } else {
+            $('.protagonists_user[page_id]').remove();
         }
     });
     // relation
