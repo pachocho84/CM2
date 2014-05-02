@@ -6,6 +6,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use CM\CMBundle\Entity\Entity;
 use CM\CMBundle\Entity\EntityCategoryRepository;
 use CM\CMBundle\Entity\EntityTranslation;
 use CM\CMBundle\Entity\Image;
@@ -69,6 +72,28 @@ class EntityType extends BaseEntityType
                     'locales' => $options['locales'],
                 )
             ));
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            $pages = $options['em']->getRepository('CMBundle:Page')->getPagesForUser($options['userId'], array('isAdmin' => true));
+            $choices = array();
+            foreach ($pages as $page) {
+                $choices[$page->getId()] = $page->__toString();
+            }
+
+            if ($data instanceof Entity && count($pages) > 0) {
+                $form->add('pages', 'choice', array(
+                    'required' => false,
+                    'empty_value' => 'no page',
+                    'mapped' => false,
+                    'expanded' => false,
+                    'multiple' => false,
+                    'choices' => $choices
+                ));
+            }
+         });
     }
     
     /**
@@ -78,6 +103,7 @@ class EntityType extends BaseEntityType
     {
         $resolver->setDefaults(array(
             'title' => true,
+            'userId' => null,
             'roles' => array(),
             'tags' => array(),
             'locale' => 'en',
@@ -87,6 +113,7 @@ class EntityType extends BaseEntityType
 
         $resolver->setRequired(array(
             'em',
+            'userId',
             'roles'
         ));
 

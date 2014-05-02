@@ -211,7 +211,8 @@ class Page
         $joinDisc = PageUser::JOIN_REQUEST,
         $joinArticle = PageUser::JOIN_REQUEST,
         $notification = true,
-        $tags = null
+        $tags = null,
+        $index = null
     )
     {
         if (is_null($tags)) {
@@ -229,7 +230,7 @@ class Page
         foreach ($tags as $order => $tag) {
             $pageUser->addTag($tag, $order);
         }
-        $this->pageUsers[] = $pageUser;
+        $this->pageUsers[is_null($index) ? $user->getId() : $index] = $pageUser;
     
         return $this;
     }
@@ -238,7 +239,7 @@ class Page
     {
         if (!$this->pageUsers->contains($pageUser)) {
             $pageUser->setPage($this);
-            $this->pageUsers[] = $pageUser;
+            $this->pageUsers[$pageUsers->getUserId()] = $pageUser;
         }
 
         return $this;

@@ -26,6 +26,7 @@ class PageRepository extends BaseRepository
             'pageUsers' => false,
             'status' => null,
             'biography' => false,
+            'isAdmin' => null,
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate' => true,
             'limit'    => 25,
@@ -151,7 +152,7 @@ class PageRepository extends BaseRepository
     {
         return $this->createQueryBuilder('p')
             ->select('p, pu, put, t, tt, u')
-            ->join('p.pageUsers', 'pu')
+            ->join('p.pageUsers', 'pu', '', '', 'pu.userId')
             ->leftJoin('pu.pageUserTags', 'put', '', '', 'put.order')
             ->leftJoin('put.tag', 't')
             ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale'])
@@ -161,17 +162,22 @@ class PageRepository extends BaseRepository
             ->getQuery()->getSingleResult();
     }
 
-    public function filterPagesForUser($userId)
+    public function filterPagesForUser($userId, $options = array())
     {
-        return $this->createQueryBuilder('p')
+        $options = self::getOptions($options);
+
+        $query = $this->createQueryBuilder('p')
             ->select('p')
-            ->leftJoin('p.pageUsers', 'pu')
-            ->where('pu.userId = :user_id')->setParameter('user_id', $userId);
+            ->leftJoin('p.pageUsers', 'pu');
+        if (!is_null($options['isAdmin'])) {
+            $query->andWhere('pu.admin = '.$options['isAdmin']);
+        }
+        return $query->andWhere('pu.userId = :user_id')->setParameter('user_id', $userId);
     }
 
-    public function getPagesForUser($userId)
+    public function getPagesForUser($userId, $options = array())
     {
-        return $this->filterPagesForUser($userId)->getQuery()->getResult();
+        return $this->filterPagesForUser($userId, $options)->getQuery()->getResult();
     }
 
     public function getUsersFor($pageId, $excludes = array())
@@ -184,7 +190,7 @@ class PageRepository extends BaseRepository
         if (count($excludes) > 0) {
             $query->andWhere('u.id NOT IN (:excludes)')->setParameter('excludes', $excludes);
         }
-        return array_map(function ($user) { return $user['id']; }, $query->getQuery()->getResult());
+        return $query->getQuery()->getResult();
     }
 
     public function search($q, $limit)

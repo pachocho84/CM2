@@ -251,7 +251,6 @@ function imagePosition($img, $target) {
 $(function() {
     /* PROTAGONIST */
     if($('#protagonists_finder').length > 0) {
-        var protagonist_new_id = parseInt(1 + $('.protagonists_user:last').attr('protagonist_new_id')) + 5;
         var collection = $('.protagonist_typeahead').children('.collection-items');
         $('#protagonists_finder').on('keydown', function(event) {
             if (event.keyCode === $.ui.keyCode.TAB && $(event.currentTarget).data('ui-autocomplete').menu.active) {
@@ -297,7 +296,7 @@ $(function() {
     //     },
     // });
     $(document).on('autocompleteselect', '.protagonist_typeahead', function (event, ui) {
-        protagonist_new_id += 1;
+        var protagonist_new_id = parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1;
         var callback = null;
         if ($(event.currentTarget).is('[typeahead-callback]')) {
             callback = $(event.currentTarget).attr('typeahead-callback');
@@ -327,14 +326,12 @@ $(function() {
         }
     });
     // page
-    $(document).on('change', '.protagonists_page', function (event) {
-        event.preventDefault();
-        var page = $(this).children('option:selected').attr('value');
-        $('.protagonists_user[page_id]').each(function () {
-            $(this).remove();
-        });
-        if (page != '') {
-            $.get(script + '/protagonist/addPage?page_id=' + page + '&exclude=' + $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',') + '&protagonist_new_id=' + (parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1), function (data) {
+    $(document).on('change', '[protagonists_page]', function (event) {
+        var protagonist_new_id = parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1;
+        var pageId = $(event.currentTarget).find('option:selected').attr('value') || null;
+
+        if (pageId !== null) {
+            $.get($(event.currentTarget).attr('callback').replace(/PAGE_ID/, pageId).replace(/NEW_ID/, protagonist_new_id).replace(/EXCLUDE/, $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',')), function(data) {
                 $('.protagonists_user:last').after(data);
             });
         }

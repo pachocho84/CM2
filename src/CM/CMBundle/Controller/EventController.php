@@ -227,6 +227,7 @@ class EventController extends Controller
             'cascade_validation' => true,
             'error_bubbling' => false,
             'em' => $em,
+            'userId' => $this->getUser()->getId(),
             'roles' => $user->getRoles(),
             'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_ENTITY_USER, 'locale' => $request->getLocale())),
             'locales' => array('en'/* , 'fr', 'it' */),

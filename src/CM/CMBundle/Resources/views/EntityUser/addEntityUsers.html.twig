@@ -7,14 +7,15 @@
         {% set user = entityUser.user %}
 
         {% if newEntry|default(false) %}
-            {% if target is defined and target|length == 2 and target.type == 'page' %}
-                {% if attribute(target.obj.pageUsers[loop.index0 - protagonistNewId], joinEntityType) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_NO') %}
+            {% if page is defined %}
+            {% set pageUser = page.pageUsers[(page.pageUsers|keys)[loop.index0 - protagonistNewId]] %}
+                {% if attribute(pageUser, joinEntityType) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_NO') %}
                     {% set requestText = (user.sexArray('he') ~ ' will not recive a request and this element will not be visible to ' ~ user.sexArray('his') ~ ' profile due to ' ~ user.sexArray('his') ~ ' page settings') %}
                     {% set alertClass = 'alert-danger' %}
-                {% elseif attribute(target.obj.pageUsers[loop.index0 - protagonistNewId], joinEntityType) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_YES') %}
+                {% elseif attribute(pageUser, joinEntityType) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_YES') %}
                     {% set requestText = ('this element will be automatically added to ' ~ user.sexArray('his') ~ ' profile due to ' ~ user.sexArray('his') ~ ' page settings') %}
                     {% set alertClass = 'alert-success' %}
-                {% elseif attribute(target.obj.pageUsers[loop.index0 - protagonistNewId], joinEntityType) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_REQUEST') %}
+                {% elseif attribute(pageUser, joinEntityType) == constant('CM\\CMBundle\\Entity\\PageUser::JOIN_REQUEST') %}
                     {% set requestText = (user.sexArray('he') ~ ' will recive a request to add this element to ' ~ user.sexArray('his') ~ ' profile') %}
                     {% set alertClass = 'alert-warning' %}
                 {% endif %}
@@ -49,7 +50,7 @@
             {% endif %}
         {% endif %}
 
-        <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user media alert {{ alertClass }}" user_id="{{ user.id }}" {% if target is defined and target|length == 2 %}{{ target.type }}_id="{{ target.obj.id }}"{% endif %}>
+        <div protagonist_new_id="{{ loop.index0 }}" class="collection-item protagonists_user media alert {{ alertClass }}" user_id="{{ user.id }}" {% if page is defined %}page_id="{{ page.id }}"{% endif %}>
             {{ form_errors(field) }}
             {{ show_img_box(user.img|imagine_filter('medium'), {width: 58, offset: user.imgOffset, box_attributes: {class: 'img-thumbnail pull-left'}})|raw }}
             <div class="media-body">

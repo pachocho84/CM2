@@ -468,7 +468,8 @@ abstract class Entity
         $admin = false,
         $status = EntityUser::STATUS_PENDING,
         $notification = true,
-        $tags = null
+        $tags = null,
+        $index = null
     )
     {
         if (is_null($tags)) {
@@ -483,7 +484,7 @@ abstract class Entity
         foreach ($tags as $order => $tag) {
             $entityUser->addTag($tag, $order);
         }
-        $this->entityUsers[$user->getId()] = $entityUser;
+        $this->entityUsers[is_null($index) ? $user->getId() : $index] = $entityUser;
     
         return $this;
     }

@@ -162,14 +162,14 @@ L'Orchestra è stata diretta, tra gli altri, da Riccardo Chailly, Georges Prêtr
             $manager->persist($page);
             
             /* Users */
-            foreach ($p['users'] as $p_user) {
+            foreach ($p['users'] as $pUser) {
                 $tags = array();
-                foreach ($p_user['tags'] as $tag) {
+                foreach ($pUser['tags'] as $tag) {
                     $tags[] = $manager->merge($this->getReference('tag-'.$tag));
                 }
                 $page->addUser(
-                    $manager->merge($this->getReference('user-'.$p_user['user'])),
-                    $p_user['admin'], // admin
+                    $manager->merge($this->getReference('user-'.$pUser['user'])),
+                    $pUser['admin'], // admin
                     PageUser::STATUS_ACTIVE,
                     rand(0, 2), // join event
                     rand(0, 2), // join disc

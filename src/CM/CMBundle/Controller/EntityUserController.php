@@ -17,6 +17,7 @@ use JMS\SecurityExtraBundle\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
 use CM\CMBundle\Entity\Post;
+use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\Disc;
@@ -82,10 +83,10 @@ class EntityUserController extends Controller
      * @Route("/addPage/{object}", name="entityuser_add_page")
      * @Template
      */
-    public function addEntityUsersAction(Request $request, $object)
+    public function addEntityUsersAction(Request $request, $object = null)
     {
         if (!$request->isXmlHttpRequest() || !$this->get('cm.user_authentication')->isAuthenticated()) {
-            throw new HttpException(401, 'Unauthorized access.');
+            throw new HttpException(401, $this->get('translator')->trans('Unauthorized access.', array(), 'http-errors'));
         }
         
         $em = $this->getDoctrine()->getManager();
@@ -98,11 +99,14 @@ class EntityUserController extends Controller
             $pageId = $request->query->get('page_id');
 
             $excludes = explode(',', $request->query->get('exclude'));
-            $users = $em->getRepository('CMBundle:Page')->getUsersFor($pageId, $excludes);
+            $page = $em->getRepository('CMBundle:Page')->getPageExcludeUsers($pageId, $excludes);
 
-            $target = array('page_id', $pageId);
+            $users = array();
+            foreach ($page->getPageUsers() as $pageUser) {
+                $users[] = $pageUser->getUser();
+            }
         } else {
-            throw new HttpException(401, 'Unauthorized access.');
+            throw new HttpException(401, $this->get('translator')->trans('Unauthorized access.', array(), 'http-errors'));
         }
 
         switch ($object) {
@@ -121,14 +125,17 @@ class EntityUserController extends Controller
             case 'article':
                 $entity = new Article;
                 $formType = new ArticleType;
+            default:
+                throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
                 break;
         }
 
         $protagonistNewId = $request->query->get('protagonist_new_id');
 
         // add dummies
-        foreach (range(0, $protagonistNewId - 1) as $i) {
-            $entity->addUser($this->getUser());
+        foreach (range(0, intval($protagonistNewId) - 1) as $i) {
+            $dummyUser = new User;
+            $entity->addUser($dummyUser, null, null, null, null, '_'.$i);
         }
 
         foreach ($users as $user) {    
@@ -155,7 +162,7 @@ class EntityUserController extends Controller
             'newEntry' => true,
             'entity' => $entity,
             'entityUsers' => $form->createView()['entityUsers'],
-            'target' => $target,
+            'page' => $page,
             'joinEntityType' => 'join'.$this->get('cm.helper')->className($entity->className()), // TODO: caluculate it
             'protagonistNewId' => $protagonistNewId
         );
