@@ -23,13 +23,11 @@ use CM\CMBundle\Form\BiographyType;
 use CM\CMBundle\Form\PageImageType;
 use CM\CMBundle\Form\PageMembersType;
 
-/**
- * @Route("/pages")
- */
+
 class PageController extends Controller
 {
     /**
-     * @Route("/{page}", name = "page_index", requirements={"page" = "\d+"})
+     * @Route("/pages/{page}", name = "page_index", requirements={"page" = "\d+"})
      * @Template
      */
     public function indexAction(Request $request, $page = 1)
@@ -43,7 +41,7 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/{slug}/wall/{pageNum}", name="page_wall", requirements={"pageNum" = "\d+"})
+     * @Route("/pages/{slug}/wall/{pageNum}", name="page_wall", requirements={"pageNum" = "\d+"})
      * @Template
      */
     public function wallAction(Request $request, $slug, $pageNum = 1)
@@ -67,8 +65,8 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/{slug}/wall/{lastUpdated}/update", name="page_wall_update")
-     * @Route("/{slug}/wall/{lastUpdated}/update", name="page_show_update")
+     * @Route("/pages/{slug}/wall/{lastUpdated}/update", name="page_wall_update")
+     * @Route("/pages/{slug}/wall/{lastUpdated}/update", name="page_show_update")
      * @Template("CMBundle:Wall:posts.html.twig")
      */
     public function postsAction(Request $request, $slug, $lastUpdated)
@@ -89,8 +87,8 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/new", name="page_new") 
-     * @Route("/{slug}/edit", name="page_edit")
+     * @Route("/pages/new", name="page_new") 
+     * @Route("/account/pages/{slug}/edit", name="page_edit")
      * @JMS\Secure(roles="ROLE_USER")
      * @Template
      */
@@ -157,36 +155,7 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/account/image", name="page_image_edit")
-     * @JMS\Secure(roles="ROLE_USER")
-     * @Template
-     */
-    public function imageEditAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
- 
-        $form = $this->createForm(new PageImageType, $this->getPage(), array(
-/*             'action' => $this->generateUrl($formRoute, $formRouteArgs), */
-            'cascade_validation' => true,
-        ))->add('save', 'submit');
-        
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em->persist($this->getPage());
-            $em->flush();
-
-            return new RedirectResponse($this->generateUrl('page_show', array('slug' => $this->getPage()->getSlug())));
-        }
-        
-        return array(
-            'form' => $form->createView(),
-            'page' => $this->getPage()
-        );
-    }
-
-    /**
-     * @Route("/{slug}/multimedia/{pageNum}", name="page_multimedia")
+     * @Route("/pages/{slug}/multimedia/{pageNum}", name="page_multimedia")
      * @Template
      */
     public function multimediasAction(Request $request, $slug, $pageNum = 1)
@@ -216,7 +185,7 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/{slug}/links/{pageNum}", name="page_link")
+     * @Route("/pages/{slug}/links/{pageNum}", name="page_link")
      * @Template
      */
     public function linksAction(Request $request, $slug, $pageNum = 1)
@@ -246,9 +215,9 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/{slug}/events/{pageNum}", name = "page_events", requirements={"pageNum" = "\d+"})
-     * @Route("/{slug}/events/archive/{pageNum}", name="page_events_archive", requirements={"pageNum" = "\d+"}) 
-     * @Route("/{slug}/events/category/{category_slug}/{pageNum}", name="page_events_category", requirements={"pageNum" = "\d+"})
+     * @Route("/pages/{slug}/events/{pageNum}", name = "page_events", requirements={"pageNum" = "\d+"})
+     * @Route("/pages/{slug}/events/archive/{pageNum}", name="page_events_archive", requirements={"pageNum" = "\d+"}) 
+     * @Route("/pages/{slug}/events/category/{category_slug}/{pageNum}", name="page_events_category", requirements={"pageNum" = "\d+"})
      * @Template
      */
     public function eventsAction(Request $request, $slug, $pageNum = 1, $category_slug = null)
@@ -286,9 +255,9 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/{slug}/discs/{pageNum}", name="page_discs", requirements={"pageNum" = "\d+"})
-     * @Route("/{slug}/discs/archive/{pageNum}", name="page_discs_archive", requirements={"pageNum" = "\d+"}) 
-     * @Route("/{slug}/discs/category/{category_slug}/{pageNum}", name="page_discs_category", requirements={"pageNum" = "\d+"})
+     * @Route("/pages/{slug}/discs/{pageNum}", name="page_discs", requirements={"pageNum" = "\d+"})
+     * @Route("/pages/{slug}/discs/archive/{pageNum}", name="page_discs_archive", requirements={"pageNum" = "\d+"}) 
+     * @Route("/pages/{slug}/discs/category/{category_slug}/{pageNum}", name="page_discs_category", requirements={"pageNum" = "\d+"})
      * @Template
      */
     public function discsAction(Request $request, $slug, $pageNum = 1, $category_slug = null)
@@ -325,7 +294,7 @@ class PageController extends Controller
     }
     
     /**
-     * @Route("/{slug}/articles/{pageNum}", name="page_articles", requirements={"pageNum" = "\d+"})
+     * @Route("/pages/{slug}/articles/{pageNum}", name="page_articles", requirements={"pageNum" = "\d+"})
      * @Template
      */
     public function articlesAction(Request $request, $slug, $pageNum = 1, $category_slug = null)
@@ -353,7 +322,7 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/{pageId}/join/{object}/{userId}", name="page_change_join", requirements={"pageId" = "\d+", "userId" = "\d+"})
+     * @Route("/pages/{pageId}/join/{object}/{userId}", name="page_change_join", requirements={"pageId" = "\d+", "userId" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")
      * @Template("CMBundle:PageUser:joinType.html.twig")
      */
@@ -386,7 +355,7 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/{slug}/delete", name="page_delete")
+     * @Route("/pages/{slug}/delete", name="page_delete")
      * @JMS\Secure(roles="ROLE_USER")
      */
     public function deleteAction(Request $request, $slug)
@@ -409,7 +378,7 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/popover/{slug}", name="page_popover")
+     * @Route("/pages/popover/{slug}", name="page_popover")
      * @Template
      */
     public function popoverAction(Request $request, $slug)
@@ -432,7 +401,7 @@ class PageController extends Controller
     }
 
     /**
-     * @Route("/{slug}/{pageNum}", name="page_show", requirements={"pageNum" = "\d+"})
+     * @Route("/pages/{slug}/{pageNum}", name="page_show", requirements={"pageNum" = "\d+"})
      * @Template
      */
     public function showAction(Request $request, $slug, $pageNum = 1)

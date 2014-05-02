@@ -33,6 +33,19 @@ use CM\CMBundle\Form\PageUserCollectionType;
 class UserController extends Controller
 {
     /**
+     * @Route("/users/faces", name="user_faces")
+     * @Template
+     */
+    public function facesAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $users = $em->getRepository('CMBundle:User')->getFaces(array('paginate' => false));
+        
+        return array('users' => $users);
+    }
+    
+    /**
      * @Route("/typeaheadHint", name="user_typeahead_hint")
      */
     public function typeaheadHintAction(Request $request)
@@ -253,7 +266,6 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        $userPages = $em->getRepository('CMBundle:Page')->getPages(array('user_id' => $this->getUser()->getId(), 'paginate' => false));
         $pageUsers = $em->getRepository('CMBundle:PageUser')->getWithPage($this->getUser()->getId(), array('paginate' => false));
 
         $form = $this->createForm(new PageUserCollectionType, array('pages' => $pageUsers), array(

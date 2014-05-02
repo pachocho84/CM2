@@ -58,13 +58,6 @@
                     </li>
                     <li{% if controller_name() ~ '_' ~ action_name() in ['user_pages', 'page_edit', 'page_membersSettings'] %} class="active"{% endif %}>
                         <a href="{{ path('user_pages') }}">{{ icon('Page') }} {{ 'Pages'|trans }}</a>
-                        {% if controller_name() ~ '_' ~ action_name() in ['user_pages', 'page_edit', 'page_membersSettings'] %}
-                            <ul>
-                                {% for userPage in userPages %}
-                                    <li><a href="{{ path('page_edit', {slug: userPage.slug})}}"{% if controller_name() ~ '_' ~ action_name() == 'page_editAction' %} class="active"{% endif %}>{{ userPage }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
                     </li>
                     <li{% if controller_name() == 'education' %} class="active"{% endif %}>
                         <a href="{{ path('user_education') }}">{{ icon('Education') }} {{ 'Education'|trans }}</a>

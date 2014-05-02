@@ -1,0 +1,25 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+
+
+{% block title %}{{ 'Faces'|trans }}{% endblock %}
+{#
+{% set meta = {
+    description: biography|short_text({max: 155, stripped: true}),
+    image: user|default_img|imagine_filter('full')
+} %}
+#}
+
+
+
+{% block heading %}
+    <h2>{{ icon('User') }} {{ block('title') }}</h2>
+{% endblock %}
+
+
+
+{% block body %}
+    {% for user in users %}
+        <div class="pull-left">{{ show_img_box(user.img|imagine_filter('avatar'), {width: 50, offset: user.imgOffset,  link: path('user_show', {slug: user.slug}), publisher_box: user}) }}</div>
+    {% endfor %}
+{% endblock %}

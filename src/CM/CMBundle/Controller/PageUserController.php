@@ -49,7 +49,7 @@ class PageUserController extends Controller
     }
 
     /**
-     * @Route("/pages/{slug}/account/members", name="pageuser_members_settings", requirements={"pageNum" = "\d+"})
+     * @Route("/account/pages/{slug}/members", name="pageuser_members_settings", requirements={"pageNum" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")1
      * @Template
      */
