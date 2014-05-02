@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormEvent;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\UserTagRepository;
 use CM\CMBundle\Form\DataTransformer\UserToIntTransformer;
-use CM\CMBundle\Form\DataTransformer\TagsToArrayTransformer;
+use CM\CMBundle\Form\DataTransformer\TagsToTextTransformer;
 
 class UserTagsType extends AbstractType
 {
@@ -29,13 +29,10 @@ class UserTagsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add($builder->create('userTags', 'choice', array(
-                'attr' => array('tags' => ''),
-                'choices' => $options['tags'],
-                'multiple' => true,
-                'by_reference' => false,
-                'label' => 'Roles'
-            ))->addModelTransformer(new TagsToArrayTransformer($options['tags'], 'CM\CMBundle\Entity\UserTag')));
+        $builder->add($builder->create('userTags', 'hidden', array(
+                    'attr' => array('tags' => array_reduce($options['tags'], function($carry, $a) { return $carry.(is_null($carry) ? '' : ';').$a->getId().','.$a; }), ''),
+                    'label' => 'Roles'
+                ))->addModelTransformer(new TagsToTextTransformer($options['tags'], 'CM\CMBundle\Entity\UserTag')));
     }
     
     /**

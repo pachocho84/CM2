@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use CM\CMBundle\Entity\Page;
-use CM\CMBundle\Form\DataTransformer\TagsToArrayTransformer;
+use CM\CMBundle\Form\DataTransformer\TagsToTextTransformer;
 
 class PageType extends AbstractType
 {
@@ -17,13 +17,10 @@ class PageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name')
-            ->add($builder->create('pageTags', 'choice', array(
-                    'attr' => array('tags' => ''),
-                    'choices' => $options['tags'],
-                    'multiple' => true,
-                    'by_reference' => false,
-                    'label' => 'Types'
-                ))->addModelTransformer(new TagsToArrayTransformer($options['tags'], 'CM\CMBundle\Entity\PageTag')))
+            ->add($builder->create('pageTags', 'hidden', array(
+                    'attr' => array('tags' => array_reduce($options['tags'], function($carry, $a) { return $carry.(is_null($carry) ? '' : ';').$a->getId().','.$a; }), ''),
+                    'label' => 'Roles'
+                ))->addModelTransformer(new TagsToTextTransformer($options['tags'], 'CM\CMBundle\Entity\PageTag')))
             ->add('biography', new BiographyType, array(
                 'roles' => $options['roles'],
                 'em' => $options['em'],

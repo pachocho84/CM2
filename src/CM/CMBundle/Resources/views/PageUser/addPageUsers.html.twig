@@ -41,7 +41,6 @@
             {{ show_img_box(user.img|imagine_filter('medium'), {width: 58, offset: user.imgOffset, box_attributes: {class: 'img-thumbnail pull-left'}})|raw }}
             <div class="media-body">
                 {% if user.id != app.security.token.user.id %}<a class="protagonists_remove close" aria-hidden="true" id="protagonists_remove_{{ loop.index0 }}">&times;</a>{% endif %}
-                {{ protagonistNewId }} : {{ loop.index0 }}
                 <h4 class="media-heading">{{ user }} <small>({{ requestText|trans }})</small></h4>
                 <div class="row">
                     <div class="col-md-9">

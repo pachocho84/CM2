@@ -17,8 +17,7 @@ class ProfileType extends BaseType
     {
         // parent::buildForm($builder, $options);
     
-        $builder
-            ->add('firstName')
+        $builder->add('firstName')
             ->add('lastName')
             ->add('sex', 'choice', array(
                 'choices' => array(User::SEX_M => 'Male', User::SEX_F => 'Female'),
@@ -33,7 +32,8 @@ class ProfileType extends BaseType
             	'attr' => array('autocomplete-city' => '')
             ))
             ->add('birthDate', 'date', array(
-                'widget' => 'single_text'
+                'widget' => 'choice',
+                'years' => range(date('Y'), date('Y') - 110)
             ))
             ->add('birthDateVisible', 'choice', array(
                 'choices' => array(

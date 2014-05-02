@@ -5,7 +5,6 @@ namespace CM\CMBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use CM\CMBundle\Form\DataTransformer\TagsToArrayTransformer;
 use CM\CMBundle\Entity\PageUser;
 
 class PageUserJoinType extends AbstractType

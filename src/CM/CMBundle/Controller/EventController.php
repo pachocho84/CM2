@@ -212,6 +212,7 @@ class EventController extends Controller
                 'slug' => $slug,
                 'locale' => $request->getLocale(),
                 'protagonists' => true,
+                'status' => array(EntityUser::STATUS_PENDING, EntityUser::STATUS_ACTIVE, EntityUser::STATUS_REQUESTED),
                 'tags' => true
             ));
 

@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use CM\CMBundle\Entity\EntityUserTag;
 use CM\CMBundle\Model\ArrayContainer;
 
-class TagsToArrayTransformer implements DataTransformerInterface
+class TagsToTextTransformer implements DataTransformerInterface
 {
     private $tags;
 
@@ -35,23 +35,23 @@ class TagsToArrayTransformer implements DataTransformerInterface
 
         uasort($tags, function($a, $b) { return $a->getOrder() - $b->getOrder(); });
 
-        return array_map(function($tag) { return $tag->getTagId(); }, $tags->toArray());
+        return array_reduce($tags->toArray(), function($carry, $a) { return $carry.(is_null($carry) ? '' : ';').$a->getTagId().','.$a; });
     }
 
     /**
      * Transforms an entity to an array collection.
      */
-    public function reverseTransform($array)
+    public function reverseTransform($text)
     {
-        if (is_null($array)) {
+        if (is_null($text) || $text == '') {
             return null;
         }
-        
+
         $tags = array();
-        foreach ($array as $order => $id) {
-        	$entityUserTag = new $this->class;
-        	$entityUserTag->setTag($this->tags[$id])
-        		->setOrder($order);
+        foreach (split(';', $text) as $order => $tag) {
+            $entityUserTag = new $this->class;
+            $entityUserTag->setTag($this->tags[split(',', $tag)[0]])
+                ->setOrder($order);
             $tags[] = $entityUserTag;
         }
     

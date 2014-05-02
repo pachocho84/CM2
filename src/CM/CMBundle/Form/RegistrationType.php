@@ -26,6 +26,17 @@ class RegistrationType extends BaseType
             ))
             ->add('imgFile')
             ->add('imgOffset', 'hidden')
+            ->add('birthDate', 'date', array(
+                'widget' => 'choice',
+                'years' => range(date('Y'), date('Y') - 110)
+            ))
+            ->add('birthDateVisible', 'choice', array(
+                'choices' => array(
+                    User::BIRTHDATE_VISIBLE => 'Visible',
+                    User::BIRTHDATE_NO_YEAR => 'Not visible',
+                    User::BIRTHDATE_INVISIBLE => 'Year not visible'),
+                'expanded' => true
+            ))
             ->add('recaptcha', 'ewz_recaptcha', array(
                 'mapped' => false,
                 'constraints'   => array(

@@ -22,6 +22,7 @@ use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\Disc;
 use CM\CMBundle\Entity\Multimedia;
 use CM\CMBundle\Entity\Article;
+use CM\CMBundle\Entity\Page;
 use CM\CMBundle\Entity\PageUser;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
@@ -32,6 +33,7 @@ use CM\CMBundle\Form\DiscType;
 use CM\CMBundle\Form\MultimediaType;
 use CM\CMBundle\Form\ArticleType;
 use CM\CMBundle\Form\ImageCollectionType;
+use CM\CMBundle\Form\PageMembersType;
 
 class PageUserController extends Controller
 {
@@ -49,15 +51,18 @@ class PageUserController extends Controller
     }
 
     /**
-     * @Route("/pages/{slug}/account/members", name="pageuser_members_settings", requirements={"pageNum" = "\d+"})
+     * @Route("/account/pages/{slug}/members", name="pageuser_members_settings", requirements={"pageNum" = "\d+"})
      * @JMS\Secure(roles="ROLE_USER")1
      * @Template
      */
     public function membersSettingsAction(Request $request, $slug)
     {
         $em = $this->getDoctrine()->getManager();
-        
-        $page = $em->getRepository('CMBundle:Page')->getPage($slug, array('pageUsers' => true));
+    
+        $page = $em->getRepository('CMBundle:Page')->getPage($slug, array(
+            'pageUsers' => true,
+            'status' => array(PageUser::STATUS_PENDING, PageUser::STATUS_ACTIVE, PageUser::STATUS_REQUESTED)
+        ));
         
         if (!$page) {
             throw new NotFoundHttpException('Page not found.');
@@ -72,7 +77,7 @@ class PageUserController extends Controller
             'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_USER, 'locale' => $request->getLocale())),
             'type' => 'CM\CMBundle\Form\PageUserType',
             'em' => $em
-        ));
+        ))->add('save', 'submit');
 
         $form->handleRequest($request);
 
@@ -116,6 +121,7 @@ class PageUserController extends Controller
     /**
      * @Route("/members/add/page/{pageId}", name="pageuser_add_pageusers", requirements={"pageId"="\d+"})
      * @JMS\Secure(roles="ROLE_USER")
+     * @Template
      */
     public function addPageUsersAction(Request $request, $pageId)
     {

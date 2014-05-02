@@ -31,6 +31,7 @@ class EventRepository extends BaseRepository
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'protagonist'  => null,
             'protagonists'  => false,
+            'status' => null,
             'tags'  => false,
             'limit'         => 25,
         ), $options);
@@ -182,11 +183,18 @@ class EventRepository extends BaseRepository
             $query->andWhere('t.slug = :slug')->setParameter('slug', $options['slug']);
         }
         if ($options['protagonists']) {
-            $query->addSelect('eu, us')
-                ->join('e.entityUsers', 'eu', '', '', 'eu.userId')
-                ->join('eu.user', 'us')
+            $query->addSelect('eu, us');
+            if (is_array($options['status'])) {
+                $query->join('e.entityUsers', 'eu', 'with', 'eu.status in (:status)', 'eu.userId')
+                    ->setParameter('status', $options['status']);
+            } elseif (!is_null($options['status'])) {
+                $query->join('e.entityUsers', 'eu', 'with', 'eu.status = :status', 'eu.userId')
+                    ->setParameter('status', $options['status']);
+            } else {
+                $query->join('ep.entityUsers', 'eu', '', '', 'eu.userId');
+            }
+            $query->join('eu.user', 'us')
                 ->addOrderBy('us.firstName');
-
         }
         if (!is_null($options['protagonist'])) {
             $query->addSelect('eu')

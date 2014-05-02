@@ -56,6 +56,11 @@ class EntityUserTag
      * @ORM\Column(name="`order`", type="smallint", nullable=true)
      */
     private $order;
+    
+    public function __toString()
+    {
+        return $this->getTag()->__toString();
+    }
 
     public static function className()
     {

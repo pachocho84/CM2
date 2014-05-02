@@ -9,6 +9,15 @@
         </div>
         <div class="box-body">
             {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-sm-6">
+                        {{ form_row(form.firstName) }}
+                    </div>
+                    <div class="col-sm-6">
+                        {{ form_row(form.lastName) }}
+                    </div>
+                </div>
+
                 {{ form_widget(form) }}
                 
                 <div class="text-right">

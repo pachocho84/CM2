@@ -24,6 +24,7 @@ class PageRepository extends BaseRepository
             'pageId' => null,
             'tags' => false,
             'pageUsers' => false,
+            'status' => null,
             'biography' => false,
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate' => true,
@@ -50,9 +51,17 @@ class PageRepository extends BaseRepository
                 ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale']);
         }
         if ($options['pageUsers']) {
-            $query->addSelect('pu, puu, put, t1, tt1')
-                ->join('p.pageUsers', 'pu')
-                ->join('pu.user', 'puu')
+            $query->addSelect('pu, puu, put, t1, tt1');
+            if (is_array($options['status'])) {
+                $query->join('p.pageUsers', 'pu', 'with', 'pu.status in (:status)', 'pu.userId')
+                    ->setParameter('status', $options['status']);
+            } elseif (!is_null($options['status'])) {
+                $query->join('p.pageUsers', 'pu', 'with', 'pu.status = :status', 'pu.userId')
+                    ->setParameter('status', $options['status']);
+            } else {
+                $query->join('p.pageUsers', 'pu', '', '', 'pu.userId');
+            }
+            $query->join('pu.user', 'puu')
                 ->leftJoin('pu.pageUserTags', 'put', '', '', 'put.order')
                 ->leftJoin('put.tag', 't1')
                 ->leftJoin('t1.translations', 'tt1', 'with', 'tt1.locale = :locale1')->setParameter('locale1', $options['locale'])

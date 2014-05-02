@@ -134,6 +134,10 @@ cm_cmbundle_contacts:
     resource: "CM\\CMBundle\\Controller\\ContactsController"
     type:     annotation
 
+cm_cmbundle_staticpages:
+    resource: "CM\\CMBundle\\Controller\\StaticPagesController"
+    type:     annotation
+
 cm_cmbundle_user:
     resource: "CM\\CMBundle\\Controller\\UserController"
     type:     annotation

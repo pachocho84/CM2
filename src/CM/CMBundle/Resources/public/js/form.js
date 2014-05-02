@@ -184,8 +184,12 @@ function initAddress(container) {
 }
 
 function initTags($protagonist) {
-    $protagonist.find('input[tags]').each(function(i, elem) {
-        var source = $.map($(elem).closest('.row').find('select[tags] option:not([disabled])'), function(e) { return {label: $(e).html(), value: $(e).attr('value')}; } );
+    $protagonist.find('input[tags-input]').each(function(i, elem) {
+        var $tagsInput = $(elem).siblings('input[tags]');
+
+        var source = $.map($tagsInput.attr('tags').split(';'), function(e) { e = e.split(','); return {label: e[1], value: e[0]}; } );
+        console.log($tagsInput.attr('tags').split(';'), source);
+
         $(elem).tokenfield({
             autocomplete: {
                 source: source,
@@ -202,18 +206,20 @@ function initTags($protagonist) {
             showAutocompleteOnFocus: true
         });
 
-        var $input = $(elem).siblings('.token-input.ui-autocomplete-input');
-        $(document).on('tokenfield:createtoken', function(event) {
-            $input.attr('placeholder', '');
-        }).on('tokenfield:removetoken', function(event) {
-            if ($(elem).tokenfield('getTokens', 'active').length == 0 && $input.attr('placeholder') == '') {
-                $input.attr('placeholder', $(elem).attr('placeholder'));
-            }
-        });
+        // var $input = $(elem).siblings('.token-input.ui-autocomplete-input');
+        // $(document).on('tokenfield:createtoken', function(event) {
+        //     $input.attr('placeholder', '');
+        // }).on('tokenfield:removetoken', function(event) {
+        //     if ($tagsInput.tokenfield('getTokens', 'active').length == 0 && $input.attr('placeholder') == '') {
+        //         $input.attr('placeholder', $tagsInput.attr('placeholder'));
+        //     }
+        // });
 
-        $(elem).closest('.row').find('select[tags] option[selected]').each(function(i, e) {
-            $(elem).tokenfield('createToken', {label: $(e).html(), value: $(e).attr('value')});
-        }).filter('placeholder').remove();
+        $.each($tagsInput.val().split(';'), function(i, e) {
+            e = e.split(',');
+            $(elem).tokenfield('createToken', {label: e[1], value: e[0]});
+        });
+        $(elem).attr('placeholder', '');
     });
 }
 
@@ -602,22 +608,8 @@ $(function() {
         initTags($(event.currentTarget));
     });
 
-    $(document).on('tokenfield:preparetoken', 'input[tags]', function(event) {
-        $(event.currentTarget).closest('.row').find('select[tags] option[value="' + event.token.value + '"]').attr('selected', 'selected');
-
-        if ($(event.currentTarget).tokenfield('getTokens').length == 0) {
-            $(event.currentTarget).closest('.row').find('input.ui-autocomplete-input').attr('placeholder', '');
-        }
-    }).on('tokenfield:removetoken', 'input[tags]', function(event) {
-        $(event.currentTarget).closest('.row').find('select[tags] option[value="' + event.token.value + '"]').removeAttr('selected');
-
-        if ($(event.currentTarget).tokenfield('getTokens').length == 0) {
-            $(event.currentTarget).closest('.row').find('input.ui-autocomplete-input').attr('placeholder', $(event.currentTarget).attr('placeholder'));
-        }
-    });
-
-    $('.protagonists_user').each(function(i, elem) {
-        initTags($(elem));
+    $(document).on('tokenfield:createtoken tokenfield:removetoken', 'input[tags-input]', function(event) {
+        $(event.currentTarget).closest('.row').find('input[tags]').val($.map($(event.currentTarget).tokenfield('getTokens'), function(tag) { return tag.value + ',' + tag.label; }).join(';'));
     });
 
 

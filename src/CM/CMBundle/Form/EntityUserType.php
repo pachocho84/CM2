@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormEvent;
 use CM\CMBundle\Entity\EntityUser;
 use CM\CMBundle\Entity\UserTagRepository;
 use CM\CMBundle\Form\DataTransformer\UserToIntTransformer;
-use CM\CMBundle\Form\DataTransformer\TagsToArrayTransformer;
+use CM\CMBundle\Form\DataTransformer\TagsToTextTransformer;
 
 class EntityUserType extends AbstractType
 {
@@ -46,16 +46,30 @@ class EntityUserType extends AbstractType
                     )
                 ));
         }
-        $builder->add($builder->create('entityUserTags', 'choice', array(
-                'attr' => array('tags' => ''),
-                'choices' => $options['tags'],
-                'multiple' => true,
-                'by_reference' => false,
-                'label' => 'Roles'
-            ))->addModelTransformer(new TagsToArrayTransformer($options['tags'], 'CM\CMBundle\Entity\EntityUserTag')));
+        $builder->add($builder->create('entityUserTags', 'hidden', array(
+                    'attr' => array('tags' => array_reduce($options['tags'], function($carry, $a) { return $carry.(is_null($carry) ? '' : ';').$a->getId().','.$a; }), ''),
+                    'label' => 'Roles'
+                ))->addModelTransformer(new TagsToTextTransformer($options['tags'], 'CM\CMBundle\Entity\EntityUserTag')));
         if ($options['is_admin']) {
             $builder->add('notification');
         }
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            if ($data instanceof EntityUser && $data->getStatus() == EntityUser::STATUS_REQUESTED) {
+                $form->add('status', 'choice', array(
+                    'expanded' => true,
+                    'multiple' => false,
+                    'choices' => array(
+                        EntityUser::STATUS_REQUESTED => 'requested',
+                        EntityUser::STATUS_ACTIVE => 'active',
+                        EntityUser::STATUS_REFUSED_ADMIN => 'refused',
+                    )
+                ));
+            }
+         });
     }
     
     /**

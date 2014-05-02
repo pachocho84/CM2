@@ -2,10 +2,8 @@
 
 {% block title %}Circuito Musica{% endblock %}
 
-{% block initialJavascript %}
+{% block initialJavascripts %}
     <script>
-        // Object.defineProperty(console, '_commandLineAPI', { get : function() { throw 'We disabled it, Chrome user!' } });
-
         var documentURL = document.URL;
         history.replaceState(documentURL, document.title, documentURL);
         window.onpopstate = function() {
@@ -13,7 +11,45 @@
                 window.location.reload(true);
             }
         };
+
+        var script  = "{{ app.request.scriptname }}";
+        var culture = "{{ app.request.locale }}";
+        var logged  = "{{ is_granted('ROLE_USER') }}";
+        var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
+        //i18n.init({lng: culture});
     </script>
+
+    {% javascripts
+        'bundles/cm/js/jquery-2.0.3.min.js'
+        'lib/jquery-ui/js/jquery-ui.min.js'
+        'bundles/cm/js/jquery-ui-i18n.min.js'
+        'lib/bootstrap/js/bootstrap.min.js'
+        'lib/autosize/jquery.autosize.min.js'
+        'lib/blueimp-gallery/js/jquery.blueimp-gallery.min.js'
+        'lib/jasny-bootstrap/js/jasny-bootstrap.min.js'
+        'lib/i18next/i18next-1.7.2.min.js'
+        'lib/typeahead/handlebars-v1.3.0.js'
+        'lib/typeahead/typeahead.min.js'
+        'lib/tokenfield/js/bootstrap-tokenfield.min.js'
+        'bundles/cm/js/jquery.cycle2.min.js'
+        'bundles/cm/js/jquery.cycle2.scrollVert.min.js'
+        'bundles/cm/js/jquery.form.min.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% if is_granted('ROLE_CLIENT') or
+        (is_granted('ROLE_WRITER') and app.request.get('_route') in ['article_edit', 'article_new']) or
+        app.request.get('_route') in ['page_biography_edit'] %}
+        {% javascripts
+            'lib/tinymce/tinymce.min.js'
+            'lib/tinymce/jquery.tinymce.min.js'
+        %}
+            <script src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    {% endif %}
+    {% if is_granted('ROLE_CLIENT') %}
+        <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_canary.js"></script>
+    {% endif %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -160,44 +196,6 @@
                 </div>
             </div>
         </div>
-    {% endif %}
-{% endblock %}
-
-{% block initialJavascripts %}
-    <script>
-        var script  = "{{ app.request.scriptname }}";
-        var culture = "{{ app.request.locale }}";
-        var logged  = "{{ is_granted('ROLE_USER') }}";
-        var typeaheadHintRoute = "{{ path('user_typeahead_hint') }}";
-        //i18n.init({lng: culture});
-    </script>
-    {% javascripts
-        'bundles/cm/js/jquery-2.0.3.min.js'
-        'lib/jquery-ui/js/jquery-ui.min.js'
-        'bundles/cm/js/jquery-ui-i18n.min.js'
-        'lib/bootstrap/js/bootstrap.min.js'
-        'lib/autosize/jquery.autosize.min.js'
-        'lib/blueimp-gallery/js/jquery.blueimp-gallery.min.js'
-        'lib/jasny-bootstrap/js/jasny-bootstrap.min.js'
-        'lib/i18next/i18next-1.7.2.min.js'
-        'lib/typeahead/handlebars-v1.3.0.js'
-        'lib/typeahead/typeahead.min.js'
-        'lib/tokenfield/js/bootstrap-tokenfield.min.js'
-        'bundles/cm/js/jquery.cycle2.min.js'
-        'bundles/cm/js/jquery.cycle2.scrollVert.min.js'
-        'bundles/cm/js/jquery.form.min.js'
-    %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    {% if is_granted('ROLE_CLIENT') or
-        (is_granted('ROLE_WRITER') and app.request.get('_route') in ['article_edit', 'article_new']) or
-        app.request.get('_route') in ['page_biography_edit'] %}
-        {% javascripts
-            'lib/tinymce/tinymce.min.js'
-            'lib/tinymce/jquery.tinymce.min.js'
-        %}
-            <script src="{{ asset_url }}"></script>
-        {% endjavascripts %}
     {% endif %}
 {% endblock %}
 

@@ -24,7 +24,9 @@ class ArticleRepository extends BaseRepository
             'paginate'      => true,
             'categoryId' => null,
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
+            'protagonist'  => null,
             'protagonists'  => false,
+            'status' => null,
             'limit'         => 25,
         ), $options);
     }
@@ -88,23 +90,49 @@ class ArticleRepository extends BaseRepository
     {
         $options = self::getOptions($options);
         
-        return $this->createQueryBuilder('a')
-            ->select('a, t, i, p, l, c, u, lu, cu, pg, eu, us')
-            ->leftJoin('a.translations', 't')
-            ->leftJoin('a.images', 'i')
-            ->leftJoin('a.posts', 'p', 'WITH', 'p.type = '.Post::TYPE_CREATION)
-            ->leftJoin('p.likes', 'l')
-            ->leftJoin('p.comments', 'c')
-            ->leftJoin('p.user', 'u')
-            ->leftJoin('l.user', 'lu')
-            ->leftJoin('c.user', 'cu')
+        $query = $this->createQueryBuilder('a')
+            ->select('a, t, ec, ect, i, p, pl, plu, pc, pcu, u, pg')
+            ->join('a.translations', 't', 'with', 't.locale IN (:locales)')->setParameter('locales', $options['locales'])
+            ->join('a.category', 'ec')
+            ->join('ec.translations', 'ect', 'with', 'ect.locale = :locale')->setParameter('locale', $options['locale'])
+            ->leftJoin('a.image', 'i')
+            ->join('a.post', 'p')
+            ->leftJoin('p.likes', 'pl')
+            ->leftJoin('pl.user', 'plu')
+            ->leftJoin('p.comments', 'pc')
+            ->leftJoin('pc.user', 'pcu')
+            ->join('p.user', 'u')
             ->leftJoin('p.page', 'pg')
-            ->leftJoin('a.entityUsers', 'eu')
-            ->leftJoin('eu.user', 'us')
-            ->andWhere('a.id = :id')->setParameter('id', $id)
-            ->andWhere('t.locale IN (:locales)')->setParameter('locales', $options['locales'])
-            ->getQuery()
-            ->getSingleResult();
+            ->andWhere('a.id = :id')->setParameter('id', $id);
+        if (!is_null($options['slug'])) {
+            $query->andWhere('t.slug = :slug')->setParameter('slug', $options['slug']);
+        }
+        if ($options['protagonists']) {
+            $query->addSelect('eu, us');
+            if (is_array($options['status'])) {
+                $query->join('a.entityUsers', 'eu', 'with', 'eu.status in (:status)', 'eu.userId')
+                    ->setParameter('status', $options['status']);
+            } elseif (!is_null($options['status'])) {
+                $query->join('a.entityUsers', 'eu', 'with', 'eu.status = :status', 'eu.userId')
+                    ->setParameter('status', $options['status']);
+            } else {
+                $query->join('ep.entityUsers', 'eu', '', '', 'eu.userId');
+            }
+            $query->join('eu.user', 'us')
+                ->addOrderBy('us.firstName');
+        }
+        if (!is_null($options['protagonist'])) {
+            $query->addSelect('eu')
+                ->leftJoin('a.entityUsers', 'eu', 'with', 'eu.userId = :user_id', 'eu.userId')
+                ->setParameter('user_id', $options['protagonist']);
+        }
+        if ($options['tags']) {
+            $query->addSelect('eut, ta, tat')
+                ->leftJoin('eu.entityUserTags', 'eut', '', '', 'eut.order')
+                ->leftJoin('eut.tag', 'ta')
+                ->leftJoin('ta.translations', 'tat', 'with', 'tat.locale = :locale');
+        }
+        return $query->getQuery()->getSingleResult();
     }
 
     public function getLatests($options = array())

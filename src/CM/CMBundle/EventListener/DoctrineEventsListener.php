@@ -318,7 +318,7 @@ class DoctrineEventsListener
             $post = $page->getPost();
 
             if ($pageUser->getUserId() == $this->getUser()->getId()) {
-                $toNotify = $em->getRepository('CMBundle:Page')->getAdmins($fan->getPage()->getId());;
+                $toNotify = $em->getRepository('CMBundle:Page')->getAdmins($page->getId());;
                 $type = Notification::TYPE_REQUEST_ACCEPTED_BY_USER;
             } else {
                 $toNotify = array($pageUser->getUser());

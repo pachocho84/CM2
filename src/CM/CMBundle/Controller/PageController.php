@@ -21,7 +21,6 @@ use CM\CMBundle\Entity\Tag;
 use CM\CMBundle\Form\PageType;
 use CM\CMBundle\Form\BiographyType;
 use CM\CMBundle\Form\PageImageType;
-use CM\CMBundle\Form\PageMembersType;
 
 /**
  * @Route("/pages")
