@@ -235,6 +235,11 @@ class Page
         return $this;
     }
 
+    public function getPageUser($userId)
+    {
+        return $this->pageUsers[$userId];
+    }
+
     public function addPageUser(PageUser $pageUser)
     {
         if (!$this->pageUsers->contains($pageUser)) {

@@ -191,7 +191,7 @@ class EventRepository extends BaseRepository
                 $query->join('e.entityUsers', 'eu', 'with', 'eu.status = :status', 'eu.userId')
                     ->setParameter('status', $options['status']);
             } else {
-                $query->join('ep.entityUsers', 'eu', '', '', 'eu.userId');
+                $query->join('e.entityUsers', 'eu', '', '', 'eu.userId');
             }
             $query->join('eu.user', 'us')
                 ->addOrderBy('us.firstName');

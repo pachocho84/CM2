@@ -138,7 +138,7 @@ class EntityUserController extends Controller
             $entity->addUser($dummyUser, null, null, null, null, '_'.$i);
         }
 
-        foreach ($users as $user) {    
+        foreach ($users as $user) {
             $entity->addUser(
                 $user,
                 false, // admin

@@ -17,6 +17,7 @@ use JMS\SecurityExtraBundle\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\ORM\Translatable\CurrentLocaleCallable;
 use CM\CMBundle\Entity\Post;
+use CM\CMBundle\Entity\User;
 use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\Disc;
@@ -156,8 +157,9 @@ class PageUserController extends Controller
         $protagonistNewId = $request->query->get('protagonist_new_id');
 
         // add dummies
-        foreach (range(0, $protagonistNewId - 1) as $i) {
-            $page->addUser($this->getUser());
+        foreach (range(0, intval($protagonistNewId) - 1) as $i) {
+            $dummyUser = new User;
+            $page->addUser($dummyUser, null, null, null, null, null, null, null, '_'.$i);
         }
 
         $page->addUser(

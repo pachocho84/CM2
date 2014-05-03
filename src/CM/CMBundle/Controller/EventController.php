@@ -18,6 +18,7 @@ use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Event;
 use CM\CMBundle\Entity\EntityUser;
+use CM\CMBundle\Entity\PageUser;
 use CM\CMBundle\Entity\EventDate;
 use CM\CMBundle\Entity\Image;
 use CM\CMBundle\Entity\Multimedia;
@@ -212,7 +213,7 @@ class EventController extends Controller
                 'slug' => $slug,
                 'locale' => $request->getLocale(),
                 'protagonists' => true,
-                'status' => array(EntityUser::STATUS_PENDING, EntityUser::STATUS_ACTIVE, EntityUser::STATUS_REQUESTED),
+                // 'status' => array(EntityUser::STATUS_PENDING, EntityUser::STATUS_ACTIVE, EntityUser::STATUS_REQUESTED),
                 'tags' => true
             ));
 
@@ -237,6 +238,37 @@ class EventController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            if (isset($form['pages']) && !is_null($form['pages']->getData())) {
+                $page = $em->getRepository('CMBundle:Page')->getPage($form['pages']->getData(), array('pageUsers' => true));
+                 if (is_null($page)) {
+                    throw new NotFoundHttpException($this->get('translator')->trans('Page not found.', array(), 'http-errors'));
+                }
+                if (!$this->get('cm.user_authentication')->isAdminOf($page)) {
+                    throw new HttpException(403, $this->get('translator')->trans('You cannot do this.', array(), 'http-errors'));
+                }
+
+                foreach ($event->getEntityUsers() as &$entityUser) {
+                    if ($entityUser->getStatus() != EntityUser::STATUS_PENDING
+                        || $entityUser->getUserId() == $event->getPost()->getUserId()
+                        || $entityUser->getUserId() == $this->getUser()->getId()
+                    ) {
+                        continue;
+                    }
+
+                    $pageUser = $page->getPageUser($entityUser->getUserId());
+                    if (!is_null($pageUser)) {
+                        switch ($pageUser->getJoinEvent()) {
+                            case PageUser::JOIN_NO:
+                                $entityUser->setStatus(EntityUser::STATUS_REFUSED_ENTITY_USER);
+                                break;
+                            case PageUser::JOIN_NO:
+                                $entityUser->setStatus(EntityUser::STATUS_ACTIVE);
+                                break;
+                        }
+                    }
+                }
+            }
+
             $em->persist($event);
             $em->flush();
 

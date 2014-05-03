@@ -271,10 +271,10 @@ class RelationController extends Controller
         }
 
         if ($user->getId() == $this->getUser()->getId()) {
-            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_NO, true, array('relationTypeId' => $typeId));
-            $pendingRelations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_NO);
+            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), array('accepted' => Relation::ACCEPTED_NO, 'exclude' => true, 'relationTypeId' => $typeId));
+            $pendingRelations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), array('accepted' => Relation::ACCEPTED_NO));
         } else {
-            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_BOTH, false, array('relationTypeId' => $typeId));
+            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), array('accepted' => Relation::ACCEPTED_BOTH, 'relationTypeId' => $typeId));
         }
         
         $pagination = $this->get('knp_paginator')->paginate($relations, $page, 10);
@@ -304,11 +304,11 @@ class RelationController extends Controller
 
         if ($user->getId() == $this->getUser()->getId()) {
             $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesPerUser($user->getId(), Relation::ACCEPTED_NO, true);
-            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_NO, true);
+            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), array('accepted' => Relation::ACCEPTED_NO, 'exclude' => true));
             $pendingRelations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_NO);
         } else {
             $relationTypes = $em->getRepository('CMBundle:Relation')->getRelationTypesPerUser($user->getId(), Relation::ACCEPTED_BOTH);
-            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), Relation::ACCEPTED_BOTH);
+            $relations = $em->getRepository('CMBundle:Relation')->getRelationsPerUser($user->getId(), array('accepted' => Relation::ACCEPTED_BOTH));
         }
 
         $groupedRelations = array();

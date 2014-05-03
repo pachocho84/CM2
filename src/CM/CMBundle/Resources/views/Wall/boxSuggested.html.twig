@@ -6,7 +6,7 @@
     <div class="objects box-body clearfix">
         {% for user in suggestions %}
             <div class="media">
-                {{ show_img_box(user.img|imagine_filter('avatar'), {width: 50, offset: user.imgOffset, link: path('user_show', {'slug': user.slug}), box_attributes: {class: 'pull-left img-rounded'}, publisher_box: user}) }}
+                {{ show_img_box(user|default_img|imagine_filter('avatar'), {width: 50, offset: user.imgOffset, link: path('user_show', {'slug': user.slug}), box_attributes: {class: 'pull-left img-rounded'}, publisher_box: user}) }}
             
                 <div class="media-body">
                     <h4 class="media-heading">{{ user }}</h4>
