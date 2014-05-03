@@ -97,8 +97,7 @@ class PageController extends Controller
 
         $user = $this->getUser();
         
-        if ($slug == null) {
-            
+        if (is_null($slug)) {
             $page = new Page;
             $page->setCreator($user);
 
@@ -136,7 +135,7 @@ class PageController extends Controller
             'locale' => $request->getLocale(),
             'tags' => $em->getRepository('CMBundle:Tag')->getTags(array('type' => Tag::TYPE_PAGE, 'locale' => $request->getLocale())),
         ))->add('save', 'submit');
-        
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {

@@ -215,7 +215,7 @@ class RelationRepository extends BaseRepository
         } else {
             foreach ($relations as $relation) {
                 if (!isset($suggestions[$relation->getUserId()])) {
-                    $suggestions[$relation->getUserId()] = $relation->getUserId();
+                    $suggestions[$relation->getUserId()] = 666;
                 }
             }
         }
@@ -230,9 +230,8 @@ class RelationRepository extends BaseRepository
             ->where('u.id in (:ids)')->setParameter('ids', array_keys($suggestions))
             ->getQuery()
             ->getResult();
-
         foreach ($users as $user) {
-            $suggestions[$user->getId()]['user'] = $user;
+            $suggestions[$user->getId()] = $user;
         }
 
         return $suggestions;
