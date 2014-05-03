@@ -1,0 +1,34 @@
+{% extends 'CMBundle::layout.html.twig' %}
+
+
+
+{% block title %}{{ 'Last registered users'|trans }}{% endblock %}
+{#
+{% set meta = {
+    description: biography|short_text({max: 155, stripped: true}),
+    image: user|default_img|imagine_filter('full')
+} %}
+#}
+
+
+
+{% block heading %}
+    <h2>{{ icon('User') }} {{ block('title') }}</h2>
+{% endblock %}
+
+
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class='box'>
+                <div class="box-body">
+                    {{ include('CMBundle:User:objects.html.twig') }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+{#             <div data-ajax-url="{{ path('event_sponsored') }}"></div> #}
+        </div>
+    </div>
+{% endblock %}

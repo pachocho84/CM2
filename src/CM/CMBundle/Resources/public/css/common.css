@@ -704,6 +704,17 @@ form textarea[expandable] {
        -moz-border-radius: 3px;
             border-radius: 3px;
 }
+.box:before,
+.box:after,
+.box-body:before,
+.box-body:after {
+  content: " ";
+  display: table;
+}
+.box:after,
+.box-body:after {
+  clear: both;
+}
 /*
 .box a {
     color: #404040;

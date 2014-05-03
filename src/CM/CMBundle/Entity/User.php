@@ -170,6 +170,18 @@ class User extends BaseUser implements ParticipantInterface
     private $vip = false;
 
     /**
+     * @ORM\Column(name="biography_id", type="integer", nullable=true)
+     */
+    private $biographyId;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Biography", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="biography_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @Assert\Valid
+     */
+    private $biography;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="newsletter", type="boolean")
@@ -842,6 +854,42 @@ class User extends BaseUser implements ParticipantInterface
     public function getPosts()
     {
         return $this->posts;
+    }
+
+    /**
+     * Set biography
+     *
+     * @return Biography Id 
+     */
+    public function setBiographyId()
+    {
+        return $this->biographyId;
+    }
+
+    /**
+     * Set biography
+     *
+     * @param string $biography
+     * @return Page
+     */
+    public function setBiography($biography)
+    {
+        $this->biography = $biography;
+        if (!is_null($biography)) {
+            $this->biographyId = $biography->getId();
+        }
+    
+        return $this;
+    }
+
+    /**
+     * Get biography
+     *
+     * @return string 
+     */
+    public function getBiography()
+    {
+        return $this->biography;
     }
 
     /**

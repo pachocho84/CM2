@@ -1,0 +1,10 @@
+<div class="media object">
+    {{ show_img_box(user.img|imagine_filter('xsmall'), {width: 100, offset: user.imgOffset,  link: path('user_show', {slug: user.slug}), box_attributes: {class: 'pull-left'}, publisher_box: user}) }}
+    <div class="media-body">
+        <h4 class="media-heading">
+            {{ user }} 
+            <small>{{ user.tags|join(', ')|trim }}</small>
+        </h4>
+        {{ user.biography|short_text({max: 350}) }}
+    </div>
+</div>

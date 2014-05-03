@@ -1,0 +1,11 @@
+{% for user in users %}
+    {{ include('CMBundle:User:object.html.twig' ) }}
+{% endfor %}
+
+
+
+{% if users.paginationData.current < users.paginationData.last %}
+    <div class="well well-small" load_more>
+        <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({ 'page': users.getPaginationData.next })) }}">{{ 'Load more'|trans }}</a>
+    </div>
+{% endif %}
