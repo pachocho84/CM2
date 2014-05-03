@@ -48,9 +48,9 @@ class TagsToTextTransformer implements DataTransformerInterface
         }
 
         $tags = array();
-        foreach (split(';', $text) as $order => $tag) {
+        foreach (explode(';', $text) as $order => $tag) {
             $entityUserTag = new $this->class;
-            $entityUserTag->setTag($this->tags[split(',', $tag)[0]])
+            $entityUserTag->setTag($this->tags[explode(',', $tag)[0]])
                 ->setOrder($order);
             $tags[] = $entityUserTag;
         }

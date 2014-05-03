@@ -327,18 +327,17 @@ $(function() {
     });
     // page
     $(document).on('change', '[protagonists_page]', function (event) {
-        var protagonist_new_id = parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1;
+        $('.protagonists_user[page_id]').remove();
         var pageId = $(event.currentTarget).find('option:selected').attr('value') || null;
 
         if (pageId !== null) {
+            var protagonist_new_id = parseInt($('.protagonists_user:last').attr('protagonist_new_id')) + 1;
             $.get($(event.currentTarget).attr('callback').replace(/PAGE_ID/, pageId).replace(/NEW_ID/, protagonist_new_id).replace(/EXCLUDE/, $('.protagonists_user').map(function() { return $(this).attr('user_id'); }).get().join(',')), function(data) {
                 $.each($('<div>' + data + '</div>').find('.protagonists_user'), function(i, elem) {
                     $('.protagonists_user:last').after($(elem));
                     $('.protagonists_user:last').trigger('protagonist-added');
                 });
             });
-        } else {
-            $('.protagonists_user[page_id]').remove();
         }
     });
     // relation

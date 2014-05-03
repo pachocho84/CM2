@@ -20,6 +20,8 @@ class RelationRepository extends BaseRepository
         ), $options);
 
         return array_merge(array(
+            'accepted' => Relation::ACCEPTED_BOTH,
+            'exclude' => false,
             'relationTypeId' => null,
             'indexBy' => null,
             'groupBy' => null,
@@ -99,22 +101,26 @@ class RelationRepository extends BaseRepository
     //         ->getQuery()->getResult();
     // }
 
-    public function getRelationsPerUser($userId, $accepted = Relation::ACCEPTED_BOTH, $exclude = false, $options = array())
+    public function getRelationsPerUser($userId, $options = array())
     {
         $options = self::getOptions($options);
 
         $count = $this->createQueryBuilder('r')
             ->select('count(r.id)')
             ->leftJoin('r.relationType', 'rt')
-            ->andWhere('r.userId = :user_id')->setParameter('user_id', $userId)
-            ->andWhere('r.accepted '.($exclude ? '!=' : '=').' :accepted')->setParameter('accepted', $accepted);
+            ->andWhere('r.userId = :user_id')->setParameter('user_id', $userId);
+        if (!is_null($options['accepted'])) {
+            $count->andWhere('r.accepted '.($options['exclude'] ? '!=' : '=').' :accepted')->setParameter('accepted', $options['accepted']);
+        }
 
         $query = $this->createQueryBuilder('r')
             ->select('r, rt, u')
             ->leftJoin('r.relationType', 'rt')
             ->leftJoin('r.fromUser', 'u')
-            ->andWhere('r.userId = :user_id')->setParameter('user_id', $userId)
-            ->andWhere('r.accepted '.($exclude ? '!=' : '=').' :accepted')->setParameter('accepted', $accepted);
+            ->andWhere('r.userId = :user_id')->setParameter('user_id', $userId);
+        if (!is_null($options['accepted'])) {
+            $query->andWhere('r.accepted '.($options['exclude'] ? '!=' : '=').' :accepted')->setParameter('accepted', $options['accepted']);
+        }
 
         if (!is_null($options['relationTypeId'])) {
             $count->andWhere('rt.id = :relation_type_id')->setParameter('relation_type_id', $options['relationTypeId']);
@@ -125,6 +131,26 @@ class RelationRepository extends BaseRepository
             ->groupBy('r.relationTypeId');
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+
+    public function getRelatedUserIdsPerUser($userId, $options = array())
+    {
+        $options = self::getOptions($options);
+
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('distinct u.id')
+            ->from('CMBundle:User', 'u')
+            ->join('CMBundle:Relation', 'r', 'with', 'r.userId = :user_id')->setParameter('user_id', $userId);
+        if (!is_null($options['accepted'])) {
+            $query->andWhere('r.accepted '.($options['exclude'] ? '!=' : '=').' :accepted')->setParameter('accepted', $options['accepted']);
+        }
+
+        if (!is_null($options['relationTypeId'])) {
+            $query->leftJoin('r.relationType', 'rt')
+                ->andWhere('rt.id = :relation_type_id')->setParameter('relation_type_id', $options['relationTypeId']);
+        }
+
+        return $query->getQuery()->getResult();
     }
 
     public function getRelationsIdsPerUser($userId, $accepted = Relation::ACCEPTED_BOTH, $exclude = false, $options = array())
