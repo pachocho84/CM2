@@ -23,7 +23,7 @@ class PageUserType extends AbstractType
     
         $builder->add($builder->create('user', 'hidden')->addModelTransformer(new UserToIntTransformer($options['em'])))
             ->add($builder->create('pageUserTags', 'hidden', array(
-                    'attr' => array('tags' => array_reduce($options['tags'], function($carry, $a) { return $carry.(is_null($carry) ? '' : ';').$a->getId().','.$a; }), ''),
+                    'attr' => array('tags' => array_reduce($options['tags'], function($carry, $a) { return $carry.(is_null($carry) ? '' : ';').$a->getId().','.$a; })),
                     'label' => 'Roles'
                 ))->addModelTransformer(new TagsToTextTransformer($options['tags'], 'CM\CMBundle\Entity\PageUserTag')
             ))->add('admin', 'checkbox', array(

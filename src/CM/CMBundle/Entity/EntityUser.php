@@ -343,14 +343,4 @@ class EntityUser
     {
         return $this->notification;
     }
-
-    public function isNew()
-    {
-        return $this->isNew;
-    }
-
-    public function isUpdated()
-    {
-        return $this->isUpdated;
-    }
 }

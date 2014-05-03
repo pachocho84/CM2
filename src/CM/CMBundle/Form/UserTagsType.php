@@ -30,7 +30,7 @@ class UserTagsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add($builder->create('userTags', 'hidden', array(
-                    'attr' => array('tags' => array_reduce($options['tags'], function($carry, $a) { return $carry.(is_null($carry) ? '' : ';').$a->getId().','.$a; }, '')),
+                    'attr' => array('tags' => array_reduce($options['tags'], function($carry, $a) { return $carry.(is_null($carry) ? '' : ';').$a->getId().','.$a; })),
                     'label' => 'Roles'
                 ))->addModelTransformer(new TagsToTextTransformer($options['tags'], 'CM\CMBundle\Entity\UserTag')));
     }
