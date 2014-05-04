@@ -25,6 +25,7 @@ class UserRepository extends BaseRepository
             'paginate'      => true,
             'limit'         => 25,
             'tags'          => false,
+            'biography'     => false,
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
         ), $options);
     }
@@ -32,13 +33,14 @@ class UserRepository extends BaseRepository
     public function getUserBySlug($slug, array $options = array())
     {
         $query = $this->createQueryBuilder('u')
-            ->select('u'); 
+            ->select('u')
+            ->andWhere('u.enabled = '.true); 
                        
         if ($options['tags']) {
             $query->addSelect('ut, t, tt')
-            ->leftJoin('u.userTags', 'ut', '', '', 'ut.order')
-            ->leftJoin('ut.tag', 't')
-            ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale']);
+                ->leftJoin('u.userTags', 'ut', '', '', 'ut.order')
+                ->leftJoin('ut.tag', 't')
+                ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')->setParameter('locale', $options['locale']);
         }
         
         $query->andWhere('u.usernameCanonical = :slug')->setParameter('slug', $slug);
@@ -50,7 +52,9 @@ class UserRepository extends BaseRepository
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('p.id')->from('CMBundle:Page', 'p')
             ->leftJoin('p.pageUsers', 'pu')
+            ->leftJoin('pu.user', 'u')
             ->where('pu.userId = :user_id')->setParameter('user_id', $user_id)
+            ->andWhere('u.enabled = '.true)
             ->andWhere('pu.admin = '.true)
             ->getQuery()->getArrayResult();
         return array_map('current', $query);
@@ -74,7 +78,6 @@ class UserRepository extends BaseRepository
         return $qb->select('partial u.{id, username, usernameCanonical, firstName, lastName, img, imgOffset}')
             ->andWhere('u.id IN (:relations)')->setParameter('relations', $relations)
             ->andWhere('u.id NOT IN (:exclude)')->setParameter('exclude', $exclude)
-            // ->where('u.IsActive = ?', true)
             ->andWhere('u.enabled = '.true)
             ->andWhere(
                 $qb->expr()->orX('CONCAT(u.firstName, CONCAT(\' \', u.lastName)) LIKE :fullname', 'CONCAT(u.lastName, CONCAT(\' \', u.firstName)) LIKE :fullname')
@@ -83,21 +86,47 @@ class UserRepository extends BaseRepository
             ->getQuery()->getArrayResult();
     }
 
-    public function getLastRegisteredUsers($limit)
+    public function getLastRegisteredUsers($options = array())
     {
-        return $this->createQueryBuilder('u')
+        $options = self::getOptions($options);
+        
+        if ($options['paginate']) {
+            $count = $this->createQueryBuilder('u')
+                ->select('count(u.id)')
+                ->andWhere('u.enabled = '.true);
+        }
+        
+        $query = $this->createQueryBuilder('u')
             ->select('u')
             ->andWhere('u.enabled = '.true)
             ->andWhere('u.img is not null')
-            ->orderBy('u.id', 'desc')
-            ->setMaxResults($limit)
-            ->getQuery()->getResult();
+            ->orderBy('u.id', 'desc');
+            
+        if ($options['tags']) {
+            $query->addSelect('ut, t, tt')
+                ->leftJoin('u.userTags', 'ut', '', '', 'ut.order')
+                ->leftJoin('ut.tag', 't')
+                ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale');
+        }
+            
+        if ($options['biography']) {
+            $query->addSelect('b, bt')
+                ->leftJoin('u.biography', 'b')
+                ->leftJoin('b.translations', 'bt', 'with', 'bt.locale in (:locales)')->setParameter('locales', $options['locales']);
+        }
+        
+        if ($options['tags'] or $options['biography']) {
+            $query->setParameter('locale', $options['locale']);
+        }
+            
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }
 
     public function getWith($id, $what = array())
     {
         $query = $this->createQueryBuilder('u')
             ->select('u')
+            ->andWhere('u.enabled = '.true)
             ->andWhere('u.id = :id')->setParameter('id', $id);
             foreach ($what as $prop) {
                 $query->leftJoin('u.'.$prop, $prop);
@@ -109,6 +138,7 @@ class UserRepository extends BaseRepository
     {
         $query = $this->createQueryBuilder('u')
             ->select('u, ut, t, tt')
+            ->andWhere('u.enabled = '.true)
             ->leftJoin('u.userTags', 'ut', '', '', 'ut.order')
             ->leftJoin('ut.tag', 't')
             ->leftJoin('t.translations', 'tt', 'with', 'tt.locale = :locale')
@@ -121,7 +151,6 @@ class UserRepository extends BaseRepository
     {
         $qb = $this->createQueryBuilder('u');
         return $qb->select('u')
-            // ->where('u.IsActive = ?', true)
             ->andWhere('u.enabled = '.true)
             ->andWhere(
                 $qb->expr()->orX(
@@ -137,8 +166,11 @@ class UserRepository extends BaseRepository
 
     public function getFaces($options = array())
     {
+        $options = self::getOptions($options);
+        
         $query = $this->createQueryBuilder('u')
             ->select('u')
+            ->andWhere('u.enabled = '.true)
             ->where('u.img is not null')
             ->orderBy('u.id', 'desc');
             

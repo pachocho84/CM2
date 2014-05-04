@@ -33,6 +33,24 @@ use CM\CMBundle\Form\PageUserCollectionType;
 class UserController extends Controller
 {
     /**
+     * @Route("/users/{page}", name="user_index", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function indexAction(Request $request, $page = 1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $users = $em->getRepository('CMBundle:User')->getLastRegisteredUsers(array('tags' => true, 'biography' => true));
+        $pagination = $this->get('knp_paginator')->paginate($users, $page, 10);
+        
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('CMBundle:User:objects.html.twig', array('users' => $pagination, 'page' => $page));
+        }
+        
+        return array('users' => $pagination);
+    }
+    
+    /**
      * @Route("/users/faces", name="user_faces")
      * @Template
      */

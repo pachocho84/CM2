@@ -79,7 +79,7 @@ class WallController extends Controller
 
             if ($page == 1) {
                 // Last registered users
-                $boxes['lastUsers;'.$order['last']] = $this->renderView('CMBundle:Wall:boxLastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(28)));
+                $boxes['lastUsers;'.$order['last']] = $this->renderView('CMBundle:Wall:boxLastUsers.html.twig', array('lastUsers' => $em->getRepository('CMBundle:User')->getLastRegisteredUsers(array('limit' => 28, 'paginate' => false))));
 
                 // Reviews 
                 if (in_array($request->get('_route'), array('wall_index', 'wall_newspaper'))) {
