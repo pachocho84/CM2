@@ -220,6 +220,13 @@ services:
             entityManager: @doctrine.orm.entity_manager
             helper: @cm.helper
 
+    cm.validator.city:
+        class: CM\CMBundle\Validator\Constraints\CityValidator
+        arguments:
+            session: @session
+        tags:
+            - { name: validator.constraint_validator, alias: cm_cmbundle.city }
+
     cm.form.type.eventdate:
         class: CM\CMBundle\Form\EventDateType
         arguments:

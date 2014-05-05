@@ -755,6 +755,7 @@ class DoctrineEventsListener
         }
 
         foreach ($images as $type => $img) {
+        $this->container->get('logger')->info('CMBundle_info '.$type.' '.$img); // ##########################################################################
             $album = new ImageAlbum;
             $image = new Image;
 

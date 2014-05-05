@@ -433,10 +433,17 @@ class ImageAlbumController extends Controller
             ));
         }
 
+        if ($request->get('_route') == 'user_images') {
+            $lastWork = $em->getRepository('CMBundle:Work')->getLast($publisher->getId());
+            $lastEducation = $em->getRepository('CMBundle:Education')->getLast($publisher->getId());
+        }
+
         return new Response($this->renderView($template, array(
             $publisherType => $publisher,
             'albums' => $pagination,
-            'count' => $this->countAlbumsAndImages(array($publisherType.'Id' => $publisher->getId()))
+            'count' => $this->countAlbumsAndImages(array($publisherType.'Id' => $publisher->getId())),
+            'lastWork' => $lastWork,
+            'lastEducation' => $lastEducation,
         )));
     }
 
@@ -506,9 +513,8 @@ class ImageAlbumController extends Controller
             $template = 'CMBundle:Page:imagesEntities.html.twig';
         }
 
-        $entities = $em->getRepository('CMBundle:Image')->getEntityImages(array(
-            $publisherType.'Id' => $publisher->getId(),
-            // 'paginate' => false
+        $entities = $em->getRepository('CMBundle:ImageAlbum')->getEntities(array(
+            $publisherType.'Id' => $publisher->getId()
         ));
         
         $pagination = $this->get('knp_paginator')->paginate($entities, $page, 40);

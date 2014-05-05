@@ -3,17 +3,17 @@
     <div class="box-heading box-heading-big">
         <div class="media">
             <div class="pull-right">
-                <a href="{{ path('imagealbum_new') }}" class="btn btn-default btn-sm">{{ icon('Plus')|raw }} {{ 'Create a new album'|trans }}</a>
+                <a href="{{ path('imagealbum_new') }}" class="btn btn-default btn-sm">{{ icon('Plus') }} {{ 'Create a new album'|trans }}</a>
             </div>
             <div class="media-body">
-                <h2>{{ icon('Image')|raw }} {{ 'Albums'|trans }}</h2>
+                <h2>{{ icon('Image') }} {{ 'Albums'|trans }}</h2>
             </div>
         </div>
-        {{ include('CMBundle:ImageAlbum:menu.html.twig', {'inAlbumsPage': true}) }}
+        {{ include('CMBundle:ImageAlbum:menu.html.twig', {inAlbumsPage: true}) }}
     </div>
 
     <div class="media-list objects">
-        {{ include('CMBundle:ImageAlbum:albumList.html.twig', {'link': publisherType ~ '_album'}) }}
+        {{ include('CMBundle:ImageAlbum:albumList.html.twig', {link: publisherType ~ '_album'}) }}
     </div>
     
 </div>

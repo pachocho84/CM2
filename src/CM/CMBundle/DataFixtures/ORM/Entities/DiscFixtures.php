@@ -426,6 +426,15 @@ Angelo Formenti',
             ->setUser($user);
         $disc->setImage($image);
 
+        for ($j = 0; $j < 8; $j++) {
+            $newImage = new Image;
+            $newImage->setImg(DiscFixtures::$discs[$i]['img'])
+                ->setText('image #'.($j + 1).' for disc "'.$disc->getTitle().'"')
+                ->setMain(true)
+                ->setUser($user);
+            $disc->addImage($newImage);
+        }
+
         $manager->persist($disc);
         
         if ($i % 10 == 9) {

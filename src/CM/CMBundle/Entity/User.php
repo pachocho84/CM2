@@ -4,6 +4,7 @@ namespace CM\CMBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use CM\CMBundle\Validator\Constraints as CMAssert;
 use FOS\UserBundle\Model\User as BaseUser;
 use FOS\MessageBundle\Model\ParticipantInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -150,14 +151,16 @@ class User extends BaseUser implements ParticipantInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="city_birth", type="string", length=50)
+     * @ORM\Column(name="city_birth", type="string", length=50, nullable=true)
+     * @CMAssert\City
      */
     private $cityBirth; // TODO: city validation
 
     /**
      * @var string
      *
-     * @ORM\Column(name="city_current", type="string", length=50)
+     * @ORM\Column(name="city_current", type="string", length=50, nullable=true)
+     * @CMAssert\City
      */
     private $cityCurrent; // TODO: city validation
 

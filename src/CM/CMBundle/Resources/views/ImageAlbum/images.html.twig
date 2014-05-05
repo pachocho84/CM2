@@ -42,7 +42,7 @@
                 <h2>{{ icon('Image') }} {{ 'Images'|trans }}</h2>
             </div>
         </div>
-        {#{{ include('CMBundle:ImageAlbum:menu.html.twig', {'inImagesPage': true}) }}#}
+        {{ include('CMBundle:ImageAlbum:menu.html.twig', {'inImagesPage': true}) }}
     </div>
 
     <ul class="list-unstyled objects images{% if album is defined %} images-sortable{% endif %} clearfix">

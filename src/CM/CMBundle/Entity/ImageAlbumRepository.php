@@ -23,6 +23,7 @@ class ImageAlbumRepository extends BaseRepository
             'userId'       => null,
             'pageId'       => null,
             'type'         => ImageAlbum::TYPE_ALBUM,
+            'entities' => false,
             'entityType' => null,
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'after' => null,
@@ -44,7 +45,7 @@ class ImageAlbumRepository extends BaseRepository
             ->from('CMBundle:Entity', 'e')
             ->join('e.post', 'p')
             ->where('e not instance of :image_album')->setParameter('image_album', 'image_album')
-            ->andWhere('size(e.images) > 0');
+            ->andWhere('size(e.images) > 1');
         $images = $this->getEntityManager()->createQueryBuilder()
             ->select('count(i.id)')
             ->from('CMBundle:Image', 'i')
@@ -127,7 +128,7 @@ class ImageAlbumRepository extends BaseRepository
             ->select('p')
             ->from('CMBundle:Post', 'p')
             ->leftJoin('p.entity', 'e')
-            ->leftJoin('p.entity', 'a', 'with', 'a instance of CMBundle:ImageAlbum')
+            ->leftJoin('p.entity', 'a', 'with', 'a instance of :image_album')->setParameter('image_album', 'image_album')
             ->where('a.id = :id')->setParameter('id', $id);
         if (!is_null($options['userId'])) {
             $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId']);
@@ -154,29 +155,71 @@ class ImageAlbumRepository extends BaseRepository
         $options = self::getOptions($options);
 
         $count = $this->createQueryBuilder('a')
-            ->select('count(a.id)')
-            ->innerJoin('a.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION);
+            ->select('count(a.id)');
         if (!is_null($options['userId'])) {
-            $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
+            $count->join('a.post', 'p')
+                ->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
                 ->andWhere('p.pageId is NULL');
         }
         if (!is_null($options['pageId'])) {
-            $count->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+            $count->join('a.post', 'p')
+                ->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
 
         $query = $this->createQueryBuilder('a')
             ->select('a')
-            ->innerJoin('a.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
-            ->leftJoin('a.images', 'i');
+            ->join('a.images', 'i');
         if (!is_null($options['userId'])) {
-            $query->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
+            $query->join('a.post', 'p')
+                ->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
                 ->andWhere('p.pageId is NULL');
         }
         if (!is_null($options['pageId'])) {
-            $query->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+            $query->join('a.post', 'p')
+                ->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
         }
-        $query->orderBy('i.id', 'desc')
-            ->addOrderBy('a.type');
+        $query->orderBy('a.type')
+            ->addOrderBy('i.id', 'desc');
+
+        return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
+    }
+
+    public function getEntities($options = array())
+    {
+        $options = self::getOptions($options);
+
+        $count = $this->getEntityManager()->createQueryBuilder()
+            ->select('count(e.id)')
+            ->from('CMBundle:Entity', 'e');
+        if (!is_null($options['userId'])) {
+            $count->join('e.entityUsers', 'eu')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
+        }
+        if (!is_null($options['pageId'])) {
+            $count->join('e.post', 'p')
+                ->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+        }
+        $count->andWhere('e not instance of :image_album')->setParameter('image_album', 'image_album')
+            ->andWhere('size(e.images) > 1');
+
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->select('e')
+            ->from('CMBundle:Entity', 'e')
+            ->join('e.images', 'i');
+        if (!is_null($options['userId'])) {
+            $query->join('e.entityUsers', 'eu')
+                ->andWhere('eu.userId = :user_id')->setParameter('user_id', $options['userId'])
+                ->andWhere('eu.status = '.EntityUser::STATUS_ACTIVE);
+        }
+        if (!is_null($options['pageId'])) {
+            $query->join('e.post', 'p')
+                ->andWhere('p.pageId = :page_id')->setParameter('page_id', $options['pageId']);
+        }
+        $query->andWhere('e not instance of :image_album')->setParameter('image_album', 'image_album')
+            ->andWhere('size(e.images) > 1')
+            ->orderBy('e.id', 'desc')
+            ->addOrderBy('i.id', 'desc');
 
         return $options['paginate'] ? $query->getQuery()->setHint('knp_paginator.count', $count->getQuery()->getSingleScalarResult()) : $query->setMaxResults($options['limit'])->getQuery()->getResult();
     }

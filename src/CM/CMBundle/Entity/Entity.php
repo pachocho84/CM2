@@ -42,21 +42,21 @@ abstract class Entity
      *
      * @ORM\Column(name="type", type="smallint", nullable=true)
      */
-    private $type;
+    protected $type;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="source", type="string", length=150, nullable=true)
      */
-    private $source;
+    protected $source;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="date", nullable=true)
      */
-    private $date;
+    protected $date;
 
     /**
      * @ORM\ManyToOne(targetEntity="EntityCategory", inversedBy="entities")
@@ -64,64 +64,64 @@ abstract class Entity
      * @Assert\Valid
      * @Assert\NotNull(groups="Event")
      */
-    private $category;
+    protected $category;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="image_id", type="integer", nullable=true)
      */
-    private $imageId;
+    protected $imageId;
 
     /**
      * @ORM\ManyToOne(targetEntity="Image")
      * @ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
-    private $image;
+    protected $image;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="img_offset", type="decimal", precision=10, scale=2, nullable=true)
      */
-    private $imgOffset;
+    protected $imgOffset;
     
     /**
-     * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Image", mappedBy="entity", cascade={"persist", "remove"}, orphanRemoval=true)
      * @Assert\Valid
      */
-    private $images;
+    protected $images;
     
     /**
-     * @ORM\OneToMany(targetEntity="Multimedia", mappedBy="entity", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Multimedia", mappedBy="entity", cascade={"persist", "remove"}, orphanRemoval=true)
      * @Assert\Valid
      */
-    private $multimedia;
+    protected $multimedia;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="post_id", type="integer", nullable=true)
      */
-    private $postId;
+    protected $postId;
 
     /**
      * @ORM\ManyToOne(targetEntity="Post", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="post_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      **/
-    private $post;
+    protected $post;
 
     /**
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="entity", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="entity", cascade={"persist", "remove"}, orphanRemoval=true)
      * @Assert\Valid
      */
-    private $posts;
+    protected $posts;
 
     /**
      * @ORM\OneToMany(targetEntity="EntityUser", mappedBy="entity", cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="userId", orphanRemoval=true)
      * @Assert\Valid
      */
-    private $entityUsers;
+    protected $entityUsers;
     
     public function __construct()
     {
