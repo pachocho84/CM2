@@ -24,6 +24,7 @@ class ImageRepository extends BaseRepository
             'pageId'       => null,
             'next' => null,
             'entityId' => null,
+            'noEntity' => false,
             'type'       => ImageAlbum::TYPE_ALBUM,
             'locales'       => array_values(array_merge(array('en' => 'en'), array($options['locale'] => $options['locale']))),
             'paginate'      => true,
@@ -70,6 +71,17 @@ class ImageRepository extends BaseRepository
             $count->andWhere('i.entityId = :album_id')->setParameter('album_id', $options['albumId']);
             $query->andWhere('i.entityId = :album_id')->setParameter('album_id', $options['albumId'])
                 ->orderBy('i.sequence');
+        } elseif ($options['noEntity']) {
+            $count->leftJoin('i.entity', 'e')
+                ->andWhere($count->expr()->orX(
+                'i.entityId is null',
+                'e instance of :image_album'
+            ))->setParameter('image_album', 'image_album');
+            $query->leftJoin('i.entity', 'e')
+                ->andWhere($query->expr()->orX(
+                'i.entityId is null',
+                'e instance of :image_album'
+            ))->setParameter('image_album', 'image_album');
         }
         if (!is_null($options['userId'])) {
             $count->andWhere('i.userId = :user_id')->setParameter('user_id', $options['userId']);
@@ -92,7 +104,7 @@ class ImageRepository extends BaseRepository
             ->select('count(e.id)')
             ->from('CMBundle:Entity', 'e')
             ->where('e not instance of :image_album')->setParameter('image_album', 'image_album')
-            ->innerJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
+            ->join('e.post', 'p')
             ->andWhere('p.object in (:objects)')->setParameter('objects', array(
                 'CM\CMBundle\Entity\Entity',
                 'CM\CMBundle\Entity\Event',
@@ -100,7 +112,7 @@ class ImageRepository extends BaseRepository
                 'CM\CMBundle\Entity\Disc'
             ))
             ->leftJoin('e.images', 'i')
-            ->andWhere('size(e.images) > 2');
+            ->andWhere('size(e.images) > 1');
         if (!is_null($options['userId'])) {
             $count->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
                 ->andWhere('p.pageId is NULL');
@@ -115,7 +127,7 @@ class ImageRepository extends BaseRepository
             ->leftJoin('e.translations', 't', 'with', 't.locale IN (:locales)')
             ->setParameter('locales', $options['locales'])
             ->where('e not instance of :image_album')->setParameter('image_album', 'image_album')
-            ->leftJoin('e.posts', 'p', 'with', 'p.type = '.Post::TYPE_CREATION)
+            ->join('e.post', 'p')
             ->andWhere('p.object in (:objects)')->setParameter('objects', array(
                 'CM\CMBundle\Entity\Entity',
                 'CM\CMBundle\Entity\Event',

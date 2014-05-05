@@ -1,8 +1,8 @@
 <div>
     {% if app.environment == 'dev' %}
-        {% set attr = attr|default({})|merge({novalidate: 'novalidate', method: 'post', class: (attr.class|default('') ~ ' fos_user_registration_register')|trim}) %}
+        {% set attr = attr|default({})|merge({novalidate: 'novalidate'}) %}
     {% endif %}
-    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} {% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+    {{ form_start(form, attr|default({})|merge({action: path('fos_user_registration_register'), method: 'post'})) }}
         <div class="row">
             <div class="col-sm-6">
                 {{ form_row(form.firstName) }}
@@ -11,9 +11,9 @@
                 {{ form_row(form.lastName) }}
             </div>
         </div>
-        {{ form_widget(form) }}
-        <div class="clearfix">
-            <input type="submit" value="{{ 'Register'|trans }}" class="btn btn-primary pull-right" />
+        {{ form_row(form) }}
+        <div class="text-right">
+            <input type="submit" value="{{ 'Register'|trans }}" class="btn btn-primary" />
         </div>
-    </form>
+    {{ form_end(form) }}
 </div>

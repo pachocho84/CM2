@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation as JMS;
 use CM\CMBundle\Entity\Page;
 use CM\CMBundle\Entity\PageUser;
+use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Biography;
 use CM\CMBundle\Entity\EntityCategory;
 use CM\CMBundle\Entity\Tag;
@@ -107,8 +108,7 @@ class PageController extends Controller
                 PageUser::STATUS_ACTIVE
             );
 
-            $post = $this->get('cm.post_center')->getNewPost($user, $user);
-
+            $post = $this->get('cm.post_center')->getNewPost($user, $user, Post::TYPE_CREATION, $page->className());
             $page->addPost($post);
 
             $biography = new Biography;

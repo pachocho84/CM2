@@ -37,17 +37,22 @@ class ImageAlbumRepository extends BaseRepository
 
         $albums = $this->createQueryBuilder('a')
             ->select('count(a.id)')
-            ->leftJoin('a.posts', 'p')
-            ->where('p.object = :object')->setParameter('object', get_class(new ImageAlbum));
+            ->join('a.post', 'p')
+            ->where('a instance of :image_album')->setParameter('image_album', 'image_album');
         $entities = $this->getEntityManager()->createQueryBuilder()
             ->select('count(e.id)')
             ->from('CMBundle:Entity', 'e')
-            ->leftJoin('e.posts', 'p')
-            ->where('p.object != :object')->setParameter('object', get_class(new ImageAlbum))
+            ->join('e.post', 'p')
+            ->where('e not instance of :image_album')->setParameter('image_album', 'image_album')
             ->andWhere('size(e.images) > 0');
         $images = $this->getEntityManager()->createQueryBuilder()
             ->select('count(i.id)')
-            ->from('CMBundle:Image', 'i');
+            ->from('CMBundle:Image', 'i')
+            ->leftJoin('i.entity', 'e')
+                ->andWhere($albums->expr()->orX(
+                'i.entityId is null',
+                'e instance of :image_album'
+            ))->setParameter('image_album', 'image_album');
         if (!is_null($options['userId'])) {
             $albums->andWhere('p.userId = :user_id')->setParameter('user_id', $options['userId'])
                 ->andWhere('p.pageId is NULL');

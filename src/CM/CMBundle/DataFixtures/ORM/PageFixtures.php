@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use CM\CMBundle\Entity\Page;
 use CM\CMBundle\Entity\PageUser;
+use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Biography;
 
 class PageFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
@@ -146,7 +147,7 @@ L'Orchestra è stata diretta, tra gli altri, da Riccardo Chailly, Georges Prêtr
                 $page->addTag($manager->merge($this->getReference('tag-'.$tag)), $order);
             }
 
-            $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+            $post = $this->container->get('cm.post_center')->getNewPost($user, $user, Post::TYPE_CREATION, $page->className());
             $page->addPost($post);
 
             $biography = new Biography;

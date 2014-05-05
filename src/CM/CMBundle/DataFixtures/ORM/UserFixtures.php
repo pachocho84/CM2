@@ -9,6 +9,7 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use CM\CMBundle\Entity\User;
+use CM\CMBundle\Entity\Post;
 use CM\CMBundle\Entity\Biography;
 
 class UserFixtures extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
@@ -323,9 +324,9 @@ Con L’etichetta  Limen Music  ha registrato cd e dvd dei quintetti per clarine
                 $user->addRole('ROLE_WRITER');
             }
 
-            $post = $this->container->get('cm.post_center')->getNewPost($user, $user);
+            // $post = $this->container->get('cm.post_center')->getNewPost($user, $user, Post::TYPE_CREATION, $user->className());
 
-            $user->addPost($post);
+            // $user->addPost($post);
 
             if (array_key_exists('biography', $person)) {
 

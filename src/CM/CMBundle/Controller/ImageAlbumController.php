@@ -290,7 +290,7 @@ class ImageAlbumController extends Controller
             $template = 'CMBundle:Page:images.html.twig';
         }
 
-        $images = $em->getRepository('CMBundle:Image')->getImages(array($publisherType.'Id' => $publisher->getId()));
+        $images = $em->getRepository('CMBundle:Image')->getImages(array($publisherType.'Id' => $publisher->getId(), 'noEntity' => true));
         
         $pagination = $this->get('knp_paginator')->paginate($images, $page, 40);
 
@@ -513,6 +513,7 @@ class ImageAlbumController extends Controller
         
         $pagination = $this->get('knp_paginator')->paginate($entities, $page, 40);
 
+        // var_dump($pagination);die;
         if ($request->isXmlHttpRequest()) {
             return $this->render('CMBundle:ImageAlbum:imageEntityList.html.twig', array(
                 $publisherType => $publisher,
@@ -522,10 +523,17 @@ class ImageAlbumController extends Controller
             ));
         }
 
+        if ($request->get('_route') == 'user_images') {
+            $lastWork = $em->getRepository('CMBundle:Work')->getLast($publisher->getId());
+            $lastEducation = $em->getRepository('CMBundle:Education')->getLast($publisher->getId());
+        }
+
         return new Response($this->renderView($template, array(
             $publisherType => $publisher,
             'entities' => $pagination,
-            'count' => $this->countAlbumsAndImages(array($publisherType.'Id' => $publisher->getId()))
+            'count' => $this->countAlbumsAndImages(array($publisherType.'Id' => $publisher->getId())),
+            'lastWork' => $lastWork,
+            'lastEducation' => $lastEducation,
         )));
     }
 }

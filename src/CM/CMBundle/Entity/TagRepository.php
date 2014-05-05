@@ -20,7 +20,7 @@ class TagRepository extends BaseRepository
         ), $options);
     }
     
-    public function filterTags(array $options = array())
+    public function getTags(array $options = array())
     {
         $options = self::getOptions($options);
         
@@ -31,13 +31,10 @@ class TagRepository extends BaseRepository
 
         if (!is_null($options['type'])) {
              $query->andWhere('bit_and(t.type, :type) > 0')->setParameter('type', $options['type']);
-         }
+        }
 
-        return $query;
-    }
-    
-    public function getTags(array $options = array())
-    {
-        return $this->filterTags($options)->getQuery()->getResult();
+        $query->orderBy('tt.name');
+
+        return $query->getQuery()->getResult();
     }
 }

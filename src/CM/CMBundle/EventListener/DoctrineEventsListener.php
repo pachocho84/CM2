@@ -71,9 +71,9 @@ class DoctrineEventsListener
         $object = $args->getEntity();
         $em = $args->getEntityManager();
 
-        if ($object instanceof User) {
-            $this->userPersistedRoutine($object, $em);
-        }
+        // if ($object instanceof User) {
+        //     $this->userPersistedRoutine($object, $em);
+        // }
         if ($object instanceof EntityUser) {
             $this->entityUserPersistedRoutine($object, $em);
         }
@@ -209,21 +209,21 @@ class DoctrineEventsListener
         }
     }
 
-    private function userPersistedRoutine(User &$user, EntityManager $em)
-    {
-        $post = $this->get('cm.post_center')->newPost(
-            is_null($this->getUser()) ? $user : $this->getUser(),
-            $user,
-            Post::TYPE_CREATION,
-            $user->className()
-        );
+    // private function userPersistedRoutine(User &$user, EntityManager $em)
+    // {
+    //     $post = $this->get('cm.post_center')->newPost(
+    //         is_null($this->getUser()) ? $user : $this->getUser(),
+    //         $user,
+    //         Post::TYPE_CREATION,
+    //         $user->className()
+    //     );
 
-        $this->container->get('logger')->info('CMBundle_info '.$user);// ##########################################################################
+    //     $this->container->get('logger')->info('CMBundle_info '.$user.' '.$post->getType());// ##########################################################################
 
-        $em->persist($post);
+    //     $em->persist($post);
 
-        $flushNeeded = true;
-    }
+    //     $flushNeeded = true;
+    // }
 
     private function entityUserPersistedRoutine(EntityUser &$entityUser, EntityManager $em)
     {
@@ -734,49 +734,50 @@ class DoctrineEventsListener
     {
         $uow = $em->getUnitOfWork();
 
-        $user = null;
         if ($publisher instanceof User) {
             $user = $publisher;
+            $page = null;
         }
-        $page = null;
         if ($publisher instanceof Page) {
             $page = $publisher;
             $user = is_null($this->get('security.context')->getToken()) ? $page->getCreator() : $this->getUser();
         }
 
-        $album = new ImageAlbum;
-        $image = new Image;
-        if ($publisher->getImg()) {
-            $album->setType(ImageAlbum::TYPE_PROFILE);
+        $images = array();
+        if (!is_null($publisher->getImg())) {
+            $images[ImageAlbum::TYPE_PROFILE] = $publisher->getImg();
+        }
+        if (!is_null($publisher->getCoverImg())) {
+            $images[ImageAlbum::TYPE_COVER] = $publisher->getCoverImg();
+        }
+        if (property_exists($publisher, 'backgroundImg') && !is_null($publisher->getBackgroundImg())) {
+            $images[ImageAlbum::TYPE_BACKGROUND] = $publisher->getBackgroundImg();
+        }
+
+        foreach ($images as $type => $img) {
+            $album = new ImageAlbum;
+            $image = new Image;
+
+            $album->setType($type);
             
-            $image->setImg($publisher->getImg());
+            $image->setImg($img);
+
+            $post = $this->get('cm.post_center')->getNewPost($user, $user);
+            $post->setPage($page);
+            $album->setPost($post);
+
+            $image->setMain(true)
+                ->setUser($user)
+                ->setPage($page);
+            $album->setImage($image);
+
+            $em->persist($album);
+            $em->persist($image);
+            $em->persist($post);
+            $uow->computeChangeSet($em->getClassmetadata($image->className()), $image);
+            $uow->computeChangeSet($em->getClassmetadata($album->className()), $album);
+            $uow->computeChangeSet($em->getClassmetadata($post->className()), $post);
         }
-        if ($publisher->getCoverImg()) {
-            $album->setType(ImageAlbum::TYPE_COVER);
-
-            $image->setImg($publisher->getCoverImg());
-        }
-        if (property_exists($publisher, 'backgroundImg') && $publisher->getBackgroundImg()) {
-            $album->setType(ImageAlbum::TYPE_BACKGROUND);
-
-            $image->setImg($publisher->getBackgroundImg());
-        }
-
-        $post = $this->get('cm.post_center')->getNewPost($user, $user);
-        $post->setPage($page);
-        $album->setPost($post);
-
-        $image->setMain(true)
-            ->setUser($user)
-            ->setPage($page);
-        $album->setImage($image);
-
-        $em->persist($album);
-        $em->persist($image);
-        $em->persist($post);
-        $uow->computeChangeSet($em->getClassmetadata($image->className()), $image);
-        $uow->computeChangeSet($em->getClassmetadata($album->className()), $album);
-        $uow->computeChangeSet($em->getClassmetadata($post->className()), $post);
 
         $this->flushNeeded = true;
     }
@@ -794,67 +795,35 @@ class DoctrineEventsListener
             $page = $publisher;
         }
 
+        $images = array();
         if (array_key_exists('img', $em->getUnitOfWork()->getEntityChangeSet($publisher))) {
-            $album = $em->getRepository('CMBundle:ImageAlbum')->getImageAlbum(array(
-                'userId' => is_null($user) ? null : $user->getId(),
-                'pageId' => is_null($page) ? null : $page->getId(),
-                'type' => ImageAlbum::TYPE_PROFILE,
-            ));
-            if (is_null($album)) {
-                $album = new ImageAlbum;
-                $album->setType(ImageAlbum::TYPE_PROFILE);
-            }
-
-            $image = new Image;
-            $image->setImg($publisher->getImg())
-                ->setImgOffset($publisher->getImgOffset())
-                ->setMain(true)
-                ->setUser($user)
-                ->setPage($page);
-            $album->addImage($image);
-
-            $em->persist($album);
-            $em->persist($image);
-            $uow->computeChangeSet($em->getClassmetadata($image->className()), $image);
-            $uow->computeChangeSet($em->getClassmetadata($album->className()), $album);
+            $images[ImageAlbum::TYPE_PROFILE] = array('img' => $publisher->getImg(), 'offset' => $publisher->getImgOffset());
         }
         if (array_key_exists('cover_img', $em->getUnitOfWork()->getEntityChangeSet($publisher))) {
-            $album = $em->getRepository('CMBundle:ImageAlbum')->getImageAlbum(array(
-                'userId' => is_null($user) ? null : $user->getId(),
-                'pageId' => is_null($page) ? null : $page->getId(),
-                'type' => ImageAlbum::TYPE_COVER,
-            ));
-            if (is_null($album)) {
-                $album = new ImageAlbum;
-                $album->setType(ImageAlbum::TYPE_COVER);
-            }
-
-            $image = new Image;
-            $image->setImg($publisher->getCoverImg())
-                ->setImgOffset($publisher->getCoverImgOffset())
-                ->setMain(true)
-                ->setUser($user)
-                ->setPage($page);
-            $album->addImage($image);
-
-            $em->persist($album);
-            $em->persist($image);
-            $uow->computeChangeSet($em->getClassmetadata($image->className()), $image);
-            $uow->computeChangeSet($em->getClassmetadata($album->className()), $album);
+            $images[ImageAlbum::TYPE_COVER] = array('img' => $publisher->getCoverImg(), 'offset' => $publisher->getCoverImgOffset());
         }
         if (array_key_exists('background_img', $em->getUnitOfWork()->getEntityChangeSet($publisher))) {
+            $images[ImageAlbum::TYPE_BACKGROUND] = array('img' => $publisher->getBackgroundImg(), 'offset' => null);
+        }
+
+        foreach ($images as $type => $img) {
             $album = $em->getRepository('CMBundle:ImageAlbum')->getImageAlbum(array(
                 'userId' => is_null($user) ? null : $user->getId(),
                 'pageId' => is_null($page) ? null : $page->getId(),
-                'type' => ImageAlbum::TYPE_BACKGROUND,
+                'type' => $type,
             ));
             if (is_null($album)) {
                 $album = new ImageAlbum;
-                $album->setType(ImageAlbum::TYPE_BACKGROUND);
+                $album->setType($type);
+
+                $post = $this->get('cm.post_center')->getNewPost($user, $user);
+                $post->setPage($page);
+                $album->setPost($post);
             }
 
             $image = new Image;
-            $image->setImg($publisher->getBackgroundImg())
+            $image->setImg($img['img'])
+                ->setImgOffset($img['offset'])
                 ->setMain(true)
                 ->setUser($user)
                 ->setPage($page);
@@ -864,17 +833,21 @@ class DoctrineEventsListener
             $em->persist($image);
             $uow->computeChangeSet($em->getClassmetadata($image->className()), $image);
             $uow->computeChangeSet($em->getClassmetadata($album->className()), $album);
+            if (!is_null($post)) {
+                $em->persist($post);
+                $uow->computeChangeSet($em->getClassmetadata($post->className()), $post);
+            }
         }
     }
 
     private function imgRemovedRoutine(&$publisher, EntityManager $em)
     {
-        $this->get('cm.post_center')->removePost(
-            $this->getUser(),
-            $this->getUser(),
-            get_class($biography),
-            array($biography->getId())
-        );
+        // $this->get('cm.post_center')->removePost(
+        //     $this->getUser(),
+        //     $this->getUser(),
+        //     get_class($biography),
+        //     array($biography->getId())
+        // );
     }
 
     private function relationOutPersistedRoutine(Relation &$relation, EntityManager $em)

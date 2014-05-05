@@ -10,11 +10,11 @@
             </div>
         </div>
         
-        {{ include('CMBundle:ImageAlbum:menu.html.twig', {'inEntitiesPage': true}) }}
+        {{ include('CMBundle:ImageAlbum:menu.html.twig', {inEntitiesPage: true}) }}
     </div>
     
     <div class="objects">
-        {{ include('CMBundle:ImageAlbum:imageEntityList.html.twig', {'link': publisherType ~ '_album'}) }}
+        {{ include('CMBundle:ImageAlbum:imageEntityList.html.twig', {link: publisherType ~ '_album'}) }}
     </div>
     
 </div>

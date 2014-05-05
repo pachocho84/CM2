@@ -28,14 +28,16 @@ class RegistrationType extends BaseType
             ->add('imgOffset', 'hidden')
             ->add('birthDate', 'date', array(
                 'widget' => 'choice',
-                'years' => range(date('Y'), date('Y') - 110)
+                'years' => range(date('Y'), date('Y') - 110),
+                'error_bubbling' => false,
             ))
             ->add('birthDateVisible', 'choice', array(
                 'choices' => array(
                     User::BIRTHDATE_VISIBLE => 'Visible',
                     User::BIRTHDATE_NO_YEAR => 'Not visible',
                     User::BIRTHDATE_INVISIBLE => 'Year not visible'),
-                'expanded' => true
+                'expanded' => true,
+                'error_bubbling' => false,
             ))
             ->add('recaptcha', 'ewz_recaptcha', array(
                 'required' => true,

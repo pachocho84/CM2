@@ -120,6 +120,7 @@ class User extends BaseUser implements ParticipantInterface
      * @var boolean
      *
      * @ORM\Column(name="sex", type="boolean", nullable=false)
+     * @Assert\NotNull(message = "Please choose a gender.")
      * @Assert\Choice(choices = {CM\CMBundle\Entity\User::SEX_M, CM\CMBundle\Entity\User::SEX_F}, message = "Choose a valid gender.")
      */
     private $sex;
@@ -128,7 +129,7 @@ class User extends BaseUser implements ParticipantInterface
      * @var \DateTime
      *
      * @ORM\Column(name="birth_date", type="date", nullable=false)
-     * @Assert\NotBlank
+     * @Assert\NotBlank(message="Please insert your date of birth.")
      * @Assert\Date
      */
     private $birthDate;
@@ -137,6 +138,7 @@ class User extends BaseUser implements ParticipantInterface
      * @var boolean
      *
      * @ORM\Column(name="birth_date_visible", type="smallint")
+     * @Assert\NotNull(message = "Please make a choice.")
      * @Assert\Choice(choices = {
      *     CM\CMBundle\Entity\User::BIRTHDATE_VISIBLE,
      *     CM\CMBundle\Entity\User::BIRTHDATE_NO_YEAR,
@@ -149,7 +151,6 @@ class User extends BaseUser implements ParticipantInterface
      * @var string
      *
      * @ORM\Column(name="city_birth", type="string", length=50)
-     * @Assert\NotBlank
      */
     private $cityBirth; // TODO: city validation
 
@@ -157,7 +158,6 @@ class User extends BaseUser implements ParticipantInterface
      * @var string
      *
      * @ORM\Column(name="city_current", type="string", length=50)
-     * @Assert\NotBlank
      */
     private $cityCurrent; // TODO: city validation
 
@@ -168,18 +168,6 @@ class User extends BaseUser implements ParticipantInterface
      * @Assert\Choice(choices = {true, false})
      */
     private $vip = false;
-
-    /**
-     * @ORM\Column(name="biography_id", type="integer", nullable=true)
-     */
-    private $biographyId;
-    
-    /**
-     * @ORM\OneToOne(targetEntity="Biography", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="biography_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     * @Assert\Valid
-     */
-    private $biography;
 
     /**
      * @var boolean
@@ -304,6 +292,18 @@ class User extends BaseUser implements ParticipantInterface
      * @ORM\OneToMany(targetEntity="Relation", mappedBy="fromUser", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
     private $relationsOutgoing;
+
+    /**
+     * @ORM\Column(name="biography_id", type="integer", nullable=true)
+     */
+    private $biographyId;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Biography", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="biography_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+     * @Assert\Valid
+     */
+    private $biography;
 
     public function __construct()
     {

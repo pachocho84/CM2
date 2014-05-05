@@ -405,6 +405,11 @@
     {{ block('imageBox_widget') }}
 {% endblock %}
 
+{% block _fos_user_registration_form_birthDate_widget %}
+    <label>{{ 'Birthday'|trans({}, translation_domain) }}</label>
+    {{ block('date_widget') }}
+{% endblock %}
+
 {# Labels #}
 
 {% block form_label %}
