@@ -1,5 +1,8 @@
 <div>
-    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+    {% if app.environment == 'dev' %}
+        {% set attr = attr|default({})|merge({novalidate: 'novalidate', method: 'post', class: (attr.class|default('') ~ ' fos_user_registration_register')|trim}) %}
+    {% endif %}
+    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} {% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
         <div class="row">
             <div class="col-sm-6">
                 {{ form_row(form.firstName) }}

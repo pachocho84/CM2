@@ -6,6 +6,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag;
 use Doctrine\ORM\EntityManager;
+use Cm\CMBundle\Entity\Entity;
 use Cm\CMBundle\Entity\EntityUser;
 use Cm\CMBundle\Entity\Image;
 use Cm\CMBundle\Entity\Post;
@@ -101,7 +102,7 @@ class UserAuthentication
 
     public function isAdminOf($object)
     {
-        if (! $this->isAuthenticated()) {
+        if (!$this->isAuthenticated()) {
             return false;
         }
 
@@ -133,14 +134,14 @@ class UserAuthentication
                 return true;
             }
 
-            $user_id = $this->securityContext->getToken()->getUser()->getId();
+            $userId = $this->securityContext->getToken()->getUser()->getId();
             if (method_exists($object, 'getCreatorId')) {
-                $creator_id = $object->getCreatorId();
+                $creatorId = $object->getCreatorId();
             } elseif (method_exists($object, 'getUserId')) {
-                $creator_id = $object->getUserId();
+                $creatorId = $object->getUserId();
             } elseif (method_exists($object, 'getPost')) {
                 if (!is_null($object->getPost())) {
-                    $creator_id = $object->getPost()->getCreatorId();
+                    $creatorId = $object->getPost()->getCreatorId();
                 } else {
                     return true; // is a newly created entity!
                 }
@@ -149,18 +150,20 @@ class UserAuthentication
             }
 
             // 3) CREATOR
-            if ($user_id == $creator_id) {
+            if ($userId == $creatorId) {
                 return true;
             }
 
             if ($object instanceof Post || $object instanceof Image) {
-                $page_id = $object->getPage()->getId();
-            } elseif ($object instanceof Pages) {
-                $page_id = $object->getId();
+                $pageId = $object->getPageId();
+            } elseif ($object instanceof Page) {
+                $pageId = $object->getId();
+            } elseif ($object instanceof Entity) {
+                $pageId = $object->getPost()->getPageId();
             }
 
             // 4) PAGE
-            if (!is_null($page_id) && in_array($page_id, $this->session->get('user/pages_admin'))) {
+            if (!is_null($pageId) && in_array($pageId, (array)$this->session->get('user/pages_admin'))) {
                 return true;
             }
 
@@ -168,7 +171,7 @@ class UserAuthentication
             if (method_exists($object, 'getEntityUsers') && count($object->getEntityUsers()) > 0) {
                 $protagonists = $object->getEntityUsers();
                 foreach ($protagonists as $protagonist) {
-                    if ($protagonist->getUserId() == $user_id && $protagonist->isAdmin() && $protagonist->getStatus() == EntityUser::STATUS_ACTIVE) {
+                    if ($protagonist->getUserId() == $userId && $protagonist->isAdmin() && $protagonist->getStatus() == EntityUser::STATUS_ACTIVE) {
                         return true;
                     }
                 }

@@ -1,5 +1,5 @@
 {% extends 'CMBundle::layout.html.twig' %}
 
 {% block body %}
-    {{ render(controller('FOSUserBundle:Registration:register', {'template': null})) }}
+    {{ render(controller('FOSUserBundle:Registration:register', {'template': null, request: app.request})) }}
 {% endblock %}

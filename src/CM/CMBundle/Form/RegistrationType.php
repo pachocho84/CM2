@@ -38,6 +38,7 @@ class RegistrationType extends BaseType
                 'expanded' => true
             ))
             ->add('recaptcha', 'ewz_recaptcha', array(
+                'required' => true,
                 'mapped' => false,
                 'constraints'   => array(
                     new EWZ\True

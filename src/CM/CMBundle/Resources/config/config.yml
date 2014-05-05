@@ -79,6 +79,7 @@ ewz_recaptcha:
     public_key:   6Ld0ufESAAAAAN5e79hGMo7QIYJjrwtZGVLtj1fp
     private_key:  6Ld0ufESAAAAAImIX0gLxej3x70nBZYOoivw_O9n
     locale_key:   kernel.default_locale
+    ajax: true
 
 fos_message:
     db_driver: orm

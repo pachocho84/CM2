@@ -42,7 +42,7 @@ class DoctrineEventsListener
 
     private function getUser()
     {
-        if (is_null($this->get('security.context'))) {
+        if (is_null($this->get('security.context')->getToken())) {
             return null;
         }
         return $this->get('security.context')->getToken()->getUser();
@@ -71,6 +71,9 @@ class DoctrineEventsListener
         $object = $args->getEntity();
         $em = $args->getEntityManager();
 
+        if ($object instanceof User) {
+            $this->userPersistedRoutine($object, $em);
+        }
         if ($object instanceof EntityUser) {
             $this->entityUserPersistedRoutine($object, $em);
         }
@@ -204,6 +207,22 @@ class DoctrineEventsListener
 
             $args->getEntityManager()->flush();
         }
+    }
+
+    private function userPersistedRoutine(User &$user, EntityManager $em)
+    {
+        $post = $this->get('cm.post_center')->newPost(
+            is_null($this->getUser()) ? $user : $this->getUser(),
+            $user,
+            Post::TYPE_CREATION,
+            $user->className()
+        );
+
+        $this->container->get('logger')->info('CMBundle_info '.$user);// ##########################################################################
+
+        $em->persist($post);
+
+        $flushNeeded = true;
     }
 
     private function entityUserPersistedRoutine(EntityUser &$entityUser, EntityManager $em)
