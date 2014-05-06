@@ -134,7 +134,7 @@ function initAddress(container) {
                 $.ajax('https://maps.googleapis.com/maps/api/geocode/json?sensor=false&culture=' + culture + '&address=' + request.term, {
                     success: function(data) {
                         response($.map(data.results, function(address) {
-                            return {label: address.formatted_address, value: address.formatted_address, coords: address.geometry.location}
+                            return {label: address.formatted_address, value: address.formatted_address, coords: address.geometry.location};
                         }));
                     }
                 });
@@ -144,7 +144,6 @@ function initAddress(container) {
               return false;
             },
             select: function(event, ui) {
-                console.log(ui.item);
                 $(elem).attr('address-autocomplete', 'set');
                 $(elem).closest('.date-form').find('[address-latitude]').val(ui.item.coords.lat);
                 $(elem).closest('.date-form').find('[address-longitude]').val(ui.item.coords.lng);
@@ -157,29 +156,67 @@ function initAddress(container) {
                 $(elem).closest('.date-form').find('[address-longitude]').val('');
             }
         });
-        // $(elem).typeahead({
-        //     name: 'address',
-        //     // minLength: 3,
-        //     valueKey: 'val',
-        //     template: '<div>{{ val }}</div>',
-        //     engine: Handlebars,
-        //     remote: {
-        //         url: 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&culture=' + culture + '&address=%QUERY',
-        //         replace: function (url, uriEncodedQuery) {
-        //             return url.replace('%QUERY', uriEncodedQuery);
-        //         },
-        //         filter: function(data) {
-        //             if (data.status == 'OK') {
-        //                 return $.map(data.results, function(address) {
-        //                     value = new Object();
-        //                     value.val = address.formatted_address;
-        //                     value.coords = address.geometry.location.lat + ',' + address.geometry.location.lng;
-        //                     return value;
-        //                 });
-        //             }
-        //         }
-        //     }
-        // });
+    });
+}
+
+function initCities(container) {
+    $.each($(container).find('[city-autocomplete]'), function(i, elem) {
+        $(elem).keydown(function(event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+            }
+        });
+        $(elem).autocomplete({
+            minLength: 1,
+            delay: 300,
+            source: function(request, response) {
+                $.ajax('http://api.geonames.org/searchJSON?formatted=true&style=full&username=circuitomusica&maxRows=8&type=json&lang=' + culture + '&q=' + request.term, {
+                    success: function(data) {
+                        response($.map(data.geonames, function(city) {
+                            console.log(city);
+                            var name = city.name + (city.adminName1 ? ", " + city.adminName1 : "") + ", " + city.countryName
+                            return {label: name, value: name, lang: culture, coords: {lat: city.lat, lng: city.lng}};
+                        }));
+                    }
+                });
+            },
+            focus: function() {
+              // prevent value inserted on focus
+              return false;
+            },
+            select: function(event, ui) {
+                console.log(ui.item);
+                $(elem).attr('city-autocomplete', 'set');
+                $(elem).closest('.city-form').find('[city-lang]').val(ui.item.coords.lang);
+                $(elem).closest('.city-form').find('[city-latitude]').val(ui.item.coords.lat);
+                $(elem).closest('.city-form').find('[city-longitude]').val(ui.item.coords.lng);
+            }
+        });
+        $(elem).on('change', function(event) {
+            if ($(elem).val() == '') {
+                $(elem).attr('city-autocomplete', '');
+                $(elem).closest('.city-form').find('[city-lang]').val('');
+                $(elem).closest('.city-form').find('[city-latitude]').val('');
+                $(elem).closest('.city-form').find('[city-longitude]').val('');
+            }
+        });
+
+
+    // $('[autocomplete-city]').typeahead({
+    //     name: 'cities',
+    //     minLength: 3,
+    //     template: '<div>{{ value }}</div>',
+    //     engine: Handlebars,
+    //     remote: {
+    //         url: 'http://api.geonames.org/searchJSON?formatted=true&style=full&username=circuitomusica&maxRows=8&lang=' + culture + '&q=%QUERY&type=json',
+    //         filter: function(data) {
+    //             data = $.map(data.geonames, function(city) {
+    //                 return city.name + (city.adminName1 ? ", " + city.adminName1 : "") + ", " + city.countryName;
+    //             });
+    //             return data;
+    //         }
+    //     }
+    // });
     });
 }
 
@@ -420,21 +457,7 @@ $(function() {
     });
 
     // City autocomplete
-    $('[autocomplete-city]').typeahead({
-        name: 'cities',
-        minLength: 3,
-        template: '<div>{{ value }}</div>',
-        engine: Handlebars,
-        remote: {
-            url: 'http://api.geonames.org/searchJSON?formatted=true&style=full&username=circuitomusica&maxRows=8&lang=' + culture + '&q=%QUERY&type=json',
-            filter: function(data) {
-                data = $.map(data.geonames, function(city) {
-                    return city.name + (city.adminName1 ? ", " + city.adminName1 : "") + ", " + city.countryName;
-                });
-                return data;
-            }
-        }
-    });
+    initCities($(document));
     
 //     var GooglePlacesService = new google.maps.places.AutocompleteService();
     

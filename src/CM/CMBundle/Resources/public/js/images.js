@@ -31,25 +31,25 @@ $(function() {
     
     
     // Likes & Comments
-    $('.image, .album').on('click', ' .bottom-like-count, .bottom-comment-count, .comment_new-show', function(event) {      
+    $('.image, .album').on('click', '.bottom-like-count, .bottom-comment-count, .comment_new-show', function(event) {      
         event.preventDefault();
         $('.popover').prev().popover('destroy');
         element = this;
-        $.get(script + '/like_comment/' + $(element).closest('.object').attr('data-type') + '/' + $(element).closest('.object').attr('data-id'), function(data) {
-            $('body').one('click', function(event) {
-                $('.popover').prev().popover('destroy');
-            });
-            $('body').on('click', '.popover', false);
-            $(element).closest('.object').find('.image-container').popover({
-                content: data,
-                placement: 'bottom',
-                html: true
-            }).popover('show');
-            $(element).closest('.object').find('.popover').css('top', 0);
-            if ($(element).hasClass('comment_new-show')) {
-                $(element).closest('.object').find('.comment_new').removeClass('hide').find('textarea').focus();
-            }
-        });
+        // $.get(script + '/like_comment/' + $(element).closest('.object').attr('data-type') + '/' + $(element).closest('.object').attr('data-id'), function(data) {
+        //     $('body').one('click', function(event) {
+        //         $('.popover').prev().popover('destroy');
+        //     });
+        //     $('body').on('click', '.popover', false);
+        //     $(element).closest('.object').find('.image-container').popover({
+        //         content: data,
+        //         placement: 'bottom',
+        //         html: true
+        //     }).popover('show');
+        //     $(element).closest('.object').find('.popover').css('top', 0);
+        //     if ($(element).hasClass('comment_new-show')) {
+        //         $(element).closest('.object').find('.comment_new').removeClass('hide').find('textarea').focus();
+        //     }
+        // });
     });
     
     

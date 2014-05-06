@@ -7,3 +7,11 @@
 {% block body %}
     {{ include('CMBundle:ImageAlbum:imagesEntities.html.twig', {'publisher': user, 'publisherType': 'user'}) }}
 {% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'bundles/cm/js/images.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

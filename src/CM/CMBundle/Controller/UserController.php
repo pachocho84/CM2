@@ -477,6 +477,16 @@ class UserController extends Controller
     }
 
     /**
+     * @Route("/account", name="fos_user_profile_show", requirements={"page" = "\d+"})
+     * @Template
+     */
+    public function fakeShowAction(Request $request)
+    {
+        $this->get('session')->getFlashBag()->add('form-success', 'Profile updated');
+        return $this->forward($this->routeToControllerName('fos_user_profile'));
+    }
+
+    /**
      * @Route("/{slug}/{page}", name="user_show", requirements={"page" = "\d+"})
      * @Template
      */

@@ -24,6 +24,14 @@ class RegistrationType extends BaseType
                 'choices' => array(User::SEX_M => 'Male', User::SEX_F => 'Female'),
                 'expanded' => true
             ))
+            ->add('type', 'choice', array(
+                'choices' => array(
+                    User::TYPE_PROFESSIONAL => 'Professional musician',
+                    User::TYPE_STUDENT => 'Musical student',
+                    User::TYPE_KEEN => 'Keen about music'),
+                'expanded' => true,
+                'error_bubbling' => false,
+            ))
             ->add('imgFile')
             ->add('imgOffset', 'hidden')
             ->add('birthDate', 'date', array(

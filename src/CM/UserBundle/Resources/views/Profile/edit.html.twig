@@ -8,6 +8,10 @@
             <h2>{{ icon('Options') }} {{ block('section') }}</h2>
         </div>
         <div class="box-body">
+            {% for flash in app.session.flashbag.get('form-success') %}
+                <p class="bg-success">{{ flash|trans }}</p>
+            {% endfor %}
+
             {{ form_start(form) }}
                 <div class="row">
                     <div class="col-sm-6">
@@ -26,5 +30,25 @@
                 </div>
             {{ form_end(form) }}
         </div>
+    </div>
+{% endblock %}
+
+{% form_theme form _self %}
+
+{% block _fos_user_profile_form_cityBirth_widget %}
+    <div class="city-form">
+        {{ block('form_widget_simple') }}
+        {{ form_widget(form.parent.cityBirthLang) }}
+        {{ form_widget(form.parent.cityBirthLatitude) }}
+        {{ form_widget(form.parent.cityBirthLongitude) }}
+    </div>
+{% endblock %}
+
+{% block _fos_user_profile_form_cityCurrent_widget %}
+    <div class="city-form">
+        {{ block('form_widget_simple') }}
+        {{ form_widget(form.parent.cityCurrentLang) }}
+        {{ form_widget(form.parent.cityCurrentLatitude) }}
+        {{ form_widget(form.parent.cityCurrentLongitude) }}
     </div>
 {% endblock %}

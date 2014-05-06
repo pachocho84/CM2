@@ -1,20 +1,36 @@
 {% for entity in entities %}
-    {% if loop.index % 4 == 1 %}<div class="row">{% endif %}
-        <div class="object col-lg-3 cycle-slideshow" data-cycle-slides="> div" data-cycle-fx="scrollVert">
-            <h4 class="media-heading">{{ entity.id }}: {{ entity }}</h4>
-            <div>
-                {{ show_img_box(entity.images[0].getImg|imagine_filter('medium'), {width: 150, link: path(link, {slug: publisher.slug, id: entity.id})})|raw }}
+    <li class="object album" data-type="post" data-id="{{ entity.id }}">
+        <div class="image-container">
+        {% if can_manage(entity) %}
+            <div class="btn-group pull-right hide">
+              <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="glyphicon glyphicon-chevron-down"></i>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="{{ path('imagealbum_add_image', {id: entity.id}) }}">{{ icon('Edit') }} {{ 'Edit'|trans }}</a></li>
+                {#<?php if ($album->getImageAlbum()->getType() == 'album'): ?>
+                    <li><?php delete_link('@image_album_delete?id='.$album->getEntityId(), 'album') ?></li>
+                <?php endif ?>#}
+              </ul>
             </div>
-            <div>
-                {{ show_img_box(entity.images[1].getImg|imagine_filter('medium'), {width: 150, link: path(link, {slug: publisher.slug, id: entity.id})})|raw }}
-            </div>
-            {% if entity.images[2] is defined %}
-                <div>
-                    {{ show_img_box(entity.images[2].getImg|imagine_filter('medium'), {width: 150, link: path(link, {slug: publisher.slug, id: entity.id})})|raw }}
-                </div>
-            {% endif %}
+        {% endif  %}
+        <div class="album-preview">
+            {% for image in entity.images|slice(0, 3) %}
+                {{ show_img_box(image.getImg|imagine_filter('medium'), {width: 150, link: path(link, {slug: publisher.slug, id: entity.id})}) }}
+            {% endfor  %}
         </div>
-    {% if loop.index % 4 == 0 or loop.index == entities|length %}</div>{% endif %}
+        <div class="album-details">
+            <h4><a href="{{ path(link, {slug: publisher.slug, id: entity.id}) }}">{{ entity }}</a></h4>
+            <div>
+                {% set count = entity.images|length %}
+                {% transchoice count %}
+                    {0} No photos|{1} 1 photo|]1,Inf] %count% photos
+                {% endtranschoice %}
+            </div>
+            {{ include('CMBundle::social.html.twig', {post: entity.post}) }}
+        </div>
+        </div>
+    </li>
 {% endfor %}
 
 {% if entities.paginationData.current < entities.paginationData.last %}

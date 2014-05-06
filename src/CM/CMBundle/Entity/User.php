@@ -5,6 +5,7 @@ namespace CM\CMBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use CM\CMBundle\Validator\Constraints as CMAssert;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use FOS\UserBundle\Model\User as BaseUser;
 use FOS\MessageBundle\Model\ParticipantInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class User extends BaseUser implements ParticipantInterface
 {
+    use ORMBehaviors\Timestampable\Timestampable;
     use \CM\CMBundle\Model\ImageTrait;
     use \CM\CMBundle\Model\CoverImageTrait;
 
@@ -27,6 +29,10 @@ class User extends BaseUser implements ParticipantInterface
     const BIRTHDATE_VISIBLE = 0;
     const BIRTHDATE_NO_YEAR = 1;
     const BIRTHDATE_INVISIBLE = 2;
+
+    const TYPE_PROFESSIONAL = 0;
+    const TYPE_STUDENT = 1;
+    const TYPE_KEEN = 2;
 
     /**
      * @var integer
@@ -127,6 +133,19 @@ class User extends BaseUser implements ParticipantInterface
     private $sex;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="type", type="smallint")
+     * @Assert\NotBlank(message="Please choose an option.")
+     * @Assert\Choice(choices = {
+     *     CM\CMBundle\Entity\User::TYPE_PROFESSIONAL,
+     *     CM\CMBundle\Entity\User::TYPE_STUDENT,
+     *     CM\CMBundle\Entity\User::TYPE_KEEN
+     * }, message = "Choose a valid option.")
+     */
+    private $type = self::TYPE_PROFESSIONAL;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="birth_date", type="date", nullable=false)
@@ -139,12 +158,12 @@ class User extends BaseUser implements ParticipantInterface
      * @var boolean
      *
      * @ORM\Column(name="birth_date_visible", type="smallint")
-     * @Assert\NotNull(message = "Please make a choice.")
+     * @Assert\NotNull(message = "Please choose an option.")
      * @Assert\Choice(choices = {
      *     CM\CMBundle\Entity\User::BIRTHDATE_VISIBLE,
      *     CM\CMBundle\Entity\User::BIRTHDATE_NO_YEAR,
      *     CM\CMBundle\Entity\User::BIRTHDATE_INVISIBLE
-     * })
+     * }, message = "Choose a valid option.")
      */
     private $birthDateVisible;
 
@@ -152,17 +171,57 @@ class User extends BaseUser implements ParticipantInterface
      * @var string
      *
      * @ORM\Column(name="city_birth", type="string", length=50, nullable=true)
-     * @CMAssert\City
      */
-    private $cityBirth; // TODO: city validation
+    private $cityBirth;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="city_birth_lang", type="string", length=5, nullable=true)
+     */
+    private $cityBirthLang;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="city_birth_latitude", type="float")
+     */
+    private $cityBirthLatitude;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="city_birth_longitude", type="float")
+     */
+    private $cityBirthLongitude;
 
     /**
      * @var string
      *
      * @ORM\Column(name="city_current", type="string", length=50, nullable=true)
-     * @CMAssert\City
      */
-    private $cityCurrent; // TODO: city validation
+    private $cityCurrent;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="city_current_lang", type="string", length=5, nullable=true)
+     */
+    private $cityCurrentLang;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="city_current_latitude", type="float")
+     */
+    private $cityCurrentLatitude;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="city_current_longitude", type="float")
+     */
+    private $cityCurrentLongitude;
 
     /**
      * @var boolean
@@ -446,6 +505,29 @@ class User extends BaseUser implements ParticipantInterface
     }
 
     /**
+     * Set type
+     *
+     * @param string $type
+     * @return Post
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * Set birthDate
      *
      * @param \DateTime $birthDate
@@ -515,6 +597,75 @@ class User extends BaseUser implements ParticipantInterface
     }
 
     /**
+     * Set cityBirthLang
+     *
+     * @param string $cityBirthLang
+     * @return User
+     */
+    public function setCityBirthLang($cityBirthLang)
+    {
+        $this->cityBirthLang = $cityBirthLang;
+    
+        return $this;
+    }
+
+    /**
+     * Get cityBirthLang
+     *
+     * @return string 
+     */
+    public function getCityBirthLang()
+    {
+        return $this->cityBirthLang;
+    }
+
+    /**
+     * Set cityBirthLatitude
+     *
+     * @param string $cityBirthLatitude
+     * @return User
+     */
+    public function setCityBirthLatitude($cityBirthLatitude)
+    {
+        $this->cityBirthLatitude = $cityBirthLatitude;
+    
+        return $this;
+    }
+
+    /**
+     * Get cityBirthLatitude
+     *
+     * @return string 
+     */
+    public function getCityBirthLatitude()
+    {
+        return $this->cityBirthLatitude;
+    }
+
+    /**
+     * Set cityBirthLongitude
+     *
+     * @param string $cityBirthLongitude
+     * @return User
+     */
+    public function setCityBirthLongitude($cityBirthLongitude)
+    {
+        $this->cityBirthLongitude = $cityBirthLongitude;
+    
+        return $this;
+    }
+
+    /**
+     * Get cityBirthLongitude
+     *
+     * @return string 
+     */
+    public function getCityBirthLongitude()
+    {
+        return $this->cityBirthLongitude;
+    }
+
+    /**
      * Set cityCurrent
      *
      * @param string $cityCurrent
@@ -535,6 +686,75 @@ class User extends BaseUser implements ParticipantInterface
     public function getCityCurrent()
     {
         return $this->cityCurrent;
+    }
+
+    /**
+     * Set cityCurrentLang
+     *
+     * @param string $cityCurrentLang
+     * @return User
+     */
+    public function setCityCurrentLang($cityCurrentLang)
+    {
+        $this->cityCurrentLang = $cityCurrentLang;
+    
+        return $this;
+    }
+
+    /**
+     * Get cityCurrentLang
+     *
+     * @return string 
+     */
+    public function getCityCurrentLang()
+    {
+        return $this->cityCurrentLang;
+    }
+
+    /**
+     * Set cityCurrentLatitude
+     *
+     * @param string $cityCurrentLatitude
+     * @return User
+     */
+    public function setCityCurrentLatitude($cityCurrentLatitude)
+    {
+        $this->cityCurrentLatitude = $cityCurrentLatitude;
+    
+        return $this;
+    }
+
+    /**
+     * Get cityCurrentLatitude
+     *
+     * @return string 
+     */
+    public function getCityCurrentLatitude()
+    {
+        return $this->cityCurrentLatitude;
+    }
+
+    /**
+     * Set cityCurrentLongitude
+     *
+     * @param string $cityCurrentLongitude
+     * @return User
+     */
+    public function setCityCurrentLongitude($cityCurrentLongitude)
+    {
+        $this->cityCurrentLongitude = $cityCurrentLongitude;
+    
+        return $this;
+    }
+
+    /**
+     * Get cityCurrentLongitude
+     *
+     * @return string 
+     */
+    public function getCityCurrentLongitude()
+    {
+        return $this->cityCurrentLongitude;
     }
 
     /**

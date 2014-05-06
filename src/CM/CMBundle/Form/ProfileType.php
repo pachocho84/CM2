@@ -23,14 +23,28 @@ class ProfileType extends BaseType
                 'choices' => array(User::SEX_M => 'Male', User::SEX_F => 'Female'),
                 'expanded' => true
             ))
+            ->add('type', 'choice', array(
+                'choices' => array(
+                    User::TYPE_PROFESSIONAL => 'Professional musician',
+                    User::TYPE_STUDENT => 'Musical student',
+                    User::TYPE_KEEN => 'Keen about music'),
+                'expanded' => true,
+                'error_bubbling' => false,
+            ))
             ->add('cityBirth', 'text', array(
-            	'label' => 'City of birth',
-                'attr' => array('autocomplete-city' => '')
+                'label' => 'City of birth',
+                'attr' => array('city-autocomplete' => '')
             ))
+            ->add('cityBirthLang', 'hidden', array('attr' => array('city-lang' => '')))
+            ->add('cityBirthLatitude', 'hidden', array('attr' => array('city-latitude' => '')))
+            ->add('cityBirthLongitude', 'hidden', array('attr' => array('city-longitude' => '')))
             ->add('cityCurrent', 'text', array(
-            	'label' => 'Current city',
-            	'attr' => array('autocomplete-city' => '')
+                'label' => 'Current city',
+                'attr' => array('city-autocomplete' => '')
             ))
+            ->add('cityCurrentLang', 'hidden', array('attr' => array('city-lang' => '')))
+            ->add('cityCurrentLatitude', 'hidden', array('attr' => array('city-latitude' => '')))
+            ->add('cityCurrentLongitude', 'hidden', array('attr' => array('city-longitude' => '')))
             ->add('birthDate', 'date', array(
                 'widget' => 'choice',
                 'years' => range(date('Y'), date('Y') - 110)

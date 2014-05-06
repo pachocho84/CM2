@@ -1,5 +1,93 @@
 {% extends 'CMBundle:Form:layout.html.twig' %}
 
+{% block title %}
+    {% if app.request.get('_route') == 'event_new' %}
+        {{ "Add event"|trans }}
+    {% elseif app.request.get('_route') == 'event_edit' %}
+        {{ "Edit event: %title%"|trans({'%title%': entity.title}) }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-5">
+            <h2>{{ block('title') }}</h2>
+        </div>
+    </div>
+    
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-4">
+                {{ form_row(form.image) }}
+            </div>
+            <div class="col-md-8">
+                {{ form_row(form.translations) }}
+                {{ form_row(form.category) }}
+                {% if form.posts is defined %}{{ form_row(form.posts) }}{% endif %}
+            </div>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+        'lib/select2/select2-bootstrap.css'
+        'lib/select2/select2.css'
+    %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+
+    <style>
+      [gmap-canvas] {
+        height: 200px;
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+      }
+      .controls {
+        margin-top: 16px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      [gmap-input] {
+        background-color: #fff;
+        padding: 0 11px 0 13px;
+        width: 400px;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        text-overflow: ellipsis;
+      }
+
+      [gmap-input]:focus {
+        border-color: #4d90fe;
+        margin-left: -1px;
+        padding-left: 14px;  /* Regular padding-left + 1. */
+        width: 401px;
+      }
+
+      .pac-container {
+        font-family: Roboto;
+      }
+
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&language={{ app.request.locale }}"></script>
+    {% javascripts 'lib/select2/select2.js' %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
 {% form_theme form _self %}
 
 {% block _cm_cmbundle_event_eventDates_row %}
@@ -85,92 +173,4 @@
         {{ form_errors(form) }}
     </div>
 {% endspaceless %}
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    {% stylesheets
-        'lib/select2/select2-bootstrap.css'
-        'lib/select2/select2.css'
-    %}
-        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
-    {% endstylesheets %}
-
-    <style>
-      [gmap-canvas] {
-        height: 200px;
-        width: 100%;
-        margin: 0px;
-        padding: 0px;
-      }
-      .controls {
-        margin-top: 16px;
-        border: 1px solid transparent;
-        border-radius: 2px 0 0 2px;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        height: 32px;
-        outline: none;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-      }
-
-      [gmap-input] {
-        background-color: #fff;
-        padding: 0 11px 0 13px;
-        width: 400px;
-        font-family: Roboto;
-        font-size: 15px;
-        font-weight: 300;
-        text-overflow: ellipsis;
-      }
-
-      [gmap-input]:focus {
-        border-color: #4d90fe;
-        margin-left: -1px;
-        padding-left: 14px;  /* Regular padding-left + 1. */
-        width: 401px;
-      }
-
-      .pac-container {
-        font-family: Roboto;
-      }
-
-    </style>
-{% endblock %}
-
-{% block title %}
-    {% if app.request.get('_route') == 'event_new' %}
-        {{ "Add event"|trans }}
-    {% elseif app.request.get('_route') == 'event_edit' %}
-        {{ "Edit event: %title%"|trans({'%title%': entity.title}) }}
-    {% endif %}
-{% endblock %}
-
-{% block body %}
-    <div class="row">
-        <div class="col-lg-5">
-            <h2>{{ block('title') }}</h2>
-        </div>
-    </div>
-    
-    {{ form_start(form) }}
-        <div class="row">
-            <div class="col-md-4">
-                {{ form_row(form.image) }}
-            </div>
-            <div class="col-md-8">
-                {{ form_row(form.translations) }}
-                {{ form_row(form.category) }}
-                {% if form.posts is defined %}{{ form_row(form.posts) }}{% endif %}
-            </div>
-        </div>
-    {{ form_end(form) }}
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&language={{ app.request.locale }}"></script>
-    {% javascripts 'lib/select2/select2.js' %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
 {% endblock %}
